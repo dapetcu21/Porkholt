@@ -40,9 +40,11 @@ enum {
 
 @synthesize animating, context;
 
-- (void)awakeFromNib
+- (void)loadView
 {
-    EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]; No GLES 2.0 ... yet...
+	EAGLView * view = [[EAGLView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+	EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]; No GLES 2.0 ... yet...
     
     if (!aContext)
     {
@@ -57,10 +59,11 @@ enum {
 	self.context = aContext;
 	[aContext release];
 	
-    [(EAGLView *)self.view setContext:context];
-    [(EAGLView *)self.view setFramebuffer];
-    
-	PHMainEvents::sharedInstance()->init(self.view.frame.size.width, self.view.frame.size.height);
+	self.view = view;
+    [view setContext:context];
+    [view setFramebuffer];
+	
+	PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
 	
     animating = FALSE;
     displayLinkSupported = FALSE;
@@ -91,23 +94,18 @@ enum {
 - (void)viewWillAppear:(BOOL)animated
 {
     [self startAnimation];
-    
     [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self stopAnimation];
-    
     [super viewWillDisappear:animated];
 }
 
 - (void)viewDidUnload
 {
 	[super viewDidUnload];
-	
-
-    // Tear down context.
     if ([EAGLContext currentContext] == context)
         [EAGLContext setCurrentContext:nil];
 	self.context = nil;	
@@ -207,12 +205,15 @@ enum {
     [(EAGLView *)self.view presentFramebuffer];
 }
 
+
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
+	PHMainEvents::sharedInstance()->memoryWarning();
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 /*

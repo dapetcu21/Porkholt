@@ -8,25 +8,39 @@
 
 #import "PorkholtAppDelegate.h"
 #import "PorkholtViewController.h"
+#import "PHMainEvents.h"
 
 @implementation PorkholtAppDelegate
 
 @synthesize window;
 @synthesize viewController;
 
+- (void)applicationDidFinishLaunching:(UIApplication *)application
+{
+	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	viewController = [[PorkholtViewController alloc] init];
+
+	[window addSubview:viewController.view];
+	[window layoutSubviews];
+	[window makeKeyAndVisible];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [viewController stopAnimation];
+	PHMainEvents::sharedInstance()->appSuspended();
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [viewController startAnimation];
+	PHMainEvents::sharedInstance()->appResumed();
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     [viewController stopAnimation];
+	PHMainEvents::sharedInstance()->appQuits();
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
