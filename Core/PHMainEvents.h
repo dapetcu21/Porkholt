@@ -20,6 +20,7 @@ private:
 	PHView * view;
 	double _screenWidth;
 	double _screenHeight;
+	bool suspended;
 public:
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };

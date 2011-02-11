@@ -166,8 +166,6 @@ void PHView::draw()
         0,  _bounds.height,
         _bounds.width,  _bounds.height,
     };
-    
-	printf("%f %f\n",_bounds.width,  _bounds.height);
 	
     static const GLubyte squareColors[] = {
         255, 255,   0, 255,

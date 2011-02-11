@@ -22,6 +22,7 @@ void PHMainEvents::init(double screenX, double screenY)
 {
 	_screenWidth = screenX;
 	_screenHeight = screenY;
+	suspended = 0;
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
 	
 	//TEST CODE BEGIN
@@ -60,20 +61,26 @@ void PHMainEvents::renderFrame(double timeElapsed)
 
 void PHMainEvents::appSuspended()
 {
-	
+	if (suspended) return;
+	suspended = true;
+	printf("Porkholt: appSuspended\n");
 }
 
 void PHMainEvents::appResumed()
 {
-	
+	if (!suspended) return;
+	suspended = false;
+	printf("Porkholt: appResumed\n");
 }
 
 void PHMainEvents::appQuits()
 {
-	
+	//This isn't guaranteed to be called
+	//Save all stuff in PHMainEvents::appSuspended()
+	printf("Porkholt: appQuits\n");
 }
 
 void PHMainEvents::memoryWarning()
 {
-	
+	printf("Porkholt: memoryWarning\n");
 }

@@ -60,7 +60,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* Classes */ = {
+		080E96DDFE201D6D7F000001 /* iOS Bindings */ = {
 			isa = PBXGroup;
 			children = (
 				28FD14FC0DC6FC130079059D /* EAGLView.h */,
@@ -69,8 +69,11 @@
 				1D3623250D0F684500981E51 /* PorkholtAppDelegate.mm */,
 				28EC4C5611D54ECE0027AA9F /* PorkholtViewController.h */,
 				28EC4C5711D54ECE0027AA9F /* PorkholtViewController.mm */,
+				32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+				8D1107310486CEB800E47090 /* Porkholt-Info.plist */,
 			);
-			path = Classes;
+			path = "iOS Bindings";
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -85,8 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				C152809312B9713E009067A7 /* Core */,
-				080E96DDFE201D6D7F000001 /* Classes */,
-				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				080E96DDFE201D6D7F000001 /* iOS Bindings */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -94,20 +96,10 @@
 			name = CustomTemplate;
 			sourceTree = "<group>";
 		};
-		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
-			isa = PBXGroup;
-			children = (
-				32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
-			);
-			name = "Other Sources";
-			sourceTree = "<group>";
-		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				C13242691304A863001AEBFE /* rsrc */,
-				8D1107310486CEB800E47090 /* Porkholt-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -162,7 +154,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Porkholt" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Porkholt_iOS" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -217,9 +209,9 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Porkholt_Prefix.pch;
+				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				INFOPLIST_FILE = "Porkholt-Info.plist";
+				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
 				PRODUCT_NAME = Porkholt;
 			};
 			name = Debug;
@@ -230,9 +222,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Porkholt_Prefix.pch;
+				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				INFOPLIST_FILE = "Porkholt-Info.plist";
+				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
 				PRODUCT_NAME = Porkholt;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -278,7 +270,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Porkholt" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Porkholt_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
