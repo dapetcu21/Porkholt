@@ -9,6 +9,8 @@
 
 #include "PHView.h"
 
+std::list<PHAnimationDescriptor*> PHView::animations;
+
 struct PHView::ViewEl
 {
 	PHView * el;
@@ -186,4 +188,79 @@ void PHView::draw()
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	
+}
+
+//animation system
+void PHView::addAnimation(PHAnimationDescriptor * anim)
+{
+	if (anim->time == 0) return;
+	if (anim->view == NULL) return;
+	anim->retain();
+	animations.push_back(anim);
+}
+void PHView::updateAnimation(double time)
+{
+	std::list<PHAnimationDescriptor*>::iterator nx;
+	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i=nx)
+	{
+		double tm = time;
+		nx = i;
+		nx++;
+		while (tm)
+		{
+			double amount;
+			PHAnimationDescriptor * anim = *i;
+			if (tm<anim->time)
+			{
+				amount = tm/anim->time;
+				anim->time -= tm;
+				tm = 0;
+			} else {
+				amount = 1;
+				tm -= anim->time;
+				anim->time = 0;
+			}
+			if ((anim->moveX) || (anim->moveY))
+			{
+				PHRect fr = ((PHView*)anim->view)->frame();
+				fr.x += amount * anim->moveX;
+				fr.y += amount * anim->moveY;
+				((PHView*)anim->view)->setFrame(fr);
+				anim->moveX *= 1-amount;
+				anim->moveY *= 1-amount;
+			}
+			if (anim->rotate)
+			{
+				((PHView*)anim->view)->rotate(amount * anim->rotate);
+				anim->rotate *= 1-amount;
+			}
+			if (anim->scaleX!=1)
+			{
+				double ratio = 1/(anim->_scaleX);
+				anim->_scaleX+= (anim->scaleX - anim->_scaleX)*amount;
+				ratio*=anim->_scaleX;
+				((PHView*)anim->view)->setScaleX(((PHView*)anim->view)->scaleX()*ratio);
+			}
+			if (anim->scaleY!=1)
+			{
+				double ratio = 1/(anim->_scaleY);
+				anim->_scaleY+= (anim->scaleY - anim->_scaleY)*amount;
+				ratio*=anim->_scaleY;
+				((PHView*)anim->view)->setScaleY(((PHView*)anim->view)->scaleY()*ratio);
+			}
+			if (tm)
+			{
+				PHAnimationDescriptor * next = anim->nextAnimation();
+				if (next)
+					next->retain();
+				*i = next;
+				anim->release();
+				if (!*i)
+				{
+					animations.erase(i);
+					tm = 0;
+				}
+			}
+		}
+	}
 }

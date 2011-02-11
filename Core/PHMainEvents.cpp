@@ -26,17 +26,30 @@ void PHMainEvents::init(double screenX, double screenY)
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
 	
 	//TEST CODE BEGIN
-	PHView * view2 = new PHView(PHMakeRect(100, 100, 100, 100));
-	PHView * view3 = new PHView(PHMakeRect(200, 200, 50, 100));
+	PHView * view2 = new PHView(PHMakeRect(50, 50, 100, 100));
 	view->addSubview(view2);
-	view->addSubview(view3);
-	view2->setRotation(10); //10 degrees clockwise
-	view2->setScaleX(0.75);
-	view3->setRotation(-30); //30 degrees counterclockwise
-	view3->setScaleX(1.5);
-	view3->setEffectOrder(PHView::EffectOrderRotateScale);
+	PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+	anim->moveX = 100;
+	anim->moveY = 100;
+	anim->time = 2.0f;
+	anim->view = view2;
+	PHAnimationDescriptor * anim2 = new PHAnimationDescriptor;
+	anim2->rotate = 90;
+	anim2->scaleX = 1.5f;
+	anim2->scaleY = 1.5f;
+	anim2->time = 1.0f;
+	anim2->view = view2;
+	anim->setNextAnimation(anim2);
+	anim2->release();
+	PHView::addAnimation(anim);
+	anim->release();
+	anim = new PHAnimationDescriptor;
+	anim->rotate = -90;
+	anim->time = 1.0f;
+	anim->view =view2;
+	PHView::addAnimation(anim);
+	anim->release();
 	view2->release();
-	view3->release();
 	//TEST CODE END
 	
 	glMatrixMode(GL_PROJECTION);
@@ -55,6 +68,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
+	PHView::updateAnimation(timeElapsed);
 	view->render();
 	
 }

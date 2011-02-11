@@ -41,6 +41,7 @@
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
+		C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
 		C1852D6112BBD40700EF0BB8 /* PHView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHView.h; sourceTree = "<group>"; };
 		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHView.cpp; sourceTree = "<group>"; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
@@ -129,6 +130,7 @@
 				C1852D6112BBD40700EF0BB8 /* PHView.h */,
 				C1852D6212BBD40700EF0BB8 /* PHView.cpp */,
 				C1B9D658130264F0002BE2BE /* PHGeometry.h */,
+				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";

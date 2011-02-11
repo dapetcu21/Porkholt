@@ -11,10 +11,12 @@
 #define PHVIEW_H
 
 #include "PHMain.h"
+#include "PHAnimationDescriptor.h"
+#include <list>
 
 class PHView : PHObject
 {
-private:
+protected:
 	struct ViewEl;
 	ViewEl * viewsSt;
 	ViewEl * viewsEn;
@@ -67,6 +69,13 @@ public:
 	
 	virtual ~PHView();
 	friend class PHMainEvents;
+	
+//animation system
+private:
+	static std::list<PHAnimationDescriptor*> animations;
+public:
+	static void addAnimation(PHAnimationDescriptor * anim);
+	static void updateAnimation(double time);
 };
 
 #endif
