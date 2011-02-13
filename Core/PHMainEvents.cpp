@@ -18,21 +18,41 @@ PHMainEvents * PHMainEvents::sharedInstance()
 	return inst;
 }
 
+void PHMainEvents::remove(void * ud)
+{
+	((PHView*)ud)->removeFromSuperview();
+}
+
 void PHMainEvents::init(double screenX, double screenY)
 {
 	_screenWidth = screenX;
 	_screenHeight = screenY;
 	suspended = 0;
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
+	view->setBackgroundColor(PHGrayColor());
 	
 	//TEST CODE BEGIN
-	PHView * view2 = new PHView(PHMakeRect(50, 50, 100, 100));
-	view->addSubview(view2);
+	PHImageView * view2 = new PHImageView(PHMakeRect(50, 50, 100, 100));
+	view2->setImage(PHImage::imageNamed("test"));
+	PHView * view3 = new PHTestView(PHMakeRect(0, 0, 20, 20));
+	view3->setCenter(view2->boundsCenter());
+	view2->addSubview(view3);
 	PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+	anim->moveX = -50;
+	anim->moveY = -50;
+	anim->time = 3;
+	anim->view = view3;
+	PHView::addAnimation(anim);
+	anim->release();
+	view->addSubview(view2);
+	anim = new PHAnimationDescriptor;
 	anim->moveX = 100;
 	anim->moveY = 100;
 	anim->time = 2.0f;
 	anim->view = view2;
+	anim->callback = (PHAnimationDescriptor::Callback)&PHMainEvents::remove;
+	anim->target = this;
+	anim->userdata = (void*)view3;
 	PHAnimationDescriptor * anim2 = new PHAnimationDescriptor;
 	anim2->rotate = 90;
 	anim2->scaleX = 1.5f;
@@ -50,6 +70,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	PHView::addAnimation(anim);
 	anim->release();
 	view2->release();
+	view3->release();
 	//TEST CODE END
 	
 	glMatrixMode(GL_PROJECTION);
@@ -57,6 +78,8 @@ void PHMainEvents::init(double screenX, double screenY)
 	glTranslatef(-1.0f, -1.0f, 0.0f);
 	glScalef(2.0f/(_screenWidth-1), 2.0f/(_screenHeight-1), 1.0f);
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void PHMainEvents::renderFrame(double timeElapsed)

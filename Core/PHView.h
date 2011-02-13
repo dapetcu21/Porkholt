@@ -9,6 +9,7 @@
 
 #ifndef PHVIEW_H
 #define PHVIEW_H
+#define INSIDE_PHVIEW_H
 
 #include "PHMain.h"
 #include "PHAnimationDescriptor.h"
@@ -25,10 +26,13 @@ protected:
 	PHRect _frame,_bounds;
 	PHPoint _rotationalCenter,_scalingCenter;
 	double _rotation,_scaleX,_scaleY;
+	double _alpha;
+	PHColor _backColor;
 	int effOrder;
 	PHView();
 	PHView(const PHRect &frame);
 	void render();
+	void drawBackground();
 	virtual void draw();
 	virtual void setup_matrix();
 	
@@ -47,7 +51,7 @@ public:
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
 	PHPoint center() const;
-	void setCenter(const PHRect &center);
+	void setCenter(const PHPoint &center);
 	PHPoint boundsCenter() const;
 	PHPoint rotationalCenter() const {return _rotationalCenter;}
 	PHPoint scalingCenter() const {return _scalingCenter; }
@@ -62,7 +66,10 @@ public:
 	int effectOrder() { return effOrder; };
 	void setEffectOrder(int eff) { effOrder = eff; };
 	void rotate(double rot) { _rotation+= rot; };
-	
+	void setAlpha(double alpha) { _alpha = alpha; if (alpha<0) alpha = 0; if (alpha>1) alpha = 1; };
+	double alpha() { return _alpha; }
+	void setBackgroundColor(const PHColor &color) { _backColor = color; };
+	PHColor backgroundColor() { return _backColor; };
 	void addSubview(PHView * view);
 	void removeFromSuperview();
 	void bringToFront();
@@ -78,4 +85,5 @@ public:
 	static void updateAnimation(double time);
 };
 
+#undef INSIDE_PHVIEW_H
 #endif

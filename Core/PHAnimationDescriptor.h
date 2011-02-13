@@ -22,16 +22,30 @@ public:
 	double rotate;
 	double time;
 	PHObject * view;
-	PHAnimationDescriptor() : next(NULL), scaleX(1), scaleY(1),_scaleX(1),_scaleY(1), moveX(0), moveY(0), rotate(0), view(NULL) {};
+	
+	typedef void (PHObject::*Callback)(void *);
+	Callback callback;
+	PHObject * target;
+	void * userdata;
+	
+	
+	PHAnimationDescriptor() : 
+		next(NULL), scaleX(1), scaleY(1),_scaleX(1),
+		_scaleY(1), moveX(0), moveY(0), rotate(0), 
+		view(NULL), callback(NULL), target(NULL), userdata(NULL) {};
 	void setNextAnimation(PHAnimationDescriptor * nexta)
 	{
-		nexta->retain();
+		if (nexta) nexta->retain();
 		if (next) next->release();
 		next = nexta;
 	}
 	PHAnimationDescriptor * nextAnimation()
 	{
 		return next;
+	}
+	~PHAnimationDescriptor()
+	{
+		if (next) next->release();
 	}
 };
 

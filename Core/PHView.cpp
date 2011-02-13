@@ -17,14 +17,16 @@ struct PHView::ViewEl
 	PHView::ViewEl * next, * prev;
 };
 
-PHView::PHView() :  viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),
-					_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate)
+#define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
+						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
+						_backColor(PHClearColor()), _alpha(1.0f)
+
+PHView::PHView() :  PHVIEW_INITLIST
 {
 	setFrame(PHMakeRect(0, 0, 0, 0));
 }
 
-PHView::PHView(const PHRect &frame) : viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),
-									  _rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate)
+PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
 {
 	setFrame(frame);
 }
@@ -50,7 +52,7 @@ PHPoint PHView::center() const
 	return tmp;
 }
 
-void PHView::setCenter(const PHRect &_center)
+void PHView::setCenter(const PHPoint &_center)
 {
 	setFrame(PHMakeRect(_center.x-_frame.width/2, _center.y-_frame.height/2, _frame.width, _frame.height));
 }
@@ -96,6 +98,7 @@ void PHView::render()
 {
 	glPushMatrix();
 	setup_matrix();
+	drawBackground();
 	draw();
 	PHView::ViewEl * p = viewsSt;
 	while (p)
@@ -141,6 +144,17 @@ void PHView::removeFromSuperview()
 
 PHView::~PHView()
 {
+	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i++)
+	{
+		PHAnimationDescriptor * p  = *i;
+		while (p)
+		{
+			if (p->view == this)
+				p->view = NULL;
+			p=p->nextAnimation();
+		}
+	}
+	
 	PHView::ViewEl * p = viewsSt;
 	while (p)
 	{
@@ -158,10 +172,10 @@ void PHView::bringToFront()
 	su->addSubview(this);
 	release();
 }
-		
-void PHView::draw()
+
+void PHView::drawBackground()
 {
-	
+	if (_backColor.a == 0) return;
 	const GLfloat squareVertices[] = {
         0, 0,
         _bounds.width, 0,
@@ -169,32 +183,32 @@ void PHView::draw()
         _bounds.width,  _bounds.height,
     };
 	
-    static const GLubyte squareColors[] = {
-        255, 255,   0, 255,
-        0,   255, 255, 255,
-        0,     0,   0,   0,
-        255,   0, 255, 255,
+	const GLfloat squareColors[] = {
+        _backColor.r, _backColor.g,  _backColor.b, _backColor.a,
+        _backColor.r, _backColor.g,  _backColor.b, _backColor.a,
+        _backColor.r, _backColor.g,  _backColor.b, _backColor.a,
+        _backColor.r, _backColor.g,  _backColor.b, _backColor.a,
     };
-    
-    static float transY = 0.0f;
-	
-    //glTranslatef(0.0f, (GLfloat)(sinf(transY)*150), 0.0f);
-	transY += 0.075f;
 	
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
+	glColorPointer(4, GL_FLOAT, 0, squareColors);
 	glEnableClientState(GL_COLOR_ARRAY);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+}
+		
+void PHView::draw()
+{
 	
 }
 
 //animation system
 void PHView::addAnimation(PHAnimationDescriptor * anim)
 {
-	if (anim->time == 0) return;
-	if (anim->view == NULL) return;
 	anim->retain();
 	animations.push_back(anim);
 }
@@ -220,33 +234,36 @@ void PHView::updateAnimation(double time)
 				tm -= anim->time;
 				anim->time = 0;
 			}
-			if ((anim->moveX) || (anim->moveY))
+			if (anim->view)
 			{
-				PHRect fr = ((PHView*)anim->view)->frame();
-				fr.x += amount * anim->moveX;
-				fr.y += amount * anim->moveY;
-				((PHView*)anim->view)->setFrame(fr);
-				anim->moveX *= 1-amount;
-				anim->moveY *= 1-amount;
-			}
-			if (anim->rotate)
-			{
-				((PHView*)anim->view)->rotate(amount * anim->rotate);
-				anim->rotate *= 1-amount;
-			}
-			if (anim->scaleX!=1)
-			{
-				double ratio = 1/(anim->_scaleX);
-				anim->_scaleX+= (anim->scaleX - anim->_scaleX)*amount;
-				ratio*=anim->_scaleX;
-				((PHView*)anim->view)->setScaleX(((PHView*)anim->view)->scaleX()*ratio);
-			}
-			if (anim->scaleY!=1)
-			{
-				double ratio = 1/(anim->_scaleY);
-				anim->_scaleY+= (anim->scaleY - anim->_scaleY)*amount;
-				ratio*=anim->_scaleY;
-				((PHView*)anim->view)->setScaleY(((PHView*)anim->view)->scaleY()*ratio);
+				if ((anim->moveX) || (anim->moveY))
+				{
+					PHRect fr = ((PHView*)anim->view)->frame();
+					fr.x += amount * anim->moveX;
+					fr.y += amount * anim->moveY;
+					((PHView*)anim->view)->setFrame(fr);
+					anim->moveX *= 1-amount;
+					anim->moveY *= 1-amount;
+				}
+				if (anim->rotate)
+				{
+					((PHView*)anim->view)->rotate(amount * anim->rotate);
+					anim->rotate *= 1-amount;
+				}
+				if (anim->scaleX!=1)
+				{
+					double ratio = 1/(anim->_scaleX);
+					anim->_scaleX+= (anim->scaleX - anim->_scaleX)*amount;
+					ratio*=anim->_scaleX;
+					((PHView*)anim->view)->setScaleX(((PHView*)anim->view)->scaleX()*ratio);
+				}
+				if (anim->scaleY!=1)
+				{
+					double ratio = 1/(anim->_scaleY);
+					anim->_scaleY+= (anim->scaleY - anim->_scaleY)*amount;
+					ratio*=anim->_scaleY;
+					((PHView*)anim->view)->setScaleY(((PHView*)anim->view)->scaleY()*ratio);
+				}
 			}
 			if (tm)
 			{
@@ -254,6 +271,8 @@ void PHView::updateAnimation(double time)
 				if (next)
 					next->retain();
 				*i = next;
+				if (anim->target && anim->callback)
+					(anim->target->*(anim->callback))(anim->userdata);
 				anim->release();
 				if (!*i)
 				{

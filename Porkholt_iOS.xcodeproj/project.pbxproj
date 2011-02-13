@@ -17,6 +17,12 @@
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
+		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
+		C17B484B1307B82300C2EC8D /* PHImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484A1307B82300C2EC8D /* PHImage.cpp */; };
+		C17B484E1307B83000C2EC8D /* PHImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484D1307B83000C2EC8D /* PHImageView.cpp */; };
+		C17B48C6130800C600C2EC8D /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C17B48C5130800C600C2EC8D /* libz.a */; };
+		C17B48C91308024C00C2EC8D /* PHFileManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C17B48C81308024C00C2EC8D /* PHFileManager.mm */; };
+		C17B48CC13080FE300C2EC8D /* PHErrors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B48CB13080FE300C2EC8D /* PHErrors.cpp */; };
 		C1852D6312BBD40700EF0BB8 /* PHView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1852D6212BBD40700EF0BB8 /* PHView.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 /* End PBXBuildFile section */
@@ -42,6 +48,17 @@
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
 		C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
+		C17B480A130719FF00C2EC8D /* PHTestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestView.h; sourceTree = "<group>"; };
+		C17B480B130719FF00C2EC8D /* PHTestView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestView.cpp; sourceTree = "<group>"; };
+		C17B48491307B82300C2EC8D /* PHImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImage.h; sourceTree = "<group>"; };
+		C17B484A1307B82300C2EC8D /* PHImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImage.cpp; sourceTree = "<group>"; };
+		C17B484C1307B83000C2EC8D /* PHImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageView.h; sourceTree = "<group>"; };
+		C17B484D1307B83000C2EC8D /* PHImageView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImageView.cpp; sourceTree = "<group>"; };
+		C17B48C5130800C600C2EC8D /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = Externals/lib/darwin/libz.a; sourceTree = "<group>"; };
+		C17B48C71308024C00C2EC8D /* PHFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFileManager.h; sourceTree = "<group>"; };
+		C17B48C81308024C00C2EC8D /* PHFileManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHFileManager.mm; sourceTree = "<group>"; };
+		C17B48CA13080FE300C2EC8D /* PHErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHErrors.h; sourceTree = "<group>"; };
+		C17B48CB13080FE300C2EC8D /* PHErrors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHErrors.cpp; sourceTree = "<group>"; };
 		C1852D6112BBD40700EF0BB8 /* PHView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHView.h; sourceTree = "<group>"; };
 		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHView.cpp; sourceTree = "<group>"; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
@@ -58,6 +75,7 @@
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */,
+				C17B48C6130800C600C2EC8D /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +85,7 @@
 		080E96DDFE201D6D7F000001 /* iOS Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				C17B48C81308024C00C2EC8D /* PHFileManager.mm */,
 				28FD14FC0DC6FC130079059D /* EAGLView.h */,
 				28FD14FD0DC6FC130079059D /* EAGLView.m */,
 				1D3623240D0F684500981E51 /* PorkholtAppDelegate.h */,
@@ -116,6 +135,7 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				C1F23269130550AA00DE3624 /* libpng15.a */,
+				C17B48C5130800C600C2EC8D /* libz.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -131,6 +151,15 @@
 				C1852D6212BBD40700EF0BB8 /* PHView.cpp */,
 				C1B9D658130264F0002BE2BE /* PHGeometry.h */,
 				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
+				C17B480A130719FF00C2EC8D /* PHTestView.h */,
+				C17B480B130719FF00C2EC8D /* PHTestView.cpp */,
+				C17B48491307B82300C2EC8D /* PHImage.h */,
+				C17B484A1307B82300C2EC8D /* PHImage.cpp */,
+				C17B484C1307B83000C2EC8D /* PHImageView.h */,
+				C17B484D1307B83000C2EC8D /* PHImageView.cpp */,
+				C17B48C71308024C00C2EC8D /* PHFileManager.h */,
+				C17B48CA13080FE300C2EC8D /* PHErrors.h */,
+				C17B48CB13080FE300C2EC8D /* PHErrors.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -219,6 +248,11 @@
 				28EC4C5911D54ECE0027AA9F /* PorkholtViewController.mm in Sources */,
 				C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */,
 				C1852D6312BBD40700EF0BB8 /* PHView.cpp in Sources */,
+				C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */,
+				C17B484B1307B82300C2EC8D /* PHImage.cpp in Sources */,
+				C17B484E1307B83000C2EC8D /* PHImageView.cpp in Sources */,
+				C17B48C91308024C00C2EC8D /* PHFileManager.mm in Sources */,
+				C17B48CC13080FE300C2EC8D /* PHErrors.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +263,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -248,6 +283,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
@@ -271,6 +307,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = Externals/libpng;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 			};
@@ -284,6 +321,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = Externals/libpng;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
 				SDKROOT = iphoneos;

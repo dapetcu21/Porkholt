@@ -31,6 +31,8 @@ public:
 	void appQuits();
 	void memoryWarning();
 	void init(double screenX, double screenY);
+	
+	void remove(void * ud);
 };
 
 #endif
