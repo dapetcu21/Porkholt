@@ -34,6 +34,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	//TEST CODE BEGIN
 	PHImageView * view2 = new PHImageView(PHMakeRect(50, 50, 100, 100));
 	view2->setImage(PHImage::imageNamed("test"));
+	//view2->setBackgroundColor(PHMakeColor(0.9f, 0.1f, 0.1f, 0.9f))
 	PHView * view3 = new PHTestView(PHMakeRect(0, 0, 20, 20));
 	view3->setCenter(view2->boundsCenter());
 	view2->addSubview(view3);

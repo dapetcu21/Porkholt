@@ -32,9 +32,10 @@ private:
 	unsigned int texid;
 	
 public:
-	int height();
-	int width();
+	int height() { return _height; };
+	int width() { return _width; };
 	void bindToTexture();
+	~PHImage();
 };
 
 #endif

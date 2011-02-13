@@ -124,16 +124,21 @@ PHImage::PHImage(const string & path)
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);
-	for (int y=0; y<_height; y+=5)
+	/*for (int y=0; y<_height; y+=5)
 	{
 		for (int x=0; x<_height; x+=5)
 			printf("%c",buffer[y*rowsize+x*4+3]?'X':' ');
 		printf("\n");
-	}
+	}*/
 	
 	//PHLog("%d",glGetError());
 	
 	delete[] buffer;
+}
+
+PHImage::~PHImage()
+{
+	glDeleteTextures(1, &texid);
 }
 
 void PHImage::bindToTexture()
