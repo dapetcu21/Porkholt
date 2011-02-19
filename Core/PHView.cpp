@@ -19,7 +19,7 @@ struct PHView::ViewEl
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor()), _alpha(1.0f)
+						_backColor(PHClearColor()), _alpha(1.0f), _userInput(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -81,9 +81,10 @@ void PHView::apply_scaling()
 	glTranslatef(-_scalingCenter.x, -_scalingCenter.y, 0);
 }
 
-void PHView::setup_matrix()
+void PHView::applyMatrices()
 {
 	glTranslatef(_frame.x, _frame.y, 0);
+	glScalef(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1, 1);
 	if (effOrder == EffectOrderScaleRotate)
 	{
 		apply_rotation();
@@ -97,7 +98,7 @@ void PHView::setup_matrix()
 void PHView::render()
 {
 	glPushMatrix();
-	setup_matrix();
+	applyMatrices();
 	drawBackground();
 	draw();
 	PHView::ViewEl * p = viewsSt;
@@ -155,6 +156,8 @@ PHView::~PHView()
 		}
 	}
 	
+	PHEventHandler::sharedInstance()->removeView(this);
+	
 	PHView::ViewEl * p = viewsSt;
 	while (p)
 	{
@@ -202,8 +205,11 @@ void PHView::drawBackground()
 }
 		
 void PHView::draw()
+{	
+}
+
+void PHView::touchEvent(PHTouch * touch)
 {
-	
 }
 
 //animation system
@@ -282,4 +288,88 @@ void PHView::updateAnimation(double time)
 			}
 		}
 	}
+}
+
+//stuff
+PHView * PHView::pointerDeepFirst(PHTouch * touch)
+{
+	if (!_userInput) return NULL;
+	glPushMatrix();
+	applyMatrices();
+	PHView * view = NULL;
+	PHView::ViewEl * p = viewsEn;
+	while (p)
+	{
+		PHView * v = p->el->pointerDeepFirst(touch);
+		if (v)
+		{
+			view = v;
+			break;
+		}
+		p=p->prev;
+	}
+	if (!view)
+	{
+		PHPoint pnt = PHUnTransformedPoint(touch->location());
+		if (pnt.x>=0 && pnt.y>=0 && pnt.x<=_bounds.width && pnt.y<=_bounds.height)
+			view = this;
+	}
+	glPopMatrix();
+	return view;
+}
+
+//geometry
+void PHView::loadMatrixTree()
+{
+	if (superView)
+	{
+		superView->loadMatrixTree();
+	}
+	applyMatrices();
+}
+
+PHPoint PHView::toMyCoordinates(PHPoint pnt)
+{
+	GLfloat m[16];
+	glPushMatrix();
+	glLoadIdentity();
+	loadMatrixTree();
+	glGetFloatv(GL_MODELVIEW, m);
+	glPopMatrix();
+	return PHUnTransformPointMatrix(m, pnt);
+}
+
+void PHView::toMyCoordinates(PHPoint * pnt, int n)
+{
+	GLfloat m[16];
+	glPushMatrix();
+	glLoadIdentity();
+	loadMatrixTree();
+	glGetFloatv(GL_MODELVIEW, m);
+	glPopMatrix();
+	for (int i=0; i<n; i++)
+		pnt[i] = PHUnTransformPointMatrix(m, pnt[i]);
+}
+
+PHPoint PHView::fromMyCoordinates(PHPoint pnt)
+{
+	GLfloat m[16];
+	glPushMatrix();
+	glLoadIdentity();
+	loadMatrixTree();
+	glGetFloatv(GL_MODELVIEW, m);
+	glPopMatrix();
+	return PHTransformPointMatrix(m, pnt);
+}
+
+void PHView::fromMyCoordinates(PHPoint * pnt, int n)
+{
+	GLfloat m[16];
+	glPushMatrix();
+	glLoadIdentity();
+	loadMatrixTree();
+	glGetFloatv(GL_MODELVIEW, m);
+	glPopMatrix();
+	for (int i=0; i<n; i++)
+		pnt[i] = PHTransformPointMatrix(m, pnt[i]);
 }

@@ -35,3 +35,23 @@ void PHTestView::draw()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 }
+
+void PHTestView::touchEvent(PHTouch * touch)
+{
+	if (touch->phase() == PHTouch::touchMovedState)
+	{
+		PHPoint p[2];
+		p[0] = touch->location();
+		p[1] = touch->lastLocation();
+		if (superView)
+		{
+			superView->toMyCoordinates(p, 2);
+		}
+		PHRect frame;
+		frame = this->frame();
+		frame.x+=p[0].x-p[1].x;
+		frame.y+=p[0].y-p[1].y;
+		setFrame(frame);
+		
+	}
+}

@@ -27,6 +27,7 @@ protected:
 	PHPoint _rotationalCenter,_scalingCenter;
 	double _rotation,_scaleX,_scaleY;
 	double _alpha;
+	bool _userInput;
 	PHColor _backColor;
 	int effOrder;
 	PHView();
@@ -34,10 +35,13 @@ protected:
 	void render();
 	void drawBackground();
 	virtual void draw();
-	virtual void setup_matrix();
 	
 	void apply_rotation();
 	void apply_scaling();
+	void applyMatrices();
+	void loadMatrixTree();
+	
+	virtual void touchEvent(PHTouch * touch);
 	
 public:
 	
@@ -70,16 +74,29 @@ public:
 	double alpha() { return _alpha; }
 	void setBackgroundColor(const PHColor &color) { _backColor = color; };
 	PHColor backgroundColor() { return _backColor; };
+	void setUserInput(bool ui) { _userInput = ui; };
+	bool userInput() { return _userInput; };
+	PHView * superview() { return superView; };
+	
 	void addSubview(PHView * view);
 	void removeFromSuperview();
 	void bringToFront();
+
+	PHPoint toMyCoordinates(PHPoint pnt);
+	void toMyCoordinates(PHPoint * pnt, int n);
+	PHPoint fromMyCoordinates(PHPoint pnt);
+	void fromMyCoordinates(PHPoint * pnt, int n);
+	
 	
 	virtual ~PHView();
 	friend class PHMainEvents;
+	friend class PHEventHandler;
 	
 //animation system
 private:
 	static std::list<PHAnimationDescriptor*> animations;
+	PHView * pointerDeepFirst(PHTouch * touch);
+	
 public:
 	static void addAnimation(PHAnimationDescriptor * anim);
 	static void updateAnimation(double time);

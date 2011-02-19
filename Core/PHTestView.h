@@ -16,8 +16,11 @@ class PHTestView: public PHView
 public:
 	PHTestView() : PHView() {};
 	PHTestView(const PHRect &frame) : PHView(frame) {};
+	
 protected:
 	virtual void draw();
+	virtual void touchEvent(PHTouch * touch);
+	
 };
 
 #endif

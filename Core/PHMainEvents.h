@@ -31,7 +31,7 @@ public:
 	void appQuits();
 	void memoryWarning();
 	void init(double screenX, double screenY);
-	
+	PHView * mainView() { return view; };
 	void remove(void * ud);
 };
 

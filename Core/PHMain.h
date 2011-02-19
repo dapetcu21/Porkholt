@@ -24,11 +24,22 @@ using namespace std;
 	#endif
 #endif
 
+#ifdef PH_IPHONE_OS
+	#import <OpenGLES/ES1/gl.h>
+	#import <OpenGLES/ES1/glext.h>
+	#import <OpenGLES/ES2/gl.h>
+	#import <OpenGLES/ES2/glext.h>
+#endif
+
+#include "PHTime.h"
 #include "PHObject.h"
 #include "PHGeometry.h"
 #include "PHErrors.h"
 #include "PHFileManager.h"
 #include "PHImage.h"
+#include "PHTouch.h"
+#include "PHEventHandler.h"
+#include "PHMotion.h"
 
 #ifndef INSIDE_PHVIEW_H
 	#include "PHView.h"
@@ -36,11 +47,6 @@ using namespace std;
 	#include "PHImageView.h"
 #endif
 
-#ifdef PH_IPHONE_OS
-	#import <OpenGLES/ES1/gl.h>
-	#import <OpenGLES/ES1/glext.h>
-	#import <OpenGLES/ES2/gl.h>
-	#import <OpenGLES/ES2/glext.h>
-#endif
+#include "PHMainEvents.h"
 
 #endif

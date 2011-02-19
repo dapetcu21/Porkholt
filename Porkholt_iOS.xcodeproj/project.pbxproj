@@ -15,6 +15,8 @@
 		28FD14FE0DC6FC130079059D /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FD14FD0DC6FC130079059D /* EAGLView.m */; };
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */; };
+		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
@@ -23,6 +25,11 @@
 		C17B48C6130800C600C2EC8D /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C17B48C5130800C600C2EC8D /* libz.a */; };
 		C17B48C91308024C00C2EC8D /* PHFileManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C17B48C81308024C00C2EC8D /* PHFileManager.mm */; };
 		C17B48CC13080FE300C2EC8D /* PHErrors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B48CB13080FE300C2EC8D /* PHErrors.cpp */; };
+		C17B4E14130E991600C2EC8D /* PHEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E13130E991600C2EC8D /* PHEventHandler.cpp */; };
+		C17B4E17130E9B6A00C2EC8D /* PHTouch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E16130E9B6A00C2EC8D /* PHTouch.cpp */; };
+		C17B4E37130EA1F400C2EC8D /* PHTouchInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */; };
+		C17B4E3D130EA4F000C2EC8D /* PHTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */; };
+		C17B4F23130EFAEA00C2EC8D /* PHGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */; };
 		C1852D6312BBD40700EF0BB8 /* PHView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1852D6212BBD40700EF0BB8 /* PHView.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 /* End PBXBuildFile section */
@@ -42,6 +49,10 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Porkholt_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Porkholt-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Porkholt-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C1185540130FDDB8004F341A /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
+		C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
+		C11855A2130FDF09004F341A /* PHMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMotion.h; sourceTree = "<group>"; };
+		C11855A3130FDF09004F341A /* PHMotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMotion.cpp; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
 		C152809412B97169009067A7 /* PHMainEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMainEvents.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
@@ -59,6 +70,15 @@
 		C17B48C81308024C00C2EC8D /* PHFileManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHFileManager.mm; sourceTree = "<group>"; };
 		C17B48CA13080FE300C2EC8D /* PHErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHErrors.h; sourceTree = "<group>"; };
 		C17B48CB13080FE300C2EC8D /* PHErrors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHErrors.cpp; sourceTree = "<group>"; };
+		C17B4E12130E991600C2EC8D /* PHEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventHandler.h; sourceTree = "<group>"; };
+		C17B4E13130E991600C2EC8D /* PHEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventHandler.cpp; sourceTree = "<group>"; };
+		C17B4E15130E9B6A00C2EC8D /* PHTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTouch.h; sourceTree = "<group>"; };
+		C17B4E16130E9B6A00C2EC8D /* PHTouch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTouch.cpp; sourceTree = "<group>"; };
+		C17B4E35130EA1F400C2EC8D /* PHTouchInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTouchInterface.h; sourceTree = "<group>"; };
+		C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHTouchInterface.mm; sourceTree = "<group>"; };
+		C17B4E3B130EA4F000C2EC8D /* PHTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTime.h; sourceTree = "<group>"; };
+		C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTime.cpp; sourceTree = "<group>"; };
+		C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGeometry.cpp; sourceTree = "<group>"; };
 		C1852D6112BBD40700EF0BB8 /* PHView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHView.h; sourceTree = "<group>"; };
 		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHView.cpp; sourceTree = "<group>"; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
@@ -95,6 +115,10 @@
 				32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				8D1107310486CEB800E47090 /* Porkholt-Info.plist */,
+				C17B4E35130EA1F400C2EC8D /* PHTouchInterface.h */,
+				C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */,
+				C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */,
+				C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */,
 			);
 			path = "iOS Bindings";
 			sourceTree = "<group>";
@@ -113,6 +137,7 @@
 				C152809312B9713E009067A7 /* Core */,
 				080E96DDFE201D6D7F000001 /* iOS Bindings */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				C17B4C751308F57F00C2EC8D /* Resources-iPad */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -149,10 +174,11 @@
 				C163951812BA3FD000B0A72E /* PHMain.h */,
 				C1852D6112BBD40700EF0BB8 /* PHView.h */,
 				C1852D6212BBD40700EF0BB8 /* PHView.cpp */,
-				C1B9D658130264F0002BE2BE /* PHGeometry.h */,
-				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
 				C17B480A130719FF00C2EC8D /* PHTestView.h */,
 				C17B480B130719FF00C2EC8D /* PHTestView.cpp */,
+				C1B9D658130264F0002BE2BE /* PHGeometry.h */,
+				C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */,
+				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
 				C17B48491307B82300C2EC8D /* PHImage.h */,
 				C17B484A1307B82300C2EC8D /* PHImage.cpp */,
 				C17B484C1307B83000C2EC8D /* PHImageView.h */,
@@ -160,8 +186,23 @@
 				C17B48C71308024C00C2EC8D /* PHFileManager.h */,
 				C17B48CA13080FE300C2EC8D /* PHErrors.h */,
 				C17B48CB13080FE300C2EC8D /* PHErrors.cpp */,
+				C17B4E12130E991600C2EC8D /* PHEventHandler.h */,
+				C17B4E13130E991600C2EC8D /* PHEventHandler.cpp */,
+				C17B4E15130E9B6A00C2EC8D /* PHTouch.h */,
+				C17B4E16130E9B6A00C2EC8D /* PHTouch.cpp */,
+				C17B4E3B130EA4F000C2EC8D /* PHTime.h */,
+				C1185540130FDDB8004F341A /* PHAccelInterface.h */,
+				C11855A2130FDF09004F341A /* PHMotion.h */,
+				C11855A3130FDF09004F341A /* PHMotion.cpp */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		C17B4C751308F57F00C2EC8D /* Resources-iPad */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Resources-iPad";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,6 +294,13 @@
 				C17B484E1307B83000C2EC8D /* PHImageView.cpp in Sources */,
 				C17B48C91308024C00C2EC8D /* PHFileManager.mm in Sources */,
 				C17B48CC13080FE300C2EC8D /* PHErrors.cpp in Sources */,
+				C17B4E14130E991600C2EC8D /* PHEventHandler.cpp in Sources */,
+				C17B4E17130E9B6A00C2EC8D /* PHTouch.cpp in Sources */,
+				C17B4E37130EA1F400C2EC8D /* PHTouchInterface.mm in Sources */,
+				C17B4E3D130EA4F000C2EC8D /* PHTime.cpp in Sources */,
+				C17B4F23130EFAEA00C2EC8D /* PHGeometry.cpp in Sources */,
+				C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */,
+				C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +311,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COMPRESS_PNG_FILES = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -276,6 +324,7 @@
 					"\"$(SRCROOT)/Externals/lib/darwin\"",
 				);
 				PRODUCT_NAME = Porkholt;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -283,7 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COMPRESS_PNG_FILES = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
@@ -294,6 +343,7 @@
 					"\"$(SRCROOT)/Externals/lib/darwin\"",
 				);
 				PRODUCT_NAME = Porkholt;
+				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -303,13 +353,17 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = Externals/libpng;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -318,13 +372,17 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = Externals/libpng;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

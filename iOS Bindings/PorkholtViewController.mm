@@ -11,6 +11,8 @@
 #import <mach/mach_time.h>
 #import "PorkholtViewController.h"
 #import "PHMainEvents.h"
+#import "PHTouchInterface.h"
+#import "PHMain.h"
 
 #import "EAGLView.h"
 
@@ -43,7 +45,12 @@ enum {
 - (void)loadView
 {
 	EAGLView * view = [[EAGLView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
+
+    PHTouchInterface * touchView = [[PHTouchInterface alloc] initWithFrame:view.bounds];
+	touchView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+	[view addSubview:touchView];
+	[touchView release];
+	
 	EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]; No GLES 2.0 ... yet...
     
     if (!aContext)

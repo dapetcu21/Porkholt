@@ -10,8 +10,13 @@
 #ifndef PHGEOMETRY_H
 #define PHGEOMETRY_H
 
+#include "PHMain.h"
+
 struct PHRect
 {
+//	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
+//	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
+//	PHRect() : x(0), y(0), width(0), height(0) {};
 	double x,y;
 	double width,height;
 };
@@ -100,5 +105,11 @@ inline PHPoint PHMakePoint(double x, double y)
 	tmp.y = y;
 	return tmp;
 }
+
+void PHInvertMatrix(const GLfloat * m, GLfloat * inverse);
+PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt);
+PHPoint PHUnTransformPointMatrix(const GLfloat * m, const PHPoint & pnt);
+PHPoint PHTransformedPoint(const PHPoint & pnt);
+PHPoint PHUnTransformedPoint(const PHPoint & pnt);
 
 #endif
