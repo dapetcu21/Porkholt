@@ -49,4 +49,9 @@ using namespace std;
 
 #include "PHMainEvents.h"
 
+#ifndef INSIDE_PHVIEWCONTROLLER_H
+	#include "PHViewController.h"
+	#include "PHTestViewController.h"
+#endif
+
 #endif

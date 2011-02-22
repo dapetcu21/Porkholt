@@ -17,11 +17,6 @@ PHMainEvents * PHMainEvents::sharedInstance()
 	return inst;
 }
 
-//TEST CODE BEGIN
-PHView * view4;
-PHView * view2;
-//TEST CODE END
-
 void PHMainEvents::init(double screenX, double screenY)
 {
 	_screenWidth = screenX;
@@ -31,22 +26,6 @@ void PHMainEvents::init(double screenX, double screenY)
 	view->setBackgroundColor(PHGrayColor());
 	view->setUserInput(true);
 	
-	//TEST CODE BEGIN
-	view2 = new PHTestView(PHMakeRect(50, 50, 100, 100));
-	view4 = new PHTestView(PHMakeRect(150, 150, 100, 100));
-	PHView * view3 = new PHTestView(PHMakeRect(0,0,30,30));
-	view3->setCenter(view2->boundsCenter());
-	view3->setUserInput(true);
-	view2->addSubview(view3);
-	view3->release();
-	view2->setUserInput(true);
-	view->addSubview(view2);
-	view2->release();
-	view->addSubview(view4);
-	view4->setUserInput(true);
-	view4->release();
-	//TEST CODE END
-	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glTranslatef(-1.0f, -1.0f, 0.0f);
@@ -54,6 +33,10 @@ void PHMainEvents::init(double screenX, double screenY)
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	viewController = new PHTestViewController(screenBounds());
+	viewController->init();
+	view->addSubview(viewController->getView());
 }
 
 void PHMainEvents::renderFrame(double timeElapsed)
@@ -64,11 +47,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	//TEST CODE BEGIN
-	PHTilt tilt = PHMotion::sharedInstance()->getTilt();
-	view2->setRotation(-tilt.roll); // "geostationary" view
-	view4->setRotation(tilt.pitch);
-	//TEST CODE END
+	viewController->updateScene(timeElapsed);
 	
 	PHView::updateAnimation(timeElapsed);
 	view->render();

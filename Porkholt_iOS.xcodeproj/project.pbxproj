@@ -17,6 +17,8 @@
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */; };
 		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
+		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
+		C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A43131441C2004F341A /* PHTestViewController.cpp */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
@@ -53,6 +55,10 @@
 		C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
 		C11855A2130FDF09004F341A /* PHMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMotion.h; sourceTree = "<group>"; };
 		C11855A3130FDF09004F341A /* PHMotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMotion.cpp; sourceTree = "<group>"; };
+		C1185A07131426F9004F341A /* PHViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHViewController.h; sourceTree = "<group>"; };
+		C1185A08131426F9004F341A /* PHViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHViewController.cpp; sourceTree = "<group>"; };
+		C1185A42131441C2004F341A /* PHTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestViewController.h; sourceTree = "<group>"; };
+		C1185A43131441C2004F341A /* PHTestViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestViewController.cpp; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
 		C152809412B97169009067A7 /* PHMainEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMainEvents.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
@@ -194,6 +200,10 @@
 				C1185540130FDDB8004F341A /* PHAccelInterface.h */,
 				C11855A2130FDF09004F341A /* PHMotion.h */,
 				C11855A3130FDF09004F341A /* PHMotion.cpp */,
+				C1185A07131426F9004F341A /* PHViewController.h */,
+				C1185A08131426F9004F341A /* PHViewController.cpp */,
+				C1185A42131441C2004F341A /* PHTestViewController.h */,
+				C1185A43131441C2004F341A /* PHTestViewController.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -301,6 +311,8 @@
 				C17B4F23130EFAEA00C2EC8D /* PHGeometry.cpp in Sources */,
 				C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */,
 				C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */,
+				C1185A09131426F9004F341A /* PHViewController.cpp in Sources */,
+				C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

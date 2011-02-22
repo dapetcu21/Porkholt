@@ -15,7 +15,7 @@
 #include "PHAnimationDescriptor.h"
 #include <list>
 
-class PHView : PHObject
+class PHView : public PHObject
 {
 protected:
 	struct ViewEl;
@@ -30,8 +30,7 @@ protected:
 	bool _userInput;
 	PHColor _backColor;
 	int effOrder;
-	PHView();
-	PHView(const PHRect &frame);
+
 	void render();
 	void drawBackground();
 	virtual void draw();
@@ -50,6 +49,9 @@ public:
 		EffectOrderScaleRotate = 0,
 		EffectOrderRotateScale
 	};
+	
+	PHView();
+	PHView(const PHRect &frame);
 	
 	void setFrame(const PHRect &frame);
 	PHRect frame() const { return _frame; }
