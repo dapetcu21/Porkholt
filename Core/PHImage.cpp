@@ -188,10 +188,10 @@ void PHImage::clearImages()
 void PHImage::renderInFrame(const PHRect & frm)
 {
 	const GLfloat squareVertices[] = {
-        frm.x,		frm.y,
-        frm.width,	frm.y,
-        frm.x,		frm.height,
-        frm.width,  frm.height,
+        frm.x,			frm.y,
+        frm.x+frm.width,frm.y,
+        frm.x,			frm.y+frm.height,
+        frm.x+frm.width,frm.y+frm.height,
     };
 	
 	double xC = (double)_width/actWidth;
