@@ -8,7 +8,7 @@
  */
 #ifndef PHIMAGE_H
 #define PHIMAGE_H
-#include "PHMain.h"
+#include "PHObject.h"
 
 class PHImage;
 #include <map>
@@ -25,6 +25,8 @@ private:
 	PHImage(const string & path);
 	
 	int _height;
+	int actHeight;
+	int actWidth;
 	int _width;
 	uint8_t bit_depth;
 	uint8_t color_type;
@@ -36,6 +38,8 @@ public:
 	int width() { return _width; };
 	void bindToTexture();
 	~PHImage();
+	
+	void renderInFrame(const PHRect & frm);
 };
 
 #endif

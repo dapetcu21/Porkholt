@@ -21,7 +21,8 @@ protected:
 	virtual PHView * loadView(const PHRect & frame);
 public:
 	virtual void updateScene(double timeElapsed);
-	PHTestViewController(const PHRect & frame) : PHViewController(frame) {};
-	PHTestViewController() : PHViewController() {};
+	
+	void callback1(PHObject * sender, void * ud);
+	void callback2(PHObject * sender, void * ud);
 };
 #endif

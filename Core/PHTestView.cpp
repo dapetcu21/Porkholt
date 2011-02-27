@@ -11,7 +11,7 @@
 
 void PHTestView::draw()
 {
-	const GLfloat squareVertices[] = {
+	GLfloat squareVertices[] = {
         0, 0,
         _bounds.width, 0,
         0,  _bounds.height,

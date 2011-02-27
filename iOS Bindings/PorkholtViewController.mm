@@ -72,7 +72,7 @@ enum {
 	
 	PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
 	
-    animating = FALSE;
+	animating = FALSE;
     displayLinkSupported = FALSE;
     animationFrameInterval = 1;
     displayLink = nil;

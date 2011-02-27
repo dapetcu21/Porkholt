@@ -22,4 +22,6 @@ public:
 	int referenceCount() { return _refcount; };
 };
 
+typedef void (PHObject::*PHCallback) (PHObject * sender, void * ud);
+
 #endif

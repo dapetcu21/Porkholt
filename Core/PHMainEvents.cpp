@@ -22,6 +22,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	_screenWidth = screenX;
 	_screenHeight = screenY;
 	suspended = 0;
+	
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
 	view->setBackgroundColor(PHGrayColor());
 	view->setUserInput(true);
@@ -34,9 +35,16 @@ void PHMainEvents::init(double screenX, double screenY)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	viewController = new PHTestViewController(screenBounds());
+	
+	viewController = new PHNavigationController();
 	viewController->init();
+	viewController->viewWillAppear();
 	view->addSubview(viewController->getView());
+	viewController->viewDidAppear();
+	
+	PHTestViewController * vc = new PHTestViewController();
+	vc->init();
+	((PHNavigationController*)viewController)->pushViewController(vc);
 }
 
 void PHMainEvents::renderFrame(double timeElapsed)
@@ -47,9 +55,11 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	viewController->updateScene(timeElapsed);
-	
 	PHView::updateAnimation(timeElapsed);
+	
+	if (viewController)  
+		viewController->updateScene(timeElapsed);
+	
 	view->render();
 }
 

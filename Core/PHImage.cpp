@@ -7,7 +7,7 @@
  *
  */
 
-#include "PHImage.h"
+#include "PHMain.h"
 #define PNG_DEBUG 4
 #include <png.h>
 #include <sstream>
@@ -74,6 +74,12 @@ PHImage::PHImage(const string & path)
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 	number_of_passes = png_set_interlace_handling(png_ptr);
+	actWidth = 1;
+	actHeight = 1;
+	while (actWidth<_width)
+		actWidth<<=1;
+	while (actHeight<_height)
+		actHeight<<=1;
 	
 	png_read_update_info(png_ptr, info_ptr);
 	
@@ -92,11 +98,12 @@ PHImage::PHImage(const string & path)
 	png_read_image(png_ptr, row_pointers);
 	
 	size_t rowsize = png_get_rowbytes(png_ptr,info_ptr);
-	size_t size = rowsize*_height;
+	size_t actrowsize = rowsize/_width*actWidth;
+	size_t size = actrowsize*actHeight;
 	uint8_t * buffer = new uint8_t[size];
 	for (int i=0; i<_height; i++)
 	{
-		memcpy(buffer+i*rowsize, row_pointers[i],rowsize);
+		memcpy(buffer+i*actrowsize, row_pointers[i],rowsize);
 		delete[] row_pointers[i];
 	}
 	delete[] row_pointers;
@@ -122,15 +129,8 @@ PHImage::PHImage(const string & path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, actHeight, actWidth, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);
-	/*for (int y=0; y<_height; y+=5)
-	{
-		for (int x=0; x<_height; x+=5)
-			printf("%c",buffer[y*rowsize+x*4+3]?'X':' ');
-		printf("\n");
-	}*/
-	
 	//PHLog("%d",glGetError());
 	
 	delete[] buffer;
@@ -183,4 +183,38 @@ void PHImage::clearImages()
 			i->second->release();
 	}
 	images = tmp;
+}
+
+void PHImage::renderInFrame(const PHRect & frm)
+{
+	const GLfloat squareVertices[] = {
+        frm.x,		frm.y,
+        frm.width,	frm.y,
+        frm.x,		frm.height,
+        frm.width,  frm.height,
+    };
+	
+	double xC = (double)_width/actWidth;
+	double yC = (double)_height/actHeight;
+	
+	const GLfloat squareTexCoords[] = {
+        0.0f,	yC,
+		xC,		yC,
+		0.0f,	0.0f,
+		xC,		0.0f,
+    };
+	
+	bindToTexture();
+	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
+	
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+	
 }

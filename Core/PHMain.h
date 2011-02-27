@@ -45,6 +45,7 @@ using namespace std;
 	#include "PHView.h"
 	#include "PHTestView.h"
 	#include "PHImageView.h"
+	#include "PHButtonView.h"
 #endif
 
 #include "PHMainEvents.h"
@@ -52,6 +53,7 @@ using namespace std;
 #ifndef INSIDE_PHVIEWCONTROLLER_H
 	#include "PHViewController.h"
 	#include "PHTestViewController.h"
+	#include "PHNavigationController.h"
 #endif
 
 #endif

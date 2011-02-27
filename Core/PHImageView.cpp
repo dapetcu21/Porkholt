@@ -30,32 +30,8 @@ PHImageView::~PHImageView()
 
 void PHImageView::draw()
 {
-	const GLfloat squareVertices[] = {
-        0, 0,
-        _bounds.width, 0,
-        0,  _bounds.height,
-        _bounds.width,  _bounds.height,
-    };
-	
-	const GLfloat squareTexCoords[] = {
-        0.0f,1.0f,
-		1.0f,1.0f,
-		0.0f,0.0f,
-		1.0f,0.0f,
-    };
-	
-	_image->bindToTexture();
-	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
-	
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+	if (_image)
+		_image->renderInFrame(_bounds);
 }
 
 void PHImageView::setImage(PHImage * image) 

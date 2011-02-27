@@ -19,6 +19,7 @@
 		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
 		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
 		C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A43131441C2004F341A /* PHTestViewController.cpp */; };
+		C126D6341317D6FC00DACBC0 /* PHNavigationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
@@ -33,6 +34,7 @@
 		C17B4E3D130EA4F000C2EC8D /* PHTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */; };
 		C17B4F23130EFAEA00C2EC8D /* PHGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */; };
 		C1852D6312BBD40700EF0BB8 /* PHView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1852D6212BBD40700EF0BB8 /* PHView.cpp */; };
+		C192A11413185B5000C18BA2 /* PHButtonView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C192A11313185B5000C18BA2 /* PHButtonView.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +61,8 @@
 		C1185A08131426F9004F341A /* PHViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHViewController.cpp; sourceTree = "<group>"; };
 		C1185A42131441C2004F341A /* PHTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestViewController.h; sourceTree = "<group>"; };
 		C1185A43131441C2004F341A /* PHTestViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestViewController.cpp; sourceTree = "<group>"; };
+		C126D6321317D6FC00DACBC0 /* PHNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNavigationController.h; sourceTree = "<group>"; };
+		C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNavigationController.cpp; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
 		C152809412B97169009067A7 /* PHMainEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMainEvents.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
@@ -87,6 +91,8 @@
 		C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGeometry.cpp; sourceTree = "<group>"; };
 		C1852D6112BBD40700EF0BB8 /* PHView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHView.h; sourceTree = "<group>"; };
 		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHView.cpp; sourceTree = "<group>"; };
+		C192A11213185B5000C18BA2 /* PHButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHButtonView.h; sourceTree = "<group>"; };
+		C192A11313185B5000C18BA2 /* PHButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHButtonView.cpp; sourceTree = "<group>"; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -204,6 +210,10 @@
 				C1185A08131426F9004F341A /* PHViewController.cpp */,
 				C1185A42131441C2004F341A /* PHTestViewController.h */,
 				C1185A43131441C2004F341A /* PHTestViewController.cpp */,
+				C126D6321317D6FC00DACBC0 /* PHNavigationController.h */,
+				C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */,
+				C192A11213185B5000C18BA2 /* PHButtonView.h */,
+				C192A11313185B5000C18BA2 /* PHButtonView.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -313,6 +323,8 @@
 				C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */,
 				C1185A09131426F9004F341A /* PHViewController.cpp in Sources */,
 				C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */,
+				C126D6341317D6FC00DACBC0 /* PHNavigationController.cpp in Sources */,
+				C192A11413185B5000C18BA2 /* PHButtonView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
