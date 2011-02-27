@@ -24,7 +24,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	suspended = 0;
 	
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
-	view->setBackgroundColor(PHGrayColor());
+	view->setBackgroundColor(PHGrayColor);
 	view->setUserInput(true);
 	
 	glMatrixMode(GL_PROJECTION);

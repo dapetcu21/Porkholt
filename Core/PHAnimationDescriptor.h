@@ -22,6 +22,8 @@ public:
 	double rotate;
 	double time;
 	PHObject * view;
+	PHColor bgColor;
+	int tag;
 	
 	typedef void (PHObject::*Callback)(void *);
 	Callback callback;
@@ -31,7 +33,7 @@ public:
 	
 	PHAnimationDescriptor() : 
 		next(NULL), scaleX(1), scaleY(1),_scaleX(1),
-		_scaleY(1), moveX(0), moveY(0), rotate(0), 
+		_scaleY(1), moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor),
 		view(NULL), callback(NULL), target(NULL), userdata(NULL) {};
 	void setNextAnimation(PHAnimationDescriptor * nexta)
 	{

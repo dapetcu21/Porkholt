@@ -46,42 +46,11 @@ inline PHColor PHMakeColor(double red, double green, double blue)
 	return tmp;
 }
 
-inline PHColor PHClearColor()
-{
-	PHColor tmp;
-	tmp.r = 0.0f;
-	tmp.g = 0.0f;
-	tmp.b = 0.0f;
-	tmp.a = 0.0f;
-	return tmp;
-}
-inline PHColor PHBlackColor()
-{
-	PHColor tmp;
-	tmp.r = 0.0f;
-	tmp.g = 0.0f;
-	tmp.b = 0.0f;
-	tmp.a = 1.0f;
-	return tmp;
-}
-inline PHColor PHWhiteColor()
-{
-	PHColor tmp;
-	tmp.r = 1.0f;
-	tmp.g = 1.0f;
-	tmp.b = 1.0f;
-	tmp.a = 1.0f;
-	return tmp;
-}
-inline PHColor PHGrayColor()
-{
-	PHColor tmp;
-	tmp.r = 0.5f;
-	tmp.g = 0.5f;
-	tmp.b = 0.5f;
-	tmp.a = 1.0f;
-	return tmp;
-}
+extern PHColor PHClearColor;
+extern PHColor PHBlackColor;
+extern PHColor PHGrayColor;
+extern PHColor PHWhiteColor;
+extern PHColor PHInvalidColor;
 
 inline PHRect PHMakeRect(double x, double y, double width, double height)
 {
@@ -97,6 +66,8 @@ struct PHPoint
 {
 	double x,y;
 };
+
+extern PHPoint PHOriginPoint;
 
 inline PHPoint PHMakePoint(double x, double y)
 {

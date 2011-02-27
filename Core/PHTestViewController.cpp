@@ -12,7 +12,7 @@
 void PHTestViewController::callback1(PHObject * sender, void * ud)
 {
 	if (navController)
-		navController->popViewController();
+		navController->popViewController((int)ud);
 }
 
 void PHTestViewController::callback2(PHObject * sender, void * ud)
@@ -20,14 +20,13 @@ void PHTestViewController::callback2(PHObject * sender, void * ud)
 	PHTestViewController * vc = new PHTestViewController();
 	vc->init();
 	if (navController)
-		navController->pushViewController(vc);
+		navController->pushViewController(vc,(int)ud);
 	vc->release();
 }
 
 PHView * PHTestViewController::loadView(const PHRect & frame)
 {
 	PHView * view = new PHView(frame);
-	view->setBackgroundColor(PHGrayColor());
 	view->setUserInput(true);
 	
 	view2 = new PHTestView(PHMakeRect(50, 50, 100, 100));
@@ -48,22 +47,25 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	view4->release();
 	
 	
-	PHButtonView * button1 = new PHButtonView(PHMakeRect(0, 0, 40, 40));
-	PHButtonView * button2 = new PHButtonView(PHMakeRect(50, 0, 40, 40));
-	button1->setImage(PHImage::imageNamed("stop"));
-	button1->setPressedImage(PHImage::imageNamed("start"));
+	for (int i=0; i<PHNavigationController::NUMANIMATIONS; i++)
+	{
+		PHButtonView * button1 = new PHButtonView(PHMakeRect(i*60+0, 0, 25, 40));
+		PHButtonView * button2 = new PHButtonView(PHMakeRect(i*60+25, 0, 25, 40));
+		button1->setImage(PHImage::imageNamed("stop"));
+		button1->setPressedImage(PHImage::imageNamed("start"));
 	
-	button2->setPressedImage(PHImage::imageNamed("stop"));
-	button2->setImage(PHImage::imageNamed("start"));
+		button2->setPressedImage(PHImage::imageNamed("stop"));
+		button2->setImage(PHImage::imageNamed("start"));
 	
-	button1->setUpCallBack(this, (PHCallback)&PHTestViewController::callback1, NULL);
-	button2->setUpCallBack(this, (PHCallback)&PHTestViewController::callback2, NULL);
+		button1->setUpCallBack(this, (PHCallback)&PHTestViewController::callback1, (void*)i);
+		button2->setUpCallBack(this, (PHCallback)&PHTestViewController::callback2, (void*)i);
 	
-	view->addSubview(button1);
-	view->addSubview(button2);
+		view->addSubview(button1);
+		view->addSubview(button2);
 	
-	button1->release();
-	button2->release();
+		button1->release();
+		button2->release();
+	}
 	
 	return view;
 }

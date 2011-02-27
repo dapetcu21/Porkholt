@@ -17,15 +17,31 @@ class PHNavigationController : public PHViewController
 private:
 	list<PHViewController*> stack;
 	PHViewController * currentVC, * lastVC;
+	PHView * fadeView;
+	PHColor _fadeColor;
 	int animation;
+	
 	void startAnimating();
 	void stopAnimating();
-public:
-	PHNavigationController() : currentVC(NULL),lastVC(NULL) {};
+	void startSlideAnimation(double x, double y);
+	void endSlideAnimation(void * dmy);
+	void cancelAnimation();
+	void startFadeAnimation();
+	void middleFadeAnimation();
+	void endFadeAnimation();
 	
+	friend class PHAnimationDescriptor;
+public:
+	PHNavigationController() : currentVC(NULL),lastVC(NULL),_fadeColor(PHWhiteColor) {};
 	enum Animations
 	{
-		NoAnim = 0
+		NoAnim = 0,
+		SlideLeft,
+		SlideRight,
+		SlideUp,
+		SlideDown,
+		FadeToColor,
+		NUMANIMATIONS
 	};
 	void pushViewController(PHViewController * vc, int anim, bool replace);
 	void popViewController(int anim);
@@ -34,6 +50,9 @@ public:
 	void popViewController() { popViewController(NoAnim); }
 	
 	virtual void updateScene(double timeElapsed);
+	
+	PHColor fadeColor() { return _fadeColor; };
+	void setFadeColor(const PHColor & c) { _fadeColor = c; };
 };
 
 #endif

@@ -19,7 +19,7 @@ struct PHView::ViewEl
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor()), _alpha(1.0f), _userInput(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -42,6 +42,12 @@ void PHView::setFrame(const PHRect &frame)
 		_scalingCenter = _rotationalCenter = boundsCenter();
 	}
 	_frame = frame;
+}
+
+void PHView::setPosition(const PHPoint &pos)
+{
+	_frame.x = pos.x;
+	_frame.y = pos.y;
 }
 
 PHPoint PHView::center() const
@@ -112,6 +118,10 @@ void PHView::render()
 
 void PHView::addSubview(PHView * view)
 {
+	if (!view)
+		return;
+	view->retain();
+	view->removeFromSuperview();
 	PHView::ViewEl * tmp = new PHView::ViewEl;
 	tmp->el = view;
 	tmp->prev = viewsEn;
@@ -123,7 +133,6 @@ void PHView::addSubview(PHView * view)
 		tmp->prev->next = tmp;
 	view->currPos = tmp;
 	view->superView = this;
-	view->retain();
 }
 
 void PHView::removeFromSuperview()
@@ -143,18 +152,37 @@ void PHView::removeFromSuperview()
 	release();
 }
 
-PHView::~PHView()
+void PHView::cancelAnimationsWithTag(int tag)
 {
 	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i++)
 	{
 		PHAnimationDescriptor * p  = *i;
 		while (p)
 		{
-			if (p->view == this)
+			if ((p->view == this) && ((tag==0) || (p->tag == tag)))
 				p->view = NULL;
 			p=p->nextAnimation();
 		}
 	}
+}
+
+void PHView::cancelAllAnimationsWithTag(int tag)
+{
+	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i++)
+	{
+		PHAnimationDescriptor * p  = *i;
+		while (p)
+		{
+			if ((tag==0) || (p->tag == tag))
+				p->view = NULL;
+			p=p->nextAnimation();
+		}
+	}
+}
+
+PHView::~PHView()
+{
+	cancelAnimations();
 	
 	PHEventHandler::sharedInstance()->removeView(this);
 	
@@ -277,7 +305,7 @@ void PHView::updateAnimation(double time)
 				if (next)
 					next->retain();
 				*i = next;
-				if (anim->target && anim->callback)
+				if (anim -> view && anim->target && anim->callback)
 					(anim->target->*(anim->callback))(anim->userdata);
 				anim->release();
 				if (!*i)

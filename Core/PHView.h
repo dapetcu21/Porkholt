@@ -54,6 +54,7 @@ public:
 	PHView(const PHRect &frame);
 	
 	void setFrame(const PHRect &frame);
+	void setPosition(const PHPoint &pos);
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
 	PHPoint center() const;
@@ -102,6 +103,10 @@ private:
 public:
 	static void addAnimation(PHAnimationDescriptor * anim);
 	static void updateAnimation(double time);
+	void cancelAnimationsWithTag(int tag);
+	void cancelAnimations() { cancelAnimationsWithTag(0); };
+	static void cancelAllAnimationsWithTag(int tag);
+	static void cancelAllAnimations() { cancelAllAnimationsWithTag(0); };
 };
 
 #undef INSIDE_PHVIEW_H

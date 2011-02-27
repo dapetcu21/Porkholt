@@ -9,6 +9,13 @@
 
 #include "PHMain.h"
 
+PHPoint PHOriginPoint = {0,0};
+PHColor PHClearColor = {0,0,0,0};
+PHColor PHBlackColor = {0,0,0,1};
+PHColor PHWhiteColor = {1,1,1,1};
+PHColor PHGrayColor = {0.5,0.5,0.5,1};
+PHColor PHInvalidColor = {-1,-1,-1,-1};
+
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 {
 	double a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
