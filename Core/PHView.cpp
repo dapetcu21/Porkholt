@@ -244,8 +244,50 @@ void PHView::touchEvent(PHTouch * touch)
 void PHView::addAnimation(PHAnimationDescriptor * anim)
 {
 	anim->retain();
+	anim->totalTime = anim->time;
 	animations.push_back(anim);
 }
+
+
+inline double circleEq(double x,double mx,double my,double r)
+{
+	return sqrt(r*r-(x-mx)*(x-mx))+my;
+}
+
+#define bounceL 0.5f
+
+double PHView::animFunction(double time,int ftype)
+{
+	if (ftype==PHAnimationDescriptor::LinearFunction)
+		return time;
+	if (ftype==PHAnimationDescriptor::BounceFunction)
+	{
+		if (time<1-bounceL)
+		{
+			return time/(1-bounceL);
+		} else {
+			double m = (bounceL-1);
+			double n = 1-m*(1-bounceL);
+			double yy = m*(1-bounceL/2)+n;
+			double r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
+			return circleEq(time, 1-bounceL/2, yy, r);
+		}
+	}
+	if (ftype==PHAnimationDescriptor::FadeInFunction)
+	{
+		return time*time;
+	}
+	if (ftype==PHAnimationDescriptor::FadeOutFunction)
+	{
+		return -time*time+2*time;
+	}
+	if (ftype==PHAnimationDescriptor::FadeInOutFunction)
+	{
+		return sin(M_PI*(time-0.5f))/2;
+	}
+	return time; //revert to linear
+}
+
 void PHView::updateAnimation(double time)
 {
 	std::list<PHAnimationDescriptor*>::iterator nx;
@@ -256,47 +298,58 @@ void PHView::updateAnimation(double time)
 		nx++;
 		while (tm)
 		{
-			double amount;
+			double lastRatio,ratio,diff;
 			PHAnimationDescriptor * anim = *i;
 			if (tm<anim->time)
 			{
-				amount = tm/anim->time;
+				lastRatio = animFunction((anim->totalTime-anim->time)/anim->totalTime,anim->timeFunction);
 				anim->time -= tm;
+				ratio = animFunction((anim->totalTime-anim->time)/anim->totalTime,anim->timeFunction);
 				tm = 0;
 			} else {
-				amount = 1;
+				lastRatio = animFunction((anim->totalTime-anim->time)/anim->totalTime,anim->timeFunction);
 				tm -= anim->time;
 				anim->time = 0;
+				ratio = 1;
 			}
+			diff = ratio-lastRatio;
 			if (anim->view)
 			{
 				if ((anim->moveX) || (anim->moveY))
 				{
 					PHRect fr = ((PHView*)anim->view)->frame();
-					fr.x += amount * anim->moveX;
-					fr.y += amount * anim->moveY;
+					fr.x += diff * anim->moveX;
+					fr.y += diff * anim->moveY;
 					((PHView*)anim->view)->setFrame(fr);
-					anim->moveX *= 1-amount;
-					anim->moveY *= 1-amount;
 				}
 				if (anim->rotate)
 				{
-					((PHView*)anim->view)->rotate(amount * anim->rotate);
-					anim->rotate *= 1-amount;
+					((PHView*)anim->view)->rotate(diff * anim->rotate);
 				}
 				if (anim->scaleX!=1)
 				{
-					double ratio = 1/(anim->_scaleX);
-					anim->_scaleX+= (anim->scaleX - anim->_scaleX)*amount;
-					ratio*=anim->_scaleX;
-					((PHView*)anim->view)->setScaleX(((PHView*)anim->view)->scaleX()*ratio);
+					double lastM,m;
+					lastM = 1 + (anim->scaleX-1)*lastRatio;
+					m = 1 + (anim->scaleX-1)*ratio;
+					((PHView*)anim->view)->setScaleX(((PHView*)anim->view)->scaleX()/lastM*m);
 				}
 				if (anim->scaleY!=1)
 				{
-					double ratio = 1/(anim->_scaleY);
-					anim->_scaleY+= (anim->scaleY - anim->_scaleY)*amount;
-					ratio*=anim->_scaleY;
-					((PHView*)anim->view)->setScaleY(((PHView*)anim->view)->scaleY()*ratio);
+					double lastM,m;
+					lastM = 1 + (anim->scaleY-1)*lastRatio;
+					m = 1 + (anim->scaleY-1)*ratio;
+					((PHView*)anim->view)->setScaleY(((PHView*)anim->view)->scaleY()/lastM*m);
+				}
+				if (anim->bgColor.a>=0)
+				{
+					PHColor clr,trg,crr;
+					crr = ((PHView*)anim->view)->backgroundColor();
+					trg = anim->bgColor;
+					clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
+					clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
+					clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
+					clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
+					((PHView*)anim->view)->setBackgroundColor(clr);
 				}
 			}
 			if (tm)

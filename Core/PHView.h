@@ -99,7 +99,7 @@ public:
 private:
 	static std::list<PHAnimationDescriptor*> animations;
 	PHView * pointerDeepFirst(PHTouch * touch);
-	
+	static double animFunction(double time,int ftype);
 public:
 	static void addAnimation(PHAnimationDescriptor * anim);
 	static void updateAnimation(double time);

@@ -17,24 +17,36 @@ class PHAnimationDescriptor : public PHObject
 private:
 	PHAnimationDescriptor * next;
 public:
-	double scaleX,scaleY,_scaleX,_scaleY;
+	double scaleX,scaleY;
 	double moveX,moveY;
 	double rotate;
 	double time;
+	double totalTime;
 	PHObject * view;
 	PHColor bgColor;
 	int tag;
+	int timeFunction;
 	
 	typedef void (PHObject::*Callback)(void *);
 	Callback callback;
 	PHObject * target;
 	void * userdata;
 	
+	enum Functions
+	{
+		LinearFunction = 0,
+		BounceFunction,
+		FadeInFunction,
+		FadeOutFunction,
+		FadeInOutFunction,
+		NUMFUNCTIONS
+	};
 	
 	PHAnimationDescriptor() : 
-		next(NULL), scaleX(1), scaleY(1),_scaleX(1),
-		_scaleY(1), moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor),
-		view(NULL), callback(NULL), target(NULL), userdata(NULL) {};
+		next(NULL), scaleX(1), scaleY(1),
+		moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor),
+		view(NULL), callback(NULL), target(NULL), userdata(NULL), time(0), totalTime(0), timeFunction(LinearFunction) {};
+	
 	void setNextAnimation(PHAnimationDescriptor * nexta)
 	{
 		if (nexta) nexta->retain();

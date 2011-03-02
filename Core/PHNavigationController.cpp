@@ -34,9 +34,10 @@ void PHNavigationController::startFadeAnimation()
 	anim->bgColor = _fadeColor;
 	anim->tag=-4432;
 	anim->view = fadeView;
-	anim->time = 0.3f;
+	anim->time = 0.5f;
 	anim->callback = (PHAnimationDescriptor::Callback)&PHNavigationController::middleFadeAnimation;
 	anim->target = this;
+	anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
 	PHView::addAnimation(anim);
 	anim->release();
 	view->addSubview(fadeView);
@@ -49,9 +50,10 @@ void PHNavigationController::middleFadeAnimation()
 	anim->bgColor = PHClearColor;
 	anim->tag=-4432;
 	anim->view = fadeView;
-	anim->time = 0.3f;
+	anim->time = 0.5f;
 	anim->callback = (PHAnimationDescriptor::Callback)&PHNavigationController::endFadeAnimation;
 	anim->target = this;
+	anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
 	PHView::addAnimation(anim);
 	anim->release();
 	if (lastVC)
@@ -68,6 +70,7 @@ void PHNavigationController::middleFadeAnimation()
 void PHNavigationController::endFadeAnimation()
 {
 	fadeView->removeFromSuperview();
+	fadeView = NULL;
 	stopAnimating();
 }
 
@@ -107,7 +110,8 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		anim->moveY=y;
 		anim->tag=-4432;
 		anim->view = lastV;
-		anim->time = 0.3f;
+		anim->time = 0.5f;
+		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
 		anim->callback = (PHAnimationDescriptor::Callback)&PHNavigationController::endSlideAnimation;
 		anim->target = this;
 		PHView::addAnimation(anim);
@@ -123,7 +127,8 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		anim->moveY=y;
 		anim->tag=-4432;
 		anim->view = currentV;
-		anim->time = 0.3f;
+		anim->time = 0.5f;
+		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
 		anim->callback = (PHAnimationDescriptor::Callback)&PHNavigationController::endSlideAnimation;
 		anim->target = this;
 		PHView::addAnimation(anim);
