@@ -40,6 +40,8 @@ using namespace std;
 #include "PHTouch.h"
 #include "PHEventHandler.h"
 #include "PHMotion.h"
+#include "PHThread.h"
+#include "PHMutex.h"
 
 #ifndef INSIDE_PHVIEW_H
 	#include "PHView.h"
@@ -55,5 +57,7 @@ using namespace std;
 	#include "PHTestViewController.h"
 	#include "PHNavigationController.h"
 #endif
+
+#include "PHLevelSystem.h"
 
 #endif

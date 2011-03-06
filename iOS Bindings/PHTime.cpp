@@ -8,8 +8,10 @@
  */
 
 #include "PHTime.h"
-#import <mach/mach.h>
-#import <mach/mach_time.h>
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#include <time.h>
+#include <errno.h>
 
 double PHTime::getTime()
 {
@@ -22,4 +24,21 @@ double PHTime::getTime()
 	
     uint64_t nano = tm * sTimebaseInfo.numer / sTimebaseInfo.denom;
 	return nano/1000000000.0f;	
+}
+
+void PHTime::sleep(double time)
+{
+	struct timespec s1,s2;
+	s1.tv_nsec = ((long)((time-(long long)time)*1000000000))%1000000000;
+	s1.tv_sec = (int)time;
+	int res;
+	while (res=nanosleep(&s1, &s2))
+	{
+		if (errno!=EINTR)
+		{
+			break;
+		} else {
+			s1=s2;
+		}
+	}
 }

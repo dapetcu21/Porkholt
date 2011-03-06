@@ -14,6 +14,7 @@ class PHTime
 {
 public:
 	static double getTime();
+	static void sleep(double time);
 };
 
 #endif
