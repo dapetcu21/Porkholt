@@ -10,15 +10,27 @@
 #ifndef PHWORLD_H
 #define PHWORLD_H
 
+class PHLCamera;
+class PHLObject;
+
 class PHWorld : public PHObject 
 {
 private:
 	PHView * view;
 	PHView * worldView;
+	
+	PHLCamera * camera;
+	PHLObject * player;
+	
+	PHRect worldSize;
 public:
 	PHWorld(const PHRect & size);
 	PHView * getView() { return view; }
 	virtual ~PHWorld();
+	
+	list<PHLObject*> objects;
+	void addObject(PHLObject * obj);
+	void removeObject(PHLObject * obj);
 	
 	void updateScene(double time);
 };

@@ -38,6 +38,8 @@
 		C17D0F671323811F00BDB8EF /* PHThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F661323811F00BDB8EF /* PHThread.cpp */; };
 		C1852D6312BBD40700EF0BB8 /* PHView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1852D6212BBD40700EF0BB8 /* PHView.cpp */; };
 		C192A11413185B5000C18BA2 /* PHButtonView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C192A11313185B5000C18BA2 /* PHButtonView.cpp */; };
+		C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */; };
+		C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */; };
 		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
 		C1C359251323C08000D3A95A /* PHLua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C359241323C08000D3A95A /* PHLua.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
@@ -106,6 +108,10 @@
 		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHView.cpp; sourceTree = "<group>"; };
 		C192A11213185B5000C18BA2 /* PHButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHButtonView.h; sourceTree = "<group>"; };
 		C192A11313185B5000C18BA2 /* PHButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHButtonView.cpp; sourceTree = "<group>"; };
+		C1B7ECAA1323E1250004C8EA /* PHLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLObject.h; sourceTree = "<group>"; };
+		C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLObject.cpp; sourceTree = "<group>"; };
+		C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLCamera.h; sourceTree = "<group>"; };
+		C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLCamera.cpp; sourceTree = "<group>"; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
 		C1C358241323B6E700D3A95A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
 		C1C359231323C08000D3A95A /* PHLua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLua.h; sourceTree = "<group>"; };
@@ -257,6 +263,10 @@
 				C17D0F571322AD7700BDB8EF /* PHWorld.cpp */,
 				C1C359231323C08000D3A95A /* PHLua.h */,
 				C1C359241323C08000D3A95A /* PHLua.cpp */,
+				C1B7ECAA1323E1250004C8EA /* PHLObject.h */,
+				C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */,
+				C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */,
+				C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -365,6 +375,8 @@
 				C17D0F581322AD7700BDB8EF /* PHWorld.cpp in Sources */,
 				C17D0F671323811F00BDB8EF /* PHThread.cpp in Sources */,
 				C1C359251323C08000D3A95A /* PHLua.cpp in Sources */,
+				C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */,
+				C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

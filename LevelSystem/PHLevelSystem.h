@@ -13,4 +13,9 @@
 #include "PHLevelController.h"
 #include "PHWorld.h"
 
+#ifndef INSIDE_PHLOBJECT_H
+	#include "PHLObject.h"
+	#include "PHLCamera.h"
+#endif
+
 #endif

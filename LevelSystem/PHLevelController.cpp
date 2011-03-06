@@ -29,7 +29,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 {
 	PHView * view = new PHView(frame);
 	view->setUserInput(true);
-	PHWorld * world = new PHWorld(PHMakeRect(0, 0, 1000, 1000));
+	world = new PHWorld(PHMakeRect(0, 0, 1000, 1000));
 	mutex = new PHMutex;
 	pauseMutex = new PHMutex;
 	view->addSubview(world->getView());
@@ -91,6 +91,34 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		PHLog("LUA: %s",lua_tostring(L,-1));
 		lua_pop(L, 1);  /* pop error message from the stack */
 	} 
+	
+	lua_getglobal(L,"objects");
+	
+	lua_pushstring(L, "n");
+	lua_gettable(L, -2);
+	int n = lua_tonumber(L, -1);
+	lua_pop(L,1);
+	
+	for (int i=0; i<n; i++)
+	{
+		lua_pushnumber(L, i);
+		lua_gettable(L, -2);
+		
+		lua_pushstring(L, "class");
+		lua_gettable(L, -2);
+		string clss = lua_tostring(L, -1);
+		lua_pop(L,1);
+		PHLObject * obj = PHLObject::objectWithClass(clss);
+		obj->loadFromLUA(L);
+		obj->loadView();
+		mutex->lock();
+		world->addObject(obj);
+		obj->release();
+		mutex->unlock();
+		
+		lua_pop(L,1);
+	}
+	lua_pop(L,1);
     
 	lua_close(L);
 	

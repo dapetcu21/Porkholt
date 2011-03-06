@@ -57,6 +57,7 @@ public:
 	void setPosition(const PHPoint &pos);
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
+	void setBounds(const PHRect &bnd) { _bounds = bnd; }
 	PHPoint center() const;
 	void setCenter(const PHPoint &center);
 	PHPoint boundsCenter() const;
