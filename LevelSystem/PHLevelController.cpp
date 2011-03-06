@@ -8,7 +8,7 @@
  */
 
 #include "PHMain.h"
-#include <lua.h>
+#include "PHLua.h"
 
 void PHLevelController::test(PHButtonView * sender, void * ud)
 {
@@ -78,6 +78,21 @@ PHLevelController::~PHLevelController()
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
 {
+	mutex->lock();
+	string dir = directory;
+	mutex->unlock();
+	
+	int error;
+	lua_State *L = lua_open();   /* opens Lua */
+	luaL_openlibs(L);
+    
+	error = luaL_loadfile(L, (dir+"/init.lua").c_str()) || lua_pcall(L, 0, 0, 0);
+	if (error) {
+		PHLog("LUA: %s",lua_tostring(L,-1));
+		lua_pop(L, 1);  /* pop error message from the stack */
+	} 
+    
+	lua_close(L);
 	
 	while (running)
 	{

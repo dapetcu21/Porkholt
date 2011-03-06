@@ -44,7 +44,7 @@ cp $LIBPATH_static lnsout/$LIBNAME_static.arm
 
 # Do it all again for native cpu
 make clean
-make macosx CC="gcc -arch x86_64 -arch i386" 
+make macosx CC="gcc -arch x86_64 -arch i386 -mmacosx-version-min=10.4" 
  
 # Copy the native library to the temporary location
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386
