@@ -38,6 +38,7 @@
 		C17D0F671323811F00BDB8EF /* PHThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F661323811F00BDB8EF /* PHThread.cpp */; };
 		C1852D6312BBD40700EF0BB8 /* PHView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1852D6212BBD40700EF0BB8 /* PHView.cpp */; };
 		C192A11413185B5000C18BA2 /* PHButtonView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C192A11313185B5000C18BA2 /* PHButtonView.cpp */; };
+		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 /* End PBXBuildFile section */
 
@@ -105,6 +106,7 @@
 		C192A11213185B5000C18BA2 /* PHButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHButtonView.h; sourceTree = "<group>"; };
 		C192A11313185B5000C18BA2 /* PHButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHButtonView.cpp; sourceTree = "<group>"; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
+		C1C358241323B6E700D3A95A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,6 +121,7 @@
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */,
 				C17B48C6130800C600C2EC8D /* libz.a in Frameworks */,
+				C1C358251323B6E700D3A95A /* liblua.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +191,7 @@
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				C1F23269130550AA00DE3624 /* libpng15.a */,
 				C17B48C5130800C600C2EC8D /* libz.a */,
+				C1C358241323B6E700D3A95A /* liblua.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -413,7 +417,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Externals/libpng;
+				HEADER_SEARCH_PATHS = (
+					Externals/lua/include,
+					Externals/libpng,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
@@ -431,7 +438,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Externals/libpng;
+				HEADER_SEARCH_PATHS = (
+					Externals/lua/include,
+					Externals/libpng,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;

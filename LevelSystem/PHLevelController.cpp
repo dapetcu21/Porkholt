@@ -8,6 +8,7 @@
  */
 
 #include "PHMain.h"
+#include <lua.h>
 
 void PHLevelController::test(PHButtonView * sender, void * ud)
 {

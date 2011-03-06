@@ -11,6 +11,7 @@
 #define PHLEVELCONTROLLER_H
 
 class PHWorld;
+class PHButtonView;
 
 class PHLevelController : public PHViewController
 {
