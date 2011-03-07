@@ -88,8 +88,6 @@ export CXXFLAGS="$CFLAGS"
 make -j4
 cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
 
-make distclean
-
 unset CPPFLAGS CFLAGS CPP LDFLAGS CPP CXXFLAGS DEVROOT SDKROOT
 
 # Create fat lib by combining the three versions
