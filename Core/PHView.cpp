@@ -44,6 +44,12 @@ void PHView::setFrame(const PHRect &frame)
 	_frame = frame;
 }
 
+void PHView::setBounds(const PHRect &bnd) 
+{ 
+	_bounds = bnd; 
+	_scalingCenter = _rotationalCenter = boundsCenter();
+}
+
 void PHView::setPosition(const PHPoint &pos)
 {
 	_frame.x = pos.x;
