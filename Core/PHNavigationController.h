@@ -20,6 +20,7 @@ private:
 	PHView * fadeView;
 	PHColor _fadeColor;
 	int animation;
+	bool hidden;
 	
 	void startAnimating();
 	void stopAnimating();
@@ -32,7 +33,7 @@ private:
 	
 	friend class PHAnimationDescriptor;
 public:
-	PHNavigationController() : currentVC(NULL),lastVC(NULL),_fadeColor(PHBlackColor),fadeView(NULL) {};
+	PHNavigationController() : currentVC(NULL),lastVC(NULL),_fadeColor(PHBlackColor),fadeView(NULL),hidden(true) {};
 	enum Animations
 	{
 		NoAnim = 0,
@@ -50,6 +51,9 @@ public:
 	void popViewController() { popViewController(NoAnim); }
 	
 	virtual void updateScene(double timeElapsed);
+	
+	virtual void viewDidDisappear();
+	virtual void viewWillAppear();
 	
 	PHColor fadeColor() { return _fadeColor; };
 	void setFadeColor(const PHColor & c) { _fadeColor = c; };

@@ -26,6 +26,9 @@ protected:
 	string directory;
 public:
 	
+	void pause();
+	void resume();
+	
 	void auxThread(PHThread * sender, void * ud);
 	
 	PHLevelController(string path);
@@ -34,6 +37,9 @@ public:
 	~PHLevelController();
 	
 	void test(PHButtonView * sender, void * ud);
+	
+	void viewDidAppear();
+	void viewWillDisappear();
 	
 };
 

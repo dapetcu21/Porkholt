@@ -131,7 +131,6 @@ PHImage::PHImage(const string & path)
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, actHeight, actWidth, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);
-	//PHLog("%d",glGetError());
 	
 	delete[] buffer;
 }

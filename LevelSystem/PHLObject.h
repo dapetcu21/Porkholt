@@ -14,6 +14,8 @@
 
 #include "PHMain.h"
 
+class PHImageView;
+
 class PHLObject : public PHObject
 {
 protected:
@@ -22,7 +24,17 @@ protected:
 	PHView * view;
 	PHWorld * wrld;
 	
+	struct Image
+	{
+		PHImageView * img;
+		PHRect bounds;
+	};
+	list<Image> images;
+	PHRect viewSize;
+	void loadImages();
+	
 	friend class PHWorld;
+	
 public:
 	PHLObject();
 	virtual ~PHLObject();
@@ -31,7 +43,7 @@ public:
 	PHPoint position() { return pos; };
 	void setPosition(PHPoint p);
 	
-	virtual void loadFromLUA(void * L);
+	virtual void loadFromLUA(void * L, const string & root);
 	virtual void loadView();
 	
 	static PHLObject * objectWithClass(const string & str);

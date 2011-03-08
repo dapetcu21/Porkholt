@@ -20,7 +20,7 @@ public:
 	
 	PHRect size() { return sz; };
 	
-	virtual void loadFromLUA(void * L);
+	virtual void loadFromLUA(void * L, const string & root);
 	virtual void loadView();
 };
 

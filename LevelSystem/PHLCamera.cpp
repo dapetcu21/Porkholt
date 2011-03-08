@@ -19,9 +19,9 @@ PHLCamera::~PHLCamera()
 {
 }
 
-void PHLCamera::loadFromLUA(void * l)
+void PHLCamera::loadFromLUA(void * l, const string & root)
 {
-	PHLObject::loadFromLUA(l);
+	PHLObject::loadFromLUA(l,root);
 	lua_State * L = (lua_State*)l;
 	
 	lua_pushstring(L, "camH");

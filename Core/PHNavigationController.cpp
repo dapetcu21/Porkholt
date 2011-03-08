@@ -9,22 +9,42 @@
 
 #include "PHNavigationController.h"
 
-void PHNavigationController::stopAnimating()
+void PHNavigationController::viewDidDisappear()
 {
+	hidden = true;
 	if (currentVC)
 	{
-		currentVC->getView()->setPosition(PHOriginPoint);
-		currentVC->viewDidAppear();
+		if (currentVC->getViewState() == PHViewController::StateAppearing)
+			currentVC->_viewDidAppear();
+		currentVC->_viewWillDisappear();
+		currentVC->_viewDidDisappear();
 	}
-	if (lastVC)
-		lastVC->viewDidDisappear();
 	if (lastVC)
 	{
-		lastVC->navController = NULL;
-		lastVC->release();
-		lastVC = NULL;
+		if (lastVC->getViewState() == PHViewController::StateAppearing)
+			lastVC->_viewDidAppear();
+		lastVC->_viewWillDisappear();
+		lastVC->_viewDidDisappear();
 	}
-	animation = NoAnim;
+}
+
+void PHNavigationController::viewWillAppear()
+{
+	hidden = false;
+	if (currentVC)
+	{
+		if (currentVC->getViewState() == PHViewController::StateDisappearing)
+			currentVC->_viewDidDisappear();
+		currentVC->_viewWillAppear();
+		currentVC->_viewDidAppear();
+	}
+	if (lastVC)
+	{
+		if (lastVC->getViewState() == PHViewController::StateDisappearing)
+			lastVC->_viewDidDisappear();
+		lastVC->_viewWillAppear();
+		lastVC->_viewDidAppear();
+	}
 }
 
 void PHNavigationController::startFadeAnimation()
@@ -143,10 +163,10 @@ void PHNavigationController::startAnimating()
 		currentVC->retain();
 		currentVC->navController = this;
 	}
-	if (currentVC)
-		currentVC->viewWillAppear();
-	if (lastVC)
-		lastVC->viewWillDisappear();
+	if (currentVC&&!hidden)
+		currentVC->_viewWillAppear();
+	if (lastVC&&!hidden)
+		lastVC->_viewWillDisappear();
 	switch (animation)
 	{
 		case NoAnim:
@@ -184,6 +204,31 @@ void PHNavigationController::startAnimating()
 			break;
 		}
 	}
+}
+
+void PHNavigationController::stopAnimating()
+{
+	if (currentVC)
+	{
+		currentVC->getView()->setPosition(PHOriginPoint);
+		if (!hidden)
+		{
+			currentVC->_viewWillAppear();
+			currentVC->_viewDidAppear();
+		}
+	}
+	if (lastVC&&!hidden)
+	{
+		lastVC->_viewWillDisappear();
+		lastVC->_viewDidDisappear();
+	}
+	if (lastVC)
+	{
+		lastVC->navController = NULL;
+		lastVC->release();
+		lastVC = NULL;
+	}
+	animation = NoAnim;
 }
 
 void PHNavigationController::pushViewController(PHViewController * vc, int anim, bool replace)

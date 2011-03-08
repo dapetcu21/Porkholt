@@ -38,9 +38,9 @@ void PHMainEvents::init(double screenX, double screenY)
 	
 	viewController = new PHNavigationController();
 	viewController->init();
-	viewController->viewWillAppear();
+	viewController->_viewWillAppear();
 	view->addSubview(viewController->getView());
-	viewController->viewDidAppear();
+	viewController->_viewDidAppear();
 	
 	PHViewController * vc = new PHLevelController(PHFileManager::singleton()->resourcePath()+"/levels/test");
 	vc->init();
@@ -67,6 +67,11 @@ void PHMainEvents::appSuspended()
 {
 	if (suspended) return;
 	suspended = true;
+	if (viewController)
+	{
+		viewController->_viewWillDisappear();
+		viewController->_viewDidDisappear();
+	}
 	PHLog("appSuspended\n");
 }
 
@@ -75,6 +80,11 @@ void PHMainEvents::appResumed()
 	if (!suspended) return;
 	suspended = false;
 	PHLog("appResumed\n");
+	if (viewController)
+	{
+		viewController->_viewWillAppear();
+		viewController->_viewDidAppear();
+	}
 }
 
 void PHMainEvents::appQuits()
