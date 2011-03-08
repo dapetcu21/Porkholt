@@ -42,6 +42,7 @@ using namespace std;
 #include "PHMotion.h"
 #include "PHThread.h"
 #include "PHMutex.h"
+#include "PHRandom.h"
 
 #ifndef INSIDE_PHVIEW_H
 	#include "PHView.h"

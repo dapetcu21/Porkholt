@@ -16,10 +16,6 @@ map<string,PHImage*> PHImage::images;
 
 PHImage::PHImage(const string & path)
 {
-//	size_t size;
-//	uint8_t * buf = PHFileManager::singleton()->loadFile(path, size);
-	
-	glGenTextures(1,&texid);
 
 	png_byte color_type;
 	png_byte bit_depth;
@@ -110,7 +106,7 @@ PHImage::PHImage(const string & path)
 	fclose(fp);
 	png_destroy_read_struct(&png_ptr,&info_ptr,NULL);
 	
-	GLint format = -1;
+	format = -1;
 	if (color_type == PNG_COLOR_TYPE_RGB)
 		format = GL_RGB;
 	if (color_type == PNG_COLOR_TYPE_RGBA)
@@ -122,6 +118,15 @@ PHImage::PHImage(const string & path)
 		delete[] buffer;
 		throw PHInvalidFileFormat;
 	}
+	
+	PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHImage::loadToTexture, (void*)buffer, true);
+
+	delete[] buffer;
+}
+
+void PHImage::loadToTexture(PHObject * sender, void * ud)
+{	
+	glGenTextures(1,&texid);
 	bindToTexture();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -130,9 +135,7 @@ PHImage::PHImage(const string & path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, actHeight, actWidth, 0, 
-				 format, GL_UNSIGNED_BYTE, buffer);
-	
-	delete[] buffer;
+				 format, GL_UNSIGNED_BYTE, (uint8_t *)ud);	
 }
 
 PHImage::~PHImage()

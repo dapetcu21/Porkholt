@@ -23,6 +23,8 @@ void PHMainEvents::init(double screenX, double screenY)
 	_screenHeight = screenY;
 	suspended = 0;
 	
+	PHThread::mainThread();
+	
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
 	view->setBackgroundColor(PHGrayColor);
 	view->setUserInput(true);
@@ -59,6 +61,8 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	
 	if (viewController)  
 		viewController->updateScene(timeElapsed);
+	
+	PHThread::mainThread()->processQueue();
 	
 	view->render();
 }

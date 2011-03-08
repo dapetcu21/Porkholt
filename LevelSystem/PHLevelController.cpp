@@ -62,14 +62,6 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	paused = false;
 	thread->start();
 	
-	PHButtonView * bt = new PHButtonView(PHMakeRect(50, 50, 50, 50));
-	bt->setImage(PHImage::imageNamed("stop"));
-	bt->setPressedImage(PHImage::imageNamed("start"));
-	bt->setDownCallBack(this, (PHCallback)&PHLevelController::test, NULL);
-	bt->setUserInput(true);
-	view->addSubview(bt);
-	bt->release();
-	
 	return view;
 }
 

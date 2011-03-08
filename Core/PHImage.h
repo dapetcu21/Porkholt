@@ -30,6 +30,7 @@ private:
 	int _width;
 	uint8_t bit_depth;
 	uint8_t color_type;
+	GLint format;
 	
 	unsigned int texid;
 	
@@ -40,6 +41,8 @@ public:
 	~PHImage();
 	
 	void renderInFrame(const PHRect & frm);
+	
+	void loadToTexture(PHObject * sender, void * ud); //don't use
 };
 
 #endif
