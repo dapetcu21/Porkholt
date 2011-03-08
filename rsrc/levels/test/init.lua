@@ -11,12 +11,26 @@ obj.class = "PHLObject";
 obj.posX = 3;
 obj.posY = 0.25;
 obj.images = {};
-obj.images.n = 1;
+obj.images.n = 3;
 obj.images[0] = {
     filename = "ground.png";
     posX = -3;
     posY = -0.25;
-    imgW = 6;
+    imgW = 2.371604938271605;
+    imgH = 0.5;
+};
+obj.images[1] = {
+    filename = "ground.png";
+    posX = -0.628395061728395;
+    posY = -0.25;
+    imgW = 2.371604938271605;
+    imgH = 0.5;
+};
+obj.images[2] = {
+    filename = "ground.png";
+    posX = 1.74320987654321;
+    posY = -0.25;
+    imgW = 2.371604938271605;
     imgH = 0.5;
 };
 addObject(obj);

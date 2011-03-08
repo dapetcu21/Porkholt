@@ -76,14 +76,14 @@ void PHMainEvents::appSuspended()
 		viewController->_viewWillDisappear();
 		viewController->_viewDidDisappear();
 	}
-	PHLog("appSuspended\n");
+	PHLog("appSuspended");
 }
 
 void PHMainEvents::appResumed()
 {
 	if (!suspended) return;
 	suspended = false;
-	PHLog("appResumed\n");
+	PHLog("appResumed");
 	if (viewController)
 	{
 		viewController->_viewWillAppear();
@@ -95,10 +95,10 @@ void PHMainEvents::appQuits()
 {
 	//This isn't guaranteed to be called
 	//Save all stuff in PHMainEvents::appSuspended()
-	PHLog("appQuits\n");
+	PHLog("appQuits");
 }
 
 void PHMainEvents::memoryWarning()
 {
-	PHLog("memoryWarning\n");
+	PHLog("memoryWarning");
 }
