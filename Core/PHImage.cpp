@@ -138,7 +138,7 @@ void PHImage::loadToTexture(PHObject * sender, void * ud)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, actHeight, actWidth, 0, 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, (uint8_t *)ud);	
 }
 
