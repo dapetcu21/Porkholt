@@ -78,11 +78,11 @@ make distclean
 unset CPPFLAGS CFLAGS CPP LDFLAGS CPP CXXFLAGS DEVROOT SDKROOT
 
 # Also compile for 64 bits
-export DEVROOT=/Developer
-export SDKROOT=$DEVROOT/SDKs/MacOSX10.6.sdk
+#export DEVROOT=/Developer
+#export SDKROOT=$DEVROOT/SDKs/MacOSX10.6.sdk
 
-export CFLAGS="$CPPFLAGS -pipe -no-cpp-precomp -isysroot $SDKROOT -arch x86_64"
-export CXXFLAGS="$CFLAGS"
+#export CFLAGS="$CPPFLAGS -pipe -no-cpp-precomp -isysroot $SDKROOT -arch x86_64"
+#export CXXFLAGS="$CFLAGS"
 
 ./configure
 make -j4
