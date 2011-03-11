@@ -39,7 +39,8 @@ LIBNAME_static=`basename $LIBPATH_static`
  
 # TODO: add custom flags as necessary for package
 ./configure CXX=$DEVROOT/usr/bin/arm-apple-darwin10-g++-4.2.1 CC=$DEVROOT/usr/bin/arm-apple-darwin10-gcc-4.2.1 LD=$DEVROOT/usr/bin/ld --host=arm-apple-darwin
- 
+
+make clean 
 make -j4
  
 # Copy the ARM library to a temporary location
@@ -78,13 +79,18 @@ make distclean
 unset CPPFLAGS CFLAGS CPP LDFLAGS CPP CXXFLAGS DEVROOT SDKROOT
 
 # Also compile for 64 bits
-#export DEVROOT=/Developer
-#export SDKROOT=$DEVROOT/SDKs/MacOSX10.6.sdk
+export DEVROOT=/Developer
+export SDKROOT=$DEVROOT/SDKs/MacOSX10.6.sdk
 
-#export CFLAGS="$CPPFLAGS -pipe -no-cpp-precomp -isysroot $SDKROOT -arch x86_64"
-#export CXXFLAGS="$CFLAGS"
+export CFLAGS="$CPPFLAGS -pipe -no-cpp-precomp -isysroot $SDKROOT -arch x86_64"
+export CXXFLAGS="$CFLAGS"
 
-./configure
+
+if ! ./configure
+then
+   ./configure --host=x86_64
+fi
+
 make -j4
 cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
 
