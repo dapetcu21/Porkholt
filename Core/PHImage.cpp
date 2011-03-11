@@ -97,8 +97,6 @@ PHImage::PHImage(const string & path)
 	size_t actrowsize = rowsize/_width*actWidth;
 	size_t size = actrowsize*actHeight;
 	
-	PHLog("rsize:%d arsize:%d size:%d w:%d h:%d",rowsize,actrowsize,size,_width,_height);
-	
 	uint8_t * buffer = new uint8_t[size];
 	for (int i=0; i<_height; i++)
 	{
@@ -129,7 +127,6 @@ PHImage::PHImage(const string & path)
 
 void PHImage::loadToTexture(PHObject * sender, void * ud)
 {	
-	PHLog("actW:%d actH:%d W:%d H:%d",actWidth,actHeight,_width,_height);
 	glGenTextures(1,&texid);
 	bindToTexture();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
