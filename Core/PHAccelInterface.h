@@ -12,9 +12,14 @@
 
 #include "PHMain.h"
 
+class PHMutex;
+
 class PHAccelInterface
 {
+private:
+	static PHMutex * mutex;
 public:
+	
 	static PHAcceleration acc;
 	static PHAcceleration getAcceleration();
 	static void setAcceleration(const PHAcceleration & _acc);

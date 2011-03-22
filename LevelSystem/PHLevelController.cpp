@@ -9,6 +9,7 @@
 
 #include "PHMain.h"
 #include "PHLua.h"
+#include <Box2D/Box2D.h>
 
 void PHLevelController::viewDidAppear()
 {
@@ -52,9 +53,12 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 {
 	PHView * view = new PHView(frame);
 	view->setUserInput(true);
-	world = new PHWorld(PHMakeRect(0, 0, 1000, 1000));
 	mutex = new PHMutex;
+	world = new PHWorld(PHMakeRect(0, 0, 1000, 1000),mutex);
 	pauseMutex = new PHMutex;
+	backgroundView = new PHImageView(frame);
+	backgroundView->setImage(PHImage::imageFromPath(directory+"/bg.png"));
+	view->addSubview(backgroundView);
 	view->addSubview(world->getView());
 	thread = new PHThread;
 	thread->setFunction(this,(PHCallback)&PHLevelController::auxThread, NULL);
@@ -80,13 +84,16 @@ void PHLevelController::updateScene(double timeElapsed)
 
 PHLevelController::~PHLevelController()
 {
+	if (backgroundView)
+		backgroundView->release();
+	running = false;
+	thread->join();
+	thread->release();
 	if (world)
 	{
 		world->getView()->removeFromSuperview();
 		world->release();
 	}
-	running = false;
-	thread->join();
 	mutex->release();
 	pauseMutex->release();
 }
@@ -95,6 +102,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 {
 	mutex->lock();
 	string dir = directory;
+	b2World * fWorld = world->physicsWorld;
 	mutex->unlock();
 	
 	int error;
@@ -133,7 +141,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 				lua_pop(L,1);
 				
 				PHLObject * obj = PHLObject::objectWithClass(clss);
-				obj->loadFromLUA(L,dir);
+				obj->loadFromLUA(L,dir,fWorld);
 				obj->loadView();
 				mutex->lock();
 				world->addObject(obj);
@@ -148,16 +156,36 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	lua_close(L);
 	
+	mutex->lock();
+	PHLPlayer * player = world->player;
+	list<PHPoint> * q = &world->eventQueue;
+	mutex->unlock();
+	
 	while (running)
 	{
+		double lastTime = PHTime::getTime();
 		pauseMutex->lock();
+		
 		mutex->lock();
-		
-		PHLog("Hello!");
-		
+		player->updateControls(q);
 		mutex->unlock();
+		
+		fWorld->Step(1.0f/60.0f, 6, 2);
+		fWorld->ClearForces();
+		
+		mutex->lock();
+		for (list<PHLObject*>::iterator i = world->objects.begin(); i!=world->objects.end(); i++)
+		{
+			PHLObject * obj = *i;
+			obj->updatePosition();
+			obj->limitVelocity();
+		}
+		mutex->unlock();
+		
 		pauseMutex->unlock();
 		
-		PHTime::sleep(1);
+		double time = 1.0f/60.0f - (PHTime::getTime()-lastTime);
+		if (time>0)
+			PHTime::sleep(time);
 	}
 }

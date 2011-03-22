@@ -13,7 +13,7 @@
 class PHObject
 {
 private:
-	int _refcount;
+	volatile int _refcount;
 public:
 	PHObject(): _refcount(1) {};
 	PHObject * retain() { _refcount++; return this;};

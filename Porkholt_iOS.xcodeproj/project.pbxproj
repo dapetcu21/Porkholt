@@ -22,6 +22,7 @@
 		C122CD9913265BF9004BF5CE /* PHRandom.mm in Sources */ = {isa = PBXBuildFile; fileRef = C122CD9813265BF9004BF5CE /* PHRandom.mm */; };
 		C126D6341317D6FC00DACBC0 /* PHNavigationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
+		C13664281337F972009B755B /* PHCaptureView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13664271337F972009B755B /* PHCaptureView.cpp */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
 		C17B484B1307B82300C2EC8D /* PHImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484A1307B82300C2EC8D /* PHImage.cpp */; };
@@ -111,11 +112,14 @@
 		C1A03613132E062300F0200C /* b2Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CC132E062300F0200C /* b2Shape.h */; };
 		C1A03614132E062300F0200C /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CD132E062300F0200C /* Box2D.h */; };
 		C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A034E9132DF62700F0200C /* libBox2D.a */; };
+		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
+		C1AF8BE413395F9D0046179B /* AccelerometerSimulation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF8BE313395F9D0046179B /* AccelerometerSimulation.m */; };
 		C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */; };
 		C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */; };
 		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
 		C1C359251323C08000D3A95A /* PHLua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C359241323C08000D3A95A /* PHLua.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
+		C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,7 +127,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C1A034E8132DF62700F0200C /* Box2D */;
+			remoteGlobalIDString = C1A034E8132DF62700F0200C;
 			remoteInfo = Box2D;
 		};
 /* End PBXContainerItemProxy section */
@@ -156,6 +160,8 @@
 		C126D6321317D6FC00DACBC0 /* PHNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNavigationController.h; sourceTree = "<group>"; };
 		C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNavigationController.cpp; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
+		C13664261337F972009B755B /* PHCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCaptureView.h; sourceTree = "<group>"; };
+		C13664271337F972009B755B /* PHCaptureView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCaptureView.cpp; sourceTree = "<group>"; };
 		C152809412B97169009067A7 /* PHMainEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMainEvents.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
@@ -265,6 +271,10 @@
 		C1A035CB132E062300F0200C /* b2PolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2PolygonShape.h; sourceTree = "<group>"; };
 		C1A035CC132E062300F0200C /* b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Shape.h; sourceTree = "<group>"; };
 		C1A035CD132E062300F0200C /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
+		C1AF893113387B850046179B /* PHGaugeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGaugeView.h; sourceTree = "<group>"; };
+		C1AF893213387B850046179B /* PHGaugeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGaugeView.cpp; sourceTree = "<group>"; };
+		C1AF8BE213395F9D0046179B /* AccelerometerSimulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerSimulation.h; sourceTree = "<group>"; };
+		C1AF8BE313395F9D0046179B /* AccelerometerSimulation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerometerSimulation.m; sourceTree = "<group>"; };
 		C1B7ECAA1323E1250004C8EA /* PHLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLObject.h; sourceTree = "<group>"; };
 		C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLObject.cpp; sourceTree = "<group>"; };
 		C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLCamera.h; sourceTree = "<group>"; };
@@ -274,6 +284,8 @@
 		C1C359231323C08000D3A95A /* PHLua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLua.h; sourceTree = "<group>"; };
 		C1C359241323C08000D3A95A /* PHLua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLua.cpp; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
+		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPlayer.h; sourceTree = "<group>"; };
+		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPlayer.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,6 +317,8 @@
 		080E96DDFE201D6D7F000001 /* iOS Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				C1AF8BE213395F9D0046179B /* AccelerometerSimulation.h */,
+				C1AF8BE313395F9D0046179B /* AccelerometerSimulation.m */,
 				C17B48C81308024C00C2EC8D /* PHFileManager.mm */,
 				28FD14FC0DC6FC130079059D /* EAGLView.h */,
 				28FD14FD0DC6FC130079059D /* EAGLView.m */,
@@ -428,6 +442,12 @@
 				C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */,
 				C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */,
 				C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */,
+				C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */,
+				C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */,
+				C13664261337F972009B755B /* PHCaptureView.h */,
+				C13664271337F972009B755B /* PHCaptureView.cpp */,
+				C1AF893113387B850046179B /* PHGaugeView.h */,
+				C1AF893213387B850046179B /* PHGaugeView.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -731,6 +751,10 @@
 				C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */,
 				C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */,
 				C122CD9913265BF9004BF5CE /* PHRandom.mm in Sources */,
+				C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */,
+				C13664281337F972009B755B /* PHCaptureView.cpp in Sources */,
+				C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */,
+				C1AF8BE413395F9D0046179B /* AccelerometerSimulation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -881,6 +905,7 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = Box2D;
 				SDKROOT = iphoneos;
@@ -894,6 +919,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = Box2D;
 				SDKROOT = iphoneos;

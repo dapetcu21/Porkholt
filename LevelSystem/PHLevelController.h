@@ -10,8 +10,11 @@
 #ifndef PHLEVELCONTROLLER_H
 #define PHLEVELCONTROLLER_H
 
+#include "PHMain.h"
+
 class PHWorld;
 class PHButtonView;
+class PHImageView;
 
 class PHLevelController : public PHViewController
 {
@@ -21,6 +24,7 @@ protected:
 	PHMutex * mutex;
 	PHMutex * pauseMutex;
 	PHThread * thread;
+	PHImageView * backgroundView;
 	volatile bool running;
 	bool paused;
 	string directory;

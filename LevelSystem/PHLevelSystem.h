@@ -16,6 +16,7 @@
 #ifndef INSIDE_PHLOBJECT_H
 	#include "PHLObject.h"
 	#include "PHLCamera.h"
+	#include "PHLPlayer.h"
 #endif
 
 #endif

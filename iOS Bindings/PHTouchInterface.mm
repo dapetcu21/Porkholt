@@ -9,6 +9,7 @@
 #import "PHTouchInterface.h"
 #import "PHMain.h"
 #import "PHAccelInterface.h"
+#import "AccelerometerSimulation.h"
 
 @implementation PHTouchInterface
 

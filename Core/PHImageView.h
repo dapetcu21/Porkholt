@@ -16,7 +16,7 @@ class PHImage;
 
 class PHImageView : public PHView
 {
-private:
+protected:
 	PHImage * _image;
 public:
 	PHImage * image() { return _image; };
