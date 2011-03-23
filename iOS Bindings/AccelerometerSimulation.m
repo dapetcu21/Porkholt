@@ -7,6 +7,7 @@
 //
 
 #import "AccelerometerSimulation.h"
+#import "PHTouchInterface.h"
 
 // when compiling to ARM (iPhone device), hide everything and use system defaults
 // if you wish to use simulation mode even on the device, remove the #if/#endif
@@ -102,12 +103,20 @@ static AccelerometerSimulation *sharedAccelerometer = NULL;
 		// parse the data, no error handling!
 		NSArray *components = [data componentsSeparatedByString:@","];
 		
-		// create our own acceleration object
-		[accObject initWithTimestamp:[[components objectAtIndex:1] doubleValue] 
-								   X:[[components objectAtIndex:2] doubleValue] 
-								   Y:[[components objectAtIndex:3] doubleValue]
-								   Z:[[components objectAtIndex:4] doubleValue]];
-		[accelDelegate accelerometer:self didAccelerate:(UIAcceleration*)accObject];
+		if (strncmp("TCH", [data UTF8String], 3)==0)
+		{
+			[PHTouchInterfaceSingleton processEvent:(void*)(unsigned long)[[components objectAtIndex:1] longLongValue]
+											  state:[[components objectAtIndex:2] intValue]
+												  X:[[components objectAtIndex:3] doubleValue]
+												  Y:[[components objectAtIndex:4] doubleValue]];
+		} else {
+			// create our own acceleration object
+			[accObject initWithTimestamp:[[components objectAtIndex:1] doubleValue] 
+									   X:[[components objectAtIndex:2] doubleValue] 
+									   Y:[[components objectAtIndex:3] doubleValue]
+									   Z:[[components objectAtIndex:4] doubleValue]];
+			[accelDelegate accelerometer:self didAccelerate:(UIAcceleration*)accObject];
+			}
     }
 }
 

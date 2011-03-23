@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-
 @interface PHTouchInterface : UIView <UIAccelerometerDelegate> {
 
 }
+
+extern PHTouchInterface * PHTouchInterfaceSingleton;
+
+-(void)processEvent:(void*)event state:(int)state X:(double)x Y:(double)y;
 
 @end

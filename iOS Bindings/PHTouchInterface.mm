@@ -11,12 +11,15 @@
 #import "PHAccelInterface.h"
 #import "AccelerometerSimulation.h"
 
+PHTouchInterface * PHTouchInterfaceSingleton = NULL;
+
 @implementation PHTouchInterface
 
 - (id)initWithFrame:(CGRect)frame {
     
     self = [super initWithFrame:frame];
     if (self) {
+		PHTouchInterfaceSingleton = self;
 		self.multipleTouchEnabled = YES;
 		[UIAccelerometer sharedAccelerometer].delegate=self;
 		[UIAccelerometer sharedAccelerometer].updateInterval=1.0f/60;
@@ -41,6 +44,38 @@
     // Drawing code.
 }
 */
+
+-(void)processEvent:(void*)event state:(int)state X:(double)x Y:(double)y
+{
+	PHPoint pnt;
+	pnt.y = x*self.frame.size.height;
+	pnt.x = y*self.frame.size.width;
+	
+	PHLog("%d %x %f %f",state,event,pnt.x,pnt.y);
+	switch (state)
+	{
+		case 0:
+		{
+			PHEventHandler::sharedInstance()->touchDown(pnt, event);
+			break;
+		}
+		case 1:
+		{
+			PHEventHandler::sharedInstance()->touchUp(pnt, event);
+			break;
+		}
+		case 2:
+		{
+			PHEventHandler::sharedInstance()->touchCancelled(pnt, event);
+			break;
+		}
+		case 3:
+		{
+			PHEventHandler::sharedInstance()->touchMoved(pnt, event);
+			break;
+		}
+	}
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
