@@ -111,3 +111,11 @@ PHPoint PHUnTransformedPoint(const PHPoint & pnt)
 	glGetFloatv(GL_MODELVIEW, m);
 	return PHUnTransformPointMatrix(m, pnt);
 }
+
+void PHLowPassFilter(double & var, double newval, double period, double cutoff)
+{
+	double RC=1.0/cutoff;
+	double alpha=period/(period+RC);
+	//alpha = 0.000005;
+	var = newval * alpha + var * (1.0 - alpha);
+}

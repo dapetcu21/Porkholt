@@ -158,6 +158,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	mutex->lock();
 	PHLPlayer * player = world->player;
+	PHLCamera * camera = world->camera;
 	list<PHPoint> * q = &world->eventQueue;
 	mutex->unlock();
 	
@@ -168,7 +169,9 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		
 		mutex->lock();
 		player->updateControls(q);
+		camera->updateCamera(player->position());
 		mutex->unlock();
+		
 		
 		fWorld->Step(1.0f/60.0f, 6, 2);
 		fWorld->ClearForces();

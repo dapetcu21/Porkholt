@@ -83,4 +83,6 @@ PHPoint PHUnTransformPointMatrix(const GLfloat * m, const PHPoint & pnt);
 PHPoint PHTransformedPoint(const PHPoint & pnt);
 PHPoint PHUnTransformedPoint(const PHPoint & pnt);
 
+void PHLowPassFilter(double & var, double newval, double period, double cutoff);
+
 #endif

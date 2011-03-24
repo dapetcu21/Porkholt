@@ -23,6 +23,8 @@ public:
 	
 	virtual void loadFromLUA(void * L, const string & root,b2World * world);
 	virtual void loadView();
+	
+	void updateCamera(PHPoint pnt);
 };
 
 #endif
