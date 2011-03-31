@@ -28,7 +28,7 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	worldSize = size;
 	view->addSubview(layerView);
 	view->addSubview(worldView);
-	//view->addSubview(jumpGaugeView);
+	view->addSubview(jumpGaugeView);
 	b2Vec2 grav(0,-10);
 	physicsWorld = new b2World(grav,true);
 }
