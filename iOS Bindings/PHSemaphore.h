@@ -12,7 +12,7 @@
 
 #include "PHObject.h"
 #include <semaphore.h>
-#include <errno.h>
+
 extern string PHSysCallError;
 
 #ifdef PH_DARWIN
@@ -22,12 +22,8 @@ private:
 	sem_t * sem;
 public:
 	PHSemaphore(int n) { 
-		PHLog("new sem");
 		if ((sem = sem_open("porkholt", O_CREAT | O_EXCL,S_IRWXU | S_IRWXG,n))==SEM_FAILED)
-		{
-			PHLog("%s",strerror(errno));
 			throw PHSysCallError;
-		}
 		sem_unlink("porkholt");
 	};
 	void wait() { sem_wait(sem); };
