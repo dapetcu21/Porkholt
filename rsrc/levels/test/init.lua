@@ -1,141 +1,54 @@
-objects = {};
-objects.n = 0;
+lyr = { scale = 1.0; }
+layerAddImage(lyr,"lyr2.png",0,0,3.5/2*3,3.5);
+addLayer(lyr);
 
-function addObject(o)
-    objects[objects.n] = o;
-    objects.n = objects.n + 1;
-end
+lyr = { scale = 0.7; }
+layerAddImage(lyr,"lyr3.png",0,0,3.5/2*3,3.5);
+addLayer(lyr);
 
-obj = {};
-obj.class = "PHLObject";
+lyr = { scale = 0.3; }
+layerAddImage(lyr,"lyr1.png",0,0,3.5/2*3,3.5);
+addLayer(lyr);
+
+obj = objectWithClass("PHLObject")
 obj.posX = 3;
 obj.posY = 0.25;
-obj.images = {};
-obj.images.n = 3;
-dubious = 2.371604938271605;
-obj.images[0] = {
-    filename = "ground.png";
-    posX = -3;
-    posY = -0.25;
-    imgW = dubious;
-    imgH = 0.5;
-};
-obj.images[1] = {
-    filename = "ground.png";
-    posX = -3+dubious;
-    posY = -0.25;
-    imgW = dubious;
-    imgH = 0.5;
-};
-obj.images[2] = {
-    filename = "ground.png";
-    posX = -3+2*dubious;
-    posY = -0.25;
-    imgW = dubious;
-    imgH = 0.5;
-};
-obj.physics = {
-    n = 1;
-}
-obj.physics[0] = {
-    shape = "box";
-    boxH = 0.5;
-    boxW = 3*dubious;
-    boxX = -1.5*dubious;
-    boxY = -0.25;
-}
+for i=-2,3 do
+	objectAddImage(obj,"ground.png",4*i,-0.85,2*1.1,1*1.1);
+	objectAddImage(obj,"ground.png",4*i+2,-0.85,2*1.1,1*1.1);
+	objectAddImage(obj,"grass.png",4*i,-0.15,4*1.1,0.4);
+end
+objectAddBox(obj,-3,-0.25,20,0.5)
 addObject(obj);
 
-obj = {};
-obj.class = "PHLPlayer";
-obj.physics = {
-    dynamic = 1;
-    n = 1;
-}
-obj.physics[0] = {
-    shape = "circle";
-    circleR = 0.25;
-    restitution = 0.5;
-}
+obj = objectWithClass("PHLPlayer");
 obj.posX = 1.5;
 obj.posY = 2.75;
-obj.maxVelocityX = 3;
-obj.images = {};
-obj.images.n = 1;
-obj.images[0] = {
-    filename = "ball.png";
-    posX = -0.25;
-    posY = -0.25;
-    imgW = 0.5;
-    imgH = 0.5;
-}
 addObject(obj);
 
-obj = {};
-obj.class = "PHLObject";
+obj = objectWithClass("PHLObject");
 obj.posX = 4;
 obj.posY = 2;
 obj.rotation = 30;
-obj.physics = {
-    dynamic = 1;
-    n = 1;
-}
-obj.physics[0] = {
-    shape = "box";
-    friction = 0.3;
-    boxW = 1;
-    boxH = 1;
-    boxX = -0.5;
-    boxY = -0.5;
-    density = 0.1;
-}
-obj.images = {
-    n = 1;
-}
-obj.images[0] = {
-    filename = "box.png";
-    posX = -0.5;
-    posY = -0.5;
-    imgW = 1;
-    imgH = 1;
-}
+obj.physics.dynamic = 1;
+objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
+objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
 addObject(obj);
 
-
-obj = {};
-obj.class = "PHLCamera";
+obj = objectWithClass("PHLCamera");
 obj.posX = 3;
 obj.posY = 1.75;
-obj.camH = 3.5;
+obj.camH = 4;
 addObject(obj);
 
-obj = {};
-obj.class = "PHLObject";
+obj = objectWithClass("PHLObject");
 obj.posX = 0;
 obj.posY = 0;
-obj.physics = {
-    n = 1;
-}
-obj.physics[0] = {
-    shape = "box";
-    boxH = 10;
-    boxW = 0.1;
-    boxX = 0;
-    boxY = 0;
-}
+objectAddBox(obj,-0.1,0,0.1,10);
 addObject(obj);
-obj = {};
-obj.class = "PHLObject";
-obj.posX = 3*dubious;
+
+obj = objectWithClass("PHLObject");
+obj.posX = 10;
 obj.posY = 0;
-obj.physics = {
-    n = 1;
-}
-obj.physics[0] = {
-    shape = "box";
-    boxH = 10;
-    boxW = 0.1;
-    boxX = 0;
-    boxY = 0;
-}
+objectAddBox(obj,0,0,0.1,10);
 addObject(obj);

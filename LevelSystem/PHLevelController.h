@@ -22,12 +22,14 @@ protected:
 	virtual PHView * loadView(const PHRect & frame);
 	PHWorld * world;
 	PHMutex * mutex;
-	PHMutex * pauseMutex;
+	PHSemaphore * pSem1, * pSem2;
 	PHThread * thread;
 	PHImageView * backgroundView;
 	volatile bool running;
 	bool paused;
 	string directory;
+	
+	friend class PHWorld;
 public:
 	
 	void pause();
@@ -42,8 +44,8 @@ public:
 	
 	void test(PHButtonView * sender, void * ud);
 	
-	void viewDidAppear();
-	void viewWillDisappear();
+	void appSuspended();
+	void appResumed();
 	
 };
 

@@ -23,8 +23,10 @@ class PHWorld : public PHObject
 private:
 	PHCaptureView * view;
 	PHView * worldView;
-
-	PHWorld * wrld;
+	PHView * layerView;
+	
+	PHLevelController * controller;
+	
 	PHLCamera * camera;
 	PHLPlayer * player;
 	
@@ -35,14 +37,26 @@ private:
 	list<PHLObject*> objects;
 	list<PHPoint> eventQueue;
 	
-	PHMutex * controlsMutex;
 	
 	friend class PHLevelController;
 	
 	double _jumpGauge,maxJump,jumpGrowth;
 	PHGaugeView * jumpGaugeView;
+	
+	
+	struct layer
+	{
+		PHRect pos;
+		PHView * container;
+		double scale;
+	};
+	list<layer> layers;
+	
 public:
-	PHWorld(const PHRect & size,PHMutex * mutex);
+	void addLayer(PHImage * img, PHRect pos, double scale);
+	
+	
+	PHWorld(const PHRect & size,PHLevelController * cnt);
 	PHView * getView() { return (PHView *)view; }
 	virtual ~PHWorld();
 	
@@ -50,7 +64,7 @@ public:
 	void removeObject(PHLObject * obj);
 	void removeAllObjects();
 	
-	void updateScene(double time);
+	void updateScene();
 	
 	double jumpGauge() { return _jumpGauge; }
 	void setJumpGauge(double j) { _jumpGauge = j; }

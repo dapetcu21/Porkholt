@@ -106,7 +106,7 @@ void PHView::applyMatrices()
 		apply_rotation();
 	}
 }
-
+extern PHView * playerView;
 void PHView::render()
 {
 	glPushMatrix();

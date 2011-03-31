@@ -31,7 +31,7 @@ protected:
 	PHColor _backColor;
 	int effOrder;
 
-	void render();
+	virtual void render();
 	void drawBackground();
 	virtual void draw();
 	
@@ -108,6 +108,7 @@ public:
 	void cancelAnimations() { cancelAnimationsWithTag(0); };
 	static void cancelAllAnimationsWithTag(int tag);
 	static void cancelAllAnimations() { cancelAllAnimationsWithTag(0); };
+
 };
 
 #undef INSIDE_PHVIEW_H

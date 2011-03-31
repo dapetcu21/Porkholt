@@ -29,3 +29,26 @@ void PHCaptureView::touchEvent(PHTouch * touch)
 			mutex->unlock();
 	}
 }
+
+void PHCaptureView::render()
+{
+	if (sm1)
+	{
+		if (*paused)
+			sm1->trywait();
+		else
+			sm1->wait();
+		
+	}
+	
+	if (mutex)
+		mutex->lock();
+	PHView::render();
+	if (mutex)
+		mutex->unlock();
+	
+	if (sm2&&!(*paused))
+	{	
+		sm2->signal();
+	}
+}

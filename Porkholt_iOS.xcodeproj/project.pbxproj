@@ -19,6 +19,7 @@
 		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
 		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
 		C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A43131441C2004F341A /* PHTestViewController.cpp */; };
+		C11E56CC13436F14008881B9 /* PHMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E56CB13436F14008881B9 /* PHMessage.cpp */; };
 		C122CD9913265BF9004BF5CE /* PHRandom.mm in Sources */ = {isa = PBXBuildFile; fileRef = C122CD9813265BF9004BF5CE /* PHRandom.mm */; };
 		C126D6341317D6FC00DACBC0 /* PHNavigationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
@@ -155,6 +156,9 @@
 		C1185A08131426F9004F341A /* PHViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHViewController.cpp; sourceTree = "<group>"; };
 		C1185A42131441C2004F341A /* PHTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestViewController.h; sourceTree = "<group>"; };
 		C1185A43131441C2004F341A /* PHTestViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestViewController.cpp; sourceTree = "<group>"; };
+		C11E56CA13436F14008881B9 /* PHMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMessage.h; sourceTree = "<group>"; };
+		C11E56CB13436F14008881B9 /* PHMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMessage.cpp; sourceTree = "<group>"; };
+		C11E57BB13446F83008881B9 /* PHSemaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSemaphore.h; sourceTree = "<group>"; };
 		C122CD9713265BF9004BF5CE /* PHRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHRandom.h; sourceTree = "<group>"; };
 		C122CD9813265BF9004BF5CE /* PHRandom.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHRandom.mm; sourceTree = "<group>"; };
 		C126D6321317D6FC00DACBC0 /* PHNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNavigationController.h; sourceTree = "<group>"; };
@@ -336,6 +340,7 @@
 				C17D0F651323811F00BDB8EF /* PHThread.h */,
 				C17D0F661323811F00BDB8EF /* PHThread.cpp */,
 				C17D0F681323845300BDB8EF /* PHMutex.h */,
+				C11E57BB13446F83008881B9 /* PHSemaphore.h */,
 				C122CD9713265BF9004BF5CE /* PHRandom.h */,
 				C122CD9813265BF9004BF5CE /* PHRandom.mm */,
 			);
@@ -424,6 +429,8 @@
 				C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */,
 				C192A11213185B5000C18BA2 /* PHButtonView.h */,
 				C192A11313185B5000C18BA2 /* PHButtonView.cpp */,
+				C11E56CA13436F14008881B9 /* PHMessage.h */,
+				C11E56CB13436F14008881B9 /* PHMessage.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -755,6 +762,7 @@
 				C13664281337F972009B755B /* PHCaptureView.cpp in Sources */,
 				C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */,
 				C1AF8BE413395F9D0046179B /* AccelerometerSimulation.m in Sources */,
+				C11E56CC13436F14008881B9 /* PHMessage.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

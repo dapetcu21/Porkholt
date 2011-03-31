@@ -12,6 +12,7 @@
 
 string PHIOError("I/O Error");
 string PHInvalidFileFormat("Invalid File Format");
+string PHSysCallError("System Call Error");
 
 void PHLog(const char * str, ...)
 {

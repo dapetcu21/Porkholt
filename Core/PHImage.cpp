@@ -14,7 +14,7 @@
 
 map<string,PHImage*> PHImage::images;
 
-PHImage::PHImage(const string & path)
+PHImage::PHImage(const string & path) : texid(-1)
 {
 
 	png_byte color_type;
@@ -120,9 +120,7 @@ PHImage::PHImage(const string & path)
 		throw PHInvalidFileFormat;
 	}
 	
-	PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHImage::loadToTexture, (void*)buffer, true);
-
-	delete[] buffer;
+	PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHImage::loadToTexture, (void*)buffer, false);
 }
 
 void PHImage::loadToTexture(PHObject * sender, void * ud)
@@ -137,6 +135,7 @@ void PHImage::loadToTexture(PHObject * sender, void * ud)
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, format, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, (uint8_t *)ud);	
+	delete[] (uint8_t *)ud;
 }
 
 PHImage::~PHImage()

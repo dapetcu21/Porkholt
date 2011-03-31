@@ -10,6 +10,8 @@
 #include "PHMain.h"
 #include <Box2D/Box2D.h>
 
+PHView * playerView = NULL;
+
 PHLPlayer::PHLPlayer()
 {
 	_class = "PHLPlayer";
@@ -27,6 +29,7 @@ void PHLPlayer::loadFromLUA(void * L, const string & root,b2World * world)
 void PHLPlayer::loadView()
 {
 	PHLObject::loadView();
+	playerView = view;
 }
 
 #define MAX_TILT 30.0f

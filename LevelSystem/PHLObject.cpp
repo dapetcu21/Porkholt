@@ -38,13 +38,6 @@ void PHLObject::loadBody(void *l)
 			isstatic = false;
 		lua_pop(L,1);
 		
-		b2BodyDef def;
-		def.position.Set(pos.x,pos.y);
-		def.angle = -rot*M_PI/180.0f;
-		def.userData = this;
-		def.type = isstatic?b2_staticBody:b2_dynamicBody;
-		body = world->CreateBody(&def);
-		
 		int n = 0;
 		lua_pushstring(L, "n");
 		lua_gettable(L, -2);
@@ -52,107 +45,118 @@ void PHLObject::loadBody(void *l)
 			n = (int)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		
-		for (int i=0; i<n; i++)
+		if (n)
 		{
-			lua_pushnumber(L, i);
-			lua_gettable(L, -2);
-			if (lua_istable(L, -1))
+		
+			b2BodyDef def;
+			def.position.Set(pos.x,pos.y);
+			def.angle = -rot*M_PI/180.0f;
+			def.userData = this;
+			def.type = isstatic?b2_staticBody:b2_dynamicBody;
+			body = world->CreateBody(&def);
+			
+			for (int i=0; i<n; i++)
 			{
-				
-				//shape attributes
-				const char * typ = "";
-				lua_pushstring(L, "shape");
+				lua_pushnumber(L, i);
 				lua_gettable(L, -2);
-				if (lua_isstring(L, -1))
-					typ = lua_tostring(L,-1);
-				lua_pop(L,1);
-				double boxH=1, boxW=1, boxX=-0.5f, boxY=-0.5f, circleR=1;
-				
-				lua_pushstring(L, "boxH");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					boxH = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "boxW");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					boxW = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "boxX");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					boxX = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "boxY");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					boxY = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "circleR");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					circleR = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				//physics attributes
-				double friction = 0.3f;
-				double restitution = 0.0f;
-				double density = 1.0f;
-				
-				lua_pushstring(L, "friction");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					friction = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "restitution");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					restitution = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "density");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					density = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				lua_pushstring(L, "boxY");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					boxY = lua_tonumber(L, -1);
-				lua_pop(L,1);
-				
-				b2FixtureDef fdef;
-				fdef.friction = friction;
-				fdef.density = density;
-				fdef.restitution = restitution;				
+				if (lua_istable(L, -1))
+				{
+					
+					//shape attributes
+					const char * typ = "";
+					lua_pushstring(L, "shape");
+					lua_gettable(L, -2);
+					if (lua_isstring(L, -1))
+						typ = lua_tostring(L,-1);
+					lua_pop(L,1);
+					double boxH=1, boxW=1, boxX=-0.5f, boxY=-0.5f, circleR=1;
+					
+					lua_pushstring(L, "boxH");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						boxH = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "boxW");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						boxW = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "boxX");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						boxX = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "boxY");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						boxY = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "circleR");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						circleR = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					//physics attributes
+					double friction = 0.3f;
+					double restitution = 0.0f;
+					double density = 1.0f;
+					
+					lua_pushstring(L, "friction");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						friction = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "restitution");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						restitution = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "density");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						density = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					lua_pushstring(L, "boxY");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						boxY = lua_tonumber(L, -1);
+					lua_pop(L,1);
+					
+					b2FixtureDef fdef;
+					fdef.friction = friction;
+					fdef.density = density;
+					fdef.restitution = restitution;				
 
-				if (strcmp(typ, "box")==0)
-				{
-					b2PolygonShape shape;
-					b2Vec2 v[4];
-					v[0].Set(boxX,		boxY);
-					v[1].Set(boxX+boxW,	boxY);
-					v[2].Set(boxX+boxW,	boxY+boxH);
-					v[3].Set(boxX,		boxY+boxH);
-					shape.Set(v,4);
-					fdef.shape = &shape;
-					body->CreateFixture(&fdef);
+					if (strcmp(typ, "box")==0)
+					{
+						b2PolygonShape shape;
+						b2Vec2 v[4];
+						v[0].Set(boxX,		boxY);
+						v[1].Set(boxX+boxW,	boxY);
+						v[2].Set(boxX+boxW,	boxY+boxH);
+						v[3].Set(boxX,		boxY+boxH);
+						shape.Set(v,4);
+						fdef.shape = &shape;
+						body->CreateFixture(&fdef);
+					}
+					if (strcmp(typ, "circle")==0)
+					{
+						b2CircleShape shape;
+						shape.m_radius = circleR;
+						fdef.shape = &shape;
+						body->CreateFixture(&fdef);					
+					}
 				}
-				if (strcmp(typ, "circle")==0)
-				{
-					b2CircleShape shape;
-					shape.m_radius = circleR;
-					fdef.shape = &shape;
-					body->CreateFixture(&fdef);					
-				}
+				lua_pop(L, 1);
 			}
-			lua_pop(L, 1);
 		}
 	}
 	lua_pop(L,1);

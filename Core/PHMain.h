@@ -35,6 +35,7 @@ using namespace std;
 
 #include "PHTime.h"
 #include "PHObject.h"
+#include "PHMessage.h"
 #include "PHGeometry.h"
 #include "PHErrors.h"
 #include "PHFileManager.h"
@@ -44,6 +45,7 @@ using namespace std;
 #include "PHMotion.h"
 #include "PHThread.h"
 #include "PHMutex.h"
+#include "PHSemaphore.h"
 #include "PHRandom.h"
 
 #ifndef INSIDE_PHVIEW_H

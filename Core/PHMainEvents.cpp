@@ -32,7 +32,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glTranslatef(-1.0f, -1.0f, 0.0f);
-	glScalef(2.0f/(_screenWidth-1), 2.0f/(_screenHeight-1), 1.0f);
+	glScalef(2.0f/(_screenWidth), 2.0f/(_screenHeight), 1.0f);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -71,6 +71,7 @@ void PHMainEvents::appSuspended()
 {
 	if (suspended) return;
 	suspended = true;
+	PHMessage::messageWithName("appSuspended")->broadcast(this, NULL);
 	if (viewController)
 	{
 		viewController->_viewWillDisappear();
@@ -84,6 +85,7 @@ void PHMainEvents::appResumed()
 	if (!suspended) return;
 	suspended = false;
 	PHLog("appResumed");
+	PHMessage::messageWithName("appResumed")->broadcast(this, NULL);
 	if (viewController)
 	{
 		viewController->_viewWillAppear();

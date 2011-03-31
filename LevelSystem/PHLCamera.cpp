@@ -49,9 +49,7 @@ void PHLCamera::updateCamera(PHPoint pnt)
 		pnt.y-=sz.height*0.25f;
 	else
 		pnt.y=pos.y;
-	double ox = pos.x;
 	PHLowPassFilter(pos.x, pnt.x, 1/60.0f, 5.0f);
 	PHLowPassFilter(pos.y, pnt.y, 1/60.0f, 5.0f);
-	PHLog("old:%f new:%f delta:%f",ox,pos.x,pos.x-ox);
 	setPosition(pos);
 }
