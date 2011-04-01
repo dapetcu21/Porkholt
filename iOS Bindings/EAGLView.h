@@ -19,7 +19,7 @@
 @interface EAGLView : UIView
 {
 @private
-    EAGLContext *context;
+    EAGLContext *context,*workingContext;
     
     // The pixel dimensions of the CAEAGLLayer.
     GLint framebufferWidth;
@@ -31,6 +31,8 @@
 
 @property (nonatomic, retain) EAGLContext *context;
 
+- (void)initMain;
+- (void)initSecondary;
 - (void)setFramebuffer;
 - (BOOL)presentFramebuffer;
 

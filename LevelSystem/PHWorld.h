@@ -46,15 +46,14 @@ private:
 	
 	struct layer
 	{
-		PHRect pos;
 		PHView * container;
 		double scale;
 	};
 	list<layer> layers;
 	
 public:
-	void addLayer(PHImage * img, PHRect pos, double scale);
-	
+	PHWorld::layer * addLayer(double scale);
+	void addToLayer(layer * lyr, PHImage * img, PHRect pos);
 	
 	PHWorld(const PHRect & size,PHLevelController * cnt);
 	PHView * getView() { return (PHView *)view; }

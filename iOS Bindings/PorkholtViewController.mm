@@ -16,20 +16,6 @@
 
 #import "EAGLView.h"
 
-// Uniform index.
-enum {
-    UNIFORM_TRANSLATE,
-    NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
-// Attribute index.
-enum {
-    ATTRIB_VERTEX,
-    ATTRIB_COLOR,
-    NUM_ATTRIBUTES
-};
-
 @interface PorkholtViewController ()
 @property (nonatomic, retain) EAGLContext *context;
 /*- (BOOL)loadShaders;
@@ -42,29 +28,73 @@ enum {
 
 @synthesize animating, context;
 
+class PHRenderThread : public PHObject
+{
+public:
+	PHMutex * pauseMutex;
+	EAGLView * view;
+	volatile bool running;
+	double frameInterval;
+	void renderingThread()
+	{
+		[view initSecondary];
+		
+		PHMainEvents * mainClass = PHMainEvents::sharedInstance();
+		
+		mainClass->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+		
+		double lastTime = 0;
+		double time = 0;
+		pauseMutex->lock();
+		double targetTime = PHTime::getTime();
+		while (running)
+		{
+			pauseMutex->unlock();
+			targetTime+= frameInterval;
+			
+			[view setFramebuffer];
+			
+			[PHTouchInterfaceSingleton processQueue];
+			
+			lastTime = time;
+			time = PHTime::getTime();
+			double elapsedTime = time-lastTime;
+			if (elapsedTime>frameInterval)
+				elapsedTime = frameInterval;
+			mainClass->renderFrame(elapsedTime);
+			
+			if (![view presentFramebuffer])
+				PHLog("ERROR: Couldn't swap buffers");
+			if (!mainClass->independentTiming())
+			{
+				double currentTime = PHTime::getTime();
+				double sleepTime = targetTime-currentTime;
+				if (sleepTime>0)
+					PHTime::sleep(sleepTime);
+				else
+					targetTime = currentTime;
+			}
+			pauseMutex->lock();
+		}
+		pauseMutex->unlock();	
+	}
+} renderThread;
+
+
 - (void)loadView
 {
 	EAGLView * view = [[EAGLView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-
+	[view initMain];
+	
     PHTouchInterface * touchView = [[PHTouchInterface alloc] initWithFrame:view.bounds];
 	touchView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 	[view addSubview:touchView];
 	[touchView release];
 	
-	self.context = (EAGLContext*)PHCreateGLContextAndBindIt();
-	[self.context release];
-	
 	self.view = view;
-    [view setContext:context];
-    [view setFramebuffer];
-	
-	PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
 	
 	animating = FALSE;
     displayLinkSupported = FALSE;
-    animationFrameInterval = 1;
-    displayLink = nil;
-    animationTimer = nil;
     
     // Use of CADisplayLink requires iOS version 3.1 or greater.
 	// The NSTimer object is used as fallback when it isn't available.
@@ -72,14 +102,27 @@ enum {
     NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
     if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
         displayLinkSupported = TRUE;
+	
+	PHThread::mainThread();
+	
+	pausemutex = new PHMutex;
+	pausemutex->lock();
+	thread = new PHThread;
+	thread->setFunction(&renderThread, (PHCallback)&PHRenderThread::renderingThread, NULL);
+	renderThread.view = view;
+	renderThread.pauseMutex = pausemutex;
+	renderThread.running = true;
+	renderThread.frameInterval = 1/60.0f;
+	thread->start();
 }
 
 - (void)dealloc
 {
-    
-    PHDestroyGLContext((void*)context);
-    
-    [super dealloc];
+	renderThread.running = false;
+	thread->join();
+	pausemutex->release();
+	thread->release();
+	[super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -94,63 +137,12 @@ enum {
     [super viewWillDisappear:animated];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-    if ([EAGLContext currentContext] == context)
-        [EAGLContext setCurrentContext:nil];
-	self.context = nil;	
-}
-
-- (NSInteger)animationFrameInterval
-{
-    return animationFrameInterval;
-}
-
-- (void)setAnimationFrameInterval:(NSInteger)frameInterval
-{
-    /*
-	 Frame interval defines how many display frames must pass between each time the display link fires.
-	 The display link will only fire 30 times a second when the frame internal is two on a display that refreshes 60 times a second. The default frame interval setting of one will fire 60 times a second when the display refreshes at 60 times a second. A frame interval setting of less than one results in undefined behavior.
-	 */
-    if (frameInterval >= 1)
-    {
-        animationFrameInterval = frameInterval;
-        
-        if (animating)
-        {
-            [self stopAnimation];
-            [self startAnimation];
-        }
-    }
-}
-
-- (void)resetTime
-{
-	lastTime = mach_absolute_time();
-}
-
 - (void)startAnimation
 {
     if (!animating)
     {
-        if (displayLinkSupported)
-        {
-            /*
-			 CADisplayLink is API new in iOS 3.1. Compiling against earlier versions will result in a warning, but can be dismissed if the system version runtime check for CADisplayLink exists in -awakeFromNib. The runtime check ensures this code will not be called in system versions earlier than 3.1.
-            */
-            displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(drawFrame)];
-            [displayLink setFrameInterval:animationFrameInterval];
-            
-            // The run loop will retain the display link on add.
-            [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        }
-        else
-            animationTimer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)((1.0 / 60.0) * animationFrameInterval) target:self selector:@selector(drawFrame) userInfo:nil repeats:TRUE];
-        
         animating = TRUE;
-		
-		[self resetTime];
+		pausemutex->unlock();
     }
 }
 
@@ -158,44 +150,10 @@ enum {
 {
     if (animating)
     {
-        if (displayLinkSupported)
-        {
-            [displayLink invalidate];
-            displayLink = nil;
-        }
-        else
-        {
-            [animationTimer invalidate];
-            animationTimer = nil;
-        }
-        
         animating = FALSE;
-		
-		
+		pausemutex->lock();
     }
 }
-
-- (void)drawFrame
-{
-    [(EAGLView *)self.view setFramebuffer];
-		
-
-	uint64_t tm = mach_absolute_time();
-	
-	static mach_timebase_info_data_t    sTimebaseInfo;
-    if ( sTimebaseInfo.denom == 0 ) {
-        (void) mach_timebase_info(&sTimebaseInfo);
-    }
-	
-    uint64_t elapsedNano = (tm-lastTime) * sTimebaseInfo.numer / sTimebaseInfo.denom;
-	double timeElapsed = elapsedNano/1000000000.0f;
-	lastTime = tm;
-	
-	PHMainEvents::sharedInstance()->renderFrame(timeElapsed);
-    
-    [(EAGLView *)self.view presentFramebuffer];
-}
-
 
 - (void)didReceiveMemoryWarning
 {

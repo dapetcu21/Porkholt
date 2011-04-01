@@ -23,6 +23,7 @@ private:
 	double _screenWidth;
 	double _screenHeight;
 	bool suspended;
+	bool indTiming;
 public:
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
@@ -36,6 +37,9 @@ public:
 	void init(double screenX, double screenY);
 	PHView * mainView() { return view; };
 	void remove(void * ud);
+	
+	bool independentTiming() { return indTiming; };
+	void setIndependentTiming(bool i) { indTiming = i; };
 };
 
 #endif

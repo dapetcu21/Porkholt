@@ -23,7 +23,8 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 		self.multipleTouchEnabled = YES;
 		[UIAccelerometer sharedAccelerometer].delegate=self;
 		[UIAccelerometer sharedAccelerometer].updateInterval=1.0f/60;
-        // Initialization code.
+		mutex = new PHMutex;
+		queue.clear();
     }
     return self;
 }
@@ -45,36 +46,63 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 }
 */
 
+-(void)processQueue
+{
+	mutex->lock();
+	while (!queue.empty())
+	{
+		PHPoint pnt;
+		TouchTask & task = queue.front();
+		pnt.x = task.x;
+		pnt.y = task.y;
+		void * event = task.ud;
+		switch (task.state)
+		{
+			case 0:
+			{
+				PHEventHandler::sharedInstance()->touchDown(pnt, event);
+				break;
+			}
+			case 1:
+			{
+				PHEventHandler::sharedInstance()->touchUp(pnt, event);
+				break;
+			}
+			case 2:
+			{
+				PHEventHandler::sharedInstance()->touchCancelled(pnt, event);
+				break;
+			}
+			case 3:
+			{
+				PHEventHandler::sharedInstance()->touchMoved(pnt, event);
+				break;
+			}
+		}
+		queue.pop_front();
+	}
+	mutex->unlock();
+}
+
+-(void)addTask:(void *)ud state:(int)state X:(double)x Y:(double)y
+{
+	TouchTask tmp;
+	tmp.ud = ud;
+	tmp.x = x;
+	tmp.y = y;
+	tmp.state = state;
+	mutex->lock();
+	queue.push_back(tmp);
+	mutex->unlock();
+}
+
 -(void)processEvent:(void*)event state:(int)state X:(double)x Y:(double)y
 {
 	PHPoint pnt;
 	pnt.y = x*self.frame.size.height;
 	pnt.x = y*self.frame.size.width;
 	
-	PHLog("%d %x %f %f",state,event,pnt.x,pnt.y);
-	switch (state)
-	{
-		case 0:
-		{
-			PHEventHandler::sharedInstance()->touchDown(pnt, event);
-			break;
-		}
-		case 1:
-		{
-			PHEventHandler::sharedInstance()->touchUp(pnt, event);
-			break;
-		}
-		case 2:
-		{
-			PHEventHandler::sharedInstance()->touchCancelled(pnt, event);
-			break;
-		}
-		case 3:
-		{
-			PHEventHandler::sharedInstance()->touchMoved(pnt, event);
-			break;
-		}
-	}
+	[self addTask:event state:state X:pnt.x Y:pnt.y];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -83,7 +111,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	{
 		CGPoint pnt = [touch locationInView:self];
 		pnt.y = self.bounds.size.height - pnt.y;
-		PHEventHandler::sharedInstance()->touchDown(PHMakePoint(pnt.x,pnt.y), touch);
+		[self addTask:touch state:0 X:pnt.x Y:pnt.y];
 	}
 }
 
@@ -93,7 +121,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	{
 		CGPoint pnt = [touch locationInView:self];
 		pnt.y = self.bounds.size.height - pnt.y;
-		PHEventHandler::sharedInstance()->touchMoved(PHMakePoint(pnt.x,pnt.y), touch);
+		[self addTask:touch state:3 X:pnt.x Y:pnt.y];
 	}
 }
 
@@ -103,7 +131,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	{
 		CGPoint pnt = [touch locationInView:self];
 		pnt.y = self.bounds.size.height - pnt.y;
-		PHEventHandler::sharedInstance()->touchUp(PHMakePoint(pnt.x,pnt.y), touch);
+		[self addTask:touch state:1 X:pnt.x Y:pnt.y];
 	}
 }
 
@@ -113,11 +141,14 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	{
 		CGPoint pnt = [touch locationInView:self];
 		pnt.y = self.bounds.size.height - pnt.y;
-		PHEventHandler::sharedInstance()->touchCancelled(PHMakePoint(pnt.x,pnt.y), touch);
+		[self addTask:touch state:2 X:pnt.x Y:pnt.y];
 	}	
 }
 
 - (void)dealloc {
+	mutex->release();
+	queue.clear();
+	[UIAccelerometer sharedAccelerometer].delegate=nil;
     [super dealloc];
 }
 

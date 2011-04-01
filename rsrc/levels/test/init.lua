@@ -28,18 +28,18 @@ obj.posX = 1.5;
 obj.posY = 2.75;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.posX = 4;
-obj.posY = 2;
-obj.rotation = 30;
-obj.physics.dynamic = 1;
-objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
-objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
-addObject(obj);
-
+for i=0,10 do
+	obj = objectWithClass("PHLObject");
+	obj.posX = 4+i;
+	obj.posY = 2;
+	obj.physics.dynamic = 1;
+	objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
+	objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
+	addObject(obj);
+end 
 obj = objectWithClass("PHLObject");
 obj.posX = 8;
-obj.posY = 1.5;
+obj.posY = 2;
 objectAddBox(obj,-2,-0.2,4,0.4);
 objectAddImage(obj,"platform.png",-2,-0.2,4,0.4);
 addObject(obj);

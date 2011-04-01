@@ -21,7 +21,6 @@ function layerAddImage(l,fn, x, y, w, h)
 		imgW = w;
 		imgH = h;
 	}
-	print("hi",fn," ",x," ",y," ",w," ",h);
 	l.n = l.n + 1;
 end
 

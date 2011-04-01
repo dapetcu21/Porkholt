@@ -143,17 +143,21 @@ void PHWorld::removeAllObjects()
 	objects.clear();
 }
 
-void PHWorld::addLayer(PHImage * img, PHRect pos, double scale)
+PHWorld::layer * PHWorld::addLayer(double scale)
 {
 	layer tmp;
 	tmp.container = new PHView(worldSize);
-	PHImageView * view  = new PHImageView(pos);
-	view->setImage(img);
-	tmp.container->addSubview(view);
 	layerView->addSubview(tmp.container);
-	view->release();
 	tmp.container->release();
-	tmp.pos = pos;
 	tmp.scale = scale;
 	layers.push_back(tmp);
+	return &(layers.back());
+}
+
+void PHWorld::addToLayer(layer * lyr, PHImage * img, PHRect pos)
+{
+	PHImageView * view  = new PHImageView(pos);
+	view->setImage(img);
+	lyr->container->addSubview(view);
+	view->release();
 }

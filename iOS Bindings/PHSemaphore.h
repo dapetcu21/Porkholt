@@ -27,7 +27,7 @@ public:
 		sem_unlink("porkholt");
 	};
 	void wait() { sem_wait(sem); };
-	void trywait() { sem_trywait(sem); };
+	void trywait() { sem_trywait(sem); }; 
 	void signal() { sem_post(sem); };
 	~PHSemaphore() { 
 		sem_close(sem);

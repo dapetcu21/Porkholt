@@ -21,7 +21,7 @@ using namespace std;
 #ifdef __APPLE__
 	#define PH_IPHONE_OS
 	#define PH_DARWIN
-	#ifdef TARGET_IPHONE_SIMULATOR
+	#ifdef __i386__
 		#define PH_SIMULATOR
 	#endif
 #endif

@@ -22,6 +22,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	_screenWidth = screenX;
 	_screenHeight = screenY;
 	suspended = 0;
+	indTiming = false;
 	
 	PHThread::mainThread();
 	

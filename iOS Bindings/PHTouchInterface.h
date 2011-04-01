@@ -7,12 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PHMain.h"
+
+#include <list>
+
+struct TouchTask
+{
+	double x,y;
+	int state;
+	void * ud;
+};
+
+class PHMutex;
 
 @interface PHTouchInterface : UIView <UIAccelerometerDelegate> {
-
+	PHMutex * mutex;
+	list<TouchTask> queue;
 }
 
 extern PHTouchInterface * PHTouchInterfaceSingleton;
+
+-(void)processQueue;
+-(void)addTask:(void *)ud state:(int)state X:(double)x Y:(double)y;
 
 -(void)processEvent:(void*)event state:(int)state X:(double)x Y:(double)y;
 

@@ -46,27 +46,45 @@
 - (void)dealloc
 {
     [self deleteFramebuffer];    
-    [context release];
-    
+	[context release];
+	if (context!=workingContext)
+		[workingContext release];
     [super dealloc];
 }
 
-- (EAGLContext *)context
+
+- (void)initMain
 {
-    return context;
+	EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]; No GLES 2.0 ... yet...
+    
+    if (!aContext)
+    {
+        aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+    }
+    
+    if (!aContext)
+        NSLog(@"Failed to create ES context");
+    else if (![EAGLContext setCurrentContext:aContext])
+        NSLog(@"Failed to set ES context current");
+	context = aContext;
+	workingContext = context;
+ 	[self setFramebuffer];
 }
 
-- (void)setContext:(EAGLContext *)newContext
+- (void) initSecondary
 {
-    if (context != newContext)
+	EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:context.sharegroup]; No GLES 2.0 ... yet...
+    
+    if (!aContext)
     {
-        [self deleteFramebuffer];
-        
-        [context release];
-        context = [newContext retain];
-        
-        [EAGLContext setCurrentContext:nil];
+        aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1 sharegroup:context.sharegroup];
     }
+    
+    if (!aContext)
+        NSLog(@"Failed to create ES context");
+    else if (![EAGLContext setCurrentContext:aContext])
+        NSLog(@"Failed to set ES context current");
+	workingContext = aContext;
 }
 
 - (void)createFramebuffer
@@ -115,9 +133,9 @@
 
 - (void)setFramebuffer
 {
-    if (context)
+    if (workingContext)
     {
-        [EAGLContext setCurrentContext:context];
+        [EAGLContext setCurrentContext:workingContext];
         
         if (!defaultFramebuffer)
             [self createFramebuffer];
@@ -132,13 +150,13 @@
 {
     BOOL success = FALSE;
     
-    if (context)
+    if (workingContext)
     {
-        [EAGLContext setCurrentContext:context];
+        [EAGLContext setCurrentContext:workingContext];
         
         glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
         
-        success = [context presentRenderbuffer:GL_RENDERBUFFER];
+        success = [workingContext presentRenderbuffer:GL_RENDERBUFFER];
     }
     
     return success;

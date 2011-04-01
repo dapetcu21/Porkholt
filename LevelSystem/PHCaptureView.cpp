@@ -21,25 +21,18 @@ void PHCaptureView::touchEvent(PHTouch * touch)
 		p.y = p1.y-p2.y;
 		p.x/=_bounds.height;
 		p.y/=_bounds.height;
-		if (mutex)
-			mutex->lock();
-		if (l)
-			l->push_back(p);
-		if (mutex)
-			mutex->unlock();
+		mutex->lock();
+		l->push_back(p);
+		mutex->unlock();
 	}
 }
 
 void PHCaptureView::render()
 {
-	if (sm1)
-	{
-		if (*paused)
-			sm1->trywait();
-		else
-			sm1->wait();
-		
-	}
+	if (*paused)
+		sm1->trywait();
+	else
+		sm1->wait();
 	
 	if (mutex)
 		mutex->lock();
@@ -47,8 +40,6 @@ void PHCaptureView::render()
 	if (mutex)
 		mutex->unlock();
 	
-	if (sm2&&!(*paused))
-	{	
+	if (!(*paused))
 		sm2->signal();
-	}
 }

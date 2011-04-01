@@ -114,7 +114,7 @@
 		C1A03614132E062300F0200C /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CD132E062300F0200C /* Box2D.h */; };
 		C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A034E9132DF62700F0200C /* libBox2D.a */; };
 		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
-		C1AF8BE413395F9D0046179B /* AccelerometerSimulation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF8BE313395F9D0046179B /* AccelerometerSimulation.m */; };
+		C1AF8BE413395F9D0046179B /* AccelerometerSimulation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1AF8BE313395F9D0046179B /* AccelerometerSimulation.mm */; };
 		C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */; };
 		C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */; };
 		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
@@ -278,7 +278,7 @@
 		C1AF893113387B850046179B /* PHGaugeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGaugeView.h; sourceTree = "<group>"; };
 		C1AF893213387B850046179B /* PHGaugeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGaugeView.cpp; sourceTree = "<group>"; };
 		C1AF8BE213395F9D0046179B /* AccelerometerSimulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerSimulation.h; sourceTree = "<group>"; };
-		C1AF8BE313395F9D0046179B /* AccelerometerSimulation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerometerSimulation.m; sourceTree = "<group>"; };
+		C1AF8BE313395F9D0046179B /* AccelerometerSimulation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AccelerometerSimulation.mm; sourceTree = "<group>"; };
 		C1B7ECAA1323E1250004C8EA /* PHLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLObject.h; sourceTree = "<group>"; };
 		C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLObject.cpp; sourceTree = "<group>"; };
 		C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLCamera.h; sourceTree = "<group>"; };
@@ -322,7 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				C1AF8BE213395F9D0046179B /* AccelerometerSimulation.h */,
-				C1AF8BE313395F9D0046179B /* AccelerometerSimulation.m */,
+				C1AF8BE313395F9D0046179B /* AccelerometerSimulation.mm */,
 				C17B48C81308024C00C2EC8D /* PHFileManager.mm */,
 				28FD14FC0DC6FC130079059D /* EAGLView.h */,
 				28FD14FD0DC6FC130079059D /* EAGLView.m */,
@@ -761,7 +761,7 @@
 				C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */,
 				C13664281337F972009B755B /* PHCaptureView.cpp in Sources */,
 				C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */,
-				C1AF8BE413395F9D0046179B /* AccelerometerSimulation.m in Sources */,
+				C1AF8BE413395F9D0046179B /* AccelerometerSimulation.mm in Sources */,
 				C11E56CC13436F14008881B9 /* PHMessage.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -26,12 +26,14 @@ void PHLevelController::pause()
 {
 	if (paused) return;
 	paused = true;
+	PHMainEvents::sharedInstance()->setIndependentTiming(false);
 }
 
 void PHLevelController::resume()
 {
 	if (!paused) return;
 	paused = false;
+	PHMainEvents::sharedInstance()->setIndependentTiming(true);
 }
 
 void PHLevelController::test(PHButtonView * sender, void * ud)
@@ -67,6 +69,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	thread->setFunction(this,(PHCallback)&PHLevelController::auxThread, NULL);
 	running = true;
 	paused = false;
+	PHMainEvents::sharedInstance()->setIndependentTiming(true);
 	thread->start();
 	
 	return view;
@@ -100,6 +103,7 @@ PHLevelController::~PHLevelController()
 	pSem2->release();
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
+	PHMainEvents::sharedInstance()->setIndependentTiming(false);
 }
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
@@ -154,6 +158,9 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 				if (lua_isnumber(L, -1))
 					n = lua_tonumber(L, -1);
 				lua_pop(L,1);
+				
+				PHWorld::layer * lyr = NULL;
+				
 				for (int j=0; j<n; j++)
 				{
 					lua_pushnumber(L, j);
@@ -198,7 +205,9 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 							PHImage * img = PHImage::imageFromPath(filename);
 							
 							mutex->lock();
-							world->addLayer(img, pos, scale);
+							if (!lyr)
+								lyr = world->addLayer(scale);
+							world->addToLayer(lyr, img, pos);
 							mutex->unlock();
 							
 						}						
@@ -258,16 +267,21 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	list<PHPoint> * q = &world->eventQueue;
 	mutex->unlock();
 	
+	double targetTime = PHTime::getTime();
+	
 	while (running)
 	{
-		double lastTime = PHTime::getTime();
+		targetTime+=1.0f/60.0f;
 		
 		mutex->lock();
 		player->updateControls(q);
 		mutex->unlock();
 		
-		
+#ifdef PH_SIMULATOR
 		fWorld->Step(1.0f/60.0f, 6, 2);
+#else
+		fWorld->Step(1.0f/60.0f*1.2, 6, 2); //UGLY HACK for bad iPhone timing
+#endif
 		fWorld->ClearForces();
 		
 		pSem2->wait();
@@ -282,8 +296,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		world->updateScene();
 		mutex->unlock();
 		pSem1->signal();
-		double time = 1.0f/60.0f - (PHTime::getTime()-lastTime);
+		
+		double currentTime = PHTime::getTime();
+		double time = targetTime - currentTime;
 		if (time>0)
 			PHTime::sleep(time);
+		else
+			targetTime = currentTime;
 	}
 }
