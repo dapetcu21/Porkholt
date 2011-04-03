@@ -269,6 +269,9 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	double targetTime = PHTime::getTime();
 	
+	double ct = targetTime;
+	int fcount = 0;
+	
 	while (running)
 	{
 		targetTime+=1.0f/60.0f;
@@ -277,11 +280,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		player->updateControls(q);
 		mutex->unlock();
 		
-#ifdef PH_SIMULATOR
 		fWorld->Step(1.0f/60.0f, 6, 2);
-#else
-		fWorld->Step(1.0f/60.0f*1.2, 6, 2); //UGLY HACK for bad iPhone timing
-#endif
+
 		fWorld->ClearForces();
 		
 		pSem2->wait();
@@ -297,11 +297,21 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		mutex->unlock();
 		pSem1->signal();
 		
+		
 		double currentTime = PHTime::getTime();
 		double time = targetTime - currentTime;
 		if (time>0)
 			PHTime::sleep(time);
 		else
 			targetTime = currentTime;
+		
+		fcount++;
+		if (fcount==60)
+		{
+			fcount = 0;
+			double ctt = PHTime::getTime();
+			PHLog("%lf",ctt-ct);
+			ct = ctt;
+		}
 	}
 }
