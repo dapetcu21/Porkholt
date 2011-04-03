@@ -203,12 +203,39 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 								pos.height = lua_tonumber(L, -1);
 							lua_pop(L, 1);
 							
+							PHRect portion = PHWholeRect;
+							
+							lua_pushstring(L, "texX");
+							lua_gettable(L, -2);
+							if (lua_isnumber(L, -1))
+								portion.x = lua_tonumber(L, -1);
+							lua_pop(L, 1);
+							
+							lua_pushstring(L, "texY");
+							lua_gettable(L, -2);
+							if (lua_isnumber(L, -1))
+								portion.y = lua_tonumber(L, -1);
+							lua_pop(L, 1);
+							
+							lua_pushstring(L, "texW");
+							lua_gettable(L, -2);
+							if (lua_isnumber(L, -1))
+								portion.width = lua_tonumber(L, -1);
+							lua_pop(L, 1);
+							
+							lua_pushstring(L, "texH");
+							lua_gettable(L, -2);
+							if (lua_isnumber(L, -1))
+								portion.height = lua_tonumber(L, -1);
+							lua_pop(L, 1);
+					
+							
 							PHImage * img = PHImage::imageFromPath(filename);
 							
 							mutex->lock();
 							if (!lyr)
 								lyr = world->addLayer(scale);
-							world->addToLayer(lyr, img, pos);
+							world->addToLayer(lyr, img, pos,portion);
 							mutex->unlock();
 							
 						}						

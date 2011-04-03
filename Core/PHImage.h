@@ -28,6 +28,7 @@ private:
 	int actHeight;
 	int actWidth;
 	int _width;
+	bool antialiasing;
 	uint8_t bit_depth;
 	uint8_t color_type;
 	GLint format;
@@ -40,7 +41,8 @@ public:
 	void bindToTexture();
 	~PHImage();
 	
-	void renderInFrame(const PHRect & frm);
+	void renderInFrame(const PHRect & frm) { renderInFramePortion(frm,PHWholeRect); }
+	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr);
 	
 	void loadToTexture(PHObject * sender, void * ud); //don't use
 };

@@ -28,14 +28,16 @@ obj.posX = 1.5;
 obj.posY = 2.75;
 addObject(obj);
 
-for i=0,10 do
-	obj = objectWithClass("PHLObject");
-	obj.posX = 4+i;
-	obj.posY = 2;
-	obj.physics.dynamic = 1;
-	objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
-	objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
-	addObject(obj);
+for i=0,9 do
+	for j=0,1 do
+		obj = objectWithClass("PHLObject");
+		obj.posX = 4+i;
+		obj.posY = 2+j;
+		obj.physics.dynamic = 1;
+		objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
+		objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
+		addObject(obj);
+	end
 end 
 obj = objectWithClass("PHLObject");
 obj.posX = 8;

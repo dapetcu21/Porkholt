@@ -52,6 +52,8 @@ extern PHColor PHGrayColor;
 extern PHColor PHWhiteColor;
 extern PHColor PHInvalidColor;
 
+extern PHRect PHWholeRect;
+
 inline PHRect PHMakeRect(double x, double y, double width, double height)
 {
 	PHRect tmp;

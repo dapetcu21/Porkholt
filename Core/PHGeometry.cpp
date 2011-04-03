@@ -10,6 +10,7 @@
 #include "PHMain.h"
 
 PHPoint PHOriginPoint = {0,0};
+PHRect PHWholeRect = {0,0,1,1};
 PHColor PHClearColor = {0,0,0,0};
 PHColor PHBlackColor = {0,0,0,1};
 PHColor PHWhiteColor = {1,1,1,1};

@@ -120,6 +120,8 @@ PHImage::PHImage(const string & path) : texid(-1)
 		throw PHInvalidFileFormat;
 	}
 	
+	antialiasing = !(PHFileManager::singleton()->fileExists(path+".noaa"));
+	
 	PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHImage::loadToTexture, (void*)buffer, false);
 }
 
@@ -130,9 +132,10 @@ void PHImage::loadToTexture(PHObject * sender, void * ud)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, antialiasing?GL_LINEAR_MIPMAP_NEAREST:GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
+	if (antialiasing)
+		glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, format, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, (uint8_t *)ud);	
@@ -188,7 +191,7 @@ void PHImage::clearImages()
 	images = tmp;
 }
 
-void PHImage::renderInFrame(const PHRect & frm)
+void PHImage::renderInFramePortion(const PHRect & frm,const PHRect & port)
 {
 	const GLfloat squareVertices[] = {
         frm.x,			frm.y,
@@ -201,10 +204,10 @@ void PHImage::renderInFrame(const PHRect & frm)
 	double yC = (double)_height/actHeight;
 	
 	const GLfloat squareTexCoords[] = {
-        0.0f,	yC,
-		xC,		yC,
-		0.0f,	0.0f,
-		xC,		0.0f,
+        xC*port.x				, yC*(port.y+port.height),
+		xC*(port.x+port.width)	, yC*(port.y+port.height),
+		xC*port.x				, yC*port.y,
+		xC*(port.x+port.width)	, yC*port.y,
     };
 	
 	bindToTexture();

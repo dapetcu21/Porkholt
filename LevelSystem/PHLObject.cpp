@@ -239,6 +239,8 @@ void PHLObject::loadFromLUA(void * l, const string & root, b2World * _world)
 				
 				if (isV)
 				{
+					PHRect portion = PHWholeRect;
+					
 					lua_pushstring(L, "posX");
 					lua_gettable(L, -2);
 					if (lua_isnumber(L, -1))
@@ -263,9 +265,33 @@ void PHLObject::loadFromLUA(void * l, const string & root, b2World * _world)
 						img.bounds.height = lua_tonumber(L, -1);
 					lua_pop(L, 1);
 					
+					lua_pushstring(L, "texX");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						portion.x = lua_tonumber(L, -1);
+					lua_pop(L, 1);
+					
+					lua_pushstring(L, "texY");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						portion.y = lua_tonumber(L, -1);
+					lua_pop(L, 1);
+					
+					lua_pushstring(L, "texW");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						portion.width = lua_tonumber(L, -1);
+					lua_pop(L, 1);
+					
+					lua_pushstring(L, "texH");
+					lua_gettable(L, -2);
+					if (lua_isnumber(L, -1))
+						portion.height = lua_tonumber(L, -1);
+					lua_pop(L, 1);
 					
 					img.img = new PHImageView();
 					img.img->setImage(PHImage::imageFromPath(filename));
+					img.img->setTextureCoordinates(portion);
 					img.img->setOptimizations(true);
 					images.push_back(img);
 					

@@ -53,7 +53,7 @@ private:
 	
 public:
 	PHWorld::layer * addLayer(double scale);
-	void addToLayer(layer * lyr, PHImage * img, PHRect pos);
+	void addToLayer(layer * lyr, PHImage * img, const PHRect & pos, const PHRect & portion);
 	
 	PHWorld(const PHRect & size,PHLevelController * cnt);
 	PHView * getView() { return (PHView *)view; }

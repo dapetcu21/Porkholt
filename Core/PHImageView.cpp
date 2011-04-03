@@ -9,15 +9,17 @@
 
 #include "PHImageView.h"
 
-PHImageView::PHImageView() : PHView(), _image(NULL)
+#define PHIMAGEVIEW_INIT _image(NULL), coords(PHWholeRect)
+
+PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
 }
 
-PHImageView::PHImageView(const PHRect &frame) : PHView(frame), _image(NULL)
+PHImageView::PHImageView(const PHRect &frame) : PHView(frame), PHIMAGEVIEW_INIT
 {
 }
 
-PHImageView::PHImageView(PHImage * image) : PHView(), _image(NULL)
+PHImageView::PHImageView(PHImage * image) : PHView(), PHIMAGEVIEW_INIT
 {
 	setImage(image);
 }
@@ -31,7 +33,7 @@ PHImageView::~PHImageView()
 void PHImageView::draw()
 {
 	if (_image)
-		_image->renderInFrame(_bounds);
+		_image->renderInFramePortion(_bounds,coords);
 }
 
 void PHImageView::setImage(PHImage * image) 

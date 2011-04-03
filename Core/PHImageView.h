@@ -18,12 +18,15 @@ class PHImageView : public PHView
 {
 protected:
 	PHImage * _image;
+	PHRect coords;
 public:
 	PHImage * image() { return _image; };
 	void setImage(PHImage * image);
 	PHImageView();
 	PHImageView(const PHRect &frame);
 	PHImageView(PHImage * image);
+	const PHRect & textureCoordinates() { return coords; };
+	void setTextureCoordinates(const PHRect & r) { coords = r; };
 	virtual ~PHImageView();
 	virtual void draw();
 };

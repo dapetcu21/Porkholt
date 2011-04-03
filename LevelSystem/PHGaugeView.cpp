@@ -13,6 +13,8 @@ void PHGaugeView::draw()
 {
 	PHRect bounds = _bounds;
 	bounds.width*=lvl;
+	PHRect portion = PHWholeRect;
+	portion.width*=lvl;
 	if (_image)
-		_image->renderInFrame(bounds);
+		_image->renderInFramePortion(bounds,portion);
 }

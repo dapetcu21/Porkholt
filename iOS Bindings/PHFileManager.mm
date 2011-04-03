@@ -18,6 +18,13 @@ const string & PHFileManager::resourcePath()
 	return str;
 }
 
+bool PHFileManager::fileExists(const string & path)
+{
+	struct stat results;
+    return (stat(path.c_str(), &results) == 0);
+}
+
+
 size_t PHFileManager::fileSize(const string & path)
 {
     struct stat results;
