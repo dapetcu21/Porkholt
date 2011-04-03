@@ -266,6 +266,7 @@ void PHLObject::loadFromLUA(void * l, const string & root, b2World * _world)
 					
 					img.img = new PHImageView();
 					img.img->setImage(PHImage::imageFromPath(filename));
+					img.img->setOptimizations(true);
 					images.push_back(img);
 					
 					if (img.bounds.x < min.x)

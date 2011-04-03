@@ -19,7 +19,7 @@ struct PHView::ViewEl
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -111,13 +111,50 @@ void PHView::render()
 {
 	glPushMatrix();
 	applyMatrices();
-	drawBackground();
-	draw();
-	PHView::ViewEl * p = viewsSt;
-	while (p)
+	
+	bool optimizeOut = false;
+	if (_optimize)
 	{
-		p->el->render();
-		p=p->next;
+		GLfloat m[16];
+		glGetFloatv(GL_MODELVIEW, m);
+		PHPoint pnt;
+		double minX,minY,maxX,maxY;
+		minX=minY=0x3f3f3f3f;
+		maxX=maxY=-0x3f3f3f3f;
+#define test\
+		if (pnt.x<minX)\
+			minX = pnt.x;\
+		if (pnt.x>maxX)\
+			maxX = pnt.x;\
+		if (pnt.y<minY)\
+			minY = pnt.y;\
+		if (pnt.y>maxY)\
+			maxY = pnt.y;
+		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x,_bounds.y));
+		test;
+		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x+_bounds.width,_bounds.y));
+		test;
+		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x+_bounds.width,_bounds.y+_bounds.height));
+		test;
+		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x,_bounds.y+_bounds.height));
+		test;
+		
+		PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
+		
+		optimizeOut =	(minX<bounds.x && maxX<bounds.x) || (minY<bounds.y && maxY<bounds.y) ||
+						(minX>bounds.x+bounds.width && maxX>bounds.x+bounds.width) || (minY>bounds.y+bounds.height && maxY>bounds.y+bounds.height);
+	}
+	
+	if (!optimizeOut)
+	{
+		drawBackground();
+		draw();
+		PHView::ViewEl * p = viewsSt;
+		while (p)
+		{
+			p->el->render();
+			p=p->next;
+		}
 	}
 	glPopMatrix();
 }
@@ -395,7 +432,7 @@ PHView * PHView::pointerDeepFirst(PHTouch * touch)
 		}
 		p=p->prev;
 	}
-	if (!view)
+	if ((!view)&&(!_inputRouting))
 	{
 		PHPoint pnt = PHUnTransformedPoint(touch->location());
 		if (pnt.x>=0 && pnt.y>=0 && pnt.x<=_bounds.width && pnt.y<=_bounds.height)
@@ -428,14 +465,15 @@ PHPoint PHView::toMyCoordinates(PHPoint pnt)
 
 void PHView::toMyCoordinates(PHPoint * pnt, int n)
 {
-	GLfloat m[16];
+	GLfloat m[16],inverse[16];
 	glPushMatrix();
 	glLoadIdentity();
 	loadMatrixTree();
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
+	PHInvertMatrix(m, inverse);
 	for (int i=0; i<n; i++)
-		pnt[i] = PHUnTransformPointMatrix(m, pnt[i]);
+		pnt[i] = PHTransformPointMatrix(inverse, pnt[i]);
 }
 
 PHPoint PHView::fromMyCoordinates(PHPoint pnt)

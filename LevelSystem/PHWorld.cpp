@@ -24,6 +24,8 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	view->setSemaphores(cntr->pSem1, cntr->pSem2);
 	view->setPaused(&cntr->paused);
 	worldView = new PHView(size);
+	worldView->setUserInput(true);
+	worldView->setInputRouting(true);
 	layerView = new PHView(bounds);
 	worldSize = size;
 	view->addSubview(layerView);
@@ -158,6 +160,7 @@ void PHWorld::addToLayer(layer * lyr, PHImage * img, PHRect pos)
 {
 	PHImageView * view  = new PHImageView(pos);
 	view->setImage(img);
+	view->setOptimizations(true);
 	lyr->container->addSubview(view);
 	view->release();
 }

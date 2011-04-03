@@ -28,6 +28,8 @@ protected:
 	double _rotation,_scaleX,_scaleY;
 	double _alpha;
 	bool _userInput;
+	bool _inputRouting;
+	bool _optimize;
 	PHColor _backColor;
 	int effOrder;
 
@@ -80,6 +82,10 @@ public:
 	PHColor backgroundColor() { return _backColor; };
 	void setUserInput(bool ui) { _userInput = ui; };
 	bool userInput() { return _userInput; };
+	void setInputRouting(bool ir) { _inputRouting = ir; };
+	bool inputRouting() { return _inputRouting; };
+	void setOptimizations(bool ui) { _optimize = ui; };
+	bool optimizations() { return _optimize; };
 	PHView * superview() { return superView; };
 	
 	void addSubview(PHView * view);

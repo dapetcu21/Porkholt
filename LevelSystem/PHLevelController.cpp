@@ -12,6 +12,7 @@
 #include <Box2D/Box2D.h>
 
 
+
 void PHLevelController::appSuspended()
 {
 	pause();
@@ -268,9 +269,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	mutex->unlock();
 	
 	double targetTime = PHTime::getTime();
+//#define FRAME_TIMING
 	
+#ifdef FRAME_TIMING
 	double ct = targetTime;
 	int fcount = 0;
+#endif
 	
 	while (running)
 	{
@@ -304,7 +308,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			PHTime::sleep(time);
 		else
 			targetTime = currentTime;
-		
+#ifdef FRAME_TIMING		
 		fcount++;
 		if (fcount==60)
 		{
@@ -313,5 +317,6 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			PHLog("%lf",ctt-ct);
 			ct = ctt;
 		}
+#endif
 	}
 }
