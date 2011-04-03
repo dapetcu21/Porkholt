@@ -22,7 +22,6 @@ class PHThread;
 {
     BOOL animating;
 	volatile BOOL running;
-    BOOL displayLinkSupported;
 	
 	PHMutex * pausemutex;
 	PHThread * thread;

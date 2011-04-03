@@ -37,8 +37,8 @@ public:
 	double frameInterval;
 	void renderingThread()
 	{
-		[view initSecondary];
-		
+		[view initMain];
+		[view setFramebuffer];
 		PHMainEvents * mainClass = PHMainEvents::sharedInstance();
 		
 		mainClass->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -52,9 +52,8 @@ public:
 			pauseMutex->unlock();
 			targetTime+= frameInterval;
 			
-			[view setFramebuffer];
-			
 			[PHTouchInterfaceSingleton processQueue];
+			[view setFramebuffer];
 			
 			lastTime = time;
 			time = PHTime::getTime();
@@ -85,7 +84,6 @@ public:
 - (void)loadView
 {
 	EAGLView * view = [[EAGLView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	[view initMain];
 	
     PHTouchInterface * touchView = [[PHTouchInterface alloc] initWithFrame:view.bounds];
 	touchView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -95,14 +93,6 @@ public:
 	self.view = view;
 	
 	animating = FALSE;
-    displayLinkSupported = FALSE;
-    
-    // Use of CADisplayLink requires iOS version 3.1 or greater.
-	// The NSTimer object is used as fallback when it isn't available.
-    NSString *reqSysVer = @"3.1";
-    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-    if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
-        displayLinkSupported = TRUE;
 	
 	PHThread::mainThread();
 	

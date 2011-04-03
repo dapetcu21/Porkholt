@@ -12,6 +12,7 @@
 #import <OpenGLES/ES1/glext.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
+#include <pthread.h>
 
 // This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 // The view content is basically an EAGL surface you render your OpenGL scene into.
@@ -20,11 +21,10 @@
 {
 @private
     EAGLContext *context,*workingContext;
-    
     // The pixel dimensions of the CAEAGLLayer.
     GLint framebufferWidth;
     GLint framebufferHeight;
-    
+	pthread_mutex_t mutex;
     // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view.
     GLuint defaultFramebuffer, colorRenderbuffer;
 }
