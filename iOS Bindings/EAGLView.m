@@ -153,8 +153,8 @@
 		if (!defaultFramebuffer)
 		{
 			pthread_mutex_unlock(&mutex);
-			[self createFramebuffer];
-			//[self performSelectorOnMainThread:@selector(createFramebuffer) withObject:nil waitUntilDone:YES];
+			//[self createFramebuffer];
+			[self performSelectorOnMainThread:@selector(createFramebuffer) withObject:nil waitUntilDone:YES];
 			pthread_mutex_lock(&mutex);
 		}
 		

@@ -22,19 +22,21 @@ private:
 	PHViewController * viewController;
 	double _screenWidth;
 	double _screenHeight;
+	int fps;
 	bool suspended;
 	bool indTiming;
 public:
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHMakeRect(0, 0, _screenWidth, _screenHeight); };
+	int framesPerSecond() { return fps; }
 	static PHMainEvents * sharedInstance();
 	void renderFrame(double timeElapsed);
 	void appSuspended();
 	void appResumed();
 	void appQuits();
 	void memoryWarning();
-	void init(double screenX, double screenY);
+	void init(double screenX, double screenY,int FPS);
 	PHView * mainView() { return view; };
 	void remove(void * ud);
 	

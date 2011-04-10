@@ -19,4 +19,6 @@ extern "C"
 #include <lualib.h>
 }
 
+void PHLuaSetIncludePath(lua_State * L, string path);
+
 #endif

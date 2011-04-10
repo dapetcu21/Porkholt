@@ -38,6 +38,9 @@ void PHLPlayer::loadView()
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
+	
+	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	
 	b2Vec2 force;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
 	int f = t.roll;
@@ -73,7 +76,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 		force.y/=60;
 		body->ApplyLinearImpulse(force, center);
 	}
-	jumpGauge+=wrld->jumpGaugeGrowth()/60.0f;
+	jumpGauge+=wrld->jumpGaugeGrowth()/(double)fps;
 	double max = wrld->maxJumpGauge();
 	if (jumpGauge > max)
 		jumpGauge = max;

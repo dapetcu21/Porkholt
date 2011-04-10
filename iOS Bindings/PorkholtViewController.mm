@@ -13,7 +13,8 @@
 #import "PHMainEvents.h"
 #import "PHTouchInterface.h"
 #import "PHMain.h"
-
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #import "EAGLView.h"
 
 @interface PorkholtViewController ()
@@ -34,14 +35,16 @@ public:
 	PHMutex * pauseMutex;
 	EAGLView * view;
 	volatile bool running;
-	double frameInterval;
+	int fps;
 	void renderingThread()
 	{
 		[view initMain];
 		[view setFramebuffer];
 		PHMainEvents * mainClass = PHMainEvents::sharedInstance();
 		
-		mainClass->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+		mainClass->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width,fps);
+		
+		double frameInterval = 1.0f/fps;
 		
 		double lastTime = 0;
 		double time = 0;
@@ -80,6 +83,28 @@ public:
 	}
 } renderThread;
 
+- (NSString *) platform
+{
+	size_t size;
+	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+	char *machine = (char*)malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+	free(machine);
+	return platform;
+}
+
+- (bool) dumbDevice
+{
+	NSString * platform = [self platform];
+	PHLog("Running on %s",[platform UTF8String]);
+	if ([platform isEqual:@"iPhone1,1"]|| //iPhone 1G
+		[platform isEqual:@"iPhone1,2"]|| //iPhone 3G
+		[platform isEqual:@"iPod1,1"]||   //iPod Touch 1G
+		[platform isEqual:@"iPod2,1"])    //iPod Touch 2G
+		return true;
+	return false;
+}
 
 - (void)loadView
 {
@@ -103,7 +128,9 @@ public:
 	renderThread.view = view;
 	renderThread.pauseMutex = pausemutex;
 	renderThread.running = true;
-	renderThread.frameInterval = 1/60.0f;
+	renderThread.fps = 60;
+	if ([self dumbDevice])
+		renderThread.fps = 30;
 	thread->start();
 }
 

@@ -118,11 +118,11 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
-	error = luaL_loadfile(L, (PHFileManager::singleton()->resourcePath()+"/scripts/init_common.lua").c_str()) || lua_pcall(L, 0, 0, 0);
-	if (error) {
-		PHLog("Lua: %s",lua_tostring(L,-1));
-		lua_pop(L, 1);  /* pop error message from the stack */
-	} 
+	PHFileManager * fileMan = PHFileManager::singleton();
+	string resourcePath = fileMan->resourcePath();
+	
+	PHLuaSetIncludePath(L, dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
+	
 	error = luaL_loadfile(L, (dir+"/init.lua").c_str()) || lua_pcall(L, 0, 0, 0);
 	if (error) {
 		PHLog("Lua: %s",lua_tostring(L,-1));
@@ -303,15 +303,21 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	int fcount = 0;
 #endif
 	
+	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	double frameInterval = 1.0f/fps;
+	
 	while (running)
 	{
-		targetTime+=1.0f/60.0f;
+		targetTime+=frameInterval;
 		
 		mutex->lock();
 		player->updateControls(q);
 		mutex->unlock();
 		
-		fWorld->Step(1.0f/60.0f, 6, 2);
+		if (fps<=30)
+			fWorld->Step(frameInterval, 10, 3);
+		else
+			fWorld->Step(frameInterval, 6, 2);
 
 		fWorld->ClearForces();
 		
@@ -337,7 +343,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			targetTime = currentTime;
 #ifdef FRAME_TIMING		
 		fcount++;
-		if (fcount==60)
+		if (fcount==fps)
 		{
 			fcount = 0;
 			double ctt = PHTime::getTime();

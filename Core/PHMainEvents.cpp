@@ -17,8 +17,9 @@ PHMainEvents * PHMainEvents::sharedInstance()
 	return inst;
 }
 
-void PHMainEvents::init(double screenX, double screenY)
+void PHMainEvents::init(double screenX, double screenY, int FPS)
 {
+	fps = FPS;
 	_screenWidth = screenX;
 	_screenHeight = screenY;
 	suspended = 0;
@@ -45,7 +46,7 @@ void PHMainEvents::init(double screenX, double screenY)
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
 	
-	PHViewController * vc = new PHLevelController(PHFileManager::singleton()->resourcePath()+"/levels/test");
+	PHViewController * vc = new PHLevelController(PHFileManager::singleton()->resourcePath()+"/levels/test.phlevel");
 	vc->init();
 	((PHNavigationController*)viewController)->pushViewController(vc);
 }

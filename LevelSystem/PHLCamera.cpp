@@ -40,6 +40,9 @@ void PHLCamera::loadView()
 
 void PHLCamera::updateCamera(PHPoint pnt)
 {
+	
+	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	
 	pnt.x-=sz.width*(1.0f/3-0.5f);
 	PHPoint pos = position();
 	if (pnt.y<pos.y-sz.height*0.25f)
@@ -49,7 +52,7 @@ void PHLCamera::updateCamera(PHPoint pnt)
 		pnt.y-=sz.height*0.25f;
 	else
 		pnt.y=pos.y;
-	PHLowPassFilter(pos.x, pnt.x, 1/60.0f, 5.0f);
-	PHLowPassFilter(pos.y, pnt.y, 1/60.0f, 5.0f);
+	PHLowPassFilter(pos.x, pnt.x, 1.0f/fps, 5.0f);
+	PHLowPassFilter(pos.y, pnt.y, 1.0f/fps, 5.0f);
 	setPosition(pos);
 }

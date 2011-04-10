@@ -1,3 +1,5 @@
+require("init_common");
+
 lyr = { scale = 0.3; }
 for i=-2,3 do
 	layerAddImage(lyr,"lyr1.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
@@ -33,12 +35,13 @@ for i=0,9 do
 		obj = objectWithClass("PHLObject");
 		obj.posX = 4+i;
 		obj.posY = 2+j;
-		obj.physics.dynamic = 1;
+		obj.physics.dynamic = true;
 		objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
 		objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
 		addObject(obj);
 	end
 end 
+
 obj = objectWithClass("PHLObject");
 obj.posX = 8;
 obj.posY = 2;
@@ -63,3 +66,5 @@ obj.posX = 20;
 obj.posY = 0;
 objectAddBox(obj,0,0,0.1,10);
 addObject(obj);
+
+require("lvl_designer");

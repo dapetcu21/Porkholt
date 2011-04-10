@@ -1,0 +1,411 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
+		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
+		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
+		8D15AC310486D014006FF6A4 /* MyDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		C11618FE134A73EA005F7FB9 /* PHAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C11618FD134A73E9005F7FB9 /* PHAppController.m */; };
+		C1161ABA134BB661005F7FB9 /* ObjectController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1161AB9134BB661005F7FB9 /* ObjectController.m */; };
+		C1161AD9134C4C6C005F7FB9 /* FileBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1161AD8134C4C6C005F7FB9 /* FileBrowserController.m */; };
+		C1161AE3134C50EB005F7FB9 /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C1161AE2134C50EB005F7FB9 /* ImageAndTextCell.m */; };
+		C1161AE6134C5A0C005F7FB9 /* FileSystemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C1161AE5134C5A0C005F7FB9 /* FileSystemNode.m */; };
+		C1161C13134C9660005F7FB9 /* BrowserOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1161C12134C9660005F7FB9 /* BrowserOutlineView.m */; };
+		C1161D28134CC999005F7FB9 /* BrowserTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C1161D27134CC999005F7FB9 /* BrowserTreeNode.m */; };
+		C1161EE6134DD4FD005F7FB9 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1161EE5134DD4FD005F7FB9 /* liblua.a */; };
+		C116203E134DE322005F7FB9 /* PHObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C116203D134DE322005F7FB9 /* PHObject.m */; };
+		C116213F134E49BF005F7FB9 /* PHObjectProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C116213E134E49BF005F7FB9 /* PHObjectProperty.m */; };
+		C116230A134EF8FB005F7FB9 /* ItemInfoTable.m in Sources */ = {isa = PBXBuildFile; fileRef = C1162309134EF8FB005F7FB9 /* ItemInfoTable.m */; };
+		C1162515134F63E9005F7FB9 /* init_common.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1162514134F63E9005F7FB9 /* init_common.lua */; };
+		C1162517134F65BD005F7FB9 /* level_des.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1162516134F65BD005F7FB9 /* level_des.lua */; };
+		C11627C61351A7E8005F7FB9 /* prototype.phlevel in Resources */ = {isa = PBXBuildFile; fileRef = C11627BC1351A7E8005F7FB9 /* prototype.phlevel */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
+		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2564AD2C0F5327BB00F57823 /* Level_Designer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level_Designer_Prefix.pch; sourceTree = "<group>"; };
+		2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDocument.m; sourceTree = "<group>"; };
+		2A37F4AEFDCFA73011CA2CEA /* MyDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDocument.h; sourceTree = "<group>"; };
+		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		8D15AC360486D014006FF6A4 /* Level_Designer-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Level_Designer-Info.plist"; sourceTree = "<group>"; };
+		8D15AC370486D014006FF6A4 /* Level Designer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Level Designer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C11618FC134A73E9005F7FB9 /* PHAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAppController.h; sourceTree = "<group>"; };
+		C11618FD134A73E9005F7FB9 /* PHAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHAppController.m; sourceTree = "<group>"; };
+		C1161AB8134BB661005F7FB9 /* ObjectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectController.h; sourceTree = "<group>"; };
+		C1161AB9134BB661005F7FB9 /* ObjectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectController.m; sourceTree = "<group>"; };
+		C1161AD7134C4C6C005F7FB9 /* FileBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileBrowserController.h; sourceTree = "<group>"; };
+		C1161AD8134C4C6C005F7FB9 /* FileBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileBrowserController.m; sourceTree = "<group>"; };
+		C1161AE1134C50EB005F7FB9 /* ImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAndTextCell.h; sourceTree = "<group>"; };
+		C1161AE2134C50EB005F7FB9 /* ImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAndTextCell.m; sourceTree = "<group>"; };
+		C1161AE4134C5A0C005F7FB9 /* FileSystemNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemNode.h; sourceTree = "<group>"; };
+		C1161AE5134C5A0C005F7FB9 /* FileSystemNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemNode.m; sourceTree = "<group>"; };
+		C1161C11134C9660005F7FB9 /* BrowserOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserOutlineView.h; sourceTree = "<group>"; };
+		C1161C12134C9660005F7FB9 /* BrowserOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserOutlineView.m; sourceTree = "<group>"; };
+		C1161D26134CC999005F7FB9 /* BrowserTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserTreeNode.h; sourceTree = "<group>"; };
+		C1161D27134CC999005F7FB9 /* BrowserTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserTreeNode.m; sourceTree = "<group>"; };
+		C1161EE5134DD4FD005F7FB9 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = /Users/da_petcu21/Programare/iPhone/Porkholt/Externals/lib/darwin/liblua.a; sourceTree = "<absolute>"; };
+		C116203C134DE322005F7FB9 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
+		C116203D134DE322005F7FB9 /* PHObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHObject.m; sourceTree = "<group>"; };
+		C116213D134E49BF005F7FB9 /* PHObjectProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObjectProperty.h; sourceTree = "<group>"; };
+		C116213E134E49BF005F7FB9 /* PHObjectProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHObjectProperty.m; sourceTree = "<group>"; };
+		C1162308134EF8FB005F7FB9 /* ItemInfoTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInfoTable.h; sourceTree = "<group>"; };
+		C1162309134EF8FB005F7FB9 /* ItemInfoTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ItemInfoTable.m; sourceTree = "<group>"; };
+		C1162514134F63E9005F7FB9 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = init_common.lua; sourceTree = "<group>"; };
+		C1162516134F65BD005F7FB9 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level_des.lua; sourceTree = "<group>"; };
+		C11627BC1351A7E8005F7FB9 /* prototype.phlevel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = prototype.phlevel; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D15AC330486D014006FF6A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
+				C1161EE6134DD4FD005F7FB9 /* liblua.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C1161EE5134DD4FD005F7FB9 /* liblua.a */,
+				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+				13E42FBA07B3F13500E4EEF1 /* CoreData.framework */,
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB0FE9D524F11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D15AC370486D014006FF6A4 /* Level Designer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A37F4AAFDCFA73011CA2CEA /* Level Designer */ = {
+			isa = PBXGroup;
+			children = (
+				C116230C134EF922005F7FB9 /* File Browser Controller */,
+				C116230B134EF90B005F7FB9 /* Object Controller */,
+				2A37F4ABFDCFA73011CA2CEA /* Classes */,
+				C116230D134EF92D005F7FB9 /* Cocoa Extensions */,
+				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
+				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
+				19C28FB0FE9D524F11CA2CBB /* Products */,
+			);
+			name = "Level Designer";
+			sourceTree = "<group>";
+		};
+		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4AEFDCFA73011CA2CEA /* MyDocument.h */,
+				2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */,
+				C11618FC134A73E9005F7FB9 /* PHAppController.h */,
+				C11618FD134A73E9005F7FB9 /* PHAppController.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				2564AD2C0F5327BB00F57823 /* Level_Designer_Prefix.pch */,
+				2A37F4B0FDCFA73011CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C11627BC1351A7E8005F7FB9 /* prototype.phlevel */,
+				C1162516134F65BD005F7FB9 /* level_des.lua */,
+				C1162514134F63E9005F7FB9 /* init_common.lua */,
+				8D15AC360486D014006FF6A4 /* Level_Designer-Info.plist */,
+				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				1DDD58280DA1D0D100B32029 /* MyDocument.xib */,
+				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
+				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C116230B134EF90B005F7FB9 /* Object Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C1161AB8134BB661005F7FB9 /* ObjectController.h */,
+				C1161AB9134BB661005F7FB9 /* ObjectController.m */,
+				C116203C134DE322005F7FB9 /* PHObject.h */,
+				C116203D134DE322005F7FB9 /* PHObject.m */,
+				C116213D134E49BF005F7FB9 /* PHObjectProperty.h */,
+				C116213E134E49BF005F7FB9 /* PHObjectProperty.m */,
+				C1162308134EF8FB005F7FB9 /* ItemInfoTable.h */,
+				C1162309134EF8FB005F7FB9 /* ItemInfoTable.m */,
+			);
+			name = "Object Controller";
+			sourceTree = "<group>";
+		};
+		C116230C134EF922005F7FB9 /* File Browser Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C1161AD7134C4C6C005F7FB9 /* FileBrowserController.h */,
+				C1161AD8134C4C6C005F7FB9 /* FileBrowserController.m */,
+				C1161AE4134C5A0C005F7FB9 /* FileSystemNode.h */,
+				C1161AE5134C5A0C005F7FB9 /* FileSystemNode.m */,
+				C1161C11134C9660005F7FB9 /* BrowserOutlineView.h */,
+				C1161C12134C9660005F7FB9 /* BrowserOutlineView.m */,
+				C1161D26134CC999005F7FB9 /* BrowserTreeNode.h */,
+				C1161D27134CC999005F7FB9 /* BrowserTreeNode.m */,
+			);
+			name = "File Browser Controller";
+			sourceTree = "<group>";
+		};
+		C116230D134EF92D005F7FB9 /* Cocoa Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C1161AE1134C50EB005F7FB9 /* ImageAndTextCell.h */,
+				C1161AE2134C50EB005F7FB9 /* ImageAndTextCell.m */,
+			);
+			name = "Cocoa Extensions";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D15AC270486D014006FF6A4 /* Level Designer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "Level Designer" */;
+			buildPhases = (
+				8D15AC2B0486D014006FF6A4 /* Resources */,
+				8D15AC300486D014006FF6A4 /* Sources */,
+				8D15AC330486D014006FF6A4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Level Designer";
+			productInstallPath = "$(HOME)/Applications";
+			productName = "Level Designer";
+			productReference = 8D15AC370486D014006FF6A4 /* Level Designer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "Level Designer" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* Level Designer */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D15AC270486D014006FF6A4 /* Level Designer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D15AC2B0486D014006FF6A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */,
+				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
+				C1162515134F63E9005F7FB9 /* init_common.lua in Resources */,
+				C1162517134F65BD005F7FB9 /* level_des.lua in Resources */,
+				C11627C61351A7E8005F7FB9 /* prototype.phlevel in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D15AC300486D014006FF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC310486D014006FF6A4 /* MyDocument.m in Sources */,
+				8D15AC320486D014006FF6A4 /* main.m in Sources */,
+				C11618FE134A73EA005F7FB9 /* PHAppController.m in Sources */,
+				C1161ABA134BB661005F7FB9 /* ObjectController.m in Sources */,
+				C1161AD9134C4C6C005F7FB9 /* FileBrowserController.m in Sources */,
+				C1161AE3134C50EB005F7FB9 /* ImageAndTextCell.m in Sources */,
+				C1161AE6134C5A0C005F7FB9 /* FileSystemNode.m in Sources */,
+				C1161C13134C9660005F7FB9 /* BrowserOutlineView.m in Sources */,
+				C1161D28134CC999005F7FB9 /* BrowserTreeNode.m in Sources */,
+				C116203E134DE322005F7FB9 /* PHObject.m in Sources */,
+				C116213F134E49BF005F7FB9 /* PHObjectProperty.m in Sources */,
+				C116230A134EF8FB005F7FB9 /* ItemInfoTable.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1660FE840EACC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58280DA1D0D100B32029 /* MyDocument.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58290DA1D0D100B32029 /* English */,
+			);
+			name = MyDocument.xib;
+			sourceTree = "<group>";
+		};
+		1DDD582A0DA1D0D100B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD582B0DA1D0D100B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C05733C808A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Level_Designer_Prefix.pch;
+				INFOPLIST_FILE = "Level_Designer-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+				);
+				PRODUCT_NAME = "Level Designer";
+			};
+			name = Debug;
+		};
+		C05733C908A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Level_Designer_Prefix.pch;
+				INFOPLIST_FILE = "Level_Designer-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+				);
+				PRODUCT_NAME = "Level Designer";
+			};
+			name = Release;
+		};
+		C05733CC08A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../Externals/lua/include;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		C05733CD08A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../Externals/lua/include;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "Level Designer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733C808A9546B00998B17 /* Debug */,
+				C05733C908A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "Level Designer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733CC08A9546B00998B17 /* Debug */,
+				C05733CD08A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+}

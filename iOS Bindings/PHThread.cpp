@@ -15,6 +15,8 @@ map<pthread_t,PHThread*> PHThread::threads;
 PHThread * PHThread::main = NULL;
 PHMutex * PHThread::threads_mutex;
 
+PHThread * PHMainEventThread = NULL;
+
 void new_thread ( void * ud )
 {
 	((PHThread*)ud)->execute();
