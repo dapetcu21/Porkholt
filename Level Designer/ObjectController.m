@@ -10,6 +10,7 @@
 #import "PHObject.h"
 #import "PHObjectProperty.h"
 #import "ItemInfoTable.h"
+#import "WorldController.h"
 
 #define kDragObjectPBoardType @"PHObjectPBoardType"
 #define kDragPropertyPBoardType @"PHPropertyPBoardType"
@@ -60,10 +61,6 @@
 
 -(PHObject*)selectedObject
 {
-	//NSArray * arr = [arrayController selectedObjects];
-	//if ([arr count]!=1)
-	//	return nil;
-	//return [arr objectAtIndex:0];
 	return [arrayController selection];
 }
 

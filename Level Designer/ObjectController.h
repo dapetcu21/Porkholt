@@ -13,6 +13,7 @@
 
 @class PHObject;
 @class ItemInfoTable;
+@class WorldController;
 
 @interface ObjectController : NSObject<NSTableViewDelegate> {
 	NSMutableArray * objects;
@@ -23,6 +24,8 @@
 	IBOutlet ItemInfoTable * itemInfo; 
 	NSIndexSet * draggedObjects;
 	NSIndexSet * draggedKeys;
+	IBOutlet WorldController * worldController;
+	
 	
 	IBOutlet NSButtonCell * boolCell;
 	IBOutlet NSNumberFormatter * numberFormatter;

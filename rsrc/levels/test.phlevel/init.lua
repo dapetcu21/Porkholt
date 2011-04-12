@@ -14,24 +14,9 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
-obj = objectWithClass("PHLObject")
-obj.posX = 0;
-obj.posY = 0.25;
-for i=-2,6 do
-	objectAddImage(obj,"ground.png",4*i,-0.85,2*1.1,1*1.1);
-	objectAddImage(obj,"ground.png",4*i+2,-0.85,2*1.1,1*1.1);
-	objectAddImage(obj,"grass.png",4*i,-0.15,4*1.1,0.4);
-end
-objectAddBox(obj,0,-0.25,20,0.5)
-addObject(obj);
 
-obj = objectWithClass("PHLPlayer");
-obj.posX = 1.5;
-obj.posY = 2.75;
-addObject(obj);
-
-for i=0,9 do
-	for j=0,1 do
+for i=0,4 do
+	for j=0,0 do
 		obj = objectWithClass("PHLObject");
 		obj.posX = 4+i;
 		obj.posY = 2+j;
@@ -65,6 +50,22 @@ obj = objectWithClass("PHLObject");
 obj.posX = 20;
 obj.posY = 0;
 objectAddBox(obj,0,0,0.1,10);
+addObject(obj);
+
+obj = objectWithClass("PHLPlayer");
+obj.posX = 1.5;
+obj.posY = 2.75;
+addObject(obj);
+
+obj = objectWithClass("PHLObject")
+obj.posX = 0;
+obj.posY = 0.25;
+for i=-2,6 do
+	objectAddImage(obj,"ground.png",4*i,-0.85,2*1.1,1*1.1);
+	objectAddImage(obj,"ground.png",4*i+2,-0.85,2*1.1,1*1.1);
+	objectAddImage(obj,"grass.png",4*i,-0.15,4*1.1,0.4);
+end
+objectAddBox(obj,0,-0.25,20,0.5)
 addObject(obj);
 
 require("lvl_designer");

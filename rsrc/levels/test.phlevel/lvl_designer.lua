@@ -7,6 +7,7 @@ obj.SorinSucks = true;
 obj.posX = 0.000000;
 obj.posY = 0.000000;
 obj.rotation = 0.000000;
+obj.SorinSucksAmount = 12.000000;
 obj.levelDes = true;
 addObject(obj);
 

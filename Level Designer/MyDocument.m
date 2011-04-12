@@ -45,6 +45,7 @@
 	[browserController setRootURL:[self fileURL]];
 	[objectController loadFromFile:[self fileURL]];
 }
+
 - (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation originalContentsURL:(NSURL *)absoluteOriginalContentsURL error:(NSError **)outError
 {
 	NSFileManager * man = [NSFileManager defaultManager];

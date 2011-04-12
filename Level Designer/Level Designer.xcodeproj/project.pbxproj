@@ -27,6 +27,12 @@
 		C1162515134F63E9005F7FB9 /* init_common.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1162514134F63E9005F7FB9 /* init_common.lua */; };
 		C1162517134F65BD005F7FB9 /* level_des.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1162516134F65BD005F7FB9 /* level_des.lua */; };
 		C11627C61351A7E8005F7FB9 /* prototype.phlevel in Resources */ = {isa = PBXBuildFile; fileRef = C11627BC1351A7E8005F7FB9 /* prototype.phlevel */; };
+		C11627D11351AF45005F7FB9 /* WorldController.m in Sources */ = {isa = PBXBuildFile; fileRef = C11627D01351AF45005F7FB9 /* WorldController.m */; };
+		C11627E11351BFD1005F7FB9 /* ObjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = C11627E01351BFD1005F7FB9 /* ObjectView.m */; };
+		C116281D1351C7F3005F7FB9 /* ViewScaling.m in Sources */ = {isa = PBXBuildFile; fileRef = C116281C1351C7F3005F7FB9 /* ViewScaling.m */; };
+		C11628C21351E1B5005F7FB9 /* WorldClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = C11628C11351E1B5005F7FB9 /* WorldClipView.m */; };
+		C11629001351E686005F7FB9 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = C11628FF1351E686005F7FB9 /* cloud.png */; };
+		C1162AD81353378C005F7FB9 /* WorldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1162AD71353378C005F7FB9 /* WorldView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +73,17 @@
 		C1162514134F63E9005F7FB9 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = init_common.lua; sourceTree = "<group>"; };
 		C1162516134F65BD005F7FB9 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level_des.lua; sourceTree = "<group>"; };
 		C11627BC1351A7E8005F7FB9 /* prototype.phlevel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = prototype.phlevel; sourceTree = "<group>"; };
+		C11627CF1351AF45005F7FB9 /* WorldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldController.h; sourceTree = "<group>"; };
+		C11627D01351AF45005F7FB9 /* WorldController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorldController.m; sourceTree = "<group>"; };
+		C11627DF1351BFD1005F7FB9 /* ObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectView.h; sourceTree = "<group>"; };
+		C11627E01351BFD1005F7FB9 /* ObjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectView.m; sourceTree = "<group>"; };
+		C116281B1351C7F3005F7FB9 /* ViewScaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewScaling.h; sourceTree = "<group>"; };
+		C116281C1351C7F3005F7FB9 /* ViewScaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewScaling.m; sourceTree = "<group>"; };
+		C11628C01351E1B5005F7FB9 /* WorldClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldClipView.h; sourceTree = "<group>"; };
+		C11628C11351E1B5005F7FB9 /* WorldClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorldClipView.m; sourceTree = "<group>"; };
+		C11628FF1351E686005F7FB9 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud.png; sourceTree = "<group>"; };
+		C1162AD61353378C005F7FB9 /* WorldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldView.h; sourceTree = "<group>"; };
+		C1162AD71353378C005F7FB9 /* WorldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorldView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +129,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* Level Designer */ = {
 			isa = PBXGroup;
 			children = (
+				C11627CE1351AF11005F7FB9 /* World Controller */,
 				C116230C134EF922005F7FB9 /* File Browser Controller */,
 				C116230B134EF90B005F7FB9 /* Object Controller */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
@@ -147,6 +165,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C11628FF1351E686005F7FB9 /* cloud.png */,
 				C11627BC1351A7E8005F7FB9 /* prototype.phlevel */,
 				C1162516134F65BD005F7FB9 /* level_des.lua */,
 				C1162514134F63E9005F7FB9 /* init_common.lua */,
@@ -202,8 +221,25 @@
 			children = (
 				C1161AE1134C50EB005F7FB9 /* ImageAndTextCell.h */,
 				C1161AE2134C50EB005F7FB9 /* ImageAndTextCell.m */,
+				C116281B1351C7F3005F7FB9 /* ViewScaling.h */,
+				C116281C1351C7F3005F7FB9 /* ViewScaling.m */,
 			);
 			name = "Cocoa Extensions";
+			sourceTree = "<group>";
+		};
+		C11627CE1351AF11005F7FB9 /* World Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C11627CF1351AF45005F7FB9 /* WorldController.h */,
+				C11627D01351AF45005F7FB9 /* WorldController.m */,
+				C11627DF1351BFD1005F7FB9 /* ObjectView.h */,
+				C11627E01351BFD1005F7FB9 /* ObjectView.m */,
+				C11628C01351E1B5005F7FB9 /* WorldClipView.h */,
+				C11628C11351E1B5005F7FB9 /* WorldClipView.m */,
+				C1162AD61353378C005F7FB9 /* WorldView.h */,
+				C1162AD71353378C005F7FB9 /* WorldView.m */,
+			);
+			name = "World Controller";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,6 +298,7 @@
 				C1162515134F63E9005F7FB9 /* init_common.lua in Resources */,
 				C1162517134F65BD005F7FB9 /* level_des.lua in Resources */,
 				C11627C61351A7E8005F7FB9 /* prototype.phlevel in Resources */,
+				C11629001351E686005F7FB9 /* cloud.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +321,11 @@
 				C116203E134DE322005F7FB9 /* PHObject.m in Sources */,
 				C116213F134E49BF005F7FB9 /* PHObjectProperty.m in Sources */,
 				C116230A134EF8FB005F7FB9 /* ItemInfoTable.m in Sources */,
+				C11627D11351AF45005F7FB9 /* WorldController.m in Sources */,
+				C11627E11351BFD1005F7FB9 /* ObjectView.m in Sources */,
+				C116281D1351C7F3005F7FB9 /* ViewScaling.m in Sources */,
+				C11628C21351E1B5005F7FB9 /* WorldClipView.m in Sources */,
+				C1162AD81353378C005F7FB9 /* WorldView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
