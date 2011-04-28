@@ -19,7 +19,7 @@ LIBFILE=libz
  
 # Select the desired iPhone SDK
 export DEVROOT=/Developer/Platforms/iPhoneOS.platform/Developer
-export SDKROOT=$DEVROOT/SDKs/iPhoneOS4.2.sdk
+export SDKROOT=$DEVROOT/SDKs/iPhoneOS4.3.sdk
  
 # Set up relevant environment variables
 export CPPFLAGS="-I$SDKROOT/usr/lib/gcc/arm-apple-darwin10/4.2.1/include/ -I$SDKROOT/usr/include/ -miphoneos-version-min=2.2"
