@@ -720,7 +720,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "cd ${PROJECT_DIR}/Externals\n./make_darwin.sh";
+			shellScript = "cd \"${PROJECT_DIR}/Externals\"\n./make_darwin.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
