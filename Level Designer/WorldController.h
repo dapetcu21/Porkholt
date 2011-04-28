@@ -11,9 +11,11 @@
 @class ObjectController;
 @interface WorldController : NSObject {
 	IBOutlet ObjectController * objectController;
+	NSArrayController * controller;
 	IBOutlet NSScrollView * scrollView;
 	NSView * worldView;
 	double scalingFactor;
+	NSArray * objects;
 }
 
 @property(nonatomic,assign) double scalingFactor;
@@ -26,5 +28,7 @@
 -(IBAction)expandUp:(id)sender;
 -(IBAction)expandDown:(id)sender;
 -(IBAction)scrollToOrigin:(id)sender;
+
+-(void)updateSubviews;
 
 @end

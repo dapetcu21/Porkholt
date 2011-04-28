@@ -71,8 +71,8 @@ function Initializers.PHLCamera(obj)
 end
 function Initializers.PHLPlayer(obj)
 	Initializers.PHLObject(obj)
-	obj.physics.dynamic = 1;
-	objectAddCircle(obj,0.25,{restitution = 0.5;});
+	obj.physics.dynamic = true;
+	objectAddCircle(obj,0.25,{restitution = 0.6;});
 	obj.maxVelocityX = 3;
 	objectAddImage(obj,"ball.png",-0.25,-0.25,0.5,0.5);
 end

@@ -9,12 +9,16 @@
 #import <Cocoa/Cocoa.h>
 
 @class PHObjectProperty;
+@class ObjectView;
 
 @interface PHObject : NSObject<NSCopying,NSCoding> {
 	NSString * className;
 	NSMutableArray * properties;
 	PHObjectProperty * classProperty, *posXProperty, *posYProperty, *rotationProperty;
 	BOOL readOnly;
+	
+	ObjectView * view;
+	
 }
 @property(nonatomic,assign) NSString * className; 
 @property(nonatomic,assign) NSPoint position;
@@ -28,11 +32,15 @@
 @property(nonatomic,assign) BOOL editable;
 
 -(void)move:(NSPoint)mv;
+-(void)positionChanged;
+
 
 -(void)setProperties:(NSArray*)obj;
 -(NSMutableArray*)properties;
 
 -(id)initFromLua:(lua_State*)L;
 -(void)saveToFile:(NSMutableString*)file;
+
+@property(nonatomic,assign) ObjectView * view;
 
 @end

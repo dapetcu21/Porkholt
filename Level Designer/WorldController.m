@@ -15,6 +15,11 @@
 
 @implementation WorldController
 
++(void)initialize
+{
+	[WorldController exposeBinding:@"objects"];
+}
+
 -(id)init
 {
 	if (self=[super init])
@@ -41,7 +46,38 @@
 	clipView.controller = self;
 	[scrollView setContentView:clipView];
 	[scrollView setDocumentView:worldView];
+	controller = [objectController arrayController];
+	[self bind:@"objects" toObject:controller withKeyPath:@"content" options:nil];
 	
+}
+
+-(NSArray*)objects
+{
+	return objects;
+}
+
+-(void)setObjects:(NSArray*)obj
+{
+	[objects release];
+	objects = [[NSArray alloc] initWithArray:obj];
+	[self updateSubviews];
+}
+
+-(void)updateSubviews
+{
+	NSLog(@"updateSubviews objects:%@",objects);
+	NSArray * views = [[[worldView subviews] copy] autorelease];
+	for (NSView * view in views)
+	{
+		if ([view isKindOfClass:[ObjectView class]])
+			[view removeFromSuperview];
+	}
+	for (PHObject * obj in objects)
+	{
+		ObjectView * view = [[ObjectView alloc] init];
+		view.object = obj;
+		[worldView addSubview:view];
+	}
 }
 
 -(double)scalingFactor

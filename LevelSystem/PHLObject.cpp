@@ -31,13 +31,12 @@ void PHLObject::loadBody(void *l)
 	lua_gettable(L, -2);
 	if (lua_istable(L, -1))
 	{
+		bool isstatic = true;
 		lua_pushstring(L, "dynamic");
 		lua_gettable(L, -2);
-		bool isstatic = lua_isnil(L, -1);
-		if (!isstatic && lua_isnumber(L, -1) && lua_tonumber(L, -1)==0)
-			isstatic = false;
-		lua_pop(L,1);
-		
+		if (lua_isboolean(L,-1))
+			isstatic = !lua_toboolean(L, -1);
+		lua_pop(L,1);		
 		int n = 0;
 		lua_pushstring(L, "n");
 		lua_gettable(L, -2);

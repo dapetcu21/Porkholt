@@ -37,6 +37,8 @@
 -(NSMutableArray*)objects;
 -(PHObject*)selectedObject;
 
+-(NSArrayController*)arrayController;
+
 -(NSString*)proposedPropertyKey:(NSString*)name;
 
 -(void)lua:(lua_State*)L setPath:(NSString*)path;

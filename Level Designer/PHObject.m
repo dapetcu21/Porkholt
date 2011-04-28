@@ -8,6 +8,7 @@
 
 #import "PHObject.h"
 #import "PHObjectProperty.h"
+#import "ObjectView.h"
 
 @implementation PHObject
 
@@ -16,6 +17,7 @@
 @synthesize posYProperty;
 @synthesize readOnly;
 @synthesize rotationProperty;
+@synthesize view;
 
 -(id)init
 {
@@ -211,12 +213,14 @@
 {
 	posXProperty.doubleValue = pos.x;
 	posYProperty.doubleValue = pos.y;
+	[self positionChanged];
 }
 
 -(void)move:(NSPoint)mv
 {
 	posXProperty.doubleValue = posXProperty.doubleValue+mv.x;
 	posYProperty.doubleValue = posYProperty.doubleValue+mv.y;
+	[self positionChanged];
 }
 
 -(double)rotation
@@ -227,6 +231,15 @@
 -(void)setRotation:(double)rot
 {
 	rotationProperty.doubleValue = rot;
+	[self positionChanged];
+}
+
+-(void)positionChanged
+{
+	if (!view) return;
+	NSSize size = view.frame.size;
+	[view setFrameOrigin:NSMakePoint(posXProperty.doubleValue-size.width/2, posYProperty.doubleValue-size.height/2)];
+	view.rotation = rotationProperty.doubleValue;
 }
 
 -(BOOL)editable

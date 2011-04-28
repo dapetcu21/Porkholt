@@ -28,8 +28,17 @@ for i=0,4 do
 end 
 
 obj = objectWithClass("PHLObject");
+obj.posX = 3;
+obj.posY = 1.5;
+obj.physics.dynamic = false;
+objectAddCircle(obj,0.5,{ friction = 0.3; density = 0.1 });
+objectAddImage(obj,"mofo.png",-0.5,-0.5,1,1);
+addObject(obj);
+
+
+obj = objectWithClass("PHLObject");
 obj.posX = 8;
-obj.posY = 2;
+obj.posY = 2.5;
 objectAddBox(obj,-2,-0.2,4,0.4);
 objectAddImage(obj,"platform.png",-2,-0.2,4,0.4);
 addObject(obj);

@@ -61,7 +61,14 @@
 
 -(PHObject*)selectedObject
 {
-	return [arrayController selection];
+	NSArray * sel = [arrayController selectedObjects];
+	if ([sel count]!=1) return nil;
+	return [sel objectAtIndex:0];
+}
+
+-(NSArrayController*)arrayController
+{
+	return arrayController;
 }
 
 #pragma mark -
@@ -202,8 +209,13 @@
 		if ([[tableColumn identifier] isEqual:COLUMNID_VALUE])
 		{
 			object.value = value;
-			if ([object.key isEqual:@"class"])
+			NSString * key = object.key;
+			if ([key isEqualToString:@"class"])
 				[objectBrowser reloadData];
+			if ([key isEqualToString:@"posX"]||
+				[key isEqualToString:@"posY"]||
+				[key isEqualToString:@"rotation"])
+				[[self selectedObject] positionChanged];
 		}
 	}
 }
