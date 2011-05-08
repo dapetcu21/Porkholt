@@ -9,6 +9,7 @@
 #import "PHObject.h"
 #import "PHObjectProperty.h"
 #import "ObjectView.h"
+#import "ObjectController.h"
 
 @implementation PHObject
 
@@ -18,11 +19,13 @@
 @synthesize readOnly;
 @synthesize rotationProperty;
 @synthesize view;
+@synthesize controller;
 
 -(id)init
 {
 	if (self = [super init])
 	{
+		selected = NO;
 		properties = [[NSMutableArray alloc] init];
 		[properties addObject:classProperty=[PHObjectProperty mandatoryPropertyWithValue:@"PHObject" ofType:kPHObjectPropertyString forKey:@"class"]];
 		[properties addObject:posXProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"posX"]];
@@ -194,6 +197,7 @@
 -(void)setClassName:(NSString *)cn
 {
 	[classProperty setValue:cn];
+	[self modified];
 }
 
 -(NSString*)className
@@ -214,6 +218,7 @@
 	posXProperty.doubleValue = pos.x;
 	posYProperty.doubleValue = pos.y;
 	[self positionChanged];
+	[self modified];
 }
 
 -(void)move:(NSPoint)mv
@@ -221,6 +226,12 @@
 	posXProperty.doubleValue = posXProperty.doubleValue+mv.x;
 	posYProperty.doubleValue = posYProperty.doubleValue+mv.y;
 	[self positionChanged];
+	[self modified];
+}
+
+-(void)modified
+{
+	[controller objectChanged:self];
 }
 
 -(double)rotation
@@ -232,14 +243,39 @@
 {
 	rotationProperty.doubleValue = rot;
 	[self positionChanged];
+	[self modified];
+}
+
++(Class)viewClassForLuaClass:(NSString*)class
+{
+	return [ObjectView class];
+}
+
+-(void)rebuildView
+{
+	[self retain];
+	Class cls = [[self class] viewClassForLuaClass:classProperty.stringValue];
+	if (!view || ![[view class] isEqual:cls])
+	{
+		if (view)
+		{
+			view.object = nil;
+		}
+		view = [[cls alloc] init];
+		view.object = self;
+	}
+	[view setFrame:NSMakeRect(-0.04, -0.04, 0.08f, 0.08f)];
+	[self positionChanged];
+	[self release];
 }
 
 -(void)positionChanged
 {
 	if (!view) return;
 	NSSize size = view.frame.size;
+	[view setFrameCenterRotation:0];
 	[view setFrameOrigin:NSMakePoint(posXProperty.doubleValue-size.width/2, posYProperty.doubleValue-size.height/2)];
-	view.rotation = rotationProperty.doubleValue;
+	[view setFrameCenterRotation:rotationProperty.doubleValue];
 }
 
 -(BOOL)editable
@@ -250,6 +286,26 @@
 -(void)setEditable:(BOOL)sa
 {
 	readOnly=!sa;
+}
+
+-(BOOL)isSelected
+{
+	return selected;
+}
+
+-(void)updateSelected:(BOOL)val
+{
+	selected = val;
+}
+
+-(void)setSelected:(BOOL)val
+{
+	if (val==selected)
+		return;
+	if (val)
+		[[controller arrayController] addSelectedObjects:[NSArray arrayWithObject:self]];
+	else 
+		[[controller arrayController] removeSelectedObjects:[NSArray arrayWithObject:self]];
 }
 
 -(id)copyWithZone:(NSZone *)zone
@@ -269,6 +325,7 @@
 			obj.rotationProperty = newProp;
 		[prop addObject:newProp];
 	}
+	obj.controller = controller;
 	return obj;
 }
 

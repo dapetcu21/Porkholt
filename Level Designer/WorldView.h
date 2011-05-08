@@ -10,7 +10,11 @@
 
 
 @interface WorldView : NSView {
-
+	int dragState;
+	NSRect dragRect;
+	NSPoint dragPoint;
 }
+
+-(void)beginDragging:(NSEvent *)theEvent;
 
 @end

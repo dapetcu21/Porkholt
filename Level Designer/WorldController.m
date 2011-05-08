@@ -12,12 +12,14 @@
 #import "ViewScaling.h"
 #import "WorldClipView.h"
 #import "WorldView.h"
+#import "PHObject.h"
 
 @implementation WorldController
 
 +(void)initialize
 {
 	[WorldController exposeBinding:@"objects"];
+	[WorldController exposeBinding:@"selection"];
 }
 
 -(id)init
@@ -31,10 +33,15 @@
 
 -(void) dealloc
 {
+	[objects release];
+	[selection release];
 	[super dealloc];
 }
 -(void)awakeFromNib
 {
+	objects = [NSArray new];
+	selection = [NSArray new];
+	
 	worldView = [[WorldView alloc] init];
 	NSRect frm = [scrollView contentView].bounds;
 	worldView.frame = frm;
@@ -48,8 +55,24 @@
 	[scrollView setDocumentView:worldView];
 	controller = [objectController arrayController];
 	[self bind:@"objects" toObject:controller withKeyPath:@"content" options:nil];
-	
+	[self bind:@"selection" toObject:controller withKeyPath:@"selectedObjects" options:nil];	
 }
+
+-(NSArray*)selection
+{
+	return selection;
+}
+
+-(void)setSelection:(NSArray*)obj
+{
+	[selection release];
+	selection = [[NSArray alloc] initWithArray:obj];
+	for (PHObject * obj in objects)
+		[obj updateSelected:NO];
+	for (PHObject * obj in selection)
+		[obj updateSelected:YES];	
+}
+
 
 -(NSArray*)objects
 {
@@ -69,15 +92,18 @@
 	NSArray * views = [[[worldView subviews] copy] autorelease];
 	for (NSView * view in views)
 	{
+		[view retain];
 		if ([view isKindOfClass:[ObjectView class]])
 			[view removeFromSuperview];
 	}
 	for (PHObject * obj in objects)
 	{
-		ObjectView * view = [[ObjectView alloc] init];
-		view.object = obj;
+		[obj rebuildView];
+		ObjectView * view = obj.view;
 		[worldView addSubview:view];
 	}
+	for (NSView * view in views)
+		[view release];
 }
 
 -(double)scalingFactor

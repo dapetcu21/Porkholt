@@ -52,6 +52,7 @@
 	if (obj==objects) return;
 	[objects release];
 	objects = [[NSMutableArray alloc] initWithArray:obj];
+	NSLog(@"setObjects");
 }
 
 -(NSMutableArray*)objects
@@ -69,6 +70,13 @@
 -(NSArrayController*)arrayController
 {
 	return arrayController;
+}
+
+-(void)objectChanged:(PHObject*)obj
+{
+	if (ignoreChange) return;
+	if ([self selectedObject] != obj) return;
+	[itemInfo reloadData];
 }
 
 #pragma mark -
@@ -137,6 +145,7 @@
 					if (lua_istable(L,-1))
 					{
 						PHObject * obj = [[[PHObject alloc] initFromLua:L] autorelease];
+						obj.controller = self;
 						if (obj.readOnly)
 							[robjs addObject:obj];
 						else
@@ -200,23 +209,32 @@
 	if (tableView==itemInfo)
 	{
 		if (row<0) return;
+		ignoreChange = YES;
 		PHObjectProperty * object = [[keyController arrangedObjects] objectAtIndex:row];
 		if ([[tableColumn identifier] isEqual:COLUMNID_KEY])
 		{
 			if (!object.mandatory && ![object.key isEqual:value])
+			{
 				object.key = [self proposedPropertyKey:value];
+				[[self selectedObject] modified];
+			}
 		}
 		if ([[tableColumn identifier] isEqual:COLUMNID_VALUE])
 		{
 			object.value = value;
 			NSString * key = object.key;
 			if ([key isEqualToString:@"class"])
+			{
 				[objectBrowser reloadData];
+				[worldController updateSubviews];
+			}
 			if ([key isEqualToString:@"posX"]||
 				[key isEqualToString:@"posY"]||
 				[key isEqualToString:@"rotation"])
 				[[self selectedObject] positionChanged];
+			[[self selectedObject] modified];
 		}
+		ignoreChange = NO;
 	}
 }
 
@@ -413,7 +431,9 @@
 	int n = [objects count];
 	while (index<n && ((PHObject*)[[arrayController arrangedObjects] objectAtIndex:index]).readOnly)
 		index++;
-	[arrayController insertObject:[[[PHObject alloc] init] autorelease] atArrangedObjectIndex:index];
+	PHObject * obj = [[[PHObject alloc] init] autorelease];
+	obj.controller = self;
+	[arrayController insertObject:obj atArrangedObjectIndex:index];
 }
 
 -(IBAction)delete:(id)sender
@@ -472,6 +492,8 @@
 	if (type)
 	{
 		NSArray * items = [NSKeyedUnarchiver unarchiveObjectWithData:[cb dataForType:type]];
+		for (PHObject * obj in items)
+			obj.controller = self;
 		NSIndexSet * indexSet = [arrayController selectionIndexes];
 		NSUInteger index = [indexSet lastIndex];
 		if (index==NSNotFound)

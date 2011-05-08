@@ -31,10 +31,13 @@
 	IBOutlet NSNumberFormatter * numberFormatter;
 	
 	int readOnlyCells;
+	
+	BOOL ignoreChange;
 }
 
 -(void)setObjects:(NSArray*)obj;
 -(NSMutableArray*)objects;
+
 -(PHObject*)selectedObject;
 
 -(NSArrayController*)arrayController;
@@ -59,5 +62,9 @@
 -(IBAction)pasteProp:(id)sender;
 -(BOOL)validateMenuItemProp:(NSMenuItem*)sender;
 
+
+-(void)objectChanged:(PHObject*)obj;
+//@property(nonatomic,retain) NSArray * objects;
+//@property(nonatomic,retain) NSArray * selection;
 
 @end

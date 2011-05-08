@@ -16,6 +16,7 @@
 	NSView * worldView;
 	double scalingFactor;
 	NSArray * objects;
+	NSArray * selection;
 }
 
 @property(nonatomic,assign) double scalingFactor;

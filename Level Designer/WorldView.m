@@ -7,9 +7,18 @@
 //
 
 #import "WorldView.h"
-
+#import "ObjectView.h"
+#import "PHObject.h"
 
 @implementation WorldView
+
+enum dragStates
+{
+	dsNone = 0,
+	dsSelect,
+	dsMove,
+	NUMDRAGSTATES
+};
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -27,6 +36,11 @@
 #define MINORWIDTH 0.01f
 
 - (void)drawRect:(NSRect)dirtyRect {
+	dirtyRect.origin.x-=MAJORWIDTH;
+	dirtyRect.origin.y-=MAJORWIDTH;
+	dirtyRect.size.width+=2*MAJORWIDTH;
+	dirtyRect.size.height+=2*MAJORWIDTH;
+	
 	[[NSColor blackColor] setFill];
 	[NSBezierPath fillRect:dirtyRect];
 	[NSBezierPath setDefaultLineWidth:MINORWIDTH];
@@ -61,10 +75,99 @@
 	}
 	[[NSColor redColor] setFill];
 	[NSBezierPath fillRect:NSMakeRect(-0.05f, -0.05f, 0.1f, 0.1f)];
+	
+	if (dragState == dsSelect)
+	{
+		[[NSColor colorWithCalibratedRed:0.5 green:0.5 blue:0.5 alpha:0.5] setFill];
+		[NSBezierPath fillRect:dragRect];
+	}
 }
 
 - (BOOL)acceptsFirstResponder
 {
 	return YES;
 }
+
+-(void)beginDragging:(NSEvent *)theEvent
+{
+	dragState = dsMove;
+	dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+}
+
+- (BOOL)resignFirstResponder
+{
+	dragState = dsNone;
+	return [super resignFirstResponder];
+}
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	NSLog(@"%x",[theEvent modifierFlags]);
+	if ([theEvent modifierFlags] & NSAlternateKeyMask)
+		dragState = dsMove;
+	else 
+	{
+		dragState = dsSelect;
+		NSArray * sv = [self subviews];
+		for (ObjectView * view in sv)
+		{
+			if (![view isKindOfClass:[ObjectView class]]) continue;
+			view.object.selected = NO;
+		}
+	}
+	dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+	if (dragState == dsMove)
+	{
+		NSPoint pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		NSPoint dif = pnt;
+		dif.x-= dragPoint.x;
+		dif.y-= dragPoint.y;
+		dragPoint = pnt;
+		NSArray * sv = [self subviews];
+		for (ObjectView * view in sv)
+		{
+			if (![view isKindOfClass:[ObjectView class]]) continue;
+			PHObject * obj = view.object;
+			if (obj.readOnly) continue;
+			if (!obj.selected) continue;
+			[obj move:dif];
+		}
+	}
+	if (dragState == dsSelect)
+	{
+		NSPoint pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		dragRect.size.width = pnt.x-dragPoint.x;
+		dragRect.size.height = pnt.y-dragPoint.y;
+		dragRect.origin = dragPoint;
+		if (dragRect.size.width<0)
+		{
+			dragRect.origin.x += dragRect.size.width;
+			dragRect.size.width = -dragRect.size.width;
+		}
+		if (dragRect.size.height<0)
+		{
+			dragRect.origin.y += dragRect.size.height;
+			dragRect.size.height = -dragRect.size.height;
+		}
+		NSArray * sv = [self subviews];
+		for (ObjectView * view in sv)
+		{
+			if (![view isKindOfClass:[ObjectView class]]) continue;
+			view.object.selected = NSPointInRect(view.frame.origin, dragRect);
+		}
+		[self setNeedsDisplay:YES];
+	}
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	dragState = dsNone;
+	[self setNeedsDisplay:YES];
+}
+
+
 @end

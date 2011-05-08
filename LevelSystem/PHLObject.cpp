@@ -361,6 +361,8 @@ void PHLObject::updatePosition()
 	setRotation(-body->GetAngle()*180.0f/M_PI);
 }
 
+#define LIMIT_CUTOFF 5.0f
+
 void PHLObject::limitVelocity()
 {
 	if (!body)
@@ -370,29 +372,37 @@ void PHLObject::limitVelocity()
 		disableLimit = false;
 		return;
 	}
+	
+	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	double period = 1.0f/fps;
+	
 	b2Vec2 v = body->GetLinearVelocity();
+	double X,Y;
+	X=v.x; Y=v.y;
 	if (maxSpeed!=FLT_MAX)
 	{
-		double length = sqrt(v.x*v.x+v.y*v.y);
+		double length = sqrt(X*X+Y*Y);
 		if (length>maxSpeed)
 			length=maxSpeed/length;
-		v.x*=length;
-		v.y*=length;
+		PHLowPassFilter(X, X*length, period, LIMIT_CUTOFF);
+		PHLowPassFilter(Y, Y*length, period, LIMIT_CUTOFF);
 	}
 	if (maxSpeedX!=FLT_MAX)
 	{
-		if (v.x>maxSpeedX)
-			v.x=maxSpeedX;
-		if (v.x<-maxSpeedX)
-			v.x=-maxSpeedX;
+		if (X>maxSpeedX)
+			PHLowPassFilter(X, maxSpeedX, period, LIMIT_CUTOFF);
+		if (X<-maxSpeedX)
+			PHLowPassFilter(X, -maxSpeedX, period, LIMIT_CUTOFF);
 	}
 	if (maxSpeedY!=FLT_MAX)
 	{
-		if (v.y>maxSpeedY)
-			v.y=maxSpeedY;
-		if (v.y<-maxSpeedY)
-			v.y=-maxSpeedY;
+		if (Y>maxSpeedY)
+			PHLowPassFilter(Y, maxSpeedY, period, LIMIT_CUTOFF);
+		if (Y<-maxSpeedY)
+			PHLowPassFilter(Y, -maxSpeedY, period, LIMIT_CUTOFF);
 	}
+	v.x = X;
+	v.y = Y;
 	body->SetLinearVelocity(v);
 }
 

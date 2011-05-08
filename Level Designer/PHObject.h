@@ -10,15 +10,16 @@
 
 @class PHObjectProperty;
 @class ObjectView;
+@class ObjectController;
 
 @interface PHObject : NSObject<NSCopying,NSCoding> {
 	NSString * className;
 	NSMutableArray * properties;
 	PHObjectProperty * classProperty, *posXProperty, *posYProperty, *rotationProperty;
 	BOOL readOnly;
-	
+	BOOL selected;
 	ObjectView * view;
-	
+	ObjectController * controller;
 }
 @property(nonatomic,assign) NSString * className; 
 @property(nonatomic,assign) NSPoint position;
@@ -33,7 +34,7 @@
 
 -(void)move:(NSPoint)mv;
 -(void)positionChanged;
-
+-(void)rebuildView;
 
 -(void)setProperties:(NSArray*)obj;
 -(NSMutableArray*)properties;
@@ -41,6 +42,11 @@
 -(id)initFromLua:(lua_State*)L;
 -(void)saveToFile:(NSMutableString*)file;
 
-@property(nonatomic,assign) ObjectView * view;
+-(void)modified;
 
+-(void)updateSelected:(BOOL)val;
+
+@property(nonatomic,assign) ObjectView * view;
+@property(nonatomic,assign,getter=isSelected) BOOL selected;
+@property(nonatomic,assign) ObjectController * controller;
 @end

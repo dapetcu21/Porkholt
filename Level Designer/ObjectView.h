@@ -12,10 +12,8 @@
 @interface ObjectView : NSView {
 	PHObject * object;
 	BOOL selected;
-	double rotation;
 }
 
 @property(nonatomic,retain) PHObject * object;
 @property(nonatomic,assign) BOOL selected;
-@property(nonatomic,assign) double rotation;
 @end

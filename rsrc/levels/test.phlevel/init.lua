@@ -33,7 +33,7 @@ obj.posY = 1.5;
 obj.physics.dynamic = false;
 objectAddCircle(obj,0.5,{ friction = 0.3; density = 0.1 });
 objectAddImage(obj,"mofo.png",-0.5,-0.5,1,1);
-addObject(obj);
+--addObject(obj);
 
 
 obj = objectWithClass("PHLObject");

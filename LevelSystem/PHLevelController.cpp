@@ -76,9 +76,8 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path)
 {
-	directory = path;
 }
 
 void PHLevelController::updateScene(double timeElapsed)

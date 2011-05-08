@@ -8,10 +8,11 @@
 
 #import "ObjectView.h"
 #import "PHObject.h"
+#import "ObjectController.h"
+#import "WorldView.h"
 
 @implementation ObjectView
 @synthesize selected;
-@synthesize rotation;
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
@@ -22,6 +23,7 @@
 
 -(void)dealloc
 {
+	object.view = nil;
 	[object release];
 	[super dealloc];
 }
@@ -41,10 +43,6 @@
 	[object release];
 	object = obj;
 	object.view = self;
-	
-	NSPoint loc = object.position;
-	[self setFrame:NSMakeRect(loc.x-0.04, loc.y-0.04, 0.08f, 0.08f)];
-	[self setRotation:object.rotation];
 }
 
 -(PHObject*)object
@@ -52,21 +50,25 @@
 	return object;
 }
 
--(double)rotation
+-(void)mouseDown:(NSEvent *)theEvent
 {
-	return rotation;
-}
+	NSView * view = (WorldView*)[self superview];
+	if ([view isKindOfClass:[WorldView class]])
+	{
+		if ([theEvent modifierFlags] & NSShiftKeyMask)
+			[super mouseDown:theEvent];
+		else
+		{
+			if (object.readOnly)
+				return;
+			if (!object.selected)
+				[[object.controller arrayController] setSelectedObjects:[NSArray arrayWithObject:object]];
+			[(WorldView*)view beginDragging:theEvent];
+		}
+	} else {
+		[super mouseDown:theEvent];
+	}
 
--(void)setRotation:(double)rot
-{
-//	CGSize size = self.frame.size;
-	rotation = rot;
-	NSRect frame = [self frame];
-	NSPoint center = frame.origin;
-	center.x+=frame.size.width/2;
-	center.y+=frame.size.height/2;
-	[self setFrameCenterRotation:rot];
-	[self setFrameOrigin:center];
 }
 
 @end
