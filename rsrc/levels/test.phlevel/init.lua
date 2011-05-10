@@ -22,7 +22,7 @@ for i=0,4 do
 		obj.posY = 2+j;
 		obj.physics.dynamic = true;
 		objectAddCircle(obj,0.3,{ friction = 0.3; density = 0.1 });
-		objectAddImage(obj,"cartoonish_wood_texture_log.png",-0.3,-0.3,0.6,0.6);
+		objectAddImage(obj,"wood_log.png",-0.3,-0.3,0.6,0.6);
 		addObject(obj);
 	end
 end 
