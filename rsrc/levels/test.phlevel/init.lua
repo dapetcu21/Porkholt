@@ -21,18 +21,18 @@ for i=0,4 do
 		obj.posX = 4+i;
 		obj.posY = 2+j;
 		obj.physics.dynamic = true;
-		objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
-		objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
+		objectAddCircle(obj,0.3,{ friction = 0.3; density = 0.1 });
+		objectAddImage(obj,"cartoonish_wood_texture_log.png",-0.3,-0.3,0.6,0.6);
 		addObject(obj);
 	end
 end 
 
-obj = objectWithClass("PHLObject");
-obj.posX = 3;
-obj.posY = 1.5;
-obj.physics.dynamic = false;
-objectAddCircle(obj,0.5,{ friction = 0.3; density = 0.1 });
-objectAddImage(obj,"mofo.png",-0.5,-0.5,1,1);
+--obj = objectWithClass("PHLObject");
+--obj.posX = 3;
+--obj.posY = 1.5;
+--obj.physics.dynamic = false;
+--objectAddCircle(obj,0.5,{ friction = 0.3; density = 0.1 });
+--objectAddImage(obj,"mofo.png",-0.5,-0.5,1,1);
 --addObject(obj);
 
 
@@ -56,6 +56,9 @@ objectAddBox(obj,-0.1,0,0.1,10);
 addObject(obj);
 --obj = objectWithClass("PHLObject");
 --ma pis pe nebunia asta
+--obj = objectWithClass("PHLObject");
+--obj.posX = 
+
 
 obj = objectWithClass("PHLObject");
 obj.posX = 20;
