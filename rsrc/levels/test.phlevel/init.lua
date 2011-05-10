@@ -21,19 +21,12 @@ for i=0,4 do
 		obj.posX = 4+i;
 		obj.posY = 2+j;
 		obj.physics.dynamic = true;
-		objectAddCircle(obj,0.3,{ friction = 0.3; density = 0.1 });
-		objectAddImage(obj,"wood_log.png",-0.3,-0.3,0.6,0.6);
+		objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
+		objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
 		addObject(obj);
 	end
 end 
 
---obj = objectWithClass("PHLObject");
---obj.posX = 3;
---obj.posY = 1.5;
---obj.physics.dynamic = false;
---objectAddCircle(obj,0.5,{ friction = 0.3; density = 0.1 });
---objectAddImage(obj,"mofo.png",-0.5,-0.5,1,1);
---addObject(obj);
 --platforma 0
 obj = objectWithClass("PHLObject")
 obj.posX = 7
@@ -67,11 +60,11 @@ addObject(obj)
 
 --o cutie de pe platforma 3
 obj = objectWithClass("PHLObject")
-obj.posX = 15.5
-obj.posY = 3.5
+obj.posX = 17
+obj.posY = 4.5
 obj.physics.dynamic = true;
-objectAddBox(obj,0.5,0.5,0.5,0.5)
-objectAddImage(obj,"box.png",0.5,0.5,0.5,0.5)
+objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
+objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
 addObject(obj)
 
 --camera
@@ -98,8 +91,8 @@ obj = objectWithClass("PHLPlayer");
 obj.posX = 1.5;
 obj.posY = 2.75;
 addObject(obj);
---pamant
 
+--pamant
 obj = objectWithClass("PHLObject")
 obj.posX = 0;
 obj.posY = 0.25;
