@@ -14,7 +14,7 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
-
+--niste lemn
 for i=0,4 do
 	for j=0,0 do
 		obj = objectWithClass("PHLObject");
@@ -34,15 +34,47 @@ end
 --objectAddCircle(obj,0.5,{ friction = 0.3; density = 0.1 });
 --objectAddImage(obj,"mofo.png",-0.5,-0.5,1,1);
 --addObject(obj);
-
-
+--platforma 0
+obj = objectWithClass("PHLObject")
+obj.posX = 7
+obj.posY = 2;
+objectAddBox(obj,-2,0.2,2,0.3)
+objectAddImage(obj,"platform.png",-2,0.2,2,0.3)
+addObject(obj);
+--platforma 1
 obj = objectWithClass("PHLObject");
-obj.posX = 8;
+obj.posX = 11;
 obj.posY = 2.5;
-objectAddBox(obj,-2,-0.2,4,0.4);
-objectAddImage(obj,"platform.png",-2,-0.2,4,0.4,{alpha=0.5; tint=colorWithRGBA(1,0.05,0.05);});
+objectAddBox(obj,-2,0.2,2,0.3)
+objectAddImage(obj,"platform.png",-2,0.2,2,0.3)
 addObject(obj);
 
+--platforma 2
+obj = objectWithClass("PHLObject");
+obj.posX = 14
+obj.posY = 3;
+objectAddBox(obj,-2,0.2,2,0.3);
+objectAddImage(obj,"platform.png",-2,0.2,2,0.3);
+addObject(obj);
+
+--platforma 3
+obj = objectWithClass("PHLObject");
+obj.posX = 17
+obj.posY = 3.5
+objectAddBox(obj,-2,0.2,2,0.3)
+objectAddImage(obj,"platform.png",-2,0.2,2,0.3)
+addObject(obj)
+
+--o cutie de pe platforma 3
+obj = objectWithClass("PHLObject")
+obj.posX = 15.5
+obj.posY = 3.5
+obj.physics.dynamic = true;
+objectAddBox(obj,0.5,0.5,0.5,0.5)
+objectAddImage(obj,"box.png",0.5,0.5,0.5,0.5)
+addObject(obj)
+
+--camera
 obj = objectWithClass("PHLCamera");
 obj.posX = 3;
 obj.posY = 1.75;
@@ -54,10 +86,6 @@ obj.posX = 0;
 obj.posY = 0;
 objectAddBox(obj,-0.1,0,0.1,10);
 addObject(obj);
---obj = objectWithClass("PHLObject");
---ma pis pe nebunia asta
---obj = objectWithClass("PHLObject");
---obj.posX = 
 
 
 obj = objectWithClass("PHLObject");
@@ -70,6 +98,7 @@ obj = objectWithClass("PHLPlayer");
 obj.posX = 1.5;
 obj.posY = 2.75;
 addObject(obj);
+--pamant
 
 obj = objectWithClass("PHLObject")
 obj.posX = 0;
