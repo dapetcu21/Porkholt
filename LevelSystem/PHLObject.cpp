@@ -225,85 +225,23 @@ void PHLObject::loadFromLUA(void * l, const string & root, b2World * _world)
 		{
 			lua_pushnumber(L, i);
 			lua_gettable(L, -2);
-			if (lua_istable(L, -1))
-			{
-				bool isV = true;
-				Image img;
-				string filename = root + "/"; 
-				lua_pushstring(L, "filename");
-				lua_gettable(L, -2);
-				if ((isV = lua_isstring(L, -1)))
-					filename = filename + lua_tostring(L, -1);
-				lua_pop(L, 1);
-				
-				if (isV)
-				{
-					PHRect portion = PHWholeRect;
-					
-					lua_pushstring(L, "posX");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						img.bounds.x = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "posY");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						img.bounds.y = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "imgW");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						img.bounds.width = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "imgH");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						img.bounds.height = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "texX");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						portion.x = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "texY");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						portion.y = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "texW");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						portion.width = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					lua_pushstring(L, "texH");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						portion.height = lua_tonumber(L, -1);
-					lua_pop(L, 1);
-					
-					img.img = new PHImageView();
-					img.img->setImage(PHImage::imageFromPath(filename));
-					img.img->setTextureCoordinates(portion);
-					img.img->setOptimizations(true);
-					images.push_back(img);
-					
-					if (img.bounds.x < min.x)
-						min.x = img.bounds.x;
-					if (img.bounds.y < min.y)
-						min.y = img.bounds.y;
-					if (img.bounds.x+img.bounds.width > min.width)
-						min.width = img.bounds.x+img.bounds.width;
-					if (img.bounds.y+img.bounds.height > min.height)
-						min.height = img.bounds.y+img.bounds.height;
-				}
-			}
+            
+            Image img;
+            PHImageView * image = PHImageView::imageFromLua(L,root);    
+            if (image)
+            {
+                img.img = image;
+                img.bounds = image->frame();
+                images.push_back(img);
+                if (img.bounds.x < min.x)
+                    min.x = img.bounds.x;
+                if (img.bounds.y < min.y)
+                    min.y = img.bounds.y;
+                if (img.bounds.x+img.bounds.width > min.width)
+                    min.width = img.bounds.x+img.bounds.width;
+                if (img.bounds.y+img.bounds.height > min.height)
+                    min.height = img.bounds.y+img.bounds.height;
+            }
 			lua_pop(L, 1);
 		}
 	}

@@ -165,80 +165,17 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 				{
 					lua_pushnumber(L, j);
 					lua_gettable(L, -2);
-					if (lua_istable(L, -1))
-					{
-						bool isV = true;
-						PHRect pos;
-						string filename = dir + "/"; 
-						lua_pushstring(L, "filename");
-						lua_gettable(L, -2);
-						if (isV = lua_isstring(L, -1))
-							filename = filename + lua_tostring(L, -1);
-						lua_pop(L, 1);
-						
-						if (isV)
-						{
-							lua_pushstring(L, "posX");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								pos.x = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							lua_pushstring(L, "posY");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								pos.y = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							lua_pushstring(L, "imgW");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								pos.width = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							lua_pushstring(L, "imgH");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								pos.height = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							PHRect portion = PHWholeRect;
-							
-							lua_pushstring(L, "texX");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								portion.x = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							lua_pushstring(L, "texY");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								portion.y = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							lua_pushstring(L, "texW");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								portion.width = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-							
-							lua_pushstring(L, "texH");
-							lua_gettable(L, -2);
-							if (lua_isnumber(L, -1))
-								portion.height = lua_tonumber(L, -1);
-							lua_pop(L, 1);
-					
-							
-							PHImage * img = PHImage::imageFromPath(filename);
-							
-							mutex->lock();
-							if (!lyr)
-								lyr = world->addLayer(scale);
-							world->addToLayer(lyr, img, pos,portion);
-							mutex->unlock();
-							
-						}						
-					}
+                    
+                    PHImageView * img = PHImageView::imageFromLua(L,dir+"/");
+                    if (img)
+                    {
+                        mutex->lock();
+                        if (!lyr)
+                            lyr = world->addLayer(scale);
+                        world->addToLayer(lyr, img);
+                        img->release();
+                        mutex->unlock();
+                    }
 					lua_pop(L, 1);
 				}
 			}

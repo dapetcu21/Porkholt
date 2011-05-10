@@ -19,6 +19,7 @@ class PHImageView : public PHView
 protected:
 	PHImage * _image;
 	PHRect coords;
+    PHColor tint;
 public:
 	PHImage * image() { return _image; };
 	void setImage(PHImage * image);
@@ -29,6 +30,11 @@ public:
 	void setTextureCoordinates(const PHRect & r) { coords = r; };
 	virtual ~PHImageView();
 	virtual void draw();
+    
+    PHColor & tintColor() { return tint; };
+    void setTintColor(const PHColor & clr) { tint = clr; };
+    
+    static PHImageView * imageFromLua(void * L,const string & rootPath);
 };
 
 #endif

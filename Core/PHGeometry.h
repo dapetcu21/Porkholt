@@ -30,6 +30,7 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
+    static PHColor colorFromLua(void * L);
 };
 
 inline PHColor PHMakeColor(double red, double green, double blue, double alpha)

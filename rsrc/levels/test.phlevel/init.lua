@@ -40,7 +40,7 @@ obj = objectWithClass("PHLObject");
 obj.posX = 8;
 obj.posY = 2.5;
 objectAddBox(obj,-2,-0.2,4,0.4);
-objectAddImage(obj,"platform.png",-2,-0.2,4,0.4);
+objectAddImage(obj,"platform.png",-2,-0.2,4,0.4,{alpha=0.5; tint=colorWithRGBA(1,0.05,0.05);});
 addObject(obj);
 
 obj = objectWithClass("PHLCamera");

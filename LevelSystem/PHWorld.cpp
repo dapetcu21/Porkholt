@@ -156,12 +156,7 @@ PHWorld::layer * PHWorld::addLayer(double scale)
 	return &(layers.back());
 }
 
-void PHWorld::addToLayer(layer * lyr, PHImage * img, const PHRect & pos, const PHRect & portion)
+void PHWorld::addToLayer(layer * lyr, PHImageView * img)
 {
-	PHImageView * view  = new PHImageView(pos);
-	view->setImage(img);
-	view->setTextureCoordinates(portion);
-	view->setOptimizations(true);
-	lyr->container->addSubview(view);
-	view->release();
+	lyr->container->addSubview(img);
 }

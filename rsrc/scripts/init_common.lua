@@ -87,3 +87,12 @@ function objectWithClass(class)
 	end
 	return obj;
 end
+
+function colorWithRGBA(r,g,b,a)
+    return {
+        r = r or 1.0;
+        g = g or 1.0;
+        b = b or 1.0;
+        a = a or 1.0;
+    };
+end

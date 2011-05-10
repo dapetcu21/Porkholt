@@ -41,8 +41,8 @@ public:
 	void bindToTexture();
 	~PHImage();
 	
-	void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHMakeColor(1.0,1.0f,1.0f,0.5f)); }
-	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(frm, cnstr,PHMakeColor(1.0,1.0f,1.0f,0.5f)); }
+	void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHInvalidColor); }
+	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(frm, cnstr,PHInvalidColor); }
     void renderInFramePortionTint(const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
 	
 	void loadToTexture(PHObject * sender, void * ud); //don't use

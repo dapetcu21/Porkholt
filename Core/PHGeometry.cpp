@@ -8,6 +8,7 @@
  */
 
 #include "PHMain.h"
+#include "PHLua.h"
 
 PHPoint PHOriginPoint = {0,0};
 PHRect PHWholeRect = {0,0,1,1};
@@ -16,6 +17,38 @@ PHColor PHBlackColor = {0,0,0,1};
 PHColor PHWhiteColor = {1,1,1,1};
 PHColor PHGrayColor = {0.5,0.5,0.5,1};
 PHColor PHInvalidColor = {-1,-1,-1,-1};
+
+PHColor PHColor::colorFromLua(void * l)
+{
+    lua_State * L = (lua_State*)l;
+    if (!lua_istable(L, -1)) return PHInvalidColor;
+    PHColor color = PHWhiteColor;
+
+    lua_pushstring(L, "r");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        color.r = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "g");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        color.g = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "b");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        color.b = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "a");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        color.a = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    return color;
+}
 
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 {
