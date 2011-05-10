@@ -1,5 +1,5 @@
 require("init_common");
-
+-- aci bagi nebunia de obiecte!!
 lyr = { scale = 0.3; }
 for i=-2,3 do
 	layerAddImage(lyr,"lyr1.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
@@ -54,6 +54,8 @@ obj.posX = 0;
 obj.posY = 0;
 objectAddBox(obj,-0.1,0,0.1,10);
 addObject(obj);
+--obj = objectWithClass("PHLObject");
+--ma pis pe nebunia asta
 
 obj = objectWithClass("PHLObject");
 obj.posX = 20;

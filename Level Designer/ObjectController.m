@@ -11,6 +11,7 @@
 #import "PHObjectProperty.h"
 #import "ItemInfoTable.h"
 #import "WorldController.h"
+#import "MyDocument.h"
 
 #define kDragObjectPBoardType @"PHObjectPBoardType"
 #define kDragPropertyPBoardType @"PHPropertyPBoardType"
@@ -22,6 +23,16 @@
 #define COLUMNID_VALUE @"Value"
 
 @implementation ObjectController
+
+-(MyDocument*)document
+{
+    return document;
+}
+
+-(NSUndoManager*)undoManager
+{
+    return [document undoManager];
+}
 
 -(id)init
 {
@@ -420,6 +431,41 @@
 #pragma mark -
 #pragma mark Copy & Paste
 
+-(void)addObjects:(NSArray*)arry atIndexSet:(NSIndexSet*)iSet
+{
+    [arrayController insertObjects:arry atArrangedObjectIndexes:iSet];
+    [[self undoManager] registerUndoWithTarget:self
+                                      selector:@selector(deleteIndexSet:)
+                                        object:iSet];
+}
+ 
+-(void)addObjectsAtIndexSet:(NSArray*)prop
+{
+    [self addObjects:[prop objectAtIndex:0] atIndexSet:[prop objectAtIndex:1]];
+}
+
+     
+-(void)deleteIndexSet:(NSIndexSet*)indexSet
+{
+    NSMutableIndexSet * nIset = [[[NSMutableIndexSet alloc] init] autorelease];
+	NSUInteger i = [indexSet firstIndex];
+    NSMutableArray * objcts = [[[NSMutableArray alloc] init] autorelease];
+	while (i!=NSNotFound)
+	{
+		PHObject * obj = [[arrayController arrangedObjects] objectAtIndex:i];
+		if (obj.editable)
+        {
+			[nIset addIndex:i];
+            [objcts addObject:obj];
+        }
+		i = [indexSet indexGreaterThanIndex:i];
+	}
+	[arrayController removeObjectsAtArrangedObjectIndexes:nIset];
+    [[self undoManager] registerUndoWithTarget:self
+                                      selector:@selector(addObjectsAtIndexSet:)
+                                        object:[NSArray arrayWithObjects:objcts,nIset,nil]];
+}
+
 -(IBAction)new:(id)sender
 {
 	NSIndexSet * indexSet = [arrayController selectionIndexes];
@@ -433,22 +479,13 @@
 		index++;
 	PHObject * obj = [[[PHObject alloc] init] autorelease];
 	obj.controller = self;
-	[arrayController insertObject:obj atArrangedObjectIndex:index];
+    [self addObjects:[NSArray arrayWithObject:obj] atIndexSet:[NSIndexSet indexSetWithIndex:index]];
 }
+
 
 -(IBAction)delete:(id)sender
 {
-	NSIndexSet * indexSet = [[[arrayController selectionIndexes] copy] autorelease];
-	NSMutableIndexSet * nIset = [[[NSMutableIndexSet alloc] init] autorelease];
-	NSUInteger i = [indexSet firstIndex];
-	while (i!=NSNotFound)
-	{
-		PHObject * obj = [[arrayController arrangedObjects] objectAtIndex:i];
-		if (obj.editable)
-			[nIset addIndex:i];
-		i = [indexSet indexGreaterThanIndex:i];
-	}
-	[arrayController removeObjectsAtArrangedObjectIndexes:nIset];
+    [self deleteIndexSet:[[[arrayController selectionIndexes] copy] autorelease]];
 }
 
 -(IBAction)duplicate:(id)sender
@@ -470,7 +507,7 @@
 		[duplicates addObject:obj];
 		i = [indexSet indexGreaterThanIndex:i];
 	}
-	[arrayController insertObjects:duplicates atArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [duplicates count])]];
+    [self addObjects:duplicates atIndexSet:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [duplicates count])]];
 }
 
 
@@ -503,7 +540,7 @@
 		int n = [objects count];
 		while (index<n && ((PHObject*)[[arrayController arrangedObjects] objectAtIndex:index]).readOnly)
 			index++;
-		[arrayController insertObjects:items atArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [items count])]];
+        [self addObjects:items atIndexSet:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [items count])]];
 	}
 }
 

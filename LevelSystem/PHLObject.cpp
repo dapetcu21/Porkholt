@@ -232,7 +232,7 @@ void PHLObject::loadFromLUA(void * l, const string & root, b2World * _world)
 				string filename = root + "/"; 
 				lua_pushstring(L, "filename");
 				lua_gettable(L, -2);
-				if (isV = lua_isstring(L, -1))
+				if ((isV = lua_isstring(L, -1)))
 					filename = filename + lua_tostring(L, -1);
 				lua_pop(L, 1);
 				

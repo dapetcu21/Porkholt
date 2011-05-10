@@ -193,7 +193,7 @@ void PHImage::clearImages()
 	images = tmp;
 }
 
-void PHImage::renderInFramePortion(const PHRect & frm,const PHRect & port)
+void PHImage::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
 	const GLfloat squareVertices[] = {
         frm.x,			frm.y,
@@ -218,9 +218,22 @@ void PHImage::renderInFramePortion(const PHRect & frm,const PHRect & port)
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
+    if (tint!=PHInvalidColor)
+    {
+        const GLfloat colors[] = { 
+            tint.r, tint.g, tint.b, tint.a,
+            tint.r, tint.g, tint.b, tint.a,
+            tint.r, tint.g, tint.b, tint.a,
+            tint.r, tint.g, tint.b, tint.a
+        };
+        glColorPointer(4, GL_FLOAT, 0, colors);
+        glEnableClientState(GL_COLOR_ARRAY);
+    }
 	
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
-	
+    
+    if (tint!=PHInvalidColor)
+        glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);

@@ -25,16 +25,16 @@ function layerAddImage(l,fn, x, y, w, h)
 end
 
 
-function objectAddImage(obj,fn, x, y, w, h)
+function objectAddImage(obj,fn, x, y, w, h,opt)
 	obj.images = obj.images or {};
 	obj.images.n = obj.images.n or 0;
-	obj.images[obj.images.n] = {
-		filename = fn;
-		posX = x;
-		posY = y;
-		imgW = w;
-		imgH = h;
-	}
+	opt = opt or {};
+	opt.filename = fn;
+	opt.posX = x;
+	opt.posY = y;
+	opt.imgW = w;
+	opt.imgH = h;
+	obj.images[obj.images.n] = opt;
 	obj.images.n = 	obj.images.n + 1;
 end
 

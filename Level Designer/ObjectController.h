@@ -14,6 +14,7 @@
 @class PHObject;
 @class ItemInfoTable;
 @class WorldController;
+@class MyDocument;
 
 @interface ObjectController : NSObject<NSTableViewDelegate> {
 	NSMutableArray * objects;
@@ -25,7 +26,7 @@
 	NSIndexSet * draggedObjects;
 	NSIndexSet * draggedKeys;
 	IBOutlet WorldController * worldController;
-	
+	IBOutlet MyDocument * document;
 	
 	IBOutlet NSButtonCell * boolCell;
 	IBOutlet NSNumberFormatter * numberFormatter;
@@ -62,6 +63,8 @@
 -(IBAction)pasteProp:(id)sender;
 -(BOOL)validateMenuItemProp:(NSMenuItem*)sender;
 
+-(MyDocument*)document;
+-(NSUndoManager*)undoManager;
 
 -(void)objectChanged:(PHObject*)obj;
 //@property(nonatomic,retain) NSArray * objects;

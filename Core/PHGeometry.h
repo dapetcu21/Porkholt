@@ -24,6 +24,12 @@ struct PHRect
 struct PHColor
 {
 	double r,g,b,a;
+    bool operator == (const PHColor & o) const {
+        return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
+    }
+    bool operator != (const PHColor & o) const {
+        return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
+    }
 };
 
 inline PHColor PHMakeColor(double red, double green, double blue, double alpha)
