@@ -21,9 +21,9 @@ PHLPlayer::~PHLPlayer()
 {
 }
 
-void PHLPlayer::loadFromLUA(void * L, const string & root,b2World * world)
+void PHLPlayer::loadFromLua(void * L, const string & root,b2World * world)
 {
-	PHLObject::loadFromLUA(L,root,world);
+	PHLObject::loadFromLua(L,root,world);
 }
 
 void PHLPlayer::loadView()

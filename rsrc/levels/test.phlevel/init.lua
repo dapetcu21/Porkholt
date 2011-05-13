@@ -31,41 +31,49 @@ end
 obj = objectWithClass("PHLObject")
 obj.posX = 7
 obj.posY = 2;
-objectAddBox(obj,-2,0.2,2,0.3)
-objectAddImage(obj,"platform.png",-2,0.2,2,0.3)
+objectAddBox(obj,-1,-0.15,2,0.3)
+objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
 addObject(obj);
 --platforma 1
 obj = objectWithClass("PHLObject");
 obj.posX = 11;
 obj.posY = 2.5;
-objectAddBox(obj,-2,0.2,2,0.3)
-objectAddImage(obj,"platform.png",-2,0.2,2,0.3)
+objectAddBox(obj,-1,-0.15,2,0.3)
+objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
 addObject(obj);
 
 --platforma 2
 obj = objectWithClass("PHLObject");
 obj.posX = 14
 obj.posY = 3;
-objectAddBox(obj,-2,0.2,2,0.3);
-objectAddImage(obj,"platform.png",-2,0.2,2,0.3);
+objectAddBox(obj,-1,-0.15,2,0.3);
+objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 addObject(obj);
 
 --platforma 3
 obj = objectWithClass("PHLObject");
-obj.posX = 17
-obj.posY = 3.5
-objectAddBox(obj,-2,0.2,2,0.3)
-objectAddImage(obj,"platform.png",-2,0.2,2,0.3)
-addObject(obj)
+obj.posX = 17;
+obj.posY = 3.5;
+objectAddBox(obj,-1,-0.15,2,0.3);
+objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
+platforma3=addObject(obj); --echivalent cu platforma3=obj pentru ca addObject returneaza o referinta la obiect... just for convenience
 
---o cutie de pe platforma 3
-obj = objectWithClass("PHLObject")
-obj.posX = 17
-obj.posY = 4.5
+--o cutie agatata de platforma 3
+obj = objectWithClass("PHLObject");
+obj.posX = 17;
+obj.posY = 1.5;
 obj.physics.dynamic = true;
 objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
 objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
-addObject(obj)
+cutie=addObject(obj);
+
+--jah bless teh joint
+joint = jointWithClass("PHDistanceJoint");
+joint.body1 = platforma3;
+joint.body2 = cutie;
+joint.anchor1 = {x=0; y=0;};
+joint.anchor2 = {x=0; y=0;};
+addJoint(joint);
 
 --camera
 obj = objectWithClass("PHLCamera");

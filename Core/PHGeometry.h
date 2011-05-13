@@ -19,6 +19,7 @@ struct PHRect
 //	PHRect() : x(0), y(0), width(0), height(0) {};
 	double x,y;
 	double width,height;
+    static PHRect rectFromLua(void * L);
 };
 
 struct PHColor
@@ -74,6 +75,7 @@ inline PHRect PHMakeRect(double x, double y, double width, double height)
 struct PHPoint
 {
 	double x,y;
+    static PHPoint pointFromLua(void * L);
 };
 
 extern PHPoint PHOriginPoint;

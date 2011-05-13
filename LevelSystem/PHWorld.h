@@ -10,13 +10,13 @@
 #ifndef PHWORLD_H
 #define PHWORLD_H
 
-#include <Box2D/Box2D.h>
-
 class PHLCamera;
 class PHLObject;
 class PHLPlayer;
 class PHCaptureView;
 class PHGaugeView;
+class PHJoint;
+class b2World;
 
 class PHWorld : public PHObject 
 {
@@ -34,12 +34,14 @@ private:
 	
 	b2World * physicsWorld;
 	
-	list<PHLObject*> objects;
+	vector<PHLObject*> objects;
+    vector<PHJoint*>joints;
 	list<PHPoint> eventQueue;
 	
 	
 	friend class PHLevelController;
-	
+	friend class PHJoint;
+    
 	double _jumpGauge,maxJump,jumpGrowth;
 	PHGaugeView * jumpGaugeView;
 	
@@ -62,7 +64,11 @@ public:
 	void addObject(PHLObject * obj);
 	void removeObject(PHLObject * obj);
 	void removeAllObjects();
-	
+    
+    void addJoint(PHJoint * obj);
+	void removeJoint(PHJoint * obj);
+	void removeAllJoints();
+    
 	void updateScene();
 	
 	double jumpGauge() { return _jumpGauge; }
@@ -71,6 +77,8 @@ public:
 	void setMaxJumpGauge(double j) { maxJump = j; }
 	double jumpGaugeGrowth() { return jumpGrowth; }
 	void setJumpGaugeGrowth(double g) { jumpGrowth = g; }
+    
+    b2World * getPhysicsWorld() { return physicsWorld; }
 };
 
 #endif

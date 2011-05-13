@@ -11,7 +11,6 @@
 #define PHEVENTHANDLER_H
 
 #include "PHMain.h"
-#include <list>
 
 class PHTouch;
 class PHView;

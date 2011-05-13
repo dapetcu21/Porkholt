@@ -50,6 +50,59 @@ PHColor PHColor::colorFromLua(void * l)
     return color;
 }
 
+PHPoint PHPoint::pointFromLua(void * l)
+{
+    lua_State * L = (lua_State*)l;
+    if (!lua_istable(L, -1)) return PHOriginPoint;
+    PHPoint pnt = PHOriginPoint;
+    
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        pnt.x = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        pnt.y = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    return pnt;
+}
+
+PHRect PHRect::rectFromLua(void * l)
+{
+    lua_State * L = (lua_State*)l;
+    if (!lua_istable(L, -1)) return PHWholeRect;
+    PHRect pnt = PHWholeRect;
+    
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        pnt.x = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        pnt.y = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "height");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        pnt.height = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_pushstring(L, "width");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        pnt.width = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    return pnt;
+}
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 {
 	double a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];

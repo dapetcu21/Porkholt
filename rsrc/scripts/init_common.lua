@@ -2,7 +2,9 @@ objects = { n = 0 };
 
 function addObject(o)
     objects[objects.n] = o;
+    o.index = objects.n;
     objects.n = objects.n + 1;
+    return o;
 end
 
 layers = { n = 0; }
@@ -88,11 +90,52 @@ function objectWithClass(class)
 	return obj;
 end
 
+JointInitializers = {}
+
+function JointInitializers.PHJoint(joint)
+end
+
+function jointWithClass(class)
+    joint = {};
+    joint.class = class;
+    if (JointInitializers[class]) then
+        JointInitializers[class](joint);
+    else
+        JointInitializers.PHJoint(joint);
+	end
+	return joint
+end
+
+joints = { n = 0; };
+
+function addJoint(o)
+    joints[joints.n] = o;
+    o.index = joints.n;
+    joints.n = joints.n + 1;
+    return o;
+end
+
 function colorWithRGBA(r,g,b,a)
     return {
         r = r or 1.0;
         g = g or 1.0;
         b = b or 1.0;
         a = a or 1.0;
+    };
+end
+
+function point(x,y)
+    return {
+        x = x or 0;
+        y = y or 0;
+    };
+end
+
+function rect(x,y,w,h)
+    return {
+        x = x or 0;
+        y = y or 0;
+        width = w or 0;
+        height = h or 0;
     };
 end

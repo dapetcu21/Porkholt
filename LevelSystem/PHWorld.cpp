@@ -10,6 +10,7 @@
 #include "PHMain.h"
 #include "PHCaptureView.h"
 #include "PHGaugeView.h"
+#include <Box2D/Box2D.h>
 
 PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(50), controller(cntr)
 {
@@ -37,9 +38,8 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 
 PHWorld::~PHWorld()
 {
-	list<PHLObject*> l = objects;
-	for (list<PHLObject*>::iterator i = l.begin(); i!=l.end(); i++)
-		
+	removeAllObjects();
+    removeAllJoints();
 	if (worldView)
 	{
 		worldView->removeFromSuperview();
@@ -121,7 +121,7 @@ void PHWorld::removeObject(PHLObject * obj)
 		camera = NULL;
 	if (obj==player)
 		player = NULL;
-	for (list<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+	for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
 		if (*i == obj)
 		{
 			objects.erase(i);
@@ -136,13 +136,38 @@ void PHWorld::removeAllObjects()
 {
 	camera = NULL;
 	player = NULL;
-	for (list<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+	for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
 	{
 		(*i)->wrld = NULL;
 		(*i)->getView()->removeFromSuperview();
 		(*i)->release();
 	}
 	objects.clear();
+}
+
+void PHWorld::addJoint(PHJoint * obj)
+{
+    if (!obj) return;
+    joints.push_back(obj);
+    obj->retain();
+}
+void PHWorld::removeJoint(PHJoint * obj)
+{
+    for (vector<PHJoint*>::iterator i = joints.begin(); i!=joints.end(); i++)
+		if (*i == obj)
+		{
+            joints.erase(i);
+            obj->release();
+        }
+}
+
+void PHWorld::removeAllJoints()
+{
+    for (vector<PHJoint*>::iterator i = joints.begin(); i!=joints.end(); i++)
+    {
+        (*i)->release();
+    }
+    objects.clear();
 }
 
 PHWorld::layer * PHWorld::addLayer(double scale)

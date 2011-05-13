@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "PHMain.h"
 
-#include <list>
-
 struct TouchTask
 {
 	double x,y;

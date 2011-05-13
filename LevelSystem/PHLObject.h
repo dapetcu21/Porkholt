@@ -13,9 +13,11 @@
 #define INSIDE_PHLOBJECT_H
 
 #include "PHMain.h"
-#include <Box2D/Box2D.h>
 
 class PHImageView;
+class PHJoint;
+class b2World;
+class b2Body;
 
 class PHLObject : public PHObject
 {
@@ -41,9 +43,14 @@ protected:
 	b2World * world;
 	b2Body * body;
 	
+    list<PHJoint*> joints;
+    void addJoint(PHJoint * joint);
+    void removeJoint(PHJoint * joint);
+    
 	friend class PHLevelController;
 	friend class PHWorld;
-	
+	friend class PHJoint;
+    
 public:
 	PHLObject();
 	virtual ~PHLObject();
@@ -62,12 +69,14 @@ public:
 	void setPosition(PHPoint p);
 	void limitVelocity();
 	
-	virtual void loadFromLUA(void * L, const string & root, b2World * world);
+	virtual void loadFromLua(void * L, const string & root, b2World * world);
 	virtual void loadView();
 	
 	static PHLObject * objectWithClass(const string & str);
 	
 	void updatePosition();
+    
+    b2Body * getBody() { return body; }
 };
 
 #endif

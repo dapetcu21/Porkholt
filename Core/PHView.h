@@ -13,7 +13,6 @@
 
 #include "PHMain.h"
 #include "PHAnimationDescriptor.h"
-#include <list>
 
 class PHView : public PHObject
 {

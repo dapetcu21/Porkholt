@@ -25,6 +25,7 @@
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C13664281337F972009B755B /* PHCaptureView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13664271337F972009B755B /* PHCaptureView.cpp */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
+		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
 		C17B484B1307B82300C2EC8D /* PHImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484A1307B82300C2EC8D /* PHImage.cpp */; };
 		C17B484E1307B83000C2EC8D /* PHImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484D1307B83000C2EC8D /* PHImageView.cpp */; };
@@ -115,6 +116,7 @@
 		C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A034E9132DF62700F0200C /* libBox2D.a */; };
 		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
 		C1AF8BE413395F9D0046179B /* AccelerometerSimulation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1AF8BE313395F9D0046179B /* AccelerometerSimulation.mm */; };
+		C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */; };
 		C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */; };
 		C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */; };
 		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
@@ -170,6 +172,8 @@
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
+		C1707D77137D13D400395313 /* PHJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		C1707D78137D13D400395313 /* PHJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
 		C17B480A130719FF00C2EC8D /* PHTestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestView.h; sourceTree = "<group>"; };
 		C17B480B130719FF00C2EC8D /* PHTestView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestView.cpp; sourceTree = "<group>"; };
@@ -193,7 +197,7 @@
 		C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGeometry.cpp; sourceTree = "<group>"; };
 		C17D0F521322A1AB00BDB8EF /* PHLevelSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelSystem.h; sourceTree = "<group>"; };
 		C17D0F531322A31000BDB8EF /* PHLevelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelController.h; sourceTree = "<group>"; };
-		C17D0F541322A31000BDB8EF /* PHLevelController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLevelController.cpp; sourceTree = "<group>"; };
+		C17D0F541322A31000BDB8EF /* PHLevelController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLevelController.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C17D0F561322AD7700BDB8EF /* PHWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHWorld.h; sourceTree = "<group>"; };
 		C17D0F571322AD7700BDB8EF /* PHWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHWorld.cpp; sourceTree = "<group>"; };
 		C17D0F651323811F00BDB8EF /* PHThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHThread.h; sourceTree = "<group>"; };
@@ -279,17 +283,19 @@
 		C1AF893213387B850046179B /* PHGaugeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGaugeView.cpp; sourceTree = "<group>"; };
 		C1AF8BE213395F9D0046179B /* AccelerometerSimulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerSimulation.h; sourceTree = "<group>"; };
 		C1AF8BE313395F9D0046179B /* AccelerometerSimulation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AccelerometerSimulation.mm; sourceTree = "<group>"; };
-		C1B7ECAA1323E1250004C8EA /* PHLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLObject.h; sourceTree = "<group>"; };
-		C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLObject.cpp; sourceTree = "<group>"; };
-		C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLCamera.h; sourceTree = "<group>"; };
-		C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLCamera.cpp; sourceTree = "<group>"; };
+		C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHDistanceJoint.cpp; sourceTree = "<group>"; };
+		C1B4AEC5137D46F9006E65FE /* PHDistanceJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDistanceJoint.h; sourceTree = "<group>"; };
+		C1B7ECAA1323E1250004C8EA /* PHLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLObject.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLCamera.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLCamera.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
 		C1C358241323B6E700D3A95A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
 		C1C359231323C08000D3A95A /* PHLua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLua.h; sourceTree = "<group>"; };
 		C1C359241323C08000D3A95A /* PHLua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLua.cpp; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
-		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPlayer.h; sourceTree = "<group>"; };
-		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPlayer.cpp; sourceTree = "<group>"; };
+		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -455,6 +461,10 @@
 				C13664271337F972009B755B /* PHCaptureView.cpp */,
 				C1AF893113387B850046179B /* PHGaugeView.h */,
 				C1AF893213387B850046179B /* PHGaugeView.cpp */,
+				C1707D77137D13D400395313 /* PHJoint.cpp */,
+				C1707D78137D13D400395313 /* PHJoint.h */,
+				C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */,
+				C1B4AEC5137D46F9006E65FE /* PHDistanceJoint.h */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -778,6 +788,8 @@
 				C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */,
 				C1AF8BE413395F9D0046179B /* AccelerometerSimulation.mm in Sources */,
 				C11E56CC13436F14008881B9 /* PHMessage.cpp in Sources */,
+				C1707D79137D13D400395313 /* PHJoint.cpp in Sources */,
+				C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

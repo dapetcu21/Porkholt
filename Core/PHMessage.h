@@ -10,10 +10,6 @@
 #ifndef PHMESSAGE_H
 #define PHMESSAGE_H
 
-#include <map>
-#include <list>
-#include <utility>
-
 class PHObject;
 
 class PHMessage : public PHObject

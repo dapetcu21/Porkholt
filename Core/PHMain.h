@@ -16,6 +16,11 @@
 #include <string>
 #include <climits>
 #include <cfloat>
+
+#include <vector>
+#include <map>
+#include <list>
+#include <utility>
 using namespace std;
 
 #ifdef __APPLE__

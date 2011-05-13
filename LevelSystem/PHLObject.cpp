@@ -9,6 +9,7 @@
 
 #include "PHMain.h"
 #include "PHLua.h"
+#include <Box2D/Box2D.h>
 
 PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false)
 {
@@ -18,6 +19,16 @@ PHLObject::~PHLObject()
 {
 	if (wrld)
 		wrld->removeObject(this);
+    list<PHJoint*> jnts = joints;
+    joints.clear();
+    for (list<PHJoint*>::iterator i = jnts.begin(); i!=jnts.end(); i++)
+    {
+        PHJoint * joint = *i;
+        if (joint->object1()==this)
+            joint->setObject1(NULL);
+        if (joint->object2()==this)
+            joint->setObject2(NULL);
+    }
 	if (body)
 		world->DestroyBody(body);
 	if (view)
@@ -161,7 +172,7 @@ void PHLObject::loadBody(void *l)
 	lua_pop(L,1);
 }
 
-void PHLObject::loadFromLUA(void * l, const string & root, b2World * _world)
+void PHLObject::loadFromLua(void * l, const string & root, b2World * _world)
 {
 	world = _world;
 	lua_State * L = (lua_State*)l;
@@ -351,4 +362,19 @@ PHLObject * PHLObject::objectWithClass(const string & str)
 	if (str=="PHLPlayer")
 		return new PHLPlayer;
 	return new PHLObject;
+}
+
+void PHLObject::addJoint(PHJoint * joint)
+{
+    joints.push_back(joint);
+}
+void PHLObject::removeJoint(PHJoint * joint)
+{
+    list<PHJoint*>::iterator i;
+    for (i=joints.begin(); i!= joints.end(); i++)
+        if (*i==joint)
+        {
+            joints.erase(i);
+            break;
+        }
 }

@@ -20,7 +20,7 @@ public:
 	
 	void updateControls(list<PHPoint> * queue);
 	
-	virtual void loadFromLUA(void * L, const string & root,b2World * world);
+	virtual void loadFromLua(void * L, const string & root,b2World * world);
 	virtual void loadView();
 };
 

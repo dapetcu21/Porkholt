@@ -9,7 +9,8 @@
 
 #ifndef PHLCAMERA_H
 #define PHLCAMERA_H
-#include <Box2D/Box2D.h>
+
+class b2World;
 
 class PHLCamera : public PHLObject
 {
@@ -21,7 +22,7 @@ public:
 	
 	PHRect size() { return sz; };
 	
-	virtual void loadFromLUA(void * L, const string & root,b2World * world);
+	virtual void loadFromLua(void * L, const string & root,b2World * world);
 	virtual void loadView();
 	
 	void updateCamera(PHPoint pnt);
