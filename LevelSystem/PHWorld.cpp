@@ -91,8 +91,8 @@ void PHWorld::updateScene()
 			pos.y = -ps.y * scaleY;
 			pos.width = worldSize.width * scaleX;
 			pos.height = worldSize.height * scaleY;
-			pos.x=round(pos.x);
-			pos.y=round(pos.y);
+			//pos.x=round(pos.x);
+			//pos.y=round(pos.y);
 			ly.container->setFrame(pos);
 			ly.container->setBounds(worldSize);
 		}

@@ -14,26 +14,13 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
---niste lemn
-for i=0,4 do
-	for j=0,0 do
-		obj = objectWithClass("PHLObject");
-		obj.posX = 4+i;
-		obj.posY = 2+j;
-		obj.physics.dynamic = true;
-		objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
-		objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
-		addObject(obj);
-	end
-end 
-
 --platforma 0
 obj = objectWithClass("PHLObject")
 obj.posX = 7
 obj.posY = 2;
 objectAddBox(obj,-1,-0.15,2,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
-addObject(obj);
+platforma0=addObject(obj);
 --platforma 1
 obj = objectWithClass("PHLObject");
 obj.posX = 11;
@@ -57,6 +44,31 @@ obj.posY = 3.5;
 objectAddBox(obj,-1,-0.15,2,0.3);
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 platforma3=obj;
+
+
+--niste lemn
+
+last = platforma0;
+for i=0,4 do
+		obj = objectWithClass("PHLObject");
+		obj.posX = 7+i*0.31;
+		obj.posY = 2;
+		obj.physics.dynamic = true;
+		objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
+		objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
+		addObject(obj);
+		
+		if (last) then
+			joint = jointWithClass("PHDistanceJoint");
+			joint.body1 = last;
+			joint.body2 = obj;
+			joint.anchor1 = {x=0.13; y=0};
+			joint.anchor2 = {x=-0.13; y=0};
+			addJoint(joint);
+		end
+		last = obj;
+end 
+
 
 --o cutie agatata de platforma 3
 obj = objectWithClass("PHLObject");
