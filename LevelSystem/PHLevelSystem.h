@@ -18,6 +18,7 @@
     #include "PHMotorJoint.h"
     #ifndef INSIDE_PHMOTORJOINT_H
         #include "PHRevoluteJoint.h"
+        #include "PHPrismaticJoint.h"
     #endif
 #endif
 

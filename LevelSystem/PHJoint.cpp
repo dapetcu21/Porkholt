@@ -16,6 +16,8 @@ PHJoint * PHJoint::jointWithClassAndWorld(string clss, PHWorld * world)
         return new PHDistanceJoint(world);
     if (clss=="PHRevoluteJoint")
         return new PHRevoluteJoint(world);
+    if (clss=="PHPrismaticJoint")
+        return new PHPrismaticJoint(world);
     return new PHJoint(world);
 }
 
