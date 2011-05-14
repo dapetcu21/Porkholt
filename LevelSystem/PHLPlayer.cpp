@@ -56,6 +56,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	while (!queue->empty()) {
 		force.x = queue->front().x*TOUCH_FORCE_FACTOR;
 		force.y = queue->front().y*TOUCH_FORCE_FACTOR;
+        queue->pop_front();
 		double length = sqrt(force.x*force.x+force.y*force.y);
 		if (force.y<0)
 			length = fabs(force.x);
@@ -71,7 +72,6 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 				temporarilyDisableVelocityLimit();
 			jumpGauge -= length;
 		}
-		queue->pop_front();
 		force.x/=60;
 		force.y/=60;
 		body->ApplyLinearImpulse(force, center);

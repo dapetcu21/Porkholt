@@ -283,6 +283,7 @@ void PHLObject::loadImages()
 void PHLObject::loadView()
 {
 	view = new PHView(PHMakeRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
+    view->setRotationalCenter(PHMakePoint(-viewSize.x, -viewSize.y));
 	loadImages();
 	view->setRotation(rot);
 }

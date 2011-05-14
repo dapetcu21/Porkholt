@@ -56,23 +56,27 @@ obj.posX = 17;
 obj.posY = 3.5;
 objectAddBox(obj,-1,-0.15,2,0.3);
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
-platforma3=addObject(obj); --echivalent cu platforma3=obj pentru ca addObject returneaza o referinta la obiect... just for convenience
+platforma3=obj;
 
 --o cutie agatata de platforma 3
 obj = objectWithClass("PHLObject");
 obj.posX = 17;
-obj.posY = 1.5;
+ballr = 211/512;
+obj.posY = 1.5+ballr;
 obj.physics.dynamic = true;
-objectAddBox(obj,-0.5,-0.5,1,1,{ friction = 0.3; density = 0.1 });
-objectAddImage(obj,"box.png",-0.5,-0.5,1,1);
-cutie=addObject(obj);
+objectAddCircle(obj,ballr);
+objectAddImage(obj,"wrecking_ball.png",-0.5,-ballr,1,2);
+cutie=obj;
+
+addObject(cutie);
+addObject(platforma3);
 
 --jah bless teh joint
-joint = jointWithClass("PHDistanceJoint");
+joint = jointWithClass("PHRevoluteJoint");
 joint.body1 = platforma3;
 joint.body2 = cutie;
-joint.anchor1 = {x=0; y=0;};
-joint.anchor2 = {x=0; y=0;};
+joint.anchor = {x=17; y=3.5;};
+joint.worldCoordinates = true;
 addJoint(joint);
 
 --camera

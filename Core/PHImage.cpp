@@ -114,11 +114,18 @@ PHImage::PHImage(const string & path) : texid(-1)
 	{
 		format = GL_RGBA;
 	}
-	if ((format == -1) || (bit_depth != 8))
+	if (format == -1)
 	{
 		delete[] buffer;
 		throw PHInvalidFileFormat;
 	}
+    
+    if (bit_depth != 8)
+    {
+        int scale = (bit_depth>>3);
+        for (int i=0; i<size/scale; i++)
+            buffer[i] = buffer[i*scale];
+    }
 	
 	antialiasing = !(PHFileManager::singleton()->fileExists(path+".noaa"));
 	

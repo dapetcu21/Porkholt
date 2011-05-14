@@ -15,6 +15,10 @@
 #include "PHJoint.h"
 #ifndef INSIDE_PHJOINT_H
     #include "PHDistanceJoint.h"
+    #include "PHMotorJoint.h"
+    #ifndef INSIDE_PHMOTORJOINT_H
+        #include "PHRevoluteJoint.h"
+    #endif
 #endif
 
 #ifndef INSIDE_PHLOBJECT_H

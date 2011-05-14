@@ -14,6 +14,8 @@ PHJoint * PHJoint::jointWithClassAndWorld(string clss, PHWorld * world)
 {
     if (clss=="PHDistanceJoint")
         return new PHDistanceJoint(world);
+    if (clss=="PHRevoluteJoint")
+        return new PHRevoluteJoint(world);
     return new PHJoint(world);
 }
 
