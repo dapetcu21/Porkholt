@@ -12,11 +12,14 @@
 #include "PHGaugeView.h"
 #include <Box2D/Box2D.h>
 
+#define GAUGE_WIDTH 304
+#define GAUGE_HEIGHT 19
+
 PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(50), controller(cntr)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
-	jumpGaugeView = new PHGaugeView(PHMakeRect(bounds.x+5, bounds.height-21, 256, 16));
+	jumpGaugeView = new PHGaugeView(PHMakeRect(bounds.x+5, bounds.height-5-GAUGE_HEIGHT, GAUGE_WIDTH, GAUGE_HEIGHT));
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
 	PHMutex * mutex = cntr->mutex;
 	view->setMutex(mutex);
