@@ -10,7 +10,7 @@
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
-PHDistanceJoint::PHDistanceJoint(PHWorld * world) : PHJoint(world)
+PHDistanceJoint::PHDistanceJoint(PHWorld * world) : PHJoint(world), freq(0), damp(0)
 {
     
 }
@@ -39,6 +39,20 @@ void PHDistanceJoint::loadFromLua(void * l)
         anchor2 = PHPoint::pointFromLua(L);
     lua_pop(L,1);
     
+    freq = 0.0f;
+    lua_pushstring(L, "frequency");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        freq = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    damp = 0.0f;
+    lua_pushstring(L, "dampening");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        damp = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
 }
 void PHDistanceJoint::recreateJoint()
 {
@@ -60,5 +74,7 @@ void PHDistanceJoint::recreateJoint()
     }
     jointDef.Initialize(b1,b2,a1,a2);
     jointDef.collideConnected = collideConnected;
+    jointDef.frequencyHz = freq;
+    jointDef.dampingRatio = damp;
     joint = world->getPhysicsWorld()->CreateJoint(&jointDef);
 }

@@ -16,6 +16,7 @@ class PHDistanceJoint : public PHJoint
 private:
     PHPoint anchor1;
     PHPoint anchor2;
+    double freq,damp;
 public:
     PHDistanceJoint(PHWorld * world);
     virtual ~PHDistanceJoint();
