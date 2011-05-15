@@ -70,14 +70,15 @@ for i=0,4 do
 end 
 
 
---o cutie agatata de platforma 3
+--wrecking ball
 obj = objectWithClass("PHLObject");
 obj.posX = 17;
 ballr = 211/512;
-obj.posY = 1.5+ballr;
+scale = 1.2;
+obj.posY = 3.5-(2-ballr)*scale;
 obj.physics.dynamic = true;
-objectAddCircle(obj,ballr);
-objectAddImage(obj,"wrecking_ball.png",-0.5,-ballr,1,2);
+objectAddCircle(obj,ballr*scale);
+objectAddImage(obj,"wrecking_ball.png",-0.5*scale,-ballr*scale,1*scale,2*scale);
 cutie=obj;
 
 addObject(cutie);
