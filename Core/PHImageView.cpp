@@ -52,11 +52,18 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
     {
         bool isV = true;
         string filename = root + "/"; 
+        string fn;
         lua_pushstring(L, "filename");
         lua_gettable(L, -2);
         if ((isV = lua_isstring(L, -1)))
-            filename = filename + lua_tostring(L, -1);
+            fn = lua_tostring(L, -1);
         lua_pop(L, 1);
+        
+        if (fn[0]=='/')
+        {
+            filename = PHFileManager::singleton()->resourcePath() + "/img";
+        }
+        filename = filename + fn;
         
         if (isV)
         {
@@ -111,6 +118,13 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
                 portion.height = lua_tonumber(L, -1);
             lua_pop(L, 1);
             
+            int tag = 0;
+            lua_pushstring(L, "tag");
+            lua_gettable(L, -2);
+            if (lua_isnumber(L, -1))
+                tag = lua_tonumber(L, -1);
+            lua_pop(L, 1);
+            
             lua_pushstring(L, "tint");
             lua_gettable(L, -2);
             PHColor tint = PHColor::colorFromLua(L);
@@ -132,6 +146,7 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
             img->setTextureCoordinates(portion);
             img->setFrame(frame);
             img->setOptimizations(true);
+            img->setTag(tag);
         }
     }
     return img;

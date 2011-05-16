@@ -17,7 +17,11 @@
 class PHView : public PHObject
 {
 protected:
-	struct ViewEl;
+	struct ViewEl
+    {
+        PHView * el;
+        ViewEl * next, * prev;
+    };
 	ViewEl * viewsSt;
 	ViewEl * viewsEn;
 	ViewEl * currPos;
@@ -31,7 +35,8 @@ protected:
 	bool _optimize;
 	PHColor _backColor;
 	int effOrder;
-
+    int _tag;
+    
 	virtual void render();
 	void drawBackground();
 	virtual void draw();
@@ -67,7 +72,7 @@ public:
 	void setRotationalCenter(const PHPoint &center) { _rotationalCenter = center;}
 	void setScalingCenter(const PHPoint &center) { _scalingCenter = center; }
 	double rotation() { return _rotation; };
-	void setRotation(double rot) { _rotation = rot; };
+	virtual void setRotation(double rot) { _rotation = rot; };
 	double scaleX() { return _scaleX; };
 	void setScaleX(double scale) { _scaleX = scale; };
 	double scaleY() { return _scaleY; };
@@ -96,6 +101,9 @@ public:
 	PHPoint fromMyCoordinates(PHPoint pnt);
 	void fromMyCoordinates(PHPoint * pnt, int n);
 	
+    void setTag(int tag) { _tag = tag; };
+    int tag() { return _tag; }
+    PHView * viewWithTag(int tag);
 	
 	virtual ~PHView();
 	friend class PHMainEvents;

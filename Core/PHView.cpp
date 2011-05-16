@@ -11,15 +11,9 @@
 
 std::list<PHAnimationDescriptor*> PHView::animations;
 
-struct PHView::ViewEl
-{
-	PHView * el;
-	PHView::ViewEl * next, * prev;
-};
-
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -497,4 +491,12 @@ void PHView::fromMyCoordinates(PHPoint * pnt, int n)
 	glPopMatrix();
 	for (int i=0; i<n; i++)
 		pnt[i] = PHTransformPointMatrix(m, pnt[i]);
+}
+
+PHView * PHView::viewWithTag(int tag)
+{
+    for (ViewEl * ve = viewsSt; ve; ve=ve->next)
+        if (ve->el->tag()==tag)
+            return ve->el;
+    return NULL;
 }

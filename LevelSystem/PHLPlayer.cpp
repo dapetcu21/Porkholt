@@ -28,7 +28,11 @@ void PHLPlayer::loadFromLua(void * L, const string & root,b2World * world)
 
 void PHLPlayer::loadView()
 {
-	PHLObject::loadView();
+	view = new PHPlayerView(PHMakeRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
+    view->setRotationalCenter(PHMakePoint(-viewSize.x, -viewSize.y));
+	loadImages();
+    ((PHPlayerView*)view)->setDesignatedView(view->viewWithTag(20));
+	view->setRotation(rot);
 	playerView = view;
 }
 

@@ -28,4 +28,8 @@
 	#include "PHLPlayer.h"
 #endif
 
+#ifndef INSIDE_PHVIEW_H
+    #include "PHPlayerView.h"
+#endif
+
 #endif

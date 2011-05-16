@@ -74,7 +74,7 @@ end
 obj = objectWithClass("PHLObject");
 obj.posX = 17;
 ballr = 211/512;
-scale = 1.2;
+scale = 1.4;
 obj.posY = 3.5-(2-ballr)*scale;
 obj.physics.dynamic = true;
 objectAddCircle(obj,ballr*scale);
