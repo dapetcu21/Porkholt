@@ -20,7 +20,7 @@ void PHPlayerView::setRotation( double rot)
     while (abs(dif-360)<abs(dif))
         dif-=360;
     int fps = PHMainEvents::sharedInstance()->framesPerSecond();
-    lastDif = (lastDif+dif)/2;
+    PHLowPassFilter(lastDif, dif, 1.0f/fps, 50.0f);
     for (ViewEl * ve = viewsSt; ve; ve=ve->next)
     {
         if (ve->el == _designatedView) continue;
