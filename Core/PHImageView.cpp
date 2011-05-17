@@ -7,7 +7,7 @@
  *
  */
 
-#include "PHImageView.h"
+#include "PHMain.h"
 #include "PHLua.h"
 
 #define PHIMAGEVIEW_INIT _image(NULL), coords(PHWholeRect), tint(PHInvalidColor)
@@ -69,6 +69,12 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
         {
             PHRect portion = PHWholeRect;
             PHRect frame = PHWholeRect;
+            string clss;
+            lua_pushstring(L, "class");
+            lua_gettable(L, -2);
+            if (lua_isstring(L, -1))
+                clss = lua_tostring(L, -1);
+            lua_pop(L, 1);
             
             lua_pushstring(L, "posX");
             lua_gettable(L, -2);
@@ -140,7 +146,7 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
             }
             lua_pop(L,1);
             
-            img = new PHImageView();
+            img = PHImageView::imageFromClass(clss);
             img->setImage(PHImage::imageFromPath(filename));
             img->setTintColor(tint);
             img->setTextureCoordinates(portion);
@@ -150,4 +156,11 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
         }
     }
     return img;
+}
+
+PHImageView * PHImageView::imageFromClass(const string & clss)
+{
+    if (clss=="PHTrailImageView")
+        return new PHTrailImageView();
+    return new PHImageView();
 }

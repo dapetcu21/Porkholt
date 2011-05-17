@@ -6,6 +6,7 @@
 //  Copyright 2011 Home. All rights reserved.
 //
 
+#ifndef INSIDE_PHVIEW_H
 #ifndef PHPLAYERVIEW_H
 #define PHPLAYERVIEW_H
 
@@ -29,4 +30,5 @@ public:
 };
 
 
+#endif
 #endif

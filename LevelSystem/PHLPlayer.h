@@ -12,8 +12,12 @@
 
 #include "PHMain.h"
 
+class PHTrailImageView;
 class PHLPlayer : public PHLObject
 {
+private:
+    PHTrailImageView * bodyView;
+    PHView * worldView;
 public:
 	PHLPlayer();
 	virtual ~PHLPlayer();

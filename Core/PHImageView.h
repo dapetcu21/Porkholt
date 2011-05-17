@@ -9,7 +9,7 @@
 
 #ifndef PHIMAGEVIEW_H
 #define PHIMAGEVIEW_H
-
+#define INSIDE_PHIMAGEVIEW_H
 #include "PHMain.h"
 
 class PHImage;
@@ -30,11 +30,13 @@ public:
 	void setTextureCoordinates(const PHRect & r) { coords = r; };
 	virtual ~PHImageView();
 	virtual void draw();
+    virtual void render() { PHView::render();};
     
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; };
     
     static PHImageView * imageFromLua(void * L,const string & rootPath);
+    static PHImageView * imageFromClass(const string & clss);
 };
-
+#undef INSIDE_PHIMAGEVIEW_H
 #endif

@@ -12,7 +12,7 @@
 
 PHView * playerView = NULL;
 
-PHLPlayer::PHLPlayer()
+PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL)
 {
 	_class = "PHLPlayer";
 }
@@ -31,7 +31,8 @@ void PHLPlayer::loadView()
 	view = new PHPlayerView(PHMakeRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
     view->setRotationalCenter(PHMakePoint(-viewSize.x, -viewSize.y));
 	loadImages();
-    ((PHPlayerView*)view)->setDesignatedView(view->viewWithTag(20));
+    ((PHPlayerView*)view)->setDesignatedView(bodyView = (PHTrailImageView*)(view->viewWithTag(20)));
+    bodyView->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
 	view->setRotation(rot);
 	playerView = view;
 }
@@ -42,7 +43,8 @@ void PHLPlayer::loadView()
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
-	
+	if (!worldView)
+        bodyView->setStopView(worldView = (bodyView->superview()->superview()));
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	
 	b2Vec2 force;
@@ -57,6 +59,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	b2Vec2 center = body->GetWorldCenter();
 	body->ApplyForce(force, center);
 	double jumpGauge = wrld->jumpGauge();
+    bool forceUsed = !(queue->empty());
 	while (!queue->empty()) {
 		force.x = queue->front().x*TOUCH_FORCE_FACTOR;
 		force.y = queue->front().y*TOUCH_FORCE_FACTOR;
@@ -85,4 +88,5 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	if (jumpGauge > max)
 		jumpGauge = max;
 	wrld->setJumpGauge(jumpGauge);
+    bodyView->setTrailSize(forceUsed?30:0);
 }

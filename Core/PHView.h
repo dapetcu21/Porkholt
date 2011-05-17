@@ -44,11 +44,11 @@ protected:
 	void apply_rotation();
 	void apply_scaling();
 	void applyMatrices();
-	void loadMatrixTree();
 	
 	virtual void touchEvent(PHTouch * touch);
 	
 public:
+    void loadMatrixTree(PHView * until);
 	
 	enum EffectOrder
 	{

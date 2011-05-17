@@ -437,11 +437,11 @@ PHView * PHView::pointerDeepFirst(PHTouch * touch)
 }
 
 //geometry
-void PHView::loadMatrixTree()
+void PHView::loadMatrixTree(PHView * until)
 {
-	if (superView)
+	if (superView&&(superView!=until))
 	{
-		superView->loadMatrixTree();
+		superView->loadMatrixTree(until);
 	}
 	applyMatrices();
 }
@@ -451,7 +451,7 @@ PHPoint PHView::toMyCoordinates(PHPoint pnt)
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree();
+	loadMatrixTree(NULL);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	return PHUnTransformPointMatrix(m, pnt);
@@ -462,7 +462,7 @@ void PHView::toMyCoordinates(PHPoint * pnt, int n)
 	GLfloat m[16],inverse[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree();
+	loadMatrixTree(NULL);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	PHInvertMatrix(m, inverse);
@@ -475,7 +475,7 @@ PHPoint PHView::fromMyCoordinates(PHPoint pnt)
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree();
+	loadMatrixTree(NULL);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	return PHTransformPointMatrix(m, pnt);
@@ -486,7 +486,7 @@ void PHView::fromMyCoordinates(PHPoint * pnt, int n)
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree();
+	loadMatrixTree(NULL);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	for (int i=0; i<n; i++)
