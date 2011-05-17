@@ -53,20 +53,16 @@ using namespace std;
 #include "PHSemaphore.h"
 #include "PHRandom.h"
 
-#ifndef INSIDE_PHVIEW_H
-	#include "PHView.h"
-	#include "PHTestView.h"
-	#include "PHImageView.h"
-	#include "PHButtonView.h"
-#endif
+#include "PHView.h"
+#include "PHTestView.h"
+#include "PHImageView.h"
+#include "PHButtonView.h"
 
 #include "PHMainEvents.h"
 
-#ifndef INSIDE_PHVIEWCONTROLLER_H
-	#include "PHViewController.h"
-	#include "PHTestViewController.h"
-	#include "PHNavigationController.h"
-#endif
+#include "PHViewController.h"
+#include "PHTestViewController.h"
+#include "PHNavigationController.h"
 
 #include "PHLevelSystem.h"
 

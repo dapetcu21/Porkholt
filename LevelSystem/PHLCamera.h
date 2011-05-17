@@ -7,6 +7,7 @@
  *
  */
 
+#ifndef INSIDE_PHLOBJECT_H
 #ifndef PHLCAMERA_H
 #define PHLCAMERA_H
 
@@ -28,4 +29,5 @@ public:
 	void updateCamera(PHPoint pnt);
 };
 
+#endif
 #endif

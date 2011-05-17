@@ -7,6 +7,7 @@
  *
  */
 
+#ifndef INSIDE_PHVIEW_H
 #ifndef PHTESTVIEW_H
 #define PHTESTVIEW_H
 #include "PHMain.h"
@@ -23,4 +24,5 @@ protected:
 	
 };
 
+#endif
 #endif

@@ -88,5 +88,5 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	if (jumpGauge > max)
 		jumpGauge = max;
 	wrld->setJumpGauge(jumpGauge);
-    bodyView->setTrailSize(forceUsed?30:0);
+    bodyView->setTrailSize(forceUsed?10:0);
 }

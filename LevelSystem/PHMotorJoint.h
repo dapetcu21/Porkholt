@@ -6,6 +6,7 @@
 //  Copyright 2011 Home. All rights reserved.
 //
 
+#ifndef INSIDE_PHJOINT_H
 #ifndef PHMOTORJOINT_H
 #define PHMOTORJOINT_H
 #define INSIDE_PHMOTORJOINT_H
@@ -32,4 +33,5 @@ public:
 };
 
 #undef INSIDE_PHMOTORJOINT_H
+#endif
 #endif

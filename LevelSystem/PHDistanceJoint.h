@@ -6,6 +6,7 @@
 //  Copyright 2011 Home. All rights reserved.
 //
 
+#ifndef INSIDE_PHJOINT_H
 #ifndef PHDISTANCEJOINT_H
 #define PHDISTANCEJOINT_H
 
@@ -24,4 +25,5 @@ public:
     virtual void recreateJoint();
 };
 
+#endif
 #endif

@@ -7,6 +7,7 @@
  *
  */
 
+#ifndef INSIDE_PHVIEW_H
 #ifndef PHBUTTONVIEW_H
 #define PHBUTTONVIEW_H
 #include "PHMain.h"
@@ -40,4 +41,5 @@ protected:
 	virtual void touchEvent(PHTouch * touch);
 };
 
+#endif
 #endif

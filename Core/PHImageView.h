@@ -7,6 +7,7 @@
  *
  */
 
+#ifndef INSIDE_PHVIEW_H
 #ifndef PHIMAGEVIEW_H
 #define PHIMAGEVIEW_H
 #define INSIDE_PHIMAGEVIEW_H
@@ -39,4 +40,5 @@ public:
     static PHImageView * imageFromClass(const string & clss);
 };
 #undef INSIDE_PHIMAGEVIEW_H
+#endif
 #endif

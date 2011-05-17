@@ -78,5 +78,5 @@ public:
     
     b2Body * getBody() { return body; }
 };
-
+#undef INSIDE_PHLOBJECT_H
 #endif

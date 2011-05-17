@@ -6,6 +6,8 @@
 //  Copyright 2011 Home. All rights reserved.
 //
 
+#ifndef INSIDE_PHJOINT_H
+#ifndef INSIDE_PHMOTORJOINT_H
 #ifndef PHPRISMATICJOINT_H
 #define PHPRISMATICJOINT_H
 
@@ -35,4 +37,6 @@ public:
     void setLimitEnabled(bool val);
 };
 
+#endif
+#endif
 #endif

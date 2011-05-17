@@ -126,6 +126,8 @@
 		C1C359251323C08000D3A95A /* PHLua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C359241323C08000D3A95A /* PHLua.cpp */; };
 		C1D6A1F01381233E0010009E /* PHPlayerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A1EE1381233E0010009E /* PHPlayerView.cpp */; };
 		C1D6A20C138262F40010009E /* PHTrailImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A20A138262F40010009E /* PHTrailImageView.cpp */; };
+		C1D6A2181382A31C0010009E /* PHLAuxLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */; };
+		C1D6A21C13831DEF0010009E /* PHAuxLayerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 		C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */; };
 /* End PBXBuildFile section */
@@ -308,6 +310,10 @@
 		C1D6A1EF1381233E0010009E /* PHPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPlayerView.h; sourceTree = "<group>"; };
 		C1D6A20A138262F40010009E /* PHTrailImageView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTrailImageView.cpp; sourceTree = "<group>"; };
 		C1D6A20B138262F40010009E /* PHTrailImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTrailImageView.h; sourceTree = "<group>"; };
+		C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLAuxLayer.cpp; sourceTree = "<group>"; };
+		C1D6A2171382A31C0010009E /* PHLAuxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAuxLayer.h; sourceTree = "<group>"; };
+		C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAuxLayerView.cpp; sourceTree = "<group>"; };
+		C1D6A21B13831DEE0010009E /* PHAuxLayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAuxLayerView.h; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -452,6 +458,8 @@
 				C192A11313185B5000C18BA2 /* PHButtonView.cpp */,
 				C11E56CA13436F14008881B9 /* PHMessage.h */,
 				C11E56CB13436F14008881B9 /* PHMessage.cpp */,
+				C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */,
+				C1D6A21B13831DEE0010009E /* PHAuxLayerView.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -490,6 +498,8 @@
 				C1D6A1EF1381233E0010009E /* PHPlayerView.h */,
 				C1D6A20A138262F40010009E /* PHTrailImageView.cpp */,
 				C1D6A20B138262F40010009E /* PHTrailImageView.h */,
+				C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */,
+				C1D6A2171382A31C0010009E /* PHLAuxLayer.h */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -820,6 +830,8 @@
 				C1B4AEDF137E5A2E006E65FE /* PHPrismaticJoint.cpp in Sources */,
 				C1D6A1F01381233E0010009E /* PHPlayerView.cpp in Sources */,
 				C1D6A20C138262F40010009E /* PHTrailImageView.cpp in Sources */,
+				C1D6A2181382A31C0010009E /* PHLAuxLayer.cpp in Sources */,
+				C1D6A21C13831DEF0010009E /* PHAuxLayerView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

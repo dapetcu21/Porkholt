@@ -7,6 +7,7 @@
  *
  */
 
+#ifndef INSIDE_PHLOBJECT_H
 #ifndef PHLPLAYER_H
 #define PHLPLAYER_H
 
@@ -28,4 +29,5 @@ public:
 	virtual void loadView();
 };
 
+#endif
 #endif

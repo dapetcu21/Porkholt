@@ -12,21 +12,17 @@
 
 #include "PHLevelController.h"
 #include "PHWorld.h"
-#include "PHJoint.h"
-#ifndef INSIDE_PHJOINT_H
-    #include "PHDistanceJoint.h"
-    #include "PHMotorJoint.h"
-    #ifndef INSIDE_PHMOTORJOINT_H
-        #include "PHRevoluteJoint.h"
-        #include "PHPrismaticJoint.h"
-    #endif
-#endif
 
-#ifndef INSIDE_PHLOBJECT_H
-	#include "PHLObject.h"
-	#include "PHLCamera.h"
-	#include "PHLPlayer.h"
-#endif
+#include "PHJoint.h"
+#include "PHDistanceJoint.h"
+#include "PHMotorJoint.h"
+#include "PHRevoluteJoint.h"
+#include "PHPrismaticJoint.h"
+
+#include "PHLObject.h"
+#include "PHLCamera.h"
+#include "PHLPlayer.h"
+#include "PHLAuxLayer.h"
 
 #include "PHPlayerView.h"
 #include "PHTrailImageView.h"

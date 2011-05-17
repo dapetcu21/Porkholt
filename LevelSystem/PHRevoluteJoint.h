@@ -6,6 +6,8 @@
 //  Copyright 2011 Home. All rights reserved.
 //
 
+#ifndef INSIDE_PHJOINT_H
+#ifndef INSIDE_PHMOTORJOINT_H
 #ifndef PHREVOLUTEJOINT_H
 #define PHREVOLUTEJOINT_H
 
@@ -34,4 +36,6 @@ public:
     void setLimitEnabled(bool val);
 };
 
+#endif
+#endif
 #endif
