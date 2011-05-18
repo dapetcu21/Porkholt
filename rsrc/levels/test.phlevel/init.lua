@@ -20,6 +20,15 @@ obj.posY = 0;
 obj.name = 20;
 addObject(obj);
 
+br1,br2 = createBridge(3,{x=8+0.15; y=2;},{x=10-0.15; y=2.5},7,0.1,function ()
+local obj = objectWithClass("PHLObject");
+obj.physics.dynamic = true;
+objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
+objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
+return addObject(obj);
+end
+);
+
 --platforma 0
 obj = objectWithClass("PHLObject")
 obj.posX = 7
@@ -27,13 +36,30 @@ obj.posY = 2;
 objectAddBox(obj,-1,-0.15,2,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
 platforma0=addObject(obj);
+
+--platforma0->pod
+joint = jointWithClass("PHDistanceJoint");
+joint.body1 = platforma0;
+joint.body2 = br1;
+joint.anchor1 = {x=1; y=0;};
+joint.anchor2 = {x=-0.1; y=0;};
+addJoint(joint);
+
 --platforma 1
 obj = objectWithClass("PHLObject");
 obj.posX = 11;
 obj.posY = 2.5;
 objectAddBox(obj,-1,-0.15,2,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
-addObject(obj);
+platforma1 = addObject(obj);
+
+--platforma1->pod
+joint = jointWithClass("PHDistanceJoint");
+joint.body1 = platforma1;
+joint.body2 = br2;
+joint.anchor1 = {x=-1; y=0;};
+joint.anchor2 = {x=0.1; y=0;};
+addJoint(joint);
 
 --platforma 2
 obj = objectWithClass("PHLObject");
@@ -54,26 +80,26 @@ platforma3=obj;
 
 --niste lemn
 
-last = platforma0;
-for i=0,4 do
-		obj = objectWithClass("PHLObject");
-		obj.posX = 7+i*0.31;
-		obj.posY = 2;
-		obj.physics.dynamic = true;
-		objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
-		objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
-		addObject(obj);
-		
-		if (last) then
-			joint = jointWithClass("PHDistanceJoint");
-			joint.body1 = last;
-			joint.body2 = obj;
-			joint.anchor1 = {x=0.13; y=0};
-			joint.anchor2 = {x=-0.13; y=0};
-			addJoint(joint);
-		end
-		last = obj;
-end 
+--last = platforma0;
+--for i=0,4 do
+--		obj = objectWithClass("PHLObject");
+--		obj.posX = 7+i*0.31;
+--		obj.posY = 2;
+--		obj.physics.dynamic = true;
+--		objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
+--		objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
+--		addObject(obj);
+--		
+--		if (last) then
+--			joint = jointWithClass("PHDistanceJoint");
+--			joint.body1 = last;
+--			joint.body2 = obj;
+--			joint.anchor1 = {x=0.13; y=0};
+--			joint.anchor2 = {x=-0.13; y=0};
+--			addJoint(joint);
+--		end
+--		last = obj;
+--end 
 
 
 --wrecking ball
