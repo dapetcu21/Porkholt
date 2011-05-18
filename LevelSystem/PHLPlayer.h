@@ -18,6 +18,7 @@ class PHLPlayer : public PHLObject
 {
 private:
     PHTrailImageView * bodyView;
+    PHImageView * faceView;
     PHView * worldView;
 public:
 	PHLPlayer();

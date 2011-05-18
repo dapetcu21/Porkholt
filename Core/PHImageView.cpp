@@ -10,7 +10,7 @@
 #include "PHMain.h"
 #include "PHLua.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), coords(PHWholeRect), tint(PHInvalidColor)
+#define PHIMAGEVIEW_INIT _image(NULL), coords(PHWholeRect), tint(PHInvalidColor), flipVert(false), flipHoriz(false)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -34,7 +34,20 @@ PHImageView::~PHImageView()
 void PHImageView::draw()
 {
 	if (_image)
-		_image->renderInFramePortionTint(_bounds,coords,tint);
+    {
+        PHRect frame = _bounds;
+        if (flipHoriz)
+        {
+            frame.x+=frame.width;
+            frame.width = -frame.width;
+        }
+        if (flipVert)
+        {
+            frame.y+=frame.height;
+            frame.height = -frame.height;
+        }
+		_image->renderInFramePortionTint(frame,coords,tint);
+    }
 }
 
 void PHImageView::setImage(PHImage * image) 
@@ -131,6 +144,20 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
                 tag = lua_tonumber(L, -1);
             lua_pop(L, 1);
             
+            bool flipHoriz = false;
+            lua_pushstring(L, "horizontallyFlipped");
+            lua_gettable(L, -2);
+            if (lua_isnumber(L, -1))
+                flipHoriz = lua_tonumber(L, -1);
+            lua_pop(L, 1);
+            
+            bool flipVert = false;
+            lua_pushstring(L, "verticallyFlipped");
+            lua_gettable(L, -2);
+            if (lua_isnumber(L, -1))
+                flipVert = lua_tonumber(L, -1);
+            lua_pop(L, 1);
+            
             lua_pushstring(L, "tint");
             lua_gettable(L, -2);
             PHColor tint = PHColor::colorFromLua(L);
@@ -153,6 +180,8 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
             img->setFrame(frame);
             img->setOptimizations(true);
             img->setTag(tag);
+            img->setHorizontallyFlipped(flipHoriz);
+            img->setVerticallyFlipped(flipVert);
         }
     }
     return img;

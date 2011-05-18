@@ -21,6 +21,7 @@ protected:
 	PHImage * _image;
 	PHRect coords;
     PHColor tint;
+    bool flipHoriz,flipVert;
 public:
 	PHImage * image() { return _image; };
 	void setImage(PHImage * image);
@@ -35,6 +36,10 @@ public:
     
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; };
+    bool horizontallyFlipped() { return flipHoriz; }
+    bool verticallyFlipped() { return flipVert; }
+    void setHorizontallyFlipped(bool b) { flipHoriz = b; }
+    void setVerticallyFlipped(bool b) { flipVert = b; }
     
     static PHImageView * imageFromLua(void * L,const string & rootPath);
     static PHImageView * imageFromClass(const string & clss);

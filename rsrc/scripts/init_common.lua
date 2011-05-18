@@ -77,7 +77,7 @@ function Initializers.PHLPlayer(obj)
 	objectAddCircle(obj,0.25,{restitution = 0.6;});
 	obj.maxVelocityX = 3;
 	objectAddImage(obj,"/ball.png",-0.25,-0.25,0.5,0.5,{tag=20; class="PHTrailImageView"});
-    objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5);
+    objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5,{tag=21});
 end
 
 function objectWithClass(class)

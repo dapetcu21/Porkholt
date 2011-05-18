@@ -12,7 +12,7 @@
 
 PHView * playerView = NULL;
 
-PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL)
+PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL)
 {
 	_class = "PHLPlayer";
 }
@@ -33,6 +33,7 @@ void PHLPlayer::loadView()
     view->setRotationalCenter(PHMakePoint(-viewSize.x, -viewSize.y));
 	loadImages();
     ((PHPlayerView*)view)->setDesignatedView(bodyView = (PHTrailImageView*)(view->viewWithTag(20)));
+    faceView = (PHImageView*)(view->viewWithTag(21));
     bodyView->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
 	view->setRotation(rot);
 	playerView = view;
@@ -93,4 +94,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 		jumpGauge = max;
 	wrld->setJumpGauge(jumpGauge);
     bodyView->setTrailSize(forceUsed?10:0);
+    b2Vec2 speed = body->GetLinearVelocity();
+    if (faceView)
+        faceView->setHorizontallyFlipped(speed.x<0);
 }
