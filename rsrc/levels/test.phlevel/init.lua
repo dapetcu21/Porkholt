@@ -20,7 +20,7 @@ obj.posY = 0;
 obj.name = 20;
 addObject(obj);
 --podu
-br1,br2 = createBridge(3,{x=8+0.15; y=2;},{x=10-0.15; y=2.5},7,0.1,function ()
+br1,br2 = createBridge(3,{x=8+0.15; y=2;},{x=10-0.15; y=2.5},7,0.01,function ()
 local obj = objectWithClass("PHLObject");
 obj.physics.dynamic = true;
 objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
@@ -29,11 +29,15 @@ return addObject(obj);
 end
 );
 
+boxW = ((792-29-12)/792)*2;
+posBox = (29/792-0.5)*2;
+
+
 --platforma 0
 obj = objectWithClass("PHLObject")
 obj.posX = 7
 obj.posY = 2;
-objectAddBox(obj,-1,-0.15,2,0.3)
+objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
 platforma0=addObject(obj);
 
@@ -49,7 +53,7 @@ addJoint(joint);
 obj = objectWithClass("PHLObject");
 obj.posX = 11;
 obj.posY = 2.5;
-objectAddBox(obj,-1,-0.15,2,0.3)
+objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3)
 platforma1 = addObject(obj);
 
@@ -65,7 +69,7 @@ addJoint(joint);
 obj = objectWithClass("PHLObject");
 obj.posX = 14
 obj.posY = 3;
-objectAddBox(obj,-1,-0.15,2,0.3);
+objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 addObject(obj);
 
@@ -73,7 +77,7 @@ addObject(obj);
 obj = objectWithClass("PHLObject");
 obj.posX = 17;
 obj.posY = 3.5;
-objectAddBox(obj,-1,-0.15,2,0.3);
+objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 platforma3=obj;
 
@@ -154,8 +158,8 @@ obj = objectWithClass("PHLObject")
 obj.posX = 0;
 obj.posY = 0.25;
 for i=-2,6 do
-	objectAddImage(obj,"ground.png",4*i,-0.85,2*1.1,1*1.1);
-	objectAddImage(obj,"ground.png",4*i+2,-0.85,2*1.1,1*1.1);
+	objectAddImage(obj,"ground.png",4*i,-0.75,2*1.1,1);
+	objectAddImage(obj,"ground.png",4*i+2,-0.75,2*1.1,1);
 	objectAddImage(obj,"grass.png",4*i,-0.15,4*1.1,0.4);
 end
 objectAddBox(obj,0,-0.25,20,0.5)

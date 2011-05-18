@@ -95,6 +95,6 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	wrld->setJumpGauge(jumpGauge);
     bodyView->setTrailSize(forceUsed?10:0);
     b2Vec2 speed = body->GetLinearVelocity();
-    if (faceView)
+    if (faceView&&(abs(speed.x)>=0.1))
         faceView->setHorizontallyFlipped(speed.x<0);
 }

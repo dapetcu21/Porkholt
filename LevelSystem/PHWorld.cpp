@@ -12,15 +12,18 @@
 #include "PHGaugeView.h"
 #include <Box2D/Box2D.h>
 
-#define GAUGE_WIDTH 304
-#define GAUGE_HEIGHT 19
+//304 19
+#define GAUGE_WIDTH 256
+#define GAUGE_HEIGHT 16
 
 PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(50), controller(cntr)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
-	jumpGaugeView = new PHGaugeView(PHMakeRect(bounds.x+5, bounds.height-5-GAUGE_HEIGHT, GAUGE_WIDTH, GAUGE_HEIGHT));
+	jumpGaugeView = new PHGaugeView(PHMakeRect(bounds.x+2, bounds.height-5-GAUGE_HEIGHT, GAUGE_WIDTH, GAUGE_HEIGHT));
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
+    PHImageView * frameView = new PHImageView(PHMakeRect(bounds.x,bounds.height-25,bounds.width,25));
+    frameView->setImage(PHImage::imageNamed("frame"));
 	PHMutex * mutex = cntr->mutex;
 	view->setMutex(mutex);
 	view->setQueue(&eventQueue);
@@ -34,6 +37,7 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	worldSize = size;
 	view->addSubview(layerView);
 	view->addSubview(worldView);
+    view->addSubview(frameView);
 	view->addSubview(jumpGaugeView);
 	b2Vec2 grav(0,-10);
 	physicsWorld = new b2World(grav,true);
