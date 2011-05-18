@@ -44,7 +44,10 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
 	if (!worldView)
+    {
         bodyView->setStopView(worldView = (bodyView->superview()->superview()));
+        bodyView->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
+    }
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	
 	b2Vec2 force;

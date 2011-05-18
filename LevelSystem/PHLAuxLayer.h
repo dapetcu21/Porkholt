@@ -18,7 +18,7 @@ class PHAuxLayerView;
 class PHLAuxLayer : public PHLObject
 {
 protected:
-    PHAuxLayerView * view;
+    int name;
 public:
 	PHLAuxLayer();
 	virtual ~PHLAuxLayer();

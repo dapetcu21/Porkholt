@@ -362,6 +362,8 @@ PHLObject * PHLObject::objectWithClass(const string & str)
 		return new PHLCamera;
 	if (str=="PHLPlayer")
 		return new PHLPlayer;
+    if (str=="PHLAuxLayer")
+        return new PHLAuxLayer;
 	return new PHLObject;
 }
 

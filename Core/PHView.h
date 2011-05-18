@@ -14,6 +14,7 @@
 #include "PHMain.h"
 #include "PHAnimationDescriptor.h"
 
+class PHAuxLayerView;
 class PHView : public PHObject
 {
 protected:
@@ -37,6 +38,7 @@ protected:
 	int effOrder;
     int _tag;
     
+    virtual void auxRender();
 	virtual void render();
 	void drawBackground();
 	virtual void draw();
@@ -122,6 +124,15 @@ public:
 	static void cancelAllAnimationsWithTag(int tag);
 	static void cancelAllAnimations() { cancelAllAnimationsWithTag(0); };
 
+//auxiliar view binding
+private:
+    PHAuxLayerView * auxLayer;
+    PHView * auxSuperview;
+    bool drawingOnAuxLayer;
+    
+    friend class PHAuxLayerView;
+public:
+    void bindToAuxLayer(PHAuxLayerView * layer, PHView * from);
 };
 
 #undef INSIDE_PHVIEW_H

@@ -7,13 +7,13 @@
  *
  */
 
-#include "PHView.h"
+#include "PHMain.h"
 
 std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -219,8 +219,10 @@ void PHView::cancelAllAnimationsWithTag(int tag)
 
 PHView::~PHView()
 {
-	cancelAnimations();
+    cancelAnimations();
 	
+    if (auxLayer)
+        auxLayer->removeView(this);
 	PHEventHandler::sharedInstance()->removeView(this);
 	
 	PHView::ViewEl * p = viewsSt;
@@ -499,4 +501,18 @@ PHView * PHView::viewWithTag(int tag)
         if (ve->el->tag()==tag)
             return ve->el;
     return NULL;
+}
+
+void PHView::bindToAuxLayer(PHAuxLayerView * layer, PHView * from)
+{
+    if (auxLayer)
+        auxLayer->removeView(this);
+    auxLayer = layer;
+    if (auxLayer)
+        auxLayer->addView(this);
+    auxSuperview = from;
+}
+void PHView::auxRender()
+{
+    render();
 }

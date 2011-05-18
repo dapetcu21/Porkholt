@@ -39,6 +39,7 @@ public:
 	PHTrailImageView(PHImage * image);
 	virtual ~PHTrailImageView();
     virtual void render();
+    virtual void auxRender();
     
     int trailSize() { return trail; }
     void setTrailSize(int tr) { trail = tr; }

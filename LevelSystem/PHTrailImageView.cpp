@@ -30,9 +30,6 @@ void PHTrailImageView::saveState(pframe & fr)
 
 void PHTrailImageView::loadState(const pframe & fr)
 {
-    glLoadIdentity();
-    if (_stopView)
-        _stopView->loadMatrixTree(NULL);
     glMultMatrixf(fr.m);
     loadMinState(fr);
 }
@@ -47,15 +44,19 @@ void PHTrailImageView::loadMinState(const pframe & fr)
     setTintColor(fr.tint);
 }
 
-void PHTrailImageView::render()
+void PHTrailImageView::auxRender()
 {
     glPushMatrix();
     pframe fr;
     saveMinState(fr);
+    glLoadIdentity();
+    if (_stopView)
+        _stopView->loadMatrixTree(NULL);
     int n = frames.size();
     int nr = 1;
     for (list<pframe>::iterator i = frames.begin(); i!=frames.end(); i++)
     {
+        glPushMatrix();
         loadState(*i);
         nr++;
         if (tint==PHInvalidColor)
@@ -66,14 +67,21 @@ void PHTrailImageView::render()
         //tint.b*=0.6;
         drawBackground();
         draw();
+        glPopMatrix();
     }
     glPopMatrix();
     loadMinState(fr);
+}
+
+void PHTrailImageView::render()
+{
     PHImageView::render();
     ssnap=(ssnap+1)%snap;
     if (!ssnap)
         pushFrame();
 }
+                              
+
 
 void PHTrailImageView::pushFrame()
 {

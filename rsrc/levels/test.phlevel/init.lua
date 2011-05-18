@@ -1,8 +1,8 @@
 require("init_common");
--- aci bagi nebunia de obiecte!!
+
 lyr = { scale = 0.3; }
 for i=-2,3 do
-	layerAddImage(lyr,"lyr1.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
+	layerAddImage(lyr,"hills.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
 end
 addLayer(lyr);
 
@@ -13,6 +13,12 @@ for i=-2,3 do
 	layerAddImage(lyr,"cloud"..ci..".png",i*5*scl+(math.random()%2-1)*scl,3*scl+(math.random()%2-1)*scl,362/480*3*scl,156/480*3*scl);
 end
 addLayer(lyr);
+
+obj=objectWithClass("PHLAuxLayer");
+obj.posX = 0;
+obj.posY = 0;
+obj.name = 20;
+addObject(obj);
 
 --platforma 0
 obj = objectWithClass("PHLObject")

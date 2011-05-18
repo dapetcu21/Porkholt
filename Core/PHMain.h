@@ -54,6 +54,7 @@ using namespace std;
 #include "PHRandom.h"
 
 #include "PHView.h"
+#include "PHAuxLayerView.h"
 #include "PHTestView.h"
 #include "PHImageView.h"
 #include "PHButtonView.h"
