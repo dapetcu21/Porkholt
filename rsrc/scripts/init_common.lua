@@ -217,6 +217,7 @@ function createBridge(bridgeRadius, p1,p2 ,numLogs, jointPos, creator)
 			joint.body2 = obj;
 			joint.anchor1 = {x=jointPos; y=0;};
 			joint.anchor2 = {x=-jointPos; y=0;};
+            joint.collideConnected = false;
 			addJoint(joint);
 		else
 			first = obj;
