@@ -19,7 +19,7 @@ obj.posX = 0;
 obj.posY = 0;
 obj.name = 20;
 addObject(obj);
-
+--podu
 br1,br2 = createBridge(3,{x=8+0.15; y=2;},{x=10-0.15; y=2.5},7,0.1,function ()
 local obj = objectWithClass("PHLObject");
 obj.physics.dynamic = true;
