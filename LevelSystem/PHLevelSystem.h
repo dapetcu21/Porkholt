@@ -23,6 +23,7 @@
 #include "PHLCamera.h"
 #include "PHLPlayer.h"
 #include "PHLAuxLayer.h"
+#include "PHLPlatform.h"
 
 #include "PHPlayerView.h"
 #include "PHTrailImageView.h"

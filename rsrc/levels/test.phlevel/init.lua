@@ -14,11 +14,6 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
-obj=objectWithClass("PHLAuxLayer");
-obj.posX = 0;
-obj.posY = 0;
-obj.name = 20;
-addObject(obj);
 --podu
 br1,br2 = createBridge(3,{x=8+0.15; y=2;},{x=10-0.15; y=2.5},7,0.01,function ()
 local obj = objectWithClass("PHLObject");
@@ -34,7 +29,7 @@ posBox = (29/792-0.5)*2;
 
 
 --platforma 0
-obj = objectWithClass("PHLObject")
+obj = objectWithClass("PHLPlatform")
 obj.posX = 7
 obj.posY = 2;
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
@@ -50,7 +45,7 @@ joint.anchor2 = {x=-0.1; y=0;};
 addJoint(joint);
 
 --platforma 1
-obj = objectWithClass("PHLObject");
+obj = objectWithClass("PHLPlatform");
 obj.posX = 11;
 obj.posY = 2.5;
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
@@ -66,7 +61,7 @@ joint.anchor2 = {x=0.1; y=0;};
 addJoint(joint);
 
 --platforma 2
-obj = objectWithClass("PHLObject");
+obj = objectWithClass("PHLPlatform");
 obj.posX = 14
 obj.posY = 3;
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
@@ -74,37 +69,19 @@ objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 addObject(obj);
 
 --platforma 3
-obj = objectWithClass("PHLObject");
+obj = objectWithClass("PHLPlatform");
 obj.posX = 17;
 obj.posY = 3.5;
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 platforma3=obj;
 
-
---niste lemn
-
---last = platforma0;
---for i=0,4 do
---		obj = objectWithClass("PHLObject");
---		obj.posX = 7+i*0.31;
---		obj.posY = 2;
---		obj.physics.dynamic = true;
---		objectAddCircle(obj,0.15,{ friction = 0.3; density = 0.1 });
---		objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
---		addObject(obj);
---		
---		if (last) then
---			joint = jointWithClass("PHDistanceJoint");
---			joint.body1 = last;
---			joint.body2 = obj;
---			joint.anchor1 = {x=0.13; y=0};
---			joint.anchor2 = {x=-0.13; y=0};
---			addJoint(joint);
---		end
---		last = obj;
---end 
-
+--trail
+obj=objectWithClass("PHLAuxLayer");
+obj.posX = 0;
+obj.posY = 0;
+obj.name = 20;
+addObject(obj);
 
 --wrecking ball
 obj = objectWithClass("PHLObject");
@@ -115,15 +92,15 @@ obj.posY = 3.5-(2-ballr)*scale;
 obj.physics.dynamic = true;
 objectAddCircle(obj,ballr*scale);
 objectAddImage(obj,"wrecking_ball.png",-0.5*scale,-ballr*scale,1*scale,2*scale);
-cutie=obj;
+bilos=obj;
 
-addObject(cutie);
+addObject(bilos);
 addObject(platforma3);
 
 --jah bless teh joint
 joint = jointWithClass("PHRevoluteJoint");
 joint.body1 = platforma3;
-joint.body2 = cutie;
+joint.body2 = bilos;
 joint.anchor = {x=17; y=3.5;};
 joint.worldCoordinates = true;
 addJoint(joint);

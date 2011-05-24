@@ -81,7 +81,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 					force.y*=jumpGauge/length;
 				length = jumpGauge;
 			} else
-				temporarilyDisableVelocityLimit();
+				;//temporarilyDisableVelocityLimit();
 			jumpGauge -= length;
 		}
 		force.x/=60;

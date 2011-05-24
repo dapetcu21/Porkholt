@@ -13,7 +13,7 @@ std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -141,8 +141,11 @@ void PHView::render()
 	
 	if (!optimizeOut)
 	{
-		drawBackground();
-		draw();
+        if ( !auxLayer || !dontDrawOnMain )
+        {
+            drawBackground();
+            draw();
+        }
 		PHView::ViewEl * p = viewsSt;
 		while (p)
 		{

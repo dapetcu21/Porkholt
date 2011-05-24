@@ -11,6 +11,19 @@
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
+PHLObject * PHLObject::objectWithClass(const string & str)
+{
+	if (str=="PHLCamera")
+		return new PHLCamera;
+	if (str=="PHLPlayer")
+		return new PHLPlayer;
+    if (str=="PHLAuxLayer")
+        return new PHLAuxLayer;
+    if (str=="PHLPlatform")
+        return new PHLPlatform;
+	return new PHLObject;
+}
+
 PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false)
 {
 }
@@ -139,12 +152,30 @@ void PHLObject::loadBody(void *l)
 					if (lua_isnumber(L, -1))
 						boxY = lua_tonumber(L, -1);
 					lua_pop(L,1);
-					
+                    
 					b2FixtureDef fdef;
 					fdef.friction = friction;
 					fdef.density = density;
 					fdef.restitution = restitution;				
 
+                    lua_pushstring(L, "groupIndex");
+                    lua_gettable(L, -2);
+                    if (lua_isnumber(L, -1))
+                        fdef.filter.groupIndex = lua_tonumber(L, -1);
+                    lua_pop(L,1);
+                    
+                    lua_pushstring(L, "categoryBits");
+                    lua_gettable(L, -2);
+                    if (lua_isnumber(L, -1))
+                        fdef.filter.categoryBits = lua_tonumber(L, -1);
+                    lua_pop(L,1);
+                    
+                    lua_pushstring(L, "maskBits");
+                    lua_gettable(L, -2);
+                    if (lua_isnumber(L, -1))
+                        fdef.filter.maskBits = lua_tonumber(L, -1);
+                    lua_pop(L,1);
+                    
 					if (strcmp(typ, "box")==0)
 					{
 						b2PolygonShape shape;
@@ -311,7 +342,7 @@ void PHLObject::updatePosition()
 	setRotation(-body->GetAngle()*180.0f/M_PI);
 }
 
-#define LIMIT_CUTOFF 5.0f
+#define LIMIT_CUTOFF 2.0f
 
 void PHLObject::limitVelocity()
 {
@@ -356,17 +387,6 @@ void PHLObject::limitVelocity()
 	body->SetLinearVelocity(v);
 }
 
-PHLObject * PHLObject::objectWithClass(const string & str)
-{
-	if (str=="PHLCamera")
-		return new PHLCamera;
-	if (str=="PHLPlayer")
-		return new PHLPlayer;
-    if (str=="PHLAuxLayer")
-        return new PHLAuxLayer;
-	return new PHLObject;
-}
-
 void PHLObject::addJoint(PHJoint * joint)
 {
     joints.push_back(joint);
@@ -380,4 +400,29 @@ void PHLObject::removeJoint(PHJoint * joint)
             joints.erase(i);
             break;
         }
+}
+
+bool PHLObject::collidesWith(PHLObject * obj)
+{
+    return true;
+}
+
+void PHLObject::contactBegin(bool b,b2Contact* contact)
+{
+    
+}
+
+void PHLObject::contactEnd(bool b,b2Contact* contact)
+{
+    
+}
+
+void PHLObject::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold)
+{
+    
+}
+
+void PHLObject::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)
+{
+    
 }

@@ -18,6 +18,9 @@ class PHImageView;
 class PHJoint;
 class b2World;
 class b2Body;
+class b2Contact;
+class b2Manifold;
+class b2ContactImpulse;
 
 class PHLObject : public PHObject
 {
@@ -77,6 +80,12 @@ public:
 	void updatePosition();
     
     b2Body * getBody() { return body; }
+    
+    virtual bool collidesWith(PHLObject * obj);
+    virtual void contactBegin(bool b,b2Contact* contact);
+    virtual void contactEnd(bool b,b2Contact* contact);
+    virtual void contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold);
+    virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
 };
 #undef INSIDE_PHLOBJECT_H
 #endif

@@ -10,11 +10,11 @@
 
 #define INIT_LIST ,snap(1),ssnap(0),trail(0),_stopView(NULL)
 
-PHTrailImageView::PHTrailImageView() : PHImageView() INIT_LIST {}
+PHTrailImageView::PHTrailImageView() : PHImageView() INIT_LIST { dontDrawOnMain = false; }
 
-PHTrailImageView::PHTrailImageView(const PHRect &frame): PHImageView(frame) INIT_LIST {}
+PHTrailImageView::PHTrailImageView(const PHRect &frame): PHImageView(frame) INIT_LIST { dontDrawOnMain = false; }
 
-PHTrailImageView::PHTrailImageView(PHImage * image) : PHImageView(image) INIT_LIST {}
+PHTrailImageView::PHTrailImageView(PHImage * image) : PHImageView(image) INIT_LIST { dontDrawOnMain = false;}
 
 PHTrailImageView::~PHTrailImageView() {}
 

@@ -128,6 +128,7 @@
 		C1D6A20C138262F40010009E /* PHTrailImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A20A138262F40010009E /* PHTrailImageView.cpp */; };
 		C1D6A2181382A31C0010009E /* PHLAuxLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */; };
 		C1D6A21C13831DEF0010009E /* PHAuxLayerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */; };
+		C1F1DE17138B963500C8051C /* PHLPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F1DE15138B963500C8051C /* PHLPlatform.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 		C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */; };
 /* End PBXBuildFile section */
@@ -314,6 +315,8 @@
 		C1D6A2171382A31C0010009E /* PHLAuxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAuxLayer.h; sourceTree = "<group>"; };
 		C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAuxLayerView.cpp; sourceTree = "<group>"; };
 		C1D6A21B13831DEE0010009E /* PHAuxLayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAuxLayerView.h; sourceTree = "<group>"; };
+		C1F1DE15138B963500C8051C /* PHLPlatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPlatform.cpp; sourceTree = "<group>"; };
+		C1F1DE16138B963500C8051C /* PHLPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPlatform.h; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -500,6 +503,8 @@
 				C1D6A20B138262F40010009E /* PHTrailImageView.h */,
 				C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */,
 				C1D6A2171382A31C0010009E /* PHLAuxLayer.h */,
+				C1F1DE15138B963500C8051C /* PHLPlatform.cpp */,
+				C1F1DE16138B963500C8051C /* PHLPlatform.h */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -832,6 +837,7 @@
 				C1D6A20C138262F40010009E /* PHTrailImageView.cpp in Sources */,
 				C1D6A2181382A31C0010009E /* PHLAuxLayer.cpp in Sources */,
 				C1D6A21C13831DEF0010009E /* PHAuxLayerView.cpp in Sources */,
+				C1F1DE17138B963500C8051C /* PHLPlatform.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

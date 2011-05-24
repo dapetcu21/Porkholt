@@ -125,14 +125,16 @@ public:
 	static void cancelAllAnimations() { cancelAllAnimationsWithTag(0); };
 
 //auxiliar view binding
-private:
+protected:
     PHAuxLayerView * auxLayer;
     PHView * auxSuperview;
     bool drawingOnAuxLayer;
+    bool dontDrawOnMain;
     
     friend class PHAuxLayerView;
 public:
     void bindToAuxLayer(PHAuxLayerView * layer, PHView * from);
+    void setDontDrawToMain( bool val) { dontDrawOnMain = val; }
 };
 
 #undef INSIDE_PHVIEW_H

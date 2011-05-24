@@ -17,6 +17,8 @@ class PHCaptureView;
 class PHGaugeView;
 class PHJoint;
 class b2World;
+class b2ContactFilter;
+class b2ContactListener;
 
 class PHWorld : public PHObject 
 {
@@ -33,6 +35,8 @@ private:
 	PHRect worldSize;
 	
 	b2World * physicsWorld;
+    b2ContactFilter * contactFilter;
+    b2ContactListener * contactListener;
 	
 	vector<PHLObject*> objects;
     vector<PHJoint*>joints;

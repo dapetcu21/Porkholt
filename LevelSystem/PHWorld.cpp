@@ -16,6 +16,66 @@
 #define GAUGE_WIDTH 256
 #define GAUGE_HEIGHT 16
 
+class PHContactListener : public b2ContactListener
+{
+public:
+    void BeginContact(b2Contact* contact)
+    { 
+        PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+        PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+        if (o1)
+            o1->contactBegin(false,contact);
+        if (o2)
+            o2->contactBegin(true,contact);
+    }
+    
+    void EndContact(b2Contact* contact)
+    { 
+        PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+        PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+        if (o1)
+            o1->contactEnd(false,contact);
+        if (o2)
+            o2->contactEnd(true,contact);
+    }
+    
+    void PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+    { 
+        PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+        PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+        if (o1)
+            o1->contactPreSolve(false,contact, oldManifold);
+        if (o2)
+            o2->contactPreSolve(true,contact, oldManifold);
+    }
+    
+    void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+    {
+        PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+        PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+        if (o1)
+            o1->contactPostSolve(false,contact, impulse);
+        if (o2)
+            o2->contactPostSolve(true,contact, impulse);
+    }
+};
+
+class PHContactFilter : public b2ContactFilter
+{
+public:
+    bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
+    {
+        bool collide =  b2ContactFilter::ShouldCollide(fixtureA,fixtureB);
+        PHLObject * objA = (PHLObject*)fixtureA->GetBody()->GetUserData();
+        PHLObject * objB = (PHLObject*)fixtureB->GetBody()->GetUserData();
+        if (objA && objB)
+        {
+            collide = collide && objA->collidesWith(objB) && objB->collidesWith(objA);
+        }
+        return collide;
+    }
+};
+
 PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(50), controller(cntr)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
@@ -41,6 +101,8 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	view->addSubview(jumpGaugeView);
 	b2Vec2 grav(0,-10);
 	physicsWorld = new b2World(grav,true);
+    physicsWorld->SetContactFilter(contactFilter = new PHContactFilter);
+    physicsWorld->SetContactListener(contactListener = new PHContactListener);
 }
 
 PHWorld::~PHWorld()
@@ -65,6 +127,8 @@ PHWorld::~PHWorld()
 	if (view)
 		view->release();
 	delete physicsWorld;
+    delete contactListener;
+    delete contactFilter;
 }
 
 void PHWorld::updateScene()
