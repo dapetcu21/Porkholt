@@ -38,7 +38,8 @@ public:
 	int fps;
 	void renderingThread()
 	{
-		[view initMain];
+        NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+        [view initMain];
 		[view setFramebuffer];
 		PHMainEvents * mainClass = PHMainEvents::sharedInstance();
 		
@@ -77,9 +78,12 @@ public:
 				else
 					targetTime = currentTime;
 			}
+            [pool release];
+            pool = [[NSAutoreleasePool alloc] init];
 			pauseMutex->lock();
 		}
 		pauseMutex->unlock();	
+        [pool release];
 	}
 } renderThread;
 

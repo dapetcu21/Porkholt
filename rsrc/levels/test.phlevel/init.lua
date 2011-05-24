@@ -15,16 +15,15 @@ end
 addLayer(lyr);
 
 --podu
-br1,br2 = createBridge(3,{x=8+0.15; y=2.1;},{x=10-0.15; y=2.6},7,0.01,function ()
-local obj = objectWithClass("PHLObject");
-obj.physics.dynamic = true;
-objectAddCircle(obj,0.15,{ friction = 0.3; density = 1 });
-objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
-return addObject(obj);
+br1,br2 = createBridge(3,{x=8+0.15; y=2.1;},{x=10-0.15; y=2.6},7,0.01,
+function ()
+	local obj = objectWithClass("PHLObject");
+	obj.physics.dynamic = true;
+	objectAddCircle(obj,0.15,{ friction = 0.3; density = 1 });
+	objectAddImage(obj,"wood_log.png",-0.15,-0.15,0.3,0.3);
+	return addObject(obj);
 end
 );
---br1.physics.dynamic = false;
---br2.physics.dynamic = false;
 boxW = ((792-29-12)/792)*2;
 posBox = (29/792-0.5)*2;
 
