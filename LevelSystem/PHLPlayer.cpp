@@ -84,9 +84,9 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 				;//temporarilyDisableVelocityLimit();
 			jumpGauge -= length;
 		}
-		force.x/=60;
-		force.y/=60;
-		body->ApplyLinearImpulse(force, center);
+//		force.x/=60;
+//		force.y/=60;
+		body->ApplyForce(force, center);
 	}
 	jumpGauge+=wrld->jumpGaugeGrowth()/(double)fps;
 	double max = wrld->maxJumpGauge();

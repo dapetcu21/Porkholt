@@ -21,7 +21,7 @@ PHLPlatform::~PHLPlatform()
 
 void PHLPlatform::contactPreSolve(bool b, b2Contact* contact, const b2Manifold* oldManifold)
 {
-    if (contacts.find(contact)!=contacts.end())
+    if (contacts.count(contact))
     {
         contact->SetEnabled(false);
         return;

@@ -69,12 +69,14 @@ void PHTrailImageView::auxRender()
         draw();
         glPopMatrix();
     }
-    glPopMatrix();
     loadMinState(fr);
+    glPopMatrix();
 }
 
 void PHTrailImageView::render()
 {
+    if (auxLayer==NULL)
+        auxRender();
     PHImageView::render();
     ssnap=(ssnap+1)%snap;
     if (!ssnap)
