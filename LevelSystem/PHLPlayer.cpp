@@ -12,7 +12,7 @@
 
 PHView * playerView = NULL;
 
-PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL)
+PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL), touchesSomething(false), normal(PHOriginPoint)
 {
 	_class = "PHLPlayer";
 }
@@ -65,6 +65,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	body->ApplyForce(force, center);
 	double jumpGauge = wrld->jumpGauge();
     bool forceUsed = !(queue->empty());
+    b2Vec2 totalJump(0,0);
 	while (!queue->empty()) {
 		force.x = queue->front().x*TOUCH_FORCE_FACTOR;
 		force.y = queue->front().y*TOUCH_FORCE_FACTOR;
@@ -80,21 +81,49 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 				if (force.y>0)
 					force.y*=jumpGauge/length;
 				length = jumpGauge;
-			} else
-				;//temporarilyDisableVelocityLimit();
+			}
 			jumpGauge -= length;
 		}
-//		force.x/=60;
-//		force.y/=60;
+        totalJump += force;
 		body->ApplyForce(force, center);
 	}
-	jumpGauge+=wrld->jumpGaugeGrowth()/(double)fps;
-	double max = wrld->maxJumpGauge();
-	if (jumpGauge > max)
-		jumpGauge = max;
+    if (forceUsed)
+    {
+        totalJump.Normalize();
+        if (totalJump.y>0.1 && normal.y>0)
+        {
+            b2Vec2 imp(0,min<double>(normal.y*2,10.0f/fps));
+            body->ApplyLinearImpulse(imp,center);
+        }
+    }
+    normal.x = normal.y = 0;
+    if (touchesSomething>0)
+    {
+        jumpGauge+=touchesSomething * wrld->jumpGaugeGrowth()/(double)fps;
+        double max = wrld->maxJumpGauge();
+        if (jumpGauge > max)
+            jumpGauge = max;
+        touchesSomething -= 1.0f/(double)fps;
+    }
 	wrld->setJumpGauge(jumpGauge);
     bodyView->setTrailSize(forceUsed?10:0);
     b2Vec2 speed = body->GetLinearVelocity();
     if (faceView&&(abs(speed.x)>=0.1))
         faceView->setHorizontallyFlipped(speed.x<0);
+}
+
+void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)
+{
+    touchesSomething = 1.0f;
+    b2Manifold * man = contact->GetManifold();
+    b2WorldManifold wMan;
+    contact->GetWorldManifold(&wMan);
+    int n = man->pointCount;
+    b2Vec2 norm = wMan.normal;
+    for (int i=0; i<n; i++)
+    {
+        float val = impulse->normalImpulses[i];
+        normal.x+=val*norm.x;
+        normal.y+=val*norm.y;
+    }
 }

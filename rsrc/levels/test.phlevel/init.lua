@@ -15,7 +15,7 @@ end
 addLayer(lyr);
 
 --podu
-br1,br2 = createBridge(5,{x=8+0.15; y=2;},{x=10-0.15; y=2.5},7,0.01,function ()
+br1,br2 = createBridge(3,{x=8+0.15; y=2.1;},{x=10-0.15; y=2.6},7,0.01,function ()
 local obj = objectWithClass("PHLObject");
 obj.physics.dynamic = true;
 objectAddCircle(obj,0.15,{ friction = 0.3; density = 1 });
@@ -41,8 +41,8 @@ platforma0=addObject(obj);
 joint = jointWithClass("PHDistanceJoint");
 joint.body1 = platforma0;
 joint.body2 = br1;
-joint.anchor1 = {x=1.05; y=0;};
-joint.anchor2 = {x=-0.1; y=0;};
+joint.anchor1 = {x=1.0; y=0.1;};
+joint.anchor2 = {x=-0.15; y=0;};
 joint.collideConnected = false;
 addJoint(joint);
 
@@ -58,8 +58,8 @@ platforma1 = addObject(obj);
 joint = jointWithClass("PHDistanceJoint");
 joint.body1 = platforma1;
 joint.body2 = br2;
-joint.anchor1 = {x=-1.05; y=0;};
-joint.anchor2 = {x=0.1; y=0;};
+joint.anchor1 = {x=-1.0; y=0.1;};
+joint.anchor2 = {x=0.15; y=0;};
 joint.collideConnected = false;
 addJoint(joint);
 

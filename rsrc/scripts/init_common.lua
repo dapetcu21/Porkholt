@@ -74,7 +74,7 @@ end
 function Initializers.PHLPlayer(obj)
 	Initializers.PHLObject(obj)
 	obj.physics.dynamic = true;
-	objectAddCircle(obj,0.25,{restitution = 0.6;});
+	objectAddCircle(obj,0.25,{restitution = 0.5;}); --0.5 restitution is the exact value for which the jumping system can't be exploited
 	obj.maxVelocityX = 3;
 	objectAddImage(obj,"/ball.png",-0.25,-0.25,0.5,0.5,{tag=20; class="PHTrailImageView"});
     objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5,{tag=21});

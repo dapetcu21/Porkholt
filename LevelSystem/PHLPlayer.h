@@ -20,6 +20,8 @@ private:
     PHTrailImageView * bodyView;
     PHImageView * faceView;
     PHView * worldView;
+    PHPoint normal;
+    double touchesSomething;
 public:
 	PHLPlayer();
 	virtual ~PHLPlayer();
@@ -28,6 +30,8 @@ public:
 	
 	virtual void loadFromLua(void * L, const string & root,b2World * world);
 	virtual void loadView();
+    
+    virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
 };
 
 #endif
