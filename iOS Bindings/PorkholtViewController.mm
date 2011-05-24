@@ -134,7 +134,7 @@ public:
 	renderThread.running = true;
 	renderThread.fps = 60;
 	if ([self dumbDevice])
-		renderThread.fps = 30;
+		renderThread.fps = 40;
 	thread->start();
 }
 

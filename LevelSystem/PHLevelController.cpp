@@ -284,7 +284,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		player->updateControls(q);
 		mutex->unlock();
 		
-		if (fps<=30)
+		if (fps<=40)
 			fWorld->Step(frameInterval, 10, 4);
 		else
 			fWorld->Step(frameInterval, 6, 3);

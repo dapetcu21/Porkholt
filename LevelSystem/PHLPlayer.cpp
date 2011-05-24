@@ -84,8 +84,8 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 			}
 			jumpGauge -= length;
 		}
-        totalJump += force;
-		body->ApplyForce(force, center);
+        force*=1/60.0f; //leave it 60... the fps doesn't matter
+		body->ApplyLinearImpulse(force, center);
 	}
     if (forceUsed)
     {
