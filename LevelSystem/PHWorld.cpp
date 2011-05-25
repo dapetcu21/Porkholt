@@ -76,7 +76,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(50), controller(cntr), contactFilter(NULL), contactListener(NULL)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
