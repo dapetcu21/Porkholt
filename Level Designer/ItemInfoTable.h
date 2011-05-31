@@ -8,10 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class PHObjectProperty;
 
-@interface ItemInfoTable : NSTableView {
+@interface ItemInfoTable : NSOutlineView {
 	NSArrayController * keyController;
+    NSUndoManager * undoManager;
+    PHObjectProperty * prop;
 }
+
 
 -(IBAction)new:(id)sender;
 -(IBAction)delete:(id)sender;
@@ -19,5 +23,7 @@
 -(IBAction)copy:(id)sender;
 -(IBAction)paste:(id)sender;
 -(BOOL)validateMenuItem:(NSMenuItem*)sender;
+
 -(void)setKeyController:(id)kc;
+@property(nonatomic,assign) NSUndoManager * undoManager;
 @end

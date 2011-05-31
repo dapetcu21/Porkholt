@@ -12,12 +12,86 @@
 @implementation PHObjectProperty
 
 @synthesize key;
-@synthesize object;
 @synthesize mandatory;
 
 +(PHObjectProperty*)propertyWithValue:(id)v ofType:(int)ty  forKey:(NSString*)k
 {
 	return [[[[self class] alloc] initWithValue:v ofType:(int)ty forKey:k] autorelease];
+}
+
+-(void)loadFromLua:(lua_State*)L
+{
+    int n = 0;
+    lua_pushstring(L, "n");
+    lua_gettable(L, -2);
+    if (lua_isnumber(L, -1))
+        n = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    NSMutableArray * properties = [self mutableChildNodes];
+    
+    for (int i=0; i<n; i++)
+    {
+        lua_pushnumber(L, i);
+        lua_gettable(L, -2);
+        if (lua_istable(L,-1))
+        {
+            id _value = nil;
+            NSString * _key = nil;
+            BOOL inherited = NO;
+            BOOL tree = NO;
+            int _type;
+            
+            lua_pushstring(L, "inherited");
+            lua_gettable(L, -2);
+            if (lua_isboolean(L,-1))
+                inherited = lua_toboolean(L, -1);
+            lua_pop(L,1);
+            
+            lua_pushstring(L, "key");
+            lua_gettable(L, -2);
+            if (lua_isstring(L, -1))
+                _key = [NSString stringWithUTF8String:lua_tostring(L,-1)];
+            lua_pop(L,1);
+            
+            lua_pushstring(L, "value");
+            lua_gettable(L, -2);
+            if (lua_isboolean(L, -1))
+            {
+                _value = [NSNumber numberWithBool:lua_toboolean(L, -1)];
+                _type = kPHObjectPropertyBool;
+            } else
+            if (lua_isnumber(L, -1))
+            {
+                _value = [NSNumber numberWithDouble:lua_tonumber(L, -1)];
+                _type = kPHObjectPropertyNumber;
+            } else
+            if (lua_isstring(L, -1))
+            {
+                _value = [NSString stringWithUTF8String:lua_tostring(L, -1)];
+                _type = kPHObjectPropertyString;
+            } else
+            if (lua_istable(L, -1))
+            {
+                tree=YES;
+                _value = nil;
+                _type = kPHObjectPropertyTree;
+            }
+        
+            if (_key&&(_value||tree))
+            {
+                PHObjectProperty * prop = [PHObjectProperty propertyWithValue:_value ofType:_type forKey:_key];
+                
+                if (!inherited)
+                    [properties addObject:prop];
+                if (tree)
+                    [prop loadFromLua:L];
+            }
+            lua_pop(L,1);
+        }
+        lua_pop(L, 1);
+    }
+    [properties sortUsingSelector:@selector(compare:)];
 }
 
 -(id)initWithValue:(id)v ofType:(int)ty  forKey:(NSString*)k
@@ -57,15 +131,52 @@
 -(id)copyWithZone:(NSZone *)zone
 {
 	PHObjectProperty * prop = [PHObjectProperty alloc];
+    id _value = type==kPHObjectPropertyTree?nil:[[value copy] autorelease];
 	if (mandatory)
-		prop = [prop initMandatoryWithValue:[[value copy] autorelease] ofType:type forKey:key];
+		prop = [prop initMandatoryWithValue:_value ofType:type forKey:key];
 	else
-		prop = [prop initWithValue:[[value copy] autorelease] ofType:type forKey:key];
+		prop = [prop initWithValue:_value ofType:type forKey:key];
+    NSMutableArray * arr = [prop mutableChildNodes];
+    for (PHObjectProperty * pr in [self childNodes])
+    {
+        [arr addObject:[[pr copy] autorelease]];
+    }
 	return prop;
+}
+
+-(void)setUndoable:(NSUndoManager*)man key:(NSString*)nkey
+{
+    [[man prepareWithInvocationTarget:self] setUndoable:man key:self.key];
+    [self setKey:nkey];
+}
+
+-(void)setUndoable:(NSUndoManager*)man doubleValue:(double)val
+{
+    [[man prepareWithInvocationTarget:self] setUndoable:man value:self.value];
+    [self setDoubleValue:val];
+}
+
+-(void)setUndoable:(NSUndoManager*)man boolValue:(BOOL)val
+{
+    [[man prepareWithInvocationTarget:self] setUndoable:man value:self.value];
+    [self setBoolValue:val];
+}
+
+-(void)setUndoable:(NSUndoManager*)man stringValue:(NSString*)val
+{
+    [[man prepareWithInvocationTarget:self] setUndoable:man value:self.value];
+    [self setStringValue:val];
+}
+-(void)setUndoable:(NSUndoManager*)man value:(id)val
+{
+    [[man prepareWithInvocationTarget:self] setUndoable:man value:self.value];
+    [self setValue:val];
 }
 
 -(id)value
 {
+    if (type==kPHObjectPropertyTree)
+        return [[[self childNodes] copy] autorelease];
 	return value;
 }
 
@@ -73,16 +184,30 @@
 {
 	if (v==value) return;
 	[value release];
+    if (type!=kPHObjectPropertyTree)
+    {
+        if (!v || [v isKindOfClass: [NSArray class]])
+            v = @"";
+    }
 	switch (type) {
 		case kPHObjectPropertyBool:
 			value = [[NSNumber alloc] initWithBool:[(NSNumber*)v boolValue]];
 			break;
 		case kPHObjectPropertyNumber:
-			value = [(NSNumber*)v copy];
+			value = [[NSNumber alloc] initWithDouble:[(NSNumber*)v doubleValue]];
 			break;
 		case kPHObjectPropertyString:
 			value = [[v description] retain];
 			break;
+        case kPHObjectPropertyTree:
+        {
+            NSMutableArray * arr = [self mutableChildNodes];
+            [arr removeAllObjects];
+            if (v && [v isKindOfClass:[NSArray class]])
+                [arr addObjectsFromArray:(NSArray*)v];
+            value = nil;
+            break;
+        }
 	}
 }
 
@@ -162,14 +287,15 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder
 {
 	[aCoder encodeInt:type forKey:@"type"];
-	[aCoder encodeObject:value forKey:@"value"];
-	[aCoder encodeObject:key forKey:@"key"];
+	[aCoder encodeObject:self.value forKey:@"value"];
+	[aCoder encodeObject:self.key forKey:@"key"];
 	[aCoder encodeBool:mandatory forKey:@"mandatory"];
+    
 }
 
 -(NSString*)description
 {
-	return [NSString stringWithFormat:@"%@=%@",key,value];
+	return [NSString stringWithFormat:@"%@=%@",self.key,self.value];
 }
 
 -(int)type
@@ -177,15 +303,30 @@
 	return type;
 }
 
+-(void)setUndoable:(NSUndoManager*)man type:(int)_type andValue:(id)_val
+{
+    [[man prepareWithInvocationTarget:self] setUndoable:man type:self.type andValue:self.value];
+    [self setType:_type];
+    [self setValue:_val];
+}
+
 -(void)setType:(int)ty
 {
+    if (!value)
+        value=[@"" retain];
+    if (type==kPHObjectPropertyTree)
+        [[self mutableChildNodes] removeAllObjects];
+    type = ty;
 	if (ty==kPHObjectPropertyString)
 		self.stringValue = [value description];
 	if (ty==kPHObjectPropertyNumber)
 		self.doubleValue = [value doubleValue];
 	if (ty==kPHObjectPropertyBool)
 		self.boolValue = [value boolValue];
-	type = ty;
+    if (ty==kPHObjectPropertyTree)
+    {
+        self.value = nil;
+    };
 }
 
 -(void)convertToString
@@ -203,9 +344,29 @@
 	self.type = kPHObjectPropertyBool;
 }
 
+-(void)convertToTree
+{
+    self.type = kPHObjectPropertyTree;
+}
+
 -(NSComparisonResult)compare:(PHObjectProperty*)other
 {
 	return [key compare:other.key];
+}
+
+-(PHObject*)parentObject
+{
+    id pr = [self parentNode];
+    if (!pr)
+        return parentObject;
+    if ([pr isKindOfClass:[PHObjectProperty class]])
+        return [(PHObjectProperty*)pr parentObject];
+    return nil;
+}
+
+-(void)setParentObject:(PHObject*)obj
+{
+    parentObject = obj;
 }
 
 @end

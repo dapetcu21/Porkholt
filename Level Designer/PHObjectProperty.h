@@ -14,13 +14,14 @@ enum
 {
 	kPHObjectPropertyString = 0,
 	kPHObjectPropertyNumber,
-	kPHObjectPropertyBool
+	kPHObjectPropertyBool,
+    kPHObjectPropertyTree
 };
 
-@interface PHObjectProperty : NSObject<NSCoding,NSCopying> {
+@interface PHObjectProperty : NSTreeNode<NSCoding,NSCopying> {
 	id value;
 	NSString * key;
-	PHObject * object;
+	PHObject * parentObject;
 	int type;
 	BOOL mandatory;
 }
@@ -33,12 +34,29 @@ enum
 -(void)convertToString;
 -(void)convertToNumber;
 -(void)convertToBool;
+-(void)convertToTree;
 
 @property(nonatomic,retain) id value;
 @property(nonatomic,retain) NSString * key;
-@property(nonatomic,assign) PHObject * object;
 @property(nonatomic,getter=isMandatory) BOOL mandatory;
 @property(nonatomic,assign) int type;
+
+-(void)setUndoable:(NSUndoManager*)man key:(NSString*)key;
+-(void)setUndoable:(NSUndoManager*)man doubleValue:(double)val;
+-(void)setUndoable:(NSUndoManager*)man boolValue:(BOOL)val;
+-(void)setUndoable:(NSUndoManager*)man stringValue:(NSString*)val;
+-(void)setUndoable:(NSUndoManager*)man value:(id)val;
+
+-(void)setUndoable:(NSUndoManager*)man type:(int)type andValue:(id)val;
+
+-(void)convertToString;
+-(void)convertToBool;
+-(void)convertToNumber;
+-(void)convertToTree;
+
+-(void)loadFromLua:(lua_State*)L;
+
+@property(nonatomic,assign) PHObject * parentObject;
 
 @property(nonatomic,assign) double doubleValue;
 @property(nonatomic,assign) int intValue;

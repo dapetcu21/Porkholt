@@ -48,7 +48,7 @@
 	worldView.bounds = NSMakeRect(-frm.size.width/2/scalingFactor, -frm.size.height/2/scalingFactor, frm.size.width/scalingFactor, frm.size.height/scalingFactor);
 	worldView.scale = NSMakeSize(scalingFactor, scalingFactor);
 	NSRect frame = [scrollView contentView].frame;
-	WorldClipView * clipView = [[WorldClipView alloc] initWithFrame:frame];
+	WorldClipView * clipView = [[[WorldClipView alloc] initWithFrame:frame] autorelease];
 	[clipView setDrawsBackground:NO];
 	clipView.controller = self;
 	[scrollView setContentView:clipView];

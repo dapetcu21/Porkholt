@@ -9,8 +9,10 @@
 #import "ItemInfoTable.h"
 #import "ObjectController.h"
 #import "PHObjectProperty.h"
+#import "PHObject.h"
 
 @implementation ItemInfoTable
+@synthesize undoManager;
 
 -(IBAction)new:(id)sender
 {
@@ -47,21 +49,52 @@
 	keyController = kc;
 }
 
+-(void)setType:(int)ty andValue:(id)value forProp:(PHObjectProperty*)prp
+{
+    [[undoManager prepareWithInvocationTarget:self] setType:prp.type andValue:prp.value forProp:prp];
+    [prp setType:ty];
+    [prp setValue:value];
+    [[prp parentObject] modified];
+}
+
+-(void)convertToString
+{
+    [self setType:kPHObjectPropertyString andValue:prop.value forProp:prop];
+}
+
+-(void)convertToBool
+{
+    [self setType:kPHObjectPropertyBool andValue:prop.value forProp:prop];
+}
+
+-(void)convertToNumber
+{
+    [self setType:kPHObjectPropertyNumber andValue:prop.value forProp:prop];
+}
+
+-(void)convertToTree
+{
+    [self setType:kPHObjectPropertyTree andValue:prop.value forProp:prop];
+}
+
 -(NSMenu*)menuForEvent:(NSEvent *)event
 {
 	NSPoint pt=[self convertPoint:[event locationInWindow] fromView:nil];
 	int row = [self rowAtPoint:pt];
 	if (row!=-1)
 	{
-		PHObjectProperty * obj = [[keyController arrangedObjects] objectAtIndex:row];
+        NSTreeNode * item = [self itemAtRow:row];
+        PHObjectProperty * obj = (PHObjectProperty*)[item representedObject];
 		if (obj.mandatory)
 			return nil;
 		NSMenu * menu = [[[NSMenu alloc] initWithTitle:@"Value Type"] autorelease];
 		NSMenuItem * menuitem;
 		
+        prop = obj;
+        
 		menuitem = [[[NSMenuItem alloc] init] autorelease];
 		[menuitem setTitle:@"String"];
-		[menuitem setTarget:obj];
+		[menuitem setTarget:self];
 		[menuitem setEnabled:YES];
 		[menuitem setState:obj.type==kPHObjectPropertyString];
 		[menuitem setAction:@selector(convertToString)];
@@ -69,7 +102,7 @@
 		
 		menuitem = [[[NSMenuItem alloc] init] autorelease];
 		[menuitem setTitle:@"Number"];
-		[menuitem setTarget:obj];
+		[menuitem setTarget:self];
 		[menuitem setEnabled:YES];
 		[menuitem setState:obj.type==kPHObjectPropertyNumber];
 		[menuitem setAction:@selector(convertToNumber)];
@@ -77,10 +110,18 @@
 		
 		menuitem = [[[NSMenuItem alloc] init] autorelease];
 		[menuitem setTitle:@"Bool"];
-		[menuitem setTarget:obj];
+		[menuitem setTarget:self];
 		[menuitem setEnabled:YES];
 		[menuitem setState:obj.type==kPHObjectPropertyBool];
 		[menuitem setAction:@selector(convertToBool)];
+		[menu addItem:menuitem];
+		
+        menuitem = [[[NSMenuItem alloc] init] autorelease];
+		[menuitem setTitle:@"Tree"];
+		[menuitem setTarget:self];
+		[menuitem setEnabled:YES];
+		[menuitem setState:obj.type==kPHObjectPropertyTree];
+		[menuitem setAction:@selector(convertToTree)];
 		[menu addItem:menuitem];
 		
 		[self setMenu:menu];

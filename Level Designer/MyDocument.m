@@ -54,16 +54,16 @@
 		absoluteOriginalContentsURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"prototype.phlevel"];
 
 	[man copyItemAtURL:absoluteOriginalContentsURL toURL:absoluteURL error:&err];
-	if (err)
+	if (err&&outError)
 	{
 		*outError = [NSError errorWithDomain:@"PorkholtDomain" code:-2 userInfo:
 					 [NSDictionary dictionaryWithObject:[@"Can't create bundle: " stringByAppendingString:[[err userInfo] valueForKey:NSLocalizedDescriptionKey]] forKey:NSLocalizedDescriptionKey]];
 		return NO;
 	}
 
-	NSMutableString * generatedFile = [[NSMutableString alloc] init];
+	NSMutableString * generatedFile = [[[NSMutableString alloc] init] autorelease];
 	[objectController saveToFile:generatedFile];
-	if (![man createFileAtPath:[[absoluteURL URLByAppendingPathComponent:@"lvl_designer.lua"] path] contents:[generatedFile dataUsingEncoding:NSUTF8StringEncoding] attributes:nil])
+	if (![man createFileAtPath:[[absoluteURL URLByAppendingPathComponent:@"lvl_designer.lua"] path] contents:[generatedFile dataUsingEncoding:NSUTF8StringEncoding] attributes:nil]&&outError)
 	{
 		*outError = [NSError errorWithDomain:@"PorkholtDomain" code:-1 userInfo:
 					  [NSDictionary dictionaryWithObject:@"Can't write lvl_designer.lua" forKey:NSLocalizedDescriptionKey]];

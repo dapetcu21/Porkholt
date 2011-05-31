@@ -15,16 +15,18 @@
 @class ItemInfoTable;
 @class WorldController;
 @class MyDocument;
+@class PHObjectProperty;
 
 @interface ObjectController : NSObject<NSTableViewDelegate> {
 	NSMutableArray * objects;
 	
 	IBOutlet NSArrayController * arrayController;
-	IBOutlet NSArrayController * keyController;
+	IBOutlet NSTreeController * keyController;
 	IBOutlet NSTableView * objectBrowser; 
 	IBOutlet ItemInfoTable * itemInfo; 
 	NSIndexSet * draggedObjects;
-	NSIndexSet * draggedKeys;
+	NSArray * draggedKeys;
+    BOOL draggingMandatory;
 	IBOutlet WorldController * worldController;
 	IBOutlet MyDocument * document;
 	
@@ -40,10 +42,13 @@
 -(NSMutableArray*)objects;
 
 -(PHObject*)selectedObject;
+-(void)selectObject:(PHObject*)obj;
 
 -(NSArrayController*)arrayController;
 
--(NSString*)proposedPropertyKey:(NSString*)name;
+-(NSArray*)siblingsForItem:(NSTreeNode*)prop;
+-(NSArray*)siblingsForIndexPath:(NSIndexPath*)path;
+-(NSString*)proposedPropertyKey:(NSString*)name forSiblings:(NSArray*)arr andProp:(PHObjectProperty*)prp;
 
 -(void)lua:(lua_State*)L setPath:(NSString*)path;
 -(void)loadFromFile:(NSURL*)url;
@@ -55,6 +60,11 @@
 -(IBAction)copy:(id)sender;
 -(IBAction)paste:(id)sender;
 -(BOOL)validateMenuItem:(NSMenuItem*)sender;
+
+-(void)addObjects:(NSArray*)arry atIndexSet:(NSIndexSet*)iSet;
+-(void)deleteIndexSet:(NSIndexSet*)indexSet;
+-(void)insertProperties:(NSArray*)props atIndexPaths:(NSArray*)paths forObject:(PHObject*)obj;
+-(void)removePropertiesAtIndexPaths:(NSArray*)paths forObject:(PHObject*)obj;
 
 -(IBAction)newProp:(id)sender;
 -(IBAction)deleteProp:(id)sender;

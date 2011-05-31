@@ -10,6 +10,7 @@
 #import "PHObjectProperty.h"
 #import "ObjectView.h"
 #import "ObjectController.h"
+#import "BrowserTreeNode.h"
 
 @implementation PHObject
 
@@ -64,6 +65,7 @@
 				id value = nil;
 				NSString * key = nil;
 				BOOL inherited = NO;
+                BOOL tree = NO;
 				int type;
 				
 				lua_pushstring(L, "inherited");
@@ -94,10 +96,19 @@
 				{
 					value = [NSString stringWithUTF8String:lua_tostring(L, -1)];
 					type = kPHObjectPropertyString;
-				}
-				lua_pop(L,1);
+				} else
+                if (lua_istable(L, -1))
+                {
+                    tree=YES;
+                    value = nil;
+                    type = kPHObjectPropertyTree;
+                }
+                
+                if ([key isEqualToString:@"physics"]||
+                    [key isEqualToString:@"images"])
+                    key = nil;
 				
-				if (key&&value)
+				if (key&&(value||tree))
 				{
 					BOOL mandatory = [key isEqualToString:@"class"]||
 					[key isEqualToString:@"posX"]||
@@ -108,6 +119,7 @@
 						prop = [PHObjectProperty mandatoryPropertyWithValue:value ofType:type forKey:key];
 					else
 						prop = [PHObjectProperty propertyWithValue:value ofType:type forKey:key];
+                    prop.parentObject = self;
 					
 					if ([key isEqualToString:@"class"])
 						classProperty = prop;
@@ -120,34 +132,50 @@
 					
 					if (!inherited)
 						[properties addObject:prop];
+                    if (tree)
+                        [prop loadFromLua:L];
 				}
-				
+                lua_pop(L,1);
 			}
 			lua_pop(L, 1);
 		}
-		[properties sortUsingSelector:@selector(compare:)];
+        [properties sortUsingSelector:@selector(compare:)];
 	}
 	return self;
 }
 
+-(void)saveNode:(PHObjectProperty*)prop withPath:(NSString*)path toFile:(NSMutableString*)file
+{
+    [file appendFormat:@"%@.%@ = ",path,prop.key];
+    switch (prop.type) {
+        case kPHObjectPropertyBool:
+            [file appendFormat:@"%s;\n",prop.boolValue?"true":"false"];
+            break;
+        case kPHObjectPropertyString:
+            [file appendFormat:@"[[%@]];\n",prop.stringValue];
+            break;
+        case kPHObjectPropertyNumber:
+            [file appendFormat:@"%lf;\n",prop.doubleValue];
+            break;
+        case kPHObjectPropertyTree:
+            [file appendString:@"{};\n"];
+            NSArray * arr = prop.childNodes;
+            for ( PHObjectProperty * nde in arr) 
+            {
+                [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",prop.key] toFile:file];
+            }
+            break;
+    }
+}
+                         
 -(void)saveToFile:(NSMutableString*)file
 {
 	[file appendFormat:@"\nobj = objectWithClass(\"%@\");\n",self.className];
-	for (PHObjectProperty * prop in properties)
+    
+	for ( PHObjectProperty * prop in properties) 
 	{
 		if ([prop.key isEqual:@"class"]) continue;
-		[file appendFormat:@"obj.%@ = ",prop.key];
-		switch (prop.type) {
-			case kPHObjectPropertyBool:
-				[file appendFormat:@"%s;\n",prop.boolValue?"true":"false"];
-				break;
-			case kPHObjectPropertyString:
-				[file appendFormat:@"[[%@]];\n",prop.stringValue];
-				break;
-			case kPHObjectPropertyNumber:
-				[file appendFormat:@"%lf;\n",prop.doubleValue];
-				break;
-		}
+		[self saveNode:prop withPath:@"obj" toFile:file];
 	}
 	[file appendFormat:@"obj.levelDes = true;\naddObject(obj);\n"];
 }
@@ -157,7 +185,7 @@
 	if (self = [super init])
 	{		
 		[self setProperties:[[aDecoder decodeObjectForKey:@"properties"] retain]];
-		for (PHObjectProperty * property in properties)
+		for ( PHObjectProperty * property in properties) 
 		{
 			if ([property.key isEqualToString:@"class"])
 				classProperty = property;
@@ -180,8 +208,12 @@
 -(void)setProperties:(NSArray*)obj
 {
 	if (properties==obj) return;
-	[properties retain];
+    for (PHObjectProperty * prop in properties)
+        prop.parentObject = nil;
+	[properties release];
 	properties = [[NSMutableArray alloc] initWithArray:obj];
+    for (PHObjectProperty * prop in properties)
+        prop.parentObject = self;
 }
 
 -(NSMutableArray*)properties
@@ -311,7 +343,7 @@
 -(id)copyWithZone:(NSZone *)zone
 {
 	PHObject * obj = [[PHObject allocWithZone:zone] init];
-	NSMutableArray * prop = [[NSMutableArray alloc] init];
+	NSMutableArray * prop = [[[NSMutableArray alloc] init] autorelease];
 	for (PHObjectProperty * property in properties)
 	{
 		PHObjectProperty * newProp = [[property copy] autorelease];
@@ -325,6 +357,7 @@
 			obj.rotationProperty = newProp;
 		[prop addObject:newProp];
 	}
+    [obj setProperties:prop];
 	obj.controller = controller;
 	return obj;
 }
