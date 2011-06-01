@@ -33,6 +33,8 @@
 @property(nonatomic,assign) BOOL editable;
 
 -(void)move:(NSPoint)mv;
+-(void)undoableMove:(NSPoint)mv;
+-(void)undoableSetPosition:(NSPoint)pos;
 -(void)positionChanged;
 -(void)rebuildView;
 

@@ -245,12 +245,24 @@
 	return pos;
 }
 
+-(void)undoableSetPosition:(NSPoint)pos
+{
+    [[[self.controller undoManager] prepareWithInvocationTarget:self] undoableSetPosition:[self position]];
+    [self setPosition:pos];
+}
+
 -(void)setPosition:(NSPoint)pos
 {
 	posXProperty.doubleValue = pos.x;
 	posYProperty.doubleValue = pos.y;
 	[self positionChanged];
 	[self modified];
+}
+
+-(void)undoableMove:(NSPoint)mv
+{
+    [[[self.controller undoManager] prepareWithInvocationTarget:self] undoableSetPosition:[self position]];
+    [self move:mv];
 }
 
 -(void)move:(NSPoint)mv

@@ -60,7 +60,10 @@
 		else
 		{
 			if (object.readOnly)
-				return;
+            {
+				[super mouseDown:theEvent];
+                return;
+            }
 			if (!object.selected)
 				[[object.controller arrayController] setSelectedObjects:[NSArray arrayWithObject:object]];
 			[(WorldView*)view beginDragging:theEvent];

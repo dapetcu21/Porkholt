@@ -92,6 +92,34 @@ enum dragStates
 {
 	dragState = dsMove;
 	dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    initialPoint = dragPoint;
+}
+
+-(void)endDragging:(NSEvent*)theEvent
+{
+    dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint dif,invDif;
+    dif.x = dragPoint.x-initialPoint.x;
+    dif.y = dragPoint.y-initialPoint.y;
+    invDif.x = -dif.x;
+    invDif.y = -dif.y;
+    NSArray * sv = [self subviews];
+    NSUndoManager * um = nil;
+    for (ObjectView * view in sv)
+    {
+        if (![view isKindOfClass:[ObjectView class]]) continue;
+        PHObject * obj = view.object;
+        if (obj.readOnly) continue;
+        if (!obj.selected) continue;
+        if (!um)
+        {
+            um = [obj.controller undoManager];
+            [um beginUndoGrouping];
+        }
+        [obj move:invDif];
+        [obj undoableMove:dif];
+    }
+    [um endUndoGrouping];
 }
 
 - (BOOL)resignFirstResponder
@@ -104,7 +132,7 @@ enum dragStates
 {
 	NSLog(@"%x",[theEvent modifierFlags]);
 	if ([theEvent modifierFlags] & NSAlternateKeyMask)
-		dragState = dsMove;
+		[self beginDragging:theEvent];
 	else 
 	{
 		dragState = dsSelect;
@@ -114,8 +142,8 @@ enum dragStates
 			if (![view isKindOfClass:[ObjectView class]]) continue;
 			view.object.selected = NO;
 		}
+        dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	}
-	dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -165,6 +193,8 @@ enum dragStates
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
+    if (dragState==dsMove)
+        [self endDragging:theEvent];
 	dragState = dsNone;
 	[self setNeedsDisplay:YES];
 }
