@@ -5,8 +5,9 @@
 obj = objectWithClass("PHObject");
 obj.SorinSucks = true;
 obj.SorinSucksAmount = 12.000000;
-obj.posX = 1.000000;
-obj.posY = 0.000000;
+obj.pos = {};
+obj.pos.x = 1.000000;
+obj.pos.y = 0.000000;
 obj.rotation = 0.000000;
 obj.levelDes = true;
 addObject(obj);

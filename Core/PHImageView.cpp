@@ -89,52 +89,16 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
                 clss = lua_tostring(L, -1);
             lua_pop(L, 1);
             
-            lua_pushstring(L, "posX");
+            lua_pushstring(L, "pos");
             lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                frame.x = lua_tonumber(L, -1);
+            if (lua_istable(L, -1))
+                frame = PHRect::rectFromLua(L);
             lua_pop(L, 1);
             
-            lua_pushstring(L, "posY");
+            lua_pushstring(L, "texCoord");
             lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                frame.y = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "imgW");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                frame.width = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "imgH");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                frame.height = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "texX");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                portion.x = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "texY");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                portion.y = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "texW");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                portion.width = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "texH");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                portion.height = lua_tonumber(L, -1);
+            if (lua_istable(L, -1))
+                portion = PHRect::rectFromLua(L);
             lua_pop(L, 1);
             
             int tag = 0;

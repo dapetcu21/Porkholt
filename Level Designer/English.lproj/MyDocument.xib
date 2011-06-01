@@ -368,6 +368,7 @@
 																				<string key="NSFrame">{{63, 0}, {59, 17}}</string>
 																				<reference key="NSSuperview" ref="42984335"/>
 																				<reference key="NSWindow"/>
+																				<reference key="NSNextKeyView" ref="433535286"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSButtonCell" key="NSCell" id="351060140">
 																					<int key="NSCellFlags">67239424</int>
@@ -410,6 +411,7 @@
 																				<int key="NSvFlags">292</int>
 																				<string key="NSFrame">{{2, 0}, {26, 17}}</string>
 																				<reference key="NSSuperview" ref="846741163"/>
+																				<reference key="NSNextKeyView" ref="433535286"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSButtonCell" key="NSCell" id="998034994">
 																					<int key="NSCellFlags">67239424</int>
@@ -444,7 +446,7 @@
 																								<int key="NSvFlags">4352</int>
 																								<string key="NSFrameSize">{210, 307}</string>
 																								<reference key="NSSuperview" ref="130481153"/>
-																								<reference key="NSNextKeyView" ref="343343472"/>
+																								<reference key="NSNextKeyView" ref="756260557"/>
 																								<bool key="NSEnabled">YES</bool>
 																								<object class="NSTableHeaderView" key="NSHeaderView" id="523946046">
 																									<reference key="NSNextResponder" ref="343343472"/>
@@ -587,7 +589,7 @@
 																				</object>
 																				<string key="NSFrame">{{2, 20}, {212, 325}}</string>
 																				<reference key="NSSuperview" ref="846741163"/>
-																				<reference key="NSNextKeyView" ref="130481153"/>
+																				<reference key="NSNextKeyView" ref="343343472"/>
 																				<int key="NSsFlags">562</int>
 																				<reference key="NSVScroller" ref="756260557"/>
 																				<reference key="NSHScroller" ref="154783828"/>
@@ -1822,35 +1824,6 @@
 					<int key="connectionID">100276</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: selection.editable</string>
-						<reference key="source" ref="490299949"/>
-						<reference key="destination" ref="969654667"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="490299949"/>
-							<reference key="NSDestination" ref="969654667"/>
-							<string key="NSLabel">enabled: selection.editable</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">selection.editable</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSMultipleValuesPlaceholder</string>
-									<string>NSNoSelectionPlaceholder</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<integer value="0"/>
-									<integer value="0"/>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">100280</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">newProp:</string>
 						<reference key="source" ref="1011869483"/>
@@ -2829,6 +2802,59 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">ItemInfoTable</string>
 					<string key="superclassName">NSOutlineView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>copy:</string>
+							<string>delete:</string>
+							<string>duplicate:</string>
+							<string>new:</string>
+							<string>paste:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>copy:</string>
+							<string>delete:</string>
+							<string>duplicate:</string>
+							<string>new:</string>
+							<string>paste:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">copy:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">delete:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">duplicate:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">new:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">paste:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/ItemInfoTable.h</string>
@@ -3002,15 +3028,21 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>copy:</string>
+							<string>copyProp:</string>
 							<string>delete:</string>
 							<string>deleteProp:</string>
 							<string>duplicate:</string>
+							<string>duplicateProp:</string>
 							<string>new:</string>
 							<string>newProp:</string>
 							<string>paste:</string>
+							<string>pasteProp:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3025,17 +3057,24 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>copy:</string>
+							<string>copyProp:</string>
 							<string>delete:</string>
 							<string>deleteProp:</string>
 							<string>duplicate:</string>
+							<string>duplicateProp:</string>
 							<string>new:</string>
 							<string>newProp:</string>
 							<string>paste:</string>
+							<string>pasteProp:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">copy:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">copyProp:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -3051,6 +3090,10 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
+								<string key="name">duplicateProp:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
 								<string key="name">new:</string>
 								<string key="candidateClassName">id</string>
 							</object>
@@ -3060,6 +3103,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">paste:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">pasteProp:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>

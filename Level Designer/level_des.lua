@@ -16,8 +16,9 @@ end
 
 function describeObject(obj)
 	obj.class = obj.class or "PHObject";
-	obj.posX = obj.posX or 0;
-	obj.posY = obj.posY or 0;
+	obj.pos = obj.pos or {};
+    obj.pos.x = obj.pos.x or 0;
+    obj.pos.y = obj.pos.y or 0;
 	obj.rotation = obj.rotation or 0;
     obj.index = nil;
 	
@@ -29,8 +30,7 @@ function describeObject(obj)
 	local j = 0;
 	proto = objectWithClass(obj.class)
 	proto.class = nil;
-	proto.posX = nil;
-	proto.posY = nil;
+	proto.pos = nil;
 	proto.rotation = nil;
 	for i,v in pairs(obj) do
         if (type(v)=="table") then

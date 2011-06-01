@@ -14,15 +14,12 @@ function addLayer(l)
 	layers.n = layers.n + 1;
 end
 
-function layerAddImage(l,fn, x, y, w, h)
+function layerAddImage(l,fn, x, y, w, h,opt)
 	l.n = l.n or 0;
-	l[l.n] = {
-		filename = fn;
-		posX = x;
-		posY = y;
-		imgW = w;
-		imgH = h;
-	}
+    local img = opt or {};
+    img.filename = fn;
+    img.pos = rect(x,y,w,h);
+	l[l.n] = img;
 	l.n = l.n + 1;
 end
 
@@ -32,10 +29,7 @@ function objectAddImage(obj,fn, x, y, w, h,opt)
 	obj.images.n = obj.images.n or 0;
 	opt = opt or {};
 	opt.filename = fn;
-	opt.posX = x;
-	opt.posY = y;
-	opt.imgW = w;
-	opt.imgH = h;
+	opt.pos = rect(x,y,w,h);
 	obj.images[obj.images.n] = opt;
 	obj.images.n = 	obj.images.n + 1;
 end
@@ -46,10 +40,7 @@ function objectAddBox(obj,x, y, w, h,proto)
 	local tmp = proto or {};
 	obj.physics[obj.physics.n] = tmp;
 	tmp.shape = "box";
-	tmp.boxH = h;
-	tmp.boxW = w;
-	tmp.boxX = x;
-	tmp.boxY = y;
+	tmp.box = rect(x,y,w,h);
 	obj.physics.n = obj.physics.n + 1;	
 end
 

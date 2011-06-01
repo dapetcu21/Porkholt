@@ -26,6 +26,8 @@ enum
 	BOOL mandatory;
 }
 
+-(PHObjectProperty*)propertyForKey:(NSString*)key;
+
 -(id)initWithValue:(id)v ofType:(int)ty forKey:(NSString*)k;
 +(PHObjectProperty*)propertyWithValue:(id)v ofType:(int)ty forKey:(NSString*)k;
 -(id)initMandatoryWithValue:(id)v ofType:(int)ty  forKey:(NSString*)k;

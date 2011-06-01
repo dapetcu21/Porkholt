@@ -17,6 +17,7 @@
 @synthesize classProperty;
 @synthesize posXProperty;
 @synthesize posYProperty;
+@synthesize posProperty;
 @synthesize readOnly;
 @synthesize rotationProperty;
 @synthesize view;
@@ -29,11 +30,40 @@
 		selected = NO;
 		properties = [[NSMutableArray alloc] init];
 		[properties addObject:classProperty=[PHObjectProperty mandatoryPropertyWithValue:@"PHObject" ofType:kPHObjectPropertyString forKey:@"class"]];
-		[properties addObject:posXProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"posX"]];
-		[properties addObject:posYProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"posY"]];
+        posXProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"x"];
+        posYProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"y"];
+        [properties addObject:posProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObjects:posXProperty,posYProperty,nil] ofType:kPHObjectPropertyTree forKey:@"pos"]];
 		[properties addObject:rotationProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"]];
 	}
 	return self;
+}
+
+-(void)dealloc
+{
+    [properties release];
+	[super dealloc];
+}
+
+-(PHObjectProperty*)propertyForKey:(NSString*)key
+{
+    for (PHObjectProperty * prop in properties)
+        if ([prop.key isEqualToString:key])
+            return prop;
+    return nil;
+}
+
+-(void)searchForVitalProperties
+{
+    posProperty = [self propertyForKey:@"pos"];
+    classProperty = [self propertyForKey:@"class"];
+    rotationProperty = [self propertyForKey:@"rotation"];
+    posXProperty = [posProperty propertyForKey:@"x"];
+    posYProperty = [posProperty propertyForKey:@"y"];
+    posProperty.mandatory = YES;
+    posXProperty.mandatory = YES;
+    posYProperty.mandatory = YES;
+    rotationProperty.mandatory = YES;
+    classProperty.mandatory = YES;
 }
 
 -(id)initFromLua:(lua_State*)L
@@ -110,25 +140,8 @@
 				
 				if (key&&(value||tree))
 				{
-					BOOL mandatory = [key isEqualToString:@"class"]||
-					[key isEqualToString:@"posX"]||
-					[key isEqualToString:@"posY"]||
-					[key isEqualToString:@"rotation"];
-					PHObjectProperty * prop;
-					if (mandatory)
-						prop = [PHObjectProperty mandatoryPropertyWithValue:value ofType:type forKey:key];
-					else
-						prop = [PHObjectProperty propertyWithValue:value ofType:type forKey:key];
+                    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:value ofType:type forKey:key];
                     prop.parentObject = self;
-					
-					if ([key isEqualToString:@"class"])
-						classProperty = prop;
-					if ([key isEqualToString:@"posX"])
-						posXProperty = prop;
-					if ([key isEqualToString:@"posY"])
-						posYProperty = prop;
-					if ([key isEqualToString:@"rotation"])
-						rotationProperty = prop;
 					
 					if (!inherited)
 						[properties addObject:prop];
@@ -140,6 +153,7 @@
 			lua_pop(L, 1);
 		}
         [properties sortUsingSelector:@selector(compare:)];
+        [self searchForVitalProperties];
 	}
 	return self;
 }
@@ -185,17 +199,7 @@
 	if (self = [super init])
 	{		
 		[self setProperties:[[aDecoder decodeObjectForKey:@"properties"] retain]];
-		for ( PHObjectProperty * property in properties) 
-		{
-			if ([property.key isEqualToString:@"class"])
-				classProperty = property;
-			if ([property.key isEqualToString:@"posX"])
-				posXProperty = property;
-			if ([property.key isEqualToString:@"posY"])
-				posYProperty = property;
-			if ([property.key isEqualToString:@"rotation"])
-				rotationProperty = property;
-		}
+		[self searchForVitalProperties];
 	}
 	return self;
 }
@@ -219,11 +223,6 @@
 -(NSMutableArray*)properties
 {
 	return properties;
-}
-
--(void)dealloc
-{
-	[super dealloc];
 }
 
 -(void)setClassName:(NSString *)cn
@@ -359,18 +358,11 @@
 	for (PHObjectProperty * property in properties)
 	{
 		PHObjectProperty * newProp = [[property copy] autorelease];
-		if (property==classProperty)
-			obj.classProperty = newProp;
-		if (property==posXProperty)
-			obj.posXProperty = newProp;
-		if (property==posYProperty)
-			obj.posYProperty = newProp;
-		if (property==rotationProperty)
-			obj.rotationProperty = newProp;
 		[prop addObject:newProp];
 	}
     [obj setProperties:prop];
 	obj.controller = controller;
+    [obj searchForVitalProperties];
 	return obj;
 }
 

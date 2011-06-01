@@ -92,30 +92,13 @@ void PHLObject::loadBody(void *l)
 					if (lua_isstring(L, -1))
 						typ = lua_tostring(L,-1);
 					lua_pop(L,1);
-					double boxH=1, boxW=1, boxX=-0.5f, boxY=-0.5f, circleR=1;
+                    PHRect box = PHMakeRect(-0.5f, -0.5f, 1, 1);
+                    double circleR=1;
 					
-					lua_pushstring(L, "boxH");
+					lua_pushstring(L, "box");
 					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						boxH = lua_tonumber(L, -1);
-					lua_pop(L,1);
-					
-					lua_pushstring(L, "boxW");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						boxW = lua_tonumber(L, -1);
-					lua_pop(L,1);
-					
-					lua_pushstring(L, "boxX");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						boxX = lua_tonumber(L, -1);
-					lua_pop(L,1);
-					
-					lua_pushstring(L, "boxY");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						boxY = lua_tonumber(L, -1);
+					if (lua_istable(L, -1))
+						box = PHRect::rectFromLua(L);
 					lua_pop(L,1);
 					
 					lua_pushstring(L, "circleR");
@@ -146,12 +129,6 @@ void PHLObject::loadBody(void *l)
 					if (lua_isnumber(L, -1))
 						density = lua_tonumber(L, -1);
 					lua_pop(L,1);
-					
-					lua_pushstring(L, "boxY");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						boxY = lua_tonumber(L, -1);
-					lua_pop(L,1);
                     
 					b2FixtureDef fdef;
 					fdef.friction = friction;
@@ -180,10 +157,10 @@ void PHLObject::loadBody(void *l)
 					{
 						b2PolygonShape shape;
 						b2Vec2 v[4];
-						v[0].Set(boxX,		boxY);
-						v[1].Set(boxX+boxW,	boxY);
-						v[2].Set(boxX+boxW,	boxY+boxH);
-						v[3].Set(boxX,		boxY+boxH);
+						v[0].Set(box.x,		box.y);
+						v[1].Set(box.x+box.width,	box.y);
+						v[2].Set(box.x+box.width,	box.y+box.height);
+						v[3].Set(box.x,		box.y+box.height);
 						shape.Set(v,4);
 						fdef.shape = &shape;
 						body->CreateFixture(&fdef);
@@ -207,18 +184,16 @@ void PHLObject::loadFromLua(void * l, const string & root, b2World * _world)
 {
 	world = _world;
 	lua_State * L = (lua_State*)l;
-	lua_pushstring(L, "posX");
+    
+    pos = PHOriginPoint;
+    
+	lua_pushstring(L, "pos");
 	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		pos.x = lua_tonumber(L, -1);
+	if (lua_istable(L, -1))
+		pos = PHPoint::pointFromLua(L);
 	lua_pop(L, 1);
 	
-	lua_pushstring(L, "posY");
-	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		pos.y = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-	
+    rot = 0;
 	lua_pushstring(L, "rotation");
 	lua_gettable(L, -2);
 	if (lua_isnumber(L, -1))

@@ -15,7 +15,7 @@
 @interface PHObject : NSObject<NSCopying,NSCoding> {
 	NSString * className;
 	NSMutableArray * properties;
-	PHObjectProperty * classProperty, *posXProperty, *posYProperty, *rotationProperty;
+	PHObjectProperty * classProperty, *posXProperty, *posYProperty, *rotationProperty, *posProperty;
 	BOOL readOnly;
 	BOOL selected;
 	ObjectView * view;
@@ -28,6 +28,7 @@
 @property(nonatomic,assign) PHObjectProperty * classProperty;
 @property(nonatomic,assign) PHObjectProperty * posXProperty;
 @property(nonatomic,assign) PHObjectProperty * posYProperty;
+@property(nonatomic,assign) PHObjectProperty * posProperty;
 @property(nonatomic,assign) PHObjectProperty * rotationProperty;
 @property(nonatomic,assign) BOOL readOnly;
 @property(nonatomic,assign) BOOL editable;
@@ -37,6 +38,9 @@
 -(void)undoableSetPosition:(NSPoint)pos;
 -(void)positionChanged;
 -(void)rebuildView;
+
+-(PHObjectProperty*)propertyForKey:(NSString*)key;
+-(void)searchForVitalProperties;
 
 -(void)setProperties:(NSArray*)obj;
 -(NSMutableArray*)properties;

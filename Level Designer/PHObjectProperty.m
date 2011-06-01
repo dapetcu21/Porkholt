@@ -369,4 +369,15 @@
     parentObject = obj;
 }
 
+-(PHObjectProperty*)propertyForKey:(NSString*)_key
+{
+    if (type!=kPHObjectPropertyTree) return 
+        nil;
+    NSArray * arr = [self childNodes];
+    for (PHObjectProperty* prop in arr)
+        if ([prop.key isEqualToString:_key])
+            return prop;
+    return nil;
+}
+
 @end

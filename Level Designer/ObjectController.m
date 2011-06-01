@@ -239,6 +239,7 @@
 {
     if (outlineView==itemInfo)
 	{
+        if ([self selectedObject].readOnly) return NO;
 		PHObjectProperty * object = (PHObjectProperty*)[(NSTreeNode*)item representedObject];
 		if ([[tableColumn identifier] isEqual:COLUMNID_VALUE])
 		{
@@ -439,8 +440,11 @@
     if (outlineView==itemInfo)
     {
         [draggedKeys release];
-        draggedKeys = [[NSMutableArray alloc] initWithCapacity:[items count]];
         draggingMandatory = NO;
+        
+        if ([self selectedObject].readOnly) return NO;
+        
+        draggedKeys = [[NSMutableArray alloc] initWithCapacity:[items count]];
         
         id parent = [(NSTreeNode*)[items objectAtIndex:0] parentNode];
         for (NSTreeNode* node in items)
@@ -837,6 +841,7 @@
 -(IBAction)newProp:(id)sender
 {
 	if (![self selectedObject]) return;
+    if ([self selectedObject].readOnly) return;
 	NSIndexPath * path = [self propInsertPositionForSelection:[keyController selectionIndexPaths]];
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:@"" ofType:kPHObjectPropertyString forKey:[self proposedPropertyKey:@"untitled" forSiblings:[self siblingsForIndexPath:path] andProp:nil]];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:[self selectedObject]];
@@ -846,6 +851,7 @@
 -(IBAction)deleteProp:(id)sender
 {
 	if (![self selectedObject]) return;
+    if ([self selectedObject].readOnly) return;
 	NSArray * arry = [self parentFilteredIndexPaths:[keyController selectionIndexPaths]];
     NSMutableArray * arr = [[[NSMutableArray alloc] initWithCapacity:[arry count]] autorelease];
     for (NSIndexPath * path in arry)
@@ -860,6 +866,7 @@
 -(IBAction)duplicateProp:(id)sender
 {
     if (![self selectedObject]) return;
+    if ([self selectedObject].readOnly) return;
     NSArray * arr = [keyController selectionIndexPaths];
     NSMutableArray * indexPaths = [NSMutableArray arrayWithCapacity:[arr count]];
     [indexPaths addObjectsFromArray:arr];
@@ -904,6 +911,7 @@
 -(IBAction)copyProp:(id)sender
 {
 	if (![self selectedObject]) return;
+    if ([self selectedObject].readOnly) return;
 	NSArray * indexPaths = [keyController selectionIndexPaths];
     if ([indexPaths count]==0) return;
 	NSPasteboard * cb = [NSPasteboard generalPasteboard];
@@ -914,6 +922,8 @@
 
 -(IBAction)pasteProp:(id)sender
 {
+    if (![self selectedObject]) return;
+    if ([self selectedObject].readOnly) return;
 	NSPasteboard* cb = [NSPasteboard generalPasteboard];
 	NSString * type = [cb availableTypeFromArray:[NSArray arrayWithObject:kPropertyPBoardType]];
 	if (type)
@@ -941,7 +951,16 @@
 
 -(BOOL)validateMenuItemProp:(NSMenuItem*)sender
 {
+    if (![self selectedObject]) return NO;
     NSString * title = [sender title];
+    if ([self selectedObject].readOnly)
+    {
+        if ([title isEqualToString:@"Delete"]||
+            [title isEqualToString:@"Duplicate"]||
+            [title isEqualToString:@"Paste"]||
+            [title isEqualToString:@"New"])
+            return NO;
+    }
 	if ([title isEqualToString:@"Delete"]||
         [title isEqualToString:@"Duplicate"]||
 		[title isEqualToString:@"Copy"])
