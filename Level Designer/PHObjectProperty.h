@@ -15,7 +15,8 @@ enum
 	kPHObjectPropertyString = 0,
 	kPHObjectPropertyNumber,
 	kPHObjectPropertyBool,
-    kPHObjectPropertyTree
+    kPHObjectPropertyTree,
+    kPHObjectPropertyArray
 };
 
 @interface PHObjectProperty : NSTreeNode<NSCoding,NSCopying> {
@@ -27,6 +28,7 @@ enum
 }
 
 -(PHObjectProperty*)propertyForKey:(NSString*)key;
+-(PHObjectProperty*)propertyAtIndex:(NSUInteger)index;
 
 -(id)initWithValue:(id)v ofType:(int)ty forKey:(NSString*)k;
 +(PHObjectProperty*)propertyWithValue:(id)v ofType:(int)ty forKey:(NSString*)k;
@@ -37,6 +39,9 @@ enum
 -(void)convertToNumber;
 -(void)convertToBool;
 -(void)convertToTree;
+-(void)convertToArray;
+
+-(void)fixArrayKeysUndoable:(NSUndoManager*)man;
 
 @property(nonatomic,retain) id value;
 @property(nonatomic,retain) NSString * key;

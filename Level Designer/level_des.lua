@@ -27,20 +27,14 @@ function describeObject(obj)
 		des.readOnly = false;
 	end
 	obj.levelDes = nil;
+
 	local j = 0;
-	proto = objectWithClass(obj.class)
-	proto.class = nil;
-	proto.pos = nil;
-	proto.rotation = nil;
 	for i,v in pairs(obj) do
         if (type(v)=="table") then
             des[j] = { key = i;};
-            des[j].value,des[j].inherited = describeTable(obj[i],proto[i]);
+            des[j].value = describeTable(obj[i]);
         else
             des[j] = { key = i; value = v; };
-            if (proto[i]==v) then
-                des[j].inherited = true;
-            end
         end
 		j = j+1;
 	end
@@ -48,28 +42,33 @@ function describeObject(obj)
 	return des;
 end
 
-function describeTable(obj,proto)
-    print("describeObject",obj,proto);
-    local inh = true;
+function describeTable(obj)
     local des = {};
     local j = 0;
-    proto = proto or {};
-    for i,v in pairs(obj) do
-	    print(i,v,type(v))
-        if (type(v)=="table") then
-            des[j] = { key = i;};
-            des[j].value,des[j].inherited = describeTable(obj[i],proto[i]);
-        else
-            des[j] = { key = i; value = v; };
-            if (proto[i]==v) then
-                des[j].inherited = true;
+    local n = obj.n;
+    if (n) then
+        des.array = true;
+        des.n = n;
+        for j=0,n-1 do
+            v = obj[j];
+            if (type(v)=="table") then
+                des[j] = { key = j;};
+                des[j].value = describeTable(obj[j]);
             else
-                inh = false;
-            end;
+                des[j] = { key = j; value = v; };
+            end
         end
-        j = j+1;
+    else
+        for i,v in pairs(obj) do
+            if (type(v)=="table") then
+                des[j] = { key = i;};
+                des[j].value = describeTable(obj[i]);
+            else
+                des[j] = { key = i; value = v; };
+            end
+            j = j+1;
+        end
+        des.n = j;
     end
-    des.n = j;
-    print(des,des.n);
-	return des,inh;
+	return des;
 end

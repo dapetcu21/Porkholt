@@ -22,6 +22,7 @@
 @synthesize rotationProperty;
 @synthesize view;
 @synthesize controller;
+@synthesize imagesProperty;
 
 -(id)init
 {
@@ -34,6 +35,8 @@
         posYProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"y"];
         [properties addObject:posProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObjects:posXProperty,posYProperty,nil] ofType:kPHObjectPropertyTree forKey:@"pos"]];
 		[properties addObject:rotationProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"]];
+        [properties addObject:imagesProperty=[PHObjectProperty mandatoryPropertyWithValue:nil ofType:kPHObjectPropertyArray forKey:@"images"]];
+        
 	}
 	return self;
 }
@@ -59,6 +62,7 @@
     rotationProperty = [self propertyForKey:@"rotation"];
     posXProperty = [posProperty propertyForKey:@"x"];
     posYProperty = [posProperty propertyForKey:@"y"];
+    imagesProperty = [self propertyForKey:@"images"];
     posProperty.mandatory = YES;
     posXProperty.mandatory = YES;
     posYProperty.mandatory = YES;
@@ -94,15 +98,8 @@
 			{
 				id value = nil;
 				NSString * key = nil;
-				BOOL inherited = NO;
-                BOOL tree = NO;
+				BOOL tree = NO;
 				int type;
-				
-				lua_pushstring(L, "inherited");
-				lua_gettable(L, -2);
-				if (lua_isboolean(L,-1))
-					inherited = lua_toboolean(L, -1);
-				lua_pop(L,1);
 				
 				lua_pushstring(L, "key");
 				lua_gettable(L, -2);
@@ -134,8 +131,8 @@
                     type = kPHObjectPropertyTree;
                 }
                 
-                if ([key isEqualToString:@"physics"]||
-                    [key isEqualToString:@"images"])
+                if ([key isEqualToString:@"physics"])//||
+                    //[key isEqualToString:@"images"])
                     key = nil;
 				
 				if (key&&(value||tree))
@@ -143,8 +140,8 @@
                     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:value ofType:type forKey:key];
                     prop.parentObject = self;
 					
-					if (!inherited)
-						[properties addObject:prop];
+                    [properties addObject:prop];
+                    
                     if (tree)
                         [prop loadFromLua:L];
 				}
@@ -160,7 +157,7 @@
 
 -(void)saveNode:(PHObjectProperty*)prop withPath:(NSString*)path toFile:(NSMutableString*)file
 {
-    [file appendFormat:@"%@.%@ = ",path,prop.key];
+    [file appendFormat:@"%@ = ",path];
     switch (prop.type) {
         case kPHObjectPropertyBool:
             [file appendFormat:@"%s;\n",prop.boolValue?"true":"false"];
@@ -172,13 +169,27 @@
             [file appendFormat:@"%lf;\n",prop.doubleValue];
             break;
         case kPHObjectPropertyTree:
+        {
             [file appendString:@"{};\n"];
             NSArray * arr = prop.childNodes;
             for ( PHObjectProperty * nde in arr) 
             {
-                [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",prop.key] toFile:file];
+                [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",nde.key] toFile:file];
             }
             break;
+        }
+        case kPHObjectPropertyArray:
+        {
+            NSArray * arr = prop.childNodes;
+            int n = [arr count];
+            [file appendFormat:@"{n=%d;};\n",n];
+            for (int i =0; i<n; i++)
+            {
+                PHObjectProperty * nde = [arr objectAtIndex:i];
+                [self saveNode:nde withPath:[path stringByAppendingFormat:@"[%d]",i] toFile:file];
+            }
+            break;
+        }
     }
 }
                          
@@ -189,7 +200,7 @@
 	for ( PHObjectProperty * prop in properties) 
 	{
 		if ([prop.key isEqual:@"class"]) continue;
-		[self saveNode:prop withPath:@"obj" toFile:file];
+		[self saveNode:prop withPath:[@"obj" stringByAppendingFormat:@".%@",prop.key] toFile:file];
 	}
 	[file appendFormat:@"obj.levelDes = true;\naddObject(obj);\n"];
 }

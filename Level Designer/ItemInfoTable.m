@@ -49,12 +49,23 @@
 	keyController = kc;
 }
 
--(void)setType:(int)ty andValue:(id)value forProp:(PHObjectProperty*)prp
+-(void)_setType:(int)ty andValue:(id)value forProp:(PHObjectProperty*)prp
 {
-    [[undoManager prepareWithInvocationTarget:self] setType:prp.type andValue:prp.value forProp:prp];
+    [[undoManager prepareWithInvocationTarget:self] _setType:prp.type andValue:prp.value forProp:prp];
     [prp setType:ty];
     [prp setValue:value];
     [[prp parentObject] modified];
+}
+
+-(void)setType:(int)ty andValue:(id)value forProp:(PHObjectProperty*)prp
+{
+    BOOL wasCollection = (prp.type == kPHObjectPropertyTree || prp.type == kPHObjectPropertyArray);
+    BOOL isCollection = (ty == kPHObjectPropertyTree || ty == kPHObjectPropertyArray);
+    [undoManager beginUndoGrouping];
+    [self _setType:ty andValue:value forProp:prp];
+    if (wasCollection && isCollection)
+        [prp fixArrayKeysUndoable:undoManager];
+    [undoManager endUndoGrouping];
 }
 
 -(void)convertToString
@@ -75,6 +86,11 @@
 -(void)convertToTree
 {
     [self setType:kPHObjectPropertyTree andValue:prop.value forProp:prop];
+}
+
+-(void)convertToArray
+{
+    [self setType:kPHObjectPropertyArray andValue:prop.value forProp:prop];
 }
 
 -(NSMenu*)menuForEvent:(NSEvent *)event
@@ -115,7 +131,7 @@
 		[menuitem setState:obj.type==kPHObjectPropertyBool];
 		[menuitem setAction:@selector(convertToBool)];
 		[menu addItem:menuitem];
-		
+        
         menuitem = [[[NSMenuItem alloc] init] autorelease];
 		[menuitem setTitle:@"Tree"];
 		[menuitem setTarget:self];
@@ -123,7 +139,15 @@
 		[menuitem setState:obj.type==kPHObjectPropertyTree];
 		[menuitem setAction:@selector(convertToTree)];
 		[menu addItem:menuitem];
-		
+
+        menuitem = [[[NSMenuItem alloc] init] autorelease];
+		[menuitem setTitle:@"Array"];
+		[menuitem setTarget:self];
+		[menuitem setEnabled:YES];
+		[menuitem setState:obj.type==kPHObjectPropertyArray];
+		[menuitem setAction:@selector(convertToArray)];
+		[menu addItem:menuitem];
+
 		[self setMenu:menu];
 		menu = [super menuForEvent:event];
 		[self setMenu:nil];

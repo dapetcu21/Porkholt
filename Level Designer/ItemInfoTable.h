@@ -16,7 +16,6 @@
     PHObjectProperty * prop;
 }
 
-
 -(IBAction)new:(id)sender;
 -(IBAction)delete:(id)sender;
 -(IBAction)duplicate:(id)sender;

@@ -235,6 +235,14 @@
 
 #pragma mark -Editing
 
+-(PHObjectProperty*)parentPropertyOfItem:(NSTreeNode*)node
+{
+    PHObjectProperty * parent = [[node parentNode] representedObject];
+    if ([parent isKindOfClass:[PHObjectProperty class]])
+        return parent;
+    return nil;
+}
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     if (outlineView==itemInfo)
@@ -247,6 +255,9 @@
  		}
 		if ([[tableColumn identifier] isEqual:COLUMNID_KEY])
 		{
+            PHObjectProperty * root = [self parentPropertyOfItem:item];
+            if (root.type == kPHObjectPropertyArray)
+                return NO;
 			if (object.mandatory)
 				return NO;
 			return YES;
@@ -329,9 +340,10 @@
     if (outlineView==itemInfo)
 	{
 		PHObjectProperty * object = (PHObjectProperty*)[(NSTreeNode*)item representedObject];
+        PHObjectProperty * root = [self parentPropertyOfItem:item];
 		if ([[tableColumn identifier] isEqual:COLUMNID_VALUE])
 		{
-            if (object.type==kPHObjectPropertyTree)
+            if (object.type==kPHObjectPropertyTree || object.type==kPHObjectPropertyArray)
             {
                 [cell setStringValue:@""];
             } else
@@ -347,8 +359,16 @@
 		}
 		if ([[tableColumn identifier] isEqual:COLUMNID_KEY])
 		{
-			[cell setEnabled:[outlineView isEnabled]&&!object.mandatory];
-			[cell setStringValue:object.key];
+            BOOL enabled = [outlineView isEnabled]&&!object.mandatory;
+            NSString * value = object.key;
+            if (root.type == kPHObjectPropertyArray)
+            {
+                enabled = NO;
+                NSIndexPath * path = [item indexPath];
+                value = [NSString stringWithFormat:@"%d",[path indexAtPosition:[path length]-1]];
+            }
+			[cell setEnabled:enabled];
+			[cell setStringValue:value];
 		}
     }
 }
@@ -482,7 +502,7 @@
             return NSDragOperationNone;
         }
         PHObjectProperty * object = (PHObjectProperty*)[(NSTreeNode*)item representedObject];
-        if (object.type == kPHObjectPropertyTree || item==nil)
+        if (object.type == kPHObjectPropertyTree || object.type == kPHObjectPropertyArray || item==nil)
         {
             while (item)
             {
@@ -728,8 +748,8 @@
 
 -(PHObjectProperty*)propertyAtIndexPath:(NSIndexPath*)path
 {
-    //TODO: use arranged objects.. I think
     NSUInteger n = [path length];
+    if (!n) return nil;
     PHObjectProperty * prop = [[[self selectedObject] properties] objectAtIndex:[path indexAtPosition:0]];
     for (int i=1; i<n; i++)
         prop = [[prop childNodes] objectAtIndex:[path indexAtPosition:i]];
@@ -766,7 +786,7 @@
     if (!last)
         return [NSIndexPath indexPathWithIndex:[[[self selectedObject] properties] count]];
     PHObjectProperty * prop = [self propertyAtIndexPath:last];
-    if (prop.type == kPHObjectPropertyTree)
+    if (prop.type == kPHObjectPropertyTree || prop.type == kPHObjectPropertyArray)
     {
         return [last indexPathByAddingIndex:[[prop childNodes] count]];
     }
@@ -822,19 +842,56 @@
     return arr;
 }
 
+-(void)fixArrays:(NSArray*)props
+{
+    NSUndoManager * man = [self undoManager];
+    for (PHObjectProperty * prop in props)
+        [prop fixArrayKeysUndoable:man];
+}
+
+-(NSArray*)arraysNeedingFixForIndexPaths:(NSArray*)paths
+{
+    NSMutableArray * ipaths = [NSMutableArray arrayWithCapacity:[paths count]];
+    for (NSIndexPath * path in paths)
+        [ipaths addObject:[path indexPathByRemovingLastIndex]];
+    [ipaths sortUsingSelector:@selector(compare:)];
+    NSIndexPath * last = nil;
+    NSMutableArray * arr = [NSMutableArray array];
+    for (NSIndexPath * path in ipaths)
+    {
+        if (!last || !([last compare:path]==NSOrderedSame))
+        {
+            PHObjectProperty * prop = [self propertyAtIndexPath:path];
+            if ([prop type]==kPHObjectPropertyArray)
+                [arr addObject:prop];
+        }
+        last = path;
+    }
+    return arr;
+}
+
 -(void)removePropertiesAtIndexPaths:(NSArray*)paths forObject:(PHObject*)obj
 {
     [self selectObject:obj];
-    [[[self undoManager] prepareWithInvocationTarget:self] insertProperties:[self propertiesAtIndexPaths:paths] atIndexPaths:paths forObject:obj];
+    NSUndoManager * man = [self undoManager];
+    [man beginUndoGrouping];
+    [[man prepareWithInvocationTarget:self] insertProperties:[self propertiesAtIndexPaths:paths] atIndexPaths:paths forObject:obj];
+    NSArray * arr = [self arraysNeedingFixForIndexPaths:paths];
     [keyController removeObjectsAtArrangedObjectIndexPaths:paths];
+    [self fixArrays:arr];
+    [man endUndoGrouping];
     [keyController setSelectionIndexPaths:[NSArray array]];
 }
 
 -(void)insertProperties:(NSArray*)props atIndexPaths:(NSArray*)paths forObject:(PHObject*)obj
 {
     [self selectObject:obj];
-    [[[self undoManager] prepareWithInvocationTarget:self] removePropertiesAtIndexPaths:paths forObject:obj];
+    NSUndoManager * man = [self undoManager];
+    [man beginUndoGrouping];
+    [[man prepareWithInvocationTarget:self] removePropertiesAtIndexPaths:paths forObject:obj];
     [keyController insertObjects:props atArrangedObjectIndexPaths:paths];
+    [self fixArrays:[self arraysNeedingFixForIndexPaths:paths]];
+    [man endUndoGrouping];
     [keyController setSelectionIndexPaths:paths];
 }
 

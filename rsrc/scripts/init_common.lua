@@ -197,8 +197,7 @@ function createBridge(bridgeRadius, p1,p2 ,numLogs, jointPos, creator)
 	while (numLogs ~= 0) do
 		local pnt = angleToPoint(bridgeRadius,c,a1);
 		local obj = creator();
-		obj.posX = pnt.x;
-		obj.posY = pnt.y;
+		obj.pos = pnt;
 		obj.rotation = 280-(a1/math.pi*180);
 		a1=a1+add;
 		numLogs=numLogs-1;

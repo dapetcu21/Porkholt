@@ -137,6 +137,8 @@ void PHWorld::updateScene()
 	{
 		PHRect pos = camera->size();
 		PHPoint ps = camera->position();
+        PHPoint posit = ps;
+        double rot = camera->rotation();
 		ps.x -= pos.width/2;			
 		ps.y -= pos.height/2;
 		double scaleX = view->bounds().width / pos.width;
@@ -149,6 +151,8 @@ void PHWorld::updateScene()
 		pos.y=round(pos.y);
 		worldView->setFrame(pos);
 		worldView->setBounds(worldSize);
+        worldView->setRotationalCenter(posit);
+        worldView->setRotation(-rot);
 		for (list<layer>::iterator i = layers.begin(); i!=layers.end(); i++)
 		{
 			layer & ly = *i;
@@ -162,13 +166,12 @@ void PHWorld::updateScene()
 			pos.y = -ps.y * scaleY;
 			pos.width = worldSize.width * scaleX;
 			pos.height = worldSize.height * scaleY;
-			//pos.x=round(pos.x);
-			//pos.y=round(pos.y);
 			ly.container->setFrame(pos);
 			ly.container->setBounds(worldSize);
+            ly.container->setRotationalCenter(posit);
+            ly.container->setRotation(-rot);
 		}
 	}
-	//PHLog("jumpGauge:%f",_jumpGauge);
 	jumpGaugeView->setLevel(_jumpGauge/maxJump);
 }
 

@@ -28,6 +28,16 @@
         n = lua_tonumber(L, -1);
     lua_pop(L,1);
     
+    bool array = false;
+    lua_pushstring(L,"array");
+    lua_gettable(L,-2);
+    if (lua_isboolean(L,-1))
+        array = lua_toboolean(L,-1);
+    lua_pop(L,1);
+    
+    if (array)
+        type = kPHObjectPropertyArray;
+    
     NSMutableArray * properties = [self mutableChildNodes];
     
     for (int i=0; i<n; i++)
@@ -91,7 +101,8 @@
         }
         lua_pop(L, 1);
     }
-    [properties sortUsingSelector:@selector(compare:)];
+    if (type!=kPHObjectPropertyArray)
+        [properties sortUsingSelector:@selector(compare:)];
 }
 
 -(id)initWithValue:(id)v ofType:(int)ty  forKey:(NSString*)k
@@ -131,7 +142,7 @@
 -(id)copyWithZone:(NSZone *)zone
 {
 	PHObjectProperty * prop = [PHObjectProperty alloc];
-    id _value = type==kPHObjectPropertyTree?nil:[[value copy] autorelease];
+    id _value = (type==kPHObjectPropertyTree || type==kPHObjectPropertyArray)?nil:[[value copy] autorelease];
 	if (mandatory)
 		prop = [prop initMandatoryWithValue:_value ofType:type forKey:key];
 	else
@@ -175,7 +186,7 @@
 
 -(id)value
 {
-    if (type==kPHObjectPropertyTree)
+    if (type==kPHObjectPropertyTree || type == kPHObjectPropertyArray)
         return [[[self childNodes] copy] autorelease];
 	return value;
 }
@@ -184,7 +195,7 @@
 {
 	if (v==value) return;
 	[value release];
-    if (type!=kPHObjectPropertyTree)
+    if (type!=kPHObjectPropertyTree && type !=kPHObjectPropertyArray)
     {
         if (!v || [v isKindOfClass: [NSArray class]])
             v = @"";
@@ -199,6 +210,7 @@
 		case kPHObjectPropertyString:
 			value = [[v description] retain];
 			break;
+        case kPHObjectPropertyArray:
         case kPHObjectPropertyTree:
         {
             NSMutableArray * arr = [self mutableChildNodes];
@@ -310,12 +322,33 @@
     [self setValue:_val];
 }
 
+-(void)fixArrayKeysUndoable:(NSUndoManager*)man
+{
+    int i=0;
+    NSArray * arr = [self childNodes];
+    int n=[arr count];
+    [man beginUndoGrouping];
+    for (i=0; i<n; i++)
+    {
+        PHObjectProperty * prop = (PHObjectProperty*)[arr objectAtIndex:i];
+        [prop setUndoable:man key:[NSString stringWithFormat:@"%d",i]];
+    }
+    [man endUndoGrouping];
+}
+
 -(void)setType:(int)ty
 {
-    if (!value)
-        value=[@"" retain];
-    if (type==kPHObjectPropertyTree)
-        [[self mutableChildNodes] removeAllObjects];
+    BOOL wasCollection = (type==kPHObjectPropertyTree || type==kPHObjectPropertyArray);
+    BOOL isCollection = (ty==kPHObjectPropertyTree || ty==kPHObjectPropertyArray);
+    if (wasCollection)
+    {   
+        if (!isCollection)
+        {
+            [[self mutableChildNodes] removeAllObjects];
+            [value release];
+            value = [@"" retain];
+        }
+    };
     type = ty;
 	if (ty==kPHObjectPropertyString)
 		self.stringValue = [value description];
@@ -323,10 +356,8 @@
 		self.doubleValue = [value doubleValue];
 	if (ty==kPHObjectPropertyBool)
 		self.boolValue = [value boolValue];
-    if (ty==kPHObjectPropertyTree)
-    {
+    if (!wasCollection && isCollection)
         self.value = nil;
-    };
 }
 
 -(void)convertToString
@@ -347,6 +378,11 @@
 -(void)convertToTree
 {
     self.type = kPHObjectPropertyTree;
+}
+
+-(void)convertToArray
+{
+    self.type = kPHObjectPropertyArray;
 }
 
 -(NSComparisonResult)compare:(PHObjectProperty*)other
@@ -371,13 +407,21 @@
 
 -(PHObjectProperty*)propertyForKey:(NSString*)_key
 {
-    if (type!=kPHObjectPropertyTree) return 
-        nil;
+    if (type!=kPHObjectPropertyTree) 
+        return nil;
     NSArray * arr = [self childNodes];
     for (PHObjectProperty* prop in arr)
         if ([prop.key isEqualToString:_key])
             return prop;
     return nil;
+}
+
+-(PHObjectProperty*)propertyAtIndex:(NSUInteger)index
+{
+    if (type!=kPHObjectPropertyArray) 
+        return nil;
+    NSArray * arr = [self childNodes];
+    return [arr objectAtIndex:index];
 }
 
 @end
