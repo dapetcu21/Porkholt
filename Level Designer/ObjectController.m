@@ -25,6 +25,9 @@
 #define COLUMNID_VALUE @"Value"
 
 @implementation ObjectController
+@synthesize worldController;
+@synthesize keyController;
+@synthesize arrayController;
 
 -(MyDocument*)document
 {
@@ -58,6 +61,8 @@
 	[objects release];
 	[draggedKeys release];
 	[draggedObjects release];
+    [selectedProps release];
+    [selectedPropsIndexes release];
 	[super dealloc];
 }
 
@@ -85,11 +90,6 @@
 {
     if ([self selectedObject] != obj)
         [arrayController setSelectedObjects:[NSArray arrayWithObject:obj]];
-}
-
--(NSArrayController*)arrayController
-{
-	return arrayController;
 }
 
 -(void)objectChanged:(PHObject*)obj
@@ -277,15 +277,14 @@
 {
     [[[self undoManager] prepareWithInvocationTarget:self] object:obj property:prop changeValue:prop.value];
     prop.value = value;
-    NSString * key = prop.key;
-    if ([key isEqualToString:@"class"])
+    if (prop==obj.classProperty)
     {
         [objectBrowser reloadData];
         [worldController updateSubviews];
     }
-    if ([key isEqualToString:@"posX"]||
-        [key isEqualToString:@"posY"]||
-        [key isEqualToString:@"rotation"])
+    if (prop==obj.posXProperty||
+        prop==obj.posYProperty||
+        prop==obj.rotationProperty)
         [obj positionChanged];
     [obj modified];
 }
@@ -712,7 +711,26 @@
 }
 
 #pragma mark -
-#pragma mark Property Copy & Paste
+#pragma mark Property helper functions
+
+-(NSIndexPath*)indexPathForProperty:(PHObjectProperty*)prop inArray:(NSArray*)arr baseIndexPath:(NSIndexPath*)ip
+{
+    int i=0;
+    for (PHObjectProperty * prp in arr)
+    {
+        if (prp==prop) return [ip indexPathByAddingIndex:i];
+        NSIndexPath * ipp = [self indexPathForProperty:prop inArray:[prp childNodes] baseIndexPath:[ip indexPathByAddingIndex:i]];
+        if (ipp)
+            return ipp;
+        i++;
+    }
+    return nil;
+}
+
+-(NSIndexPath*)indexPathForProperty:(PHObjectProperty*)prop
+{
+    return [self indexPathForProperty:prop inArray:[[self selectedObject] properties] baseIndexPath:[NSIndexPath indexPathWithIndexes:NULL length:0]];
+}
 
 -(NSArray*)siblingsForItem:(NSTreeNode*)prop
 {
@@ -842,6 +860,9 @@
     return arr;
 }
 
+#pragma mark -
+#pragma mark Property Copy & Paste
+
 -(void)fixArrays:(NSArray*)props
 {
     NSUndoManager * man = [self undoManager];
@@ -881,6 +902,7 @@
     [self fixArrays:arr];
     [man endUndoGrouping];
     [keyController setSelectionIndexPaths:[NSArray array]];
+    [obj modified];
 }
 
 -(void)insertProperties:(NSArray*)props atIndexPaths:(NSArray*)paths forObject:(PHObject*)obj
@@ -893,6 +915,7 @@
     [self fixArrays:[self arraysNeedingFixForIndexPaths:paths]];
     [man endUndoGrouping];
     [keyController setSelectionIndexPaths:paths];
+    [obj modified];
 }
 
 -(IBAction)newProp:(id)sender
@@ -901,6 +924,7 @@
     if ([self selectedObject].readOnly) return;
 	NSIndexPath * path = [self propInsertPositionForSelection:[keyController selectionIndexPaths]];
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:@"" ofType:kPHObjectPropertyString forKey:[self proposedPropertyKey:@"untitled" forSiblings:[self siblingsForIndexPath:path] andProp:nil]];
+    prop.parentObject = [self selectedObject];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:[self selectedObject]];
 }
 
@@ -939,6 +963,7 @@
         NSIndexPath * path = [indexPaths objectAtIndex:j];
         PHObjectProperty * oprop = [self propertyAtIndexPath:path];
         PHObjectProperty * prop = [oprop copy];
+        prop.parentObject = [self selectedObject];
         [prop setMandatory:NO];
         NSArray * sib = [self siblingsForIndexPath:path];
         prop.key = [self proposedPropertyKey:prop.key forSiblings:sib andProp:prop];
@@ -968,7 +993,6 @@
 -(IBAction)copyProp:(id)sender
 {
 	if (![self selectedObject]) return;
-    if ([self selectedObject].readOnly) return;
 	NSArray * indexPaths = [keyController selectionIndexPaths];
     if ([indexPaths count]==0) return;
 	NSPasteboard * cb = [NSPasteboard generalPasteboard];
@@ -1000,6 +1024,7 @@
 		{
 			obj.mandatory = NO;
 			obj.key = [self proposedPropertyKey:obj.key forSiblings:sib andProp:obj];
+            obj.parentObject = [self selectedObject];
 		}
 		
       	[self insertProperties:items atIndexPaths:ipaths forObject:[self selectedObject]];
@@ -1027,6 +1052,55 @@
 			return NO;
 	}
 	return YES;
+}
+
+#pragma mark -
+#pragma mark Selection Management
+
+-(void)setSelectedProps:(NSArray*)prop
+{
+    for (PHObjectProperty * prp in selectedProps)
+        [prp updateSelected:NO];
+    [selectedProps release];
+    selectedProps = [[self propertiesAtIndexPaths:prop] retain];
+    for (PHObjectProperty * prp in selectedProps)
+        [prp updateSelected:YES];
+    [selectedPropsIndexes release];
+    selectedPropsIndexes = [[NSArray alloc] initWithArray:prop];
+}
+
+-(NSArray*)selectedProps
+{
+    return selectedPropsIndexes;
+}
+
+-(void)expandStuff
+{
+    PHObject * sel = [self selectedObject];
+    NSArray * arr = sel.properties;
+    int i=0;
+    for (PHObjectProperty * prop in arr)
+    {
+        BOOL expand = (sel.posProperty == prop)||
+                      (sel.imagesProperty == prop);
+        if (expand)
+            [itemInfo expandItem:[[keyController arrangedObjects] descendantNodeAtIndexPath:[NSIndexPath indexPathWithIndex:i]]];
+        i++; 
+    }
+}
+
+-(void)setProperty:(PHObjectProperty*)prop selected:(BOOL)sel
+{
+    [self selectObject:prop.parentObject];
+    if (sel)
+        [keyController addSelectionIndexPaths:[NSArray arrayWithObject:[self indexPathForProperty:prop]]];
+    else
+        [keyController removeSelectionIndexPaths:[NSArray arrayWithObject:[self indexPathForProperty:prop]]];
+}
+
+-(void)clearPropertySelection
+{
+    [keyController setSelectionIndexPaths:[NSArray array]];
 }
 
 @end

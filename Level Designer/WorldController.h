@@ -9,17 +9,34 @@
 #import <Cocoa/Cocoa.h>
 
 @class ObjectController;
+@class WorldView;
+@class PHObject;
+
 @interface WorldController : NSObject {
 	IBOutlet ObjectController * objectController;
 	NSArrayController * controller;
 	IBOutlet NSScrollView * scrollView;
-	NSView * worldView;
+	WorldView * worldView;
 	double scalingFactor;
 	NSArray * objects;
 	NSArray * selection;
+    BOOL showImages;
+    BOOL showFixtures;
+    BOOL showMarkers;
+    BOOL showJoints;
+    BOOL objectMode;
+    PHObject * currentObject;
 }
 
 @property(nonatomic,assign) double scalingFactor;
+
+@property(nonatomic,assign) BOOL showImages;
+@property(nonatomic,assign) BOOL showFixtures;
+@property(nonatomic,assign) BOOL showMarkers;
+@property(nonatomic,assign) BOOL showJoints;
+@property(nonatomic,assign) BOOL objectMode;
+@property(nonatomic,readonly) PHObject * currentObject;
+@property(nonatomic,readonly) ObjectController * objectController;
 
 -(void)scrollViewHasScrolled;
 -(void)adjustForVisibleRect:(NSRect)visibleRect;

@@ -25,6 +25,8 @@ enum
 	PHObject * parentObject;
 	int type;
 	BOOL mandatory;
+    id userData;
+    BOOL selected;
 }
 
 -(PHObjectProperty*)propertyForKey:(NSString*)key;
@@ -69,5 +71,10 @@ enum
 @property(nonatomic,assign) int intValue;
 @property(nonatomic,assign) BOOL boolValue;
 @property(nonatomic,retain) NSString * stringValue;
+
+@property(nonatomic,assign) id userData;
+
+@property(nonatomic,assign) BOOL selected;
+-(void)updateSelected:(BOOL)sel;
 
 @end

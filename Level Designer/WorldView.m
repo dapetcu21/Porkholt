@@ -9,8 +9,13 @@
 #import "WorldView.h"
 #import "ObjectView.h"
 #import "PHObject.h"
+#import "WorldController.h"
+#import "ObjectController.h"
+#import "SubObjectView.h"
+#import "PHObjectProperty.h"
 
 @implementation WorldView
+@synthesize controller;
 
 enum dragStates
 {
@@ -97,7 +102,8 @@ enum dragStates
 
 -(void)endDragging:(NSEvent*)theEvent
 {
-    dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    if (theEvent)
+        dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSPoint dif,invDif;
     dif.x = dragPoint.x-initialPoint.x;
     dif.y = dragPoint.y-initialPoint.y;
@@ -136,12 +142,17 @@ enum dragStates
 	else 
 	{
 		dragState = dsSelect;
-		NSArray * sv = [self subviews];
-		for (ObjectView * view in sv)
-		{
-			if (![view isKindOfClass:[ObjectView class]]) continue;
-			view.object.selected = NO;
-		}
+        if (controller.objectMode)
+        {
+            [controller.objectController clearPropertySelection];
+        } else {
+            NSArray * sv = [self subviews];
+            for (ObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[ObjectView class]]) continue;
+                view.object.selected = NO;
+            }
+        }
         dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	}
 }
@@ -181,12 +192,28 @@ enum dragStates
 			dragRect.origin.y += dragRect.size.height;
 			dragRect.size.height = -dragRect.size.height;
 		}
-		NSArray * sv = [self subviews];
-		for (ObjectView * view in sv)
-		{
-			if (![view isKindOfClass:[ObjectView class]]) continue;
-			view.object.selected = NSPointInRect(view.frame.origin, dragRect);
-		}
+        if (controller.objectMode)
+        {
+            ObjectView * view = controller.currentObject.view;
+            NSRect rect = dragRect;
+            NSRect frame = [view frame];
+            rect.origin.x -= frame.origin.x+frame.size.width/2;
+            rect.origin.y -= frame.origin.y+frame.size.height/2;
+            NSArray * sv = [view subviews];
+            for (SubObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[SubObjectView class]]) continue;
+                NSLog(@"view:%@ rect:%f %f %f %f",view,rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
+                view.property.selected = [view intersectsRect:rect];
+            }
+        } else {
+            NSArray * sv = [self subviews];
+            for (ObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[ObjectView class]]) continue;
+                view.object.selected = [view intersectsRect:dragRect];
+            }
+        }
 		[self setNeedsDisplay:YES];
 	}
 }
@@ -196,8 +223,14 @@ enum dragStates
     if (dragState==dsMove)
         [self endDragging:theEvent];
 	dragState = dsNone;
+    dragRect = NSZeroRect;
 	[self setNeedsDisplay:YES];
 }
 
+-(void)cancelAllDrags
+{
+    if (dragState!=dsNone)
+        [self mouseUp:nil];
+}
 
 @end

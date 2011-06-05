@@ -8,13 +8,18 @@
 
 #import <Cocoa/Cocoa.h>
 
-
+@class WorldController;
 @interface WorldView : NSView {
 	int dragState;
 	NSRect dragRect;
 	NSPoint dragPoint,initialPoint;
+    
+    WorldController * controller;
 }
 
 -(void)beginDragging:(NSEvent *)theEvent;
+-(void)cancelAllDrags;
+
+@property(nonatomic,assign) WorldController * controller;
 
 @end

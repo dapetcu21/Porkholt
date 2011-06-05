@@ -36,15 +36,23 @@
 	int readOnlyCells;
 	
 	BOOL ignoreChange;
+    
+    NSArray * selectedProps;
+    NSArray * selectedPropsIndexes;
+    
+    PHObject * selpropsob;
 }
 
 -(void)setObjects:(NSArray*)obj;
 -(NSMutableArray*)objects;
 
+@property(nonatomic,retain) NSArray * selectedProps;
+
 -(PHObject*)selectedObject;
 -(void)selectObject:(PHObject*)obj;
 
--(NSArrayController*)arrayController;
+@property(nonatomic,readonly) NSArrayController * arrayController;
+@property(nonatomic,readonly) NSTreeController * keyController;
 
 -(NSArray*)siblingsForItem:(NSTreeNode*)prop;
 -(NSArray*)siblingsForIndexPath:(NSIndexPath*)path;
@@ -73,11 +81,17 @@
 -(IBAction)pasteProp:(id)sender;
 -(BOOL)validateMenuItemProp:(NSMenuItem*)sender;
 
--(MyDocument*)document;
--(NSUndoManager*)undoManager;
+-(void)expandStuff;
+
+@property(nonatomic,readonly) MyDocument * document;
+@property(nonatomic,readonly) NSUndoManager * undoManager;
+@property(nonatomic,readonly) WorldController * worldController;
 
 -(void)objectChanged:(PHObject*)obj;
 //@property(nonatomic,retain) NSArray * objects;
 //@property(nonatomic,retain) NSArray * selection;
+
+-(void)setProperty:(PHObjectProperty*)prop selected:(BOOL)sel;
+-(void)clearPropertySelection;
 
 @end

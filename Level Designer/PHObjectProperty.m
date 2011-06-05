@@ -7,12 +7,14 @@
 //
 
 #import "PHObjectProperty.h"
-
+#import "PHObject.h"
+#import "ObjectController.h"
 
 @implementation PHObjectProperty
 
 @synthesize key;
 @synthesize mandatory;
+@synthesize userData;
 
 +(PHObjectProperty*)propertyWithValue:(id)v ofType:(int)ty  forKey:(NSString*)k
 {
@@ -91,6 +93,7 @@
             if (_key&&(_value||tree))
             {
                 PHObjectProperty * prop = [PHObjectProperty propertyWithValue:_value ofType:_type forKey:_key];
+                prop.parentObject = self.parentObject;
                 
                 if (!inherited)
                     [properties addObject:prop];
@@ -392,17 +395,15 @@
 
 -(PHObject*)parentObject
 {
-    id pr = [self parentNode];
-    if (!pr)
-        return parentObject;
-    if ([pr isKindOfClass:[PHObjectProperty class]])
-        return [(PHObjectProperty*)pr parentObject];
+    return parentObject;
     return nil;
 }
 
 -(void)setParentObject:(PHObject*)obj
 {
     parentObject = obj;
+    for (PHObjectProperty * prop in [self childNodes])
+        prop.parentObject = obj;
 }
 
 -(PHObjectProperty*)propertyForKey:(NSString*)_key
@@ -422,6 +423,23 @@
         return nil;
     NSArray * arr = [self childNodes];
     return [arr objectAtIndex:index];
+}
+
+-(BOOL)selected
+{
+    return selected;
+}
+
+-(void)setSelected:(BOOL)sel
+{
+    if (sel==selected) return;
+    [parentObject.controller setProperty:self selected:sel];
+}
+
+-(void)updateSelected:(BOOL)sel
+{
+    selected = sel;
+//    NSLog(@"%@ setSelected:%d",self,sel);
 }
 
 @end

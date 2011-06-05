@@ -15,6 +15,38 @@
 #import "PHObject.h"
 
 @implementation WorldController
+@synthesize showImages;
+@synthesize showFixtures;
+@synthesize showMarkers;
+@synthesize showJoints;
+@synthesize objectMode;
+@synthesize currentObject;
+@synthesize objectController;
+
+-(BOOL)objectMode
+{
+    return objectMode;
+}
+
+-(void)setObjectMode:(BOOL)val
+{
+    if (val)
+    {
+        if (![objectController selectedObject]||[objectController selectedObject].readOnly)
+        {
+            NSBeep();
+            return;
+        }
+        objectMode = YES;
+        currentObject = [objectController selectedObject];
+    }
+    else
+    {
+        objectMode = NO;
+        currentObject = NO;
+    }
+    [worldView cancelAllDrags];
+}
 
 +(void)initialize
 {
@@ -26,7 +58,11 @@
 {
 	if (self=[super init])
 	{
-		scalingFactor = 150.0f;
+		scalingFactor = 100.0f;
+        showFixtures = YES;
+        showImages = YES;
+        showJoints = YES;
+        showMarkers = YES;
 	}
 	return self;
 }
@@ -43,6 +79,7 @@
 	selection = [NSArray new];
 	
 	worldView = [[WorldView alloc] init];
+    worldView.controller = self;
 	NSRect frm = [scrollView contentView].bounds;
 	worldView.frame = frm;
 	worldView.bounds = NSMakeRect(-frm.size.width/2/scalingFactor, -frm.size.height/2/scalingFactor, frm.size.width/scalingFactor, frm.size.height/scalingFactor);
@@ -70,7 +107,20 @@
 	for (PHObject * obj in objects)
 		[obj updateSelected:NO];
 	for (PHObject * obj in selection)
-		[obj updateSelected:YES];	
+		[obj updateSelected:YES];
+    PHObject * sel = [objectController selectedObject];
+	if (objectMode)
+    {
+        if ((!sel||sel.readOnly))
+            [self setObjectMode:NO];
+        else
+        {
+            [worldView cancelAllDrags];
+            currentObject = sel;    
+        }
+    }
+    if (sel)
+        [objectController expandStuff];
 }
 
 

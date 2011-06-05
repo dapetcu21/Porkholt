@@ -68,6 +68,7 @@
     posYProperty.mandatory = YES;
     rotationProperty.mandatory = YES;
     classProperty.mandatory = YES;
+    imagesProperty.mandatory = YES;
 }
 
 -(id)initFromLua:(lua_State*)L
@@ -286,6 +287,7 @@
 -(void)modified
 {
 	[controller objectChanged:self];
+    [view modified];
 }
 
 -(double)rotation
@@ -318,7 +320,7 @@
 		view = [[cls alloc] init];
 		view.object = self;
 	}
-	[view setFrame:NSMakeRect(-0.04, -0.04, 0.08f, 0.08f)];
+    [view modified];
 	[self positionChanged];
 	[self release];
 }
@@ -329,7 +331,9 @@
 	NSSize size = view.frame.size;
 	[view setFrameCenterRotation:0];
 	[view setFrameOrigin:NSMakePoint(posXProperty.doubleValue-size.width/2, posYProperty.doubleValue-size.height/2)];
-	[view setFrameCenterRotation:rotationProperty.doubleValue];
+    NSRect bounds = NSMakeRect(-size.width/2,-size.height/2,size.width,size.height);
+    [view setBounds:bounds];
+	[view setFrameCenterRotation:-rotationProperty.doubleValue];
 }
 
 -(BOOL)editable
@@ -350,6 +354,7 @@
 -(void)updateSelected:(BOOL)val
 {
 	selected = val;
+    [view setSelected:val];
 }
 
 -(void)setSelected:(BOOL)val

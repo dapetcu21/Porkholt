@@ -33,8 +33,10 @@
 		C11628C21351E1B5005F7FB9 /* WorldClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = C11628C11351E1B5005F7FB9 /* WorldClipView.m */; };
 		C11629001351E686005F7FB9 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = C11628FF1351E686005F7FB9 /* cloud.png */; };
 		C1162AD81353378C005F7FB9 /* WorldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1162AD71353378C005F7FB9 /* WorldView.m */; };
+		C1201CA5139AAD0200D30834 /* SolidColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1201CA4139AAD0200D30834 /* SolidColorView.m */; };
 		C16777581375A89A00B4E247 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16777571375A89A00B4E247 /* CoreFoundation.framework */; };
 		C16777921375A8D700B4E247 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16777911375A8D700B4E247 /* QuartzCore.framework */; };
+		C1ED0381139A53A2004E428A /* SubObjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1ED0380139A53A2004E428A /* SubObjectView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,8 +88,12 @@
 		C11628FF1351E686005F7FB9 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud.png; sourceTree = "<group>"; };
 		C1162AD61353378C005F7FB9 /* WorldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldView.h; sourceTree = "<group>"; };
 		C1162AD71353378C005F7FB9 /* WorldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorldView.m; sourceTree = "<group>"; };
+		C1201CA3139AAD0200D30834 /* SolidColorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SolidColorView.h; sourceTree = "<group>"; };
+		C1201CA4139AAD0200D30834 /* SolidColorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SolidColorView.m; sourceTree = "<group>"; };
 		C16777571375A89A00B4E247 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		C16777911375A8D700B4E247 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C1ED037F139A53A2004E428A /* SubObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubObjectView.h; sourceTree = "<group>"; };
+		C1ED0380139A53A2004E428A /* SubObjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubObjectView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +252,10 @@
 				C11628C11351E1B5005F7FB9 /* WorldClipView.m */,
 				C1162AD61353378C005F7FB9 /* WorldView.h */,
 				C1162AD71353378C005F7FB9 /* WorldView.m */,
+				C1ED037F139A53A2004E428A /* SubObjectView.h */,
+				C1ED0380139A53A2004E428A /* SubObjectView.m */,
+				C1201CA3139AAD0200D30834 /* SolidColorView.h */,
+				C1201CA4139AAD0200D30834 /* SolidColorView.m */,
 			);
 			name = "World Controller";
 			sourceTree = "<group>";
@@ -334,6 +344,8 @@
 				C116281D1351C7F3005F7FB9 /* ViewScaling.m in Sources */,
 				C11628C21351E1B5005F7FB9 /* WorldClipView.m in Sources */,
 				C1162AD81353378C005F7FB9 /* WorldView.m in Sources */,
+				C1ED0381139A53A2004E428A /* SubObjectView.m in Sources */,
+				C1201CA5139AAD0200D30834 /* SolidColorView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

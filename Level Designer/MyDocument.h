@@ -28,4 +28,6 @@
 -(IBAction)paste:(id)sender;
 -(BOOL)validateMenuItem:(NSMenuItem*)sender;
 
+-(NSURL*)resourceURLNamed:(NSString*)str;
+
 @end

@@ -111,4 +111,15 @@
 	return [objectController validateMenuItem:sender];
 }
 
+-(NSURL*)resourceURLNamed:(NSString*)str
+{
+    if ([str UTF8String][0]=='/')
+    {
+        str = [str substringFromIndex:1];
+        return nil; //TODO
+    } else {
+        return [[self fileURL] URLByAppendingPathComponent:str];
+    }
+}
+
 @end
