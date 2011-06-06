@@ -33,5 +33,6 @@
 - (BOOL)intersectsRectInObjectCoords:(NSRect)rect;
 - (BOOL)pointIntersectsSelf:(NSPoint)pnt;
 
+- (void)adaptForView:(NSView*)v;
 
 @end

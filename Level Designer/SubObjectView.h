@@ -41,6 +41,9 @@ enum kSubObjectViewType
 -(void)rebuildCachedProperties;
 -(void)weakRebuildCachedProperties;
 
+-(void)undoable:(NSUndoManager*)man move:(NSPoint)delta;
+-(void)move:(NSPoint)delta;
+
 -(BOOL)intersectsRect:(NSRect)rect;
 -(BOOL)intersectsPoint:(NSPoint)pnt;
 

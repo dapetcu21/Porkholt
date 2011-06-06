@@ -14,6 +14,14 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
+--casele
+obj = objectWithClass("PHObject");
+objectAddImage(obj,"city_bg.png",0,0,12,3*1.145833);
+obj.pos = point(1.038489,-0.15);
+obj.rotation = 0.000000;
+addObject(obj);
+
+
 --podu
 br1,br2 = createBridge(3,point(8+0.15,2.1),point(10-0.15,2.6),7,0.01,
 function ()

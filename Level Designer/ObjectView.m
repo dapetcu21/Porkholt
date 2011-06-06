@@ -231,4 +231,29 @@
     return [self intersectsRectInObjectCoords:rect];
 }
 
+- (void)adaptForView:(NSView*)v
+{
+    NSRect frame = [self frame];
+    double x = frame.size.width/2;
+    double y = frame.size.height/2;
+    NSRect fr = [v frame];
+    if (fr.origin.x<-x)
+        x=-fr.origin.x;
+    if (fr.origin.x+fr.size.width>x)
+        x=fr.origin.x+fr.size.width;
+    if (fr.origin.y<-y)
+        y=-fr.origin.y;
+    if (fr.origin.y+fr.size.height>y)
+        y=fr.origin.y+fr.size.height;
+    fr = frame;
+    fr.origin.x +=fr.size.width/2-x;
+    fr.origin.y +=fr.size.height/2-y;
+    fr.size.width = x*2;
+    fr.size.height = y*2;
+    [self setFrame:fr];
+    fr.origin.x = -x;
+    fr.origin.y = -y;
+    [self setBounds:fr];
+}
+
 @end

@@ -109,23 +109,45 @@ enum dragStates
     dif.y = dragPoint.y-initialPoint.y;
     invDif.x = -dif.x;
     invDif.y = -dif.y;
-    NSArray * sv = [self subviews];
-    NSUndoManager * um = nil;
-    for (ObjectView * view in sv)
+    if (!dif.x && !dif.y) return;
+    if (controller.objectMode)
     {
-        if (![view isKindOfClass:[ObjectView class]]) continue;
-        PHObject * obj = view.object;
-        if (obj.readOnly) continue;
-        if (!obj.selected) continue;
-        if (!um)
+        ObjectView * view = controller.currentObject.view;
+        NSArray * sv = [view subviews];
+        NSUndoManager * um = nil;
+        for (SubObjectView * view in sv)
         {
-            um = [obj.controller undoManager];
-            [um beginUndoGrouping];
+            if (![view isKindOfClass:[SubObjectView class]]) continue;
+            PHObjectProperty * prop = view.property;
+            if (!prop.selected) continue;
+            if (!um)
+            {
+                um = [prop.parentObject.controller undoManager];
+                [um beginUndoGrouping];
+            }
+            [view move:invDif];
+            [view undoable:um move:dif];
         }
-        [obj move:invDif];
-        [obj undoableMove:dif];
-    }
-    [um endUndoGrouping];
+        [um endUndoGrouping];
+    } else {
+        NSArray * sv = [self subviews];
+        NSUndoManager * um = nil;
+        for (ObjectView * view in sv)
+        {
+            if (![view isKindOfClass:[ObjectView class]]) continue;
+            PHObject * obj = view.object;
+            if (obj.readOnly) continue;
+            if (!obj.selected) continue;
+            if (!um)
+            {
+                um = [obj.controller undoManager];
+                [um beginUndoGrouping];
+            }
+            [obj move:invDif];
+            [obj undoableMove:dif];
+        }
+        [um endUndoGrouping];
+    } 
 }
 
 - (BOOL)resignFirstResponder
@@ -166,15 +188,28 @@ enum dragStates
 		dif.x-= dragPoint.x;
 		dif.y-= dragPoint.y;
 		dragPoint = pnt;
-		NSArray * sv = [self subviews];
-		for (ObjectView * view in sv)
-		{
-			if (![view isKindOfClass:[ObjectView class]]) continue;
-			PHObject * obj = view.object;
-			if (obj.readOnly) continue;
-			if (!obj.selected) continue;
-			[obj move:dif];
-		}
+        if (controller.objectMode)
+        {
+            ObjectView * view = controller.currentObject.view;
+            NSArray * sv = [view subviews];
+            for (SubObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[SubObjectView class]]) continue;
+                PHObjectProperty * property = view.property;
+                if (!property.selected) continue;
+                [view move:dif];
+            }
+        } else {
+            NSArray * sv = [self subviews];
+            for (ObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[ObjectView class]]) continue;
+                PHObject * obj = view.object;
+                if (obj.readOnly) continue;
+                if (!obj.selected) continue;
+                [obj move:dif];
+            }
+        }
 	}
 	if (dragState == dsSelect)
 	{

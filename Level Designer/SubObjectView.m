@@ -179,4 +179,30 @@
     
 }
 
+-(void)move:(NSPoint)delta
+{
+    if (posX&&posY)
+    {
+        posX.doubleValue = posX.doubleValue+delta.x;
+        posY.doubleValue = posY.doubleValue+delta.y;
+        NSPoint origin = [self frame].origin;
+        origin.x = posX.doubleValue;
+        origin.y = posY.doubleValue;
+        [self setFrameOrigin:origin];
+        [objectView adaptForView:self];
+    }
+}
+
+-(void)undoable:(NSUndoManager*)man move:(NSPoint)delta
+{
+    if (posX&&posY)
+    {
+        NSPoint invdelta;
+        invdelta.x = -delta.x;
+        invdelta.y = -delta.y;
+        [[man prepareWithInvocationTarget:self] undoable:man move:invdelta];
+        [self move:delta];
+    }
+}
+
 @end
