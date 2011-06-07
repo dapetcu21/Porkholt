@@ -94,4 +94,8 @@
 -(void)setProperty:(PHObjectProperty*)prop selected:(BOOL)sel;
 -(void)clearPropertySelection;
 
+-(IBAction)newImage:(id)sender;
+-(IBAction)newCircle:(id)sender;
+-(IBAction)newSquare:(id)sender;
+
 @end

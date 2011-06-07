@@ -134,6 +134,7 @@
             {
                 view = [[SubObjectView alloc] init];
                 view.objectView = self;
+                view.type = kSOTImage;
                 view.property = prop;
                 [view bind:@"hidden" toObject:self withKeyPath:@"object.controller.worldController.showImages" options:[NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:NSValueTransformerNameBindingOption]];
             } else {
@@ -147,7 +148,28 @@
 
 - (NSArray*)fixtureViews
 {
-    return [NSArray array];
+    PHObjectProperty * prp = object.fixturesProperty;
+    NSMutableArray * arr = [NSMutableArray array];
+    NSArray * props = prp.value;
+    if ([props isKindOfClass:[NSArray class]])
+    {
+        for (PHObjectProperty * prop in props)
+        {
+            SubObjectView * view  = prop.userData;
+            if (!view)
+            {
+                view = [[SubObjectView alloc] init];
+                view.objectView = self;
+                view.type = kSOTFixture;
+                view.property = prop;
+                [view bind:@"hidden" toObject:self withKeyPath:@"object.controller.worldController.showFixtures" options:[NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:NSValueTransformerNameBindingOption]];
+            } else {
+                [view reloadData];
+            }
+            [arr addObject:view];
+        }
+    }
+    return arr;
 }
 
 - (void)rebuildSubviews

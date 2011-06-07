@@ -16,7 +16,7 @@ addLayer(lyr);
 
 --casele
 obj = objectWithClass("PHObject");
-objectAddImage(obj,"city_bg.png",0,0,12,4.0841584158416);
+objectAddImage(obj,"city_bg.png",0,0,10.8,3.67574257425744);
 obj.pos = point(1.038489,-0.20);
 obj.rotation = 0.000000;
 addObject(obj);

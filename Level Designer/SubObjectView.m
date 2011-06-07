@@ -24,7 +24,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code here.
+        type = kSOTImage;
     }
     
     return self;
@@ -46,7 +46,21 @@
         [[NSImage imageNamed:NSImageNameCaution] drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
         return;
     }
-    [img drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
+    if (type==kSOTImage)
+        [img drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
+    else
+    {
+        NSBezierPath * bpath;
+        if (shape==kSOSRect)
+            bpath = [NSBezierPath bezierPathWithRect:[self bounds]];
+        if (shape==kSOSCircle)
+            bpath = [NSBezierPath bezierPathWithOvalInRect:[self bounds]];
+        [bpath setLineWidth:0.01f];
+        [[NSColor colorWithCalibratedRed:0.06 green:0.3 blue:0.66 alpha:0.7] setFill];
+        [[NSColor greenColor] setStroke];
+        [bpath fill];
+        [bpath stroke];
+    }
 }
 
 -(void)setProperty:(PHObjectProperty*)prop
@@ -65,14 +79,37 @@
     [self weakRebuildCachedProperties];
     NSRect frame = NSMakeRect(-0.2,-0.2,0.4,0.4);
     BOOL fail = NO;
-    if (posX&&posY&&posW&&posH)
+    if (shape==kSOSRect)
     {
-        frame.origin.x = posX.doubleValue;
-        frame.origin.y = posY.doubleValue;
-        frame.size.width = posW.doubleValue;
-        frame.size.height = posH.doubleValue;
-    } else {
-        fail = YES;
+        if (posX&&posY&&posW&&posH)
+        {
+            frame.origin.x = posX.doubleValue;
+            frame.origin.y = posY.doubleValue;
+            frame.size.width = posW.doubleValue;
+            frame.size.height = posH.doubleValue;
+        } else {
+            fail = YES;
+        }
+    }
+    if (shape==kSOSCircle)
+    {
+        if (rad)
+        {
+            double rd = rad.doubleValue;
+            if (posX&&posY)
+            {
+                frame.origin.x = posX.doubleValue-rd;
+                frame.origin.y = posY.doubleValue-rd;
+            } else
+            {
+                frame.origin.x = -rd;
+                frame.origin.y = -rd;
+            }
+            frame.size.width = rd*2;
+            frame.size.height = rd*2;
+        } else {
+            fail = YES;
+        }
     }
     [self setFrame:frame];
     if (type == kSOTImage)
@@ -87,6 +124,8 @@
                 imagePath = nimg;
                 [img release];
                 img = [[NSImage alloc] initWithContentsOfURL:[self.objectView.object.controller.document resourceURLNamed:imagePath]];
+                if (!img)
+                    fail = YES;
             }
         } else
         {
@@ -100,12 +139,26 @@
 - (int)type
 {
     return type;
+    
 }
 
 -(void)setType:(int)t
 {
     type = t;
-    [self reloadData];
+//    [self rebuildCachedProperties];
+//    [self reloadData];
+}
+        
+- (int)shape
+{
+    return shape;
+}
+
+-(void)setShape:(int)t
+{
+    shape = t;
+    //[self rebuildCachedProperties];
+    //[self reloadData];
 }
 
 -(void)rebuildCachedProperties
@@ -119,16 +172,42 @@
     [self weakRebuildCachedProperties];
 }
 
-#define reb(x,y,z) if (!y) x = nil; else if (!x || ![x.key isEqualToString:z]) x = [y propertyForKey:z]
+#define reb(x,y,z) do {if (!y) x = nil; else if (!x || ![x.key isEqualToString:z]) x = [y propertyForKey:z]; }while(0)
 
 -(void)weakRebuildCachedProperties
 {
-    reb(pos,property,@"pos");
+    if (type==kSOTFixture)
+    {
+        reb(sh,property,@"shape");
+        if (sh)
+        {
+            if ([sh.stringValue isEqualToString:@"box"] && shape!=kSOSRect)
+            {
+                shape=kSOSRect;
+                pos = nil;
+            }
+            if ([sh.stringValue isEqualToString:@"circle"] && shape!=kSOSCircle)
+            {
+                shape=kSOSCircle;
+                pos = nil;
+            }
+        }
+    }
+    if (type==kSOTImage)
+        reb(pos,property,@"pos");
+    else
+    {
+        if (shape==kSOSRect)
+            reb(pos,property,@"box");
+        if (shape==kSOSCircle)
+            reb(pos,property,@"pos");
+    }
     reb(posX,pos,@"x");
     reb(posY,pos,@"y");
     reb(posW,pos,@"width");
     reb(posH,pos,@"height");
     reb(path,property,@"filename");
+    reb(rad,property,@"circleR");
 }
 
 -(BOOL)intersectsRect:(NSRect)rect
@@ -190,6 +269,7 @@
         origin.y = posY.doubleValue;
         [self setFrameOrigin:origin];
         [objectView adaptForView:self];
+        [property.parentObject modified];
     }
 }
 
@@ -202,6 +282,7 @@
         invdelta.y = -delta.y;
         [[man prepareWithInvocationTarget:self] undoable:man move:invdelta];
         [self move:delta];
+        [property.parentObject modified];
     }
 }
 

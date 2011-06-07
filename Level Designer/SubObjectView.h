@@ -16,7 +16,7 @@
     PHObjectProperty * property;
     NSImage * img;
     NSString * imagePath;
-    int type;
+    int type,shape;
     BOOL failed;
     
     PHObjectProperty * pos;
@@ -25,6 +25,8 @@
     PHObjectProperty * posW;
     PHObjectProperty * posH;
     PHObjectProperty * path;
+    PHObjectProperty * rad;
+    PHObjectProperty * sh;
 }
 
 enum kSubObjectViewType
@@ -33,9 +35,16 @@ enum kSubObjectViewType
     kSOTFixture
 };
 
+enum kSubObjectViewShape
+{
+    kSOSRect = 0,
+    kSOSCircle
+};
+
 @property(nonatomic,assign) ObjectView * objectView;
 @property(nonatomic,retain) PHObjectProperty * property;
 @property(nonatomic,assign) int type;
+@property(nonatomic,assign) int shape;
 
 -(void)reloadData;
 -(void)rebuildCachedProperties;

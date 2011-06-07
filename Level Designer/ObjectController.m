@@ -1082,9 +1082,24 @@
     for (PHObjectProperty * prop in arr)
     {
         BOOL expand = (sel.posProperty == prop)||
-                      (sel.imagesProperty == prop);
+                      (sel.imagesProperty == prop)||
+                      (sel.physicsProperty== prop);
         if (expand)
             [itemInfo expandItem:[[keyController arrangedObjects] descendantNodeAtIndexPath:[NSIndexPath indexPathWithIndex:i]]];
+        if (prop == sel.physicsProperty)
+        {
+            NSArray * a = prop.childNodes;
+            int j=0;
+            for (PHObjectProperty * p in a)
+            {
+                if (p==sel.fixturesProperty)
+                {
+                    [itemInfo expandItem:[[keyController arrangedObjects] descendantNodeAtIndexPath:[[NSIndexPath indexPathWithIndex:i] indexPathByAddingIndex:j]]];
+                    break;
+                }
+                j++;
+            }
+        }
         i++; 
     }
 }
@@ -1101,6 +1116,64 @@
 -(void)clearPropertySelection
 {
     [keyController setSelectionIndexPaths:[NSArray array]];
+}
+
+#pragma mark -
+#pragma mark New stuff
+
+
+-(PHObjectProperty*)newRect:(double)x :(double)y :(double)w :(double)h
+{
+    PHObjectProperty * px = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:x] ofType:kPHObjectPropertyNumber forKey:@"x"];
+    PHObjectProperty * py = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:y] ofType:kPHObjectPropertyNumber forKey:@"y"];
+    PHObjectProperty * pw = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:w] ofType:kPHObjectPropertyNumber forKey:@"width"];
+    PHObjectProperty * ph = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:h] ofType:kPHObjectPropertyNumber forKey:@"height"];
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:px,py,pw,ph,nil] ofType:kPHObjectPropertyTree forKey:@"pos"];
+    return prop;
+}
+
+-(PHObjectProperty*)newPoint:(double)x :(double)y
+{
+    PHObjectProperty * px = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:x] ofType:kPHObjectPropertyNumber forKey:@"x"];
+    PHObjectProperty * py = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:y] ofType:kPHObjectPropertyNumber forKey:@"y"];
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:px,py,nil] ofType:kPHObjectPropertyTree forKey:@"pos"];
+    return prop;
+}
+
+-(IBAction)newImage:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    if (!obj || obj.readOnly) return;
+    PHObjectProperty * fname = [PHObjectProperty propertyWithValue:@"foo.bar" ofType:kPHObjectPropertyString forKey:@"filename"];
+    PHObjectProperty * pos = [self newRect:-0.25 :-0.25 :0.5 :0.5];
+    pos.key = @"pos";
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:fname,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    NSIndexPath * path = [[self indexPathForProperty:obj.imagesProperty] indexPathByAddingIndex:[[obj.imagesProperty childNodes] count]];
+    [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
+}
+
+-(IBAction)newCircle:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    if (!obj || obj.readOnly) return;
+    PHObjectProperty * shape = [PHObjectProperty propertyWithValue:@"circle" ofType:kPHObjectPropertyString forKey:@"shape"];
+    PHObjectProperty * circle = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:0.5f] ofType: kPHObjectPropertyNumber forKey:@"circleR"];
+    PHObjectProperty * pos = [self newPoint:0 :0];
+    pos.key = @"pos";
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:shape,circle,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    NSIndexPath * path = [[self indexPathForProperty:obj.fixturesProperty] indexPathByAddingIndex:[[obj.fixturesProperty childNodes] count]];
+  [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
+}
+-(IBAction)newSquare:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    if (!obj || obj.readOnly) return;
+    PHObjectProperty * shape = [PHObjectProperty propertyWithValue:@"box" ofType:kPHObjectPropertyString forKey:@"shape"];
+    PHObjectProperty * pos = [self newRect:-0.25 :-0.25 :0.5 :0.5];
+    pos.key = @"box";
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:shape,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    NSIndexPath * path = [[self indexPathForProperty:obj.fixturesProperty] indexPathByAddingIndex:[[obj.fixturesProperty childNodes] count]];
+    [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
 }
 
 @end

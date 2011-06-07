@@ -23,6 +23,8 @@
 @synthesize view;
 @synthesize controller;
 @synthesize imagesProperty;
+@synthesize fixturesProperty;
+@synthesize physicsProperty;
 
 -(id)init
 {
@@ -36,7 +38,8 @@
         [properties addObject:posProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObjects:posXProperty,posYProperty,nil] ofType:kPHObjectPropertyTree forKey:@"pos"]];
 		[properties addObject:rotationProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"]];
         [properties addObject:imagesProperty=[PHObjectProperty mandatoryPropertyWithValue:nil ofType:kPHObjectPropertyArray forKey:@"images"]];
-        
+        fixturesProperty = [PHObjectProperty mandatoryPropertyWithValue:nil ofType:kPHObjectPropertyArray forKey:@"fixtures"];
+        [properties addObject:imagesProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObject:fixturesProperty] ofType:kPHObjectPropertyTree forKey:@"physics"]];
 	}
 	return self;
 }
@@ -63,12 +66,16 @@
     posXProperty = [posProperty propertyForKey:@"x"];
     posYProperty = [posProperty propertyForKey:@"y"];
     imagesProperty = [self propertyForKey:@"images"];
+    physicsProperty = [self propertyForKey:@"physics"];
+    fixturesProperty = [physicsProperty propertyForKey:@"fixtures"];
     posProperty.mandatory = YES;
     posXProperty.mandatory = YES;
     posYProperty.mandatory = YES;
     rotationProperty.mandatory = YES;
     classProperty.mandatory = YES;
     imagesProperty.mandatory = YES;
+    physicsProperty.mandatory = YES;
+    fixturesProperty.mandatory = YES;
 }
 
 -(id)initFromLua:(lua_State*)L
@@ -132,9 +139,9 @@
                     type = kPHObjectPropertyTree;
                 }
                 
-                if ([key isEqualToString:@"physics"])//||
+                //if ([key isEqualToString:@"physics"])//||
                     //[key isEqualToString:@"images"])
-                    key = nil;
+                //    key = nil;
 				
 				if (key&&(value||tree))
 				{
