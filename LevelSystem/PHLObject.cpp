@@ -60,122 +60,129 @@ void PHLObject::loadBody(void *l)
 		lua_gettable(L, -2);
 		if (lua_isboolean(L,-1))
 			isstatic = !lua_toboolean(L, -1);
-		lua_pop(L,1);		
-		int n = 0;
-		lua_pushstring(L, "n");
-		lua_gettable(L, -2);
-		if (lua_isnumber(L, -1))
-			n = (int)lua_tonumber(L, -1);
-		lua_pop(L, 1);
-		
-		if (n)
-		{
-		
-			b2BodyDef def;
-			def.position.Set(pos.x,pos.y);
-			def.angle = -rot*M_PI/180.0f;
-			def.userData = this;
-			def.type = isstatic?b2_staticBody:b2_dynamicBody;
-			body = world->CreateBody(&def);
-			
-			for (int i=0; i<n; i++)
-			{
-				lua_pushnumber(L, i);
-				lua_gettable(L, -2);
-				if (lua_istable(L, -1))
-				{
-					
-					//shape attributes
-					const char * typ = "";
-					lua_pushstring(L, "shape");
-					lua_gettable(L, -2);
-					if (lua_isstring(L, -1))
-						typ = lua_tostring(L,-1);
-					lua_pop(L,1);
-                    PHRect box = PHMakeRect(-0.5f, -0.5f, 1, 1);
-                    double circleR=1;
-					
-					lua_pushstring(L, "box");
-					lua_gettable(L, -2);
-					if (lua_istable(L, -1))
-						box = PHRect::rectFromLua(L);
-					lua_pop(L,1);
-					
-					lua_pushstring(L, "circleR");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						circleR = lua_tonumber(L, -1);
-					lua_pop(L,1);
-					
-					//physics attributes
-					double friction = 0.3f;
-					double restitution = 0.0f;
-					double density = 1.0f;
-					
-					lua_pushstring(L, "friction");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						friction = lua_tonumber(L, -1);
-					lua_pop(L,1);
-					
-					lua_pushstring(L, "restitution");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						restitution = lua_tonumber(L, -1);
-					lua_pop(L,1);
-					
-					lua_pushstring(L, "density");
-					lua_gettable(L, -2);
-					if (lua_isnumber(L, -1))
-						density = lua_tonumber(L, -1);
-					lua_pop(L,1);
-                    
-					b2FixtureDef fdef;
-					fdef.friction = friction;
-					fdef.density = density;
-					fdef.restitution = restitution;				
+		lua_pop(L,1);	
+        
+        lua_pushstring(L, "fixtures");
+        lua_gettable(L, -2);
+        if (lua_istable(L, -1))
+        {
+            int n = 0;
+            lua_pushstring(L, "n");
+            lua_gettable(L, -2);
+            if (lua_isnumber(L, -1))
+                n = (int)lua_tonumber(L, -1);
+            lua_pop(L, 1);
+            
+            if (n)
+            {
+            
+                b2BodyDef def;
+                def.position.Set(pos.x,pos.y);
+                def.angle = -rot*M_PI/180.0f;
+                def.userData = this;
+                def.type = isstatic?b2_staticBody:b2_dynamicBody;
+                body = world->CreateBody(&def);
+                
+                for (int i=0; i<n; i++)
+                {
+                    lua_pushnumber(L, i);
+                    lua_gettable(L, -2);
+                    if (lua_istable(L, -1))
+                    {
+                        
+                        //shape attributes
+                        const char * typ = "";
+                        lua_pushstring(L, "shape");
+                        lua_gettable(L, -2);
+                        if (lua_isstring(L, -1))
+                            typ = lua_tostring(L,-1);
+                        lua_pop(L,1);
+                        PHRect box = PHMakeRect(-0.5f, -0.5f, 1, 1);
+                        double circleR=1;
+                        
+                        lua_pushstring(L, "box");
+                        lua_gettable(L, -2);
+                        if (lua_istable(L, -1))
+                            box = PHRect::rectFromLua(L);
+                        lua_pop(L,1);
+                        
+                        lua_pushstring(L, "circleR");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            circleR = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        //physics attributes
+                        double friction = 0.3f;
+                        double restitution = 0.0f;
+                        double density = 1.0f;
+                        
+                        lua_pushstring(L, "friction");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            friction = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        lua_pushstring(L, "restitution");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            restitution = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        lua_pushstring(L, "density");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            density = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        b2FixtureDef fdef;
+                        fdef.friction = friction;
+                        fdef.density = density;
+                        fdef.restitution = restitution;				
 
-                    lua_pushstring(L, "groupIndex");
-                    lua_gettable(L, -2);
-                    if (lua_isnumber(L, -1))
-                        fdef.filter.groupIndex = lua_tonumber(L, -1);
-                    lua_pop(L,1);
-                    
-                    lua_pushstring(L, "categoryBits");
-                    lua_gettable(L, -2);
-                    if (lua_isnumber(L, -1))
-                        fdef.filter.categoryBits = lua_tonumber(L, -1);
-                    lua_pop(L,1);
-                    
-                    lua_pushstring(L, "maskBits");
-                    lua_gettable(L, -2);
-                    if (lua_isnumber(L, -1))
-                        fdef.filter.maskBits = lua_tonumber(L, -1);
-                    lua_pop(L,1);
-                    
-					if (strcmp(typ, "box")==0)
-					{
-						b2PolygonShape shape;
-						b2Vec2 v[4];
-						v[0].Set(box.x,		box.y);
-						v[1].Set(box.x+box.width,	box.y);
-						v[2].Set(box.x+box.width,	box.y+box.height);
-						v[3].Set(box.x,		box.y+box.height);
-						shape.Set(v,4);
-						fdef.shape = &shape;
-						body->CreateFixture(&fdef);
-					}
-					if (strcmp(typ, "circle")==0)
-					{
-						b2CircleShape shape;
-						shape.m_radius = circleR;
-						fdef.shape = &shape;
-						body->CreateFixture(&fdef);					
-					}
-				}
-				lua_pop(L, 1);
-			}
-		}
+                        lua_pushstring(L, "groupIndex");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            fdef.filter.groupIndex = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        lua_pushstring(L, "categoryBits");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            fdef.filter.categoryBits = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        lua_pushstring(L, "maskBits");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            fdef.filter.maskBits = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
+                        if (strcmp(typ, "box")==0)
+                        {
+                            b2PolygonShape shape;
+                            b2Vec2 v[4];
+                            v[0].Set(box.x,		box.y);
+                            v[1].Set(box.x+box.width,	box.y);
+                            v[2].Set(box.x+box.width,	box.y+box.height);
+                            v[3].Set(box.x,		box.y+box.height);
+                            shape.Set(v,4);
+                            fdef.shape = &shape;
+                            body->CreateFixture(&fdef);
+                        }
+                        if (strcmp(typ, "circle")==0)
+                        {
+                            b2CircleShape shape;
+                            shape.m_radius = circleR;
+                            fdef.shape = &shape;
+                            body->CreateFixture(&fdef);					
+                        }
+                    }
+                    lua_pop(L, 1);
+                }
+            }
+        }
+        lua_pop(L, 1);
 	}
 	lua_pop(L,1);
 }
