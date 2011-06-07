@@ -59,10 +59,10 @@ void PHLCamera::updateCamera(PHPoint pnt)
     PHTilt tilt = PHMotion::sharedInstance()->getTilt();
     double rot = this->rotation();
     double newrot = tilt.roll;
-    if (newrot>5)
-        newrot=5;
-    if (newrot<-5)
-        newrot=-5;
+    if (newrot>3)
+        newrot=3;
+    if (newrot<-3)
+        newrot=-3;
     PHLowPassFilter(rot, newrot, 1.0f/fps, 2.0f+1.0f/(fabs(newrot)+1.0f));
     setRotation(rot);
 }
