@@ -171,11 +171,28 @@
             break;
         case kPHObjectPropertyTree:
         {
-            [file appendString:@"{};\n"];
+            PHObjectProperty * posX, * posY, * posW, * posH;
+            posX = [prop propertyForKey:@"x"];
+            posY = [prop propertyForKey:@"y"];
+            posW = [prop propertyForKey:@"width"];
+            posH = [prop propertyForKey:@"height"];
+            if (posX.type != kPHObjectPropertyNumber) posX = nil;
+            if (posY.type != kPHObjectPropertyNumber) posY = nil;
+            if (posW.type != kPHObjectPropertyNumber) posW = nil;
+            if (posH.type != kPHObjectPropertyNumber) posH = nil;
             NSArray * arr = prop.childNodes;
-            for ( PHObjectProperty * nde in arr) 
+            if ([arr count]==2 && posX && posY)
+                [file appendFormat:@"point(%lf,%lf);\n",posX.doubleValue,posY.doubleValue];
+            else 
+                if ([arr count]==4 && posX && posY && posW && posH)
+                    [file appendFormat:@"rect(%lf,%lf,%lf,%lf);\n",posX.doubleValue,posY.doubleValue,posW.doubleValue,posH.doubleValue];
+            else
             {
-                [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",nde.key] toFile:file];
+                [file appendString:@"{};\n"];
+                for ( PHObjectProperty * nde in arr) 
+                {
+                    [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",nde.key] toFile:file];
+                }
             }
             break;
         }
@@ -193,16 +210,69 @@
         }
     }
 }
+
+-(void)saveImage:(PHObjectProperty*)img toFile:(NSMutableString*)file
+{
+    if (img.type != kPHObjectPropertyTree) return;
+    NSArray * arr = [img value];
+    PHObjectProperty * pos = [img propertyForKey:@"pos"];
+    if (!pos || pos.type!=kPHObjectPropertyTree) return;
+    double x=0,y=0,w=0,h=0;
+    NSString * fn = @"";
+    
+    PHObjectProperty * posX = [pos propertyForKey:@"x"];
+    if (posX && posX.type==kPHObjectPropertyNumber)
+        x = posX.doubleValue;
+    PHObjectProperty * posY = [pos propertyForKey:@"y"];
+    if (posY && posY.type==kPHObjectPropertyNumber)
+        y = posY.doubleValue;
+    PHObjectProperty * posW = [pos propertyForKey:@"width"];
+    if (posW && posW.type==kPHObjectPropertyNumber)
+        w = posW.doubleValue;
+    PHObjectProperty * posH = [pos propertyForKey:@"height"];
+    if (posH && posH.type==kPHObjectPropertyNumber)
+        h = posH.doubleValue;
+    PHObjectProperty * fnprop = [img propertyForKey:@"filename"];
+    if (fnprop && fnprop.type==kPHObjectPropertyString)
+        fn = fnprop.stringValue;
+    
+    int nr = 0;
+    for (PHObjectProperty * prop in arr)
+    {
+        if ([prop.key isEqualToString:@"pos"]||[prop.key isEqualToString:@"filename"]) continue;
+        nr++;
+    }
+    
+    if (nr)
+    {
+        [file appendFormat:@"op = {};\n"];
+        for (PHObjectProperty * prop in arr)
+        {
+            if ([prop.key isEqualToString:@"pos"]||[prop.key isEqualToString:@"filename"]) continue;
+            [self saveNode:prop withPath:[@"op" stringByAppendingFormat:@".%@",prop.key] toFile:file];
+        }
+    }    
+    [file appendFormat:@"objectAddImage(obj,[[%@]],%lf,%lf,%lf,%lf%@);\n",fn,x,y,w,h,nr?@",op":@""];
+}
                          
 -(void)saveToFile:(NSMutableString*)file
 {
 	[file appendFormat:@"\nobj = objectWithClass(\"%@\");\n",self.className];
+    [file appendFormat:@"obj.pos = point(%lf,%lf);\n",self.posXProperty.doubleValue,self.posYProperty.doubleValue];
+    
     
 	for ( PHObjectProperty * prop in properties) 
 	{
 		if ([prop.key isEqual:@"class"]) continue;
+        if ([prop.key isEqual:@"pos"]) continue;
+        if ([prop.key isEqual:@"images"]) continue;
 		[self saveNode:prop withPath:[@"obj" stringByAppendingFormat:@".%@",prop.key] toFile:file];
 	}
+    
+    NSArray * images = [self.imagesProperty value];
+    for (PHObjectProperty * prop in images)
+        [self saveImage:prop toFile:file];
+    
 	[file appendFormat:@"obj.levelDes = true;\naddObject(obj);\n"];
 }
 
