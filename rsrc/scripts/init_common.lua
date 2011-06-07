@@ -35,29 +35,27 @@ function objectAddImage(obj,fn, x, y, w, h,opt)
 end
 
 function objectAddBox(obj,x, y, w, h,proto)
-	obj.physics = obj.physics or {};
-	obj.physics.n = obj.physics.n or 0;
+    local fix = obj.physics.fixtures;
 	local tmp = proto or {};
-	obj.physics[obj.physics.n] = tmp;
+	fix[fix.n] = tmp;
 	tmp.shape = "box";
 	tmp.box = rect(x,y,w,h);
-	obj.physics.n = obj.physics.n + 1;	
+	fix.n = fix.n + 1;	
 end
 
 function objectAddCircle(obj,r,proto)
-	obj.physics = obj.physics or {};
-	obj.physics.n = obj.physics.n or 0;
-	tmp = proto or {};
-	obj.physics[obj.physics.n] = tmp;
-	tmp.shape = "circle";
-	tmp.circleR = r;
-	obj.physics.n = obj.physics.n + 1;	
+    local fix = obj.physics.fixtures;
+    local tmp = proto or {};
+    fix[fix.n] = tmp;
+    tmp.shape = "circle";
+    tmp.circleR = r;
+    fix.n = fix.n + 1;	
 end
 
 Initializers = {}
 function Initializers.PHLObject(obj)
 	obj.images = { n = 0; };
-	obj.physics = { n = 0; }
+	obj.physics = { fixtures = {n = 0;}; };
 end
 function Initializers.PHLCamera(obj)
 	Initializers.PHLObject(obj)
