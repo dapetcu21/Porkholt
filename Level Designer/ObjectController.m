@@ -537,6 +537,8 @@
             }
             
             NSIndexPath * insertPath = [item indexPath];
+            if (index<0)
+                index = [[item childNodes] count];
             int n = [insertPath length];
             n++;
             NSUInteger * indexes = (NSUInteger*)malloc(sizeof(NSUInteger)*n);
