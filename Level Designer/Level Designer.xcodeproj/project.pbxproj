@@ -37,6 +37,7 @@
 		C16777581375A89A00B4E247 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16777571375A89A00B4E247 /* CoreFoundation.framework */; };
 		C16777921375A8D700B4E247 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16777911375A8D700B4E247 /* QuartzCore.framework */; };
 		C1E0E14D139E68FE009797C6 /* PHDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E0E14C139E68FE009797C6 /* PHDocumentController.m */; };
+		C1E0E175139FA0F9009797C6 /* InheritanceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E0E174139FA0F9009797C6 /* InheritanceController.m */; };
 		C1ED0381139A53A2004E428A /* SubObjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1ED0380139A53A2004E428A /* SubObjectView.m */; };
 /* End PBXBuildFile section */
 
@@ -95,6 +96,8 @@
 		C16777911375A8D700B4E247 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C1E0E14B139E68FE009797C6 /* PHDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDocumentController.h; sourceTree = "<group>"; };
 		C1E0E14C139E68FE009797C6 /* PHDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHDocumentController.m; sourceTree = "<group>"; };
+		C1E0E173139FA0F9009797C6 /* InheritanceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InheritanceController.h; sourceTree = "<group>"; };
+		C1E0E174139FA0F9009797C6 /* InheritanceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InheritanceController.m; sourceTree = "<group>"; };
 		C1ED037F139A53A2004E428A /* SubObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubObjectView.h; sourceTree = "<group>"; };
 		C1ED0380139A53A2004E428A /* SubObjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubObjectView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -149,6 +152,7 @@
 				C11627CE1351AF11005F7FB9 /* World Controller */,
 				C116230C134EF922005F7FB9 /* File Browser Controller */,
 				C116230B134EF90B005F7FB9 /* Object Controller */,
+				C1E0E16F139FA09B009797C6 /* Inheritance Controller */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				C116230D134EF92D005F7FB9 /* Cocoa Extensions */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
@@ -265,6 +269,15 @@
 			name = "World Controller";
 			sourceTree = "<group>";
 		};
+		C1E0E16F139FA09B009797C6 /* Inheritance Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C1E0E173139FA0F9009797C6 /* InheritanceController.h */,
+				C1E0E174139FA0F9009797C6 /* InheritanceController.m */,
+			);
+			name = "Inheritance Controller";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -352,6 +365,7 @@
 				C1ED0381139A53A2004E428A /* SubObjectView.m in Sources */,
 				C1201CA5139AAD0200D30834 /* SolidColorView.m in Sources */,
 				C1E0E14D139E68FE009797C6 /* PHDocumentController.m in Sources */,
+				C1E0E175139FA0F9009797C6 /* InheritanceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

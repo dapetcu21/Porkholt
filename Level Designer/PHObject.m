@@ -11,6 +11,7 @@
 #import "ObjectView.h"
 #import "ObjectController.h"
 #import "BrowserTreeNode.h"
+#import "InheritanceController.h"
 
 @implementation PHObject
 
@@ -32,14 +33,14 @@
 	{
 		selected = NO;
 		properties = [[NSMutableArray alloc] init];
-		[properties addObject:classProperty=[PHObjectProperty mandatoryPropertyWithValue:@"PHObject" ofType:kPHObjectPropertyString forKey:@"class"]];
+		[properties addObject:classProperty=[PHObjectProperty mandatoryPropertyWithValue:@"PHLObject" ofType:kPHObjectPropertyString forKey:@"class"]];
         posXProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"x"];
         posYProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"y"];
         [properties addObject:posProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObjects:posXProperty,posYProperty,nil] ofType:kPHObjectPropertyTree forKey:@"pos"]];
 		[properties addObject:rotationProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSNumber numberWithInt:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"]];
         [properties addObject:imagesProperty=[PHObjectProperty mandatoryPropertyWithValue:nil ofType:kPHObjectPropertyArray forKey:@"images"]];
         fixturesProperty = [PHObjectProperty mandatoryPropertyWithValue:nil ofType:kPHObjectPropertyArray forKey:@"fixtures"];
-        [properties addObject:imagesProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObject:fixturesProperty] ofType:kPHObjectPropertyTree forKey:@"physics"]];
+        [properties addObject:physicsProperty=[PHObjectProperty mandatoryPropertyWithValue:[NSArray arrayWithObject:fixturesProperty] ofType:kPHObjectPropertyTree forKey:@"physics"]];
 	}
 	return self;
 }
@@ -163,8 +164,10 @@
 	return self;
 }
 
--(void)saveNode:(PHObjectProperty*)prop withPath:(NSString*)path toFile:(NSMutableString*)file
+-(BOOL)saveNode:(PHObjectProperty*)prop withPath:(NSString*)path toFile:(NSMutableString*)file andModel:(PHObjectProperty*)model
 {
+    if (model && prop.type != kPHObjectPropertyArray && prop.type != kPHObjectPropertyTree && [prop.value isEqual:model.value]) return NO;
+    NSUInteger start = [file length];
     [file appendFormat:@"%@ = ",path];
     switch (prop.type) {
         case kPHObjectPropertyBool:
@@ -187,19 +190,43 @@
             if (posY.type != kPHObjectPropertyNumber) posY = nil;
             if (posW.type != kPHObjectPropertyNumber) posW = nil;
             if (posH.type != kPHObjectPropertyNumber) posH = nil;
+            
+            PHObjectProperty * mposX, * mposY, * mposW, * mposH;
+            mposX = [model propertyForKey:@"x"];
+            mposY = [model propertyForKey:@"y"];
+            mposW = [model propertyForKey:@"width"];
+            mposH = [model propertyForKey:@"height"];
+            if (mposX.type != kPHObjectPropertyNumber) mposX = nil;
+            if (mposY.type != kPHObjectPropertyNumber) mposY = nil;
+            if (mposW.type != kPHObjectPropertyNumber) mposW = nil;
+            if (mposH.type != kPHObjectPropertyNumber) mposH = nil;
+            
             NSArray * arr = prop.childNodes;
             if ([arr count]==2 && posX && posY)
-                [file appendFormat:@"point(%lf,%lf);\n",posX.doubleValue,posY.doubleValue];
+            {
+                if (mposX && mposY && mposX.doubleValue==posX.doubleValue && mposY.doubleValue==posY.doubleValue)
+                    [file deleteCharactersInRange:NSMakeRange(start,[file length]-start)];
+                else
+                    [file appendFormat:@"point(%lf,%lf);\n",posX.doubleValue,posY.doubleValue];
+            }
             else 
                 if ([arr count]==4 && posX && posY && posW && posH)
-                    [file appendFormat:@"rect(%lf,%lf,%lf,%lf);\n",posX.doubleValue,posY.doubleValue,posW.doubleValue,posH.doubleValue];
+                {
+                    if (mposX && mposY && mposW && mposH && mposX.doubleValue==posX.doubleValue && mposY.doubleValue==posY.doubleValue && mposW.doubleValue==posW.doubleValue && mposH.doubleValue==posH.doubleValue)
+                        [file deleteCharactersInRange:NSMakeRange(start,[file length]-start)];
+                    else
+                        [file appendFormat:@"rect(%lf,%lf,%lf,%lf);\n",posX.doubleValue,posY.doubleValue,posW.doubleValue,posH.doubleValue];
+                }
             else
             {
                 [file appendString:@"{};\n"];
+                BOOL doit = NO;
                 for ( PHObjectProperty * nde in arr) 
                 {
-                    [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",nde.key] toFile:file];
+                    doit = doit || [self saveNode:nde withPath:[path stringByAppendingFormat:@".%@",nde.key] toFile:file andModel:[model propertyForKey:nde.key]];
                 }
+                if (!doit)
+                    [file deleteCharactersInRange:NSMakeRange(start,[file length]-start)];
             }
             break;
         }
@@ -208,13 +235,91 @@
             NSArray * arr = prop.childNodes;
             int n = [arr count];
             [file appendFormat:@"{n=%d;};\n",n];
+            BOOL doit = NO;
+            NSArray * arr2 = model.childNodes;
             for (int i =0; i<n; i++)
             {
                 PHObjectProperty * nde = [arr objectAtIndex:i];
-                [self saveNode:nde withPath:[path stringByAppendingFormat:@"[%d]",i] toFile:file];
+                doit = doit || [self saveNode:nde withPath:[path stringByAppendingFormat:@"[%d]",i] toFile:file andModel:((i<[arr2 count])?[arr2 objectAtIndex:i]:nil)];
             }
+            if (!doit)
+                [file deleteCharactersInRange:NSMakeRange(start,[file length]-start)];
             break;
         }
+    }
+    return YES;
+}
+
+-(void)saveFixture:(PHObjectProperty*)img toFile:(NSMutableString*)file
+{
+    if (img.type != kPHObjectPropertyTree) return;
+    NSArray * arr = [img value];
+    PHObjectProperty * shape = [img propertyForKey:@"shape"];
+    if (!shape || shape.type!=kPHObjectPropertyString) return;
+    
+    if ([shape.value isEqualToString:@"circle"])
+    {
+        double rad=0;
+        
+        PHObjectProperty * crad = [img propertyForKey:@"circleR"];
+        if (crad && crad.type==kPHObjectPropertyNumber)
+            rad = crad.doubleValue;
+        
+        int nr = 0;
+        for (PHObjectProperty * prop in arr)
+        {
+            if ([prop.key isEqualToString:@"circleR"]||[prop.key isEqualToString:@"shape"]) continue;
+            nr++;
+        }
+        
+        if (nr)
+        {
+            [file appendFormat:@"op = {};\n"];
+            for (PHObjectProperty * prop in arr)
+            {
+                if ([prop.key isEqualToString:@"circleR"]||[prop.key isEqualToString:@"shape"]) continue;
+                [self saveNode:prop withPath:[@"op" stringByAppendingFormat:@".%@",prop.key] toFile:file andModel:nil];
+            }
+        }    
+        [file appendFormat:@"objectAddCircle(obj,%lf%@);\n",rad,nr?@",op":@""];
+    }
+    if ([shape.value isEqualToString:@"box"])
+    {
+        double x=0,y=0,w=0,h=0;
+        
+        PHObjectProperty * pos = [img propertyForKey:@"box"];
+        if (!pos || pos.type!=kPHObjectPropertyTree) return;
+        
+        PHObjectProperty * posX = [pos propertyForKey:@"x"];
+        if (posX && posX.type==kPHObjectPropertyNumber)
+            x = posX.doubleValue;
+        PHObjectProperty * posY = [pos propertyForKey:@"y"];
+        if (posY && posY.type==kPHObjectPropertyNumber)
+            y = posY.doubleValue;
+        PHObjectProperty * posW = [pos propertyForKey:@"width"];
+        if (posW && posW.type==kPHObjectPropertyNumber)
+            w = posW.doubleValue;
+        PHObjectProperty * posH = [pos propertyForKey:@"height"];
+        if (posH && posH.type==kPHObjectPropertyNumber)
+            h = posH.doubleValue;
+        
+        int nr = 0;
+        for (PHObjectProperty * prop in arr)
+        {
+            if ([prop.key isEqualToString:@"box"]||[prop.key isEqualToString:@"shape"]) continue;
+            nr++;
+        }
+        
+        if (nr)
+        {
+            [file appendFormat:@"op = {};\n"];
+            for (PHObjectProperty * prop in arr)
+            {
+                if ([prop.key isEqualToString:@"box"]||[prop.key isEqualToString:@"shape"]) continue;
+                [self saveNode:prop withPath:[@"op" stringByAppendingFormat:@".%@",prop.key] toFile:file andModel:nil];
+            }
+        }    
+        [file appendFormat:@"objectAddBox(obj,%lf,%lf,%lf,%lf%@);\n",x,y,w,h,nr?@",op":@""];
     }
 }
 
@@ -256,7 +361,7 @@
         for (PHObjectProperty * prop in arr)
         {
             if ([prop.key isEqualToString:@"pos"]||[prop.key isEqualToString:@"filename"]) continue;
-            [self saveNode:prop withPath:[@"op" stringByAppendingFormat:@".%@",prop.key] toFile:file];
+            [self saveNode:prop withPath:[@"op" stringByAppendingFormat:@".%@",prop.key] toFile:file andModel:nil];
         }
     }    
     [file appendFormat:@"objectAddImage(obj,[[%@]],%lf,%lf,%lf,%lf%@);\n",fn,x,y,w,h,nr?@",op":@""];
@@ -267,18 +372,43 @@
 	[file appendFormat:@"\nobj = objectWithClass(\"%@\");\n",self.className];
     [file appendFormat:@"obj.pos = point(%lf,%lf);\n",self.posXProperty.doubleValue,self.posYProperty.doubleValue];
     
+    PHObject * model = [[InheritanceController sharedInstance] modelForClass:self.className];
     
 	for ( PHObjectProperty * prop in properties) 
 	{
 		if ([prop.key isEqual:@"class"]) continue;
         if ([prop.key isEqual:@"pos"]) continue;
         if ([prop.key isEqual:@"images"]) continue;
-		[self saveNode:prop withPath:[@"obj" stringByAppendingFormat:@".%@",prop.key] toFile:file];
+        if ([prop.key isEqual:@"physics"]) continue;
+		[self saveNode:prop withPath:[@"obj" stringByAppendingFormat:@".%@",prop.key] toFile:file andModel:[model propertyForKey:prop.key]];
 	}
     
+    for ( PHObjectProperty  * prop in physicsProperty.childNodes)
+    {
+        if ([prop.key isEqual:@"fixtures"]) continue;
+        [self saveNode:prop withPath:[@"obj.physics." stringByAppendingString:prop.key] toFile:file andModel:[model.physicsProperty propertyForKey:prop.key]];
+    }
+    
+    NSArray * arr = model.imagesProperty.childNodes;
+    int i = 0;
     NSArray * images = [self.imagesProperty value];
     for (PHObjectProperty * prop in images)
-        [self saveImage:prop toFile:file];
+    {
+        if (i>=[arr count])
+            [self saveImage:prop toFile:file];
+        i++;
+    }
+    
+    arr = model.fixturesProperty.childNodes;
+    i = 0;
+    NSArray * fixtures = [self.fixturesProperty value];
+    for (PHObjectProperty * prop in fixtures)
+    {
+        if (i>=[arr count])
+            [self saveFixture:prop toFile:file];
+        i++;
+    }
+    
     
 	[file appendFormat:@"obj.levelDes = true;\naddObject(obj);\n"];
 }
