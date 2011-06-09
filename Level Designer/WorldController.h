@@ -15,8 +15,7 @@
 @interface WorldController : NSObject {
 	IBOutlet ObjectController * objectController;
 	NSArrayController * controller;
-	IBOutlet NSScrollView * scrollView;
-	WorldView * worldView;
+	IBOutlet WorldView * worldView;
 	double scalingFactor;
 	NSArray * objects;
 	NSArray * selection;
@@ -37,15 +36,6 @@
 @property(nonatomic,assign) BOOL objectMode;
 @property(nonatomic,readonly) PHObject * currentObject;
 @property(nonatomic,readonly) ObjectController * objectController;
-
--(void)scrollViewHasScrolled;
--(void)adjustForVisibleRect:(NSRect)visibleRect;
-
--(IBAction)expandLeft:(id)sender;
--(IBAction)expandRight:(id)sender;
--(IBAction)expandUp:(id)sender;
--(IBAction)expandDown:(id)sender;
--(IBAction)scrollToOrigin:(id)sender;
 
 -(void)updateSubviews;
 

@@ -13,13 +13,18 @@
 	int dragState;
 	NSRect dragRect;
 	NSPoint dragPoint,initialPoint;
-    
+    NSPoint opnt,vel;
     WorldController * controller;
+    NSTimer * inscrolltimer;
+    int ins,insn;
 }
 
 -(void)beginDragging:(NSEvent *)theEvent;
 -(void)cancelAllDrags;
 
+-(IBAction)scrollToOrigin:(id)sender;
+
 @property(nonatomic,assign) WorldController * controller;
+@property(nonatomic,assign) NSPoint position;
 
 @end
