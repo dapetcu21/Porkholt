@@ -14,6 +14,12 @@
 #import "SubObjectView.h"
 #import "PHObjectProperty.h"
 
+@interface NSEvent()
+-(double)deviceDeltaX;
+-(double)deviceDeltaY;
+-(double)deviceDeltaZ;
+@end
+
 @implementation WorldView
 @synthesize controller;
 
@@ -93,8 +99,19 @@ enum dragStates
 	return YES;
 }
 
+-(void)cancelInertialScrolling
+{
+    if (inscrolltimer)
+    {
+        [inscrolltimer invalidate];
+        inscrolltimer = nil;
+    }
+    ins = 0;
+}
+
 -(void)beginDragging:(NSEvent *)theEvent
 {
+    [self cancelInertialScrolling];
 	dragState = dsMove;
 	dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     initialPoint = dragPoint;
@@ -156,9 +173,71 @@ enum dragStates
 	return [super resignFirstResponder];
 }
 
+- (void)otherMouseDown:(NSEvent *)theEvent
+{
+    [self cancelInertialScrolling];
+    if (dragState != dsNone) return;
+    if ([theEvent buttonNumber] != 2) return;
+    opnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    vel.x = vel.y = 0;
+}
+
+- (void)otherMouseDragged:(NSEvent *)theEvent
+{
+    if (dragState != dsNone) return;
+    if ([theEvent buttonNumber] != 2) return;
+    NSPoint pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint loc = self.position;
+    vel.x = -theEvent.deltaX/controller.scalingFactor;
+    vel.y = theEvent.deltaY/controller.scalingFactor;
+    loc.x = (vel.x + loc.x);
+    loc.y = (vel.y + loc.y);
+    self.position = loc;
+    opnt = pnt;
+}
+
+double min(double a, double b) { return a<b?a:b; }
+
+-(void)inertialScroll
+{
+    if (dragState != dsNone) 
+    {
+        [inscrolltimer invalidate];
+        inscrolltimer = nil;
+    }
+    NSPoint loc = self.position;
+    loc.x = (vel.x*(ins/(double)insn) + loc.x);
+    loc.y = (vel.y*(ins/(double)insn) + loc.y);
+    self.position = loc;
+    ins--;
+    if (ins<=0)
+    {
+        [inscrolltimer invalidate];
+        inscrolltimer = nil;
+        ins = 0;
+    }
+}
+
+#define DECAY_RATE 0.04
+
+- (void)otherMouseUp:(NSEvent *)theEvent
+{
+    if (dragState != dsNone) return;
+    if ([theEvent buttonNumber] != 2) return;
+    insn = sqrtf(vel.x*vel.x+vel.y*vel.y)/DECAY_RATE;
+    if (insn>30)
+        insn=30;
+    if (insn)
+    {
+        inscrolltimer = [[NSTimer scheduledTimerWithTimeInterval:1/30.0f target:self selector:@selector(inertialScroll) userInfo:nil repeats:YES] retain];
+        ins = insn;
+    }
+}
+
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	NSLog(@"%x",[theEvent modifierFlags]);
+    [self cancelInertialScrolling];
+    [[self window] makeFirstResponder:self];
 	if ([theEvent modifierFlags] & NSAlternateKeyMask)
 		[self beginDragging:theEvent];
 	else 
@@ -238,7 +317,6 @@ enum dragStates
             for (SubObjectView * view in sv)
             {
                 if (![view isKindOfClass:[SubObjectView class]]) continue;
-                NSLog(@"view:%@ rect:%f %f %f %f",view,rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
                 view.property.selected = [view intersectsRect:rect];
             }
         } else {
@@ -262,10 +340,71 @@ enum dragStates
 	[self setNeedsDisplay:YES];
 }
 
+
 -(void)cancelAllDrags
 {
+    [self cancelInertialScrolling];
     if (dragState!=dsNone)
         [self mouseUp:nil];
+}
+
+-(NSPoint)position
+{
+    NSRect bounds = self.bounds;
+    NSPoint pnt;
+    pnt.x = bounds.origin.x+bounds.size.width/2;
+    pnt.y = bounds.origin.y+bounds.size.height/2;
+    return pnt;
+}
+
+-(void)setPosition:(NSPoint)pos
+{
+    NSRect bounds = self.bounds;
+    bounds.origin.x = pos.x-bounds.size.width/2;
+    bounds.origin.y = pos.y-bounds.size.height/2;
+    self.bounds = bounds;
+}
+
+-(void)zoomAtPoint:(NSPoint)loc byScale:(double)mg
+{
+    NSPoint pos = self.position;
+    self.position = loc;
+    double mag = controller.scalingFactor*(1+mg*0.75);
+    double sf = controller.scalingFactor;
+    controller.scalingFactor = mag;
+    pos.x = loc.x + (pos.x - loc.x)*mag/sf;
+    pos.y = loc.y + (pos.y - loc.y)*mag/sf;
+    self.position = pos;
+}
+
+- (void)scrollWheel:(NSEvent*)theEvent
+{
+    double dx = theEvent.deltaX * 10;
+    double dy = theEvent.deltaY * 10;
+    if (CGEventGetIntegerValueField([theEvent CGEvent ],kCGScrollWheelEventIsContinuous))
+    {
+        dx = theEvent.deviceDeltaX;
+        dy = theEvent.deviceDeltaY;
+    }
+    if ([theEvent modifierFlags] & NSCommandKeyMask)
+        [self zoomAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil] byScale:dy/1000];
+    else
+    {
+        NSRect bounds = self.bounds;
+        bounds.origin.x -= dx/(controller.scalingFactor);
+        bounds.origin.y += dy/(controller.scalingFactor);
+        self.bounds = bounds;
+    }
+}
+
+-(void)magnifyWithEvent:(NSEvent *)event
+{
+    [self zoomAtPoint:[self convertPoint:[event locationInWindow] fromView:nil] byScale:[event magnification]];
+}
+
+-(IBAction)scrollToOrigin:(id)sender
+{
+	[self setPosition:NSMakePoint(0,0)];
 }
 
 @end
