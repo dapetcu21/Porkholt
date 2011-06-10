@@ -481,8 +481,8 @@ double min(double a, double b) { return a<b?a:b; }
 {
     if (rotated==0) return;
     rotating = NO;
+    BOOL items = NO;
     NSUndoManager * undoMan = controller.undoManager;
-    [undoMan beginUndoGrouping];
     if (controller.objectMode)
     {
         ObjectView * view = controller.currentObject.view;
@@ -492,6 +492,12 @@ double min(double a, double b) { return a<b?a:b; }
             if (![view isKindOfClass:[SubObjectView class]]) continue;
             PHObjectProperty * property = view.property;
             if (!property.selected) continue;
+            if (![view supportsRotation]) continue;
+            if (!items)
+            {
+                items = YES;
+                [undoMan beginUndoGrouping];
+            }
             double rot = view.rotation;
             view.rotation = rot - rotated;
             [view undoable:undoMan setRotation:rot];
@@ -504,12 +510,18 @@ double min(double a, double b) { return a<b?a:b; }
             PHObject * obj = view.object;
             if (obj.readOnly) continue;
             if (!obj.selected) continue;
+            if (!items)
+            {
+                items = YES;
+                [undoMan beginUndoGrouping];
+            }
             double rot = obj.rotation;
             obj.rotation = rot - rotated;
             [obj undoableSetRotation:rot];
         }
     }
-    [undoMan endUndoGrouping];
+    if (items)
+        [undoMan endUndoGrouping];
     rotated = 0;
 }
 

@@ -55,6 +55,7 @@ enum kSubObjectViewShape
 -(void)move:(NSPoint)delta;
 -(double)rotation;
 -(void)setRotation:(double)val;
+-(BOOL)supportsRotation;
 -(void)undoable:(NSUndoManager*)man setRotation:(double)val;
 
 +(BOOL)rect:(NSRect)r1 inView:(NSView*)v1 intersectsRect:(NSRect)r2 inView:(NSView*)v2;

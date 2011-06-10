@@ -368,9 +368,9 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 
 -(double)rotation
 {
-    if (rot || rot.type != kPHObjectPropertyNumber)
-        return rot.doubleValue;
-    return 0;
+    if (!rot || rot.type != kPHObjectPropertyNumber)
+        return 0;
+    return rot.doubleValue;
 }
 -(void)setRotation:(double)val
 {
@@ -384,6 +384,11 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     [self setFrameCenterRotation:-val];
     [objectView adaptForView:self];
     [property.parentObject modified];
+}
+
+-(BOOL)supportsRotation
+{
+    return (rot && rot.type == kPHObjectPropertyNumber);
 }
 
 -(void)undoable:(NSUndoManager*)man setRotation:(double)val
