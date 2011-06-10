@@ -71,7 +71,6 @@
 	if (obj==objects) return;
 	[objects release];
 	objects = [[NSMutableArray alloc] initWithArray:obj];
-	NSLog(@"setObjects");
 }
 
 -(NSMutableArray*)objects
@@ -569,8 +568,6 @@
             NSMutableArray * insertPaths = [NSMutableArray arrayWithCapacity:cn];
             for (int i=0; i<cn; i++)
                 [insertPaths addObject:[[insertPath indexPathByRemovingLastIndex] indexPathByAddingIndex:i+last]];
-            
-            //NSLog(@"delete:%@ insert:%@ move:%@",deletePaths,insertPaths,movedObjects);
             
             [[self undoManager] beginUndoGrouping];
             PHObject * obj = [self selectedObject];
@@ -1149,7 +1146,8 @@
     PHObjectProperty * fname = [PHObjectProperty propertyWithValue:@"foo.bar" ofType:kPHObjectPropertyString forKey:@"filename"];
     PHObjectProperty * pos = [self newRect:-0.25 :-0.25 :0.5 :0.5];
     pos.key = @"pos";
-    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:fname,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    PHObjectProperty * rotation = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"];
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:fname,rotation,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
     NSIndexPath * path = [[self indexPathForProperty:obj.imagesProperty] indexPathByAddingIndex:[[obj.imagesProperty childNodes] count]];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
 }
@@ -1171,9 +1169,10 @@
     PHObject * obj = [self selectedObject];
     if (!obj || obj.readOnly) return;
     PHObjectProperty * shape = [PHObjectProperty propertyWithValue:@"box" ofType:kPHObjectPropertyString forKey:@"shape"];
+    PHObjectProperty * rotation = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"];
     PHObjectProperty * pos = [self newRect:-0.25 :-0.25 :0.5 :0.5];
     pos.key = @"box";
-    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:shape,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:shape,rotation,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
     NSIndexPath * path = [[self indexPathForProperty:obj.fixturesProperty] indexPathByAddingIndex:[[obj.fixturesProperty childNodes] count]];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
 }

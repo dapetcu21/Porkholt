@@ -37,7 +37,7 @@
 		C16777921375A8D700B4E247 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16777911375A8D700B4E247 /* QuartzCore.framework */; };
 		C1E0E14D139E68FE009797C6 /* PHDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E0E14C139E68FE009797C6 /* PHDocumentController.m */; };
 		C1E0E175139FA0F9009797C6 /* InheritanceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E0E174139FA0F9009797C6 /* InheritanceController.m */; };
-		C1ED0381139A53A2004E428A /* SubObjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1ED0380139A53A2004E428A /* SubObjectView.m */; };
+		C1ED0381139A53A2004E428A /* SubObjectView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1ED0380139A53A2004E428A /* SubObjectView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,7 +96,7 @@
 		C1E0E173139FA0F9009797C6 /* InheritanceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InheritanceController.h; sourceTree = "<group>"; };
 		C1E0E174139FA0F9009797C6 /* InheritanceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InheritanceController.m; sourceTree = "<group>"; };
 		C1ED037F139A53A2004E428A /* SubObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubObjectView.h; sourceTree = "<group>"; };
-		C1ED0380139A53A2004E428A /* SubObjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubObjectView.m; sourceTree = "<group>"; };
+		C1ED0380139A53A2004E428A /* SubObjectView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SubObjectView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,7 +257,7 @@
 				C1162AD61353378C005F7FB9 /* WorldView.h */,
 				C1162AD71353378C005F7FB9 /* WorldView.m */,
 				C1ED037F139A53A2004E428A /* SubObjectView.h */,
-				C1ED0380139A53A2004E428A /* SubObjectView.m */,
+				C1ED0380139A53A2004E428A /* SubObjectView.mm */,
 				C1201CA3139AAD0200D30834 /* SolidColorView.h */,
 				C1201CA4139AAD0200D30834 /* SolidColorView.m */,
 			);
@@ -356,7 +356,7 @@
 				C11627E11351BFD1005F7FB9 /* ObjectView.m in Sources */,
 				C116281D1351C7F3005F7FB9 /* ViewScaling.m in Sources */,
 				C1162AD81353378C005F7FB9 /* WorldView.m in Sources */,
-				C1ED0381139A53A2004E428A /* SubObjectView.m in Sources */,
+				C1ED0381139A53A2004E428A /* SubObjectView.mm in Sources */,
 				C1201CA5139AAD0200D30834 /* SolidColorView.m in Sources */,
 				C1E0E14D139E68FE009797C6 /* PHDocumentController.m in Sources */,
 				C1E0E175139FA0F9009797C6 /* InheritanceController.m in Sources */,

@@ -440,7 +440,6 @@
 -(void)updateSelected:(BOOL)sel
 {
     selected = sel;
-//    NSLog(@"%@ setSelected:%d",self,sel);
 }
 
 @end

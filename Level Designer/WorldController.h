@@ -11,6 +11,7 @@
 @class ObjectController;
 @class WorldView;
 @class PHObject;
+@class MyDocument;
 
 @interface WorldController : NSObject {
 	IBOutlet ObjectController * objectController;
@@ -25,6 +26,7 @@
     BOOL showJoints;
     BOOL objectMode;
     PHObject * currentObject;
+    IBOutlet MyDocument * document;
 }
 
 @property(nonatomic,assign) double scalingFactor;
@@ -36,7 +38,9 @@
 @property(nonatomic,assign) BOOL objectMode;
 @property(nonatomic,readonly) PHObject * currentObject;
 @property(nonatomic,readonly) ObjectController * objectController;
+@property(nonatomic,assign) MyDocument * document;
 
 -(void)updateSubviews;
+-(NSUndoManager*)undoManager;
 
 @end

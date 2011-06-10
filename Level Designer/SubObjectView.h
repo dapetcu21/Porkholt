@@ -27,6 +27,7 @@
     PHObjectProperty * path;
     PHObjectProperty * rad;
     PHObjectProperty * sh;
+    PHObjectProperty * rot;
 }
 
 enum kSubObjectViewType
@@ -52,8 +53,12 @@ enum kSubObjectViewShape
 
 -(void)undoable:(NSUndoManager*)man move:(NSPoint)delta;
 -(void)move:(NSPoint)delta;
+-(double)rotation;
+-(void)setRotation:(double)val;
+-(void)undoable:(NSUndoManager*)man setRotation:(double)val;
 
--(BOOL)intersectsRect:(NSRect)rect;
++(BOOL)rect:(NSRect)r1 inView:(NSView*)v1 intersectsRect:(NSRect)r2 inView:(NSView*)v2;
+-(BOOL)intersectsRect:(NSRect)rect fromView:(NSView*)v;
 -(BOOL)intersectsPoint:(NSPoint)pnt;
 
 @end

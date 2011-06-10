@@ -121,14 +121,14 @@ enum selectModifier
 {
     [self cancelInertialScrolling];
 	dragState = dsMove;
-	dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	dragPoint = [(controller.objectMode)?(NSView*)(controller.currentObject.view):(NSView*)self convertPoint:[theEvent locationInWindow] fromView:nil];
     initialPoint = dragPoint;
 }
 
 -(void)endDragging:(NSEvent*)theEvent
 {
     if (theEvent)
-        dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        dragPoint = [(controller.objectMode)?(NSView*)(controller.currentObject.view):(NSView*)self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSPoint dif,invDif;
     dif.x = dragPoint.x-initialPoint.x;
     dif.y = dragPoint.y-initialPoint.y;
@@ -205,6 +205,7 @@ enum selectModifier
 }
 
 double min(double a, double b) { return a<b?a:b; }
+
 
 -(void)inertialScroll
 {
@@ -314,14 +315,21 @@ double min(double a, double b) { return a<b?a:b; }
 {
 	if (dragState == dsMove)
 	{
-		NSPoint pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        ObjectView * view;
+        NSPoint pnt;
+        if (controller.objectMode)
+        {
+            view = controller.currentObject.view;
+            pnt = [view convertPoint:[theEvent locationInWindow] fromView:nil];
+        } else {
+            pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        }
 		NSPoint dif = pnt;
 		dif.x-= dragPoint.x;
 		dif.y-= dragPoint.y;
 		dragPoint = pnt;
         if (controller.objectMode)
         {
-            ObjectView * view = controller.currentObject.view;
             NSArray * sv = [view subviews];
             for (SubObjectView * view in sv)
             {
@@ -361,20 +369,16 @@ double min(double a, double b) { return a<b?a:b; }
         if (controller.objectMode)
         {
             ObjectView * view = controller.currentObject.view;
-            NSRect rect = dragRect;
-            NSRect frame = [view frame];
-            rect.origin.x -= frame.origin.x+frame.size.width/2;
-            rect.origin.y -= frame.origin.y+frame.size.height/2;
             NSArray * sv = [view subviews];
             for (SubObjectView * view in sv)
             {
                 if (![view isKindOfClass:[SubObjectView class]]) continue;
                 if (selectModifier==smNone)
-                    view.property.selected = [view intersectsRect:rect];
+                    view.property.selected = [view intersectsRect:dragRect fromView:self];
                 if (selectModifier==smAdd)
-                    view.property.selected = view.property.initialSelected || [view intersectsRect:rect];
+                    view.property.selected = view.property.initialSelected || [view intersectsRect:dragRect fromView:self];
                 if (selectModifier==smSubstract)
-                    view.property.selected = view.property.initialSelected && ![view intersectsRect:rect];
+                    view.property.selected = view.property.initialSelected && ![view intersectsRect:dragRect fromView:self];
             }
         } else {
             NSArray * sv = [self subviews];
@@ -406,6 +410,7 @@ double min(double a, double b) { return a<b?a:b; }
 
 -(void)cancelAllDrags
 {
+    [self endRotate];
     [self cancelInertialScrolling];
     if (dragState!=dsNone)
         [self mouseUp:nil];
@@ -462,12 +467,112 @@ double min(double a, double b) { return a<b?a:b; }
 
 -(void)magnifyWithEvent:(NSEvent *)event
 {
+    if (rotating) return;
     [self zoomAtPoint:[self convertPoint:[event locationInWindow] fromView:nil] byScale:[event magnification]];
+    isZooming = YES;
 }
 
 -(IBAction)scrollToOrigin:(id)sender
 {
 	[self setPosition:NSMakePoint(0,0)];
+}
+
+- (void)endRotate
+{
+    if (rotated==0) return;
+    rotating = NO;
+    NSUndoManager * undoMan = controller.undoManager;
+    [undoMan beginUndoGrouping];
+    if (controller.objectMode)
+    {
+        ObjectView * view = controller.currentObject.view;
+        NSArray * sv = [view subviews];
+        for (SubObjectView * view in sv)
+        {
+            if (![view isKindOfClass:[SubObjectView class]]) continue;
+            PHObjectProperty * property = view.property;
+            if (!property.selected) continue;
+            double rot = view.rotation;
+            view.rotation = rot - rotated;
+            [view undoable:undoMan setRotation:rot];
+        }
+    } else {
+        NSArray * sv = [self subviews];
+        for (ObjectView * view in sv)
+        {
+            if (![view isKindOfClass:[ObjectView class]]) continue;
+            PHObject * obj = view.object;
+            if (obj.readOnly) continue;
+            if (!obj.selected) continue;
+            double rot = obj.rotation;
+            obj.rotation = rot - rotated;
+            [obj undoableSetRotation:rot];
+        }
+    }
+    [undoMan endUndoGrouping];
+    rotated = 0;
+}
+
+- (void)rotate:(double)amount
+{
+    
+    rotated+=amount;
+    if (controller.objectMode)
+    {
+        ObjectView * view = controller.currentObject.view;
+        NSArray * sv = [view subviews];
+        for (SubObjectView * view in sv)
+        {
+            if (![view isKindOfClass:[SubObjectView class]]) continue;
+            PHObjectProperty * property = view.property;
+            if (!property.selected) continue;
+            view.rotation = view.rotation + amount;
+        }
+    } else {
+        NSArray * sv = [self subviews];
+        for (ObjectView * view in sv)
+        {
+            if (![view isKindOfClass:[ObjectView class]]) continue;
+            PHObject * obj = view.object;
+            if (obj.readOnly) continue;
+            if (!obj.selected) continue;
+            obj.rotation = obj.rotation + amount;
+        }
+    }
+}
+
+- (void)beginGestureWithEvent:(NSEvent *)event
+{
+}
+
+- (void)endGestureWithEvent:(NSEvent *)event
+{
+    if (!isZooming)
+        [self endRotate];
+    isZooming = NO;
+}
+
+- (void)rotateWithEvent:(NSEvent *)event
+{
+    if (isZooming)
+        return;
+    rotating = YES;
+    [self rotate:-[event rotation]];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+    [self cancelInertialScrolling];
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent
+{
+    [self rotate:[theEvent deltaY]];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent
+{
+    [self endRotate];
 }
 
 @end

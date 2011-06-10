@@ -17,6 +17,7 @@
 	BOOL selected;
     BOOL ignoreModified;
     SolidColorView * centerView;
+    double extendX,extendY;
 }
 
 @property(nonatomic,retain) PHObject * object;
@@ -26,11 +27,11 @@
 @property(nonatomic,assign) BOOL showMarkers;
 
 -(void)modified;
+-(void)updatePosition;
 
 - (void)rebuildSubviews;
 
 - (BOOL)intersectsRect:(NSRect)rect;
-- (BOOL)intersectsRectInObjectCoords:(NSRect)rect;
 - (BOOL)pointIntersectsSelf:(NSPoint)pnt;
 
 - (void)adaptForView:(NSView*)v;

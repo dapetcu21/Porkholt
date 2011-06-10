@@ -21,6 +21,7 @@
 @synthesize objectMode;
 @synthesize currentObject;
 @synthesize objectController;
+@synthesize document;
 
 -(BOOL)objectMode
 {
@@ -128,7 +129,6 @@
 
 -(void)updateSubviews
 {
-	NSLog(@"updateSubviews objects:%@",objects);
 	NSArray * views = [[[worldView subviews] copy] autorelease];
 	for (NSView * view in views)
 	{
@@ -151,7 +151,6 @@
 	return scalingFactor;
 }
 
-
 -(void)setScalingFactor:(double)sf
 {
 	NSRect bounds = worldView.bounds;
@@ -165,6 +164,11 @@
     worldView.scale = NSMakeSize(sf, sf);
 	worldView.bounds = bounds;
 	scalingFactor = sf;
+}
+
+-(NSUndoManager*)undoManager
+{
+    return [document undoManager];
 }
 
 @end

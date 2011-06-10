@@ -25,7 +25,6 @@
 
 -(void)setShowMarkers:(BOOL)value
 {
-    NSLog(@"%@ %@ %d %d",self.worldView,self.worldView.controller,self.worldView.controller.showMarkers,value);
     self.worldView.controller.showMarkers = value;
 }
 
@@ -35,6 +34,7 @@
         centerView = [[SolidColorView alloc] initWithFrame:NSMakeRect(-0.04,-0.04,0.08,0.08)];
         [centerView bind:@"hidden" toObject:self withKeyPath:@"object.controller.worldController.showMarkers" options:[NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:NSValueTransformerNameBindingOption]];
         [self addSubview:centerView];
+        extendX = extendY = 0.04;
     }
     return self;
 }
@@ -174,6 +174,53 @@
     return arr;
 }
 
+-(NSPoint)farthestForView:(NSView*)v
+{
+    NSPoint pnt;
+    pnt.x = pnt.y = 0;
+    NSRect fr = [v bounds];
+    for (int i=0; i<4; i++)
+    {
+        NSPoint pts;
+        pts.x = fr.origin.x+((i&1)?fr.size.width:0);
+        pts.y = fr.origin.y+((i&2)?fr.size.height:0);
+        pts = [self convertPoint:pts fromView:v];
+        if (pts.x>pnt.x)
+            pnt.x=pts.x;
+        if (pts.x<-pnt.x)
+            pnt.x=-pts.x;
+        if (pts.y>pnt.y)
+            pnt.y=pts.y;
+        if (pts.y<-pnt.y)
+            pnt.y=-pts.y;
+    }
+    if (fr.origin.x<-pnt.x)
+        pnt.x=-fr.origin.x;
+    if (fr.origin.x+fr.size.width>pnt.x)
+        pnt.x=fr.origin.x+fr.size.width;
+    if (fr.origin.y<-pnt.y)
+        pnt.y=-fr.origin.y;
+    if (fr.origin.y+fr.size.height>pnt.y)
+        pnt.y=fr.origin.y+fr.size.height;
+    return pnt;
+}
+
+- (void)updatePosition
+{
+    [self setFrameCenterRotation:0];
+    NSRect frame;
+    frame.size.width = extendX*2;
+    frame.size.height = extendY*2;
+    frame.origin = [object position];
+    frame.origin.x -= extendX;
+    frame.origin.y -= extendY;
+    [self setFrame:frame];
+    frame.origin.x = -extendX;
+    frame.origin.y = -extendY;
+    [self setBounds:frame];
+    [self setFrameCenterRotation:-object.rotation];
+}
+
 - (void)rebuildSubviews
 {
     NSMutableArray * arr = [NSMutableArray array];
@@ -190,29 +237,14 @@
                 break;
         doIt = FALSE;
     }
-    double x = 0.04;
-    double y = 0.04;
+    extendX = extendY = 0.04;
     for (NSView * view in arr)
     {
-        NSRect fr = [view frame];
-        if (fr.origin.x<-x)
-            x=-fr.origin.x;
-        if (fr.origin.x+fr.size.width>x)
-            x=fr.origin.x+fr.size.width;
-        if (fr.origin.y<-y)
-            y=-fr.origin.y;
-        if (fr.origin.y+fr.size.height>y)
-            y=fr.origin.y+fr.size.height;
+        NSPoint fp = [self farthestForView:view];
+        if (fp.x>extendX) extendX = fp.x;
+        if (fp.y>extendY) extendY = fp.y;
     }
-    NSRect fr = [self frame];
-    fr.origin.x +=fr.size.width/2-x;
-    fr.origin.y +=fr.size.height/2-y;
-    fr.size.width = x*2;
-    fr.size.height = y*2;
-    [self setFrame:fr];
-    fr.origin.x = -x;
-    fr.origin.y = -y;
-    [self setBounds:fr];
+    [self updatePosition];
     if (doIt)
     {
         [self setSubviews:arr];
@@ -229,55 +261,26 @@
 {
     NSArray * sv = [self subviews];
     for (NSView * v in sv)
-        if (![v isHidden] && ([sv isKindOfClass:[SubObjectView class]]?[(SubObjectView*)sv intersectsPoint:pnt]:NSPointInRect(pnt,v.frame)))
-            return YES;
-    return NO;
-}
-
-- (BOOL)intersectsRectInObjectCoords:(NSRect)rect
-{
-    NSArray * sv = [self subviews];
-    for (NSView * v in sv)
-        if (![v isHidden] && ([sv isKindOfClass:[SubObjectView class]]?[(SubObjectView*)sv intersectsRect:rect]:NSIntersectsRect(v.frame,rect)))
+        if (![v isHidden] && ([v isKindOfClass:[SubObjectView class]]?[(SubObjectView*)v intersectsPoint:[v convertPoint:pnt fromView:self]]:NSPointInRect([v convertPoint:pnt fromView:self],v.bounds)))
             return YES;
     return NO;
 }
 
 - (BOOL)intersectsRect:(NSRect)rect
 {
-    NSRect frame,bounds;
-    frame = [self frame];
-    if (!NSIntersectsRect(frame,rect))
-        return NO;
-    bounds = [self bounds];
-    rect.origin.x+=bounds.origin.x-frame.origin.x;
-    rect.origin.y+=bounds.origin.y-frame.origin.y;
-    return [self intersectsRectInObjectCoords:rect];
+    NSArray * sv = [self subviews];
+    for (NSView * v in sv)
+        if (![v isHidden] && ([v isKindOfClass:[SubObjectView class]]?[(SubObjectView*)v intersectsRect:rect fromView:self.superview]:[SubObjectView rect:rect inView:self.superview intersectsRect:v.bounds inView:v]))
+            return YES;
+    return NO;
 }
 
 - (void)adaptForView:(NSView*)v
 {
-    NSRect frame = [self frame];
-    double x = frame.size.width/2;
-    double y = frame.size.height/2;
-    NSRect fr = [v frame];
-    if (fr.origin.x<-x)
-        x=-fr.origin.x;
-    if (fr.origin.x+fr.size.width>x)
-        x=fr.origin.x+fr.size.width;
-    if (fr.origin.y<-y)
-        y=-fr.origin.y;
-    if (fr.origin.y+fr.size.height>y)
-        y=fr.origin.y+fr.size.height;
-    fr = frame;
-    fr.origin.x +=fr.size.width/2-x;
-    fr.origin.y +=fr.size.height/2-y;
-    fr.size.width = x*2;
-    fr.size.height = y*2;
-    [self setFrame:fr];
-    fr.origin.x = -x;
-    fr.origin.y = -y;
-    [self setBounds:fr];
+    NSPoint fp = [self farthestForView:v];
+    if (fp.x>extendX) extendX = fp.x;
+    if (fp.y>extendY) extendY = fp.y;
+    [self updatePosition];
 }
 
 @end

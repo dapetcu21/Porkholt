@@ -464,6 +464,12 @@
 	return pos;
 }
 
+-(void)undoableSetRotation:(double)rot
+{
+    [[[self.controller undoManager] prepareWithInvocationTarget:self] undoableSetRotation:self.rotation];
+    [self setRotation:rot];
+}
+
 -(void)undoableSetPosition:(NSPoint)pos
 {
     [[[self.controller undoManager] prepareWithInvocationTarget:self] undoableSetPosition:[self position]];
@@ -505,6 +511,10 @@
 
 -(void)setRotation:(double)rot
 {
+    while (rot<0)
+        rot+=360;
+    while (rot>=360)
+        rot-=360;
 	rotationProperty.doubleValue = rot;
 	[self positionChanged];
 	[self modified];
@@ -535,13 +545,7 @@
 
 -(void)positionChanged
 {
-	if (!view) return;
-	NSSize size = view.frame.size;
-	[view setFrameCenterRotation:0];
-	[view setFrameOrigin:NSMakePoint(posXProperty.doubleValue-size.width/2, posYProperty.doubleValue-size.height/2)];
-    NSRect bounds = NSMakeRect(-size.width/2,-size.height/2,size.width,size.height);
-    [view setBounds:bounds];
-	[view setFrameCenterRotation:-rotationProperty.doubleValue];
+	[view updatePosition];
 }
 
 -(BOOL)editable

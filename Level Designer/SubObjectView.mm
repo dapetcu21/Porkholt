@@ -15,6 +15,8 @@
 #import "WorldView.h"
 #import "WorldController.h"
 
+#import <float.h>
+
 @implementation SubObjectView
 
 @synthesize objectView;
@@ -36,6 +38,7 @@
     [property release];
     [img release];
     [imagePath release];
+    [self unbind:@"hidden"];
     [super dealloc];
 }
 
@@ -79,6 +82,7 @@
     [self weakRebuildCachedProperties];
     NSRect frame = NSMakeRect(-0.2,-0.2,0.4,0.4);
     BOOL fail = NO;
+    double rota = 0;
     if (shape==kSOSRect)
     {
         if (posX&&posY&&posW&&posH)
@@ -87,6 +91,7 @@
             frame.origin.y = posY.doubleValue;
             frame.size.width = posW.doubleValue;
             frame.size.height = posH.doubleValue;
+            rota = rot.doubleValue;
         } else {
             fail = YES;
         }
@@ -111,7 +116,9 @@
             fail = YES;
         }
     }
+    [self setFrameCenterRotation:0];
     [self setFrame:frame];
+    [self setFrameCenterRotation:-rota];
     if (type == kSOTImage)
     {
         if (path)
@@ -208,15 +215,83 @@
     reb(posH,pos,@"height");
     reb(path,property,@"filename");
     reb(rad,property,@"circleR");
+    reb(rot,property,@"rotation");
 }
 
--(BOOL)intersectsRect:(NSRect)rect
+inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 {
-    return NSIntersectsRect(self.frame,rect);
+    double x;
+    double y;
+    double maxX = p1.x;
+    double minX = p2.x;
+    double maxY = p1.y;
+    double minY = p2.y;
+    if (maxY<minX)
+    {
+        maxX = p2.x;
+        minX = p1.x;
+    }
+    if (maxY<minY)
+    {
+        maxY = p2.y;
+        minY = p1.y;
+    }
+    y = r.origin.y;
+    x = p1.x-(p1.x-p2.x)*(p1.y-y)/(p1.y-p2.y);
+    if (x>=r.origin.x && x<=r.origin.x+r.size.width && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    y = r.origin.y+r.size.height;
+    x = p1.x-(p1.x-p2.x)*(p1.y-y)/(p1.y-p2.y);
+    if (x>=r.origin.x && x<=r.origin.x+r.size.width && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    x = r.origin.x;
+    y = p1.y-(p1.y-p2.y)*(p1.x-x)/(p1.x-p2.x);
+    if (y>=r.origin.y && y<=r.origin.y+r.size.height && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    x = r.origin.x+r.size.width;
+    y = p1.y-(p1.y-p2.y)*(p1.x-x)/(p1.x-p2.x);
+    if (y>=r.origin.y && y<=r.origin.y+r.size.height && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    return NO;
+}
+
++(BOOL)rect:(NSRect)r1 inView:(NSView*)v1 intersectsRect:(NSRect)r2 inView:(NSView*)v2
+{
+    NSPoint p1[4],p2[4];
+    double minX = DBL_MAX, minY = DBL_MAX, maxX = -DBL_MAX, maxY = -DBL_MAX;
+    for (int i=0; i<4; i++)
+    {
+        p1[i].x = r1.origin.x+((i&1)?r1.size.width:0);
+        p1[i].y = r1.origin.y+((i&2)?r1.size.height:0);
+        p1[i] = [v2 convertPoint:p1[i] fromView:v1];
+        if (p1[i].x<minX) minX = p1[i].x;
+        if (p1[i].x>maxX) maxX = p1[i].x;
+        if (p1[i].y<minY) minY = p1[i].y;
+        if (p1[i].y>maxY) maxY = p1[i].y;
+        if (NSPointInRect(p1[i],r2)) return YES;
+    }
+    if ((minX>r2.origin.x+r2.size.width)||
+        (maxX<r2.origin.x)||
+        (minY>r2.origin.y+r2.size.height)||
+        (maxY<r2.origin.y))
+        return NO;
+    for (int i=0; i<4; i++)
+    {
+        p2[i].x = r2.origin.x+((i&1)?r2.size.width:0);
+        p2[i].y = r2.origin.y+((i&2)?r2.size.height:0);
+        p2[i] = [v1 convertPoint:p2[i] fromView:v2];
+        if (NSPointInRect(p2[i],r1)) return YES;
+    }
+    if (lineIntersectsRect(p1[0],p1[1],r2)) return YES;
+    if (lineIntersectsRect(p1[1],p1[3],r2)) return YES;
+    if (lineIntersectsRect(p1[0],p1[2],r2)) return YES;
+    if (lineIntersectsRect(p1[2],p1[3],r2)) return YES;
+    return NO;
+}
+
+-(BOOL)intersectsRect:(NSRect)rect fromView:(NSView*)v
+{
+    return [SubObjectView rect:rect inView:v intersectsRect:self.bounds inView:self];
 }
 -(BOOL)intersectsPoint:(NSPoint)pnt
 {
-    return NSPointInRect(pnt,self.frame);
+    return NSPointInRect(pnt,self.bounds);
 }
 
 -(void)mouseDown:(NSEvent *)theEvent
@@ -226,7 +301,7 @@
         [super mouseDown:theEvent];
         return;
     }
-    if (![self intersectsPoint:[objectView convertPoint:[theEvent locationInWindow] fromView:nil]])
+    if (![self intersectsPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]])
     {
         [super mouseDown:theEvent];
         return;
@@ -290,6 +365,32 @@
         [self move:delta];
         [property.parentObject modified];
     }
+}
+
+-(double)rotation
+{
+    if (rot || rot.type != kPHObjectPropertyNumber)
+        return rot.doubleValue;
+    return 0;
+}
+-(void)setRotation:(double)val
+{
+    if (!rot || rot.type != kPHObjectPropertyNumber) return;
+    while (val<0)
+        val+=360;
+    while (val>=360)
+        val-=360;
+    rot.doubleValue = val;
+    [self setFrameCenterRotation:0];
+    [self setFrameCenterRotation:-val];
+    [objectView adaptForView:self];
+    [property.parentObject modified];
+}
+
+-(void)undoable:(NSUndoManager*)man setRotation:(double)val
+{
+    [[man prepareWithInvocationTarget:self] setRotation:self.rotation];
+    [self setRotation:val];
 }
 
 @end

@@ -18,14 +18,19 @@
     WorldController * controller;
     NSTimer * inscrolltimer;
     int ins,insn;
-    
+    double rotated;
+    BOOL rotating;
     id sender;
+    BOOL isZooming;
 }
 
 -(void)beginDragging:(NSEvent *)theEvent;
 -(void)cancelAllDrags;
 
 -(IBAction)scrollToOrigin:(id)sender;
+
+- (void)rotate:(double)amount;
+- (void)endRotate;
 
 @property(nonatomic,assign) WorldController * controller;
 @property(nonatomic,assign) NSPoint position;

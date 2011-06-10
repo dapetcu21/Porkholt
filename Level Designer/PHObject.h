@@ -39,6 +39,7 @@
 -(void)move:(NSPoint)mv;
 -(void)undoableMove:(NSPoint)mv;
 -(void)undoableSetPosition:(NSPoint)pos;
+-(void)undoableSetRotation:(double)rot;
 -(void)positionChanged;
 -(void)rebuildView;
 
