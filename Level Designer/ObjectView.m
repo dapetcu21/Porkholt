@@ -99,20 +99,22 @@
 	if ([view isKindOfClass:[WorldView class]])
 	{
         if ([theEvent modifierFlags] & (NSShiftKeyMask | NSAlternateKeyMask | NSCommandKeyMask) )
+        {
+            if (!view.sender)
+                view.sender = self;
 			[super mouseDown:theEvent];
+            view.sender = nil;
+        }
 		else
 		{
-			if (object.readOnly)
-            {
-				[super mouseDown:theEvent];
-                return;
-            }
 			if (!object.selected)
             {
 				[[object.controller arrayController] setSelectedObjects:[NSArray arrayWithObject:object]];
                 [self setSelected:YES];
             }
-			[view beginDragging:theEvent];
+            [[self window] makeFirstResponder:view];
+            if (!object.readOnly)
+                [view beginDragging:theEvent];
 		}
 	} else {
 		[super mouseDown:theEvent];

@@ -17,7 +17,7 @@
 	NSMutableArray * properties;
 	PHObjectProperty * classProperty, *posXProperty, *posYProperty, *rotationProperty, *posProperty, *imagesProperty, * physicsProperty, * fixturesProperty;
 	BOOL readOnly;
-	BOOL selected;
+	BOOL selected,initialSelected;
 	ObjectView * view;
 	ObjectController * controller;
 }
@@ -58,4 +58,5 @@
 @property(nonatomic,assign) ObjectView * view;
 @property(nonatomic,assign,getter=isSelected) BOOL selected;
 @property(nonatomic,assign) ObjectController * controller;
+@property(nonatomic,assign) BOOL initialSelected;
 @end

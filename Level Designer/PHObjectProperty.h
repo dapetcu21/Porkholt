@@ -26,7 +26,7 @@ enum
 	int type;
 	BOOL mandatory;
     id userData;
-    BOOL selected;
+    BOOL selected,initialSelected;
 }
 
 -(PHObjectProperty*)propertyForKey:(NSString*)key;
@@ -76,5 +76,7 @@ enum
 
 @property(nonatomic,assign) BOOL selected;
 -(void)updateSelected:(BOOL)sel;
+
+@property(nonatomic,assign) BOOL initialSelected;
 
 @end

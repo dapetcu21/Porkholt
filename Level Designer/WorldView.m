@@ -22,6 +22,7 @@
 
 @implementation WorldView
 @synthesize controller;
+@synthesize sender;
 
 enum dragStates
 {
@@ -29,6 +30,13 @@ enum dragStates
 	dsSelect,
 	dsMove,
 	NUMDRAGSTATES
+};
+
+enum selectModifier
+{
+    smNone = 0,
+    smAdd,
+    smSubstract
 };
 
 - (id)initWithFrame:(NSRect)frame {
@@ -239,10 +247,21 @@ double min(double a, double b) { return a<b?a:b; }
     [self cancelInertialScrolling];
     [[self window] makeFirstResponder:self];
 	if ([theEvent modifierFlags] & NSAlternateKeyMask)
+    {
 		[self beginDragging:theEvent];
-	else 
-	{
-		dragState = dsSelect;
+        return;
+    }
+    dragState = dsSelect;
+    selectModifier = smNone;
+    if ([theEvent modifierFlags] & NSCommandKeyMask)
+    {
+        selectModifier = smAdd;
+        if ([theEvent modifierFlags] & NSShiftKeyMask)
+            selectModifier = smSubstract;
+    }
+    
+    if (selectModifier==smNone)
+    {
         if (controller.objectMode)
         {
             [controller.objectController clearPropertySelection];
@@ -254,8 +273,41 @@ double min(double a, double b) { return a<b?a:b; }
                 view.object.selected = NO;
             }
         }
-        dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	}
+    } else {
+        if (controller.objectMode)
+        {
+            ObjectView * view = controller.currentObject.view;
+            NSArray * sv = [view subviews];
+            for (SubObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[SubObjectView class]]) continue;
+                PHObjectProperty * property = view.property;
+                property.initialSelected = property.selected;
+            }
+            if (sender && [sender isKindOfClass:[SubObjectView class]])
+            {
+                if (selectModifier == smAdd)
+                    ((SubObjectView*)sender).property.selected = YES;
+                if (selectModifier == smSubstract)
+                    ((SubObjectView*)sender).property.selected = NO;
+            }
+        } else {
+            NSArray * sv = [self subviews];
+            for (ObjectView * view in sv)
+            {
+                if (![view isKindOfClass:[ObjectView class]]) continue;
+                view.object.initialSelected = view.object.selected;
+            }
+            if (sender && [sender isKindOfClass:[ObjectView class]])
+            {
+                if (selectModifier == smAdd)
+                    ((ObjectView*)sender).object.selected = YES;
+                if (selectModifier == smSubstract)
+                    ((ObjectView*)sender).object.selected = NO;
+            }
+        }
+    }
+    dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -317,14 +369,24 @@ double min(double a, double b) { return a<b?a:b; }
             for (SubObjectView * view in sv)
             {
                 if (![view isKindOfClass:[SubObjectView class]]) continue;
-                view.property.selected = [view intersectsRect:rect];
+                if (selectModifier==smNone)
+                    view.property.selected = [view intersectsRect:rect];
+                if (selectModifier==smAdd)
+                    view.property.selected = view.property.initialSelected || [view intersectsRect:rect];
+                if (selectModifier==smSubstract)
+                    view.property.selected = view.property.initialSelected && ![view intersectsRect:rect];
             }
         } else {
             NSArray * sv = [self subviews];
             for (ObjectView * view in sv)
             {
                 if (![view isKindOfClass:[ObjectView class]]) continue;
-                view.object.selected = [view intersectsRect:dragRect];
+                if (selectModifier==smNone)
+                    view.object.selected = [view intersectsRect:dragRect];
+                if (selectModifier==smAdd)
+                    view.object.selected = view.object.initialSelected || [view intersectsRect:dragRect];
+                if (selectModifier==smSubstract)
+                    view.object.selected = view.object.initialSelected && ![view intersectsRect:dragRect];
             }
         }
 		[self setNeedsDisplay:YES];
@@ -336,6 +398,7 @@ double min(double a, double b) { return a<b?a:b; }
     if (dragState==dsMove)
         [self endDragging:theEvent];
 	dragState = dsNone;
+    selectModifier = smNone;
     dragRect = NSZeroRect;
 	[self setNeedsDisplay:YES];
 }

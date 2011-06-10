@@ -235,7 +235,12 @@
 	if ([view isKindOfClass:[WorldView class]])
 	{
 		if ([theEvent modifierFlags] & (NSShiftKeyMask | NSAlternateKeyMask | NSCommandKeyMask) )
+        {
+            if (!view.sender)
+                view.sender = self;
 			[super mouseDown:theEvent];
+            view.sender = nil;
+        }
 		else
 		{
 			if (objectView.object.readOnly)
@@ -250,6 +255,7 @@
                 [controller clearPropertySelection];
                 property.selected = YES;
             }
+            [[self window] makeFirstResponder:view];
 			[view beginDragging:theEvent];
 		}
 	} else {

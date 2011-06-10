@@ -15,6 +15,7 @@
 @synthesize key;
 @synthesize mandatory;
 @synthesize userData;
+@synthesize initialSelected;
 
 +(PHObjectProperty*)propertyWithValue:(id)v ofType:(int)ty  forKey:(NSString*)k
 {

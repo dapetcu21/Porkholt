@@ -26,6 +26,7 @@
 @synthesize imagesProperty;
 @synthesize fixturesProperty;
 @synthesize physicsProperty;
+@synthesize initialSelected;
 
 -(id)init
 {

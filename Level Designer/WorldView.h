@@ -11,12 +11,15 @@
 @class WorldController;
 @interface WorldView : NSView {
 	int dragState;
+    int selectModifier;
 	NSRect dragRect;
 	NSPoint dragPoint,initialPoint;
     NSPoint opnt,vel;
     WorldController * controller;
     NSTimer * inscrolltimer;
     int ins,insn;
+    
+    id sender;
 }
 
 -(void)beginDragging:(NSEvent *)theEvent;
@@ -26,5 +29,6 @@
 
 @property(nonatomic,assign) WorldController * controller;
 @property(nonatomic,assign) NSPoint position;
+@property(nonatomic,assign) id sender;
 
 @end
