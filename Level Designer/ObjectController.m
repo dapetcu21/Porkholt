@@ -1148,6 +1148,7 @@
     pos.key = @"pos";
     PHObjectProperty * rotation = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"];
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:fname,rotation,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    prop.parentObject = [self selectedObject];
     NSIndexPath * path = [[self indexPathForProperty:obj.imagesProperty] indexPathByAddingIndex:[[obj.imagesProperty childNodes] count]];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
 }
@@ -1161,6 +1162,7 @@
     PHObjectProperty * pos = [self newPoint:0 :0];
     pos.key = @"pos";
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:shape,circle,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    prop.parentObject = [self selectedObject];
     NSIndexPath * path = [[self indexPathForProperty:obj.fixturesProperty] indexPathByAddingIndex:[[obj.fixturesProperty childNodes] count]];
   [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
 }
@@ -1173,6 +1175,7 @@
     PHObjectProperty * pos = [self newRect:-0.25 :-0.25 :0.5 :0.5];
     pos.key = @"box";
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:shape,rotation,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
+    prop.parentObject = [self selectedObject];
     NSIndexPath * path = [[self indexPathForProperty:obj.fixturesProperty] indexPathByAddingIndex:[[obj.fixturesProperty childNodes] count]];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
 }

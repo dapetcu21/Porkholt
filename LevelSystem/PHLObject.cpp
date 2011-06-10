@@ -106,11 +106,25 @@ void PHLObject::loadBody(void *l)
                             box = PHRect::rectFromLua(L);
                         lua_pop(L,1);
                         
+                        double rot = 0;
+                        lua_pushstring(L, "rotation");
+                        lua_gettable(L, -2);
+                        if (lua_isnumber(L, -1))
+                            rot = lua_tonumber(L, -1);
+                        lua_pop(L,1);
+                        
                         lua_pushstring(L, "circleR");
                         lua_gettable(L, -2);
                         if (lua_isnumber(L, -1))
                             circleR = lua_tonumber(L, -1);
                         lua_pop(L,1);
+                        
+                        PHPoint pos = PHOriginPoint;
+                        lua_pushstring(L, "pos");
+                        lua_gettable(L, -2);
+                        if (lua_istable(L, -1))
+                            pos = PHPoint::pointFromLua(L);
+                        lua_pop(L, 1);
                         
                         //physics attributes
                         double friction = 0.3f;
@@ -166,6 +180,9 @@ void PHLObject::loadBody(void *l)
                             v[1].Set(box.x+box.width,	box.y);
                             v[2].Set(box.x+box.width,	box.y+box.height);
                             v[3].Set(box.x,		box.y+box.height);
+                            b2Vec2 middle(box.x+box.width/2,box.y+box.height/2);
+                            for (int i=0; i<4; i++)
+                                b2RotatePoint(v[i],rot,middle);
                             shape.Set(v,4);
                             fdef.shape = &shape;
                             body->CreateFixture(&fdef);
@@ -174,6 +191,7 @@ void PHLObject::loadBody(void *l)
                         {
                             b2CircleShape shape;
                             shape.m_radius = circleR;
+                            shape.m_p.Set(pos.x,pos.y);
                             fdef.shape = &shape;
                             body->CreateFixture(&fdef);					
                         }

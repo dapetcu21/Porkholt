@@ -95,5 +95,7 @@ PHPoint PHTransformedPoint(const PHPoint & pnt);
 PHPoint PHUnTransformedPoint(const PHPoint & pnt);
 
 void PHLowPassFilter(double & var, double newval, double period, double cutoff);
+struct b2Vec2;
+void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around);
 
 #endif

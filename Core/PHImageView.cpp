@@ -107,7 +107,14 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
             if (lua_isnumber(L, -1))
                 tag = lua_tonumber(L, -1);
             lua_pop(L, 1);
-            
+
+            int rot = 0;
+            lua_pushstring(L, "rotation");
+            lua_gettable(L, -2);
+            if (lua_isnumber(L, -1))
+                rot = lua_tonumber(L, -1);
+            lua_pop(L, 1);
+
             bool flipHoriz = false;
             lua_pushstring(L, "horizontallyFlipped");
             lua_gettable(L, -2);
@@ -142,6 +149,7 @@ PHImageView * PHImageView::imageFromLua(void * l,const string & root)
             img->setTintColor(tint);
             img->setTextureCoordinates(portion);
             img->setFrame(frame);
+            img->setRotation(rot);
             img->setOptimizations(true);
             img->setTag(tag);
             img->setHorizontallyFlipped(flipHoriz);

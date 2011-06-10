@@ -346,8 +346,8 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
         posX.doubleValue = posX.doubleValue+delta.x;
         posY.doubleValue = posY.doubleValue+delta.y;
         NSPoint origin = [self frame].origin;
-        origin.x = posX.doubleValue;
-        origin.y = posY.doubleValue;
+        origin.x+=delta.x;
+        origin.y+=delta.y;
         [self setFrameOrigin:origin];
         [objectView adaptForView:self];
         [property.parentObject modified];
@@ -363,7 +363,6 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
         invdelta.y = -delta.y;
         [[man prepareWithInvocationTarget:self] undoable:man move:invdelta];
         [self move:delta];
-        [property.parentObject modified];
     }
 }
 
