@@ -1,3 +1,4 @@
+/Level Designer/build
 /build
 /Externals/lib
 *.pbxuser
@@ -6,6 +7,8 @@ xcuserdata
 *.xcworkspace
 *.o
 *.lo
+
+.DS_Store
 
 Externals/libpng/.deps/
 Externals/libpng/.libs/
