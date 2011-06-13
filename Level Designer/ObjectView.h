@@ -18,6 +18,7 @@
     BOOL ignoreModified;
     SolidColorView * centerView;
     double extendX,extendY;
+    BOOL hardResetScheduled;
 }
 
 @property(nonatomic,retain) PHObject * object;
@@ -35,5 +36,6 @@
 - (BOOL)pointIntersectsSelf:(NSPoint)pnt;
 
 - (void)adaptForView:(NSView*)v;
+- (void)hardModified;
 
 @end

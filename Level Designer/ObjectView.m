@@ -127,6 +127,8 @@
     PHObjectProperty * prp = object.imagesProperty;
     NSMutableArray * arr = [NSMutableArray array];
     NSArray * props = prp.value;
+    WorldController * wcontroller = object.controller.worldController;
+    BOOL objmode = wcontroller.objectMode && wcontroller.currentObject == object;
     if ([props isKindOfClass:[NSArray class]])
     {
         for (PHObjectProperty * prop in props)
@@ -139,6 +141,9 @@
                 view.type = kSOTImage;
                 view.property = prop;
                 [view bind:@"hidden" toObject:self withKeyPath:@"object.controller.worldController.showImages" options:[NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:NSValueTransformerNameBindingOption]];
+                [view bind:@"showMarkers" toObject:self withKeyPath:@"object.controller.worldController.showMarkers" options:nil];
+                if (objmode)
+                    [view setEditMode:YES];
             } else {
                 [view reloadData];
             }
@@ -153,6 +158,8 @@
     PHObjectProperty * prp = object.fixturesProperty;
     NSMutableArray * arr = [NSMutableArray array];
     NSArray * props = prp.value;
+    WorldController * wcontroller = object.controller.worldController;
+    BOOL objmode = wcontroller.objectMode && wcontroller.currentObject == object;
     if ([props isKindOfClass:[NSArray class]])
     {
         for (PHObjectProperty * prop in props)
@@ -165,6 +172,9 @@
                 view.type = kSOTFixture;
                 view.property = prop;
                 [view bind:@"hidden" toObject:self withKeyPath:@"object.controller.worldController.showFixtures" options:[NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:NSValueTransformerNameBindingOption]];
+                [view bind:@"showMarkers" toObject:self withKeyPath:@"object.controller.worldController.showMarkers" options:nil];
+                if (objmode)
+                    [view setEditMode:YES];
             } else {
                 [view reloadData];
             }
@@ -223,6 +233,7 @@
 
 - (void)rebuildSubviews
 {
+    if (hardResetScheduled) return;
     NSMutableArray * arr = [NSMutableArray array];
     [arr addObjectsFromArray:[self imageViews]];
     [arr addObjectsFromArray:[self fixtureViews]];
@@ -232,10 +243,13 @@
     BOOL doIt = TRUE;
     if (n==[sv count])
     {
+        doIt = FALSE;
         for (int i=0; i<n; i++)
             if ([arr objectAtIndex:i]!=[sv objectAtIndex:i])
+            {
+                doIt = TRUE;
                 break;
-        doIt = FALSE;
+            }
     }
     extendX = extendY = 0.04;
     for (NSView * view in arr)
@@ -281,6 +295,25 @@
     if (fp.x>extendX) extendX = fp.x;
     if (fp.y>extendY) extendY = fp.y;
     [self updatePosition];
+}
+
+- (void)_hardModified
+{
+    hardResetScheduled = NO;
+    NSArray * sv = [self subviews];
+    for (SubObjectView * v in sv)
+        if ([v isKindOfClass:[SubObjectView class]])
+            [v rebuildCachedProperties];
+    [self rebuildSubviews];
+}
+
+- (void)hardModified
+{
+    if (!hardResetScheduled)
+    {
+        hardResetScheduled  = YES;
+        [self performSelector:@selector(_hardModified) withObject:nil afterDelay:0];
+    }
 }
 
 @end

@@ -148,5 +148,13 @@
 	}
 }
 
+-(NSURL*)selectedFile
+{
+    NSArray * arr = [treeController selectedObjects];
+    if ([arr count]!=1) return nil;
+    NSTreeNode * treeNode = [arr objectAtIndex:0];
+    return ((FileSystemNode*)treeNode.representedObject).url;
+    return nil;
+}
 
 @end

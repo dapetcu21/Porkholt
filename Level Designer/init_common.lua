@@ -1,1 +1,0 @@
-../rsrc/scripts/init_common.lua

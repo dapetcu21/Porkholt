@@ -504,6 +504,11 @@
     [view modified];
 }
 
+-(void)hardModified
+{
+    [view hardModified];
+}
+
 -(double)rotation
 {
 	return rotationProperty.doubleValue;

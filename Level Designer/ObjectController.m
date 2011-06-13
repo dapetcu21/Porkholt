@@ -9,6 +9,7 @@
 #import "ObjectController.h"
 #import "PHObject.h"
 #import "PHObjectProperty.h"
+#import "FileBrowserController.h"
 #import "ItemInfoTable.h"
 #import "WorldController.h"
 #import "MyDocument.h"
@@ -571,7 +572,9 @@
             
             [[self undoManager] beginUndoGrouping];
             PHObject * obj = [self selectedObject];
+            willFollow = YES;
             [self removePropertiesAtIndexPaths:deletePaths forObject:obj];
+            willFollow = NO;
             [self insertProperties:movedObjects atIndexPaths:insertPaths forObject:obj];
             NSArray * sib = [self siblingsForIndexPath:insertPath];
             for (PHObjectProperty * prop in movedObjects)
@@ -695,8 +698,14 @@
 	}
 }
 
+-(BOOL)validateMenuItemCommon:(NSMenuItem*)sender
+{
+    return YES;
+}
+
 -(BOOL)validateMenuItem:(NSMenuItem*)sender
 {
+    if (![self validateMenuItemCommon:sender]) return NO;
 	if ([[sender title] isEqual:@"Delete"]||
 		[[sender title] isEqual:@"Duplicate"]||
 		[[sender title] isEqual:@"Copy"])
@@ -901,7 +910,11 @@
     [self fixArrays:arr];
     [man endUndoGrouping];
     [keyController setSelectionIndexPaths:[NSArray array]];
-    [obj modified];
+    if (!willFollow)
+    {
+        [obj hardModified];
+        [obj modified];
+    }
 }
 
 -(void)insertProperties:(NSArray*)props atIndexPaths:(NSArray*)paths forObject:(PHObject*)obj
@@ -914,7 +927,11 @@
     [self fixArrays:[self arraysNeedingFixForIndexPaths:paths]];
     [man endUndoGrouping];
     [keyController setSelectionIndexPaths:paths];
-    [obj modified];
+    if (!willFollow)
+    {
+        [obj hardModified];
+        [obj modified];
+    }
 }
 
 -(IBAction)newProp:(id)sender
@@ -925,6 +942,7 @@
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:@"" ofType:kPHObjectPropertyString forKey:[self proposedPropertyKey:@"untitled" forSiblings:[self siblingsForIndexPath:path] andProp:nil]];
     prop.parentObject = [self selectedObject];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:[self selectedObject]];
+    [itemInfo editColumn:[itemInfo columnWithIdentifier:COLUMNID_KEY] row:[itemInfo rowForItem:[[keyController arrangedObjects] descendantNodeAtIndexPath:path]] withEvent:nil select:YES];
 }
 
 
@@ -1030,11 +1048,59 @@
 	}
 }
 
+-(IBAction)pasteSubObject:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    if (!obj) return;
+    if (obj.readOnly) return;
+	NSPasteboard* cb = [NSPasteboard generalPasteboard];
+	NSString * type = [cb availableTypeFromArray:[NSArray arrayWithObject:kPropertyPBoardType]];
+	if (type)
+	{
+		NSArray * items = [NSKeyedUnarchiver unarchiveObjectWithData:[cb dataForType:type]];
+		
+        NSIndexPath * baseImg = [self indexPathForProperty:obj.imagesProperty];
+        NSIndexPath * baseFix = [self indexPathForProperty:obj.fixturesProperty];
+        int n = [items count];
+        int mi = [obj.imagesProperty.childNodes count];
+        int mf = [obj.fixturesProperty.childNodes count];
+        NSMutableArray * objcts = [NSMutableArray arrayWithCapacity:n];
+        NSMutableArray * ipaths = [NSMutableArray arrayWithCapacity:n];
+        for (PHObjectProperty * prop in items)
+        {
+            if ([prop propertyForKey:@"shape"])
+            {
+                [objcts addObject:prop];
+                [ipaths addObject:[baseFix indexPathByAddingIndex:mf++]];
+            }
+            if ([prop propertyForKey:@"filename"])
+            {
+                [objcts addObject:prop];
+                [ipaths addObject:[baseImg indexPathByAddingIndex:mi++]];
+            }
+        }
+        
+        if ([objcts count]==0)
+        {
+            NSBeep();
+            return;
+        }
+        
+        for (PHObjectProperty * prp in objcts)
+		{
+			prp.mandatory = NO;
+            prp.parentObject = obj;
+		}
+		
+      	[self insertProperties:objcts atIndexPaths:ipaths forObject:[self selectedObject]];
+	}
+}
+
 -(BOOL)validateMenuItemProp:(NSMenuItem*)sender
 {
-    if (![self selectedObject]) return NO;
+    if (![self validateMenuItemCommon:sender]) return NO;
     NSString * title = [sender title];
-    if ([self selectedObject].readOnly)
+    if (![self selectedObject] || [self selectedObject].readOnly)
     {
         if ([title isEqualToString:@"Delete"]||
             [title isEqualToString:@"Duplicate"]||
@@ -1046,6 +1112,8 @@
         [title isEqualToString:@"Duplicate"]||
 		[title isEqualToString:@"Copy"])
 	{
+        if (![self selectedObject])
+            return NO;
 		NSUInteger n = [[keyController selectionIndexPaths] count];
 		if (n==0)
 			return NO;
@@ -1117,6 +1185,30 @@
     [keyController setSelectionIndexPaths:[NSArray array]];
 }
 
+-(IBAction)selectAll:(id)sender
+{
+    [arrayController setSelectionIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,objects.count)]];
+}
+
+-(void)selectAllSubObjects:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    PHObjectProperty * fixtures = obj.fixturesProperty;
+    PHObjectProperty * images = obj.imagesProperty;
+    NSIndexPath * base; 
+    int n,m;
+    n = ((NSArray*)fixtures.value).count;
+    m = ((NSArray*)images.value).count;
+    NSMutableArray * a = [NSMutableArray arrayWithCapacity:n+m];
+    base = [self indexPathForProperty:fixtures];
+    for (int i=0; i<n; i++)
+        [a addObject:[base indexPathByAddingIndex:i]];
+    base = [self indexPathForProperty:images];
+    for (int i=0; i<m; i++)
+        [a addObject:[base indexPathByAddingIndex:i]];
+    [keyController setSelectionIndexPaths:a];
+}
+
 #pragma mark -
 #pragma mark New stuff
 
@@ -1139,12 +1231,43 @@
     return prop;
 }
 
+-(NSString*)urlDiff:(NSURL*)u1 :(NSURL*)u2
+{
+    NSString * s1 = [u1 absoluteString];
+    NSString * s2 = [u2 absoluteString];
+    NSString * common = [s1 commonPrefixWithString:s2 options:NSLiteralSearch];
+    return [s2 substringFromIndex:[common length]];
+}
+
 -(IBAction)newImage:(id)sender
 {
     PHObject * obj = [self selectedObject];
     if (!obj || obj.readOnly) return;
-    PHObjectProperty * fname = [PHObjectProperty propertyWithValue:@"foo.bar" ofType:kPHObjectPropertyString forKey:@"filename"];
-    PHObjectProperty * pos = [self newRect:-0.25 :-0.25 :0.5 :0.5];
+    NSString * filename = @"foo.bar";
+    NSURL * thatURL = [document.browserController.selectedFile standardizedURL];
+    NSURL * base = [[document fileURL] standardizedURL];
+    filename = [self urlDiff:base:thatURL];
+    double x=0.5,y=0.5;
+    NSImage * img = [[NSImage alloc] initWithContentsOfURL:thatURL];
+    if (img)
+    {
+        NSSize size = [img size];
+        if (size.width && size.height)
+        {
+            x = size.width;
+            y = size.height;
+            if (x>y)
+            {
+                y = y/x;
+                x = 1;
+            } else {
+                x = x/y;
+                y = 1;
+            }
+        }
+    }
+    PHObjectProperty * fname = [PHObjectProperty propertyWithValue:filename ofType:kPHObjectPropertyString forKey:@"filename"];
+    PHObjectProperty * pos = [self newRect:-x/2:-y/2:x:y];
     pos.key = @"pos";
     PHObjectProperty * rotation = [PHObjectProperty propertyWithValue:[NSNumber numberWithDouble:0] ofType:kPHObjectPropertyNumber forKey:@"rotation"];
     PHObjectProperty * prop = [PHObjectProperty propertyWithValue:[NSArray arrayWithObjects:fname,rotation,pos,nil] ofType:kPHObjectPropertyTree forKey:@"foobar"];
@@ -1178,6 +1301,163 @@
     prop.parentObject = [self selectedObject];
     NSIndexPath * path = [[self indexPathForProperty:obj.fixturesProperty] indexPathByAddingIndex:[[obj.fixturesProperty childNodes] count]];
     [self insertProperties:[NSArray arrayWithObject:prop] atIndexPaths:[NSArray arrayWithObject:path] forObject:obj];
+}
+
+#pragma mark -
+#pragma mark Move Sub Objects
+
+-(IBAction)bringToFront:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    if (!obj || obj.readOnly) return;
+    NSIndexPath * base;
+    NSArray * array;
+    int p,i,n;
+    NSMutableArray * items = [NSMutableArray array];
+    NSMutableArray * insertpaths = [NSMutableArray array];
+    NSMutableArray * deletepaths = [NSMutableArray array];
+
+    base = [self indexPathForProperty:obj.imagesProperty];
+    array = obj.imagesProperty.childNodes;
+    i = 0;
+    p = 0;
+    n = [array count];
+    for (PHObjectProperty * prop in array)
+    {
+        if (prop.selected)
+        {
+            [items addObject:prop];
+            [deletepaths addObject:[base indexPathByAddingIndex:i]];
+            p++;
+        }
+        i++;
+    }
+    for (i=n-p; i<n; i++)
+        [insertpaths addObject:[base indexPathByAddingIndex:i]];
+    
+    base = [self indexPathForProperty:obj.fixturesProperty];
+    array = obj.fixturesProperty.childNodes;
+    i = 0;
+    p = 0;
+    n = [array count];
+    for (PHObjectProperty * prop in array)
+    {
+        if (prop.selected)
+        {
+            [items addObject:prop];
+            [deletepaths addObject:[base indexPathByAddingIndex:i]];
+            p++;
+        }
+        i++;
+    }
+    for (i=n-p; i<n; i++)
+        [insertpaths addObject:[base indexPathByAddingIndex:i]];
+    
+    if ([items count]==0) 
+    {
+        NSBeep();
+        return;
+    }
+    
+    [[self undoManager] beginUndoGrouping];
+    willFollow = YES;
+    [self removePropertiesAtIndexPaths:deletepaths forObject:obj];
+    willFollow = NO;
+    [self insertProperties:items atIndexPaths:insertpaths forObject:obj];
+    [[self undoManager] endUndoGrouping];
+}
+
+-(IBAction)sendToBack:(id)sender
+{
+    PHObject * obj = [self selectedObject];
+    if (!obj || obj.readOnly) return;
+    NSIndexPath * base;
+    NSArray * array;
+    int p,i;
+    NSMutableArray * items = [NSMutableArray array];
+    NSMutableArray * insertpaths = [NSMutableArray array];
+    NSMutableArray * deletepaths = [NSMutableArray array];
+    
+    base = [self indexPathForProperty:obj.imagesProperty];
+    array = obj.imagesProperty.childNodes;
+    i = 0;
+    p = 0;
+    for (PHObjectProperty * prop in array)
+    {
+        if (prop.selected)
+        {
+            [items addObject:prop];
+            [deletepaths addObject:[base indexPathByAddingIndex:i]];
+            [insertpaths addObject:[base indexPathByAddingIndex:p++]];
+        }
+        i++;
+    }
+    
+    base = [self indexPathForProperty:obj.fixturesProperty];
+    array = obj.fixturesProperty.childNodes;
+    i = 0;
+    p = 0;
+    for (PHObjectProperty * prop in array)
+    {
+        if (prop.selected)
+        {
+            [items addObject:prop];
+            [deletepaths addObject:[base indexPathByAddingIndex:i]];
+            [insertpaths addObject:[base indexPathByAddingIndex:p++]];
+        }
+        i++;
+    }
+    
+    if ([items count]==0) 
+    {
+        NSBeep();
+        return;
+    }
+    
+    [[self undoManager] beginUndoGrouping];
+    willFollow = YES;
+    [self removePropertiesAtIndexPaths:deletepaths forObject:obj];
+    willFollow = NO;
+    [self insertProperties:items atIndexPaths:insertpaths forObject:obj];
+    [[self undoManager] endUndoGrouping];
+}
+
+#pragma mark -
+#pragma mark Matching
+
+-(void)setButtonState:(BOOL)st
+{
+    if ([matchButton state]!=st)
+        [matchButton setState:st];
+}
+
+-(IBAction)buttonChanged:(id)sender
+{
+    if (sender!=matchButton) return;
+    if ([matchButton state])
+        [self match:sender];
+    else
+        [self endMatch:sender];
+}
+
+-(IBAction)toggleMatching:(id)sender
+{
+    [self match:sender];
+}
+
+-(IBAction)match:(id)sender
+{
+    [self setButtonState:YES];
+}
+
+-(IBAction)endMatch:(id)sender
+{
+    [self setButtonState:NO];
+}
+
+-(void)commitMatch
+{
+    
 }
 
 @end

@@ -8,6 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef struct
+{
+    double x,y,w,h,r,rot;
+} positionState;
+
 @class ObjectView;
 @class PHObjectProperty;
 @interface SubObjectView : NSView {
@@ -28,6 +33,14 @@
     PHObjectProperty * rad;
     PHObjectProperty * sh;
     PHObjectProperty * rot;
+    
+    NSTrackingArea * trackingArea;
+    
+    int dragTag;
+    NSPoint dragPoint;
+    positionState initialState;
+    
+    BOOL showMarkers;
 }
 
 enum kSubObjectViewType
@@ -61,5 +74,16 @@ enum kSubObjectViewShape
 +(BOOL)rect:(NSRect)r1 inView:(NSView*)v1 intersectsRect:(NSRect)r2 inView:(NSView*)v2;
 -(BOOL)intersectsRect:(NSRect)rect fromView:(NSView*)v;
 -(BOOL)intersectsPoint:(NSPoint)pnt;
+
+-(int)resizeAreaHit:(NSPoint)pnt;
+-(void)beginDrag:(NSEvent*)theEvent withResizeArea:(int)tag;
+-(void)moveDrag:(NSEvent*)theEvent;
+-(void)endDrag:(NSEvent*)theEvent;
+
+-(void)setEditMode:(BOOL)val;
+
+-(BOOL)resetAspectRatioUndoable:(NSUndoManager*)um ;
+
+@property(nonatomic,assign)BOOL showMarkers;
 
 @end

@@ -39,6 +39,7 @@
 @property(nonatomic,readonly) PHObject * currentObject;
 @property(nonatomic,readonly) ObjectController * objectController;
 @property(nonatomic,assign) MyDocument * document;
+@property(nonatomic,readonly) WorldView * worldView;
 
 -(void)updateSubviews;
 -(NSUndoManager*)undoManager;

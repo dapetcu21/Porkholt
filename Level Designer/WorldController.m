@@ -22,6 +22,7 @@
 @synthesize currentObject;
 @synthesize objectController;
 @synthesize document;
+@synthesize worldView;
 
 -(BOOL)objectMode
 {
@@ -30,6 +31,7 @@
 
 -(void)setObjectMode:(BOOL)val
 {
+    if (objectMode == val) return;
     if (val)
     {
         if (![objectController selectedObject]||[objectController selectedObject].readOnly)
@@ -39,13 +41,16 @@
         }
         objectMode = YES;
         currentObject = [objectController selectedObject];
+        [worldView setObjectEdit:YES];
     }
     else
     {
         objectMode = NO;
-        currentObject = NO;
+        [worldView setObjectEdit:NO];
+        currentObject = nil;
     }
     [worldView cancelAllDrags];
+    
 }
 
 +(void)initialize
@@ -102,13 +107,9 @@
     PHObject * sel = [objectController selectedObject];
 	if (objectMode)
     {
-        if ((!sel||sel.readOnly))
-            [self setObjectMode:NO];
-        else
-        {
-            [worldView cancelAllDrags];
-            currentObject = sel;    
-        }
+        [self setObjectMode:NO];
+        if ((sel && !sel.readOnly))
+            [self setObjectMode:YES];
     }
     if (sel)
         [objectController expandStuff];
@@ -170,5 +171,4 @@
 {
     return [document undoManager];
 }
-
 @end

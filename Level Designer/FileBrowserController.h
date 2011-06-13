@@ -29,5 +29,6 @@
 -(void)clear;
 -(void)setRootURL:(NSURL *)path;
 
+-(NSURL*)selectedFile;
 
 @end

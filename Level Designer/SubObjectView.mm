@@ -42,27 +42,58 @@
     [super dealloc];
 }
 
+-(BOOL)showMarkers
+{
+    return showMarkers;
+}
+
+-(void)setShowMarkers:(BOOL)val
+{
+    showMarkers = val;
+    [self setNeedsDisplay:YES];
+}
+
+#define HANDLEWIDTH 0.01f
+#define RESIZEHANDLE 0.02f
+
 - (void)drawRect:(NSRect)dirtyRect
 {
+    NSRect bounds = [self bounds];
     if (failed)
     {
-        [[NSImage imageNamed:NSImageNameCaution] drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
+        [[NSImage imageNamed:NSImageNameCaution] drawInRect:bounds fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
         return;
     }
     if (type==kSOTImage)
-        [img drawInRect:[self bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
+        [img drawInRect:bounds fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.0f];
     else
     {
         NSBezierPath * bpath;
+        NSRect rect = bounds;
+        rect.size.width-=HANDLEWIDTH;
+        rect.size.height-=HANDLEWIDTH;
+        rect.origin.x+=HANDLEWIDTH/2;
+        rect.origin.y+=HANDLEWIDTH/2;
         if (shape==kSOSRect)
-            bpath = [NSBezierPath bezierPathWithRect:[self bounds]];
+            bpath = [NSBezierPath bezierPathWithRect:rect];
         if (shape==kSOSCircle)
-            bpath = [NSBezierPath bezierPathWithOvalInRect:[self bounds]];
-        [bpath setLineWidth:0.01f];
+            bpath = [NSBezierPath bezierPathWithOvalInRect:rect];
+        [bpath setLineWidth:HANDLEWIDTH];
         [[NSColor colorWithCalibratedRed:0.06 green:0.3 blue:0.66 alpha:0.7] setFill];
         [[NSColor greenColor] setStroke];
         [bpath fill];
         [bpath stroke];
+    }
+    if (shape==kSOSRect && trackingArea && showMarkers)
+    {
+        [[NSColor redColor] setFill];
+        for (int i=0; i<4; i++)
+        {
+            NSBezierPath * bpath = [NSBezierPath bezierPathWithRect:
+                     NSMakeRect(bounds.origin.x+(i&1?(bounds.size.width-RESIZEHANDLE*2):0),
+                                bounds.origin.y+(i&2?(bounds.size.height-RESIZEHANDLE*2):0),RESIZEHANDLE*2,RESIZEHANDLE*2)];
+            [bpath fill];
+        }
     }
 }
 
@@ -80,8 +111,8 @@
 -(void)reloadData
 {
     [self weakRebuildCachedProperties];
-    NSRect frame = NSMakeRect(-0.2,-0.2,0.4,0.4);
     BOOL fail = NO;
+    NSRect frame = NSMakeRect(-0.2,-0.2,0.4,0.4);
     double rota = 0;
     if (shape==kSOSRect)
     {
@@ -124,7 +155,7 @@
         if (path)
         {
             NSString * nimg = path.stringValue;
-            if (![imagePath isEqualToString:nimg] || failed)
+            if (failed || ![imagePath isEqualToString:nimg])
             {
                 [nimg retain];
                 [imagePath release];
@@ -154,6 +185,7 @@
     type = t;
 //    [self rebuildCachedProperties];
 //    [self reloadData];
+
 }
         
 - (int)shape
@@ -296,14 +328,23 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 
 -(void)mouseDown:(NSEvent *)theEvent
 {
-    if (!objectView.object.controller.worldController.objectMode)
+    PHObject * obj = objectView.object;
+    WorldController * cntr = obj.controller.worldController;
+    if (!cntr.objectMode || cntr.currentObject != obj)
     {
         [super mouseDown:theEvent];
         return;
     }
-    if (![self intersectsPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]])
+    NSPoint pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    if (![self intersectsPoint:pnt])
     {
         [super mouseDown:theEvent];
+        return;
+    }
+    int tag;
+    if (tag=[self resizeAreaHit:pnt])
+    {
+        [self beginDrag:theEvent withResizeArea:tag];
         return;
     }
     WorldView * view = (WorldView*)[[self superview] superview];
@@ -318,15 +359,15 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
         }
 		else
 		{
-			if (objectView.object.readOnly)
+			if (obj.readOnly)
             {
 				[super mouseDown:theEvent];
                 return;
             }
 			if (!property.selected)
             {
-                ObjectController * controller = objectView.object.controller;
-                [controller selectObject:objectView.object];
+                ObjectController * controller = obj.controller;
+                [controller selectObject:obj];
                 [controller clearPropertySelection];
                 property.selected = YES;
             }
@@ -337,6 +378,22 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 		[super mouseDown:theEvent];
 	}
     
+}
+
+-(void)mouseDragged:(NSEvent*)theEvent
+{
+    if (dragTag)
+        [self moveDrag:theEvent];
+    else
+        [super mouseDragged:theEvent];
+}
+
+-(void)mouseUp:(NSEvent*)theEvent
+{
+    if (dragTag)
+        [self endDrag:theEvent];
+    else
+        [super mouseUp:theEvent];
 }
 
 -(void)move:(NSPoint)delta
@@ -350,7 +407,9 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
         origin.y+=delta.y;
         [self setFrameOrigin:origin];
         [objectView adaptForView:self];
+        objectView.ignoreModified = YES;
         [property.parentObject modified];
+        objectView.ignoreModified = NO;
     }
 }
 
@@ -380,10 +439,11 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     while (val>=360)
         val-=360;
     rot.doubleValue = val;
-    [self setFrameCenterRotation:0];
     [self setFrameCenterRotation:-val];
     [objectView adaptForView:self];
+    objectView.ignoreModified = YES;
     [property.parentObject modified];
+    objectView.ignoreModified = NO;
 }
 
 -(BOOL)supportsRotation
@@ -395,6 +455,150 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 {
     [[man prepareWithInvocationTarget:self] setRotation:self.rotation];
     [self setRotation:val];
+}
+
+-(void)setEditMode:(BOOL)val
+{
+     if (val)
+     {
+         trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect 
+                                                     options:NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect
+                                                       owner:self
+                                                    userInfo:nil];
+         [self addTrackingArea:trackingArea];
+     } else {
+         [self removeTrackingArea:trackingArea];
+         [trackingArea release];
+         trackingArea = nil;
+     }
+    [self setNeedsDisplay:YES];
+}
+
+#pragma mark -
+#pragma mark Resizing
+
+-(void)beginDrag:(NSEvent*)theEvent withResizeArea:(int)tag
+{
+    
+}
+
+-(void)moveDrag:(NSEvent*)theEvent
+{
+    
+}
+
+-(void)endDrag:(NSEvent*)theEvent
+{
+    
+}
+
+-(int)resizeAreaHit:(NSPoint)pnt
+{
+    if (failed)
+        return 0;
+    if (shape == kSOSRect)
+    {
+        NSRect bounds = [self bounds];
+        if (!NSPointInRect(pnt,bounds))
+            return 0;
+        if ((pnt.x<=RESIZEHANDLE*2)&&(pnt.y<=RESIZEHANDLE*2)) return 1|4;
+        if ((pnt.x>=bounds.size.width-RESIZEHANDLE*2)&&(pnt.y<=RESIZEHANDLE*2)) return 2|4;
+        if ((pnt.x<=RESIZEHANDLE*2)&&(pnt.y>=bounds.size.height-RESIZEHANDLE*2)) return 1|8;
+        if ((pnt.x>=bounds.size.width-RESIZEHANDLE*2)&&(pnt.y>=bounds.size.height-RESIZEHANDLE*2)) return 2|8;
+        if (pnt.x<=RESIZEHANDLE) return 1;
+        if (pnt.x>=bounds.size.width-RESIZEHANDLE) return 2;
+        if (pnt.y<=RESIZEHANDLE) return 4;
+        if (pnt.y>=bounds.size.height-RESIZEHANDLE) return 8;
+    }
+    return 0;
+}
+
+-(void)updateCursorWithEvent:(NSEvent*)theEvent
+{
+    if (dragTag)
+        [[NSCursor closedHandCursor] set];
+    if ([self resizeAreaHit:[self convertPoint:[theEvent locationInWindow] fromView:nil]])
+    {
+        [[NSCursor openHandCursor] set];
+    } else 
+        [[NSCursor arrowCursor] set];
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+    [self updateCursorWithEvent:theEvent];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    [self updateCursorWithEvent:theEvent];
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    [self updateCursorWithEvent:theEvent];
+}
+
+-(void)saveState:(positionState&)st
+{
+    st.x = posX.doubleValue;
+    st.y = posY.doubleValue;
+    st.w = posW.doubleValue;
+    st.h = posH.doubleValue;
+    st.r = rad.doubleValue;
+    st.rot = rot.doubleValue;
+}
+
+-(void)loadState:(const positionState&)st
+{
+    [self weakRebuildCachedProperties];
+    if (posX)
+        posX.doubleValue = st.x;
+    if (posY)
+        posY.doubleValue = st.y;
+    if (posW)
+        posW.doubleValue = st.w;
+    if (posH)
+        posH.doubleValue = st.h;
+    if (rad)
+        rad.doubleValue = st.r;
+    if (rot)
+        rot.doubleValue = st.rot;
+    [self reloadData];
+    [objectView adaptForView:self];
+}
+
+-(void)undoable:(NSUndoManager*)man loadState:(positionState)st
+{
+    positionState current;
+    [self saveState:current];
+    [[man prepareWithInvocationTarget:self] undoable:man loadState:current];
+    [self loadState:st];
+}
+
+-(void)undoable:(NSUndoManager*)man intoState:(positionState) state
+{
+    [[man prepareWithInvocationTarget:self] undoable:man loadState:state];
+}
+
+-(BOOL)resetAspectRatioUndoable:(NSUndoManager*)um
+{
+    if (type != kSOTImage) return NO;
+    [self weakRebuildCachedProperties];
+    if (!img) return NO;
+    NSSize sz = [img size];
+    if (!sz.width || !sz.height) return NO;
+    if (!posX || !posY || !posW || !posH) return NO;
+    positionState crr;
+    [self saveState:crr];
+    double nh;
+    posH.doubleValue = nh = sz.height/sz.width*posW.doubleValue;
+    if (crr.rot)
+        posY.doubleValue = crr.y-(nh-crr.h)/2;
+    [self reloadData];
+    [objectView adaptForView:self];
+    [self undoable:um intoState:crr];
+    return YES;
 }
 
 @end

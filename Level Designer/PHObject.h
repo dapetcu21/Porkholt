@@ -53,6 +53,7 @@
 -(void)saveToFile:(NSMutableString*)file;
 
 -(void)modified;
+-(void)hardModified;
 
 -(void)updateSelected:(BOOL)val;
 

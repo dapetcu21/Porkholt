@@ -587,4 +587,96 @@ double min(double a, double b) { return a<b?a:b; }
     [self endRotate];
 }
 
+- (void)setObjectEdit:(BOOL)val
+{
+    ObjectView *  view = controller.currentObject.view;
+    NSArray * sv = view.subviews;
+    for (SubObjectView * so in sv)
+        if ([so isKindOfClass:[SubObjectView class]])
+            [so setEditMode:val];
+}
+
+#pragma mark -
+#pragma mark Cut, copy, paste
+
+-(IBAction)new:(id)_sender
+{
+    if (controller.objectMode)
+        [controller.objectController newImage:_sender];
+    else
+        [controller.objectController new:_sender];
+}
+
+-(IBAction)delete:(id)_sender
+{
+    if (controller.objectMode)
+        [controller.objectController deleteProp:_sender];
+    else
+        [controller.objectController delete:_sender];
+}
+
+-(IBAction)duplicate:(id)_sender
+{
+    if (controller.objectMode)
+        [controller.objectController duplicateProp:_sender];
+    else
+        [controller.objectController duplicate:_sender];
+}
+
+-(IBAction)copy:(id)_sender
+{
+    if (controller.objectMode)
+        [controller.objectController copyProp:_sender];
+    else
+        [controller.objectController copy:_sender];    
+}
+
+-(IBAction)paste:(id)_sender
+{
+    if (controller.objectMode)
+        [controller.objectController pasteSubObject:_sender];
+    else
+        [controller.objectController paste:_sender];    
+}
+
+-(BOOL)validateMenuItem:(NSMenuItem*)_sender
+{
+    if (controller.objectMode)
+        return [controller.objectController validateMenuItemProp:_sender];
+    else
+        return [controller.objectController validateMenuItem:_sender];
+}
+
+-(IBAction)selectAll:(id)_sender
+{
+    if (controller.objectMode)
+    {
+        [controller.objectController selectAllSubObjects:_sender];
+    } else {
+        [controller.objectController selectAll:_sender];
+    }
+}
+
+#pragma mark -
+#pragma mark Misc Features
+
+-(IBAction)resetAspectRatio:(id)sender
+{
+    ObjectView *  view = controller.objectController.selectedObject.view;
+    NSArray * sv = view.subviews;
+    BOOL smth = NO;
+    NSUndoManager * man = controller.undoManager;
+    [man beginUndoGrouping];
+    for (SubObjectView * so in sv)
+        if ([so isKindOfClass:[SubObjectView class]])
+            if (so.property.selected)
+                smth = smth || [so resetAspectRatioUndoable:man];
+    [man endUndoGrouping];
+    if (!smth)
+    {
+        [man undo];
+        NSBeep();
+    }
+}
+
 @end

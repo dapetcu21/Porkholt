@@ -8,12 +8,15 @@
 
 #import "MyDocument.h"
 #import "ObjectController.h"
+#import "WorldController.h"
 #import "FileBrowserController.h"
 
 @implementation MyDocument
 @synthesize bundle;
 @synthesize initScript;
-
+@synthesize objectController;
+@synthesize browserController;
+@synthesize worldController;
 - (id)init
 {
     self = [super init];
@@ -26,6 +29,9 @@
 {
 	[bundle release];
 	[initScript release];
+    [objectController release];
+    [browserController release];
+    [worldController release];
 	[super dealloc];
 }
 
@@ -106,6 +112,16 @@
 	[objectController paste:sender];
 }
 
+-(IBAction)scrollToOrigin:(id)sender
+{
+    [worldController.worldView scrollToOrigin:sender];
+}
+
+-(IBAction)resetAspectRatio:(id)sender
+{
+    [worldController.worldView resetAspectRatio:sender];
+}
+
 -(BOOL)validateMenuItem:(NSMenuItem*)sender
 {
 	return [objectController validateMenuItem:sender];
@@ -113,13 +129,29 @@
 
 -(NSURL*)resourceURLNamed:(NSString*)str
 {
+    if (!str || [str length]==0) return nil;
     if ([str UTF8String][0]=='/')
     {
         str = [str substringFromIndex:1];
-        return nil; //TODO
+        return [[[[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"rsrc"] URLByAppendingPathComponent:@"img"] URLByAppendingPathComponent:str];
     } else {
         return [[self fileURL] URLByAppendingPathComponent:str];
     }
+}
+
+-(IBAction)toggleMatching:(id)sender
+{
+    [objectController toggleMatching:sender];
+}
+
+-(IBAction)sendToBack:(id)sender
+{
+    [objectController sendToBack:sender];
+}
+
+-(IBAction)bringToFront:(id)sender
+{
+    [objectController bringToFront:sender];
 }
 
 @end

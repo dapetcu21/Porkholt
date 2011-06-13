@@ -36,4 +36,16 @@
 @property(nonatomic,assign) NSPoint position;
 @property(nonatomic,assign) id sender;
 
+- (void)setObjectEdit:(BOOL)val;
+
+-(IBAction)new:(id)sender;
+-(IBAction)delete:(id)sender;
+-(IBAction)duplicate:(id)sender;
+-(IBAction)copy:(id)sender;
+-(IBAction)paste:(id)sender;
+-(IBAction)selectAll:(id)sender;
+-(BOOL)validateMenuItem:(NSMenuItem*)sender;
+
+-(IBAction)resetAspectRatio:(id)sender;
+
 @end

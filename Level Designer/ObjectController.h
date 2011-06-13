@@ -33,6 +33,8 @@
 	IBOutlet NSButtonCell * boolCell;
 	IBOutlet NSNumberFormatter * numberFormatter;
 	
+    IBOutlet NSButton * matchButton;
+    
 	int readOnlyCells;
 	
 	BOOL ignoreChange;
@@ -41,6 +43,8 @@
     NSArray * selectedPropsIndexes;
     
     PHObject * selpropsob;
+    
+    BOOL willFollow;
 }
 
 -(void)setObjects:(NSArray*)obj;
@@ -68,6 +72,7 @@
 -(IBAction)copy:(id)sender;
 -(IBAction)paste:(id)sender;
 -(BOOL)validateMenuItem:(NSMenuItem*)sender;
+-(IBAction)selectAll:(id)sender;
 
 -(void)addObjects:(NSArray*)arry atIndexSet:(NSIndexSet*)iSet;
 -(void)deleteIndexSet:(NSIndexSet*)indexSet;
@@ -79,7 +84,9 @@
 -(IBAction)duplicateProp:(id)sender;
 -(IBAction)copyProp:(id)sender;
 -(IBAction)pasteProp:(id)sender;
+-(IBAction)pasteSubObject:(id)sender;
 -(BOOL)validateMenuItemProp:(NSMenuItem*)sender;
+-(IBAction)selectAllSubObjects:(id)sender;
 
 -(void)expandStuff;
 
@@ -97,5 +104,14 @@
 -(IBAction)newImage:(id)sender;
 -(IBAction)newCircle:(id)sender;
 -(IBAction)newSquare:(id)sender;
+
+-(IBAction)sendToBack:(id)sender;
+-(IBAction)bringToFront:(id)sender;
+
+-(IBAction)buttonChanged:(id)sender;
+-(IBAction)match:(id)sender;
+-(IBAction)endMatch:(id)sender;
+-(void)commitMatch;
+-(IBAction)toggleMatching:(id)sender;
 
 @end

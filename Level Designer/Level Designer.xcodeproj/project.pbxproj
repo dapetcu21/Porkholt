@@ -24,7 +24,6 @@
 		C116203E134DE322005F7FB9 /* PHObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C116203D134DE322005F7FB9 /* PHObject.m */; };
 		C116213F134E49BF005F7FB9 /* PHObjectProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C116213E134E49BF005F7FB9 /* PHObjectProperty.m */; };
 		C116230A134EF8FB005F7FB9 /* ItemInfoTable.m in Sources */ = {isa = PBXBuildFile; fileRef = C1162309134EF8FB005F7FB9 /* ItemInfoTable.m */; };
-		C1162515134F63E9005F7FB9 /* init_common.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1162514134F63E9005F7FB9 /* init_common.lua */; };
 		C1162517134F65BD005F7FB9 /* level_des.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1162516134F65BD005F7FB9 /* level_des.lua */; };
 		C11627C61351A7E8005F7FB9 /* prototype.phlevel in Resources */ = {isa = PBXBuildFile; fileRef = C11627BC1351A7E8005F7FB9 /* prototype.phlevel */; };
 		C11627D11351AF45005F7FB9 /* WorldController.m in Sources */ = {isa = PBXBuildFile; fileRef = C11627D01351AF45005F7FB9 /* WorldController.m */; };
@@ -37,6 +36,8 @@
 		C16777921375A8D700B4E247 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16777911375A8D700B4E247 /* QuartzCore.framework */; };
 		C1E0E14D139E68FE009797C6 /* PHDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E0E14C139E68FE009797C6 /* PHDocumentController.m */; };
 		C1E0E175139FA0F9009797C6 /* InheritanceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E0E174139FA0F9009797C6 /* InheritanceController.m */; };
+		C1E0E1A813A4E8AC009797C6 /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C1E0E1A713A4E8AC009797C6 /* rsrc */; };
+		C1E0E1AB13A4EAA2009797C6 /* init_common.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1E0E1AA13A4EAA2009797C6 /* init_common.lua */; };
 		C1ED0381139A53A2004E428A /* SubObjectView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1ED0380139A53A2004E428A /* SubObjectView.mm */; };
 /* End PBXBuildFile section */
 
@@ -75,7 +76,6 @@
 		C116213E134E49BF005F7FB9 /* PHObjectProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHObjectProperty.m; sourceTree = "<group>"; };
 		C1162308134EF8FB005F7FB9 /* ItemInfoTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInfoTable.h; sourceTree = "<group>"; };
 		C1162309134EF8FB005F7FB9 /* ItemInfoTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ItemInfoTable.m; sourceTree = "<group>"; };
-		C1162514134F63E9005F7FB9 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = init_common.lua; sourceTree = "<group>"; };
 		C1162516134F65BD005F7FB9 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level_des.lua; sourceTree = "<group>"; };
 		C11627BC1351A7E8005F7FB9 /* prototype.phlevel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = prototype.phlevel; sourceTree = "<group>"; };
 		C11627CF1351AF45005F7FB9 /* WorldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldController.h; sourceTree = "<group>"; };
@@ -95,6 +95,8 @@
 		C1E0E14C139E68FE009797C6 /* PHDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHDocumentController.m; sourceTree = "<group>"; };
 		C1E0E173139FA0F9009797C6 /* InheritanceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InheritanceController.h; sourceTree = "<group>"; };
 		C1E0E174139FA0F9009797C6 /* InheritanceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InheritanceController.m; sourceTree = "<group>"; };
+		C1E0E1A713A4E8AC009797C6 /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = rsrc; path = ../rsrc; sourceTree = "<group>"; };
+		C1E0E1AA13A4EAA2009797C6 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lua; name = init_common.lua; path = ../rsrc/scripts/init_common.lua; sourceTree = "<group>"; };
 		C1ED037F139A53A2004E428A /* SubObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubObjectView.h; sourceTree = "<group>"; };
 		C1ED0380139A53A2004E428A /* SubObjectView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SubObjectView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,10 +187,11 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C1E0E1A713A4E8AC009797C6 /* rsrc */,
 				C11628FF1351E686005F7FB9 /* cloud.png */,
 				C11627BC1351A7E8005F7FB9 /* prototype.phlevel */,
+				C1E0E1AA13A4EAA2009797C6 /* init_common.lua */,
 				C1162516134F65BD005F7FB9 /* level_des.lua */,
-				C1162514134F63E9005F7FB9 /* init_common.lua */,
 				8D15AC360486D014006FF6A4 /* Level_Designer-Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				1DDD58280DA1D0D100B32029 /* MyDocument.xib */,
@@ -326,10 +329,11 @@
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */,
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
-				C1162515134F63E9005F7FB9 /* init_common.lua in Resources */,
 				C1162517134F65BD005F7FB9 /* level_des.lua in Resources */,
 				C11627C61351A7E8005F7FB9 /* prototype.phlevel in Resources */,
 				C11629001351E686005F7FB9 /* cloud.png in Resources */,
+				C1E0E1AB13A4EAA2009797C6 /* init_common.lua in Resources */,
+				C1E0E1A813A4E8AC009797C6 /* rsrc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
