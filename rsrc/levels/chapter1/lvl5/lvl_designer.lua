@@ -108,70 +108,70 @@ addObject(obj);
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(6.754844,2.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(17.583959,2.281650);
-objectAddImage(obj,[[platform.png]],0.000000,0.000000,2.000000,0.300000);
-objectAddBox(obj,0.000000,0.000000,2.000000,0.300000);
+obj.pos = point(18.063959,2.431650);
+objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(20.997747,3.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(24.225254,4.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(21.391777,6.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(27.302975,5.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(30.272412,6.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(32.148784,6.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(34.047856,6.000000);
+obj.pos = point(34.039500,6.000000);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(35.924227,6.000000);
+obj.pos = point(35.915871,6.002785);
 objectAddImage(obj,[[platform.png]],-1.000000,-0.150000,2.000000,0.300000);
-objectAddBox(obj,0.000000,-0.150000,0.000000,0.300000);
+objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
@@ -184,24 +184,28 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(12.211875,0.752344);
+obj.pos = point(12.199888,0.992093);
+obj.physics.dynamic = true;
 op = {};
 op.rotation = 0.000000;
-objectAddImage(obj,[[box.png]],-0.250000,-0.250000,1.000000,1.000000,op);
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
 op = {};
 op.rotation = 0.000000;
-objectAddBox(obj,-0.250000,-0.250000,1.000000,1.000000,op);
+op.density = 0.300000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(34.669648,6.372784);
+obj.pos = point(35.245047,6.644017);
+obj.physics.dynamic = true;
 op = {};
 op.rotation = 0.000000;
-objectAddImage(obj,[[box.png]],-0.250000,-0.250000,1.000000,1.000000,op);
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
 op = {};
 op.rotation = 0.000000;
-objectAddBox(obj,-0.250000,-0.250000,1.000000,1.000000,op);
+op.density = 0.300000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
 obj.levelDes = true;
 addObject(obj);
 
