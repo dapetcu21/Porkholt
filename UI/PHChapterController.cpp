@@ -27,13 +27,13 @@ PHView * PHChapterController::loadView(const PHRect & frame)
         for (int j=0; j<rows; j++)
         {
             ostringstream oss1,oss2;
-            oss1<<path<<"/lvl"<<j*columns+i<<"/thumb.png";
-            oss2<<path<<"/lvl"<<j*columns+i<<"/thumb_pressed.png";
-            PHRect frame = PHMakeRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*j, levelSize, levelSize);
+            oss1<<path<<"/lvl"<<j*columns+i+1<<"/thumb.png";
+            oss2<<path<<"/lvl"<<j*columns+i+1<<"/thumb_pressed.png";
+            PHRect frame = PHMakeRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*(rows-j-1), levelSize, levelSize);
             PHButtonView * vv = new PHButtonView(frame);
             vv->setImage(PHImage::imageFromPath(oss1.str()));
             vv->setPressedImage(PHImage::imageFromPath(oss2.str()));
-            vv->setUpCallBack(this, (PHCallback)&PHChapterController::mouseUp, (void*)(j*columns+i));
+            vv->setUpCallBack(this, (PHCallback)&PHChapterController::mouseUp, (void*)(j*columns+i+1));
             view->addSubview(vv);
             vv->release();
         }
