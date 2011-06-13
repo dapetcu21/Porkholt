@@ -1,7 +1,7 @@
 require("init_common");
 
 lyr = { scale = 0.3; }
-for i=-2,3 do
+for i=-2,20 do
 	layerAddImage(lyr,"lyr1.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
 end
 addLayer(lyr);
