@@ -22,6 +22,7 @@
     BOOL rotating;
     id sender;
     BOOL isZooming;
+    BOOL isGesture;
 }
 
 -(void)beginDragging:(NSEvent *)theEvent;

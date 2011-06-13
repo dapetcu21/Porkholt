@@ -555,6 +555,7 @@ double min(double a, double b) { return a<b?a:b; }
 
 - (void)beginGestureWithEvent:(NSEvent *)event
 {
+    isGesture = YES;
 }
 
 - (void)endGestureWithEvent:(NSEvent *)event
@@ -562,6 +563,7 @@ double min(double a, double b) { return a<b?a:b; }
     if (!isZooming)
         [self endRotate];
     isZooming = NO;
+    isGesture = NO;
 }
 
 - (void)rotateWithEvent:(NSEvent *)event
