@@ -114,6 +114,7 @@
 		C1A03613132E062300F0200C /* b2Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CC132E062300F0200C /* b2Shape.h */; };
 		C1A03614132E062300F0200C /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CD132E062300F0200C /* Box2D.h */; };
 		C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A034E9132DF62700F0200C /* libBox2D.a */; };
+		C1AF4FBF13A6589A00ED2ED7 /* PHChapterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */; };
 		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
 		C1AF8BE413395F9D0046179B /* AccelerometerSimulation.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1AF8BE313395F9D0046179B /* AccelerometerSimulation.mm */; };
 		C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */; };
@@ -287,6 +288,9 @@
 		C1A035CB132E062300F0200C /* b2PolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2PolygonShape.h; sourceTree = "<group>"; };
 		C1A035CC132E062300F0200C /* b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Shape.h; sourceTree = "<group>"; };
 		C1A035CD132E062300F0200C /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
+		C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHChapterController.cpp; sourceTree = "<group>"; };
+		C1AF4FBE13A6589A00ED2ED7 /* PHChapterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHChapterController.h; sourceTree = "<group>"; };
+		C1AF4FC013A658E400ED2ED7 /* PHUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHUI.h; sourceTree = "<group>"; };
 		C1AF893113387B850046179B /* PHGaugeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGaugeView.h; sourceTree = "<group>"; };
 		C1AF893213387B850046179B /* PHGaugeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGaugeView.cpp; sourceTree = "<group>"; };
 		C1AF8BE213395F9D0046179B /* AccelerometerSimulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerSimulation.h; sourceTree = "<group>"; };
@@ -390,6 +394,7 @@
 			isa = PBXGroup;
 			children = (
 				C17D0F501322A18300BDB8EF /* LevelSystem */,
+				C1AF4FBB13A657BD00ED2ED7 /* UI */,
 				C152809312B9713E009067A7 /* Core */,
 				080E96DDFE201D6D7F000001 /* iOS Bindings */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -425,14 +430,12 @@
 		C152809312B9713E009067A7 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C163951812BA3FD000B0A72E /* PHMain.h */,
 				C152809412B97169009067A7 /* PHMainEvents.h */,
 				C152809512B97169009067A7 /* PHMainEvents.cpp */,
 				C152809A12B971A7009067A7 /* PHObject.h */,
-				C163951812BA3FD000B0A72E /* PHMain.h */,
 				C1852D6112BBD40700EF0BB8 /* PHView.h */,
 				C1852D6212BBD40700EF0BB8 /* PHView.cpp */,
-				C17B480A130719FF00C2EC8D /* PHTestView.h */,
-				C17B480B130719FF00C2EC8D /* PHTestView.cpp */,
 				C1B9D658130264F0002BE2BE /* PHGeometry.h */,
 				C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */,
 				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
@@ -453,12 +456,8 @@
 				C11855A3130FDF09004F341A /* PHMotion.cpp */,
 				C1185A07131426F9004F341A /* PHViewController.h */,
 				C1185A08131426F9004F341A /* PHViewController.cpp */,
-				C1185A42131441C2004F341A /* PHTestViewController.h */,
-				C1185A43131441C2004F341A /* PHTestViewController.cpp */,
 				C126D6321317D6FC00DACBC0 /* PHNavigationController.h */,
 				C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */,
-				C192A11213185B5000C18BA2 /* PHButtonView.h */,
-				C192A11313185B5000C18BA2 /* PHButtonView.cpp */,
 				C11E56CA13436F14008881B9 /* PHMessage.h */,
 				C11E56CB13436F14008881B9 /* PHMessage.cpp */,
 				C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */,
@@ -634,6 +633,22 @@
 				C1A035CC132E062300F0200C /* b2Shape.h */,
 			);
 			path = Shapes;
+			sourceTree = "<group>";
+		};
+		C1AF4FBB13A657BD00ED2ED7 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				C1AF4FC013A658E400ED2ED7 /* PHUI.h */,
+				C17B480A130719FF00C2EC8D /* PHTestView.h */,
+				C17B480B130719FF00C2EC8D /* PHTestView.cpp */,
+				C1185A42131441C2004F341A /* PHTestViewController.h */,
+				C1185A43131441C2004F341A /* PHTestViewController.cpp */,
+				C192A11213185B5000C18BA2 /* PHButtonView.h */,
+				C192A11313185B5000C18BA2 /* PHButtonView.cpp */,
+				C1AF4FBE13A6589A00ED2ED7 /* PHChapterController.h */,
+				C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -838,6 +853,7 @@
 				C1D6A2181382A31C0010009E /* PHLAuxLayer.cpp in Sources */,
 				C1D6A21C13831DEF0010009E /* PHAuxLayerView.cpp in Sources */,
 				C1F1DE17138B963500C8051C /* PHLPlatform.cpp in Sources */,
+				C1AF4FBF13A6589A00ED2ED7 /* PHChapterController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -56,16 +56,15 @@ using namespace std;
 
 #include "PHView.h"
 #include "PHAuxLayerView.h"
-#include "PHTestView.h"
 #include "PHImageView.h"
-#include "PHButtonView.h"
+
 
 #include "PHMainEvents.h"
 
 #include "PHViewController.h"
-#include "PHTestViewController.h"
 #include "PHNavigationController.h"
 
+#include "PHUI.h"
 #include "PHLevelSystem.h"
 
 #endif
