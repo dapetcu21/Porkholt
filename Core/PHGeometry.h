@@ -93,6 +93,8 @@ PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt);
 PHPoint PHUnTransformPointMatrix(const GLfloat * m, const PHPoint & pnt);
 PHPoint PHTransformedPoint(const PHPoint & pnt);
 PHPoint PHUnTransformedPoint(const PHPoint & pnt);
+bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
+
 
 void PHLowPassFilter(double & var, double newval, double period, double cutoff);
 struct b2Vec2;

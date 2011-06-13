@@ -43,7 +43,11 @@ void PHButtonView::touchEvent(PHTouch * touch)
 	if (touch->phase() == PHTouch::touchUpState)
 	{
 		_state = StateUp;
-		if (tgUp)
+		if (tgUp && PHPointInRect(toMyCoordinates(touch->location()),bounds()))
 			(tgUp->*cbUp)(this,udUp);
 	}
+    if (touch->phase() == PHTouch::touchMovedState)
+        _state = PHPointInRect(toMyCoordinates(touch->location()),bounds())?StateDown:StateUp;
+    if (touch->phase() == PHTouch::touchCancelledState)
+        _state = StateUp;
 }

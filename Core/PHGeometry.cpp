@@ -218,3 +218,10 @@ void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around)
     p = pp;
     p = p+around;
 }
+
+bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)
+{
+    if (pnt.x<rect.x || pnt.x>rect.x+rect.width) return false;
+    if (pnt.y<rect.y || pnt.y>rect.y+rect.height) return false;
+    return true;
+}
