@@ -218,7 +218,7 @@
 		C192A11313185B5000C18BA2 /* PHButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHButtonView.cpp; sourceTree = "<group>"; };
 		C1A034E9132DF62700F0200C /* libBox2D.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBox2D.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A03582132E062300F0200C /* b2Body.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Body.cpp; sourceTree = "<group>"; };
-		C1A03583132E062300F0200C /* b2Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = b2Body.h; path = Externals/box2d/Box2D/Box2D/Dynamics/b2Body.h; sourceTree = "<group>"; };
+		C1A03583132E062300F0200C /* b2Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Body.h; sourceTree = "<group>"; };
 		C1A03584132E062300F0200C /* b2ContactManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2ContactManager.cpp; sourceTree = "<group>"; };
 		C1A03585132E062300F0200C /* b2ContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2ContactManager.h; sourceTree = "<group>"; };
 		C1A03586132E062300F0200C /* b2Fixture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Fixture.cpp; sourceTree = "<group>"; };
@@ -393,7 +393,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				C1A03583132E062300F0200C /* b2Body.h */,
 				C17D0F501322A18300BDB8EF /* LevelSystem */,
 				C1AF4FBB13A657BD00ED2ED7 /* UI */,
 				C152809312B9713E009067A7 /* Core */,
@@ -525,6 +524,7 @@
 			isa = PBXGroup;
 			children = (
 				C1A03582132E062300F0200C /* b2Body.cpp */,
+				C1A03583132E062300F0200C /* b2Body.h */,
 				C1A03584132E062300F0200C /* b2ContactManager.cpp */,
 				C1A03585132E062300F0200C /* b2ContactManager.h */,
 				C1A03586132E062300F0200C /* b2Fixture.cpp */,
