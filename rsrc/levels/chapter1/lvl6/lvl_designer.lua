@@ -11,7 +11,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(169.881397,-6.203529);
+obj.pos = point(160.582092,-6.203529);
 op = {};
 op.rotation = 0.000000;
 objectAddBox(obj,-0.250000,-0.250000,10.000000,0.500000,op);
@@ -19,7 +19,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(204.205476,-6.203529);
+obj.pos = point(188.223697,-6.061011);
 op = {};
 op.rotation = 0.000000;
 objectAddBox(obj,-0.250000,-0.250000,10.000000,0.500000,op);
@@ -95,7 +95,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(145.152150,-5.214346);
+obj.pos = point(141.460792,-5.105217);
 obj.rotation = 10.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -108,7 +108,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(161.522530,-6.683248);
+obj.pos = point(157.831172,-6.574119);
 obj.rotation = 350.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -121,7 +121,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(153.306162,-6.651458);
+obj.pos = point(149.614804,-6.542329);
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[grass.png]],0.000000,-0.150000,4.400000,0.400000);
@@ -133,7 +133,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(179.442586,-5.214895);
+obj.pos = point(170.143281,-5.214895);
 obj.rotation = 10.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -146,7 +146,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(195.812966,-6.683797);
+obj.pos = point(186.513661,-6.683797);
 obj.rotation = 350.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -159,7 +159,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(187.596598,-6.652007);
+obj.pos = point(178.297293,-6.652007);
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[grass.png]],0.000000,-0.150000,4.400000,0.400000);
@@ -171,7 +171,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(213.663992,-5.376098);
+obj.pos = point(197.682213,-5.233580);
 obj.rotation = 10.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -184,7 +184,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(230.034372,-6.845000);
+obj.pos = point(214.052593,-6.702482);
 obj.rotation = 350.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -197,7 +197,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(221.818004,-6.813210);
+obj.pos = point(205.836225,-6.670692);
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[grass.png]],0.000000,-0.150000,4.400000,0.400000);
@@ -285,7 +285,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(238.194795,-5.392221);
+obj.pos = point(222.213016,-5.249703);
 obj.rotation = 10.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -304,7 +304,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(254.005032,-8.189393);
+obj.pos = point(238.023253,-8.046875);
 obj.rotation = 10.000000;
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
@@ -323,7 +323,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(269.862093,-10.987090);
+obj.pos = point(253.880314,-10.844572);
 objectAddImage(obj,[[ground.png]],0.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[ground.png]],2.000000,-0.750000,2.200000,1.000000);
 objectAddImage(obj,[[grass.png]],0.000000,-0.150000,4.400000,0.400000);
@@ -407,7 +407,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(141.031658,-3.150932);
+obj.pos = point(139.293116,-3.102298);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -415,7 +415,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(175.043797,-1.978019);
+obj.pos = point(53.738611,0.624925);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -423,7 +423,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(209.505912,-0.505091);
+obj.pos = point(64.006152,-1.200050);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -431,7 +431,117 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(284.936545,-11.368309);
+obj.pos = point(73.284817,-3.100783);
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(167.777107,-3.153801);
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(196.317992,-3.458280);
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(238.963631,-6.424150);
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(19.131207,-1.371392);
+obj.physics.dynamic = true;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
+op = {};
+op.density = 0.300000;
+op.rotation = 0.000000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(43.640940,1.366451);
+obj.physics.dynamic = true;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
+op = {};
+op.density = 0.300000;
+op.rotation = 0.000000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(85.342491,-3.881207);
+obj.physics.dynamic = true;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
+op = {};
+op.density = 0.300000;
+op.rotation = 0.000000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(100.552390,-3.350154);
+obj.physics.dynamic = true;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
+op = {};
+op.density = 0.300000;
+op.rotation = 0.000000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(228.043272,-4.338019);
+obj.physics.dynamic = true;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
+op = {};
+op.density = 0.300000;
+op.rotation = 0.000000;
+objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(260.052668,-9.042759);
+obj.physics.dynamic = true;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[box.png]],-0.500000,-0.500000,2.000000,2.000000,op);
+op = {};
+op.density = 0.300000;
+op.rotation = 0.000000;
+objectAddBox(obj,-0.500000,-0.500000,2.000000,2.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(268.954766,-11.225791);
 op = {};
 op.rotation = 0.000000;
 objectAddBox(obj,-0.250000,-0.250000,10.000000,20.000000,op);
