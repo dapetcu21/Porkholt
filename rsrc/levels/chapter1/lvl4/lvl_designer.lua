@@ -3,7 +3,7 @@
 --file is reset every time you use the Level Designer
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.258906,0.741563);
+obj.pos = point(0.274865,0.813477);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -14,7 +14,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.282344,2.235703);
+obj.pos = point(0.298303,2.307617);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -25,7 +25,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.800000,1.741641);
+obj.pos = point(0.815959,1.813555);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -36,7 +36,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.317656,2.741719);
+obj.pos = point(0.333615,2.813633);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -47,7 +47,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.847031,2.765156);
+obj.pos = point(0.862990,2.837070);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -58,7 +58,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.599844,3.247500);
+obj.pos = point(0.615803,3.319414);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -69,7 +69,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.270781,1.764844);
+obj.pos = point(0.286740,1.836758);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -80,7 +80,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.258906,1.270781);
+obj.pos = point(0.274865,1.342695);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -91,7 +91,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.788281,0.741563);
+obj.pos = point(0.804240,0.813477);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -102,7 +102,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.811719,2.259492);
+obj.pos = point(0.827678,2.331406);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
@@ -113,7 +113,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.788281,1.270781);
+obj.pos = point(0.804240,1.342695);
 op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[box.png]],-0.250000,-0.250000,0.500000,0.500000,op);
