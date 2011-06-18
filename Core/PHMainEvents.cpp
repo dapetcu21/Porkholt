@@ -8,6 +8,7 @@
  */
 
 #include "PHMain.h"
+#include "PHRemote.h"
 
 PHMainEvents * PHMainEvents::sharedInstance()
 {
@@ -26,6 +27,11 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	indTiming = false;
 	
 	PHThread::mainThread();
+
+#ifdef PH_SIMULATOR
+    remote = new PHRemote;
+    remote->start();
+#endif
 	
 	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
 	view->setBackgroundColor(PHGrayColor);
@@ -51,6 +57,13 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	((PHNavigationController*)viewController)->pushViewController(vc);
 }
 
+void PHMainEvents::processInput()
+{
+#ifdef PH_SIMULATOR
+    remote->processPendingPackets();
+#endif
+}
+
 void PHMainEvents::renderFrame(double timeElapsed)
 {	
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -58,7 +71,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 		
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
+    
 	PHView::updateAnimation(timeElapsed);
 	
 	if (viewController)  
@@ -80,6 +93,9 @@ void PHMainEvents::appSuspended()
 		viewController->_viewDidDisappear();
 	}
 	PHLog("appSuspended");
+#ifdef PH_SIMULATOR
+    remote->stop();
+#endif
 }
 
 void PHMainEvents::appResumed()
@@ -93,6 +109,9 @@ void PHMainEvents::appResumed()
 		viewController->_viewWillAppear();
 		viewController->_viewDidAppear();
 	}
+#ifdef PH_SIMULATOR
+    remote->start();
+#endif
 }
 
 void PHMainEvents::appQuits()
@@ -100,6 +119,9 @@ void PHMainEvents::appQuits()
 	//This isn't guaranteed to be called
 	//Save all stuff in PHMainEvents::appSuspended()
 	PHLog("appQuits");
+#ifdef PH_SIMULATOR
+    delete remote;
+#endif
 }
 
 void PHMainEvents::memoryWarning()

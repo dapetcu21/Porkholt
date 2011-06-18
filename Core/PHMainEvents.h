@@ -14,6 +14,8 @@
 
 class PHView;
 class PHViewController;
+class PHRemote;
+
 
 class PHMainEvents : public PHObject
 {
@@ -25,6 +27,12 @@ private:
 	int fps;
 	bool suspended;
 	bool indTiming;
+    
+#ifdef PH_SIMULATOR
+    PHRemote * remote;
+#endif
+    
+    
 public:
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
@@ -42,6 +50,8 @@ public:
 	
 	bool independentTiming() { return indTiming; };
 	void setIndependentTiming(bool i) { indTiming = i; };
+    
+    void processInput();
 };
 
 #endif

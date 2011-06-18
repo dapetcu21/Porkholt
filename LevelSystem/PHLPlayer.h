@@ -22,10 +22,13 @@ private:
     PHView * worldView;
     PHPoint normal;
     double touchesSomething;
+    int forceGap;
 public:
 	PHLPlayer();
 	virtual ~PHLPlayer();
 	
+    bool isUsingForce() { return forceGap; }
+    
 	void updateControls(list<PHPoint> * queue);
 	
 	virtual void loadFromLua(void * L, const string & root,b2World * world);

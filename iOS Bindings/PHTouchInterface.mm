@@ -9,7 +9,6 @@
 #import "PHTouchInterface.h"
 #import "PHMain.h"
 #import "PHAccelInterface.h"
-#import "AccelerometerSimulation.h"
 
 PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 
@@ -22,7 +21,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 		PHTouchInterfaceSingleton = self;
 		self.multipleTouchEnabled = YES;
 		[UIAccelerometer sharedAccelerometer].delegate=self;
-		[UIAccelerometer sharedAccelerometer].updateInterval=1.0f/60;
+ 
 		mutex = new PHMutex;
 		queue.clear();
     }

@@ -57,6 +57,7 @@ public:
 			targetTime+= frameInterval;
 			
 			[PHTouchInterfaceSingleton processQueue];
+            mainClass->processInput();
 			[view setFramebuffer];
 			
 			lastTime = time;

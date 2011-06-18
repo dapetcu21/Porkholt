@@ -12,7 +12,7 @@
 
 PHView * playerView = NULL;
 
-PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL), touchesSomething(false), normal(PHOriginPoint)
+PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL), touchesSomething(false), normal(PHOriginPoint), forceGap(0)
 {
 	_class = "PHLPlayer";
 }
@@ -106,10 +106,14 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         touchesSomething -= 1.0f/(double)fps;
     }
 	wrld->setJumpGauge(jumpGauge);
-    bodyView->setTrailSize(forceUsed?10:0);
+    if (forceUsed)
+        forceGap = 4;
+    bodyView->setTrailSize(forceGap?10:0);
     b2Vec2 speed = body->GetLinearVelocity();
     if (faceView&&(abs(speed.x)>=0.1))
         faceView->setHorizontallyFlipped(speed.x<0);
+    if (forceGap>0)
+        forceGap--;
 }
 
 void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)
