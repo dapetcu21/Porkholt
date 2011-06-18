@@ -3,7 +3,7 @@
 //  PHRemote
 //
 //  Created by Marius Petcu on 6/17/11.
-//  Copyright 2011 Home. All rights reserved.
+//  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
 #import "FlipsideViewController.h"
@@ -29,7 +29,7 @@
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
-    if (!sendAcc && (!sendTouch || queue.empty())) return;
+    if (!(sendAcc && acceleration) && (!sendTouch || queue.empty())) return;
     remote.beginPacket(0xAC);
     URField accfield;
     if (sendAcc && acceleration)
