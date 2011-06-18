@@ -448,7 +448,7 @@
 				C13E6C0D13AC78A800365340 /* URServer.h */,
 			);
 			name = uremote;
-			path = PHRemote/libudpremote;
+			path = PHRemote/uremote;
 			sourceTree = "<group>";
 		};
 		C152809312B9713E009067A7 /* Core */ = {
