@@ -3,7 +3,7 @@
 //  Porkholt
 //
 //  Created by Marius Petcu on 12/15/10.
-//  Copyright 2010 Home. All rights reserved.
+//  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
 #import "PorkholtAppDelegate.h"

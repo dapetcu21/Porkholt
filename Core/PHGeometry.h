@@ -3,7 +3,7 @@
  *  Porkholt
  *
  *  Created by Marius Petcu on 2/9/11.
- *  Copyright 2011 Home. All rights reserved.
+ *  Copyright 2011 Porkholt Labs!. All rights reserved.
  *
  */
 

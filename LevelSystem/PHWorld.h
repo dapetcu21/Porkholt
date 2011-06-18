@@ -3,7 +3,7 @@
  *  Porkholt_iOS
  *
  *  Created by Marius Petcu on 3/5/11.
- *  Copyright 2011 Home. All rights reserved.
+ *  Copyright 2011 Porkholt Labs!. All rights reserved.
  *
  */
 

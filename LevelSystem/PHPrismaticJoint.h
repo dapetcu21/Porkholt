@@ -3,7 +3,7 @@
 //  Porkholt_iOS
 //
 //  Created by Marius Petcu on 5/14/11.
-//  Copyright 2011 Home. All rights reserved.
+//  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
 #ifndef INSIDE_PHJOINT_H

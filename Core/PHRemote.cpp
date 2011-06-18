@@ -3,7 +3,7 @@
 //  Porkholt_iOS
 //
 //  Created by Marius Petcu on 6/18/11.
-//  Copyright 2011 Home. All rights reserved.
+//  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
 #include "PHMain.h"
@@ -24,7 +24,6 @@ void PHRemote::recievedPacket(uint8_t signature, const URField * const * fields,
 {
     if (signature == 0xAC)
     {
-        PHAcceleration accel;
         int state = -1;
         PHPoint pnt;
         uint32_t x=0,y=0,w=1,h=1;
@@ -76,14 +75,15 @@ void PHRemote::recievedPacket(uint8_t signature, const URField * const * fields,
             }
             if (tag==0x01)
             {
+                PHAcceleration accel;
                 if (fields[i]->length()<sizeof(uint64_t)*3) continue;
                 int64_t * arr = (int64_t*)fields[i]->asInt64s();
                 accel.x = arr[0]/1048576.0f;
                 accel.y = arr[1]/1048576.0f;
                 accel.z = arr[2]/1048576.0f;
+                PHAccelInterface::setAcceleration(accel);
                 delete[] arr;
             }
         }
-        PHAccelInterface::setAcceleration(accel);
     }
 }
