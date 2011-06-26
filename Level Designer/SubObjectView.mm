@@ -495,19 +495,99 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 #pragma mark -
 #pragma mark Resizing
 
+-(double)squareDistanceForPoint:(NSPoint)pnt
+{
+    NSRect bounds = [self bounds];
+    pnt.x-=bounds.origin.x + bounds.size.width/2;
+    pnt.y-=bounds.origin.y + bounds.size.height/2;
+    double sqdist = pnt.x*pnt.x+pnt.y*pnt.y;
+    return sqdist;
+}
+
+-(void)updateCursorWithEvent:(NSEvent*)theEvent
+{
+    if (dragTag)
+        [[NSCursor closedHandCursor] set];
+    else
+        if ([self resizeAreaHit:[self convertPoint:[theEvent locationInWindow] fromView:nil]])
+        {
+            [[NSCursor openHandCursor] set];
+        } else 
+            [[NSCursor arrowCursor] set];
+}
+
 -(void)beginDrag:(NSEvent*)theEvent withResizeArea:(int)tag
 {
-    
+    [self saveState:initialState];
+    dragTag = tag;
+    dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    if (shape==kSOSCircle)
+        dragRadius = sqrt([self squareDistanceForPoint:dragPoint]);
+    [self updateCursorWithEvent:theEvent];
 }
 
 -(void)moveDrag:(NSEvent*)theEvent
 {
-    
+    NSPoint pnt = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    if (shape==kSOSCircle && dragTag==1)
+    {
+        double radius = sqrt([self squareDistanceForPoint:pnt]);
+        rad.doubleValue = rad.doubleValue + radius - dragRadius;
+        dragRadius = radius;
+        [self reloadData];
+        [objectView adaptForView:self];
+        dragPoint = pnt;
+    }
+    if (shape==kSOSRect && dragTag!=0)
+    {
+        NSPoint p = pnt;
+        p.x-=dragPoint.x;
+        p.y-=dragPoint.y;
+        NSRect extend = NSZeroRect;
+        if (dragTag&1)
+        {
+            extend.origin.x+=p.x;
+            extend.size.width-=p.x;
+        }
+        if (dragTag&4)
+        {
+            extend.origin.y+=p.y;
+            extend.size.height-=p.y;
+        }
+        if (dragTag&2)
+            extend.size.width+=p.x;
+        if (dragTag&8)
+            extend.size.height+=p.y;
+        if (self.rotation!=0)
+        {
+            extend.origin.x = -extend.size.width;
+            extend.origin.y = -extend.size.height;
+            extend.size.width*=2;
+            extend.size.height*=2;
+        }
+        
+        positionState st;
+        [self saveState:st];
+        st.x+=extend.origin.x;
+        st.y+=extend.origin.y;
+        st.w+=extend.size.width;
+        st.h+=extend.size.height;
+        if ((st.w>0)&&(st.h>0))
+        {
+            [self loadState:st];
+            dragPoint = pnt;
+            dragPoint.x-=extend.origin.x;
+            dragPoint.y-=extend.origin.y;
+        }
+    }
+    [self updateCursorWithEvent:theEvent];
 }
 
 -(void)endDrag:(NSEvent*)theEvent
 {
-    
+    [self undoable:property.parentObject.controller.undoManager intoState:initialState];
+    dragTag = 0;
+    [self updateCursorWithEvent:theEvent];
 }
 
 -(int)resizeAreaHit:(NSPoint)pnt
@@ -528,18 +608,14 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
         if (pnt.y<=RESIZEHANDLE) return 4;
         if (pnt.y>=bounds.size.height-RESIZEHANDLE) return 8;
     }
-    return 0;
-}
-
--(void)updateCursorWithEvent:(NSEvent*)theEvent
-{
-    if (dragTag)
-        [[NSCursor closedHandCursor] set];
-    if ([self resizeAreaHit:[self convertPoint:[theEvent locationInWindow] fromView:nil]])
+    if (shape == kSOSCircle)
     {
-        [[NSCursor openHandCursor] set];
-    } else 
-        [[NSCursor arrowCursor] set];
+        double sqdist = [self squareDistanceForPoint:pnt];
+        double r = rad.doubleValue;
+        if (sqdist<=(r+RESIZEHANDLE/2)*(r+RESIZEHANDLE/2) && sqdist>=(r-RESIZEHANDLE)*(r-RESIZEHANDLE))
+            return 1;
+    }
+    return 0;
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent
@@ -566,6 +642,7 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     st.r = rad.doubleValue;
     st.rot = rot.doubleValue;
 }
+
 
 -(void)loadState:(const positionState&)st
 {

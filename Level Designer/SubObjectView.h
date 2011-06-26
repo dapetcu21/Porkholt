@@ -39,6 +39,7 @@ typedef struct
     int dragTag;
     NSPoint dragPoint;
     positionState initialState;
+    double dragRadius;
     
     BOOL showMarkers;
 }
@@ -83,6 +84,13 @@ enum kSubObjectViewShape
 -(BOOL)resetAspectRatioUndoable:(NSUndoManager*)um;
 
 -(BOOL)undoable:(NSUndoManager*)man matchWith:(SubObjectView*)source;
+
+#ifdef __cplusplus
+-(void)saveState:(positionState&)st;
+-(void)loadState:(const positionState&)st;
+-(void)undoable:(NSUndoManager*)man loadState:(positionState)state;
+-(void)undoable:(NSUndoManager*)man intoState:(positionState)state;
+#endif
 
 @property(nonatomic,readonly)double radius;
 @property(nonatomic,readonly)NSSize size;
