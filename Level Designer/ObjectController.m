@@ -12,6 +12,8 @@
 #import "FileBrowserController.h"
 #import "ItemInfoTable.h"
 #import "WorldController.h"
+#import "WorldView.h"
+#import "SubObjectView.h"
 #import "MyDocument.h"
 #include <stdlib.h>
 #include <string.h>
@@ -29,6 +31,7 @@
 @synthesize worldController;
 @synthesize keyController;
 @synthesize arrayController;
+@synthesize isMatching;
 
 -(MyDocument*)document
 {
@@ -1427,8 +1430,13 @@
 
 -(void)setButtonState:(BOOL)st
 {
+    [self setIsMatching:st];
     if ([matchButton state]!=st)
         [matchButton setState:st];
+    if (st)
+        [matchButton setTitle:@"Cancel"];
+    else
+        [matchButton setTitle:@"Match"];
 }
 
 -(IBAction)buttonChanged:(id)sender
@@ -1442,22 +1450,49 @@
 
 -(IBAction)toggleMatching:(id)sender
 {
-    [self match:sender];
+    if (!toBeMatched)
+        [self match:sender];
+    else
+        [self endMatch:sender];
 }
 
 -(IBAction)match:(id)sender
 {
+    toBeMatched = [[worldController.worldView selectedSubObjects] retain];
     [self setButtonState:YES];
 }
 
 -(IBAction)endMatch:(id)sender
 {
+    [toBeMatched release];
+    toBeMatched = nil;
     [self setButtonState:NO];
 }
 
--(void)commitMatch
+-(IBAction)commitMatch:(id)sender
 {
-    
+    NSArray * arr = [worldController.worldView selectedSubObjects];
+    SubObjectView * source = (([arr count]>=1)?[arr objectAtIndex:0]:nil);
+    BOOL matchedSomething = NO;
+    NSUndoManager * man = [self undoManager];
+    [man beginUndoGrouping];
+    if (source)
+    {
+        for (SubObjectView * view in toBeMatched)
+            matchedSomething = matchedSomething || [view undoable:man matchWith:source];
+    }
+    [man endUndoGrouping];
+    if (!matchedSomething)
+    {
+        NSBeep();
+        [man undo];
+    }
+    [self endMatch:sender];
+}
+
+-(BOOL)isMatching
+{
+    return (toBeMatched!=nil);
 }
 
 @end

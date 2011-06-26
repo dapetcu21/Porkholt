@@ -45,6 +45,9 @@
     PHObject * selpropsob;
     
     BOOL willFollow;
+    
+    NSArray *  toBeMatched;
+    BOOL isMatching;
 }
 
 -(void)setObjects:(NSArray*)obj;
@@ -111,7 +114,9 @@
 -(IBAction)buttonChanged:(id)sender;
 -(IBAction)match:(id)sender;
 -(IBAction)endMatch:(id)sender;
--(void)commitMatch;
+-(IBAction)commitMatch:(id)sender;
 -(IBAction)toggleMatching:(id)sender;
+
+@property(nonatomic,assign) BOOL isMatching;
 
 @end

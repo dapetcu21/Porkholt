@@ -66,8 +66,6 @@ enum kSubObjectViewShape
 
 -(void)undoable:(NSUndoManager*)man move:(NSPoint)delta;
 -(void)move:(NSPoint)delta;
--(double)rotation;
--(void)setRotation:(double)val;
 -(BOOL)supportsRotation;
 -(void)undoable:(NSUndoManager*)man setRotation:(double)val;
 
@@ -82,7 +80,14 @@ enum kSubObjectViewShape
 
 -(void)setEditMode:(BOOL)val;
 
--(BOOL)resetAspectRatioUndoable:(NSUndoManager*)um ;
+-(BOOL)resetAspectRatioUndoable:(NSUndoManager*)um;
+
+-(BOOL)undoable:(NSUndoManager*)man matchWith:(SubObjectView*)source;
+
+@property(nonatomic,readonly)double radius;
+@property(nonatomic,readonly)NSSize size;
+@property(nonatomic,readonly)NSPoint position;
+@property(nonatomic,assign)double rotation;
 
 @property(nonatomic,assign)BOOL showMarkers;
 

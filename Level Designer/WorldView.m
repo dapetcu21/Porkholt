@@ -681,4 +681,19 @@ double min(double a, double b) { return a<b?a:b; }
     }
 }
 
+-(NSArray*)selectedSubObjects
+{
+    NSMutableArray * arr = [[[NSMutableArray alloc] init] autorelease];
+    ObjectView *  view = controller.currentObject.view;
+    NSArray * sv = view.subviews;
+    for (SubObjectView * view in sv)
+    {
+        if (![view isKindOfClass:[SubObjectView class]]) continue;
+        PHObjectProperty * property = view.property;
+        if (!property.selected) continue;
+        [arr addObject:view];
+    }
+    return arr;
+}
+
 @end

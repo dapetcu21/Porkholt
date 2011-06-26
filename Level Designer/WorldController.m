@@ -171,4 +171,5 @@
 {
     return [document undoManager];
 }
+
 @end

@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.SystemVersion">10K540</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1306</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.AppKitVersion">1038.36</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -428,6 +428,25 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
+								<object class="NSMenuItem" id="734876095">
+									<reference key="NSMenu" ref="671289465"/>
+									<string key="NSTitle">Commit Match</string>
+									<string key="NSKeyEquiv">T</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="823099598">
+									<reference key="NSMenu" ref="671289465"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 								<object class="NSMenuItem" id="989614048">
 									<reference key="NSMenu" ref="671289465"/>
 									<string key="NSTitle">Reset Aspect Ratio</string>
@@ -764,6 +783,14 @@
 						<reference key="destination" ref="458470890"/>
 					</object>
 					<int key="connectionID">660</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">commitMatch:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="734876095"/>
+					</object>
+					<int key="connectionID">664</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1131,6 +1158,8 @@
 							<reference ref="106991206"/>
 							<reference ref="880367966"/>
 							<reference ref="667543656"/>
+							<reference ref="734876095"/>
+							<reference ref="823099598"/>
 						</object>
 						<reference key="parent" ref="562136594"/>
 					</object>
@@ -1172,6 +1201,16 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">656</int>
 						<reference key="object" ref="667543656"/>
+						<reference key="parent" ref="671289465"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">661</int>
+						<reference key="object" ref="734876095"/>
+						<reference key="parent" ref="671289465"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">663</int>
+						<reference key="object" ref="823099598"/>
 						<reference key="parent" ref="671289465"/>
 					</object>
 				</object>
@@ -1265,6 +1304,8 @@
 					<string>654.IBPluginDependency</string>
 					<string>655.IBPluginDependency</string>
 					<string>656.IBPluginDependency</string>
+					<string>661.IBPluginDependency</string>
+					<string>663.IBPluginDependency</string>
 					<string>72.IBPluginDependency</string>
 					<string>72.ImportedFromIB2</string>
 					<string>73.IBPluginDependency</string>
@@ -1374,6 +1415,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
@@ -1407,7 +1450,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">660</int>
+			<int key="maxID">664</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1470,6 +1513,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>bringToFront:</string>
+							<string>commitMatch:</string>
 							<string>duplicate:</string>
 							<string>expandDown:</string>
 							<string>expandLeft:</string>
@@ -1484,6 +1528,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1503,6 +1548,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>bringToFront:</string>
+							<string>commitMatch:</string>
 							<string>duplicate:</string>
 							<string>expandDown:</string>
 							<string>expandLeft:</string>
@@ -1519,6 +1565,10 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">bringToFront:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">commitMatch:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -1641,6 +1691,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>bringToFront:</string>
+							<string>commitMatch:</string>
 							<string>copy:</string>
 							<string>delete:</string>
 							<string>duplicate:</string>
@@ -1653,6 +1704,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1670,6 +1722,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>bringToFront:</string>
+							<string>commitMatch:</string>
 							<string>copy:</string>
 							<string>delete:</string>
 							<string>duplicate:</string>
@@ -1684,6 +1737,10 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">bringToFront:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">commitMatch:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -1844,6 +1901,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>bringToFront:</string>
 							<string>buttonChanged:</string>
+							<string>commitMatch:</string>
 							<string>copy:</string>
 							<string>copyProp:</string>
 							<string>delete:</string>
@@ -1867,6 +1925,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1897,6 +1956,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>bringToFront:</string>
 							<string>buttonChanged:</string>
+							<string>commitMatch:</string>
 							<string>copy:</string>
 							<string>copyProp:</string>
 							<string>delete:</string>
@@ -1926,6 +1986,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">buttonChanged:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">commitMatch:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

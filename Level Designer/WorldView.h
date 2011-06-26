@@ -49,4 +49,6 @@
 
 -(IBAction)resetAspectRatio:(id)sender;
 
+-(NSArray*)selectedSubObjects;
+
 @end

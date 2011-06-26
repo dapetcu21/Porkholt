@@ -86,7 +86,10 @@
     }
     if (shape==kSOSRect && trackingArea && showMarkers)
     {
-        [[NSColor redColor] setFill];
+        if (property.selected)
+            [[NSColor colorWithCalibratedRed:0.5f green:0.5f blue:1.0f alpha: 1.0f] setFill];
+        else
+            [[NSColor redColor] setFill];
         for (int i=0; i<4; i++)
         {
             NSBezierPath * bpath = [NSBezierPath bezierPathWithRect:
@@ -270,16 +273,16 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     }
     y = r.origin.y;
     x = p1.x-(p1.x-p2.x)*(p1.y-y)/(p1.y-p2.y);
-    if (x>=r.origin.x && x<=r.origin.x+r.size.width && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    if (x>=r.origin.x && x<=r.origin.x+r.size.width && x<=maxX && x>=maxX && y<=maxY && y>=minY) return YES;
     y = r.origin.y+r.size.height;
     x = p1.x-(p1.x-p2.x)*(p1.y-y)/(p1.y-p2.y);
-    if (x>=r.origin.x && x<=r.origin.x+r.size.width && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    if (x>=r.origin.x && x<=r.origin.x+r.size.width && x<=maxX && x>=maxX && y<=maxY && y>=minY) return YES;
     x = r.origin.x;
     y = p1.y-(p1.y-p2.y)*(p1.x-x)/(p1.x-p2.x);
-    if (y>=r.origin.y && y<=r.origin.y+r.size.height && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    if (y>=r.origin.y && y<=r.origin.y+r.size.height && x<=maxX && x>=maxX && y<=maxY && y>=minY) return YES;
     x = r.origin.x+r.size.width;
     y = p1.y-(p1.y-p2.y)*(p1.x-x)/(p1.x-p2.x);
-    if (y>=r.origin.y && y<=r.origin.y+r.size.height && x<=maxX && x>=maxY && y<=maxY && y>=minY) return YES;
+    if (y>=r.origin.y && y<=r.origin.y+r.size.height && x<=maxX && x>=maxX && y<=maxY && y>=minY) return YES;
     return NO;
 }
 
@@ -446,6 +449,21 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     objectView.ignoreModified = NO;
 }
 
+-(double)radius
+{
+    return rad.doubleValue;
+}
+
+-(NSSize)size
+{
+    return NSMakeSize(posW.doubleValue,posH.doubleValue);
+}
+
+-(NSPoint)position
+{
+    return NSMakePoint(posX.doubleValue,posY.doubleValue);
+}
+
 -(BOOL)supportsRotation
 {
     return (rot && rot.type == kPHObjectPropertyNumber);
@@ -598,6 +616,28 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     [self reloadData];
     [objectView adaptForView:self];
     [self undoable:um intoState:crr];
+    return YES;
+}
+
+-(BOOL)undoable:(NSUndoManager*)man matchWith:(SubObjectView*)source
+{
+    positionState crr;
+    [self saveState:crr];
+    posX.doubleValue = source.position.x;
+    posY.doubleValue = source.position.y;
+    if (shape==kSOSRect && source.shape==kSOSRect)
+    {
+        posW.doubleValue = source.size.width;
+        posH.doubleValue = source.size.height;
+        rot.doubleValue = source.rotation;
+    }   
+    if (shape==kSOSCircle && source.shape==kSOSCircle)
+    {
+        rad.doubleValue = source.radius;
+    }
+    [self undoable:man intoState:crr];
+    [self reloadData];
+    [objectView adaptForView:self];
     return YES;
 }
 

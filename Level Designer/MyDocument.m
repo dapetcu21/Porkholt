@@ -144,6 +144,11 @@
     [objectController toggleMatching:sender];
 }
 
+-(IBAction)commitMatch:(id)sender
+{
+    [objectController commitMatch:sender];
+}
+
 -(IBAction)sendToBack:(id)sender
 {
     [objectController sendToBack:sender];
@@ -153,5 +158,6 @@
 {
     [objectController bringToFront:sender];
 }
+
 
 @end

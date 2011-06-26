@@ -38,6 +38,7 @@
 -(NSURL*)resourceURLNamed:(NSString*)str;
 
 -(IBAction)toggleMatching:(id)sender;
+-(IBAction)commitMatch:(id)sender;
 -(IBAction)sendToBack:(id)sender;
 -(IBAction)bringToFront:(id)sender;
 
