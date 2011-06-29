@@ -24,7 +24,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
 	return new PHLObject;
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false)
 {
 }
 
@@ -210,8 +210,17 @@ void PHLObject::loadFromLua(void * l, const string & root, b2World * _world)
 	world = _world;
 	lua_State * L = (lua_State*)l;
     
-    pos = PHOriginPoint;
+    hasScripting = false;
+    lua_pushstring(L, "scripting");
+    lua_gettable(L, -2);
+    if (lua_isstring(L, -1))
+    {
+        hasScripting = true;
+        scriptingName = lua_tostring(L, -1);
+    }
+    lua_pop(L,1);
     
+    pos = PHOriginPoint;
 	lua_pushstring(L, "pos");
 	lua_gettable(L, -2);
 	if (lua_istable(L, -1))
@@ -425,4 +434,26 @@ void PHLObject::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* old
 void PHLObject::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)
 {
     
+}
+
+#pragma mark -
+#pragma mark scripting
+
+void PHLObject::scriptingInit(void * l)
+{
+    if (!hasScripting) return;
+    lua_State * L = (lua_State*)l;
+    lua_getglobal(L, _class.c_str());
+    lua_pushstring(L, "new");
+    lua_gettable(L, -2);
+    lua_getglobal(L, _class.c_str());
+    lua_pushnil(L);
+    lua_pushlightuserdata(L, this);
+    int err = lua_pcall(L,3,1,0);
+    if (err) {
+		PHLog("Lua: %s",lua_tostring(L,-1));
+		lua_pop(L, 1);
+    } else 
+        lua_setglobal(L, scriptingName.c_str());
+    lua_pop(L, 1);
 }

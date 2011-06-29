@@ -50,6 +50,9 @@ protected:
     void addJoint(PHJoint * joint);
     void removeJoint(PHJoint * joint);
     
+    bool hasScripting;
+    string scriptingName;
+    
 	friend class PHLevelController;
 	friend class PHWorld;
 	friend class PHJoint;
@@ -86,6 +89,8 @@ public:
     virtual void contactEnd(bool b,b2Contact* contact);
     virtual void contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold);
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
+    
+    void scriptingInit(void * l);
 };
 #undef INSIDE_PHLOBJECT_H
 #endif

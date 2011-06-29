@@ -12,6 +12,7 @@
 
 #include "PHLevelController.h"
 #include "PHWorld.h"
+#include "PHScripting.h"
 
 #include "PHJoint.h"
 #include "PHDistanceJoint.h"

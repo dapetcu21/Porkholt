@@ -14,6 +14,13 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
+--casele
+obj = objectWithClass("PHObject");
+objectAddImage(obj,"city_bg.png",0,0,10.8,3.67574257425744);
+obj.pos = point(1.038489,-0.20);
+obj.rotation = 0.000000;
+obj.scripting = "houses";
+addObject(obj);
 
 
 --podu
@@ -82,7 +89,16 @@ obj.pos = point(0,0);
 obj.name = 20;
 addObject(obj);
 
-
+--wrecking ball
+obj = objectWithClass("PHLObject");
+ballr = 211/512;
+scale = 1.4;
+obj.pos = point(17,3.5-(2-ballr)*scale);
+obj.physics.dynamic = true;
+obj.scripting = "wrecker"
+objectAddCircle(obj,ballr*scale);
+objectAddImage(obj,"wrecking_ball.png",-0.5*scale,-ballr*scale,1*scale,2*scale);
+bilos=obj;
 
 addObject(bilos);
 addObject(platforma3);
@@ -99,6 +115,7 @@ addJoint(joint);
 obj = objectWithClass("PHLCamera");
 obj.pos = point(3,1.75);
 obj.camH = 4;
+obj.scripting = "camera";
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
@@ -114,6 +131,7 @@ addObject(obj);
 
 obj = objectWithClass("PHLPlayer");
 obj.pos = point(1.5,2.75);
+obj.scripting = "player"
 addObject(obj);
 
 --pamant

@@ -30,6 +30,7 @@
 		C13E6C1313AC78C100365340 /* URServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C1013AC78C100365340 /* URServer.cpp */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
+		C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177803D13BBA4F50003640D /* PHTimer.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
 		C17B484B1307B82300C2EC8D /* PHImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484A1307B82300C2EC8D /* PHImage.cpp */; };
 		C17B484E1307B83000C2EC8D /* PHImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484D1307B83000C2EC8D /* PHImageView.cpp */; };
@@ -118,6 +119,7 @@
 		C1A03613132E062300F0200C /* b2Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CC132E062300F0200C /* b2Shape.h */; };
 		C1A03614132E062300F0200C /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CD132E062300F0200C /* Box2D.h */; };
 		C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A034E9132DF62700F0200C /* libBox2D.a */; };
+		C1A8855413B87E1F00A1A402 /* PHScripting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1A8855213B87E1F00A1A402 /* PHScripting.cpp */; };
 		C1AF4FBF13A6589A00ED2ED7 /* PHChapterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */; };
 		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
 		C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */; };
@@ -195,6 +197,8 @@
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
 		C1707D77137D13D400395313 /* PHJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1707D78137D13D400395313 /* PHJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C177803D13BBA4F50003640D /* PHTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTimer.cpp; sourceTree = "<group>"; };
+		C177803E13BBA4F50003640D /* PHTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTimer.h; sourceTree = "<group>"; };
 		C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
 		C17B480A130719FF00C2EC8D /* PHTestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestView.h; sourceTree = "<group>"; };
 		C17B480B130719FF00C2EC8D /* PHTestView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestView.cpp; sourceTree = "<group>"; };
@@ -300,6 +304,8 @@
 		C1A035CB132E062300F0200C /* b2PolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2PolygonShape.h; sourceTree = "<group>"; };
 		C1A035CC132E062300F0200C /* b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Shape.h; sourceTree = "<group>"; };
 		C1A035CD132E062300F0200C /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
+		C1A8855213B87E1F00A1A402 /* PHScripting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScripting.cpp; sourceTree = "<group>"; };
+		C1A8855313B87E1F00A1A402 /* PHScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScripting.h; sourceTree = "<group>"; };
 		C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHChapterController.cpp; sourceTree = "<group>"; };
 		C1AF4FBE13A6589A00ED2ED7 /* PHChapterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHChapterController.h; sourceTree = "<group>"; };
 		C1AF4FC013A658E400ED2ED7 /* PHUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHUI.h; sourceTree = "<group>"; };
@@ -488,6 +494,8 @@
 				C1D6A21B13831DEE0010009E /* PHAuxLayerView.h */,
 				C13E6BFC13AC780400365340 /* PHRemote.cpp */,
 				C13E6BFD13AC780400365340 /* PHRemote.h */,
+				C177803E13BBA4F50003640D /* PHTimer.h */,
+				C177803D13BBA4F50003640D /* PHTimer.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -498,6 +506,8 @@
 				C17D0F521322A1AB00BDB8EF /* PHLevelSystem.h */,
 				C17D0F531322A31000BDB8EF /* PHLevelController.h */,
 				C17D0F541322A31000BDB8EF /* PHLevelController.cpp */,
+				C1A8855313B87E1F00A1A402 /* PHScripting.h */,
+				C1A8855213B87E1F00A1A402 /* PHScripting.cpp */,
 				C17D0F561322AD7700BDB8EF /* PHWorld.h */,
 				C17D0F571322AD7700BDB8EF /* PHWorld.cpp */,
 				C1C359231323C08000D3A95A /* PHLua.h */,
@@ -886,6 +896,8 @@
 				C13E6C1113AC78C100365340 /* URCommon.cpp in Sources */,
 				C13E6C1213AC78C100365340 /* URField.cpp in Sources */,
 				C13E6C1313AC78C100365340 /* URServer.cpp in Sources */,
+				C1A8855413B87E1F00A1A402 /* PHScripting.cpp in Sources */,
+				C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

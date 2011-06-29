@@ -45,6 +45,7 @@ private:
 	
 	friend class PHLevelController;
 	friend class PHJoint;
+    friend class PHScripting;
     
 	double _jumpGauge,maxJump,jumpGrowth;
 	PHGaugeView * jumpGaugeView;

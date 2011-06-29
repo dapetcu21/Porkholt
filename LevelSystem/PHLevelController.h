@@ -15,12 +15,14 @@
 class PHWorld;
 class PHButtonView;
 class PHImageView;
+class PHScripting;
 
 class PHLevelController : public PHViewController
 {
 protected:
 	virtual PHView * loadView(const PHRect & frame);
 	PHWorld * world;
+    PHScripting * scripingEngine;
 	PHMutex * mutex;
 	PHSemaphore * pSem1, * pSem2;
 	PHThread * thread;

@@ -76,7 +76,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL)
 {
 }
 
@@ -93,6 +93,10 @@ PHLevelController::~PHLevelController()
 	running = false;
 	thread->join();
 	thread->release();
+    if (scripingEngine)
+    {
+        scripingEngine->release();
+    }
 	if (world)
 	{
 		world->getView()->removeFromSuperview();
@@ -258,6 +262,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     }
 	
 	lua_close(L);
+    
+    scripingEngine = new PHScripting(world,dir);
 	
 	mutex->lock();
 	PHLPlayer * player = world->player;
@@ -301,10 +307,10 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		}
 		camera->updateCamera(player->position());
 		world->updateScene();
+        scripingEngine->scriptingStep(frameInterval);
 		mutex->unlock();
 		pSem1->signal();
-		
-		
+                                      
 		double currentTime = PHTime::getTime();
 		double time = targetTime - currentTime;
 		if (time>0)
