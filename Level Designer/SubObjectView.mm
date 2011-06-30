@@ -480,7 +480,8 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
      if (val)
      {
          trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect 
-                                                     options:NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect
+                                                     options:NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect |
+                                                         NSTrackingCursorUpdate
                                                        owner:self
                                                     userInfo:nil];
          [self addTrackingArea:trackingArea];
@@ -504,11 +505,12 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     return sqdist;
 }
 
--(void)updateCursorWithEvent:(NSEvent*)theEvent
+-(void)cursorUpdate:(NSEvent*)theEvent
 {
     if (dragTag)
+    {
         [[NSCursor closedHandCursor] set];
-    else
+    } else
         if ([self resizeAreaHit:[self convertPoint:[theEvent locationInWindow] fromView:nil]])
         {
             [[NSCursor openHandCursor] set];
@@ -523,7 +525,6 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
     dragPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     if (shape==kSOSCircle)
         dragRadius = sqrt([self squareDistanceForPoint:dragPoint]);
-    [self updateCursorWithEvent:theEvent];
 }
 
 -(void)moveDrag:(NSEvent*)theEvent
@@ -580,14 +581,12 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
             dragPoint.y-=extend.origin.y;
         }
     }
-    [self updateCursorWithEvent:theEvent];
 }
 
 -(void)endDrag:(NSEvent*)theEvent
 {
     [self undoable:property.parentObject.controller.undoManager intoState:initialState];
     dragTag = 0;
-    [self updateCursorWithEvent:theEvent];
 }
 
 -(int)resizeAreaHit:(NSPoint)pnt
@@ -620,17 +619,17 @@ inline BOOL lineIntersectsRect(NSPoint & p1, NSPoint & p2, NSRect & r)
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    [self updateCursorWithEvent:theEvent];
+    [self cursorUpdate:theEvent];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    [self updateCursorWithEvent:theEvent];
+    [self cursorUpdate:theEvent];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-    [self updateCursorWithEvent:theEvent];
+    [self cursorUpdate:theEvent];
 }
 
 -(void)saveState:(positionState&)st
