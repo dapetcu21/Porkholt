@@ -7,12 +7,10 @@
 //
 
 
-#ifndef INSIDE_PHVIEW_H
-#ifndef INSIDE_PHIMAGEVIEW_H
 #ifndef PHTRAILIMAGEVIEW_H
 #define PHTRAILIMAGEVIEW_H
 
-#include "PHMain.h"
+#include "PHImageView.h"
 
 class PHTrailImageView : public PHImageView
 {
@@ -51,6 +49,4 @@ public:
     void pushFrame();
 };
 
-#endif
-#endif
 #endif

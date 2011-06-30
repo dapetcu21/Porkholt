@@ -7,11 +7,10 @@
  *
  */
 
-#ifndef INSIDE_PHVIEWCONTROLLER_H
 #ifndef PHNAVIGATIONCONTROLLER_H
 #define PHNAVIGATIONCONTROLLER_H
 
-#include "PHMain.h"
+#include "PHViewController.h"
 
 class PHNavigationController : public PHViewController
 {
@@ -60,5 +59,4 @@ public:
 	void setFadeColor(const PHColor & c) { _fadeColor = c; };
 };
 
-#endif
 #endif

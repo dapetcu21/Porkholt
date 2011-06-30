@@ -7,8 +7,14 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHLPlayer.h"
+#include "PHAuxLayerView.h"
+#include "PHPlayerView.h"
+#include "PHWorld.h"
+#include "PHTrailImageView.h"
+#include "PHMainEvents.h"
 #include <Box2D/Box2D.h>
+#include "PHMotion.h"
 
 PHView * playerView = NULL;
 

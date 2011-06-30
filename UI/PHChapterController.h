@@ -6,9 +6,11 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHVIEWCONTROLLER_H
 #ifndef PHCHAPTERCONTROLLER_H
 
+#include "PHViewController.h"
+
+class PHImage;
 class PHChapterController : public PHViewController
 {
 private:
@@ -24,5 +26,4 @@ public:
 	void mouseUp(PHObject * sender, void * ud);
 };
 
-#endif
 #endif

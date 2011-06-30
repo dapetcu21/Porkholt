@@ -7,11 +7,11 @@
  *
  */
 
-#ifndef INSIDE_PHVIEW_H
 #ifndef PHBUTTONVIEW_H
 #define PHBUTTONVIEW_H
-#include "PHMain.h"
+#include "PHView.h"
 
+class PHImage;
 class PHButtonView : public PHView
 {
 private:
@@ -29,8 +29,8 @@ public:
 	
 	PHButtonView();
 	PHButtonView(const PHRect &frame);
-	void setPressedImage(PHImage * img) { if (img) img->retain(); if (imgDown) imgDown->release(); imgDown=img; }
-	void setImage(PHImage * img) { if (img) img->retain(); if (imgUp) imgUp->release(); imgUp=img; }
+	void setPressedImage(PHImage * img);
+	void setImage(PHImage * img);
 	PHImage * pressedImage() { return imgDown; };
 	PHImage * image() { return imgUp; };
 	int state() { return _state; }
@@ -41,5 +41,4 @@ protected:
 	virtual void touchEvent(PHTouch * touch);
 };
 
-#endif
 #endif

@@ -7,7 +7,7 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHGeometry.h"
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 

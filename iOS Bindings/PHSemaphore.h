@@ -10,7 +10,7 @@
 #ifndef PHSEMAPHORE_H
 #define PHSEMAPHORE_H
 
-#include "PHObject.h"
+#include "PHMain.h"
 #include <semaphore.h>
 
 extern string PHSysCallError;

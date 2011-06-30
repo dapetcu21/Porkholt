@@ -6,7 +6,7 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
+#include "PHTrailImageView.h"
 
 #define INIT_LIST ,snap(1),ssnap(0),trail(0),_stopView(NULL)
 

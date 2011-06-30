@@ -7,6 +7,7 @@
 //
 
 #include "PHLAuxLayer.h"
+#include "PHAuxLayerView.h"
 #include "PHLua.h"
 
 PHLAuxLayer::PHLAuxLayer()

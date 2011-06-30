@@ -7,8 +7,9 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHLCamera.h"
 #include "PHLua.h"
+#include "PHMainEvents.h"
 
 PHLCamera::PHLCamera()
 {

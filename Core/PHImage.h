@@ -8,7 +8,7 @@
  */
 #ifndef PHIMAGE_H
 #define PHIMAGE_H
-#include "PHObject.h"
+#include "PHMain.h"
 
 class PHImage;
 #include <map>

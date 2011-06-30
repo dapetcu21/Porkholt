@@ -6,11 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHJOINT_H
 #ifndef PHDISTANCEJOINT_H
 #define PHDISTANCEJOINT_H
 
-#include "PHMain.h"
+#include "PHJoint.h"
 
 class PHDistanceJoint : public PHJoint
 {
@@ -25,5 +24,4 @@ public:
     virtual void recreateJoint();
 };
 
-#endif
 #endif

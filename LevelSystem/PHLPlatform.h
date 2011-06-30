@@ -6,11 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHLOBJECT_H
 #ifndef PHLPLATFORM_H
 #define PHLPLATFORM_H
 
-#include "PHMain.h"
+#include "PHLObject.h"
 
 class b2World;
 class b2Body;
@@ -30,5 +29,4 @@ public:
 	virtual void contactEnd(bool b,b2Contact * contact);
 };
 
-#endif
 #endif

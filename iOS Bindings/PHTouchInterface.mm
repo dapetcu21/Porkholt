@@ -7,8 +7,8 @@
 //
 
 #import "PHTouchInterface.h"
-#import "PHMain.h"
 #import "PHAccelInterface.h"
+#include "PHEventHandler.h"
 
 PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 

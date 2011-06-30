@@ -11,7 +11,7 @@
 #ifndef PHGAUGEVIEW_H
 #define PHGAUGEVIEW_H
 
-#include "PHMain.h"
+#include "PHImageView.h"
 
 class PHGaugeView : public PHImageView
 {

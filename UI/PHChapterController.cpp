@@ -6,7 +6,11 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
+#include "PHChapterController.h"
+#include "PHImageView.h"
+#include "PHButtonView.h"
+#include "PHLevelController.h"
+#include "PHNavigationController.h"
 #include <sstream>
 
 PHView * PHChapterController::loadView(const PHRect & frame)

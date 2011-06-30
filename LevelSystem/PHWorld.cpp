@@ -7,11 +7,18 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHWorld.h"
+
 #include "PHTimer.h"
 #include "PHCaptureView.h"
 #include "PHGaugeView.h"
+#include "PHImage.h"
+#include "PHLevelController.h"
 #include <Box2D/Box2D.h>
+
+#include "PHLPlayer.h"
+#include "PHLCamera.h"
+#include "PHMainEvents.h"
 
 //304 19
 #define GAUGE_WIDTH 256

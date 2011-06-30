@@ -6,7 +6,7 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
+#include "PHAuxLayerView.h"
 
 map<int,PHAuxLayerView*> PHAuxLayerView::ilist;
 

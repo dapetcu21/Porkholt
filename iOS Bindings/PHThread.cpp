@@ -7,8 +7,7 @@
  *
  */
 
-#include "PHMain.h"
-
+#include "PHThread.h"
 #include <pthread.h>
 
 map<pthread_t,PHThread*> PHThread::threads;

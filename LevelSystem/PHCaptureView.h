@@ -10,7 +10,7 @@
 #ifndef PHCAPTUREVIEW_H
 #define PHCAPTUREVIEW_H
 
-#include "PHMain.h"
+#include "PHView.h"
 
 class PHMutex;
 class PHSemaphore;

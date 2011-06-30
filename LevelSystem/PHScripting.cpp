@@ -6,8 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
+#include "PHScripting.h"
+#include "PHWorld.h"
 #include "PHLua.h"
+#include "PHFileManager.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {

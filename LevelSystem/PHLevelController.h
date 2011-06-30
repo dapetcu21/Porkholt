@@ -10,7 +10,7 @@
 #ifndef PHLEVELCONTROLLER_H
 #define PHLEVELCONTROLLER_H
 
-#include "PHMain.h"
+#include "PHViewController.h"
 
 class PHWorld;
 class PHButtonView;

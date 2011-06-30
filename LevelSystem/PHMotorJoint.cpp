@@ -6,7 +6,8 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
+#include "PHMotorJoint.h"
+#include "PHWorld.h"
 #include <Box2D/Box2D.h>
 #include "PHLua.h"
 

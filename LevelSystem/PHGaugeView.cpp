@@ -7,6 +7,7 @@
  *
  */
 
+#include "PHImage.h"
 #include "PHGaugeView.h"
 
 void PHGaugeView::draw()

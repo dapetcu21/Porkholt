@@ -6,9 +6,14 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
+#include "PHJoint.h"
 #include "PHLua.h"
+#include "PHWorld.h"
 #include <Box2D/Box2D.h>
+
+#include "PHDistanceJoint.h"
+#include "PHRevoluteJoint.h"
+#include "PHPrismaticJoint.h"
 
 PHJoint * PHJoint::jointWithClassAndWorld(string clss, PHWorld * world)
 {

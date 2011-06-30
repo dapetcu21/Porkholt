@@ -7,7 +7,10 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHView.h"
+#include "PHAuxLayerView.h"
+#include "PHMainEvents.h"
+#include "PHEventHandler.h"
 
 std::list<PHAnimationDescriptor*> PHView::animations;
 

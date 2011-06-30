@@ -7,7 +7,7 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHMessage.h"
 
 map<string,PHMessage*> PHMessage::messages;
 

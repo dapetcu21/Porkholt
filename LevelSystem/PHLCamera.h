@@ -7,9 +7,11 @@
  *
  */
 
-#ifndef INSIDE_PHLOBJECT_H
 #ifndef PHLCAMERA_H
 #define PHLCAMERA_H
+
+
+#include "PHLObject.h"
 
 class b2World;
 
@@ -29,5 +31,4 @@ public:
 	void updateCamera(PHPoint pnt);
 };
 
-#endif
 #endif

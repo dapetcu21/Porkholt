@@ -7,7 +7,10 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHEventHandler.h"
+#include "PHMainEvents.h"
+#include "PHTouch.h"
+#include "PHView.h"
 
 PHTouch * PHEventHandler::touchForUserData(void * ud, list<PHTouch*>::iterator & i)
 {

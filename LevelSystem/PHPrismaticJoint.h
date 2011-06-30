@@ -6,12 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHJOINT_H
-#ifndef INSIDE_PHMOTORJOINT_H
 #ifndef PHPRISMATICJOINT_H
 #define PHPRISMATICJOINT_H
 
-#include "PHMain.h"
+#include "PHMotorJoint.h"
 
 class PHPrismaticJoint : public PHMotorJoint
 {
@@ -37,6 +35,4 @@ public:
     void setLimitEnabled(bool val);
 };
 
-#endif
-#endif
 #endif

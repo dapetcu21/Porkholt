@@ -9,10 +9,10 @@
 
 #ifndef PHVIEW_H
 #define PHVIEW_H
-#define INSIDE_PHVIEW_H
 
 #include "PHMain.h"
 #include "PHAnimationDescriptor.h"
+#include "PHTouch.h"
 
 class PHAuxLayerView;
 class PHView : public PHObject
@@ -137,5 +137,4 @@ public:
     void setDontDrawToMain( bool val) { dontDrawOnMain = val; }
 };
 
-#undef INSIDE_PHVIEW_H
 #endif

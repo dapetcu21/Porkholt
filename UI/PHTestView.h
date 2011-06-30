@@ -7,10 +7,10 @@
  *
  */
 
-#ifndef INSIDE_PHVIEW_H
 #ifndef PHTESTVIEW_H
 #define PHTESTVIEW_H
-#include "PHMain.h"
+
+#include "PHView.h"
 
 class PHTestView: public PHView 
 {
@@ -24,5 +24,4 @@ protected:
 	
 };
 
-#endif
 #endif

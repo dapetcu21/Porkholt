@@ -10,16 +10,19 @@
 #ifndef PHWORLD_H
 #define PHWORLD_H
 
+#include "PHMain.h"
+#include "PHLObject.h"
+#include "PHJoint.h"
+
 class PHLCamera;
-class PHLObject;
 class PHLPlayer;
 class PHCaptureView;
 class PHGaugeView;
-class PHJoint;
 class b2World;
 class b2ContactFilter;
 class b2ContactListener;
 class PHTimer;
+class PHLevelController;
 
 class PHWorld : public PHObject 
 {

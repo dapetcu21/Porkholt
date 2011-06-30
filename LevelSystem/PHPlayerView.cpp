@@ -7,8 +7,8 @@
 //
 
 
-#include "PHMain.h"
-#include <cmath>
+#include "PHPlayerView.h"
+#include "PHMainEvents.h"
 
 void PHPlayerView::setRotation( double rot)
 {

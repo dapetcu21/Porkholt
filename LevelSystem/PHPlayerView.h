@@ -6,11 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHVIEW_H
 #ifndef PHPLAYERVIEW_H
 #define PHPLAYERVIEW_H
 
-#include "PHMain.h"
+#include "PHView.h"
 
 class PHPlayerView : public PHView
 {
@@ -30,5 +29,4 @@ public:
 };
 
 
-#endif
 #endif

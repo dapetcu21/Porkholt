@@ -9,6 +9,10 @@
 
 #include "PHMain.h"
 #include "PHLua.h"
+#include "PHImage.h"
+#include "PHImageView.h"
+#include "PHTrailImageView.h"
+#include "PHFileManager.h"
 
 #define PHIMAGEVIEW_INIT _image(NULL), coords(PHWholeRect), tint(PHInvalidColor), flipVert(false), flipHoriz(false)
 

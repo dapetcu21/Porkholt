@@ -6,11 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHLOBJECT_H
 #ifndef PHLAUXLAYER_H
 #define PHLAUXLAYER_H
 
-#include "PHMain.h"
+#include "PHLObject.h"
 
 class b2World;
 class PHAuxLayerView;
@@ -28,5 +27,4 @@ public:
 	
 };
 
-#endif
 #endif

@@ -7,7 +7,9 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHViewController.h"
+#include "PHMainEvents.h"
+#include "PHView.h"
 
 PHView * PHViewController::loadView(const PHRect & frame)
 {

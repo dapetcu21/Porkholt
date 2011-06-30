@@ -7,7 +7,8 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHImage.h"
+#include "PHButtonView.h"
 
 PHButtonView::PHButtonView() : PHView(), imgUp(NULL), imgDown(NULL), _state(StateUp), tgUp(NULL), tgDown(NULL)
 {
@@ -50,4 +51,18 @@ void PHButtonView::touchEvent(PHTouch * touch)
         _state = PHPointInRect(toMyCoordinates(touch->location()),bounds())?StateDown:StateUp;
     if (touch->phase() == PHTouch::touchCancelledState)
         _state = StateUp;
+}
+
+void PHButtonView::setPressedImage(PHImage * img)
+{ 
+    if (img) img->retain(); 
+    if (imgDown) imgDown->release(); 
+    imgDown=img; 
+}
+
+void PHButtonView::setImage(PHImage * img)
+{
+    if (img) img->retain();
+    if (imgUp) imgUp->release();
+    imgUp=img; 
 }

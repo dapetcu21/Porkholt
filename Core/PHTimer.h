@@ -7,7 +7,7 @@
 //
 
 #ifndef PHTIMER_H
-#include "PHObject.h"
+#include "PHMain.h"
 
 class PHTimer : public PHObject
 {

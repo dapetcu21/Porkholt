@@ -6,9 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
 #include "PHRemote.h"
 #include "PHAccelInterface.h"
+#include "PHMainEvents.h"
+#include "PHEventHandler.h"
 
 PHRemote::PHRemote()
 {

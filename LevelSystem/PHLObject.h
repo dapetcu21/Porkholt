@@ -10,8 +10,6 @@
 #ifndef PHLOBJECT_H
 #define PHLOBJECT_H
 
-#define INSIDE_PHLOBJECT_H
-
 #include "PHMain.h"
 
 class PHImageView;
@@ -21,6 +19,8 @@ class b2Body;
 class b2Contact;
 class b2Manifold;
 class b2ContactImpulse;
+class PHWorld;
+class PHView;
 
 class PHLObject : public PHObject
 {
@@ -94,5 +94,4 @@ public:
     
     void scriptingInit(void * l);
 };
-#undef INSIDE_PHLOBJECT_H
 #endif

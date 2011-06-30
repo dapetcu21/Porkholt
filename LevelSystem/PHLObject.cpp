@@ -7,7 +7,18 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHLObject.h"
+
+#include "PHLCamera.h"
+#include "PHMainEvents.h"
+#include "PHLPlatform.h"
+#include "PHLAuxLayer.h"
+#include "PHLPlayer.h"
+
+#include "PHJoint.h"
+#include "PHWorld.h"
+#include "PHImageView.h"
+
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 

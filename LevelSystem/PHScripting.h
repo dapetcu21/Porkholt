@@ -9,6 +9,8 @@
 #ifndef PHSCRIPTING_H
 #define PHSCRIPTING_H
 
+#include "PHMain.h"
+
 class PHWorld;
 struct lua_State;
 

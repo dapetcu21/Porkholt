@@ -20,7 +20,6 @@
 		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
 		C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A43131441C2004F341A /* PHTestViewController.cpp */; };
 		C11E56CC13436F14008881B9 /* PHMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E56CB13436F14008881B9 /* PHMessage.cpp */; };
-		C122CD9913265BF9004BF5CE /* PHRandom.mm in Sources */ = {isa = PBXBuildFile; fileRef = C122CD9813265BF9004BF5CE /* PHRandom.mm */; };
 		C126D6341317D6FC00DACBC0 /* PHNavigationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */; };
 		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C13664281337F972009B755B /* PHCaptureView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13664271337F972009B755B /* PHCaptureView.cpp */; };
@@ -175,8 +174,6 @@
 		C11E56CA13436F14008881B9 /* PHMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMessage.h; sourceTree = "<group>"; };
 		C11E56CB13436F14008881B9 /* PHMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMessage.cpp; sourceTree = "<group>"; };
 		C11E57BB13446F83008881B9 /* PHSemaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSemaphore.h; sourceTree = "<group>"; };
-		C122CD9713265BF9004BF5CE /* PHRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHRandom.h; sourceTree = "<group>"; };
-		C122CD9813265BF9004BF5CE /* PHRandom.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHRandom.mm; sourceTree = "<group>"; };
 		C126D6321317D6FC00DACBC0 /* PHNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNavigationController.h; sourceTree = "<group>"; };
 		C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNavigationController.cpp; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
@@ -220,7 +217,6 @@
 		C17B4E3B130EA4F000C2EC8D /* PHTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTime.h; sourceTree = "<group>"; };
 		C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTime.cpp; sourceTree = "<group>"; };
 		C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGeometry.cpp; sourceTree = "<group>"; };
-		C17D0F521322A1AB00BDB8EF /* PHLevelSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelSystem.h; sourceTree = "<group>"; };
 		C17D0F531322A31000BDB8EF /* PHLevelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelController.h; sourceTree = "<group>"; };
 		C17D0F541322A31000BDB8EF /* PHLevelController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLevelController.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C17D0F561322AD7700BDB8EF /* PHWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHWorld.h; sourceTree = "<group>"; };
@@ -308,7 +304,6 @@
 		C1A8855313B87E1F00A1A402 /* PHScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScripting.h; sourceTree = "<group>"; };
 		C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHChapterController.cpp; sourceTree = "<group>"; };
 		C1AF4FBE13A6589A00ED2ED7 /* PHChapterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHChapterController.h; sourceTree = "<group>"; };
-		C1AF4FC013A658E400ED2ED7 /* PHUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHUI.h; sourceTree = "<group>"; };
 		C1AF893113387B850046179B /* PHGaugeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGaugeView.h; sourceTree = "<group>"; };
 		C1AF893213387B850046179B /* PHGaugeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGaugeView.cpp; sourceTree = "<group>"; };
 		C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHDistanceJoint.cpp; sourceTree = "<group>"; };
@@ -389,8 +384,6 @@
 				C17D0F661323811F00BDB8EF /* PHThread.cpp */,
 				C17D0F681323845300BDB8EF /* PHMutex.h */,
 				C11E57BB13446F83008881B9 /* PHSemaphore.h */,
-				C122CD9713265BF9004BF5CE /* PHRandom.h */,
-				C122CD9813265BF9004BF5CE /* PHRandom.mm */,
 			);
 			path = "iOS Bindings";
 			sourceTree = "<group>";
@@ -503,7 +496,6 @@
 		C17D0F501322A18300BDB8EF /* LevelSystem */ = {
 			isa = PBXGroup;
 			children = (
-				C17D0F521322A1AB00BDB8EF /* PHLevelSystem.h */,
 				C17D0F531322A31000BDB8EF /* PHLevelController.h */,
 				C17D0F541322A31000BDB8EF /* PHLevelController.cpp */,
 				C1A8855313B87E1F00A1A402 /* PHScripting.h */,
@@ -674,7 +666,6 @@
 		C1AF4FBB13A657BD00ED2ED7 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				C1AF4FC013A658E400ED2ED7 /* PHUI.h */,
 				C17B480A130719FF00C2EC8D /* PHTestView.h */,
 				C17B480B130719FF00C2EC8D /* PHTestView.cpp */,
 				C1185A42131441C2004F341A /* PHTestViewController.h */,
@@ -876,7 +867,6 @@
 				C1C359251323C08000D3A95A /* PHLua.cpp in Sources */,
 				C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */,
 				C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */,
-				C122CD9913265BF9004BF5CE /* PHRandom.mm in Sources */,
 				C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */,
 				C13664281337F972009B755B /* PHCaptureView.cpp in Sources */,
 				C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */,

@@ -15,6 +15,7 @@
 #include <map>
 
 class PHMutex;
+
 class PHThread : public PHObject
 {
 private:
@@ -63,6 +64,6 @@ public:
 	static bool isMainThread();
 };
 
-#endif
-
 extern PHThread * PHMainEventThread;
+
+#endif

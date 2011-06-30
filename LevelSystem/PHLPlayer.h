@@ -7,13 +7,15 @@
  *
  */
 
-#ifndef INSIDE_PHLOBJECT_H
 #ifndef PHLPLAYER_H
 #define PHLPLAYER_H
 
 #include "PHMain.h"
 
+#include "PHLObject.h"
+
 class PHTrailImageView;
+
 class PHLPlayer : public PHLObject
 {
 private:
@@ -46,5 +48,4 @@ public:
     virtual void updateView();
 };
 
-#endif
 #endif

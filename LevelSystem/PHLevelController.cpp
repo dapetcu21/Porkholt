@@ -8,10 +8,18 @@
  */
 
 #include "PHMain.h"
+#include "PHMainEvents.h"
+#include "PHLevelController.h"
+#include "PHWorld.h"
+#include "PHScripting.h"
+#include "PHImageView.h"
 #include "PHLua.h"
 #include "PHCaptureView.h"
 #include <Box2D/Box2D.h>
+#include "PHFileManager.h"
 
+#include "PHLPlayer.h"
+#include "PHLCamera.h"
 
 
 void PHLevelController::appSuspended()
@@ -36,20 +44,6 @@ void PHLevelController::resume()
 	if (!paused) return;
 	paused = false;
 	PHMainEvents::sharedInstance()->setIndependentTiming(true);
-}
-
-void PHLevelController::test(PHButtonView * sender, void * ud)
-{
-	if (!paused)
-	{
-		pause();
-		sender->setImage(PHImage::imageNamed("start"));
-		sender->setPressedImage(PHImage::imageNamed("stop"));
-	} else {
-		resume();
-		sender->setImage(PHImage::imageNamed("stop"));
-		sender->setPressedImage(PHImage::imageNamed("start"));
-	}
 }
 
 PHView * PHLevelController::loadView(const PHRect & frame)

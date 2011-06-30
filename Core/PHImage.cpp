@@ -8,9 +8,11 @@
  */
 
 #include "PHMain.h"
+#include "PHImage.h"
 #define PNG_DEBUG 4
 #include <png.h>
 #include <sstream>
+#include "PHFileManager.h"
 
 map<string,PHImage*> PHImage::images;
 

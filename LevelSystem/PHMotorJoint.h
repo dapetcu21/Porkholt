@@ -6,12 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHJOINT_H
 #ifndef PHMOTORJOINT_H
 #define PHMOTORJOINT_H
-#define INSIDE_PHMOTORJOINT_H
 
-#include "PHMain.h"
+#include "PHJoint.h"
 
 class PHMotorJoint : public PHJoint
 {
@@ -32,6 +30,4 @@ public:
     void setMotorSpeed(double val);
 };
 
-#undef INSIDE_PHMOTORJOINT_H
-#endif
 #endif

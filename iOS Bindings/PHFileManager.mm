@@ -8,7 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#include "PHMain.h"
+#include "PHFileManager.h"
 #include <fstream>
 #include <sys/stat.h>
 

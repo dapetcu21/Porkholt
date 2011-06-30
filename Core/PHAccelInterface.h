@@ -10,7 +10,7 @@
 #ifndef PHACCELEROMETERINTERFACE_H
 #define PHACCELEROMETERINTERFACE_H
 
-#include "PHMain.h"
+#include "PHMotion.h"
 
 class PHMutex;
 

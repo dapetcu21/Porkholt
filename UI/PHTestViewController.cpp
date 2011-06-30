@@ -7,7 +7,11 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHImage.h"
+#include "PHTestViewController.h"
+#include "PHTestView.h"
+#include "PHButtonView.h"
+#include "PHMotion.h"
 
 void PHTestViewController::callback1(PHObject * sender, void * ud)
 {

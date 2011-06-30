@@ -16,7 +16,6 @@ class PHView;
 class PHViewController;
 class PHRemote;
 
-
 class PHMainEvents : public PHObject
 {
 private:

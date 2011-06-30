@@ -44,27 +44,9 @@ using namespace std;
 #include "PHMessage.h"
 #include "PHGeometry.h"
 #include "PHErrors.h"
-#include "PHFileManager.h"
-#include "PHImage.h"
-#include "PHTouch.h"
-#include "PHEventHandler.h"
-#include "PHMotion.h"
+
 #include "PHThread.h"
 #include "PHMutex.h"
 #include "PHSemaphore.h"
-#include "PHRandom.h"
-
-#include "PHView.h"
-#include "PHAuxLayerView.h"
-#include "PHImageView.h"
-
-
-#include "PHMainEvents.h"
-
-#include "PHViewController.h"
-#include "PHNavigationController.h"
-
-#include "PHUI.h"
-#include "PHLevelSystem.h"
 
 #endif

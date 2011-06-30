@@ -6,11 +6,10 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef INSIDE_PHVIEW_H
 #ifndef PHAUXLAYERVIEW_H
 #define PHAUXLAYERVIEW_H
 
-#include "PHMain.h"
+#include "PHView.h"
 
 class PHAuxLayerView : public PHView
 {
@@ -35,5 +34,4 @@ public:
     static PHAuxLayerView * auxLayerViewWithName(int n);
 };
 
-#endif
 #endif

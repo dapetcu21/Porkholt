@@ -7,7 +7,7 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHMotion.h"
 #include "PHAccelInterface.h"
 
 PHAcceleration PHMotion::getAcceleration()

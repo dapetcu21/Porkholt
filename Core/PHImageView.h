@@ -7,14 +7,13 @@
  *
  */
 
-#ifndef INSIDE_PHVIEW_H
 #ifndef PHIMAGEVIEW_H
 #define PHIMAGEVIEW_H
-#define INSIDE_PHIMAGEVIEW_H
-#include "PHMain.h"
+
+#include "PHView.h"
+#include "PHImage.h"
 
 class PHImage;
-
 class PHImageView : public PHView
 {
 protected:
@@ -44,6 +43,5 @@ public:
     static PHImageView * imageFromLua(void * L,const string & rootPath);
     static PHImageView * imageFromClass(const string & clss);
 };
-#undef INSIDE_PHIMAGEVIEW_H
-#endif
+
 #endif

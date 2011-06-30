@@ -9,9 +9,9 @@
 
 #ifndef PHVIEWCONTROLLER_H
 #define PHVIEWCONTROLLER_H
-#define INSIDE_PHVIEWCONTROLLER_H
 
 #include "PHMain.h"
+#include "PHView.h"
 
 class PHNavigationController;
 
@@ -84,5 +84,6 @@ public:
 	virtual void viewDidDisappear();
 };
 
-#undef INSIDE_PHVIEWCONTROLLER_H
+#include "PHNavigationController.h"
+
 #endif

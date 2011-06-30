@@ -10,7 +10,7 @@
 #ifndef PHMESSAGE_H
 #define PHMESSAGE_H
 
-class PHObject;
+#include "PHMain.h"
 
 class PHMessage : public PHObject
 {

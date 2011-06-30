@@ -7,11 +7,10 @@
  *
  */
 
-#ifndef INSIDE_PHVIEWCONTROLLER_H
 #ifndef PHTESTVIEWCONTROLLER_H
 #define PHTESTVIEWCONTROLLER_H
 
-#include "PHMain.h"
+#include "PHViewController.h"
 
 class PHTestViewController : public PHViewController
 {
@@ -26,5 +25,4 @@ public:
 	void callback1(PHObject * sender, void * ud);
 	void callback2(PHObject * sender, void * ud);
 };
-#endif
 #endif

@@ -6,7 +6,6 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMain.h"
 #include "PHTimer.h"
 
 void PHTimer::timePassed(double timeElapsed)

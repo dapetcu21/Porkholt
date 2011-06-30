@@ -8,11 +8,12 @@
 
 #ifndef PHJOINT_H
 #define PHJOINT_H
-#define INSIDE_PHJOINT_H
 #include "PHMain.h"
 
 class b2Joint;
 class PHWorld;
+
+#include "PHLObject.h"
 
 class PHJoint : public PHObject
 {
@@ -37,5 +38,4 @@ public:
     void setObject1(PHLObject*obj);
     void setObject2(PHLObject*obj);
 };
-#undef INSIDE_PHJOINT_H
 #endif

@@ -7,8 +7,12 @@
  *
  */
 
-#include "PHMain.h"
+#include "PHMainEvents.h"
 #include "PHRemote.h"
+#include "PHView.h"
+#include "PHChapterController.h"
+#include "PHFileManager.h"
+
 
 PHMainEvents * PHMainEvents::sharedInstance()
 {
