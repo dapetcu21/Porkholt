@@ -9,6 +9,7 @@
 
 #include "PHMain.h"
 #include "PHLua.h"
+#include "PHCaptureView.h"
 #include <Box2D/Box2D.h>
 
 
@@ -245,7 +246,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			{
 				lua_pushstring(L, "class");
 				lua_gettable(L, -2);
-				string clss = "PHLObject";
+				string clss = "PHJoint";
 				if (lua_isstring(L, -1))
 					clss = lua_tostring(L, -1);
 				lua_pop(L,1);
@@ -266,19 +267,11 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     scripingEngine = new PHScripting(world,dir);
 	
 	mutex->lock();
-	PHLPlayer * player = world->player;
-	PHLCamera * camera = world->camera;
 	list<PHPoint> * q = &world->eventQueue;
+    world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
 	mutex->unlock();
 	
 	double targetTime = PHTime::getTime();
-//#define FRAME_TIMING
-	
-#ifdef FRAME_TIMING
-	double ct = targetTime;
-	int fcount = 0;
-#endif
-	
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	double frameInterval = 1.0f/fps;
 	
@@ -286,9 +279,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	{
 		targetTime+=frameInterval;
 		
-		mutex->lock();
-		player->updateControls(q);
-		mutex->unlock();
+		world->player->updateControls(q);
 		
 		if (fps<=40)
 			fWorld->Step(frameInterval, 10, 4);
@@ -296,18 +287,13 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			fWorld->Step(frameInterval, 6, 3);
 
 		fWorld->ClearForces();
-		
+        world->updatePositions();
+        scripingEngine->scriptingStep(frameInterval);
+        world->updateTimers(frameInterval);
+        
 		pSem2->wait();
 		mutex->lock();
-		for (vector<PHLObject*>::iterator i = world->objects.begin(); i!=world->objects.end(); i++)
-		{
-			PHLObject * obj = *i;
-			obj->updatePosition();
-			obj->limitVelocity();
-		}
-		camera->updateCamera(player->position());
 		world->updateScene();
-        scripingEngine->scriptingStep(frameInterval);
 		mutex->unlock();
 		pSem1->signal();
                                       
@@ -317,15 +303,5 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			PHTime::sleep(time);
 		else
 			targetTime = currentTime;
-#ifdef FRAME_TIMING		
-		fcount++;
-		if (fcount==fps)
-		{
-			fcount = 0;
-			double ctt = PHTime::getTime();
-			PHLog("%lf",ctt-ct);
-			ct = ctt;
-		}
-#endif
 	}
 }

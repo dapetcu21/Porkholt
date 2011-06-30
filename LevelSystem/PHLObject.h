@@ -73,6 +73,7 @@ public:
 	void temporarilyDisableVelocityLimit() { disableLimit = true; }
 	void setRotation(double r);
 	void setPosition(PHPoint p);
+    void setTransform(PHPoint p,double r);
 	void limitVelocity();
 	
 	virtual void loadFromLua(void * L, const string & root, b2World * world);
@@ -80,7 +81,8 @@ public:
 	
 	static PHLObject * objectWithClass(const string & str);
 	
-	void updatePosition();
+    void updatePosition();
+    virtual void updateView();
     
     b2Body * getBody() { return body; }
     

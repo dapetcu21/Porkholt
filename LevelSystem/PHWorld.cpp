@@ -8,6 +8,7 @@
  */
 
 #include "PHMain.h"
+#include "PHTimer.h"
 #include "PHCaptureView.h"
 #include "PHGaugeView.h"
 #include <Box2D/Box2D.h>
@@ -84,8 +85,9 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
     PHImageView * frameView = new PHImageView(PHMakeRect(bounds.x,bounds.height-25,bounds.width,25));
     frameView->setImage(PHImage::imageNamed("frame"));
-	PHMutex * mutex = cntr->mutex;
+	PHMutex * mutex = new PHMutex();
 	view->setMutex(mutex);
+    mutex->release();
 	view->setQueue(&eventQueue);
 	view->setUserInput(true);
 	view->setSemaphores(cntr->pSem1, cntr->pSem2);
@@ -131,8 +133,24 @@ PHWorld::~PHWorld()
     delete contactFilter;
 }
 
+void PHWorld::updatePositions()
+{
+    for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+    {
+        PHLObject * obj = *i;
+        obj->updatePosition();
+        obj->limitVelocity();
+    }
+}
+
 void PHWorld::updateScene()
 {
+    for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+    {
+        PHLObject * obj = *i;
+        obj->updateView();
+    }
+    camera->updateCamera(player->position());
 	if (camera)
 	{
 		PHRect pos = camera->size();
@@ -258,4 +276,32 @@ PHWorld::layer * PHWorld::addLayer(double scale)
 void PHWorld::addToLayer(layer * lyr, PHImageView * img)
 {
 	lyr->container->addSubview(img);
+}
+
+void PHWorld::scheduleTimer(PHTimer * timer)
+{
+    if (!timer || !timer->isValid())
+        return;
+    timer->setLastUpdatedAt(PHTime::getTime());
+    timers.push_back(timer);
+}
+
+void PHWorld::updateTimers(double timeElapsed)
+{
+    double time = PHTime::getTime();
+    
+    list<PHTimer*>::iterator i,nx;
+    for (i=timers.begin(); i!=timers.end(); i=nx)
+    {
+        nx = i;
+        nx++;
+        PHTimer * timer = *i;
+        double real = time-timer->lastUpdatedAt();
+        if (real>timeElapsed)
+            real=timeElapsed;
+        timer->setLastUpdatedAt(time);
+        timer->timePassed(real);
+        if (!(timer->isValid()))
+            timers.erase(i);
+    }
 }

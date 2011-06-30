@@ -12,13 +12,15 @@
 
 PHView * playerView = NULL;
 
-PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL), touchesSomething(false), normal(PHOriginPoint), forceGap(0)
+PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL), touchesSomething(false), normal(PHOriginPoint), forceGap(0), trailSize(0), horizontallyFlipped(false), mutex(NULL)
 {
 	_class = "PHLPlayer";
 }
 
 PHLPlayer::~PHLPlayer()
 {
+    if (mutex)
+        mutex->release();
 }
 
 void PHLPlayer::loadFromLua(void * L, const string & root,b2World * world)
@@ -66,10 +68,14 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	double jumpGauge = wrld->jumpGauge();
     bool forceUsed = !(queue->empty());
     b2Vec2 totalJump(0,0);
+    if (mutex)
+        mutex->lock();
 	while (!queue->empty()) {
 		force.x = queue->front().x*TOUCH_FORCE_FACTOR;
 		force.y = queue->front().y*TOUCH_FORCE_FACTOR;
         queue->pop_front();
+        if (mutex)
+            mutex->unlock();
 		double length = sqrt(force.x*force.x+force.y*force.y);
 		if (force.y<0)
 			length = fabs(force.x);
@@ -86,7 +92,11 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 		}
         force*=1/60.0f; //leave it 60... the fps doesn't matter
 		body->ApplyLinearImpulse(force, center);
+        if (mutex)
+            mutex->lock();
 	}
+    if (mutex)
+        mutex->unlock();
     if (forceUsed)
     {
         totalJump.Normalize();
@@ -108,12 +118,19 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	wrld->setJumpGauge(jumpGauge);
     if (forceUsed)
         forceGap = 4;
-    bodyView->setTrailSize(forceGap?10:0);
+    trailSize = forceGap?10:0;
     b2Vec2 speed = body->GetLinearVelocity();
-    if (faceView&&(abs(speed.x)>=0.1))
-        faceView->setHorizontallyFlipped(speed.x<0);
+    if (abs(speed.x)>=0.1)
+        horizontallyFlipped = (speed.x<0);
     if (forceGap>0)
         forceGap--;
+}
+
+void PHLPlayer::updateView()
+{
+    PHLObject::updateView();
+    faceView->setHorizontallyFlipped(horizontallyFlipped);
+    bodyView->setTrailSize(trailSize);
 }
 
 void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)

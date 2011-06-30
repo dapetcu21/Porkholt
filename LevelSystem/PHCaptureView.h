@@ -26,8 +26,11 @@ private:
 public:
 	PHCaptureView() : PHView(), l(NULL), mutex(NULL), sm1(NULL), sm2(NULL) {};
 	PHCaptureView(const PHRect &frame) : PHView(frame), l(NULL), mutex(NULL), sm1(NULL), sm2(NULL) {};
+    ~PHCaptureView() { if(mutex) mutex->release(); }
+    
 	void setQueue(list<PHPoint> * q) { l = q; }
-	void setMutex(PHMutex * m) { mutex = m; }
+	void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
+    PHMutex * getMutex() { return mutex; }
 	void setSemaphores(PHSemaphore * s1, PHSemaphore * s2) { sm1 = s1; sm2= s2; }
 	void setPaused(bool * p) { paused = p; lastPaused=*p; }
 protected:

@@ -23,6 +23,11 @@ private:
     PHPoint normal;
     double touchesSomething;
     int forceGap;
+    
+    int trailSize;
+    bool horizontallyFlipped;
+    
+    PHMutex * mutex;
 public:
 	PHLPlayer();
 	virtual ~PHLPlayer();
@@ -35,6 +40,10 @@ public:
 	virtual void loadView();
     
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
+    
+    void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
+    
+    virtual void updateView();
 };
 
 #endif

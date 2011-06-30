@@ -333,13 +333,23 @@ void PHLObject::setPosition(PHPoint p)
 	pos = p; 
 	if (view)
 		view->setPosition(PHMakePoint(pos.x+viewSize.x, pos.y+viewSize.y));
+    if (body)
+        body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
 };
 
 void PHLObject::setRotation(double r)
 {
 	rot = r;
-	if (view)
-		view->setRotation(rot);
+    if (body)
+        body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
+}
+
+void PHLObject::setTransform(PHPoint p,double r)
+{
+    pos = p;
+    rot = r;
+    if (body)
+        body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
 }
 
 void PHLObject::updatePosition()
@@ -347,8 +357,17 @@ void PHLObject::updatePosition()
 	if (!body)
 		return;
 	b2Vec2 p = body->GetPosition();
-	setPosition(PHMakePoint(p.x, p.y));
-	setRotation(-body->GetAngle()*180.0f/M_PI);
+    pos = PHMakePoint(p.x, p.y);
+    rot = (-body->GetAngle()*180.0f/M_PI);
+}
+
+void PHLObject::updateView()
+{
+    if (view)
+    {
+        view->setPosition(PHMakePoint(pos.x+viewSize.x, pos.y+viewSize.y));
+        view->setRotation(rot);
+    }
 }
 
 #define LIMIT_CUTOFF 2.0f

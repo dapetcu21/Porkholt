@@ -16,6 +16,7 @@ private:
     bool repeat;
     double time;
     double timeleft;
+    double lastupd;
     PHCallback cb;
     PHObject * target;
     void * ud;
@@ -29,6 +30,9 @@ public:
     double timeLeft() { return timeleft; }
     bool repeats() { return repeat; }
     void setRepeats(bool rpt) { repeat = rpt; }
+    void setLastUpdatedAt(double u) { lastupd = u; }
+    double lastUpdatedAt() { return lastupd; }
+    
     void setCallback(PHObject * trg, PHCallback call, void * usd) { target = trg; cb = call; ud=usd; }
     bool isValid() { return valid; } 
     void invalidate() { valid = false; }

@@ -9,7 +9,7 @@
 #include "PHLPlatform.h"
 #include <Box2D/Box2D.h>
 
-PHLPlatform::PHLPlatform()
+PHLPlatform::PHLPlatform() : PHLObject()
 {
     
 }

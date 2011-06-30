@@ -19,6 +19,7 @@ class PHJoint;
 class b2World;
 class b2ContactFilter;
 class b2ContactListener;
+class PHTimer;
 
 class PHWorld : public PHObject 
 {
@@ -57,6 +58,8 @@ private:
 		double scale;
 	};
 	list<layer> layers;
+    
+    list<PHTimer*>timers;
 	
 public:
 	PHWorld::layer * addLayer(double scale);
@@ -74,6 +77,7 @@ public:
 	void removeJoint(PHJoint * obj);
 	void removeAllJoints();
     
+    void updatePositions();
 	void updateScene();
 	
 	double jumpGauge() { return _jumpGauge; }
@@ -84,6 +88,9 @@ public:
 	void setJumpGaugeGrowth(double g) { jumpGrowth = g; }
     
     b2World * getPhysicsWorld() { return physicsWorld; }
+    
+    void scheduleTimer(PHTimer * timer);
+    void updateTimers(double timeElapsed);
 };
 
 #endif

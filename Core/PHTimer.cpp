@@ -18,7 +18,7 @@ void PHTimer::timePassed(double timeElapsed)
         if (!repeat)
             invalidate();
         else
-            timeleft+=floor((-timeleft)/time)*time;
+            timeleft+=(((int)((-timeleft)/time))+1)*time;
     }
 }
 
