@@ -291,6 +291,7 @@ void PHWorld::scheduleTimer(PHTimer * timer)
         return;
     timer->setLastUpdatedAt(PHTime::getTime());
     timers.push_back(timer);
+    timer->retain();
 }
 
 void PHWorld::updateTimers(double timeElapsed)
@@ -309,6 +310,9 @@ void PHWorld::updateTimers(double timeElapsed)
         timer->setLastUpdatedAt(time);
         timer->timePassed(real);
         if (!(timer->isValid()))
+        {
             timers.erase(i);
+            timer->release();
+        }
     }
 }

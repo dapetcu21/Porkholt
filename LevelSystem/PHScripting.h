@@ -23,7 +23,7 @@ public:
     PHScripting(PHWorld * world,string level_dir);
     ~PHScripting();
     void scriptingStep(double timeElapsed);
-    void loadLevelController();
+    void loadWorld();
 };
 
 #endif

@@ -10,12 +10,12 @@
 #include "PHWorld.h"
 #include "PHLua.h"
 #include "PHFileManager.h"
+#include "PHScriptableTimer.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
     int error;
-	/*lua_State * */L = lua_open();
-    //l = (void*)L;
+    L = lua_open();
 	luaL_openlibs(L);
     
 	PHFileManager * fileMan = PHFileManager::singleton();
@@ -28,7 +28,7 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 		PHLog("Lua: %s",lua_tostring(L,-1));
 		lua_pop(L, 1);
     } else {
-        loadLevelController();
+        loadWorld();
         for (vector<PHLObject*>::iterator i = world->objects.begin(); i!=world->objects.end(); i++)
         {
             PHLObject * obj = *i;
@@ -52,8 +52,21 @@ PHScripting::~PHScripting()
     lua_close(L);
 }
 
-void PHScripting::loadLevelController()
+void PHScripting::loadWorld()
 {
+    lua_getglobal(L,"PHWorld");
+    lua_pushstring(L, "ud");
+    lua_pushlightuserdata(L, world);
+    lua_settable(L, -3);
+    
+//    luaL_Reg functions[2];
+//    functions[0].name = "scheduleTimer"; functions[0].func = PHWorld_scheduleTimer;
+//    functions[1].name = NULL;  functions[1].func = NULL;
+//    luaL_register(L,NULL,functions);
+    
+    lua_pop(L, 1);
+    
+    PHScriptableTimer::registerLuaInterface(L);
 }
 
 void PHScripting::scriptingStep(double timeElapsed)

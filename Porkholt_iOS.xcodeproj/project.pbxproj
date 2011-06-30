@@ -30,6 +30,7 @@
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
 		C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177803D13BBA4F50003640D /* PHTimer.cpp */; };
+		C177805213BCDAB50003640D /* PHScriptableTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
 		C17B484B1307B82300C2EC8D /* PHImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484A1307B82300C2EC8D /* PHImage.cpp */; };
 		C17B484E1307B83000C2EC8D /* PHImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B484D1307B83000C2EC8D /* PHImageView.cpp */; };
@@ -196,6 +197,8 @@
 		C1707D78137D13D400395313 /* PHJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C177803D13BBA4F50003640D /* PHTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTimer.cpp; sourceTree = "<group>"; };
 		C177803E13BBA4F50003640D /* PHTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTimer.h; sourceTree = "<group>"; };
+		C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScriptableTimer.cpp; sourceTree = "<group>"; };
+		C177805113BCDAB00003640D /* PHScriptableTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScriptableTimer.h; sourceTree = "<group>"; };
 		C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
 		C17B480A130719FF00C2EC8D /* PHTestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestView.h; sourceTree = "<group>"; };
 		C17B480B130719FF00C2EC8D /* PHTestView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestView.cpp; sourceTree = "<group>"; };
@@ -532,6 +535,8 @@
 				C1D6A2171382A31C0010009E /* PHLAuxLayer.h */,
 				C1F1DE15138B963500C8051C /* PHLPlatform.cpp */,
 				C1F1DE16138B963500C8051C /* PHLPlatform.h */,
+				C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */,
+				C177805113BCDAB00003640D /* PHScriptableTimer.h */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -888,6 +893,7 @@
 				C13E6C1313AC78C100365340 /* URServer.cpp in Sources */,
 				C1A8855413B87E1F00A1A402 /* PHScripting.cpp in Sources */,
 				C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */,
+				C177805213BCDAB50003640D /* PHScriptableTimer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
