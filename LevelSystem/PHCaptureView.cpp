@@ -34,10 +34,11 @@ void PHCaptureView::render()
 	else
 		sm1->wait();
 
-	lastPaused = paused;
+	lastPaused = *paused;
 	
 	if (mutex)
 		mutex->lock();
+    PHThread::mainThread()->processQueue();
 	PHView::render();
 	if (mutex)
 		mutex->unlock();

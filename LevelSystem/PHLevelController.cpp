@@ -56,6 +56,8 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	mutex = new PHMutex;
 	pSem1 = new PHSemaphore(0);
 	pSem2 = new PHSemaphore(1);
+    running = true;
+	paused = false;
 	world = new PHWorld(PHMakeRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
 	backgroundView->setImage(PHImage::imageFromPath(directory+"/bg.png"));
@@ -63,8 +65,6 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	view->addSubview(world->getView());
 	thread = new PHThread;
 	thread->setFunction(this,(PHCallback)&PHLevelController::auxThread, NULL);
-	running = true;
-	paused = false;
 	PHMainEvents::sharedInstance()->setIndependentTiming(true);
 	thread->start();
 	
@@ -265,6 +265,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
 	mutex->unlock();
 	
+    PHLog("finishinit");
+    
 	double targetTime = PHTime::getTime();
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	double frameInterval = 1.0f/fps;

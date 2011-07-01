@@ -114,7 +114,7 @@ addJoint(joint);
 --camera
 obj = objectWithClass("PHLCamera");
 obj.pos = point(3,1.75);
-obj.camH = 4;
+obj.camH = 4.5;
 obj.scripting = "camera";
 addObject(obj);
 

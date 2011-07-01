@@ -24,15 +24,16 @@ private:
 	bool * paused;
 	bool lastPaused;
 public:
-	PHCaptureView() : PHView(), l(NULL), mutex(NULL), sm1(NULL), sm2(NULL) {};
-	PHCaptureView(const PHRect &frame) : PHView(frame), l(NULL), mutex(NULL), sm1(NULL), sm2(NULL) {};
+#define PHCAPTUREVIEW_INIT l(NULL), mutex(NULL), sm1(NULL), sm2(NULL), lastPaused(false)
+	PHCaptureView() : PHView(), PHCAPTUREVIEW_INIT{};
+	PHCaptureView(const PHRect &frame) : PHView(frame), PHCAPTUREVIEW_INIT {};
     ~PHCaptureView() { if(mutex) mutex->release(); }
     
 	void setQueue(list<PHPoint> * q) { l = q; }
 	void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
     PHMutex * getMutex() { return mutex; }
 	void setSemaphores(PHSemaphore * s1, PHSemaphore * s2) { sm1 = s1; sm2= s2; }
-	void setPaused(bool * p) { paused = p; lastPaused=*p; }
+	void setPaused(bool * p) { paused = p; lastPaused=(*p); }
 protected:
 	virtual void render();
 	virtual void touchEvent(PHTouch * touch);
