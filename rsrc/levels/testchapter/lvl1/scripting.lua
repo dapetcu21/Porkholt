@@ -7,6 +7,8 @@ function callback()
 	objectAddBox(obj,posBox,-0.15,boxW,0.3)
 	objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
 	obj = PHWorld:insertObject(obj);
+	
+	wrecker:move(point(-3,0));
 end
 
 function callback2()

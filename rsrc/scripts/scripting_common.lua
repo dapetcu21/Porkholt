@@ -46,6 +46,15 @@ end
 function PHLObject:init()
 	return self;
 end
+-- function PHLObject::rotation();
+-- function PHLObject::position();
+-- function PHLObject::transform();
+-- function PHLObject::setRotation(r);
+-- function PHLObject::setPosition(p);
+-- function PHLObject::setTransform(p,r);
+-- function PHLObject::move(p);
+-- function PHLObject::rotate(r);
+-- function PHLObject::destroy();
 
 PHObject = {};
 function PHObject:new(o, ...)

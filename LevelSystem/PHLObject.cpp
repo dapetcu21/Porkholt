@@ -341,9 +341,7 @@ void PHLObject::loadView()
 
 void PHLObject::setPosition(PHPoint p) 
 {
-	pos = p; 
-	if (view)
-		view->setPosition(PHMakePoint(pos.x+viewSize.x, pos.y+viewSize.y));
+	pos = p;
     if (body)
         body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
 };
@@ -508,12 +506,124 @@ static int PHLObject_destroy(lua_State * L)
     return 0;
 }
 
+static int PHLObject_position(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    obj->position().saveToLua(L);
+    return 1;
+}
+
+static int PHLObject_rotation(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    lua_pushnumber(L,obj->rotation());
+    return 1;
+}
+
+static int PHLObject_transform(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    obj->position().saveToLua(L);
+    lua_pushnumber(L,obj->rotation());
+    return 2;
+}
+
+static int PHLObject_setTransform(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    PHPoint pnt;
+    double rot;
+    bool p = false, r = false;
+    if (lua_istable(L, 2))
+    {
+        lua_pushvalue(L, 2);
+        pnt = PHPoint::pointFromLua(L);
+        lua_pop(L,1);
+        p =true;
+    }
+    if (lua_isnumber(L, 3))
+    {
+        rot = lua_isnumber(L, 3);
+        r = true;
+    }
+    if (p&&r)
+        obj->setTransform(pnt, rot);
+    else
+    if (p)
+        obj->setPosition(pnt);
+    else 
+    if (r)
+        obj->setRotation(rot);
+    return 0;
+}
+
+static int PHLObject_setPosition(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    if (lua_istable(L, 2))
+    {
+        lua_pushvalue(L, 2);
+        obj->setPosition(PHPoint::pointFromLua(L));
+        lua_pop(L,1);
+    }
+    return 0;
+}
+
+static int PHLObject_setRotation(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    if (lua_isnumber(L, 2))
+        obj->setRotation(lua_tonumber(L, 2));
+    return 0;
+}
+
+static int PHLObject_rotate(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    if (lua_isnumber(L, 2))
+        obj->setRotation(obj->rotation()+lua_tonumber(L, 2));
+    return 0;
+}
+
+static int PHLObject_move(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    if (lua_istable(L, 2))
+    {
+        lua_pushvalue(L, 2);
+        PHPoint pnt = PHPoint::pointFromLua(L);
+        lua_pop(L,1);
+        PHPoint opnt = obj->position();
+        opnt.x +=pnt.x;
+        opnt.y +=pnt.y;
+        obj->setPosition(opnt);
+    }
+    return 0;
+}
+
 void PHLObject::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLObject");
     
     lua_pushcfunction(L, PHLObject_destroy);
     lua_setfield(L, -2, "destroy");
+    lua_pushcfunction(L, PHLObject_position);
+    lua_setfield(L, -2, "position");
+    lua_pushcfunction(L, PHLObject_rotation);
+    lua_setfield(L, -2, "rotation");
+    lua_pushcfunction(L, PHLObject_transform);
+    lua_setfield(L, -2, "transform");
+    lua_pushcfunction(L, PHLObject_setPosition);
+    lua_setfield(L, -2, "setPosition");
+    lua_pushcfunction(L, PHLObject_setRotation);
+    lua_setfield(L, -2, "setRotation");
+    lua_pushcfunction(L, PHLObject_setTransform);
+    lua_setfield(L, -2, "setTransform");
+    lua_pushcfunction(L, PHLObject_move);
+    lua_setfield(L, -2, "move");
+    lua_pushcfunction(L, PHLObject_rotate);
+    lua_setfield(L, -2, "rotate");
+    
     
     lua_pop(L, 1);
 }

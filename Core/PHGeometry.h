@@ -20,6 +20,7 @@ struct PHRect
 	double x,y;
 	double width,height;
     static PHRect rectFromLua(lua_State * L);
+    void saveToLua(lua_State * L);
 };
 
 struct PHColor
@@ -32,6 +33,7 @@ struct PHColor
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
     static PHColor colorFromLua(lua_State * L);
+    void saveToLua(lua_State * L);
 };
 
 inline PHColor PHMakeColor(double red, double green, double blue, double alpha)
@@ -76,6 +78,7 @@ struct PHPoint
 {
 	double x,y;
     static PHPoint pointFromLua(lua_State * L);
+    void saveToLua(lua_State * L);
 };
 
 extern PHPoint PHOriginPoint;

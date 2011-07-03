@@ -101,6 +101,40 @@ PHRect PHRect::rectFromLua(lua_State * L)
     
     return pnt;
 }
+
+void PHPoint::saveToLua(lua_State * L)
+{
+    lua_newtable(L);    
+    lua_pushnumber(L, x);
+    lua_setfield(L, -2, "x");
+    lua_pushnumber(L, y);
+    lua_setfield(L, -2, "y");
+}
+void PHRect::saveToLua(lua_State * L)
+{
+    lua_newtable(L);    
+    lua_pushnumber(L, x);
+    lua_setfield(L, -2, "x");
+    lua_pushnumber(L, y);
+    lua_setfield(L, -2, "y");
+    lua_pushnumber(L, width);
+    lua_setfield(L, -2, "width");
+    lua_pushnumber(L, height);
+    lua_setfield(L, -2, "height");
+}
+void PHColor::saveToLua(lua_State * L)
+{
+    lua_newtable(L);
+    lua_pushnumber(L, r);
+    lua_setfield(L, -2, "r");
+    lua_pushnumber(L, g);
+    lua_setfield(L, -2, "g");
+    lua_pushnumber(L, b);
+    lua_setfield(L, -2, "b");
+    lua_pushnumber(L, a);
+    lua_setfield(L, -2, "a");
+}
+
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 {
 	double a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
