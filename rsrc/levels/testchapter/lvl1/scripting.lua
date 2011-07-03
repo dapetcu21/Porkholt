@@ -1,18 +1,25 @@
-print(wrecker.ud);
-
-function callback1(x)
-	print("timer 1 fired");
+function callback()
+	print("timer fired");
+	local boxW = ((792-29-12)/792)*2;
+	local posBox = (29/792-0.5)*2;
+	local obj = objectWithClass("PHLPlatform");
+	obj.pos = point(1.5,2.75);
+	objectAddBox(obj,posBox,-0.15,boxW,0.3)
+	objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
+	obj = PHWorld:insertObject(obj);
 end
 
 function callback2()
-	print("timer 2 fired");
-	timer1:invalidate();
+	print("timer2 fired");
+	wrecker:destroy();
 end
 
-timer1 = PHTimer:new(nil,1,true);
-timer1:setCallback(callback1);
-timer1:schedule();
+timer = PHTimer:new(nil,3,false);
+timer:setCallback(callback);
+timer:schedule();
+timer = nil;
 
-timer2 = PHTimer:new(nil,10.5,false);
-timer2:setCallback(callback2);
-timer2:schedule();
+timer = PHTimer:new(nil,10,false);
+timer:setCallback(callback2);
+timer:schedule();
+timer = nil;

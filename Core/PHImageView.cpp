@@ -61,9 +61,8 @@ void PHImageView::setImage(PHImage * image)
 	_image=image; 
 }
 
-PHImageView * PHImageView::imageFromLua(void * l,const string & root)
+PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
 {
-    lua_State * L = (lua_State*)l;
     PHImageView * img = NULL;
     if (lua_istable(L, -1))
     {

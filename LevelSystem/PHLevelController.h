@@ -48,6 +48,8 @@ public:
 	
 	void appSuspended();
 	void appResumed();
+    
+    const string & bundlePath() { return directory; }
 	
 };
 

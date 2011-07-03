@@ -15,6 +15,7 @@
 #include "PHImage.h"
 #include "PHLevelController.h"
 #include <Box2D/Box2D.h>
+#include "PHEventQueue.h"
 
 #include "PHLPlayer.h"
 #include "PHLCamera.h"
@@ -84,7 +85,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -138,6 +139,8 @@ PHWorld::~PHWorld()
 	delete physicsWorld;
     delete contactListener;
     delete contactFilter;
+    viewQueue->release();
+    modelQueue->release();
 }
 
 void PHWorld::updatePositions()
@@ -148,10 +151,12 @@ void PHWorld::updatePositions()
         obj->updatePosition();
         obj->limitVelocity();
     }
+    modelQueue->processQueue();
 }
 
 void PHWorld::updateScene()
 {
+    viewQueue->processQueue();
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -202,8 +207,33 @@ void PHWorld::updateScene()
 
 void PHWorld::addObject(PHLObject * obj)
 {
-	if (!obj) return;
-	objects.push_back(obj);
+	insertObjectAtPosition(obj,0,NULL);
+}
+
+void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * insObj)
+{
+    if (!obj) return;
+    if (insPos==0)
+        objects.push_back(obj);
+    else
+    if (insPos==1)
+        objects.insert(objects.begin(),obj);
+    else
+    {
+        vector<PHLObject*>::iterator i,nx;
+        for (i=objects.begin(); i!=objects.end(); i=nx)
+        {
+            nx=i;
+            nx++;
+            if (*i==insObj)
+            {
+                if (insPos==4)
+                    i=nx;
+                break;
+            }
+        }
+        objects.insert(i,obj);
+    }
 	obj->retain();
 	if (obj->getClass()=="PHLCamera")
 		camera = (PHLCamera*)obj;

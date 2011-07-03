@@ -15,6 +15,7 @@
 #include <map>
 
 class PHMutex;
+class PHEventQueue;
 
 class PHThread : public PHObject
 {
@@ -23,18 +24,8 @@ private:
 	PHCallback callback;
 	PHObject * target;
 	PHMutex * initMutex;
-	
-	struct el
-	{
-		pthread_cond_t cond;
-		PHCallback cb;
-		PHObject * target;
-		void * ud;
-		bool wait;
-	};
-	list<el*> queue;
-	pthread_mutex_t q_mutex;
-	
+	PHEventQueue * eventQueue;
+    
 	void * ud;
 	bool running;
 public:

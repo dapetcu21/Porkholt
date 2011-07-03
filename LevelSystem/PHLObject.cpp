@@ -14,6 +14,7 @@
 #include "PHLPlatform.h"
 #include "PHLAuxLayer.h"
 #include "PHLPlayer.h"
+#include "PHEventQueue.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -216,10 +217,9 @@ void PHLObject::loadBody(void *l)
 	lua_pop(L,1);
 }
 
-void PHLObject::loadFromLua(void * l, const string & root, b2World * _world)
+void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world)
 {
 	world = _world;
-	lua_State * L = (lua_State*)l;
     
     hasScripting = false;
     lua_pushstring(L, "scripting");
@@ -308,7 +308,7 @@ void PHLObject::loadFromLua(void * l, const string & root, b2World * _world)
 		}
 	}
 	lua_pop(L, 1);
-	loadBody(l);
+	loadBody(L);
 	
 	min.width -= min.x;
 	min.height -= min.y;
@@ -469,13 +469,13 @@ void PHLObject::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
 #pragma mark -
 #pragma mark scripting
 
-void PHLObject::scriptingInit(void * l)
+void PHLObject::scriptingCreate(lua_State * L)
 {
-    if (!hasScripting) return;
-    lua_State * L = (lua_State*)l;
+    hasScripting = true;
     lua_getglobal(L, _class.c_str());
     lua_pushstring(L, "new");
     lua_gettable(L, -2);
+    lua_remove(L, -2);
     lua_getglobal(L, _class.c_str());
     lua_pushnil(L);
     lua_pushlightuserdata(L, this);
@@ -483,7 +483,53 @@ void PHLObject::scriptingInit(void * l)
     if (err) {
 		PHLog("Lua: %s",lua_tostring(L,-1));
 		lua_pop(L, 1);
-    } else 
-        lua_setglobal(L, scriptingName.c_str());
+        lua_pushnil(L);
+    } else {
+        lua_pushvalue(L, -1);
+        PHLuaSetWeakRef(L, this);
+    }
+}
+
+void PHLObject::scriptingInit(lua_State * L)
+{
+    if (!hasScripting) return;
+    scriptingCreate(L);
+    lua_setglobal(L, scriptingName.c_str());
+}
+
+static int PHLObject_destroy(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    lua_getglobal(L, "PHWorld");
+    lua_getfield(L,-1,"ud");
+    PHWorld * world = (PHWorld*)lua_touserdata(L, -1);
+    lua_pop(L,2);
+    world->removeObject(obj);
+    return 0;
+}
+
+void PHLObject::registerLuaInterface(lua_State * L)
+{
+    lua_getglobal(L, "PHLObject");
+    
+    lua_pushcfunction(L, PHLObject_destroy);
+    lua_setfield(L, -2, "destroy");
+    
     lua_pop(L, 1);
+}
+
+void PHLObject::defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insObj)
+{
+    dlipos = insertPos;
+    dliobj = insObj;
+    dlworld = wrld;
+    wrld->viewEventQueue()->schedule(this,(PHCallback)&PHLObject::_defferedLoading, NULL, false);
+    retain();
+}
+
+void PHLObject::_defferedLoading(PHObject * sender, void * ud)
+{
+    loadView();
+    dlworld->insertObjectAtPosition(this, dlipos, dliobj);
+    release();
 }

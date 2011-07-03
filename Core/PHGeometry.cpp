@@ -19,9 +19,8 @@ PHColor PHWhiteColor = {1,1,1,1};
 PHColor PHGrayColor = {0.5,0.5,0.5,1};
 PHColor PHInvalidColor = {-1,-1,-1,-1};
 
-PHColor PHColor::colorFromLua(void * l)
+PHColor PHColor::colorFromLua(lua_State * L)
 {
-    lua_State * L = (lua_State*)l;
     if (!lua_istable(L, -1)) return PHInvalidColor;
     PHColor color = PHWhiteColor;
 
@@ -51,9 +50,8 @@ PHColor PHColor::colorFromLua(void * l)
     return color;
 }
 
-PHPoint PHPoint::pointFromLua(void * l)
+PHPoint PHPoint::pointFromLua(lua_State * L)
 {
-    lua_State * L = (lua_State*)l;
     if (!lua_istable(L, -1)) return PHOriginPoint;
     PHPoint pnt = PHOriginPoint;
     
@@ -72,9 +70,8 @@ PHPoint PHPoint::pointFromLua(void * l)
     return pnt;
 }
 
-PHRect PHRect::rectFromLua(void * l)
+PHRect PHRect::rectFromLua(lua_State * L)
 {
-    lua_State * L = (lua_State*)l;
     if (!lua_istable(L, -1)) return PHWholeRect;
     PHRect pnt = PHWholeRect;
     

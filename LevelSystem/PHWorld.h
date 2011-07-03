@@ -23,6 +23,7 @@ class b2ContactFilter;
 class b2ContactListener;
 class PHTimer;
 class PHLevelController;
+class PHEventQueue;
 
 class PHWorld : public PHObject 
 {
@@ -30,6 +31,8 @@ private:
 	PHCaptureView * view;
 	PHView * worldView;
 	PHView * layerView;
+    PHEventQueue * modelQueue; 
+    PHEventQueue * viewQueue;
 	
 	PHLevelController * controller;
 	
@@ -75,6 +78,7 @@ public:
 	void addObject(PHLObject * obj);
 	void removeObject(PHLObject * obj);
 	void removeAllObjects();
+    void insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * insObj);
     
     void addJoint(PHJoint * obj);
 	void removeJoint(PHJoint * obj);
@@ -94,6 +98,10 @@ public:
     
     void scheduleTimer(PHTimer * timer);
     void updateTimers(double timeElapsed);
+    
+    PHLevelController * levelController() { return controller; }
+    PHEventQueue * viewEventQueue() { return viewQueue; }
+    PHEventQueue * modelEventQueue() { return modelQueue; }
 };
 
 #endif

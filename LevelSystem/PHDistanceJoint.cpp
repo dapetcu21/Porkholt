@@ -21,10 +21,9 @@ PHDistanceJoint::~PHDistanceJoint()
     
 }
 
-void PHDistanceJoint::loadFromLua(void * l)
+void PHDistanceJoint::loadFromLua(lua_State * L)
 {
-    PHJoint::loadFromLua(l);
-    lua_State * L = (lua_State*)l;
+    PHJoint::loadFromLua(L);
     anchor1 = PHOriginPoint;
     anchor2 = PHOriginPoint;
     

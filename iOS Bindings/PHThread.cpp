@@ -8,6 +8,7 @@
  */
 
 #include "PHThread.h"
+#include "PHEventQueue.h"
 #include <pthread.h>
 
 map<pthread_t,PHThread*> PHThread::threads;
@@ -32,11 +33,10 @@ void PHThread::execute()
 		(target->*callback)(this,ud);
 }
 
-#define PHTHREAD_INILIST running(false), target(NULL)
+#define PHTHREAD_INILIST running(false), target(NULL), eventQueue(new PHEventQueue)
 
 PHThread::PHThread() : PHTHREAD_INILIST
 {
-	pthread_mutex_init(&q_mutex, NULL);
 }
 
 void PHThread::start()
@@ -77,7 +77,6 @@ PHThread::PHThread(pthread_t tr) : PHTHREAD_INILIST
 	threads_mutex -> lock();
 	threads[thread] = this;
 	threads_mutex -> unlock();
-	pthread_mutex_init(&q_mutex, NULL);
 }
 
 PHThread * PHThread::currentThread()
@@ -95,7 +94,7 @@ PHThread::~PHThread()
 	threads_mutex -> lock();
 	threads.erase(thread);
 	threads_mutex -> lock();
-	pthread_mutex_destroy(&q_mutex);
+    eventQueue->release();
 };
 
 PHThread * PHThread::mainThread()
@@ -117,45 +116,10 @@ void PHThread::executeOnThread(PHObject * trg, PHCallback cb, void * userdata,bo
 		(trg->*cb)(this,userdata);
 		return;
 	}
-	el * tmp = new el;
-	tmp->target = trg;
-	tmp->cb = cb;
-	tmp->ud = userdata;
-	tmp->wait = waitUntilDone;
-	if (waitUntilDone)
-	{
-		pthread_cond_init(&tmp->cond, NULL);
-	}
-	pthread_mutex_lock(&q_mutex);
-	queue.push_back(tmp);
-	if (waitUntilDone)
-	{
-		pthread_cond_wait(&tmp->cond, &q_mutex);
-	}
-	if (waitUntilDone)
-	{
-		pthread_cond_destroy(&tmp->cond);
-		delete tmp;
-	}
-	pthread_mutex_unlock(&q_mutex);
+    eventQueue->schedule(trg,cb,userdata,waitUntilDone);
 }
 
 void PHThread::processQueue()
 {
-	pthread_mutex_lock(&q_mutex);
-	while (!queue.empty())
-	{
-		el * it = queue.front();
-		queue.pop_front();
-		(it->target->*it->cb)(this,it->ud);
-		if (it->wait)
-		{
-			pthread_cond_signal(&it->cond);
-		}
-		pthread_mutex_unlock(&q_mutex);
-		pthread_mutex_lock(&q_mutex);
-		if (!it->wait)
-			delete it;
-	}
-	pthread_mutex_unlock(&q_mutex);
+    eventQueue->processQueue();
 }

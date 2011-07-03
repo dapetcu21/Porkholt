@@ -20,10 +20,9 @@ PHLAuxLayer::~PHLAuxLayer()
     
 }
 
-void PHLAuxLayer::loadFromLua(void * l, const string & root,b2World * world)
+void PHLAuxLayer::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
-    PHLObject::loadFromLua(l, root, world);
-	lua_State * L = (lua_State*)l;
+    PHLObject::loadFromLua(L, root, world);
     
     name = rand();
     lua_pushstring(L, "name");

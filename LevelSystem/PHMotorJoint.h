@@ -20,7 +20,7 @@ protected:
 public:
     PHMotorJoint(PHWorld * world) : PHJoint(world), _motorPower(1.0f), _motorSpeed(0.0f), enableMotor(false) {};
     virtual ~PHMotorJoint();
-    virtual void loadFromLua(void * L);
+    virtual void loadFromLua(lua_State * L);
     
     bool motorEnabled() { return enableMotor; }
     void setMotorEnabled(bool val);

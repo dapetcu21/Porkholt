@@ -25,7 +25,7 @@ public:
 	
 	PHRect size() { return sz; };
 	
-	virtual void loadFromLua(void * L, const string & root,b2World * world);
+	virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
 	virtual void loadView();
 	
 	void updateCamera(PHPoint pnt);

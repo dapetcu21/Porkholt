@@ -13,10 +13,9 @@
 
 PHPrismaticJoint::~PHPrismaticJoint() {}
 
-void PHPrismaticJoint::loadFromLua(void * l)
+void PHPrismaticJoint::loadFromLua(lua_State * L)
 {
-    PHMotorJoint::loadFromLua(l);
-    lua_State * L = (lua_State*)l;
+    PHMotorJoint::loadFromLua(L);
 
     anchor = PHOriginPoint;
     lua_pushstring(L,"anchor");

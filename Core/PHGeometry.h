@@ -19,7 +19,7 @@ struct PHRect
 //	PHRect() : x(0), y(0), width(0), height(0) {};
 	double x,y;
 	double width,height;
-    static PHRect rectFromLua(void * L);
+    static PHRect rectFromLua(lua_State * L);
 };
 
 struct PHColor
@@ -31,7 +31,7 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
-    static PHColor colorFromLua(void * L);
+    static PHColor colorFromLua(lua_State * L);
 };
 
 inline PHColor PHMakeColor(double red, double green, double blue, double alpha)
@@ -75,7 +75,7 @@ inline PHRect PHMakeRect(double x, double y, double width, double height)
 struct PHPoint
 {
 	double x,y;
-    static PHPoint pointFromLua(void * L);
+    static PHPoint pointFromLua(lua_State * L);
 };
 
 extern PHPoint PHOriginPoint;

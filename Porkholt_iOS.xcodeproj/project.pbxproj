@@ -134,6 +134,7 @@
 		C1D6A20C138262F40010009E /* PHTrailImageView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A20A138262F40010009E /* PHTrailImageView.cpp */; };
 		C1D6A2181382A31C0010009E /* PHLAuxLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */; };
 		C1D6A21C13831DEF0010009E /* PHAuxLayerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */; };
+		C1EEB25513C07B9A004F5D5E /* PHEventQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1EEB25313C07B9A004F5D5E /* PHEventQueue.cpp */; };
 		C1F1DE17138B963500C8051C /* PHLPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F1DE15138B963500C8051C /* PHLPlatform.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 		C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */; };
@@ -333,6 +334,8 @@
 		C1D6A2171382A31C0010009E /* PHLAuxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAuxLayer.h; sourceTree = "<group>"; };
 		C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAuxLayerView.cpp; sourceTree = "<group>"; };
 		C1D6A21B13831DEE0010009E /* PHAuxLayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAuxLayerView.h; sourceTree = "<group>"; };
+		C1EEB25313C07B9A004F5D5E /* PHEventQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventQueue.cpp; sourceTree = "<group>"; };
+		C1EEB25413C07B9A004F5D5E /* PHEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventQueue.h; sourceTree = "<group>"; };
 		C1F1DE15138B963500C8051C /* PHLPlatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPlatform.cpp; sourceTree = "<group>"; };
 		C1F1DE16138B963500C8051C /* PHLPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPlatform.h; sourceTree = "<group>"; };
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
@@ -492,6 +495,8 @@
 				C13E6BFD13AC780400365340 /* PHRemote.h */,
 				C177803E13BBA4F50003640D /* PHTimer.h */,
 				C177803D13BBA4F50003640D /* PHTimer.cpp */,
+				C1EEB25313C07B9A004F5D5E /* PHEventQueue.cpp */,
+				C1EEB25413C07B9A004F5D5E /* PHEventQueue.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -894,6 +899,7 @@
 				C1A8855413B87E1F00A1A402 /* PHScripting.cpp in Sources */,
 				C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */,
 				C177805213BCDAB50003640D /* PHScriptableTimer.cpp in Sources */,
+				C1EEB25513C07B9A004F5D5E /* PHEventQueue.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

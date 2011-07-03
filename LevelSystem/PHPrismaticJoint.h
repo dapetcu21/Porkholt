@@ -22,7 +22,7 @@ private:
 public:
     PHPrismaticJoint(PHWorld * world) : PHMotorJoint(world), anchor(PHOriginPoint), _lowerTranslation(0.0f), _upperTranslation(1.0f), _enableLimit(true) {};
     virtual ~PHPrismaticJoint();
-    virtual void loadFromLua(void * L);
+    virtual void loadFromLua(lua_State * L);
     virtual void recreateJoint();
     
     double lowerTranslation() { return _lowerTranslation; }

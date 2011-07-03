@@ -22,7 +22,7 @@ public:
 	PHLAuxLayer();
 	virtual ~PHLAuxLayer();
 	
-	virtual void loadFromLua(void * L, const string & root,b2World * world);
+	virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
 	virtual void loadView();
 	
 };

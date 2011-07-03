@@ -1,4 +1,38 @@
+require("init_common");
+
+objects = nil;
+layers = nil;
+addLayer = nil;
+layerAddImage = nil;
+jointWithClass = nil;
+addJoint = nil;
+addObject = function (o) return PHWorld:insertObject(o) end
+
 PHWorld = {}
+function PHWorld:insertObject(o) --not a good idea to batch-create objects mid-level, especially if not inserted at the end
+	local ud = self._insertObj;
+	if ud then
+		ud = ud.ud;
+	end
+	return self:_insertObject(o,self._insertPos,ud);
+end
+function PHWorld:insertAtTheEnd()
+	self._insertPos = 0;
+	self._insertObj = nil;
+end
+function PHWorld:insertAtTheBeggining()
+	self._insertPos = 1;
+	self._insertObj = nil;
+end
+function PHWorld:insertBefore(o)
+	self._insertPos = 2;
+	self._insertObj = o;
+end
+function PHWorld:insertAfter(o)
+	self._insertPos = 3;
+	self._insertObj = o;
+end
+PHWorld:insertAtTheEnd();
 
 PHLObject = {}
 function PHLObject:new(o,ud, ...)
@@ -48,7 +82,7 @@ function PHTimer:timerFired()
 	end
 end
 --function PHTimer:invalidate()
---function PHWorld:scheduleTimer(timer)
+--function PHTimer:schedule(timer)
 
 
 PHLPlayer = PHLObject:new()

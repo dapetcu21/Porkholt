@@ -14,10 +14,9 @@
 
 PHMotorJoint::~PHMotorJoint() {}
 
-void PHMotorJoint::loadFromLua(void * l)
+void PHMotorJoint::loadFromLua(lua_State * L)
 {
-    PHJoint::loadFromLua(l);
-    lua_State * L = (lua_State*)l;
+    PHJoint::loadFromLua(L);
     enableMotor = false;
     lua_pushstring(L, "motorEnabled");
     lua_gettable(L, -2);

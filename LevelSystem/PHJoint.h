@@ -28,7 +28,7 @@ public:
     PHJoint(PHWorld * world);
     virtual ~PHJoint();
     static PHJoint * jointWithClassAndWorld(string clss, PHWorld * world);
-    virtual void loadFromLua(void * L);
+    virtual void loadFromLua(lua_State * L);
     void destroyJoint();
     virtual void recreateJoint();
     

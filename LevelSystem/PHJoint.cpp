@@ -38,10 +38,8 @@ PHJoint::~PHJoint()
     setObject2(NULL);
 }
 
-void PHJoint::loadFromLua(void * l)
+void PHJoint::loadFromLua(lua_State * L)
 {
-    lua_State * L = (lua_State*)l;
-        
     lua_pushstring(L, "body1");
     lua_gettable(L, -2);
     if (lua_istable(L, -1))

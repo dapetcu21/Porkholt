@@ -40,7 +40,7 @@ public:
     void setHorizontallyFlipped(bool b) { flipHoriz = b; }
     void setVerticallyFlipped(bool b) { flipVert = b; }
     
-    static PHImageView * imageFromLua(void * L,const string & rootPath);
+    static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
     static PHImageView * imageFromClass(const string & clss);
 };
 

@@ -29,7 +29,7 @@ PHLPlayer::~PHLPlayer()
         mutex->release();
 }
 
-void PHLPlayer::loadFromLua(void * L, const string & root,b2World * world)
+void PHLPlayer::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
 	PHLObject::loadFromLua(L,root,world);
     body->SetBullet(true);

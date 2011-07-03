@@ -20,7 +20,7 @@ private:
 public:
     PHDistanceJoint(PHWorld * world);
     virtual ~PHDistanceJoint();
-    virtual void loadFromLua(void * L);
+    virtual void loadFromLua(lua_State * L);
     virtual void recreateJoint();
 };
 

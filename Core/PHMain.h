@@ -39,6 +39,8 @@ using namespace std;
 	#import <OpenGLES/ES2/glext.h>
 #endif
 
+struct lua_State; 
+
 #include "PHTime.h"
 #include "PHObject.h"
 #include "PHMessage.h"

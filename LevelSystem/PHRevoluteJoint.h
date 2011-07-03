@@ -21,7 +21,7 @@ private:
 public:
     PHRevoluteJoint(PHWorld * world) : PHMotorJoint(world), anchor(PHOriginPoint), _lowerAngle(0.0f), _upperAngle(0.0f), _enableLimit(false) {};
     virtual ~PHRevoluteJoint();
-    virtual void loadFromLua(void * L);
+    virtual void loadFromLua(lua_State * L);
     virtual void recreateJoint();
     
     double lowerAngle() { return _lowerAngle; }

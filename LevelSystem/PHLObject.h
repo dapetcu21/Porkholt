@@ -76,7 +76,7 @@ public:
     void setTransform(PHPoint p,double r);
 	void limitVelocity();
 	
-	virtual void loadFromLua(void * L, const string & root, b2World * world);
+	virtual void loadFromLua(lua_State * L, const string & root, b2World * world);
 	virtual void loadView();
 	
 	static PHLObject * objectWithClass(const string & str);
@@ -92,6 +92,16 @@ public:
     virtual void contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold);
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
     
-    void scriptingInit(void * l);
+    void scriptingCreate(lua_State * L);
+    void scriptingInit(lua_State * L);
+    static void registerLuaInterface(lua_State * L);
+    
+    void defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insObj);
+    void _defferedLoading(PHObject * sender, void * ud);
+private:
+    int dlipos;
+    PHLObject * dliobj;
+    PHWorld * dlworld;
+
 };
 #endif
