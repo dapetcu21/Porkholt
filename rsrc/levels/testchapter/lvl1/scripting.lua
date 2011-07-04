@@ -2,17 +2,18 @@ function callback()
 	print("timer fired");
 	local boxW = ((792-29-12)/792)*2;
 	local posBox = (29/792-0.5)*2;
-	local obj = objectWithClass("PHLPlatform");
+	local obj = objectWithClass("PHLObject");
 	obj.pos = point(1.5,2.75);
-	objectAddBox(obj,posBox,-0.15,boxW,0.3)
-	objectAddImage(obj,"platform.png",-1,-0.15,2,0.3);
-	obj = PHWorld:insertObject(obj);
-	
-	wrecker:move(point(-3,0));
+	objectAddImage(obj,"box.png",-0.25,-0.25,0.5,0.5);
+	objectAddBox(obj,-0.25,-0.25,0.5,0.5);
+	obj.levelDes = true;
+	obj.physics.dynamic = true;
+	box = PHWorld:insertObject(obj);
 end
 
 function callback2()
-	print("timer2 fired");
+	print("timer 2 fired");
+	box:move(point(0,10));
 	wrecker:destroy();
 end
 
