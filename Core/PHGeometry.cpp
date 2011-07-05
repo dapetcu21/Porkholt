@@ -11,7 +11,7 @@
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
-PHPoint PHOriginPoint = {0,0};
+PHPoint PHOriginPoint(0,0);
 PHRect PHWholeRect = {0,0,1,1};
 PHColor PHClearColor = {0,0,0,0};
 PHColor PHBlackColor = {0,0,0,1};
@@ -19,30 +19,27 @@ PHColor PHWhiteColor = {1,1,1,1};
 PHColor PHGrayColor = {0.5,0.5,0.5,1};
 PHColor PHInvalidColor = {-1,-1,-1,-1};
 
-PHColor PHColor::colorFromLua(lua_State * L)
+PHColor PHColor::colorFromLua(lua_State * L, int index)
 {
-    if (!lua_istable(L, -1)) return PHInvalidColor;
+    if (!lua_istable(L, index)) return PHInvalidColor;
     PHColor color = PHWhiteColor;
 
-    lua_pushstring(L, "r");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "r");
     if (lua_isnumber(L, -1))
         color.r = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "g");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "g");
     if (lua_isnumber(L, -1))
         color.g = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "b");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "b");
     if (lua_isnumber(L, -1))
         color.b = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "a");
+    lua_getfield(L, index, "a");
     lua_gettable(L, -2);
     if (lua_isnumber(L, -1))
         color.a = lua_tonumber(L, -1);
@@ -50,19 +47,17 @@ PHColor PHColor::colorFromLua(lua_State * L)
     return color;
 }
 
-PHPoint PHPoint::pointFromLua(lua_State * L)
+PHPoint PHPoint::pointFromLua(lua_State * L, int index)
 {
-    if (!lua_istable(L, -1)) return PHOriginPoint;
+    if (!lua_istable(L, index)) return PHOriginPoint;
     PHPoint pnt = PHOriginPoint;
     
-    lua_pushstring(L, "x");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "x");
     if (lua_isnumber(L, -1))
         pnt.x = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "y");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "y");
     if (lua_isnumber(L, -1))
         pnt.y = lua_tonumber(L, -1);
     lua_pop(L, 1);
@@ -70,31 +65,27 @@ PHPoint PHPoint::pointFromLua(lua_State * L)
     return pnt;
 }
 
-PHRect PHRect::rectFromLua(lua_State * L)
+PHRect PHRect::rectFromLua(lua_State * L, int index)
 {
-    if (!lua_istable(L, -1)) return PHWholeRect;
+    if (!lua_istable(L, index)) return PHWholeRect;
     PHRect pnt = PHWholeRect;
     
-    lua_pushstring(L, "x");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "x");
     if (lua_isnumber(L, -1))
         pnt.x = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "y");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "y");
     if (lua_isnumber(L, -1))
         pnt.y = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "height");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "height");
     if (lua_isnumber(L, -1))
         pnt.height = lua_tonumber(L, -1);
     lua_pop(L, 1);
     
-    lua_pushstring(L, "width");
-    lua_gettable(L, -2);
+    lua_getfield(L, index, "width");
     if (lua_isnumber(L, -1))
         pnt.width = lua_tonumber(L, -1);
     lua_pop(L, 1);
@@ -102,7 +93,7 @@ PHRect PHRect::rectFromLua(lua_State * L)
     return pnt;
 }
 
-void PHPoint::saveToLua(lua_State * L)
+void PHPoint::saveToLua(lua_State * L) const
 {
     lua_newtable(L);    
     lua_pushnumber(L, x);
@@ -110,7 +101,7 @@ void PHPoint::saveToLua(lua_State * L)
     lua_pushnumber(L, y);
     lua_setfield(L, -2, "y");
 }
-void PHRect::saveToLua(lua_State * L)
+void PHRect::saveToLua(lua_State * L) const
 {
     lua_newtable(L);    
     lua_pushnumber(L, x);
@@ -122,7 +113,7 @@ void PHRect::saveToLua(lua_State * L)
     lua_pushnumber(L, height);
     lua_setfield(L, -2, "height");
 }
-void PHColor::saveToLua(lua_State * L)
+void PHColor::saveToLua(lua_State * L) const
 {
     lua_newtable(L);
     lua_pushnumber(L, r);

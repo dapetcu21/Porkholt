@@ -21,6 +21,7 @@ class b2Manifold;
 class b2ContactImpulse;
 class PHWorld;
 class PHView;
+class PHLAnimation;
 
 class PHLObject : public PHObject
 {
@@ -57,6 +58,8 @@ protected:
 	friend class PHWorld;
 	friend class PHJoint;
     
+    lua_State * L;
+    
 public:
 	PHLObject();
 	virtual ~PHLObject();
@@ -75,7 +78,15 @@ public:
 	void setPosition(PHPoint p);
     void setTransform(PHPoint p,double r);
 	void limitVelocity();
+    bool isDynamic();
+    void setDynamic(bool d);
+    void rotateAround(double r, PHPoint around);
 	
+    PHPoint worldPoint(const PHPoint & p);
+    PHPoint localPoint(const PHPoint & p);
+    PHPoint worldVector(const PHPoint & p);
+    PHPoint localVector(const PHPoint & p);
+    
 	virtual void loadFromLua(lua_State * L, const string & root, b2World * world);
 	virtual void loadView();
 	
@@ -93,6 +104,7 @@ public:
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
     
     void scriptingCreate(lua_State * L);
+    void scriptingDestroy();
     void scriptingInit(lua_State * L);
     static void registerLuaInterface(lua_State * L);
     
@@ -102,6 +114,14 @@ private:
     int dlipos;
     PHLObject * dliobj;
     PHWorld * dlworld;
+    
+public:
+    void addAnimation(PHLAnimation * anim);
+    void skipAllAnimations();
+    void invalidateAllAnimations();
+    void commitAnimations(double elapsedTime);
+private:
+    list<PHLAnimation*>animations;
 
 };
 #endif

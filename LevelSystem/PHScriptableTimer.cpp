@@ -17,13 +17,12 @@ PHScriptableTimer::PHScriptableTimer()
 
 PHScriptableTimer::~PHScriptableTimer()
 {
-    
+    PHLuaDeleteHardRef(L, this);
 }
 
 void PHScriptableTimer::timerFired()
 {
-    lua_pushlightuserdata(L, (void*)this);
-    lua_gettable(L, LUA_REGISTRYINDEX);
+    PHLuaGetHardRef(L, this);
 
     lua_getfield(L, -1, "timerFired");
     lua_pushvalue(L, -2);
@@ -63,9 +62,8 @@ static int PHTimer_schedule(lua_State *L)
     lua_pushlightuserdata(L,(void*)timer);
     lua_setfield(L, 1, "ud");
     
-    lua_pushlightuserdata(L, (void*)timer);
     lua_pushvalue(L, 1);
-    lua_settable(L, LUA_REGISTRYINDEX);
+    PHLuaSetHardRef(L, timer);
     
     lua_getglobal(L, "PHWorld");
     lua_pushstring(L, "ud");
@@ -80,19 +78,7 @@ static int PHTimer_schedule(lua_State *L)
 
 static int PHTimer_invalidate(lua_State *L)
 {
-    if ((lua_gettop(L)<1) || (!lua_istable(L, 1)))
-    {
-        lua_pushstring(L,"invalidate() needs 1 table argument");
-        return lua_error(L);
-    }
-    
-    lua_getfield(L, 1, "ud");
-    if (!lua_isuserdata(L, -1))
-    {
-        lua_pushstring(L,"you need to run schedule() first");
-        return lua_error(L);
-    }
-    PHScriptableTimer * timer = (PHScriptableTimer*)lua_touserdata(L, -1);
+    PHScriptableTimer * timer = (PHScriptableTimer*)PHLuaThisPointer(L);
     lua_pop(L,1);
     if (!timer)
     {

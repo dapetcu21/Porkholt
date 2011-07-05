@@ -328,7 +328,7 @@ double PHView::animFunction(double time,int ftype)
 	}
 	if (ftype==PHAnimationDescriptor::FadeInOutFunction)
 	{
-		return sin(M_PI*(time-0.5f))/2;
+		return sin(M_PI*(time-0.5f))/2+0.5;
 	}
 	return time; //revert to linear
 }

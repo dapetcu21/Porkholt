@@ -1,28 +1,56 @@
 function callback()
-	print("timer fired");
+	PHLog("timer fired");
 	local boxW = ((792-29-12)/792)*2;
 	local posBox = (29/792-0.5)*2;
 	local obj = objectWithClass("PHLObject");
-	obj.pos = point(1.5,2.75);
+	obj.pos = player:position();
+	obj.pos.y = obj.pos.y + 2;
 	objectAddImage(obj,"box.png",-0.25,-0.25,0.5,0.5);
 	objectAddBox(obj,-0.25,-0.25,0.5,0.5);
 	obj.levelDes = true;
 	obj.physics.dynamic = true;
 	box = PHWorld:insertObject(obj);
+	
+	local timer = PHTimer:new(nil,1,true);
+	timer:setCallback(callback2);
+	timer:schedule();
 end
 
 function callback2()
-	print("timer 2 fired");
-	box:move(point(0,10));
-	wrecker:destroy();
+	PHLog("timer 2 fired");
+	local p = player:position();
+	p.y = p.y + 2;
+	box:setPosition(p);
+	box:setDynamic(false); --to reset the velocity
+	box:setDynamic(true); 
 end
 
-timer = PHTimer:new(nil,3,false);
+function callback3()
+	PHLog("timer 3 fired");
+	local anim = PHLAnimation:new();
+	anim.rotation = 181;
+	anim.rotationCenter = point(17,3.5);
+	anim.time = 3;
+	anim.curveFunction = function (x) return math.sin(math.pi*(x-0.5))/2 + 0.5 end --same thing as anim.curveFunction = PHLAnimation.FadeInOutFunction, only more fancy
+	wrecker:addAnimation(anim);
+end
+
+local timer = PHTimer:new(nil,1,false);
 timer:setCallback(callback);
 timer:schedule();
-timer = nil;
 
-timer = PHTimer:new(nil,10,false);
-timer:setCallback(callback2);
+local timer = PHTimer:new(nil,10,false);
+timer:setCallback(callback3);
 timer:schedule();
-timer = nil;
+
+
+local anim = PHLAnimation:new();
+anim.force = point(0.5,0.5);
+anim.disableDynamics = false;
+anim.time = 3;
+local anim2 = PHLAnimation:new();
+anim2.movement = point(0,3);
+anim2.rotation = 360;
+anim2.time = 0.5;
+anim.nextAnimation = anim2;
+player:addAnimation(anim);

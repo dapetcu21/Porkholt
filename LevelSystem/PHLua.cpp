@@ -34,6 +34,13 @@ void PHLuaGetHardRef(lua_State * L, void * ref)
     lua_gettable(L,LUA_REGISTRYINDEX);
 }
 
+void PHLuaDeleteHardRef(lua_State * L, void * ref)
+{
+    lua_pushlightuserdata(L,ref);
+    lua_pushnil(L);
+    lua_settable(L,LUA_REGISTRYINDEX);
+}
+
 void PHLuaGetWeakRef(lua_State * L, void * ref)
 {
     lua_getfield(L,LUA_REGISTRYINDEX,"ph");
@@ -63,6 +70,15 @@ void PHLuaSetWeakRef(lua_State * L, void * ref)
     lua_pop(L,2);
 }
 
+void PHLuaDeleteWeakRef(lua_State * L, void * ref)
+{
+    lua_getfield(L,LUA_REGISTRYINDEX,"ph");
+    lua_pushlightuserdata(L,ref);
+    lua_pushnil(L);
+    lua_settable(L,-3);
+    lua_pop(L,1);
+}
+
 void * PHLuaThisPointer(lua_State * L)
 {
     if (lua_gettop(L)<1 || !lua_istable(L, 1)) 
@@ -81,4 +97,32 @@ void * PHLuaThisPointer(lua_State * L)
     void * p = lua_touserdata(L, -1);
     lua_pop(L,1);
     return p;
+}
+
+bool PHLuaLoadFile(lua_State * L, string fname)
+{
+    int error = luaL_loadfile(L, fname.c_str()) || lua_pcall(L,0,0,0);
+    if (error)
+    {
+        if (error) {
+            PHLog("Lua: %s",lua_tostring(L,-1));
+            lua_pop(L, 1);
+        } 
+        return false;
+    }
+    return true;
+}
+
+bool PHLuaCall(lua_State * L,int inargs, int outargs)
+{
+    int error = lua_pcall(L, inargs, outargs, 0);
+    if (error)
+    {
+        if (error) {
+            PHLog("Lua: %s",lua_tostring(L,-1));
+            lua_pop(L, 1);
+        } 
+        return false;
+    }
+    return true;
 }

@@ -8,6 +8,10 @@ jointWithClass = nil;
 addJoint = nil;
 addObject = function (o) return PHWorld:insertObject(o) end
 
+function PHLog(fmt, ...)
+	print(string.format("Porkholt: "..fmt,unpack(arg)));
+end
+
 PHWorld = {}
 function PHWorld:insertObject(o) --not a good idea to batch-create objects mid-level, especially if not inserted at the end
 	local ud = self._insertObj;
@@ -46,15 +50,21 @@ end
 function PHLObject:init()
 	return self;
 end
--- function PHLObject::rotation();
--- function PHLObject::position();
--- function PHLObject::transform();
--- function PHLObject::setRotation(r);
--- function PHLObject::setPosition(p);
--- function PHLObject::setTransform(p,r);
--- function PHLObject::move(p);
--- function PHLObject::rotate(r);
--- function PHLObject::destroy();
+-- function PHLObject:rotation();
+-- function PHLObject:position();
+-- function PHLObject:transform();
+-- function PHLObject:setRotation(r);
+-- function PHLObject:setPosition(p);
+-- function PHLObject:setTransform(p,r);
+-- function PHLObject:move(p);
+-- function PHLObject:rotateAround(r,a);
+-- function PHLObject:rotate(r);
+-- function PHLObject:isDynamic();
+-- function PHLObject:setDynamic(d);
+-- function PHLObject:destroy();
+-- function PHLObject:invalidateAllAnimations();
+-- function PHLObject:skipAllAnimations();
+-- function PHLObject:addAnimation(anim);
 
 PHObject = {};
 function PHObject:new(o, ...)
@@ -92,6 +102,29 @@ function PHTimer:timerFired()
 end
 --function PHTimer:invalidate()
 --function PHTimer:schedule(timer)
+
+PHLAnimation = PHObject:new{
+	LinearFunction = 0;
+	BounceFunction = 1;
+	FadeInFunction = 2;
+	FadeOutFunction = 3;
+	FadeInOutFunction = 4;
+	ConstantFunction = 5; --use this for forces
+	curveFunction = LinearFunction;
+};
+--PHLAnimation.movement
+--PHLAnimation.rotation
+--PHLAnimation.rotationCenter -- in world coordinates or object coordinates if objectCoordinates is true
+--PHLAnimation.force
+--PHLAnimation.objectCoordinates --apply the force relative to the object coordinate system, does not affect the application point
+--PHLAnimation.forceApplicationPoint --the force application point in object coordinates
+--PHLAnimation.curveFunction --this can be one of the built-in functions defined as numbers above or an outright function
+--PHLAnimation.nextAnimation
+--PHLAnimation.disableDynamics --disable physics for the object while animated... defaults to true
+--function PHLAnimation:invalidate();
+--function PHLAnimation:skip(); --this applies all changes immediately, except for forces
+--function PHLAnimation::invalidateChain();
+--function PHLAnimation::skipChain();
 
 
 PHLPlayer = PHLObject:new()

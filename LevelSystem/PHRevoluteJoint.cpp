@@ -21,7 +21,7 @@ void PHRevoluteJoint::loadFromLua(lua_State * L)
     lua_pushstring(L,"anchor");
     lua_gettable(L, -2);
     if (lua_istable(L, -1))
-        anchor = PHPoint::pointFromLua(L);
+        anchor = PHPoint::pointFromLua(L,-1);
     lua_pop(L, 1);
     
     _lowerAngle = 0.0f;

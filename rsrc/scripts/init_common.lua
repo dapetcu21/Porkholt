@@ -121,6 +121,30 @@ function point(x,y)
     };
 end
 
+vector = point;
+
+function rotatedPoint(p,angle)
+	angle = -angle/180 * math.pi;
+	return {
+		x = math.cos(angle)*p.x-math.sin(angle)*p.y;
+        y = math.sin(angle)*p.x+math.cos(angle)*p.y;
+	};
+end
+
+function translatedPoint(p,m)
+	return {
+		x = p.x+m.x;
+		y = p.y+m.y;
+	}
+end
+
+function invertedPoint(p)
+	return {
+		x = -p.x;
+		y = -p.y;
+	}
+end
+
 function rect(x,y,w,h)
     return {
         x = x or 0;

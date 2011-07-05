@@ -95,13 +95,13 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
             lua_pushstring(L, "pos");
             lua_gettable(L, -2);
             if (lua_istable(L, -1))
-                frame = PHRect::rectFromLua(L);
+                frame = PHRect::rectFromLua(L,-1);
             lua_pop(L, 1);
             
             lua_pushstring(L, "texCoord");
             lua_gettable(L, -2);
             if (lua_istable(L, -1))
-                portion = PHRect::rectFromLua(L);
+                portion = PHRect::rectFromLua(L,-1);
             lua_pop(L, 1);
             
             int tag = 0;
@@ -134,7 +134,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
             
             lua_pushstring(L, "tint");
             lua_gettable(L, -2);
-            PHColor tint = PHColor::colorFromLua(L);
+            PHColor tint = PHColor::colorFromLua(L,-1);
             lua_pop(L, 1);
             
             lua_pushstring(L, "alpha");

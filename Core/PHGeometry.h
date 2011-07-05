@@ -19,8 +19,8 @@ struct PHRect
 //	PHRect() : x(0), y(0), width(0), height(0) {};
 	double x,y;
 	double width,height;
-    static PHRect rectFromLua(lua_State * L);
-    void saveToLua(lua_State * L);
+    static PHRect rectFromLua(lua_State * L, int index);
+    void saveToLua(lua_State * L) const;
 };
 
 struct PHColor
@@ -32,8 +32,8 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
-    static PHColor colorFromLua(lua_State * L);
-    void saveToLua(lua_State * L);
+    static PHColor colorFromLua(lua_State * L, int index);
+    void saveToLua(lua_State * L) const;
 };
 
 inline PHColor PHMakeColor(double red, double green, double blue, double alpha)
@@ -77,8 +77,71 @@ inline PHRect PHMakeRect(double x, double y, double width, double height)
 struct PHPoint
 {
 	double x,y;
-    static PHPoint pointFromLua(lua_State * L);
-    void saveToLua(lua_State * L);
+    PHPoint() {};
+    PHPoint(double xx,double yy) : x(xx), y(yy) {};
+    PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
+    static PHPoint pointFromLua(lua_State * L, int index);
+    PHPoint & operator += (const PHPoint & othr)
+    {
+        x+=othr.x;
+        y+=othr.y;
+        return *this;
+    }
+    PHPoint operator + (const PHPoint & o) const
+    {
+        PHPoint res(x+o.x,y+o.y);
+        return res;
+    }
+    PHPoint & operator -= (const PHPoint & othr)
+    {
+        x-=othr.x;
+        y-=othr.y;
+        return *this;
+    }
+    PHPoint operator - (const PHPoint & o) const
+    {
+        PHPoint res(x-o.x,y-o.y);
+        return res;
+    }
+    const PHPoint & operator *= (double d)
+    {
+        x*=d;
+        y*=d;
+        return * this;
+    }
+    PHPoint operator * (double d) const
+    {
+        PHPoint res(x*d,y*d);
+        return res;
+    }
+    const PHPoint & operator /= (double d)
+    {
+        x/=d;
+        y/=d;
+        return * this;
+    }
+    PHPoint operator / (double d) const
+    {
+        PHPoint res(x/d,y/d);
+        return res;
+    }
+    void rotate(double angle)
+    {
+        angle = -angle/180 * M_PI;
+        double ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
+        x = cosv*ox-sinv*oy;
+        y = sinv*ox+cosv*oy;
+    }
+    PHPoint rotated(double angle) const
+    {
+        angle = -angle/180 * M_PI;
+        PHPoint p;
+        double sinv = sin(angle), cosv = cos(angle);
+        p.x = cosv*x-sinv*y;
+        p.y = sinv*x+cosv*y;
+        return p;
+    }
+    void saveToLua(lua_State * L) const;
 };
 
 extern PHPoint PHOriginPoint;

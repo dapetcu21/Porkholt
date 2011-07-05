@@ -13,10 +13,10 @@
 #include "PHScriptableTimer.h"
 #include "PHLObject.h"
 #include "PHLevelController.h"
+#include "PHLAnimation.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
-    int error;
     L = lua_open();
 	luaL_openlibs(L);
     
@@ -25,11 +25,8 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 	
 	PHLuaSetIncludePath(L, level_dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
     
-    error = luaL_loadfile(L, (resourcePath+"/scripts/scripting_common.lua").c_str()) || lua_pcall(L, 0, 0, 0);
-    if (error) {
-		PHLog("Lua: %s",lua_tostring(L,-1));
-		lua_pop(L, 1);
-    } else {
+    if (PHLuaLoadFile(L, resourcePath+"/scripts/scripting_common.lua"))
+    {
         loadWorld();
         for (vector<PHLObject*>::iterator i = world->objects.begin(); i!=world->objects.end(); i++)
         {
@@ -38,13 +35,7 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
         }
         string path = level_dir+"/scripting.lua";
         if (PHFileManager::singleton()->fileExists(path))
-        {
-            error = luaL_loadfile(L, path.c_str()) || lua_pcall(L, 0, 0, 0);
-            if (error) {
-                PHLog("Lua: %s",lua_tostring(L,-1));
-                lua_pop(L, 1);
-            }
-        }
+            PHLuaLoadFile(L, path);
     }
     
 }
@@ -97,6 +88,7 @@ void PHScripting::loadWorld()
     
     PHScriptableTimer::registerLuaInterface(L);
     PHLObject::registerLuaInterface(L);
+    PHLAnimation::registerLuaInterface(L);
 }
 
 void PHScripting::scriptingStep(double timeElapsed)

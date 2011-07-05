@@ -145,14 +145,17 @@ PHWorld::~PHWorld()
 
 void PHWorld::updatePositions()
 {
+    double frameInterval = 1.0f/(PHMainEvents::sharedInstance()->framesPerSecond());
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
         obj->updatePosition();
         obj->limitVelocity();
+        obj->commitAnimations(frameInterval);
     }
     modelQueue->processQueue();
 }
+
 
 void PHWorld::updateScene()
 {

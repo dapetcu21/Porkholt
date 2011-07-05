@@ -112,7 +112,6 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	b2World * fWorld = world->physicsWorld;
 	mutex->unlock();
 	
-	int error;
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
@@ -121,11 +120,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	PHLuaSetIncludePath(L, dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
 	
-	error = luaL_loadfile(L, (dir+"/init.lua").c_str()) || lua_pcall(L, 0, 0, 0);
-	if (error) {
-		PHLog("Lua: %s",lua_tostring(L,-1));
-		lua_pop(L, 1);  /* pop error message from the stack */
-	} 
+    PHLuaLoadFile(L,dir+"/init.lua");
 	
 	lua_getglobal(L,"layers");
 	

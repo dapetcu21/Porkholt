@@ -15,6 +15,7 @@
 #include "PHLAuxLayer.h"
 #include "PHLPlayer.h"
 #include "PHEventQueue.h"
+#include "PHLAnimation.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -42,6 +43,10 @@ PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL
 
 PHLObject::~PHLObject()
 {
+    scriptingDestroy();
+    for (list<PHLAnimation*>::iterator i = animations.begin(); i!=animations.end(); i++)
+        if (*i)
+            (*i)->release();
 	if (wrld)
 		wrld->removeObject(this);
     list<PHJoint*> jnts = joints;
@@ -115,7 +120,7 @@ void PHLObject::loadBody(void *l)
                         lua_pushstring(L, "box");
                         lua_gettable(L, -2);
                         if (lua_istable(L, -1))
-                            box = PHRect::rectFromLua(L);
+                            box = PHRect::rectFromLua(L,-1);
                         lua_pop(L,1);
                         
                         double rot = 0;
@@ -135,7 +140,7 @@ void PHLObject::loadBody(void *l)
                         lua_pushstring(L, "pos");
                         lua_gettable(L, -2);
                         if (lua_istable(L, -1))
-                            pos = PHPoint::pointFromLua(L);
+                            pos = PHPoint::pointFromLua(L,-1);
                         lua_pop(L, 1);
                         
                         //physics attributes
@@ -235,7 +240,7 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 	lua_pushstring(L, "pos");
 	lua_gettable(L, -2);
 	if (lua_istable(L, -1))
-		pos = PHPoint::pointFromLua(L);
+		pos = PHPoint::pointFromLua(L,-1);
 	lua_pop(L, 1);
 	
     rot = 0;
@@ -361,6 +366,53 @@ void PHLObject::setTransform(PHPoint p,double r)
         body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
 }
 
+bool PHLObject::isDynamic()
+{
+    if (!body) return false;
+    return (body->GetType()==b2_dynamicBody);
+}
+
+void PHLObject::setDynamic(bool d)
+{
+    if (body)
+        body->SetType(d?b2_dynamicBody:b2_staticBody);
+}
+
+void PHLObject::rotateAround(double r, PHPoint around)
+{
+    PHPoint p = pos;
+    p-=around;
+    p.rotate(r);
+    p+=around;
+    setTransform(p, rot+r);
+}
+
+PHPoint PHLObject::worldPoint(const PHPoint & p)
+{
+    PHPoint pp(p);
+    pp.rotate(rot);
+    pp+=pos;
+    return pp;
+}
+
+PHPoint PHLObject::localPoint(const PHPoint & p)
+{
+    PHPoint pp(p);
+    pp-=pos;
+    pp.rotate(-rot);
+    return pp;
+}
+
+PHPoint PHLObject::worldVector(const PHPoint & p)
+{
+    return p.rotated(rot);
+}
+
+PHPoint PHLObject::localVector(const PHPoint & p)
+{
+    return p.rotated(-rot);
+}
+
 void PHLObject::updatePosition()
 {
 	if (!body)
@@ -464,11 +516,132 @@ void PHLObject::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
     
 }
 
+void PHLObject::defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insObj)
+{
+    dlipos = insertPos;
+    dliobj = insObj;
+    dlworld = wrld;
+    wrld->viewEventQueue()->schedule(this,(PHCallback)&PHLObject::_defferedLoading, NULL, false);
+    retain();
+}
+
+void PHLObject::_defferedLoading(PHObject * sender, void * ud)
+{
+    loadView();
+    dlworld->insertObjectAtPosition(this, dlipos, dliobj);
+    release();
+}
+
+#pragma mark -
+#pragma mark animations
+
+void PHLObject::addAnimation(PHLAnimation * anim)
+{
+    if (anim && anim->isValid())
+    {
+        anim->retain();
+        animations.push_back(anim);
+        if (anim->statica)
+        {
+            anim->odyn = isDynamic();
+            setDynamic(false);
+        }
+    }
+}
+
+void PHLObject::skipAllAnimations()
+{
+    for (list<PHLAnimation*>::iterator i = animations.begin(); i!=animations.end(); i++)
+        if (*i)
+            (*i)->skipChain();
+}
+void PHLObject::invalidateAllAnimations()
+{
+    for (list<PHLAnimation*>::iterator i = animations.begin(); i!=animations.end(); i++)
+        if (*i)
+            (*i)->invalidateChain();
+}
+
+void PHLObject::commitAnimations(double elapsedTime)
+{
+    list<PHLAnimation*>::iterator i,nx;
+    for (i = animations.begin(); i!=animations.end(); i=nx)
+    {
+        nx = i;
+        nx++;
+        PHLAnimation * & a = *i;
+        bool doneJob = false;
+        while (!doneJob && a)
+        {
+            bool jobFinished = true;
+            if (a->isValid() && a->time)
+            {
+                double remaining = a->time-a->elapsed;
+                if ((jobFinished=((remaining<=elapsedTime)||a->isSkipped())))
+                    elapsedTime = remaining;
+                if (!a->isSkipped())
+                    doneJob = true;
+                a->elapsed +=elapsedTime;
+                double opos = a->position;
+                double pos = a->f((a->elapsed)/(a->time));
+                a->position = pos;
+                double dif = pos-opos;
+                PHPoint mv = a->move;
+                if (mv.x || mv.y)
+                    setPosition(position()+mv*dif);
+                if (a->rotate)
+                {
+                    if (a->useRotateCenter)
+                    {
+                        PHPoint rc = a->rotateCenter;
+                        if (a->objCoord)
+                            rc = worldPoint(rc);
+                        rotateAround((a->rotate)*dif,rc);
+                    }
+                    else
+                        setRotation(rotation()+(a->rotate)*dif);
+                }
+                PHPoint frc = a->force;
+                if (body&&(frc.x || frc.y))
+                {
+                    b2Vec2 force(frc.x*pos,frc.y*pos);
+                    if (a->objCoord)
+                        force = body->GetWorldVector(force);
+                    body->ApplyForce(force,body->GetWorldPoint(b2Vec2(a->forceapp.x,a->forceapp.y)));
+                }
+            }
+            if (jobFinished)
+            {
+                PHLAnimation * olda = a;
+                bool dyn = isDynamic();
+                if (olda->statica)
+                    dyn = olda->odyn;
+                a = olda->nextAnimation();
+                if (a)
+                {
+                    a->retain();
+                    if (a->statica)
+                    {
+                        a->odyn = dyn;
+                        dyn = false;
+                    }
+                }
+                setDynamic(dyn);
+                olda->release();
+            }
+        }
+        if (!a)
+            animations.erase(i);
+    }
+}
+
+
 #pragma mark -
 #pragma mark scripting
 
-void PHLObject::scriptingCreate(lua_State * L)
+void PHLObject::scriptingCreate(lua_State * l)
 {
+    L = l;
     hasScripting = true;
     lua_getglobal(L, _class.c_str());
     lua_pushstring(L, "new");
@@ -488,11 +661,17 @@ void PHLObject::scriptingCreate(lua_State * L)
     }
 }
 
-void PHLObject::scriptingInit(lua_State * L)
+void PHLObject::scriptingDestroy()
+{
+    if (L)
+        PHLuaDeleteWeakRef(L, this);
+}
+
+void PHLObject::scriptingInit(lua_State * l)
 {
     if (!hasScripting) return;
-    scriptingCreate(L);
-    lua_setglobal(L, scriptingName.c_str());
+    scriptingCreate(l);
+    lua_setglobal(l, scriptingName.c_str());
 }
 
 static int PHLObject_destroy(lua_State * L)
@@ -536,15 +715,17 @@ static int PHLObject_setTransform(lua_State * L)
     bool p = false, r = false;
     if (lua_istable(L, 2))
     {
-        lua_pushvalue(L, 2);
-        pnt = PHPoint::pointFromLua(L);
-        lua_pop(L,1);
+        pnt = PHPoint::pointFromLua(L,2);
         p =true;
+    } else {
+        luaL_argcheck(L,!lua_isnoneornil(L,2),2,NULL);
     }
     if (lua_isnumber(L, 3))
     {
-        rot = lua_isnumber(L, 3);
+        rot = lua_tonumber(L, 3);
         r = true;
+    } else {
+        luaL_argcheck(L,!lua_isnoneornil(L,2),2,NULL);
     }
     if (p&&r)
         obj->setTransform(pnt, rot);
@@ -560,45 +741,119 @@ static int PHLObject_setTransform(lua_State * L)
 static int PHLObject_setPosition(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    if (lua_istable(L, 2))
-    {
-        lua_pushvalue(L, 2);
-        obj->setPosition(PHPoint::pointFromLua(L));
-        lua_pop(L,1);
-    }
+    luaL_checktype(L, 2, LUA_TTABLE);
+    obj->setPosition(PHPoint::pointFromLua(L,2));
     return 0;
 }
 
 static int PHLObject_setRotation(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    if (lua_isnumber(L, 2))
-        obj->setRotation(lua_tonumber(L, 2));
+    luaL_checknumber(L, 2);
+    obj->setRotation(lua_tonumber(L, 2));
     return 0;
 }
 
 static int PHLObject_rotate(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    if (lua_isnumber(L, 2))
-        obj->setRotation(obj->rotation()+lua_tonumber(L, 2));
+    luaL_checknumber(L, 2);
+    obj->setRotation(obj->rotation()+lua_tonumber(L, 2));
     return 0;
 }
 
 static int PHLObject_move(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    if (lua_istable(L, 2))
-    {
-        lua_pushvalue(L, 2);
-        PHPoint pnt = PHPoint::pointFromLua(L);
-        lua_pop(L,1);
-        PHPoint opnt = obj->position();
-        opnt.x +=pnt.x;
-        opnt.y +=pnt.y;
-        obj->setPosition(opnt);
-    }
+    luaL_checktype(L, 2, LUA_TTABLE);
+    PHPoint pnt = PHPoint::pointFromLua(L,2);
+    PHPoint opnt = obj->position();
+    opnt.x +=pnt.x;
+    opnt.y +=pnt.y;
+    obj->setPosition(opnt);
     return 0;
+}
+
+static int PHLObject_addAnimation(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    PHLAnimation * anim = new PHLAnimation;
+    lua_pushvalue(L, 2);
+    anim->loadFromLua(L);
+    lua_pop(L, 1);
+    obj->addAnimation(anim);
+    return 0;
+}
+
+static int PHLObject_skipAllAnimations(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    obj->skipAllAnimations();
+    return 0;
+}
+
+static int PHLObject_invalidateAllAnimations(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    obj->invalidateAllAnimations();
+    return 0;
+}
+
+static int PHLObject_rotateAround(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checknumber(L, 2);
+    luaL_checktype(L, 3, LUA_TTABLE);
+    obj->rotateAround(lua_tonumber(L, 2), PHPoint::pointFromLua(L,3));
+    return 0;
+}
+
+static int PHLObject_isDynamic(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    lua_pushboolean(L, obj->isDynamic());
+    return 1;
+}
+
+static int PHLObject_setDynamic(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    obj->setDynamic(lua_toboolean(L, 2));
+    return 0;
+}
+
+static int PHLObject_worldPoint(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    (obj->worldPoint(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    return 1;
+}
+
+static int PHLObject_localPoint(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    (obj->localPoint(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    return 1;
+}
+
+static int PHLObject_worldVector(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    (obj->worldVector(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    return 1;
+}
+
+static int PHLObject_localVector(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    (obj->localVector(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    return 1;
 }
 
 void PHLObject::registerLuaInterface(lua_State * L)
@@ -623,23 +878,29 @@ void PHLObject::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "move");
     lua_pushcfunction(L, PHLObject_rotate);
     lua_setfield(L, -2, "rotate");
+    lua_pushcfunction(L, PHLObject_rotateAround);
+    lua_setfield(L, -2, "rotateAround");
+    lua_pushcfunction(L, PHLObject_isDynamic);
+    lua_setfield(L, -2, "isDynamic");
+    lua_pushcfunction(L, PHLObject_setDynamic);
+    lua_setfield(L, -2, "setDynamic");
+
+    lua_pushcfunction(L, PHLObject_worldPoint);
+    lua_setfield(L, -2, "worldPoint");
+    lua_pushcfunction(L, PHLObject_localPoint);
+    lua_setfield(L, -2, "localPoint");
+    lua_pushcfunction(L, PHLObject_worldVector);
+    lua_setfield(L, -2, "worldVector");
+    lua_pushcfunction(L, PHLObject_localVector);
+    lua_setfield(L, -2, "localVector");
+    
+    lua_pushcfunction(L, PHLObject_invalidateAllAnimations);
+    lua_setfield(L, -2, "invalidateAllAnimations");
+    lua_pushcfunction(L, PHLObject_rotate);
+    lua_setfield(L, -2, "skipAllAnimations");
+    lua_pushcfunction(L, PHLObject_addAnimation);
+    lua_setfield(L, -2, "addAnimation");
     
     
     lua_pop(L, 1);
-}
-
-void PHLObject::defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insObj)
-{
-    dlipos = insertPos;
-    dliobj = insObj;
-    dlworld = wrld;
-    wrld->viewEventQueue()->schedule(this,(PHCallback)&PHLObject::_defferedLoading, NULL, false);
-    retain();
-}
-
-void PHLObject::_defferedLoading(PHObject * sender, void * ud)
-{
-    loadView();
-    dlworld->insertObjectAtPosition(this, dlipos, dliobj);
-    release();
 }
