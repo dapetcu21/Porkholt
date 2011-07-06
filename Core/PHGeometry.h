@@ -132,6 +132,9 @@ struct PHPoint
         x = cosv*ox-sinv*oy;
         y = sinv*ox+cosv*oy;
     }
+    double length() { return sqrt(x*x+y*y); } 
+    double squaredLength() { return x*x+y*y; }
+    void normalize() { (*this)/=length(); }
     PHPoint rotated(double angle) const
     {
         angle = -angle/180 * M_PI;

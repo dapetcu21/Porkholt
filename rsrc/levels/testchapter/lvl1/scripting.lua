@@ -21,8 +21,7 @@ function callback2()
 	local p = player:position();
 	p.y = p.y + 2;
 	box:setPosition(p);
-	box:setDynamic(false); --to reset the velocity
-	box:setDynamic(true); 
+	box:setVelocity(vector(0,0));
 end
 
 function callback3()
@@ -45,7 +44,8 @@ timer:schedule();
 
 
 local anim = PHLAnimation:new();
-anim.force = point(0.5,0.5);
+anim.force = vector(1,0);
+anim.curveFunction = PHLAnimation.FadeInOutFunction;
 anim.disableDynamics = false;
 anim.time = 3;
 local anim2 = PHLAnimation:new();

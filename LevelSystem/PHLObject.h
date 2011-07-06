@@ -81,6 +81,18 @@ public:
     bool isDynamic();
     void setDynamic(bool d);
     void rotateAround(double r, PHPoint around);
+    
+    void applyForce(PHPoint force, PHPoint appPoint);
+    void applyImpulse(PHPoint impulse, PHPoint appPoint);
+    PHPoint velocity();
+    double scalarVelocity();
+    void setVelocity(PHPoint vel);
+    double angularVelocity();
+    void setAngularVelocity(double v);
+    void applyAngularImpulse(double impulse);
+    double mass();
+    PHPoint centerOfMass();
+    
 	
     PHPoint worldPoint(const PHPoint & p);
     PHPoint localPoint(const PHPoint & p);

@@ -344,6 +344,9 @@ void PHLObject::loadView()
 	view->setRotation(rot);
 }
 
+#pragma mark -
+#pragma mark Geometry
+
 void PHLObject::setPosition(PHPoint p) 
 {
 	pos = p;
@@ -412,6 +415,72 @@ PHPoint PHLObject::localVector(const PHPoint & p)
 {
     return p.rotated(-rot);
 }
+
+void PHLObject::applyForce(PHPoint force, PHPoint appPoint)
+{
+    if (body)
+        body->ApplyForce(b2Vec2(force.x,force.y),b2Vec2(appPoint.x,appPoint.y));
+}
+
+void PHLObject::applyImpulse(PHPoint impulse, PHPoint appPoint)
+{
+    if (body)
+        body->ApplyLinearImpulse(b2Vec2(impulse.x,impulse.y),b2Vec2(appPoint.x,appPoint.y));
+}
+
+PHPoint PHLObject::velocity()
+{
+    if (!body) return PHOriginPoint;
+    b2Vec2 v = body->GetLinearVelocity();
+    return PHPoint(v.x,v.y);
+}
+
+double PHLObject::scalarVelocity()
+{
+    if (!body) return 0;
+    b2Vec2 v = body->GetLinearVelocity();
+    return sqrt(v.x*v.x+v.y*v.y);
+}
+
+void PHLObject::setVelocity(PHPoint vel)
+{
+    if (body)
+        body->SetLinearVelocity(b2Vec2(vel.x,vel.y));
+}
+
+double PHLObject::angularVelocity()
+{
+    if (!body) return 0;
+    return body->GetAngularVelocity();
+}
+
+void PHLObject::setAngularVelocity(double v)
+{
+    if (body)
+        body->SetAngularVelocity(v);
+}
+
+void PHLObject::applyAngularImpulse(double impulse)
+{
+    if (body)
+        body->ApplyAngularImpulse(impulse);
+}
+
+double PHLObject::mass()
+{
+    if (!body) return 0;
+    return body->GetMass();
+}
+
+PHPoint PHLObject::centerOfMass()
+{
+    if (!body) return PHOriginPoint;
+    b2Vec2 c = body->GetLocalCenter();
+    return PHPoint(c.x,c.y);
+}
+
+#pragma mark -
+#pragma mark Some other stuff
 
 void PHLObject::updatePosition()
 {
@@ -562,7 +631,7 @@ void PHLObject::invalidateAllAnimations()
             (*i)->invalidateChain();
 }
 
-void PHLObject::commitAnimations(double elapsedTime)
+void PHLObject::commitAnimations(double el)
 {
     list<PHLAnimation*>::iterator i,nx;
     for (i = animations.begin(); i!=animations.end(); i=nx)
@@ -574,16 +643,18 @@ void PHLObject::commitAnimations(double elapsedTime)
         while (!doneJob && a)
         {
             bool jobFinished = true;
-            if (a->isValid() && a->time)
+            double tm = a->time;            
+            double elapsedTime = el;
+            if (a->isValid() && tm && !(tm==INFINITY && a->isSkipped()))
             {
-                double remaining = a->time-a->elapsed;
+                double remaining = tm-a->elapsed;
                 if ((jobFinished=((remaining<=elapsedTime)||a->isSkipped())))
                     elapsedTime = remaining;
                 if (!a->isSkipped())
                     doneJob = true;
                 a->elapsed +=elapsedTime;
                 double opos = a->position;
-                double pos = a->f((a->elapsed)/(a->time));
+                double pos = a->f((a->elapsed)/tm);
                 a->position = pos;
                 double dif = pos-opos;
                 PHPoint mv = a->move;
@@ -601,13 +672,44 @@ void PHLObject::commitAnimations(double elapsedTime)
                     else
                         setRotation(rotation()+(a->rotate)*dif);
                 }
-                PHPoint frc = a->force;
-                if (body&&(frc.x || frc.y))
+                if (body)
                 {
-                    b2Vec2 force(frc.x*pos,frc.y*pos);
-                    if (a->objCoord)
-                        force = body->GetWorldVector(force);
-                    body->ApplyForce(force,body->GetWorldPoint(b2Vec2(a->forceapp.x,a->forceapp.y)));
+                    if (a->angularImpulse)
+                        body->ApplyAngularImpulse((a->angularImpulse)*dif);
+                    PHPoint frc = a->force;
+                    if (frc.x || frc.y)
+                    {
+                        b2Vec2 force(frc.x*pos,frc.y*pos);
+                        if (a->objCoord)
+                            force = body->GetWorldVector(force);
+                        body->ApplyForce(force,body->GetWorldPoint(b2Vec2(a->forceapp.x,a->forceapp.y)));
+                    }
+                    frc = a->impulse;
+                    if (frc.x || frc.y)
+                    {
+                        b2Vec2 impulse(frc.x*dif,frc.y*dif);
+                        if (a->objCoord)
+                            impulse = body->GetWorldVector(impulse);
+                        body->ApplyLinearImpulse(impulse,body->GetWorldPoint(b2Vec2(a->forceapp.x,a->forceapp.y)));
+                    }
+                    frc = a->velocity;
+                    if (frc.x || frc.y)
+                    {
+                        double desired = frc.length();
+                        frc/=desired;
+                        b2Vec2 vel = body->GetLinearVelocity();
+                        double actual = frc.x*vel.x+frc.y*vel.y;
+                        double impulse = (desired - actual)*body->GetMass();
+                        if (impulse>(a->corrForce*elapsedTime))
+                            impulse=a->corrForce*elapsedTime;
+                        if (impulse<-(a->corrForce*elapsedTime))
+                            impulse=-(a->corrForce*elapsedTime);
+                        if (impulse)
+                        {
+                            frc*=impulse;
+                            body->ApplyLinearImpulse(b2Vec2(frc.x,frc.y),body->GetWorldCenter());
+                        }
+                    }
                 }
             }
             if (jobFinished)
@@ -856,6 +958,82 @@ static int PHLObject_localVector(lua_State * L)
     return 1;
 }
 
+static int PHLObject_applyImpulse(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    PHPoint ap;
+    if (lua_istable(L, 3))
+        ap = PHPoint::pointFromLua(L, 3);
+    else
+    {
+        luaL_argcheck(L, !lua_isnoneornil(L, 3), 3, NULL);
+        ap = obj->worldVector(PHOriginPoint);
+    }
+    obj->applyImpulse(PHPoint::pointFromLua(L, 2), ap);
+    return 0;
+}
+
+static int PHLObject_velocity(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    obj->velocity().saveToLua(L);
+    return 1;
+}
+
+static int PHLObject_scalarVelocity(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    lua_pushnumber(L, obj->scalarVelocity());
+    return 1;
+}
+
+static int PHLObject_setVelocity(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    obj->setVelocity(PHPoint::pointFromLua(L, 2));
+    return 0;
+}
+
+static int PHLObject_angularVelocity(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    lua_pushnumber(L, obj->angularVelocity());
+    return 1;
+}
+
+static int PHLObject_setAngularVelocity(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checknumber(L, 2);
+    obj->setAngularVelocity(lua_tonumber(L, 2));
+    return 0;
+}
+
+static int PHLObject_applyAngularImpulse(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checknumber(L, 2);
+    obj->applyAngularImpulse(lua_tonumber(L, 2));
+    return 0;
+}
+
+static int PHLObject_mass(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    lua_pushnumber(L, obj->mass());
+    return 1;
+}
+
+static int PHLObject_centerOfMass(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    obj->centerOfMass().saveToLua(L);
+    return 1;
+}
+
+
 void PHLObject::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLObject");
@@ -893,6 +1071,25 @@ void PHLObject::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "worldVector");
     lua_pushcfunction(L, PHLObject_localVector);
     lua_setfield(L, -2, "localVector");
+    lua_pushcfunction(L, PHLObject_applyImpulse);
+    lua_setfield(L, -2, "applyImpulse");
+    lua_pushcfunction(L, PHLObject_velocity);
+    lua_setfield(L, -2, "velocity");
+    lua_pushcfunction(L, PHLObject_scalarVelocity);
+    lua_setfield(L, -2, "scalarVelocity");
+    lua_pushcfunction(L, PHLObject_setVelocity);
+    lua_setfield(L, -2, "setVelocity");
+    lua_pushcfunction(L, PHLObject_angularVelocity);
+    lua_setfield(L, -2, "angularVelocity");
+    lua_pushcfunction(L, PHLObject_setAngularVelocity);
+    lua_setfield(L, -2, "setAngularVelocity");
+    lua_pushcfunction(L, PHLObject_applyAngularImpulse);
+    lua_setfield(L, -2, "applyAngularImpulse");
+    lua_pushcfunction(L, PHLObject_mass);
+    lua_setfield(L, -2, "mass");
+    lua_pushcfunction(L, PHLObject_centerOfMass);
+    lua_setfield(L, -2, "centerOfMass");
+    
     
     lua_pushcfunction(L, PHLObject_invalidateAllAnimations);
     lua_setfield(L, -2, "invalidateAllAnimations");

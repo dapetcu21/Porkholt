@@ -65,6 +65,15 @@ end
 -- function PHLObject:invalidateAllAnimations();
 -- function PHLObject:skipAllAnimations();
 -- function PHLObject:addAnimation(anim);
+-- function PHLObject:applyImpulse(impulse,applicationPoint)
+-- function PHLObject:velocity()
+-- function PHLObject:scalarVelocity()
+-- function PHLObject:setVelocity(vel) -- vector
+-- function PHLObject:angularVelocity()
+-- function PHLObject:setAngularVelocity(val) -- number
+-- function PHLObject:applyAngularImpulse(val) -- number
+-- function PHLObject:mass();
+-- function PHLObject:centerOfMass();
 
 PHObject = {};
 function PHObject:new(o, ...)
@@ -109,15 +118,20 @@ PHLAnimation = PHObject:new{
 	FadeInFunction = 2;
 	FadeOutFunction = 3;
 	FadeInOutFunction = 4;
-	ConstantFunction = 5; --use this for forces
+	ConstantFunction = 5; --use this for forces and velocities
 	curveFunction = LinearFunction;
 };
+--PHLAnimation.time --the duration of the animation
 --PHLAnimation.movement
 --PHLAnimation.rotation
 --PHLAnimation.rotationCenter -- in world coordinates or object coordinates if objectCoordinates is true
---PHLAnimation.force
---PHLAnimation.objectCoordinates --apply the force relative to the object coordinate system, does not affect the application point
---PHLAnimation.forceApplicationPoint --the force application point in object coordinates
+--PHLAnimation.velocity --tries to maintain this vectorial velocity using a maximum force of correctorForce
+--PHLAnimation.correctorForce --defaults to infinity, don't leave it at infinity unless you want instant velocity correction
+--PHLAnimation.force --can be applied infinitely
+--PHLAnimation.impulse --same as force if LinearFunction, allows for better distribution control
+--PHLAnimation.angularImpulse
+--PHLAnimation.objectCoordinates --apply the force/impulse relative to the object coordinate system, does not affect the application point, defaults to false
+--PHLAnimation.forceApplicationPoint --the force/impulse application point
 --PHLAnimation.curveFunction --this can be one of the built-in functions defined as numbers above or an outright function
 --PHLAnimation.nextAnimation
 --PHLAnimation.disableDynamics --disable physics for the object while animated... defaults to true

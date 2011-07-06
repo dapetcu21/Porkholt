@@ -9,7 +9,7 @@
 #include "PHLAnimation.h"
 #include "PHLua.h"
 
-PHLAnimation::PHLAnimation() : time(0), move(PHOriginPoint),rotateCenter(PHOriginPoint),useRotateCenter(false), objCoord(false), force(PHOriginPoint), forceapp(PHOriginPoint), rotate(0),elapsed(0), position(0), valid(true), skipped(false), statica(true), odyn(false), L(NULL), function(LinearFunction), next(NULL)
+PHLAnimation::PHLAnimation() : time(0), move(PHOriginPoint),rotateCenter(PHOriginPoint),useRotateCenter(false), objCoord(false), force(PHOriginPoint), impulse(PHOriginPoint), forceapp(PHOriginPoint), velocity(PHOriginPoint), rotate(0), angularImpulse(0), corrForce(INFINITY), elapsed(0), position(0), valid(true), skipped(false), statica(true), odyn(false), L(NULL), function(LinearFunction), next(NULL)
 {
     
 }
@@ -123,6 +123,26 @@ void PHLAnimation::loadFromLua(lua_State * l)
     lua_getfield(L, -1, "force");
     if (lua_istable(L, -1))
         force = PHPoint::pointFromLua(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "impulse");
+    if (lua_istable(L, -1))
+        impulse = PHPoint::pointFromLua(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "velocity");
+    if (lua_istable(L, -1))
+        velocity = PHPoint::pointFromLua(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "correctorForce");
+    if (lua_isnumber(L, -1))
+        corrForce = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "angularImpulse");
+    if (lua_isnumber(L, -1))
+        angularImpulse = lua_tonumber(L, -1);
     lua_pop(L,1);
     
     lua_getfield(L, -1, "forceApplicationPoint");

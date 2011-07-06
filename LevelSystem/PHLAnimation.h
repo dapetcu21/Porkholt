@@ -15,9 +15,9 @@ class PHLAnimation : public PHObject
 {
 private:
     double time;
-    PHPoint move,rotateCenter,force,forceapp;
+    PHPoint move,rotateCenter,force,impulse,forceapp,velocity;
     bool useRotateCenter,objCoord;
-    double rotate;
+    double rotate,angularImpulse,corrForce;
     double elapsed;
     double position; //f(elapsed)
     bool valid,skipped,statica,odyn;
@@ -46,6 +46,7 @@ public:
     
     void setMovement(PHPoint movement) { move = movement; }
     void setForce(PHPoint frc, bool objectCoordinates) { force = frc;  objCoord = objectCoordinates;}
+    void setImpulse(PHPoint frc, bool objectCoordinates) { impulse = frc;  objCoord = objectCoordinates;}
     void setForceApplicationPoint(PHPoint app) { forceapp = app; }
     void setRotation(double rot)
     {
@@ -67,6 +68,7 @@ public:
     void invalidateChain();
     void setDisableDynamics(bool d) { statica = d; };
     bool isDisablingDynamics() { return statica; }
+    void setCurveFunction(int f) { function = f; }
     
     void setNextAnimation(PHLAnimation * anim) {
         if (anim) anim->retain();
