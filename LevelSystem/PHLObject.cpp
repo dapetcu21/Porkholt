@@ -729,6 +729,8 @@ void PHLObject::commitAnimations(double el)
                     }
                 }
                 setDynamic(dyn);
+                if (olda->isValid() || olda->invalidateCallback)
+                    olda->animationFinished();
                 olda->release();
             }
         }

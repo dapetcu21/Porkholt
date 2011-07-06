@@ -34,6 +34,10 @@ function callback3()
 	wrecker:addAnimation(anim);
 end
 
+function callbackulupeste(s)
+	PHLog("animation callback fired: %s",s);
+end
+
 local timer = PHTimer:new(nil,1,false);
 timer:setCallback(callback);
 timer:schedule();
@@ -48,6 +52,7 @@ anim.force = vector(1,0);
 anim.curveFunction = PHLAnimation.FadeInOutFunction;
 anim.disableDynamics = false;
 anim.time = 3;
+anim:setCallback(callbackulupeste,"meow");
 local anim2 = PHLAnimation:new();
 anim2.movement = point(0,3);
 anim2.rotation = 360;

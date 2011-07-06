@@ -9,7 +9,7 @@
 #include "PHLAnimation.h"
 #include "PHLua.h"
 
-PHLAnimation::PHLAnimation() : time(0), move(PHOriginPoint),rotateCenter(PHOriginPoint),useRotateCenter(false), objCoord(false), force(PHOriginPoint), impulse(PHOriginPoint), forceapp(PHOriginPoint), velocity(PHOriginPoint), rotate(0), angularImpulse(0), corrForce(INFINITY), elapsed(0), position(0), valid(true), skipped(false), statica(true), odyn(false), L(NULL), function(LinearFunction), next(NULL)
+PHLAnimation::PHLAnimation() : time(0), move(PHOriginPoint),rotateCenter(PHOriginPoint),useRotateCenter(false), objCoord(false), force(PHOriginPoint), impulse(PHOriginPoint), forceapp(PHOriginPoint), velocity(PHOriginPoint), rotate(0), angularImpulse(0), corrForce(INFINITY), elapsed(0), position(0), valid(true), skipped(false), statica(true), odyn(false), L(NULL), function(LinearFunction), next(NULL), cbTarget(NULL), cbFunction(NULL), cbUd(NULL), invalidateCallback(false)
 {
     
 }
@@ -161,6 +161,12 @@ void PHLAnimation::loadFromLua(lua_State * l)
     if (lua_isboolean(L, -1))
         statica = lua_toboolean(L, -1);
     lua_pop(L,1);
+    
+    invalidateCallback = false;
+    lua_getfield(L, -1, "callbackOnInvalidate");
+    if (lua_isboolean(L, -1))
+        invalidateCallback = lua_toboolean(L, -1);
+    lua_pop(L,1);
 
     useRotateCenter = false;
     lua_getfield(L, -1, "rotationCenter");
@@ -241,4 +247,25 @@ void PHLAnimation::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "skipChain");
     
     lua_pop(L,1);
+}
+
+void PHLAnimation::animationFinished()
+{
+    if (cbFunction && cbTarget)
+        (cbTarget->*cbFunction)(this,cbUd);
+    if (L)
+    {
+        PHLuaGetHardRef(L,this);
+        if (lua_istable(L, -1))
+        {
+            lua_getfield(L, -1, "animationFinished");
+            if (lua_isfunction(L, -1))
+            {
+                lua_pushvalue(L, -2);
+                PHLuaCall(L,1,0);
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);
+    }
 }

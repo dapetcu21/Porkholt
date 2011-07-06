@@ -73,7 +73,7 @@ end
 -- function PHLObject:setAngularVelocity(val) -- number
 -- function PHLObject:applyAngularImpulse(val) -- number
 -- function PHLObject:mass();
--- function PHLObject:centerOfMass();
+-- function PHLObject:centerOfMass(); --in object coordinates
 
 PHObject = {};
 function PHObject:new(o, ...)
@@ -123,22 +123,37 @@ PHLAnimation = PHObject:new{
 };
 --PHLAnimation.time --the duration of the animation
 --PHLAnimation.movement
+---
 --PHLAnimation.rotation
 --PHLAnimation.rotationCenter -- in world coordinates or object coordinates if objectCoordinates is true
---PHLAnimation.velocity --tries to maintain this vectorial velocity using a maximum force of correctorForce
+---
+--PHLAnimation.velocity --tries to maintain this vectorial velocity using a maximum force of correctorForce, can be applied infinitely
 --PHLAnimation.correctorForce --defaults to infinity, don't leave it at infinity unless you want instant velocity correction
+---
 --PHLAnimation.force --can be applied infinitely
 --PHLAnimation.impulse --same as force if LinearFunction, allows for better distribution control
 --PHLAnimation.angularImpulse
 --PHLAnimation.objectCoordinates --apply the force/impulse relative to the object coordinate system, does not affect the application point, defaults to false
 --PHLAnimation.forceApplicationPoint --the force/impulse application point
+---
 --PHLAnimation.curveFunction --this can be one of the built-in functions defined as numbers above or an outright function
---PHLAnimation.nextAnimation
+--PHLAnimation.nextAnimation --you can chain animations
 --PHLAnimation.disableDynamics --disable physics for the object while animated... defaults to true
---function PHLAnimation:invalidate();
---function PHLAnimation:skip(); --this applies all changes immediately, except for forces
---function PHLAnimation::invalidateChain();
---function PHLAnimation::skipChain();
+--function PHLAnimation:invalidate(); --this leaves the animation as it is and cancells it (including its callback)
+--function PHLAnimation:skip(); --this applies all changes immediately, except for forces and velocities
+--function PHLAnimation:invalidateChain();
+--function PHLAnimation:skipChain();
+---
+--PHLAnimation.callbackOnInvalidate --normally, calling invalidate() on an animation cancels the callback, set this to true to override that behaviour
+function PHLAnimation:setCallback(cb,...)
+	self.cb = cb;
+	self.args = arg;
+end
+function PHLAnimation:animationFinished() --don't call this manually
+	if self.cb then
+		self.cb(unpack(self.args or {}));
+	end
+end
 
 
 PHLPlayer = PHLObject:new()

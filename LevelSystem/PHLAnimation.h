@@ -39,6 +39,11 @@ private:
     
     PHLAnimation * next;
     
+    PHObject * cbTarget;
+    PHCallback cbFunction;
+    void * cbUd;
+    bool invalidateCallback;
+    
     friend class PHLObject;
 public:
     PHLAnimation();
@@ -47,6 +52,8 @@ public:
     void setMovement(PHPoint movement) { move = movement; }
     void setForce(PHPoint frc, bool objectCoordinates) { force = frc;  objCoord = objectCoordinates;}
     void setImpulse(PHPoint frc, bool objectCoordinates) { impulse = frc;  objCoord = objectCoordinates;}
+    void setAngularImpulse(double ai) { angularImpulse = ai; }
+    void setVelocity(PHPoint vel, double correctorForce) { velocity = vel; corrForce = correctorForce; }
     void setForceApplicationPoint(PHPoint app) { forceapp = app; }
     void setRotation(double rot)
     {
@@ -76,6 +83,15 @@ public:
         next = anim;
     }
     PHLAnimation * nextAnimation() { return next; }
+    
+    void setCallback(PHObject * target, PHCallback cb, void * ud)
+    {
+        cbTarget = target;
+        cbFunction = cb;
+        cbUd = ud;
+    }
+    void setCallbackOnInvalidate(bool ci) { invalidateCallback = ci; }
+    void animationFinished();
     
     void loadFromLua(lua_State * L);
     static void registerLuaInterface(lua_State * L);
