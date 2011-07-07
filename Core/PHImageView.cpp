@@ -111,11 +111,11 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
                 tag = lua_tonumber(L, -1);
             lua_pop(L, 1);
 
-            int rot = 0;
+            double rot = 0;
             lua_pushstring(L, "rotation");
             lua_gettable(L, -2);
             if (lua_isnumber(L, -1))
-                rot = lua_tonumber(L, -1);
+                rot = -toRad(lua_tonumber(L, -1));
             lua_pop(L, 1);
 
             bool flipHoriz = false;

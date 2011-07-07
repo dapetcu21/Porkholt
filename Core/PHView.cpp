@@ -78,7 +78,7 @@ void PHView::apply_rotation()
 {
 	if (!_rotation) return;
 	glTranslatef(_rotationalCenter.x, _rotationalCenter.y, 0);
-	glRotatef(_rotation, 0, 0, -1);
+    PHGLRotate(_rotation);
 	glTranslatef(-_rotationalCenter.x, -_rotationalCenter.y, 0);
 }
 

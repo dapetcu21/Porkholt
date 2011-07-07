@@ -95,7 +95,7 @@ void PHLObject::loadBody(void *l)
             
                 b2BodyDef def;
                 def.position.Set(pos.x,pos.y);
-                def.angle = -rot*M_PI/180.0f;
+                def.angle = rot;
                 def.userData = this;
                 def.type = isstatic?b2_staticBody:b2_dynamicBody;
                 body = world->CreateBody(&def);
@@ -127,7 +127,7 @@ void PHLObject::loadBody(void *l)
                         lua_pushstring(L, "rotation");
                         lua_gettable(L, -2);
                         if (lua_isnumber(L, -1))
-                            rot = lua_tonumber(L, -1);
+                            rot = -toRad(lua_tonumber(L, -1));
                         lua_pop(L,1);
                         
                         lua_pushstring(L, "circleR");
@@ -247,7 +247,7 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 	lua_pushstring(L, "rotation");
 	lua_gettable(L, -2);
 	if (lua_isnumber(L, -1))
-		rot = lua_tonumber(L, -1);
+		rot = -toRad(lua_tonumber(L, -1));
 	lua_pop(L, 1);
 	
 	lua_pushstring(L, "maxVelocity");
@@ -351,14 +351,14 @@ void PHLObject::setPosition(PHPoint p)
 {
 	pos = p;
     if (body)
-        body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
+        body->SetTransform(b2Vec2(pos.x, pos.y),rot);
 };
 
 void PHLObject::setRotation(double r)
 {
 	rot = r;
     if (body)
-        body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
+        body->SetTransform(b2Vec2(pos.x, pos.y),rot);
 }
 
 void PHLObject::setTransform(PHPoint p,double r)
@@ -366,7 +366,7 @@ void PHLObject::setTransform(PHPoint p,double r)
     pos = p;
     rot = r;
     if (body)
-        body->SetTransform(b2Vec2(pos.x, pos.y),-rot*M_PI/180.0f);
+        body->SetTransform(b2Vec2(pos.x, pos.y),rot);
 }
 
 bool PHLObject::isDynamic()
@@ -488,7 +488,7 @@ void PHLObject::updatePosition()
 		return;
 	b2Vec2 p = body->GetPosition();
     pos = PHMakePoint(p.x, p.y);
-    rot = (-body->GetAngle()*180.0f/M_PI);
+    rot = body->GetAngle();
 }
 
 void PHLObject::updateView()
@@ -799,7 +799,7 @@ static int PHLObject_position(lua_State * L)
 static int PHLObject_rotation(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_pushnumber(L,obj->rotation());
+    lua_pushnumber(L,PHWarp(-toDeg(obj->rotation()),360));
     return 1;
 }
 
@@ -807,7 +807,7 @@ static int PHLObject_transform(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     obj->position().saveToLua(L);
-    lua_pushnumber(L,obj->rotation());
+    lua_pushnumber(L,PHWarp(-toDeg(obj->rotation()),360));
     return 2;
 }
 
@@ -826,7 +826,7 @@ static int PHLObject_setTransform(lua_State * L)
     }
     if (lua_isnumber(L, 3))
     {
-        rot = lua_tonumber(L, 3);
+        rot = -toRad(lua_tonumber(L, 3));
         r = true;
     } else {
         luaL_argcheck(L,!lua_isnoneornil(L,2),2,NULL);
@@ -854,7 +854,7 @@ static int PHLObject_setRotation(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checknumber(L, 2);
-    obj->setRotation(lua_tonumber(L, 2));
+    obj->setRotation(-toRad(lua_tonumber(L, 2)));
     return 0;
 }
 
@@ -862,7 +862,7 @@ static int PHLObject_rotate(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checknumber(L, 2);
-    obj->setRotation(obj->rotation()+lua_tonumber(L, 2));
+    obj->setRotation(obj->rotation()-toRad(lua_tonumber(L, 2)));
     return 0;
 }
 
@@ -909,7 +909,7 @@ static int PHLObject_rotateAround(lua_State * L)
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checknumber(L, 2);
     luaL_checktype(L, 3, LUA_TTABLE);
-    obj->rotateAround(lua_tonumber(L, 2), PHPoint::pointFromLua(L,3));
+    obj->rotateAround(-toRad(lua_tonumber(L, 2)), PHPoint::pointFromLua(L,3));
     return 0;
 }
 

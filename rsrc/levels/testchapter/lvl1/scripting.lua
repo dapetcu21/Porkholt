@@ -22,6 +22,8 @@ function callback2()
 	p.y = p.y + 2;
 	box:setPosition(p);
 	box:setVelocity(vector(0,0));
+	box:setAngularVelocity(0);
+	box:setRotation(0);
 end
 
 function callback3()

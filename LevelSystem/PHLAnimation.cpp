@@ -112,7 +112,7 @@ void PHLAnimation::loadFromLua(lua_State * l)
     
     lua_getfield(L, -1, "rotation");
     if (lua_isnumber(L, -1))
-        rotate = lua_tonumber(L, -1);
+        rotate = -toRad(lua_tonumber(L, -1));
     lua_pop(L,1);
     
     lua_getfield(L, -1, "movement");

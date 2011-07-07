@@ -233,7 +233,6 @@ void PHLowPassFilter(double & var, double newval, double period, double cutoff)
 void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around)
 {
     p = p-around;
-    angle = -angle/180 * M_PI;
     b2Vec2 pp = p;
     pp.x = cos(angle)*p.x-sin(angle)*p.y;
     pp.y = sin(angle)*p.x+cos(angle)*p.y;
@@ -246,4 +245,16 @@ bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)
     if (pnt.x<rect.x || pnt.x>rect.x+rect.width) return false;
     if (pnt.y<rect.y || pnt.y>rect.y+rect.height) return false;
     return true;
+}
+
+void PHGLRotate(double angle)
+{
+    double sinv = sin(-angle), cosv = cos(-angle);
+    GLfloat m[16] = {
+        cosv, -sinv, 0, 0,
+        sinv,  cosv, 0, 0,
+           0,     0, 1, 0,
+           0,     0, 0, 1
+    };
+    glMultMatrixf(m);
 }

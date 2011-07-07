@@ -127,7 +127,6 @@ struct PHPoint
     }
     void rotate(double angle)
     {
-        angle = -angle/180 * M_PI;
         double ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
         x = cosv*ox-sinv*oy;
         y = sinv*ox+cosv*oy;
@@ -137,7 +136,6 @@ struct PHPoint
     void normalize() { (*this)/=length(); }
     PHPoint rotated(double angle) const
     {
-        angle = -angle/180 * M_PI;
         PHPoint p;
         double sinv = sin(angle), cosv = cos(angle);
         p.x = cosv*x-sinv*y;
@@ -168,5 +166,17 @@ bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
 void PHLowPassFilter(double & var, double newval, double period, double cutoff);
 struct b2Vec2;
 void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around);
+
+#define toRad(x) ((x)/180.0f*M_PI)
+#define toDeg(x) ((x)/M_PI*180.0f)
+inline double PHWarp(double v, double f)
+{
+    if (v<0)
+        v-=((int)(v/f)-1)*f;
+    if (v>=f)
+        v-=((int)(v/f))*f;
+    return v;
+}
+void PHGLRotate(double angle);
 
 #endif
