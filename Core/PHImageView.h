@@ -14,15 +14,19 @@
 #include "PHImage.h"
 
 class PHImage;
+class PHImageAnimator;
+
 class PHImageView : public PHView
 {
 protected:
 	PHImage * _image;
+    PHImageAnimator * _animator;
 	PHRect coords;
     PHColor tint;
     bool flipHoriz,flipVert;
 public:
 	PHImage * image() { return _image; };
+    PHImageAnimator * animator() { return _animator; }
 	void setImage(PHImage * image);
 	PHImageView();
 	PHImageView(const PHRect &frame);

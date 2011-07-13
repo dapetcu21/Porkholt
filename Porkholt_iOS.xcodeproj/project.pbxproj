@@ -43,6 +43,9 @@
 		C17B4E37130EA1F400C2EC8D /* PHTouchInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */; };
 		C17B4E3D130EA4F000C2EC8D /* PHTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */; };
 		C17B4F23130EFAEA00C2EC8D /* PHGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */; };
+		C17BF7FF13C846D600DDD9C7 /* PHAnimatedImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17BF7FD13C846D600DDD9C7 /* PHAnimatedImage.cpp */; };
+		C17BF80313C862E400DDD9C7 /* PHNormalImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17BF80113C862E300DDD9C7 /* PHNormalImage.cpp */; };
+		C17BF80613CD6B2300DDD9C7 /* PHImageAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17BF80413CD6B2200DDD9C7 /* PHImageAnimator.cpp */; };
 		C17D0F551322A31000BDB8EF /* PHLevelController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F541322A31000BDB8EF /* PHLevelController.cpp */; };
 		C17D0F581322AD7700BDB8EF /* PHWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F571322AD7700BDB8EF /* PHWorld.cpp */; };
 		C17D0F671323811F00BDB8EF /* PHThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F661323811F00BDB8EF /* PHThread.cpp */; };
@@ -224,6 +227,12 @@
 		C17B4E3B130EA4F000C2EC8D /* PHTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTime.h; sourceTree = "<group>"; };
 		C17B4E3C130EA4F000C2EC8D /* PHTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTime.cpp; sourceTree = "<group>"; };
 		C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGeometry.cpp; sourceTree = "<group>"; };
+		C17BF7FD13C846D600DDD9C7 /* PHAnimatedImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimatedImage.cpp; sourceTree = "<group>"; };
+		C17BF7FE13C846D600DDD9C7 /* PHAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimatedImage.h; sourceTree = "<group>"; };
+		C17BF80113C862E300DDD9C7 /* PHNormalImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNormalImage.cpp; sourceTree = "<group>"; };
+		C17BF80213C862E400DDD9C7 /* PHNormalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNormalImage.h; sourceTree = "<group>"; };
+		C17BF80413CD6B2200DDD9C7 /* PHImageAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImageAnimator.cpp; sourceTree = "<group>"; };
+		C17BF80513CD6B2200DDD9C7 /* PHImageAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageAnimator.h; sourceTree = "<group>"; };
 		C17D0F531322A31000BDB8EF /* PHLevelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelController.h; sourceTree = "<group>"; };
 		C17D0F541322A31000BDB8EF /* PHLevelController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLevelController.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C17D0F561322AD7700BDB8EF /* PHWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHWorld.h; sourceTree = "<group>"; };
@@ -473,6 +482,12 @@
 				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
 				C17B48491307B82300C2EC8D /* PHImage.h */,
 				C17B484A1307B82300C2EC8D /* PHImage.cpp */,
+				C17BF7FD13C846D600DDD9C7 /* PHAnimatedImage.cpp */,
+				C17BF7FE13C846D600DDD9C7 /* PHAnimatedImage.h */,
+				C17BF80413CD6B2200DDD9C7 /* PHImageAnimator.cpp */,
+				C17BF80513CD6B2200DDD9C7 /* PHImageAnimator.h */,
+				C17BF80113C862E300DDD9C7 /* PHNormalImage.cpp */,
+				C17BF80213C862E400DDD9C7 /* PHNormalImage.h */,
 				C17B484C1307B83000C2EC8D /* PHImageView.h */,
 				C17B484D1307B83000C2EC8D /* PHImageView.cpp */,
 				C17B48C71308024C00C2EC8D /* PHFileManager.h */,
@@ -906,6 +921,9 @@
 				C177805213BCDAB50003640D /* PHScriptableTimer.cpp in Sources */,
 				C1EEB25513C07B9A004F5D5E /* PHEventQueue.cpp in Sources */,
 				C17B487513C1C44200FAD712 /* PHLAnimation.cpp in Sources */,
+				C17BF7FF13C846D600DDD9C7 /* PHAnimatedImage.cpp in Sources */,
+				C17BF80313C862E400DDD9C7 /* PHNormalImage.cpp in Sources */,
+				C17BF80613CD6B2300DDD9C7 /* PHImageAnimator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

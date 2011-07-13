@@ -9,6 +9,8 @@
 
 #include "PHImage.h"
 #include "PHButtonView.h"
+#include "PHNormalImage.h"
+#include "PHAnimatedImage.h"
 
 PHButtonView::PHButtonView() : PHView(), imgUp(NULL), imgDown(NULL), _state(StateUp), tgUp(NULL), tgDown(NULL)
 {
@@ -25,10 +27,12 @@ void PHButtonView::draw()
 	if (_state == StateDown)
 	{
 		if (imgDown)
-			imgDown->renderInFrame(_bounds);
+            if (imgDown->isNormal())
+                ((PHNormalImage*)imgDown)->renderInFrame(_bounds);
 	} else {
 		if (imgUp)
-			imgUp->renderInFrame(_bounds);
+            if (imgUp->isNormal())
+                ((PHNormalImage*)imgUp)->renderInFrame(_bounds);
 	}
 }
 

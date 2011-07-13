@@ -93,7 +93,7 @@ PHThread::~PHThread()
 	initMutex->release();
 	threads_mutex -> lock();
 	threads.erase(thread);
-	threads_mutex -> lock();
+	threads_mutex -> unlock();
     eventQueue->release();
 };
 

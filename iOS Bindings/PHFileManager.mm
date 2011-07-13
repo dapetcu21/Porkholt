@@ -24,6 +24,13 @@ bool PHFileManager::fileExists(const string & path)
     return (stat(path.c_str(), &results) == 0);
 }
 
+bool PHFileManager::isDirectory(const string & path)
+{
+    struct stat results;
+    if (stat(path.c_str(), &results) != 0)
+        return false;
+    return (results.st_mode & S_IFDIR);
+}
 
 size_t PHFileManager::fileSize(const string & path)
 {

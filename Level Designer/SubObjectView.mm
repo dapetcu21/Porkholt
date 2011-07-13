@@ -164,7 +164,11 @@
                 [imagePath release];
                 imagePath = nimg;
                 [img release];
-                img = [[NSImage alloc] initWithContentsOfURL:[self.objectView.object.controller.document resourceURLNamed:imagePath]];
+                NSURL * url = [self.objectView.object.controller.document resourceURLNamed:imagePath];
+                BOOL isDirectory = NO;
+                if ([[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:&isDirectory] && isDirectory)
+                    url = [url URLByAppendingPathComponent:@"0.png"];
+                img = [[NSImage alloc] initWithContentsOfURL:url];
                 if (!img)
                     fail = YES;
             }

@@ -63,7 +63,6 @@ public:
 			lastTime = time;
 			time = PHTime::getTime();
 			double elapsedTime = time-lastTime;
-		//	PHLog("elapsedTime: %f",elapsedTime/frameInterval);
 			if (elapsedTime>1.5*frameInterval)
 				elapsedTime = 1.5*frameInterval;
 			mainClass->renderFrame(elapsedTime);

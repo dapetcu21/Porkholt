@@ -126,3 +126,15 @@ bool PHLuaCall(lua_State * L,int inargs, int outargs)
     }
     return true;
 }
+
+void PHLuaSeedRandom(lua_State * L)
+{
+    lua_getglobal(L, "math");
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "randomseed");
+        lua_pushnumber(L, time(NULL));
+        PHLuaCall(L, 1, 0);
+    }
+    lua_pop(L, 1);
+}

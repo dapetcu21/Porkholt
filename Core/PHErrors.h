@@ -17,4 +17,5 @@ void PHLog(const string & str, ...);
 extern string PHIOError;
 extern string PHInvalidFileFormat;
 extern string PHSysCallError;
+extern string PHLuaError;
 #endif

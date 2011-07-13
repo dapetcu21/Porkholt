@@ -13,8 +13,11 @@
 #include "PHImageView.h"
 #include "PHTrailImageView.h"
 #include "PHFileManager.h"
+#include "PHNormalImage.h"
+#include "PHAnimatedImage.h"
+#include "PHImageAnimator.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), coords(PHWholeRect), tint(PHInvalidColor), flipVert(false), flipHoriz(false)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), flipVert(false), flipHoriz(false)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -29,8 +32,28 @@ PHImageView::PHImageView(PHImage * image) : PHView(), PHIMAGEVIEW_INIT
 	setImage(image);
 }
 
+void PHImageView::setImage(PHImage * img)
+{
+    if (_animator)
+    {
+        _animator->release();
+        _animator = NULL;
+    }
+    if (img)
+    {
+        img->retain();
+        if (img->isAnimated())
+            _animator = ((PHAnimatedImage*)img)->newAnimator();
+    }
+    if (_image)
+        _image->release();
+    _image = img;
+}
+
 PHImageView::~PHImageView()
 {
+    if (_animator)
+        _animator->release();
 	if (_image)
 		_image->release();
 }
@@ -50,15 +73,12 @@ void PHImageView::draw()
             frame.y+=frame.height;
             frame.height = -frame.height;
         }
-		_image->renderInFramePortionTint(frame,coords,tint);
+        if (_image->isNormal())
+            ((PHNormalImage*)_image)->renderInFramePortionTint(frame,coords,tint);
+        
+        if (_image->isAnimated())
+            _animator->renderInFramePortionTint(frame,coords,tint);
     }
-}
-
-void PHImageView::setImage(PHImage * image) 
-{ 
-	if (image) image->retain(); 
-	if (_image) _image->release(); 
-	_image=image; 
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)

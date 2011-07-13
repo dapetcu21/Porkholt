@@ -30,4 +30,5 @@ void PHLuaGetHardRef(lua_State * L, void * ref);
 void PHLuaSetHardRef(lua_State * L, void * ref);
 void PHLuaDeleteHardRef(lua_State * L, void * ref);
 void * PHLuaThisPointer(lua_State * L);
+void PHLuaSeedRandom(lua_State * L);
 #endif

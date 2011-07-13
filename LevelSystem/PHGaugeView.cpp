@@ -9,6 +9,8 @@
 
 #include "PHImage.h"
 #include "PHGaugeView.h"
+#include "PHNormalImage.h"
+#include "PHAnimatedImage.h"
 
 void PHGaugeView::draw()
 {
@@ -17,5 +19,6 @@ void PHGaugeView::draw()
 	PHRect portion = PHWholeRect;
 	portion.width*=lvl;
 	if (_image)
-		_image->renderInFramePortion(bounds,portion);
+        if (_image->isNormal())
+            ((PHNormalImage*)_image)->renderInFramePortion(bounds,portion);
 }
