@@ -29,7 +29,7 @@ protected:
     
 public:
     PHAuxLayerView(int name);
-    ~PHAuxLayerView();
+    virtual ~PHAuxLayerView();
     
     static PHAuxLayerView * auxLayerViewWithName(int n);
 };

@@ -27,7 +27,7 @@ public:
 #define PHCAPTUREVIEW_INIT l(NULL), mutex(NULL), sm1(NULL), sm2(NULL), lastPaused(false)
 	PHCaptureView() : PHView(), PHCAPTUREVIEW_INIT{};
 	PHCaptureView(const PHRect &frame) : PHView(frame), PHCAPTUREVIEW_INIT {};
-    ~PHCaptureView() { if(mutex) mutex->release(); }
+    virtual ~PHCaptureView() { if(mutex) mutex->release(); }
     
 	void setQueue(list<PHPoint> * q) { l = q; }
 	void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }

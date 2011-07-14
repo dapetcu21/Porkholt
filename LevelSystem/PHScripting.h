@@ -21,7 +21,7 @@ private:
     lua_State * L;
 public:
     PHScripting(PHWorld * world,string level_dir);
-    ~PHScripting();
+    virtual ~PHScripting();
     void scriptingStep(double timeElapsed);
     void loadWorld();
 };

@@ -18,7 +18,7 @@ class PHImageAnimator : public PHObject
 private:
     PHAnimatedImage * _image;
     PHImageAnimator(PHAnimatedImage * img);
-    ~PHImageAnimator();
+    virtual ~PHImageAnimator();
     
     friend class PHAnimatedImage;
     

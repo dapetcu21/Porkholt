@@ -29,7 +29,7 @@ private:
 public:
     
     PHNormalImage(const string & path);
-    ~PHNormalImage();
+    virtual ~PHNormalImage();
     
     void bindToTexture();
     

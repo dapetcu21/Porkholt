@@ -16,6 +16,7 @@
 #include "PHLPlayer.h"
 #include "PHEventQueue.h"
 #include "PHLAnimation.h"
+#include "PHLSensor.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -34,6 +35,8 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         return new PHLAuxLayer;
     if (str=="PHLPlatform")
         return new PHLPlatform;
+    if (str=="PHLSensor")
+        return new PHLSensor;
 	return new PHLObject;
 }
 
@@ -202,16 +205,16 @@ void PHLObject::loadBody(void *l)
                                 b2RotatePoint(v[i],rot,middle);
                             shape.Set(v,4);
                             fdef.shape = &shape;
-                            body->CreateFixture(&fdef);
                         }
                         if (strcmp(typ, "circle")==0)
                         {
                             b2CircleShape shape;
                             shape.m_radius = circleR;
                             shape.m_p.Set(pos.x,pos.y);
-                            fdef.shape = &shape;
-                            body->CreateFixture(&fdef);					
+                            fdef.shape = &shape;					
                         }
+                        if (customizeFixture(L,fdef) && fdef.shape)
+                            body->CreateFixture(&fdef);
                     }
                     lua_pop(L, 1);
                 }
@@ -220,6 +223,11 @@ void PHLObject::loadBody(void *l)
         lua_pop(L, 1);
 	}
 	lua_pop(L,1);
+}
+
+bool PHLObject::customizeFixture(lua_State * L, b2FixtureDef & fixtureDef)
+{
+    return true;
 }
 
 void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world)
@@ -1102,4 +1110,12 @@ void PHLObject::registerLuaInterface(lua_State * L)
     
     
     lua_pop(L, 1);
+}
+
+void PHLObject::luaPushSelf(lua_State * l)
+{
+    if (hasScripting && l==L)
+        PHLuaGetWeakRef(L, this);
+    else
+        lua_pushstring(l, _class.c_str());
 }

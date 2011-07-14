@@ -19,7 +19,7 @@ class PHScriptableTimer : public PHTimer
 private:
     lua_State * L;
 public:
-    ~PHScriptableTimer();
+    virtual ~PHScriptableTimer();
     PHScriptableTimer();
     
     lua_State * luaState() { return L; }

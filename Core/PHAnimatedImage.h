@@ -71,7 +71,7 @@ private:
     
 public:
     PHAnimatedImage(const string & s);
-    ~PHAnimatedImage();
+    virtual ~PHAnimatedImage();
     
     virtual bool isAnimated() { return true; }
     

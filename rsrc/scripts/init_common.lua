@@ -40,6 +40,7 @@ function objectAddBox(obj,x, y, w, h,proto)
 	fix[fix.n] = tmp;
 	tmp.shape = "box";
 	tmp.box = rect(x,y,w,h);
+	setmetatable(tmp,obj._fixturemeta);
 	fix.n = fix.n + 1;	
 end
 
@@ -49,13 +50,23 @@ function objectAddCircle(obj,r,proto)
     fix[fix.n] = tmp;
     tmp.shape = "circle";
     tmp.circleR = r;
+	setmetatable(tmp,obj._fixturemeta);
     fix.n = fix.n + 1;	
 end
+
+cWORLD = 1;
+cPLAYER = 2;
+cNPC = 4;
+cMOB = 8;
 
 Initializers = {}
 function Initializers.PHLObject(obj)
 	obj.images = { n = 0; };
 	obj.physics = { fixtures = {n = 0;}; };
+	obj._fixtureindex = {};
+	obj._fixtureindex.categoryBits = cWORLD;
+	obj._fixtureindex.maskBits = cWORLD + cPLAYER + cNPC + cMOB;
+	obj._fixturemeta = { __index = obj._fixtureindex };
 end
 function Initializers.PHLCamera(obj)
 	Initializers.PHLObject(obj)
@@ -63,10 +74,16 @@ end
 function Initializers.PHLPlayer(obj)
 	Initializers.PHLObject(obj)
 	obj.physics.dynamic = true;
+	obj._fixtureindex.categoryBits = cPLAYER;
+	obj._fixtureindex.maskBits = cWORLD + cPLAYER + cMOB;
 	objectAddCircle(obj,0.25,{restitution = 0.5;}); --0.5 restitution is the exact value for which the jumping system can't be exploited
 	obj.maxVelocityX = 3;
 	objectAddImage(obj,"/ball.png",-0.25,-0.25,0.5,0.5,{tag=20; class="PHTrailImageView"});
     objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5,{tag=21});
+end
+function Initializers.PHLSensor(obj)
+	Initializers.PHLObject(obj)
+	obj._fixtureindex.maskBits = cPLAYER;
 end
 
 function objectWithClass(class)

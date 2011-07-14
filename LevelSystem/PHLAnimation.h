@@ -47,7 +47,7 @@ private:
     friend class PHLObject;
 public:
     PHLAnimation();
-    ~PHLAnimation();
+    virtual ~PHLAnimation();
     
     void setMovement(PHPoint movement) { move = movement; }
     void setForce(PHPoint frc, bool objectCoordinates) { force = frc;  objCoord = objectCoordinates;}

@@ -166,3 +166,9 @@ function PHLPlayer:init() --constructor example
 end
 
 PHLCamera = PHLObject:new()
+
+PHLSensor = PHLObject:new()
+function PHLSensor:objectEntered(obj) --override these. obj is either a table representing an object or a string with the object's class if the object isn't scriptable
+end
+function PHLSensor:objectExited(obj)
+end

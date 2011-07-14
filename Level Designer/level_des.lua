@@ -30,13 +30,15 @@ function describeObject(obj)
 
 	local j = 0;
 	for i,v in pairs(obj) do
-        if (type(v)=="table") then
-            des[j] = { key = i;};
-            des[j].value = describeTable(obj[i]);
-        else
-            des[j] = { key = i; value = v; };
+        if ( not (type(i)=="string" and string.sub(i,1,1)=="_")) then
+            if (type(v)=="table") then
+                des[j] = { key = i;};
+                des[j].value = describeTable(obj[i]);
+            else
+                des[j] = { key = i; value = v; };
+            end
+            j = j+1;
         end
-		j = j+1;
 	end
 	des.n = j;
 	return des;

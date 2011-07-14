@@ -61,3 +61,11 @@ anim2.rotation = 360;
 anim2.time = 0.5;
 anim.nextAnimation = anim2;
 player:addAnimation(anim);
+
+function sensor:objectEntered(obj)
+	print("entered: ",obj);
+end
+
+function sensor:objectExited(obj)
+	print("exited: ",obj);
+end

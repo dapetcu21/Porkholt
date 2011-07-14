@@ -31,7 +31,7 @@ public:
 	int height() { return _height; };
 	int width() { return _width; };
 
-	~PHImage();
+	virtual ~PHImage();
     
     virtual bool isNormal() { return false; };
     virtual bool isAnimated() { return false; };

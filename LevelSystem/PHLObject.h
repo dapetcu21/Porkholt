@@ -22,6 +22,7 @@ class b2ContactImpulse;
 class PHWorld;
 class PHView;
 class PHLAnimation;
+struct b2FixtureDef;
 
 class PHLObject : public PHObject
 {
@@ -109,11 +110,20 @@ public:
     
     b2Body * getBody() { return body; }
     
+private:
+    
+    virtual bool customizeFixture(lua_State * L, b2FixtureDef & fixtureDef);
+    
     virtual bool collidesWith(PHLObject * obj);
     virtual void contactBegin(bool b,b2Contact* contact);
     virtual void contactEnd(bool b,b2Contact* contact);
     virtual void contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold);
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
+    
+    friend class PHContactListener;
+    friend class PHContactFilter;
+    
+public:
     
     void scriptingCreate(lua_State * L);
     void scriptingDestroy();
@@ -122,6 +132,8 @@ public:
     
     void defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insObj);
     void _defferedLoading(PHObject * sender, void * ud);
+    
+    void luaPushSelf(lua_State * L);
 private:
     int dlipos;
     PHLObject * dliobj;
