@@ -1,7 +1,5 @@
 function callback()
 	PHLog("timer fired");
-	local boxW = ((792-29-12)/792)*2;
-	local posBox = (29/792-0.5)*2;
 	local obj = objectWithClass("PHLObject");
 	obj.pos = player:position();
 	obj.pos.y = obj.pos.y + 2;
@@ -57,7 +55,7 @@ anim.time = 3;
 anim:setCallback(callbackulupeste,"meow");
 local anim2 = PHLAnimation:new();
 anim2.movement = point(0,3);
-anim2.rotation = 360;
+anim2.rotation = 360*3;
 anim2.time = 0.5;
 anim.nextAnimation = anim2;
 player:addAnimation(anim);

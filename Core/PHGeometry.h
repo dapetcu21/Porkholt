@@ -177,6 +177,8 @@ inline double PHWarp(double v, double f)
         v-=((int)(v/f))*f;
     return v;
 }
+
 void PHGLRotate(double angle);
+void PHGLFlip(PHPoint center, bool horiz, bool vert);
 
 #endif

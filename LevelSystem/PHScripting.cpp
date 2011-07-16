@@ -14,6 +14,7 @@
 #include "PHLObject.h"
 #include "PHLevelController.h"
 #include "PHLAnimation.h"
+#include "PHLNPC.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
@@ -88,6 +89,7 @@ void PHScripting::loadWorld()
     
     PHScriptableTimer::registerLuaInterface(L);
     PHLObject::registerLuaInterface(L);
+    PHLNPC::registerLuaInterface(L);
     PHLAnimation::registerLuaInterface(L);
 }
 

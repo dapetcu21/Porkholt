@@ -1,3 +1,4 @@
+
 /*
  *  PHLPlayer.h
  *  Porkholt_iOS
@@ -10,24 +11,17 @@
 #ifndef PHLPLAYER_H
 #define PHLPLAYER_H
 
-#include "PHMain.h"
-
-#include "PHLObject.h"
+#include "PHLNPC.h"
 
 class PHTrailImageView;
 
-class PHLPlayer : public PHLObject
+class PHLPlayer : public PHLNPC
 {
 private:
-    PHTrailImageView * bodyView;
-    PHImageView * faceView;
     PHView * worldView;
     PHPoint normal;
     double touchesSomething;
     int forceGap;
-    
-    int trailSize;
-    bool horizontallyFlipped;
     
     PHMutex * mutex;
 public:
@@ -39,13 +33,10 @@ public:
 	void updateControls(list<PHPoint> * queue);
 	
 	virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
-	virtual void loadView();
     
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
     
     void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
-    
-    virtual void updateView();
 };
 
 #endif

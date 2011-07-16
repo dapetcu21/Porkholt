@@ -23,7 +23,7 @@ void PHPlayerView::setRotation( double rot)
     PHLowPassFilter(lastDif, dif, 1.0f/fps, 50.0f);
     for (ViewEl * ve = viewsSt; ve; ve=ve->next)
     {
-        if (ve->el == _designatedView) continue;
+        if (ve->el->tag() != _designatedTag) continue;
         ve->el->setRotation(ve->el->rotation()-lastDif);
     }
 }

@@ -23,6 +23,7 @@ class PHWorld;
 class PHView;
 class PHLAnimation;
 struct b2FixtureDef;
+class b2Fixture;
 
 class PHLObject : public PHObject
 {
@@ -60,6 +61,10 @@ protected:
 	friend class PHJoint;
     
     lua_State * L;
+    
+    vector<b2FixtureDef*>fixturesDefinitions;
+    vector<b2Fixture*>fixtures;
+    void rebuildFixtures();
     
 public:
 	PHLObject();
@@ -105,7 +110,7 @@ public:
 	
 	static PHLObject * objectWithClass(const string & str);
 	
-    void updatePosition();
+    virtual void updatePosition();
     virtual void updateView();
     
     b2Body * getBody() { return body; }

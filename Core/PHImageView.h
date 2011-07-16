@@ -23,7 +23,6 @@ protected:
     PHImageAnimator * _animator;
 	PHRect coords;
     PHColor tint;
-    bool flipHoriz,flipVert;
 public:
 	PHImage * image() { return _image; };
     PHImageAnimator * animator() { return _animator; }
@@ -39,10 +38,6 @@ public:
     
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; };
-    bool horizontallyFlipped() { return flipHoriz; }
-    bool verticallyFlipped() { return flipVert; }
-    void setHorizontallyFlipped(bool b) { flipHoriz = b; }
-    void setVerticallyFlipped(bool b) { flipVert = b; }
     
     static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
     static PHImageView * imageFromClass(const string & clss);

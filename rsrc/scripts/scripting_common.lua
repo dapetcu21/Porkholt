@@ -155,15 +155,12 @@ function PHLAnimation:animationFinished() --don't call this manually
 	end
 end
 
+PHLNPC = PHLObject:new();
+--function PHLNPC:isFlipped();
+--function PHLNPC:setFlipped(f);
+--function PHLNPC:flip();
 
-PHLPlayer = PHLObject:new()
-function PHLPlayer:init() --constructor example
-	if (PHLObject.init(self)) then
-		-- extra init code here
-		return self;
-	end
-	return nil;
-end
+PHLPlayer = PHLNPC:new()
 
 PHLCamera = PHLObject:new()
 

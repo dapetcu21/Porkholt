@@ -16,9 +16,7 @@
 #include <Box2D/Box2D.h>
 #include "PHMotion.h"
 
-PHView * playerView = NULL;
-
-PHLPlayer::PHLPlayer() : bodyView(NULL), worldView(NULL), faceView(NULL), touchesSomething(false), normal(PHOriginPoint), forceGap(0), trailSize(0), horizontallyFlipped(false), mutex(NULL)
+PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL)
 {
 	_class = "PHLPlayer";
 }
@@ -31,21 +29,10 @@ PHLPlayer::~PHLPlayer()
 
 void PHLPlayer::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
-	PHLObject::loadFromLua(L,root,world);
+	PHLNPC::loadFromLua(L,root,world);
     body->SetBullet(true);
 }
 
-void PHLPlayer::loadView()
-{
-	view = new PHPlayerView(PHMakeRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
-    view->setRotationalCenter(PHMakePoint(-viewSize.x, -viewSize.y));
-	loadImages();
-    ((PHPlayerView*)view)->setDesignatedView(bodyView = (PHTrailImageView*)(view->viewWithTag(20)));
-    faceView = (PHImageView*)(view->viewWithTag(21));
-    bodyView->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
-	view->setRotation(rot);
-	playerView = view;
-}
 
 #define MAX_TILT 30.0f
 #define TILT_FORCE_FACTOR 0.05f
@@ -53,11 +40,6 @@ void PHLPlayer::loadView()
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
-	if (!worldView)
-    {
-        bodyView->setStopView(worldView = (bodyView->superview()->superview()));
-        bodyView->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
-    }
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	
 	b2Vec2 force;
@@ -124,19 +106,9 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	wrld->setJumpGauge(jumpGauge);
     if (forceUsed)
         forceGap = 4;
-    trailSize = forceGap?10:0;
-    b2Vec2 speed = body->GetLinearVelocity();
-    if (abs(speed.x)>=0.1)
-        horizontallyFlipped = (speed.x<0);
+    setUsesTrail(forceGap);
     if (forceGap>0)
         forceGap--;
-}
-
-void PHLPlayer::updateView()
-{
-    PHLObject::updateView();
-    faceView->setHorizontallyFlipped(horizontallyFlipped);
-    bodyView->setTrailSize(trailSize);
 }
 
 void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)

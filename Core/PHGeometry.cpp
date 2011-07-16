@@ -249,12 +249,26 @@ bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)
 
 void PHGLRotate(double angle)
 {
-    double sinv = sin(-angle), cosv = cos(-angle);
+    double sinv = sin(angle), cosv = cos(angle);
     GLfloat m[16] = {
-        cosv, -sinv, 0, 0,
-        sinv,  cosv, 0, 0,
+         cosv, sinv, 0, 0,
+        -sinv,  cosv, 0, 0,
            0,     0, 1, 0,
            0,     0, 0, 1
+    };
+    glMultMatrixf(m);
+}
+
+void PHGLFlip(PHPoint center, bool horiz, bool vert)
+{
+    if (!horiz && !vert) return;
+    double px = horiz?-1:1;
+    double py = vert?-1:1;
+    GLfloat m[16] = {
+        px                    , 0                    , 0, 0,
+        0                     , py                   , 0, 0,
+        0                     , 0                    , 1, 0,
+        -center.x*px+center.x , -center.y*py+center.y, 0, 1
     };
     glMultMatrixf(m);
 }

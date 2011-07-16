@@ -28,7 +28,8 @@ protected:
 	ViewEl * currPos;
 	PHView * superView;
 	PHRect _frame,_bounds;
-	PHPoint _rotationalCenter,_scalingCenter;
+	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
+    bool fhoriz,fvert;
 	double _rotation,_scaleX,_scaleY;
 	double _alpha;
 	bool _userInput;
@@ -71,6 +72,12 @@ public:
 	PHPoint boundsCenter() const;
 	PHPoint rotationalCenter() const {return _rotationalCenter;}
 	PHPoint scalingCenter() const {return _scalingCenter; }
+    PHPoint flipCenter() const { return _flipCenter; };
+    void setFlipCenter(const PHPoint &center) { _flipCenter = center; }
+    bool horizontallyFlipped() const { return fhoriz; }
+    bool verticallyFlipped() const { return fvert; }
+    void setHorizontallyFlipped(bool b) { fhoriz = b; }
+    void setVerticallyFlipped(bool b) { fvert = b; }  
 	void setRotationalCenter(const PHPoint &center) { _rotationalCenter = center;}
 	void setScalingCenter(const PHPoint &center) { _scalingCenter = center; }
 	double rotation() { return _rotation; };

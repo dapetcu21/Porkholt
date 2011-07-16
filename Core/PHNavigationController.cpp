@@ -61,7 +61,6 @@ void PHNavigationController::startFadeAnimation()
 	PHView::addAnimation(anim);
 	anim->release();
 	view->addSubview(fadeView);
-	fadeView->release();
 }
 
 void PHNavigationController::middleFadeAnimation()
@@ -90,6 +89,7 @@ void PHNavigationController::middleFadeAnimation()
 void PHNavigationController::endFadeAnimation()
 {
 	fadeView->removeFromSuperview();
+    fadeView->release();
 	fadeView = NULL;
 	stopAnimating();
 }

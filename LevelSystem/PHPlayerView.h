@@ -14,16 +14,16 @@
 class PHPlayerView : public PHView
 {
 private:
-    PHView * _designatedView;
+    int _designatedTag;
     double lastDif;
 public:
-    PHView * designatedView() { return _designatedView; }
-    void setDesignatedView(PHView * view) { _designatedView = view; };
+    int designatedTag() { return _designatedTag; }
+    void setDesignatedTag(int tag) { _designatedTag = tag; };
     
     virtual void setRotation( double rot);
     
 public:
-#define PHPLAYERVIEW_INIT _designatedView(NULL), lastDif(0)
+#define PHPLAYERVIEW_INIT _designatedTag(-1), lastDif(0)
     PHPlayerView() : PHView(), PHPLAYERVIEW_INIT {};
 	PHPlayerView(const PHRect &frame) : PHView(frame), PHPLAYERVIEW_INIT {};
 };

@@ -71,13 +71,23 @@ end
 function Initializers.PHLCamera(obj)
 	Initializers.PHLObject(obj)
 end
-function Initializers.PHLPlayer(obj)
+function Initializers.PHLNPC(obj)
 	Initializers.PHLObject(obj)
+	obj._fixtureindex.categoryBits = cNPC;
+	obj._fixtureindex.maskBits = cWORLD;
 	obj.physics.dynamic = true;
+end
+function Initializers.PHLPlayer(obj)
+	Initializers.PHLNPC(obj)
 	obj._fixtureindex.categoryBits = cPLAYER;
 	obj._fixtureindex.maskBits = cWORLD + cPLAYER + cMOB;
-	objectAddCircle(obj,0.25,{restitution = 0.5;}); --0.5 restitution is the exact value for which the jumping system can't be exploited
 	obj.maxVelocityX = 3;
+	obj.trail = true;
+	obj.trailSize = 10;
+	obj.staticFace = true;
+	obj.faceFlipping = true;
+	obj.automaticFlipping = true;
+	objectAddCircle(obj,0.25,{restitution = 0.5;}); --0.5 restitution is the exact value for which the jumping system can't be exploited
 	objectAddImage(obj,"/ball.png",-0.25,-0.25,0.5,0.5,{tag=20; class="PHTrailImageView"});
     objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5,{tag=21});
 end

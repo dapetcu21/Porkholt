@@ -17,7 +17,7 @@
 #include "PHAnimatedImage.h"
 #include "PHImageAnimator.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), flipVert(false), flipHoriz(false)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -62,22 +62,11 @@ void PHImageView::draw()
 {
 	if (_image)
     {
-        PHRect frame = _bounds;
-        if (flipHoriz)
-        {
-            frame.x+=frame.width;
-            frame.width = -frame.width;
-        }
-        if (flipVert)
-        {
-            frame.y+=frame.height;
-            frame.height = -frame.height;
-        }
         if (_image->isNormal())
-            ((PHNormalImage*)_image)->renderInFramePortionTint(frame,coords,tint);
+            ((PHNormalImage*)_image)->renderInFramePortionTint(_bounds,coords,tint);
         
         if (_image->isAnimated())
-            _animator->renderInFramePortionTint(frame,coords,tint);
+            _animator->renderInFramePortionTint(_bounds,coords,tint);
     }
 }
 

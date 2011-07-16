@@ -16,7 +16,7 @@ std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -36,7 +36,7 @@ void PHView::setFrame(const PHRect &frame)
 		_bounds.x = _bounds.y = 0;
 		_bounds.width = frame.width;
 		_bounds.height = frame.height;
-		_scalingCenter = _rotationalCenter = boundsCenter();
+		_scalingCenter = _rotationalCenter = _flipCenter = boundsCenter();
 	}
 	_frame = frame;
 }
@@ -44,7 +44,7 @@ void PHView::setFrame(const PHRect &frame)
 void PHView::setBounds(const PHRect &bnd) 
 { 
 	_bounds = bnd; 
-	_scalingCenter = _rotationalCenter = boundsCenter();
+	_scalingCenter = _rotationalCenter = _flipCenter = boundsCenter();
 }
 
 void PHView::setPosition(const PHPoint &pos)
@@ -102,6 +102,7 @@ void PHView::applyMatrices()
 		apply_scaling();
 		apply_rotation();
 	}
+    PHGLFlip(_flipCenter,fhoriz,fvert);
 }
 extern PHView * playerView;
 void PHView::render()

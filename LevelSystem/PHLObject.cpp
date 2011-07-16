@@ -37,6 +37,8 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         return new PHLPlatform;
     if (str=="PHLSensor")
         return new PHLSensor;
+    if (str=="PHLNPC")
+        return new PHLNPC;
 	return new PHLObject;
 }
 
@@ -64,6 +66,11 @@ PHLObject::~PHLObject()
     }
 	if (body)
 		world->DestroyBody(body);
+    for (int i=0; i<fixturesDefinitions.size(); i++)
+    {
+        delete fixturesDefinitions[i]->shape;
+        delete fixturesDefinitions[i];
+    }
 	if (view)
 		view->release();
 }
@@ -169,32 +176,32 @@ void PHLObject::loadBody(void *l)
                             density = lua_tonumber(L, -1);
                         lua_pop(L,1);
                         
-                        b2FixtureDef fdef;
-                        fdef.friction = friction;
-                        fdef.density = density;
-                        fdef.restitution = restitution;				
+                        b2FixtureDef * fdef = new b2FixtureDef;
+                        fdef->friction = friction;
+                        fdef->density = density;
+                        fdef->restitution = restitution;				
 
                         lua_pushstring(L, "groupIndex");
                         lua_gettable(L, -2);
                         if (lua_isnumber(L, -1))
-                            fdef.filter.groupIndex = lua_tonumber(L, -1);
+                            fdef->filter.groupIndex = lua_tonumber(L, -1);
                         lua_pop(L,1);
                         
                         lua_pushstring(L, "categoryBits");
                         lua_gettable(L, -2);
                         if (lua_isnumber(L, -1))
-                            fdef.filter.categoryBits = lua_tonumber(L, -1);
+                            fdef->filter.categoryBits = lua_tonumber(L, -1);
                         lua_pop(L,1);
                         
                         lua_pushstring(L, "maskBits");
                         lua_gettable(L, -2);
                         if (lua_isnumber(L, -1))
-                            fdef.filter.maskBits = lua_tonumber(L, -1);
+                            fdef->filter.maskBits = lua_tonumber(L, -1);
                         lua_pop(L,1);
                         
                         if (strcmp(typ, "box")==0)
                         {
-                            b2PolygonShape shape;
+                            b2PolygonShape * shape = new b2PolygonShape;
                             b2Vec2 v[4];
                             v[0].Set(box.x,		box.y);
                             v[1].Set(box.x+box.width,	box.y);
@@ -203,26 +210,42 @@ void PHLObject::loadBody(void *l)
                             b2Vec2 middle(box.x+box.width/2,box.y+box.height/2);
                             for (int i=0; i<4; i++)
                                 b2RotatePoint(v[i],rot,middle);
-                            shape.Set(v,4);
-                            fdef.shape = &shape;
+                            shape->Set(v,4);
+                            fdef->shape = shape;
                         }
                         if (strcmp(typ, "circle")==0)
                         {
-                            b2CircleShape shape;
-                            shape.m_radius = circleR;
-                            shape.m_p.Set(pos.x,pos.y);
-                            fdef.shape = &shape;					
+                            b2CircleShape * shape = new b2CircleShape;
+                            shape->m_radius = circleR;
+                            shape->m_p.Set(pos.x,pos.y);
+                            fdef->shape = shape;					
                         }
-                        if (customizeFixture(L,fdef) && fdef.shape)
-                            body->CreateFixture(&fdef);
+                        if (customizeFixture(L,*fdef) && fdef->shape)
+                        {
+                            fixturesDefinitions.push_back(fdef);
+                            fixtures.push_back(NULL);
+                        }
                     }
                     lua_pop(L, 1);
                 }
+                rebuildFixtures();
             }
         }
         lua_pop(L, 1);
 	}
 	lua_pop(L,1);
+}
+
+void PHLObject::rebuildFixtures()
+{
+    if (!body) return;
+    int n = min(fixturesDefinitions.size(),fixtures.size());
+    for (int i=0; i<n; i++)
+    {
+        if (fixtures[i])
+            body->DestroyFixture(fixtures[i]);
+        fixtures[i] = body->CreateFixture(fixturesDefinitions[i]);
+    }
 }
 
 bool PHLObject::customizeFixture(lua_State * L, b2FixtureDef & fixtureDef)
