@@ -16,7 +16,7 @@ class PHTrailImageView;
 class PHLNPC : public PHLObject
 {
 protected:
-    PHTrailImageView * bodyView;
+    PHImageView * bodyView;
     PHImageView * faceView;
     
 private:
@@ -25,6 +25,7 @@ private:
     bool staticFace;
     PHView * worldView;
     bool fflip,bflip,aflip,flipped;
+    bool trailPossible;
 public:
     PHLNPC();
     virtual ~PHLNPC();

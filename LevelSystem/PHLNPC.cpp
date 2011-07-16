@@ -26,13 +26,6 @@ PHLNPC::~PHLNPC()
     
 }
 
-void PHLNPC::updateView()
-{
-    PHLObject::updateView();
-    //faceView->setHorizontallyFlipped(horizontallyFlipped);
-    bodyView->setTrailSize(trail?traillen:0);
-}
-
 void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
     PHLObject::loadFromLua(L,root,world);
@@ -87,20 +80,27 @@ void PHLNPC::loadView()
     faceView = (PHImageView*)(view->viewWithTag(21));
     if (staticFace) 
         ((PHPlayerView*)view)->setDesignatedTag(21);
-    if (typeid(bodyView) == typeid(PHPlayerView))
-        bodyView->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
+    if ((trailPossible = (typeid(bodyView) == typeid(PHTrailImageView*))))
+        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
 	view->setRotation(rot);
 }
 
+
+void PHLNPC::updateView()
+{
+    PHLObject::updateView();
+    if (trailPossible)
+        ((PHTrailImageView*)bodyView)->setTrailSize(trail?traillen:0);
+}
 
 void PHLNPC::updatePosition()
 {
     PHLObject::updatePosition();
 	if (!body) return;
-	if (!worldView)
+	if (!worldView && trailPossible)
     {
-        bodyView->setStopView(worldView = (bodyView->superview()->superview()));
-        bodyView->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
+        ((PHTrailImageView*)bodyView)->setStopView(worldView = (bodyView->superview()->superview()));
+        ((PHTrailImageView*)bodyView)->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
     }
 	
     b2Vec2 speed = body->GetLinearVelocity();
