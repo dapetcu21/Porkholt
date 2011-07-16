@@ -25,7 +25,6 @@ PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thr
 #else
     loadFromFile(this, NULL);
 #endif  
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHNormalImage::loadToTexture, NULL, false);
 }
 
 void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
@@ -139,10 +138,14 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
         for (int i=0; i<size/scale; i++)
             buffer[i] = buffer[i*scale];
     }
+    
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHNormalImage::loadToTexture, NULL, false);
 }
 
 void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 {	
+    if (loaded) return;
+    
     if (thread)
     {
         thread->join();
@@ -164,6 +167,7 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 	glTexImage2D(GL_TEXTURE_2D, 0, format, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);	
 	delete[] buffer;
+    loaded = true;
 }
 
 PHNormalImage::~PHNormalImage()
@@ -178,6 +182,8 @@ void PHNormalImage::bindToTexture()
 
 void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
+    load();
+    
 	const GLfloat squareVertices[] = {
         frm.x,			frm.y,
         frm.x+frm.width,frm.y,

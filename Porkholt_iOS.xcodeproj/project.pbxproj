@@ -127,6 +127,7 @@
 		C1AF4FBF13A6589A00ED2ED7 /* PHChapterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */; };
 		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
 		C1B2418813D06A3A005B60BF /* PHLNPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B2418613D06A3A005B60BF /* PHLNPC.cpp */; };
+		C1B2418C13D1D314005B60BF /* PHFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B2418A13D1D313005B60BF /* PHFont.cpp */; };
 		C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */; };
 		C1B4AED9137DA430006E65FE /* PHMotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AED7137DA430006E65FE /* PHMotorJoint.cpp */; };
 		C1B4AEDC137DADFC006E65FE /* PHRevoluteJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEDA137DADFB006E65FE /* PHRevoluteJoint.cpp */; };
@@ -326,6 +327,8 @@
 		C1AF893213387B850046179B /* PHGaugeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGaugeView.cpp; sourceTree = "<group>"; };
 		C1B2418613D06A3A005B60BF /* PHLNPC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLNPC.cpp; sourceTree = "<group>"; };
 		C1B2418713D06A3A005B60BF /* PHLNPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLNPC.h; sourceTree = "<group>"; };
+		C1B2418A13D1D313005B60BF /* PHFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHFont.cpp; sourceTree = "<group>"; };
+		C1B2418B13D1D314005B60BF /* PHFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFont.h; sourceTree = "<group>"; };
 		C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHDistanceJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1B4AEC5137D46F9006E65FE /* PHDistanceJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDistanceJoint.h; sourceTree = "<group>"; };
 		C1B4AED7137DA430006E65FE /* PHMotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHMotorJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -486,6 +489,8 @@
 				C1B9D658130264F0002BE2BE /* PHGeometry.h */,
 				C17B4F22130EFAEA00C2EC8D /* PHGeometry.cpp */,
 				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
+				C1B2418B13D1D314005B60BF /* PHFont.h */,
+				C1B2418A13D1D313005B60BF /* PHFont.cpp */,
 				C17B48491307B82300C2EC8D /* PHImage.h */,
 				C17B484A1307B82300C2EC8D /* PHImage.cpp */,
 				C17BF7FD13C846D600DDD9C7 /* PHAnimatedImage.cpp */,
@@ -936,6 +941,7 @@
 				C17BF80613CD6B2300DDD9C7 /* PHImageAnimator.cpp in Sources */,
 				C1C0398113CEE6DB004BCC24 /* PHLSensor.cpp in Sources */,
 				C1B2418813D06A3A005B60BF /* PHLNPC.cpp in Sources */,
+				C1B2418C13D1D314005B60BF /* PHFont.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

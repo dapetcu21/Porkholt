@@ -26,6 +26,8 @@ private:
     FILE * fp;
     
     unsigned int texid;
+    
+    virtual void _load() { loadToTexture(NULL,NULL); }
 public:
     
     PHNormalImage(const string & path);

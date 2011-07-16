@@ -69,6 +69,8 @@ private:
     
     friend class PHImageAnimator;
     
+    virtual void _load() { loadImages(NULL,NULL); }
+    
 public:
     PHAnimatedImage(const string & s);
     virtual ~PHAnimatedImage();

@@ -40,6 +40,7 @@ void PHCaptureView::render()
 		mutex->lock();
     PHThread::mainThread()->processQueue();
 	PHView::render();
+    PHLog("render");
 	if (mutex)
 		mutex->unlock();
 	

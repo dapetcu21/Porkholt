@@ -51,7 +51,6 @@ PHAnimatedImage::PHAnimatedImage(const string & s) : PHImage(s), thread(NULL), d
 #else
     loadImages(NULL,NULL);
 #endif
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHAnimatedImage::loadTextures, NULL, false);
 }
 
 void PHAnimatedImage::loadFromLua()
@@ -343,15 +342,20 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
                 buffer[i] = buffer[i*scale];
         }
     }
+    
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHAnimatedImage::loadTextures, NULL, false);
 }
 
 void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
 {
+    if (loaded) return;
+    
     if (thread)
     {
         thread->join();
         thread->release();
     }
+    
     GLint format = -1;
     if (clr == PNG_COLOR_TYPE_RGB)
         format = GL_RGB;
@@ -383,6 +387,8 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
     } else
         for (int i=0; i<textures.size(); i++)
             delete [] textures[i].buffer;
+    
+    loaded = true;
 }
 
 int PHAnimatedImage::sectionNo(const string & sectionName)

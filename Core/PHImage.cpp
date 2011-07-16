@@ -15,7 +15,7 @@
 
 map<string,PHImage*> PHImage::images;
 
-PHImage::PHImage(const string & path) {};
+PHImage::PHImage(const string & path) : loaded(false) {};
 
 PHImage::~PHImage() {};
 
@@ -39,7 +39,6 @@ PHImage * PHImage::imageFromPath(const string & path)
 	} else {
 		img = images[path];
 	}
-	img->retain();
 	return img;
 }
 
@@ -47,7 +46,8 @@ PHImage * PHImage::imageNamed(const string & string)
 {
 	return PHImage::imageFromPath(PHFileManager::singleton()->resourcePath()+"/img/"+string+".png");
 }
-void PHImage::clearImages()
+
+void PHImage::collectGarbage()
 {
 	map<string,PHImage*>::iterator i;
 	map<string,PHImage*> tmp;

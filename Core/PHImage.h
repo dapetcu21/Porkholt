@@ -18,7 +18,7 @@ class PHImage : public PHObject
 public:
 	static PHImage* imageFromPath(const string & path);
 	static PHImage* imageNamed(const string & name);
-	static void clearImages();
+	static void collectGarbage();
 	
 protected:
 	static map<string,PHImage*> images;
@@ -26,10 +26,14 @@ protected:
 	
 	int _height;
     int _width;
+    
+    bool loaded;
+    void load() { if (!loaded) _load(); }
+    virtual void _load() = 0;
 	
 public:
-	int height() { return _height; };
-	int width() { return _width; };
+	int height() { load(); return _height; };
+	int width() { load(); return _width; };
 
 	virtual ~PHImage();
     

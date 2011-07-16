@@ -139,6 +139,8 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
 {
     if (realframe<0) return;
     
+    _image->load();
+    
     const GLfloat squareVertices[] = {
         frm.x,			frm.y,
         frm.x+frm.width,frm.y,

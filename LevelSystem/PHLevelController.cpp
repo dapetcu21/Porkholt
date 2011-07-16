@@ -17,6 +17,7 @@
 #include "PHCaptureView.h"
 #include <Box2D/Box2D.h>
 #include "PHFileManager.h"
+#include "PHFont.h"
 
 #include "PHLPlayer.h"
 #include "PHLCamera.h"
@@ -65,7 +66,6 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	view->addSubview(world->getView());
 	thread = new PHThread;
 	thread->setFunction(this,(PHCallback)&PHLevelController::auxThread, NULL);
-	PHMainEvents::sharedInstance()->setIndependentTiming(true);
 	thread->start();
 	
 	return view;
@@ -258,9 +258,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	mutex->lock();
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
+    PHImage::collectGarbage();
+    PHFont::collectGarbage();
+    PHMainEvents::sharedInstance()->setIndependentTiming(true);
 	mutex->unlock();
 	
-    PHLog("finishinit");
+    
     
 	double targetTime = PHTime::getTime();
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
