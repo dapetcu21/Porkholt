@@ -18,9 +18,11 @@
 #include <Box2D/Box2D.h>
 #include "PHFileManager.h"
 #include "PHFont.h"
-
+#include "PHTextController.h"
 #include "PHLPlayer.h"
 #include "PHLCamera.h"
+
+#include <fstream>
 
 
 void PHLevelController::appSuspended()
@@ -43,6 +45,7 @@ void PHLevelController::pause()
 void PHLevelController::resume()
 {
 	if (!paused) return;
+    if (!ready1 || !ready2) return;
 	paused = false;
 	PHMainEvents::sharedInstance()->setIndependentTiming(true);
 }
@@ -58,7 +61,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	pSem1 = new PHSemaphore(0);
 	pSem2 = new PHSemaphore(1);
     running = true;
-	paused = false;
+	paused = true;
 	world = new PHWorld(PHMakeRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
 	backgroundView->setImage(PHImage::imageFromPath(directory+"/bg.png"));
@@ -71,14 +74,48 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false)
 {
+}
+
+void PHLevelController::viewWillAppear()
+{
+    ready2 = true;
+    resume();
+}
+
+void PHLevelController::textViewControllerFinished(PHTextController * sender, void * ud)
+{
+    sender->navigationController()->pushViewController(this, PHNavigationController::FadeToColor, true);
+    this->release();
+}
+
+PHViewController * PHLevelController::mainViewController()
+{
+    ifstream file((directory+"/intro.txt").c_str());
+    vector<string> * v = new vector<string>;
+    while (file.good())
+    {
+        v->push_back(string());
+        getline(file,v->back(),'|');
+    };
+    if (v->empty())
+    {
+        delete v;
+        this->retain();
+        return this;
+    }
+    PHTextController * vc = new PHTextController(v);
+    vc->init();
+    vc->setForegroundColor(PHWhiteColor);
+    vc->setBackgroundColor(PHBlackColor);
+    vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, NULL);
+    this->retain();
+    return vc;
 }
 
 void PHLevelController::updateScene(double timeElapsed)
 {
-//	mutex->lock();
-//	mutex->unlock();
 }
 
 PHLevelController::~PHLevelController()
@@ -261,6 +298,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     PHImage::collectGarbage();
     PHFont::collectGarbage();
     PHMainEvents::sharedInstance()->setIndependentTiming(true);
+    ready1 = true;
+    resume();
 	mutex->unlock();
 	
     
@@ -273,23 +312,25 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	{
 		targetTime+=frameInterval;
 		
-		world->player->updateControls(q);
-		
-		if (fps<=40)
-			fWorld->Step(frameInterval, 10, 4);
-		else
-			fWorld->Step(frameInterval, 6, 3);
+        if (!paused)
+        {
+            world->player->updateControls(q);
+            
+            if (fps<=40)
+                fWorld->Step(frameInterval, 10, 4);
+            else
+                fWorld->Step(frameInterval, 6, 3);
 
-		fWorld->ClearForces();
-        world->updatePositions();
-        scripingEngine->scriptingStep(frameInterval);
-        world->updateTimers(frameInterval);
-        
-		pSem2->wait();
-		mutex->lock();
-		world->updateScene();
-		mutex->unlock();
-		pSem1->signal();
+            fWorld->ClearForces();
+            world->updatePositions();
+            scripingEngine->scriptingStep(frameInterval);
+            world->updateTimers(frameInterval);
+            pSem2->wait();
+            mutex->lock();
+            world->updateScene();
+            mutex->unlock();
+            pSem1->signal();
+        }
                                       
 		double currentTime = PHTime::getTime();
 		double time = targetTime - currentTime;

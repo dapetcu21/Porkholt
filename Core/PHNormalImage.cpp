@@ -18,7 +18,7 @@ PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thr
 	if (!fp)
 		throw PHIOError;
     antialiasing = PHFileManager::singleton()->fileExists(path+".aa");
-#ifdef PHIMAGE_SIMULTANEOUS_LOADING
+#ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
     thread = new PHThread;
     thread->setFunction(this, (PHCallback)&PHNormalImage::loadFromFile, NULL);
     thread->start();
@@ -29,6 +29,9 @@ PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thr
 
 void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 {
+#ifdef PHIMAGE_ORDERED_LOADING
+    loadingMutex->lock();
+#endif
     buffer = NULL;
     
 	png_byte color_type;
@@ -140,6 +143,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
     }
     
     PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHNormalImage::loadToTexture, NULL, false);
+#ifdef PHIMAGE_ORDERED_LOADING
+    loadingMutex->unlock();
+#endif
 }
 
 void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
@@ -204,12 +210,12 @@ void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & p
     };
 	
 	bindToTexture();
+	
+    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | ((tint==PHInvalidColor)?0:PHGLColorArray);
+    PHGLSetStates(states);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
-    if (tint!=PHInvalidColor)
+    if (states & PHGLColorArray)
     {
         const GLfloat colors[] = { 
             tint.r, tint.g, tint.b, tint.a,
@@ -218,15 +224,7 @@ void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & p
             tint.r, tint.g, tint.b, tint.a
         };
         glColorPointer(4, GL_FLOAT, 0, colors);
-        glEnableClientState(GL_COLOR_ARRAY);
     }
-	
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
     
-    if (tint!=PHInvalidColor)
-        glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
-	
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

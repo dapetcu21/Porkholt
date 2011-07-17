@@ -14,6 +14,9 @@
 #include "PHAnimatedImage.h"
 
 map<string,PHImage*> PHImage::images;
+#ifdef PHIMAGE_ORDERED_LOADING
+PHMutex * PHImage::loadingMutex = new PHMutex;
+#endif
 
 PHImage::PHImage(const string & path) : loaded(false) {};
 

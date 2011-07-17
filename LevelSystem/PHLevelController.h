@@ -16,6 +16,7 @@ class PHWorld;
 class PHButtonView;
 class PHImageView;
 class PHScripting;
+class PHTextController;
 
 class PHLevelController : public PHViewController
 {
@@ -32,6 +33,10 @@ protected:
 	string directory;
 	
 	friend class PHWorld;
+    
+    volatile bool ready1,ready2;
+    
+    virtual void viewWillAppear();
 public:
 	
 	void pause();
@@ -50,7 +55,10 @@ public:
 	void appResumed();
     
     const string & bundlePath() { return directory; }
+    
+    PHViewController * mainViewController();
 	
+    void textViewControllerFinished(PHTextController * sender, void * ud);
 };
 
 #endif

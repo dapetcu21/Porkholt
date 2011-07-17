@@ -25,15 +25,11 @@ void PHTestView::draw()
         255,   0, 255, 255,
     };
 	
+    PHGLSetStates(PHGLVertexArray | PHGLColorArray);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
-	glEnableClientState(GL_COLOR_ARRAY);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void PHTestView::touchEvent(PHTouch * touch)

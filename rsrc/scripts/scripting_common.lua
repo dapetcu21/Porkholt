@@ -159,6 +159,10 @@ PHLNPC = PHLObject:new();
 --function PHLNPC:isFlipped();
 --function PHLNPC:setFlipped(f);
 --function PHLNPC:flip();
+--function PHLNPC:hasTrail();
+--function PHLNPC:setTrail(f);
+--function PHLNPC:usesTrail();
+--function PHLNPC:setUsesTrail(f);
 
 PHLPlayer = PHLNPC:new()
 

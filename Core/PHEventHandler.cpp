@@ -29,9 +29,6 @@ void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 	touch->ud = ud;
 	touches.push_back(touch);
 	touch->_ownerView = PHMainEvents::sharedInstance()->mainView()->pointerDeepFirst(touch);
-	if (touch->_ownerView)
-		touch->_ownerView->touchEvent(touch);
-	
 }
 
 void PHEventHandler::touchUp(PHPoint pnt, void * ud)

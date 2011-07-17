@@ -33,6 +33,8 @@ public:
 	void init();
 	void init(const PHRect & frame);
 	
+    PHNavigationController * navigationController() { return navController; }
+    
 	virtual void updateScene(double timeElapsed);
 	
 	enum ViewStates
@@ -78,10 +80,13 @@ public:
 		}
 	}
 	
+private:
 	virtual void viewDidAppear();
 	virtual void viewWillAppear();
 	virtual void viewWillDisappear();
 	virtual void viewDidDisappear();
+    
+    virtual PHColor fadeToColor() { return PHInvalidColor; }
 };
 
 #include "PHNavigationController.h"

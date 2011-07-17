@@ -51,12 +51,16 @@ void PHChapterController::updateScene(double timeElapsed)
 
 void PHChapterController::mouseUp(PHObject * sender, void * ud)
 {
+    if (getViewState()!=StateAppeared) return;
+    
     ostringstream oss;
     oss<<path<<"/lvl"<<(int)ud;
-    PHLevelController * vc = new PHLevelController(oss.str());
-    vc->init();
+    PHLevelController * lvlvc = new PHLevelController(oss.str());
+    lvlvc->init();
+    PHViewController * vc = lvlvc->mainViewController();
     navController->pushViewController(vc,PHNavigationController::FadeToColor);
     vc->release();
+    lvlvc->release();
 }
 
 PHChapterController::PHChapterController(const string & _path) : path(_path)

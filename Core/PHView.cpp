@@ -16,7 +16,7 @@ std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _inputRouting(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -252,7 +252,7 @@ void PHView::bringToFront()
 
 void PHView::drawBackground()
 {
-	if (_backColor.a == 0) return;
+	if (_backColor.a <= 0) return;
 	const GLfloat squareVertices[] = {
         0, 0,
         _bounds.width, 0,
@@ -267,15 +267,11 @@ void PHView::drawBackground()
         _backColor.r, _backColor.g,  _backColor.b, _backColor.a,
     };
 	
+    PHGLSetStates(PHGLVertexArray | PHGLColorArray);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glColorPointer(4, GL_FLOAT, 0, squareColors);
-	glEnableClientState(GL_COLOR_ARRAY);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
 }
 		
 void PHView::draw()
@@ -284,6 +280,7 @@ void PHView::draw()
 
 void PHView::touchEvent(PHTouch * touch)
 {
+    eventHandled = false;
 }
 
 //animation system
@@ -391,9 +388,23 @@ void PHView::updateAnimation(double time)
 					PHColor clr,trg,crr;
 					crr = ((PHView*)anim->view)->backgroundColor();
 					trg = anim->bgColor;
-					clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
-					clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
-					clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
+                    if (trg.a>0)
+                    {
+                        if (crr.a>0)
+                        {
+                            clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
+                            clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
+                            clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
+                        } else {
+                            clr.r = trg.r;
+                            clr.g = trg.g;
+                            clr.b = trg.b;
+                        }
+                    } else {
+                        clr.r = crr.r;
+                        clr.g = crr.g;
+                        clr.b = crr.b;
+                    }
 					clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
 					((PHView*)anim->view)->setBackgroundColor(clr);
 				}
@@ -405,7 +416,7 @@ void PHView::updateAnimation(double time)
 					next->retain();
 				*i = next;
 				if (anim -> view && anim->target && anim->callback)
-					(anim->target->*(anim->callback))(anim->userdata);
+					(anim->target->*(anim->callback))(anim->target,anim->userdata);
 				anim->release();
 				if (!*i)
 				{
@@ -435,11 +446,15 @@ PHView * PHView::pointerDeepFirst(PHTouch * touch)
 		}
 		p=p->prev;
 	}
-	if ((!view)&&(!_inputRouting))
+	if (!view)
 	{
 		PHPoint pnt = PHUnTransformedPoint(touch->location());
 		if (pnt.x>=0 && pnt.y>=0 && pnt.x<=_bounds.width && pnt.y<=_bounds.height)
-			view = this;
+        {
+            eventHandled = true;
+            touchEvent(touch);
+			view = eventHandled?this:false;
+        }
 	}
 	glPopMatrix();
 	return view;

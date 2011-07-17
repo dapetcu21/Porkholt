@@ -116,7 +116,11 @@ void PHMainEvents::appResumed()
 		viewController->_viewDidAppear();
 	}
 #ifdef PH_SIMULATOR
-    remote->start();
+    try {
+        remote->start();
+    } catch (string err) {
+        PHLog("URemote: %s",err.c_str());
+    }
 #endif
 }
 

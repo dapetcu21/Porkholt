@@ -54,10 +54,10 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	b2Vec2 center = body->GetWorldCenter();
 	body->ApplyForce(force, center);
 	double jumpGauge = wrld->jumpGauge();
-    bool forceUsed = !(queue->empty());
     b2Vec2 totalJump(0,0);
     if (mutex)
         mutex->lock();
+    bool forceUsed = !(queue->empty());
 	while (!queue->empty()) {
 		force.x = queue->front().x*TOUCH_FORCE_FACTOR;
 		force.y = queue->front().y*TOUCH_FORCE_FACTOR;
@@ -106,7 +106,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	wrld->setJumpGauge(jumpGauge);
     if (forceUsed)
         forceGap = 4;
-    setUsesTrail(forceGap);
+    setUsesTrail(forceGap>0);
     if (forceGap>0)
         forceGap--;
 }

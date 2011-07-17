@@ -10,6 +10,9 @@
 #define PHIMAGE_H
 #include "PHMain.h"
 
+#define PHIMAGE_ASYNCHRONEOUS_LOADING
+#define PHIMAGE_ORDERED_LOADING
+
 class PHImage;
 #include <map>
 
@@ -19,6 +22,9 @@ public:
 	static PHImage* imageFromPath(const string & path);
 	static PHImage* imageNamed(const string & name);
 	static void collectGarbage();
+#ifdef PHIMAGE_ORDERED_LOADING
+    static PHMutex * loadingMutex;
+#endif
 	
 protected:
 	static map<string,PHImage*> images;
@@ -40,7 +46,5 @@ public:
     virtual bool isNormal() { return false; };
     virtual bool isAnimated() { return false; };
 };
-
-#define PHIMAGE_SIMULTANEOUS_LOADING
 
 #endif

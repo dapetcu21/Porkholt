@@ -29,21 +29,21 @@ void PHCaptureView::touchEvent(PHTouch * touch)
 
 void PHCaptureView::render()
 {
-	if (*paused || ((!*paused)&&lastPaused))
+    bool p = *paused;
+	if (p || ((!p)&&lastPaused))
 		sm1->trywait();
 	else
 		sm1->wait();
 
-	lastPaused = *paused;
+	lastPaused = p;
 	
 	if (mutex)
 		mutex->lock();
     PHThread::mainThread()->processQueue();
 	PHView::render();
-    PHLog("render");
 	if (mutex)
 		mutex->unlock();
 	
-	if (!(*paused))
+	if (!(p))
 		sm2->signal();
 }

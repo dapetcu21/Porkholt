@@ -27,8 +27,7 @@ public:
 	int tag;
 	int timeFunction;
 	
-	typedef void (PHObject::*Callback)(void *);
-	Callback callback;
+	PHCallback callback;
 	PHObject * target;
 	void * userdata;
 	

@@ -171,12 +171,12 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
     };
 	
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+    
+    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | ((tint==PHInvalidColor)?0:PHGLColorArray);
+    PHGLSetStates(states);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
-    if (tint!=PHInvalidColor)
+    if (states & PHGLColorArray)
     {
         const GLfloat colors[] = { 
             tint.r, tint.g, tint.b, tint.a,
@@ -185,15 +185,9 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
             tint.r, tint.g, tint.b, tint.a
         };
         glColorPointer(4, GL_FLOAT, 0, colors);
-        glEnableClientState(GL_COLOR_ARRAY);
     }
-	
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
+	PHGLSetStates(states);
     
-    if (tint!=PHInvalidColor)
-        glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
 
 }

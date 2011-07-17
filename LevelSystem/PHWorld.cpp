@@ -102,7 +102,6 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	view->setPaused(&cntr->paused);
 	worldView = new PHView(size);
 	worldView->setUserInput(true);
-	worldView->setInputRouting(true);
 	layerView = new PHView(bounds);
 	worldSize = size;
 	view->addSubview(layerView);

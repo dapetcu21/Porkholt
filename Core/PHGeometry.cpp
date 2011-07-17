@@ -272,3 +272,43 @@ void PHGLFlip(PHPoint center, bool horiz, bool vert)
     };
     glMultMatrixf(m);
 }
+
+void PHGLSetStates(int states)
+{
+    static int actualStates = 0;
+    int xr = states^actualStates;
+    actualStates = states;
+    
+    if (xr & PHGLVertexArray)
+    {
+        if (states & PHGLVertexArray)
+            glEnableClientState(GL_VERTEX_ARRAY);
+        else
+            glDisableClientState(GL_VERTEX_ARRAY);
+    }
+    
+ 
+    if (xr & PHGLColorArray)
+    {
+        if (states & PHGLColorArray)
+            glEnableClientState(GL_COLOR_ARRAY);
+        else
+            glDisableClientState(GL_COLOR_ARRAY);
+    }
+    
+    if (xr & PHGLTextureCoordArray)
+    {
+        if (states & PHGLTextureCoordArray)
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        else
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+    
+    if (xr & PHGLTexture)
+    {
+        if (states & PHGLTexture)
+            glEnable(GL_TEXTURE_2D);
+        else
+            glDisable(GL_TEXTURE_2D);
+    }
+}

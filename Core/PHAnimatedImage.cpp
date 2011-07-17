@@ -44,7 +44,7 @@ PHAnimatedImage::PHAnimatedImage(const string & s) : PHImage(s), thread(NULL), d
     loadFromLua();
     cleanupLua();
     luaMutex->unlock();
-#ifdef PHIMAGE_SIMULTANEOUS_LOADING
+#ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
     thread = new PHThread;
     thread->setFunction(this, (PHCallback)&PHAnimatedImage::loadImages, NULL);
     thread->start();
@@ -186,6 +186,9 @@ void PHAnimatedImage::cleanupLua()
 
 void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
 {
+#ifdef PHIMAGE_ORDERED_LOADING
+    loadingMutex->lock();
+#endif
     _width = _height = 0;
     int maxtexwidth = 1024;
     int maxtexheight = 1024;
@@ -344,6 +347,9 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
     }
     
     PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHAnimatedImage::loadTextures, NULL, false);
+#ifdef PHIMAGE_ORDERED_LOADING
+    loadingMutex->unlock();
+#endif
 }
 
 void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
