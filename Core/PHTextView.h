@@ -37,6 +37,7 @@ protected:
     void rebuildColorArray();
     double lengthForInterval(int st, int en);
     
+    PHSize sz;
     
 public:
 	PHTextView();
@@ -63,6 +64,7 @@ public:
     void setAlignment(int a) { needsReload = true; _alignment = a; }
     void setFontColor(const PHColor & c) { colorArrayNeedsReload = true; color = c; }
     PHColor fontColor() { return color; }
+    PHSize textSize() { if (needsReload) recalculatePositions(); return sz; }
     
     void setText(const string & s) { needsReload = true; _text = s; }
     const string & text() { return _text; };

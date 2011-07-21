@@ -163,6 +163,7 @@ PHLNPC = PHLObject:new();
 --function PHLNPC:setTrail(f);
 --function PHLNPC:usesTrail();
 --function PHLNPC:setUsesTrail(f);
+--function PHLNPC:addDialog(text);
 
 PHLPlayer = PHLNPC:new()
 

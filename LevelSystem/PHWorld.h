@@ -24,6 +24,14 @@ class b2ContactListener;
 class PHTimer;
 class PHLevelController;
 class PHEventQueue;
+class PHLNPC;
+
+class PHDialog : public PHObject
+{
+public:
+    PHLNPC * npc;
+    string text;
+};
 
 class PHWorld : public PHObject 
 {
@@ -102,6 +110,22 @@ public:
     PHLevelController * levelController() { return controller; }
     PHEventQueue * viewEventQueue() { return viewQueue; }
     PHEventQueue * modelEventQueue() { return modelQueue; }
+    
+    PHLCamera * getCamera() { return camera; }
+    PHLPlayer * getPlayer() { return player; }
+    PHView * getWorldView() { return worldView; }
+    
+public:
+    
+    void advanceDialog();
+    void updateDialogs();
+    void addDialog(PHDialog* d);
+    
+private:
+    
+    list<PHDialog*> dialogs;
+    PHDialog * currentDialog;
+  
 };
 
 #endif

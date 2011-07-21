@@ -23,7 +23,9 @@ public:
 	PHLCamera();
 	virtual ~PHLCamera();
 	
-	PHRect size() { return sz; };
+	PHRect bounds() { return sz; };
+    double width() { return sz.width; }
+    double height() { return sz.height; }
 	
 	virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
 	virtual void loadView();

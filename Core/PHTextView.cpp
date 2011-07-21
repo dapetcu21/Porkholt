@@ -190,8 +190,13 @@ void PHTextView::recalculatePositions()
     GLushort *idx = indices;
     
     GLushort index = 0;
+    
+    double maxLen = 0;
+    
     for (int i=0; i<n; i++)
     {
+        if (lines[i].length>maxLen)
+            maxLen = lines[i].length;
         double startX = 0;
         if ((_alignment & 12) == justifyRight)
             startX = width-lines[i].length;
@@ -222,6 +227,9 @@ void PHTextView::recalculatePositions()
         }
         startY-=(1+lineSpace)*size;
     }
+    
+    sz.x = maxLen;
+    sz.y = blockHeight;
 }
 
 void PHTextView::rebuildColorArray()

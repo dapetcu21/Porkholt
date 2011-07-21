@@ -140,6 +140,8 @@ PHLevelController::~PHLevelController()
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
 	PHMainEvents::sharedInstance()->setIndependentTiming(false);
+    if (dialogImage)
+        dialogImage = (PHImage*)dialogImage->release();
 }
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
@@ -293,6 +295,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     scripingEngine = new PHScripting(world,dir);
 	
 	mutex->lock();
+    
+    if (!dialogImage)
+        dialogImage = PHImage::imageNamed("dialogbubble");
+    if (dialogImage)
+        dialogImage->retain();
+    
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
     PHImage::collectGarbage();
@@ -340,3 +348,5 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			targetTime = currentTime;
 	}
 }
+
+PHImage * PHLevelController::dialogImage = NULL;

@@ -12,6 +12,9 @@
 #include "PHLObject.h"
 
 class PHTrailImageView;
+class PHDialog;
+class PHTextView;
+class PHDialogView;
 
 class PHLNPC : public PHLObject
 {
@@ -26,6 +29,7 @@ private:
     PHView * worldView;
     bool fflip,bflip,aflip,flipped;
     bool trailPossible;
+    PHPoint overHeadPoint;
 public:
     PHLNPC();
     virtual ~PHLNPC();
@@ -51,6 +55,18 @@ public:
     virtual void loadView();
     virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
     static void registerLuaInterface(lua_State * L);
+    
+private:
+    PHDialog * currentDialog;
+    PHDialogView * dialogView;
+    PHTextView * dialogTextView;
+    void _dialogDismissed(PHLObject * sender, void * ud);
+    void dialogViewFired(PHDialogView * dv);
+    friend class PHDialogView;
+public:
+    void showDialog(PHDialog * dialog);
+    void swapDialog(PHDialog * dialog);
+    void dismissDialog();
 };
 
 #endif

@@ -62,6 +62,7 @@ player:addAnimation(anim);
 
 function sensor:objectEntered(obj)
 	print("entered: ",obj);
+	player:addDialog("hello!")
 end
 
 function sensor:objectExited(obj)

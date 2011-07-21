@@ -13,17 +13,26 @@
 #include "PHAuxLayerView.h"
 #include <Box2D/Box2D.h>
 #include "PHLua.h"
+#include "PHTextView.h"
+#include "PHLevelController.h"
+#include "PHWorld.h"
+#include "PHLCamera.h"
+#include "PHDialogView.h"
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1)
 {
     _class = "PHLNPC";
 }
 
 PHLNPC::~PHLNPC()
 {
-    
+    if (dialogView)
+    {
+        dialogView->removeFromSuperview();
+        dialogView->release();
+    }
 }
 
 void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
@@ -67,6 +76,11 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
     if (lua_isboolean(L, -1))
         aflip = lua_toboolean(L, -1);
     lua_pop(L, 1);
+    
+    lua_getfield(L, -1, "overHead");
+    if (lua_istable(L, -1))
+        overHeadPoint = PHPoint::pointFromLua(L, -1);
+    lua_pop(L, 1);
 }
 
 void PHLNPC::loadView()
@@ -89,6 +103,8 @@ void PHLNPC::loadView()
 void PHLNPC::updateView()
 {
     PHLObject::updateView();
+    if (dialogView)
+        dialogView->setPosition(overHeadPoint+pos);
     if (trailPossible)
         ((PHTrailImageView*)bodyView)->setTrailSize((utrail&&trail)?traillen:0);
 }
@@ -146,6 +162,106 @@ void PHLNPC::flip()
     }
 }
 
+#define dialogFontSize 0.2
+#define dialogBorderTop 0.2
+#define dialogBorderBottom 0.2
+#define dialogBorderLeft 0.2
+#define dialogBorderright 0.2
+
+void PHLNPC::showDialog(PHDialog *dialog)
+{
+    if (currentDialog)
+        currentDialog->release();
+    currentDialog = dialog;
+    currentDialog->retain();
+    if (!dialogView)
+    {
+        dialogView = new PHDialogView(this);
+        dialogView->setImage(PHLevelController::dialogImage);
+        dialogView->setUserInput(true);
+        dialogTextView = new PHTextView();
+        dialogTextView->setFont(PHFont::fontNamed("Arial"));
+        dialogTextView->setFontSize(dialogFontSize);
+        dialogTextView->setFontColor(PHBlackColor);
+        dialogTextView->setAlignment(PHTextView::alignBottom | PHTextView::justifyLeft);
+        dialogView->addSubview(dialogTextView);
+        dialogTextView->release();
+        getWorld()->getWorldView()->addSubview(dialogView);
+    }
+    dialogView->cancelAnimations();
+    PHPoint bubblePoint = overHeadPoint+pos;
+    PHLCamera * camera = getWorld()->getCamera();
+    double camwidth = camera->width();
+    bool flipped = position().x>=camera->position().x;
+    double width = abs(position().x-camera->position().x)+camwidth*0.45;
+    if (width>camwidth*0.6)
+        width=camwidth*0.6;
+    double height = dialogFontSize/(1.0f-dialogBorderTop-dialogBorderBottom);
+    dialogView->setFrame(PHMakeRect(bubblePoint.x, bubblePoint.y, width, height));
+    dialogView->setFlipCenter(PHOriginPoint);
+    dialogView->setHorizontallyFlipped(flipped);
+    dialogTextView->setHorizontallyFlipped(flipped);
+    dialogTextView->setFrame(PHMakeRect(width*dialogBorderLeft, height*dialogBorderBottom, width*(1.0f-dialogBorderLeft-dialogBorderright), dialogFontSize));
+    dialogTextView->setText(currentDialog->text);
+    PHPoint sz =  dialogTextView->textSize();
+    width = sz.x/(1.0f-dialogBorderLeft-dialogBorderright);
+    height = sz.y/(1.0f-dialogBorderTop-dialogBorderBottom);
+    dialogView->setFrame(PHMakeRect(bubblePoint.x, bubblePoint.y, width, height));
+    dialogTextView->setFrame(PHMakeRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
+    double scale = 1024;
+    dialogView->setScaleX(1/scale);
+    dialogView->setScaleY(1/scale);
+    dialogView->setScalingCenter(PHOriginPoint);
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->scaleX = scale;
+    anim->scaleY = scale;
+    anim->view = dialogView;
+    anim->time = 0.5f;
+    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
+{
+    dialogView->removeFromSuperview();
+    dialogView->release();
+    dialogView=NULL;
+}
+
+void PHLNPC::dialogViewFired(PHDialogView * dv)
+{
+    if (dialogView==dv)
+        getWorld()->advanceDialog();
+}
+
+void PHLNPC::dismissDialog()
+{
+    if (currentDialog)
+    {
+        currentDialog->release();
+        currentDialog = NULL;
+    }
+    if (!dialogView) return;
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    double scale = 1024;
+    anim->scaleX = 1/scale;
+    anim->scaleY = 1/scale;
+    anim->time = 0.5f;
+    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
+    anim->target = this;
+    anim->callback = (PHCallback)&PHLNPC::_dialogDismissed;
+    anim->userdata = NULL;
+    anim->view = dialogView;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+void PHLNPC::swapDialog(PHDialog *dialog)
+{
+    
+}
+
 static int PHLNPC_isFlipped(lua_State * L)
 {
     PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
@@ -198,6 +314,18 @@ static int PHLNPC_setUsesTrail(lua_State * L)
     return 0;
 }
 
+static int PHLNPC_addDialog(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    luaL_checkstring(L, 2);
+    PHDialog * dialog = new PHDialog;
+    dialog->text = lua_tostring(L, 2);
+    dialog->npc = npc;
+    npc->getWorld()->addDialog(dialog);
+    dialog->release();
+    return 0;
+}
+
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLNPC");
@@ -216,7 +344,8 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "usesTrail");
     lua_pushcfunction(L, PHLNPC_setUsesTrail);
     lua_setfield(L, -2, "setUsesTrail");
-
+    lua_pushcfunction(L, PHLNPC_addDialog);
+    lua_setfield(L, -2, "addDialog");
     
     lua_pop(L,1);
 }

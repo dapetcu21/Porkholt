@@ -23,7 +23,8 @@ public:
 	double time;
 	double totalTime;
 	PHObject * view;
-	PHColor bgColor;
+	PHColor bgColor,customColor;
+    double customValue;
 	int tag;
 	int timeFunction;
 	
@@ -43,8 +44,7 @@ public:
 	
 	PHAnimationDescriptor() : 
 		next(NULL), scaleX(1), scaleY(1),
-		moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor),
-		view(NULL), callback(NULL), target(NULL), userdata(NULL), time(0), totalTime(0), timeFunction(LinearFunction) {};
+		moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor), customColor(PHInvalidColor), customValue(0), view(NULL), callback(NULL), target(NULL), userdata(NULL), time(0), totalTime(0), timeFunction(LinearFunction) {};
 	
 	void setNextAnimation(PHAnimationDescriptor * nexta)
 	{

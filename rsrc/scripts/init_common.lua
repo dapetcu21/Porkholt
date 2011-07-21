@@ -76,6 +76,7 @@ function Initializers.PHLNPC(obj)
 	obj._fixtureindex.categoryBits = cNPC;
 	obj._fixtureindex.maskBits = cWORLD;
 	obj.physics.dynamic = true;
+	obj.overHead = point(0,0.5);
 end
 function Initializers.PHLPlayer(obj)
 	Initializers.PHLNPC(obj)

@@ -115,6 +115,8 @@ public:
     
     b2Body * getBody() { return body; }
     
+    PHWorld * getWorld() { return wrld; }
+    
 private:
     
     virtual bool customizeFixture(lua_State * L, b2FixtureDef & fixtureDef);

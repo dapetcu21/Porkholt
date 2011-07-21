@@ -18,6 +18,7 @@
 #include "PHEventQueue.h"
 
 #include "PHLPlayer.h"
+#include "PHLNPC.h"
 #include "PHLCamera.h"
 #include "PHMainEvents.h"
 
@@ -85,7 +86,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -159,6 +160,7 @@ void PHWorld::updatePositions()
 void PHWorld::updateScene()
 {
     viewQueue->processQueue();
+    updateDialogs();
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -167,7 +169,7 @@ void PHWorld::updateScene()
     camera->updateCamera(player->position());
 	if (camera)
 	{
-		PHRect pos = camera->size();
+		PHRect pos = camera->bounds();
 		PHPoint ps = camera->position();
         PHPoint posit = ps;
         double rot = camera->rotation();
@@ -188,7 +190,7 @@ void PHWorld::updateScene()
 		for (list<layer>::iterator i = layers.begin(); i!=layers.end(); i++)
 		{
 			layer & ly = *i;
-			PHRect pos = camera->size();
+			PHRect pos = camera->bounds();
 			PHPoint ps = camera->position();
 			ps.x -= pos.width/2;			
 			ps.y -= pos.height/2;
@@ -347,4 +349,43 @@ void PHWorld::updateTimers(double timeElapsed)
             timer->release();
         }
     }
+}
+
+#pragma mark -
+#pragma mark dialogs
+
+void PHWorld::advanceDialog()
+{
+    if (dialogs.empty() && currentDialog)
+    {
+        currentDialog->npc->dismissDialog();
+        currentDialog->release();
+        currentDialog = NULL;
+        return;
+    } 
+    PHDialog * first = dialogs.front();
+    if (currentDialog && currentDialog->npc == first->npc)
+        currentDialog->npc->swapDialog(first);
+    else
+    {
+        if (currentDialog)
+            currentDialog->npc->dismissDialog();
+        first->npc->showDialog(first);
+    }
+    if (currentDialog)
+        currentDialog->release();
+    currentDialog = first;
+    dialogs.pop_front();
+}
+
+void PHWorld::updateDialogs()
+{
+    if (!currentDialog && !dialogs.empty())
+        advanceDialog();
+}
+
+void PHWorld::addDialog(PHDialog* d)
+{
+    dialogs.push_back(d);
+    d->retain();
 }

@@ -90,7 +90,14 @@ inline PHRect PHMakeRect(double x, double y, double width, double height)
 
 struct PHPoint
 {
-	double x,y;
+    union {
+        double x;
+        double width;
+    };
+    union {
+        double y;
+        double height;
+    };
     PHPoint() {};
     PHPoint(double xx,double yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
@@ -158,6 +165,10 @@ struct PHPoint
     }
     void saveToLua(lua_State * L) const;
 };
+
+typedef PHPoint PHSize;
+#define PHMakeSize PHMakePoint
+#define PHNullSize PHOriginPoint
 
 extern PHPoint PHOriginPoint;
 

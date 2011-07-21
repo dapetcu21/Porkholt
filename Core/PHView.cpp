@@ -370,6 +370,10 @@ void PHView::updateAnimation(double time)
 				{
 					((PHView*)anim->view)->rotate(diff * anim->rotate);
 				}
+                if (anim->customValue)
+                {
+                    ((PHView*)anim->view)->incrementAnimatedValue(diff * anim->customValue);
+                }
 				if (anim->scaleX!=1)
 				{
 					double lastM,m;
@@ -408,6 +412,31 @@ void PHView::updateAnimation(double time)
                     }
 					clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
 					((PHView*)anim->view)->setBackgroundColor(clr);
+				}
+                if (anim->customColor.a>=0)
+				{
+					PHColor clr,trg,crr;
+					crr = ((PHView*)anim->view)->animatedColor();
+					trg = anim->customColor;
+                    if (trg.a>0)
+                    {
+                        if (crr.a>0)
+                        {
+                            clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
+                            clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
+                            clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
+                        } else {
+                            clr.r = trg.r;
+                            clr.g = trg.g;
+                            clr.b = trg.b;
+                        }
+                    } else {
+                        clr.r = crr.r;
+                        clr.g = crr.g;
+                        clr.b = crr.b;
+                    }
+					clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
+					((PHView*)anim->view)->setAnimatedColor(clr);
 				}
 			}
 			if (tm)

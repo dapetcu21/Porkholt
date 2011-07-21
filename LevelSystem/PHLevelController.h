@@ -17,6 +17,7 @@ class PHButtonView;
 class PHImageView;
 class PHScripting;
 class PHTextController;
+class PHImage;
 
 class PHLevelController : public PHViewController
 {
@@ -59,6 +60,8 @@ public:
     PHViewController * mainViewController();
 	
     void textViewControllerFinished(PHTextController * sender, void * ud);
+    
+    static PHImage * dialogImage;
 };
 
 #endif

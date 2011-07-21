@@ -122,6 +122,11 @@ private:
 	PHView * pointerDeepFirst(PHTouch * touch);
 	static double animFunction(double time,int ftype);
 public:
+    
+    virtual const PHColor & animatedColor() { return PHInvalidColor; };
+    virtual void setAnimatedColor(const PHColor &) {};
+    virtual void incrementAnimatedValue(double) {}
+    
 	static void addAnimation(PHAnimationDescriptor * anim);
 	static void updateAnimation(double time);
 	void cancelAnimationsWithTag(int tag);
