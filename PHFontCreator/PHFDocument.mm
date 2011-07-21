@@ -102,30 +102,32 @@
         NSSize sz = NSMakeSize(0, 0);
         NSString * ch;
         fp--;
-        while (pointer+sz.width <= size)
+        while (pointer+ceil(sz.width)+1 <= size)
         {
             if (sz.height>maxHeight)
                 maxHeight = sz.height;
-            if (fp>=st && save)
+            if (fp>=st)
             {
-                character chr;
-                chr.c = [ch UTF8String][0];
-                chr.minX = pointer / size;
-                chr.maxX = (pointer+sz.width) / size;
-                chr.maxY = position / size;
-                chr.minY = (position-sz.height) / size;
-                chr.aspectRatio = sz.width/sz.height;
-                characters.push_back(chr);
+                if (save)
+                {
+                    character chr;
+                    chr.c = [ch UTF8String][0];
+                    chr.minX = pointer / size;
+                    chr.maxX = (pointer+sz.width) / (double)size;
+                    chr.maxY = 1.0f - position / size;
+                    chr.minY = 1.0f - (position-sz.height) / size;
+                    chr.aspectRatio = sz.width/sz.height;
+                    characters.push_back(chr);
+                }
+                [ch drawAtPoint:NSMakePoint(pointer, position-sz.height) withAttributes:attributes];
             }
-            pointer+=sz.width;
+            pointer+=ceil(sz.width)+1;
             fp++;
             if (fp>=n) break;
             ch = [s substringWithRange:NSMakeRange(fp, 1)];
             sz = [ch sizeWithAttributes:attributes];
         }
-        NSString * row = [s substringWithRange:NSMakeRange(st, fp-st)];
-        position -= maxHeight;
-        [row drawAtPoint:NSMakePoint(0, position) withAttributes:attributes];
+        position -= ceil(maxHeight);
         st = fp;
     }
     if (save)

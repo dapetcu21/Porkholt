@@ -21,6 +21,23 @@ protected:
     int _alignment;
     string _text;
     PHColor color;
+    
+    bool needsReload;
+    bool colorArrayNeedsReload;
+    
+    GLubyte * colors;
+    GLfloat * vertices;
+    GLfloat * textureCoordinates;
+    GLushort * indices;
+    
+    unsigned int nGlyphs;
+    
+    
+    void recalculatePositions();
+    void rebuildColorArray();
+    double lengthForInterval(int st, int en);
+    
+    
 public:
 	PHTextView();
 	PHTextView(const PHRect &frame);
@@ -37,17 +54,17 @@ public:
     };
     
 	PHFont * font() { return _font; }
-    void setFont(PHFont * font) { if (font) font->retain(); if (_font) _font->release(); _font = font; }
+    void setFont(PHFont * font) { if (font) font->retain(); if (_font) _font->release(); _font = font; needsReload = true;}
     double fontSize() { return size; }
-    void setFontSize(double s) { size = s; }
+    void setFontSize(double s) { needsReload = true; size = s; }
     double lineSpacing() { return lineSpace; }
-    void setLineSpacing(double s) {  lineSpace = s; }
+    void setLineSpacing(double s) {  needsReload = true; lineSpace = s; }
     int alignment() { return _alignment; }
-    void setAlignment(int a) { _alignment = a; }
-    void setFontColor(const PHColor & c) { color = c; }
+    void setAlignment(int a) { needsReload = true; _alignment = a; }
+    void setFontColor(const PHColor & c) { colorArrayNeedsReload = true; color = c; }
     PHColor fontColor() { return color; }
     
-    void setText(const string & s) { _text = s; }
+    void setText(const string & s) { needsReload = true; _text = s; }
     const string & text() { return _text; };
 protected:
 	virtual void draw();

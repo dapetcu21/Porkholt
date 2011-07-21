@@ -138,3 +138,10 @@ void PHMainEvents::memoryWarning()
 {
 	PHLog("memoryWarning");
 }
+
+int PHMainEvents::interfaceType()
+{
+    if (_screenHeight >= 400)
+        return interfaceHD;
+    return interfaceSD;
+}

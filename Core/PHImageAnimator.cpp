@@ -178,13 +178,14 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     if (states & PHGLColorArray)
     {
-        const GLfloat colors[] = { 
-            tint.r, tint.g, tint.b, tint.a,
-            tint.r, tint.g, tint.b, tint.a,
-            tint.r, tint.g, tint.b, tint.a,
-            tint.r, tint.g, tint.b, tint.a
+        PH24BitColor t(tint);
+        const GLubyte colors[] = { 
+            t.r, t.g, t.b, t.a,
+            t.r, t.g, t.b, t.a,
+            t.r, t.g, t.b, t.a,
+            t.r, t.g, t.b, t.a
         };
-        glColorPointer(4, GL_FLOAT, 0, colors);
+        glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
     }
 	PHGLSetStates(states);
     

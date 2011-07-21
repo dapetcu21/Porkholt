@@ -51,6 +51,14 @@ public:
 	void setIndependentTiming(bool i) { indTiming = i; };
     
     void processInput();
+
+    enum interfaceType
+    {
+        interfaceSD = 0,
+        interfaceHD,
+        numInterfaceTypes
+    };
+    int interfaceType();
 };
 
 #endif

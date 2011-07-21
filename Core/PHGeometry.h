@@ -36,6 +36,20 @@ struct PHColor
     void saveToLua(lua_State * L) const;
 };
 
+struct PH24BitColor
+{
+    uint8_t r,g,b,a;
+    bool operator == (const PH24BitColor & o) const {
+        return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
+    }
+    bool operator != (const PH24BitColor & o) const {
+        return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
+    }
+    PH24BitColor() {};
+    PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
+};
+
+
 inline PHColor PHMakeColor(double red, double green, double blue, double alpha)
 {
 	PHColor tmp;

@@ -26,9 +26,10 @@ PHView * PHTextController::loadView(const PHRect & frame)
     view->setBounds(fr);
     view->setBackgroundColor(bColor);
     view->setUserInput(true);
-    textView = new PHTextView(PHMakeRect(fr.width/6,1.0f/6,fr.width*4/6,4.0f/6));
+    textView = new PHTextView(PHMakeRect(fr.width/12,1.0f/6,fr.width*5/6,4.0f/6));
     textView->setFontSize(0.1f);
     textView->setFontColor(fColor);
+    textView->setFont(PHFont::fontNamed("Arial"));
     pos = 0;
     textView->setText((*strings)[pos]);
     textView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);

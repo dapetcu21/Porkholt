@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -364,6 +364,7 @@
 		C1D6A2171382A31C0010009E /* PHLAuxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAuxLayer.h; sourceTree = "<group>"; };
 		C1D6A21A13831DED0010009E /* PHAuxLayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAuxLayerView.cpp; sourceTree = "<group>"; };
 		C1D6A21B13831DEE0010009E /* PHAuxLayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAuxLayerView.h; sourceTree = "<group>"; };
+		C1E00AAD13D6CA9B00AB410A /* PHSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSerialization.h; sourceTree = "<group>"; };
 		C1EEB25313C07B9A004F5D5E /* PHEventQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventQueue.cpp; sourceTree = "<group>"; };
 		C1EEB25413C07B9A004F5D5E /* PHEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventQueue.h; sourceTree = "<group>"; };
 		C1F1DE15138B963500C8051C /* PHLPlatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPlatform.cpp; sourceTree = "<group>"; };
@@ -489,6 +490,7 @@
 		C152809312B9713E009067A7 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C1E00AAD13D6CA9B00AB410A /* PHSerialization.h */,
 				C163951812BA3FD000B0A72E /* PHMain.h */,
 				C152809412B97169009067A7 /* PHMainEvents.h */,
 				C152809512B97169009067A7 /* PHMainEvents.cpp */,
@@ -588,10 +590,6 @@
 				C177805113BCDAB00003640D /* PHScriptableTimer.h */,
 				C17B487313C1C44200FAD712 /* PHLAnimation.cpp */,
 				C17B487413C1C44200FAD712 /* PHLAnimation.h */,
-				C1B2419113D21584005B60BF /* PHTextController.h */,
-				C1B2419013D21583005B60BF /* PHTextController.cpp */,
-				C1B2419413D2CC5E005B60BF /* PHTextControllerView.h */,
-				C1B2419313D2CC5D005B60BF /* PHTextControllerView.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -726,6 +724,10 @@
 		C1AF4FBB13A657BD00ED2ED7 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				C1B2419113D21584005B60BF /* PHTextController.h */,
+				C1B2419013D21583005B60BF /* PHTextController.cpp */,
+				C1B2419413D2CC5E005B60BF /* PHTextControllerView.h */,
+				C1B2419313D2CC5D005B60BF /* PHTextControllerView.cpp */,
 				C17B480A130719FF00C2EC8D /* PHTestView.h */,
 				C17B480B130719FF00C2EC8D /* PHTestView.cpp */,
 				C1185A42131441C2004F341A /* PHTestViewController.h */,
@@ -830,10 +832,11 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0410;
 				ORGANIZATIONNAME = "Porkholt Labs!";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Porkholt_iOS" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -1074,7 +1077,6 @@
 					Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1097,7 +1099,6 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1111,7 +1112,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				PREBINDING = NO;
 				PRODUCT_NAME = Box2D;
 				SDKROOT = iphoneos;
 			};
@@ -1123,9 +1123,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				PREBINDING = NO;
 				PRODUCT_NAME = Box2D;
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
