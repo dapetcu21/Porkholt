@@ -119,6 +119,7 @@ private:
     
     list<PHDialog*> dialogs;
     PHDialog * currentDialog;
+    PHLNPC * dialogInitiator;
   
 };
 

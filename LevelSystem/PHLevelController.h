@@ -62,6 +62,7 @@ public:
     void textViewControllerFinished(PHTextController * sender, void * ud);
     
     static PHImage * dialogImage;
+    static PHImage * questImage;
 };
 
 #endif

@@ -88,7 +88,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -382,8 +382,29 @@ void PHWorld::advanceDialog()
 
 void PHWorld::updateDialogs()
 {
-    if (!currentDialog && !dialogs.empty())
-        advanceDialog();
+    if (!currentDialog)
+    {
+        if (!dialogs.empty())
+        {
+            if (!dialogInitiator)
+            {
+                dialogInitiator = dialogs.front()->npc;
+                dialogInitiator->retain();
+                dialogInitiator->setInternalShowsQuest(false);
+            }
+            if (!(dialogInitiator->animatingquest))
+                advanceDialog();
+        }
+        else
+        {
+            if (dialogInitiator)
+            {
+                dialogInitiator->setInternalShowsQuest(true);
+                dialogInitiator->release();
+                dialogInitiator = NULL;
+            }
+        }
+    }
 }
 
 void PHWorld::addDialog(PHDialog* d)

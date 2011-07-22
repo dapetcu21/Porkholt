@@ -19,9 +19,12 @@ private:
     bool touchEnabled;
     virtual void touchEvent(PHTouch * t);
     virtual void draw();
+    bool stretch;
 public:
-    PHDialogView(PHLNPC * d) : delegate(d), touchEnabled(true) {}
+    PHDialogView(PHLNPC * d) : delegate(d), touchEnabled(true), stretch(false) {}
     void reenableTouch() { touchEnabled = true; }
+    void setStretchBubble(bool s) { stretch = s; }
+    bool stretchBubble() { return stretch; }
 };
 
 #endif

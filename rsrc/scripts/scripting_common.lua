@@ -175,6 +175,11 @@ function PHLNPC:addDialog(text,cb,...)
 	end
 	self:_addDialog(text,call);
 end
+--function PHLNPC:showsQuest();
+--function PHLNPC:setShowsQuest(s);
+--function PHLNPC:reallyShowsQuest();
+function PHLNPC:questTapped(obj) --override this to do something when the user taps the quest/info popup
+end
 
 function PHDialog_runCallback(cb)
 	cb.callback(unpack(cb.args));

@@ -23,6 +23,11 @@ void PHDialogView::touchEvent(PHTouch * t)
 void PHDialogView::draw()
 {
     if (!_image) return;
+    if (!stretch)
+    {
+        PHImageView::draw();
+        return;
+    }
     double aspectRatio = _image->width()/_image->height()*2;
     double aspectRatioC = _bounds.width/_bounds.height;
     if (aspectRatioC/aspectRatio >1.0f)

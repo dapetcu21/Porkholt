@@ -1,5 +1,6 @@
 function callback()
 	PHLog("timer fired");
+	player:setShowsQuest(true);
 	local obj = objectWithClass("PHLObject");
 	obj.pos = player:position();
 	obj.pos.y = obj.pos.y + 2;
@@ -64,11 +65,20 @@ function dialogCallback(text)
 	PHLog("dialogCallback: %s",text)
 end
 
-function sensor:objectEntered(obj)
-	PHLog("entered: %s",obj);
+function showtext()
 	text = text or "hello!";
 	player:addDialog(text,dialogCallback,text);
 	text = text.." "..text;
+end
+
+function sensor:objectEntered(obj)
+	PHLog("entered: %s",obj);
+	showtext()
+end
+
+function player:questTapped(obj)
+	PHLog("questTapped");
+	showtext();
 end
 
 function sensor:objectExited(obj)

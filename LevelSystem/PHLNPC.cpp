@@ -22,7 +22,7 @@
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1)
 {
     _class = "PHLNPC";
 }
@@ -33,6 +33,11 @@ PHLNPC::~PHLNPC()
     {
         dialogView->removeFromSuperview();
         dialogView->release();
+    }
+    if (questView)
+    {
+        questView->removeFromSuperview();
+        questView->release();
     }
 }
 
@@ -82,6 +87,16 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
     if (lua_istable(L, -1))
         overHeadPoint = PHPoint::pointFromLua(L, -1);
     lua_pop(L, 1);
+    
+    lua_getfield(L, -1, "questPoint");
+    if (lua_istable(L, -1))
+        questPoint = PHPoint::pointFromLua(L, -1);
+    lua_pop(L, 1);
+    
+    lua_getfield(L, -1, "questHeight");
+    if (lua_isnumber(L, -1))
+        questHeight = lua_tonumber(L, -1);
+    lua_pop(L, 1);
 }
 
 void PHLNPC::loadView()
@@ -109,6 +124,15 @@ void PHLNPC::updateView()
         bool flipped = dialogView->horizontallyFlipped();
         dialogView->setPosition(PHMakePoint(pos.x+(flipped?-1:1)*overHeadPoint.x-(flipped?dialogView->frame().width:0), pos.y+overHeadPoint.y));
     }
+    if (questView)
+    {
+        questView->setPosition(PHMakePoint(pos.x-questView->frame().width/2+questPoint.x, pos.y+questPoint.y));
+    }
+    if (queuedquest)
+    {
+        queuedquest = false;
+        setShowsQuest(qquest);
+    }
     if (trailPossible)
         ((PHTrailImageView*)bodyView)->setTrailSize((utrail&&trail)?traillen:0);
 }
@@ -132,6 +156,7 @@ void PHLNPC::flip()
 {
     if (!fflip && !bflip) return;
     flipped = !flipped;
+    questPoint.x = -questPoint.x;
     if (bflip && body)
     {
         for (int i=0; i<fixturesDefinitions.size(); i++)
@@ -187,6 +212,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
         dialogView->setImage(PHLevelController::dialogImage);
         dialogView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogView->setUserInput(true);
+        dialogView->setStretchBubble(true);
         dialogTextView = new PHTextView();
         dialogTextView->setFont(PHFont::fontNamed("Arial"));
         dialogTextView->setFontSize(dialogFontSize);
@@ -227,7 +253,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
     anim->view = dialogView;
     anim->time = 0.5f;
     anim->tag = 5836;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    anim->timeFunction = PHAnimationDescriptor::BounceFunction;
     PHView::addAnimation(anim);
     anim->release();
 }
@@ -243,6 +269,14 @@ void PHLNPC::dialogViewFired(PHDialogView * dv)
 {
     if (dialogView==dv)
         getWorld()->advanceDialog();
+    if (questView==dv)
+    {
+        PHLuaGetWeakRef(L, this);
+        lua_getfield(L, -1, "questTapped");
+        lua_pushvalue(L, -2);
+        PHLuaCall(L, 1, 0);
+        dv->reenableTouch();
+    }
 }
 
 void PHLNPC::dismissDialog()
@@ -355,6 +389,86 @@ void PHLNPC::_dialogSwapEnd(PHLObject * sender, void * ud)
         dialogView->reenableTouch();
 }
 
+void PHLNPC::showQuest()
+{
+    if (!questView)
+    {
+        questView = new PHDialogView(this);
+        questView->setImage(PHLevelController::questImage);
+        getWorld()->getWorldView()->addSubview(questView);
+    }
+    PHView::cancelAllAnimationsWithTag(4867);
+    questView->setUserInput(true);
+    
+    double aspectRatio = PHLevelController::questImage?((double)(PHLevelController::questImage->width())/PHLevelController::questImage->height()):1.0f;
+    
+    questView->setFrame(PHMakeRect(pos.x-questHeight*aspectRatio/2+questPoint.x, pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
+    questView->setScalingCenter(PHMakePoint(questHeight*aspectRatio/2, 0));
+
+    double scale = 1024;
+    questView->setScaleX(1/scale);
+    questView->setScaleY(1/scale);
+    animatingquest = true;
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->scaleX = scale;
+    anim->scaleY = scale;
+    anim->tag = 4867;
+    anim->view = questView;
+    anim->callback = (PHCallback)&PHLNPC::questShowedUp;
+    anim->target = this;
+    anim->userdata = NULL;
+    anim->time = 0.5;
+    anim->timeFunction = PHAnimationDescriptor::BounceFunction;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+void PHLNPC::questShowedUp(PHObject *sender, void *ud)
+{
+    animatingquest = false;
+}
+
+void PHLNPC::hideQuest()
+{
+    if (!questView)
+    {
+        animatingquest = false;
+        return;
+    }
+    PHView::cancelAllAnimationsWithTag(4867);
+    questView->setUserInput(false);
+    
+    double scale = 1024;
+    animatingquest = true;
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->scaleX = 1/scale;
+    anim->scaleY = 1/scale;
+    anim->tag = 4867;
+    anim->view = questView;
+    anim->callback = (PHCallback)&PHLNPC::questHiddenItself;
+    anim->target = this;
+    anim->userdata = NULL;
+    anim->time = 0.3;
+    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    PHView::addAnimation(anim);
+    anim->release();
+
+}
+
+void PHLNPC::questHiddenItself(PHObject *sender, void *ud)
+{
+    animatingquest = false;
+    if (questView)
+    {
+        questView->removeFromSuperview();
+        questView->release();
+        questView = NULL;
+    }
+}
+
+#pragma mark -
+#pragma mark scripting
+
 static int PHLNPC_isFlipped(lua_State * L)
 {
     PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
@@ -424,6 +538,28 @@ static int PHLNPC_addDialog(lua_State * L)
     return 0;
 }
 
+static int PHLNPC_showsQuest(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    lua_pushboolean(L, npc->showsQuest());
+    return 1;
+}
+
+static int PHLNPC_reallyShowsQuest(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    lua_pushboolean(L, npc->reallyShowsQuest());
+    return 1;
+}
+
+static int PHLNPC_setShowsQuest(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    npc->queueSetShowsQuest(lua_toboolean(L, 2));
+    return 0;
+}
+
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLNPC");
@@ -444,6 +580,12 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "setUsesTrail");
     lua_pushcfunction(L, PHLNPC_addDialog);
     lua_setfield(L, -2, "_addDialog");
+    lua_pushcfunction(L, PHLNPC_showsQuest);
+    lua_setfield(L, -2, "showsQuest");
+    lua_pushcfunction(L, PHLNPC_setShowsQuest);
+    lua_setfield(L, -2, "setShowsQuest");
+    lua_pushcfunction(L, PHLNPC_reallyShowsQuest);
+    lua_setfield(L, -2, "reallyShowsQuest");
     
     lua_pop(L,1);
 }

@@ -65,7 +65,38 @@ private:
     void _dialogSwapBegin(PHLObject * sender, void * ud);
     void _dialogSwapEnd(PHLObject * sender, void * ud);
     friend class PHDialogView;
+    
+    PHDialogView * questView;
+    
+    bool quest1,quest2,reallyquest,animatingquest;
+    void showQuest();
+    void hideQuest();
+    void questShowedUp(PHObject * sender, void * ud);
+    void questHiddenItself(PHObject * sender, void * ud);
+    void updateShowsQuest()
+    {
+        if (quest1 && quest2 != reallyquest)
+        {
+            reallyquest = quest1 && quest2;
+            if (reallyquest)
+                showQuest();
+            else
+                hideQuest();
+        }
+    }
+    void setInternalShowsQuest(bool q) { quest2 = q; updateShowsQuest(); }
+    bool internalShowsQuest() { return quest2; }
+    friend class PHWorld;
+    
+    bool qquest,queuedquest;
+    double questHeight;
+    PHPoint questPoint;
 public:
+    void setShowsQuest(bool q) { quest1 = q; updateShowsQuest(); }
+    bool showsQuest() { return quest1; }
+    bool reallyShowsQuest() { return reallyquest; }
+    void queueSetShowsQuest(bool q) { qquest = q; queuedquest = true; }
+    
     void showDialog(PHDialog * dialog);
     void swapDialog(PHDialog * dialog);
     void dismissDialog();

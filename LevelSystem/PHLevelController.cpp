@@ -24,6 +24,8 @@
 
 #include <fstream>
 
+#define releaseImage(img) if (img) img = (PHImage*)img->release()
+#define retainImage(img,fname) if (!img) img = PHImage::imageNamed((fname)); if (img) img->retain()
 
 void PHLevelController::appSuspended()
 {
@@ -140,8 +142,8 @@ PHLevelController::~PHLevelController()
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
 	PHMainEvents::sharedInstance()->setIndependentTiming(false);
-    if (dialogImage)
-        dialogImage = (PHImage*)dialogImage->release();
+    releaseImage(dialogImage);
+    releaseImage(questImage);
 }
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
@@ -296,10 +298,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	mutex->lock();
     
-    if (!dialogImage)
-        dialogImage = PHImage::imageNamed("dialogbubble");
-    if (dialogImage)
-        dialogImage->retain();
+    retainImage(dialogImage, "dialogbubble");
+    retainImage(questImage, "quest");
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
@@ -350,3 +350,4 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 }
 
 PHImage * PHLevelController::dialogImage = NULL;
+PHImage * PHLevelController::questImage = NULL;
