@@ -127,7 +127,10 @@ void PHLNPC::updateView()
     }
     if (questView)
     {
-        questView->setPosition(PHMakePoint(pos.x-questView->frame().width/2+questPoint.x, pos.y+questPoint.y));
+        double width = questView->frame().width;
+        questView->setFrame(PHMakeRect(pos.x+(flipped?(-questPoint.x-width):(questPoint.x)), pos.y+questPoint.y, width, questHeight));
+        questView->setHorizontallyFlipped(flipped);
+        questView->setScalingCenter(PHOriginPoint);
     }
     if (queuedquest)
     {
@@ -157,7 +160,6 @@ void PHLNPC::flip()
 {
     if (!fflip && !bflip) return;
     flipped = !flipped;
-    questPoint.x = -questPoint.x;
     if (bflip && body)
     {
         for (int i=0; i<fixturesDefinitions.size(); i++)
@@ -396,6 +398,7 @@ void PHLNPC::showQuest()
     {
         questView = new PHDialogView(this);
         questView->setImage(PHLevelController::questImage);
+        questView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         getWorld()->getWorldView()->addSubview(questView);
     }
     PHView::cancelAllAnimationsWithTag(4867);
@@ -403,8 +406,9 @@ void PHLNPC::showQuest()
     
     double aspectRatio = PHLevelController::questImage?((double)(PHLevelController::questImage->width())/PHLevelController::questImage->height()):1.0f;
     
-    questView->setFrame(PHMakeRect(pos.x-questHeight*aspectRatio/2+questPoint.x, pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
-    questView->setScalingCenter(PHMakePoint(questHeight*aspectRatio/2, 0));
+    questView->setFrame(PHMakeRect(pos.x+(flipped?(-questPoint.x-questHeight*aspectRatio):(questPoint.x)), pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
+    questView->setHorizontallyFlipped(flipped);
+    questView->setScalingCenter(PHOriginPoint);
 
     double scale = 1024;
     questView->setScaleX(1/scale);

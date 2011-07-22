@@ -91,7 +91,7 @@ function Initializers.PHLPlayer(obj)
 	obj.faceFlipping = true;
 	obj.automaticFlipping = true;
 	obj.overHead = point(0.15,0.3);
-	obj.questPoint = point(0,0.3);
+	obj.questPoint = point(0.15,0.3);
 	objectAddCircle(obj,0.25,{restitution = 0.5;}); --0.5 restitution is the exact value for which the jumping system can't be exploited
 	objectAddImage(obj,"/ball.png",-0.25,-0.25,0.5,0.5,{tag=20; class="PHTrailImageView"});
     objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5,{tag=21});
