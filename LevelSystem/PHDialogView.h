@@ -18,6 +18,7 @@ private:
     PHLNPC * delegate;
     bool touchEnabled;
     virtual void touchEvent(PHTouch * t);
+    virtual void draw();
 public:
     PHDialogView(PHLNPC * d) : delegate(d), touchEnabled(true) {}
     void reenableTouch() { touchEnabled = true; }

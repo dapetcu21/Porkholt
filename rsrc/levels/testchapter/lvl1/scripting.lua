@@ -60,11 +60,17 @@ anim2.time = 0.5;
 anim.nextAnimation = anim2;
 player:addAnimation(anim);
 
+function dialogCallback(text)
+	PHLog("dialogCallback: %s",text)
+end
+
 function sensor:objectEntered(obj)
-	print("entered: ",obj);
-	player:addDialog("hello!")
+	PHLog("entered: %s",obj);
+	text = text or "hello!";
+	player:addDialog(text,dialogCallback,text);
+	text = text.." "..text;
 end
 
 function sensor:objectExited(obj)
-	print("exited: ",obj);
+	PHLog("exited: %s",obj);
 end

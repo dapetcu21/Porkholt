@@ -58,16 +58,21 @@ PHImageView::~PHImageView()
 		_image->release();
 }
 
-void PHImageView::draw()
+void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd, const PHColor & clr)
 {
-	if (_image)
+    if (_image)
     {
         if (_image->isNormal())
-            ((PHNormalImage*)_image)->renderInFramePortionTint(_bounds,coords,tint);
+            ((PHNormalImage*)_image)->renderInFramePortionTint(fr,crd,clr);
         
         if (_image->isAnimated())
-            _animator->renderInFramePortionTint(_bounds,coords,tint);
+            _animator->renderInFramePortionTint(fr,crd,clr);
     }
+}
+
+void PHImageView::draw()
+{
+    renderInFramePortionTint(_bounds, coords, tint);
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)

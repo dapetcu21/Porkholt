@@ -9,6 +9,11 @@ addJoint = nil;
 addObject = function (o) return PHWorld:insertObject(o) end
 
 function PHLog(fmt, ...)
+	for i,v in pairs(arg) do
+		if (type(v) == "table") then
+			arg[i] = tostring(v);
+		end
+	end
 	print(string.format("Porkholt: "..fmt,unpack(arg)));
 end
 
@@ -163,7 +168,17 @@ PHLNPC = PHLObject:new();
 --function PHLNPC:setTrail(f);
 --function PHLNPC:usesTrail();
 --function PHLNPC:setUsesTrail(f);
---function PHLNPC:addDialog(text);
+function PHLNPC:addDialog(text,cb,...)
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_addDialog(text,call);
+end
+
+function PHDialog_runCallback(cb)
+	cb.callback(unpack(cb.args));
+end
 
 PHLPlayer = PHLNPC:new()
 

@@ -66,6 +66,9 @@ public:
     PHColor fontColor() { return color; }
     PHSize textSize() { if (needsReload) recalculatePositions(); return sz; }
     
+    virtual const PHColor & animatedColor() { return color; }
+    virtual void setAnimatedColor(const PHColor & c) { setFontColor(c); }
+    
     void setText(const string & s) { needsReload = true; _text = s; }
     const string & text() { return _text; };
 protected:

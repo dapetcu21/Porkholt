@@ -248,11 +248,12 @@
 		C17D0F661323811F00BDB8EF /* PHThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHThread.cpp; sourceTree = "<group>"; };
 		C17D0F681323845300BDB8EF /* PHMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMutex.h; sourceTree = "<group>"; };
 		C1852D6112BBD40700EF0BB8 /* PHView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHView.h; sourceTree = "<group>"; };
-		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHView.cpp; sourceTree = "<group>"; };
+		C1852D6212BBD40700EF0BB8 /* PHView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHView.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C192A11213185B5000C18BA2 /* PHButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHButtonView.h; sourceTree = "<group>"; };
 		C192A11313185B5000C18BA2 /* PHButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHButtonView.cpp; sourceTree = "<group>"; };
 		C19B4B2813D8D00F00C714FB /* PHDialogView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHDialogView.cpp; sourceTree = "<group>"; };
 		C19B4B2A13D8D05100C714FB /* PHDialogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDialogView.h; sourceTree = "<group>"; };
+		C19FD3A613D9932A00871F8E /* PHDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDialog.h; sourceTree = "<group>"; };
 		C1A034E9132DF62700F0200C /* libBox2D.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBox2D.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A03582132E062300F0200C /* b2Body.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Body.cpp; sourceTree = "<group>"; };
 		C1A03583132E062300F0200C /* b2Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Body.h; sourceTree = "<group>"; };
@@ -563,6 +564,9 @@
 				C1C0397F13CEE6DB004BCC24 /* PHLSensor.cpp */,
 				C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */,
 				C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */,
+				C19FD3A613D9932A00871F8E /* PHDialog.h */,
+				C19B4B2A13D8D05100C714FB /* PHDialogView.h */,
+				C19B4B2813D8D00F00C714FB /* PHDialogView.cpp */,
 				C1B2418713D06A3A005B60BF /* PHLNPC.h */,
 				C1B2418613D06A3A005B60BF /* PHLNPC.cpp */,
 				C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */,
@@ -593,8 +597,6 @@
 				C177805113BCDAB00003640D /* PHScriptableTimer.h */,
 				C17B487313C1C44200FAD712 /* PHLAnimation.cpp */,
 				C17B487413C1C44200FAD712 /* PHLAnimation.h */,
-				C19B4B2A13D8D05100C714FB /* PHDialogView.h */,
-				C19B4B2813D8D00F00C714FB /* PHDialogView.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";

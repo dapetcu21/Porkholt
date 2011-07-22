@@ -25,13 +25,7 @@ class PHTimer;
 class PHLevelController;
 class PHEventQueue;
 class PHLNPC;
-
-class PHDialog : public PHObject
-{
-public:
-    PHLNPC * npc;
-    string text;
-};
+class PHDialog;
 
 class PHWorld : public PHObject 
 {

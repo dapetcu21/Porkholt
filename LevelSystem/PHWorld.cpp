@@ -22,6 +22,8 @@
 #include "PHLCamera.h"
 #include "PHMainEvents.h"
 
+#include "PHDialog.h"
+
 //304 19
 #define GAUGE_WIDTH 256
 #define GAUGE_HEIGHT 16

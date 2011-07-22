@@ -23,6 +23,9 @@ protected:
     PHImageAnimator * _animator;
 	PHRect coords;
     PHColor tint;
+    
+    void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
+    
 public:
 	PHImage * image() { return _image; };
     PHImageAnimator * animator() { return _animator; }
@@ -38,6 +41,9 @@ public:
     
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; };
+    
+    virtual const PHColor & animatedColor() { return tint; }
+    virtual void setAnimatedColor(const PHColor & c) { setTintColor(c); }
     
     static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
     static PHImageView * imageFromClass(const string & clss);

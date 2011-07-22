@@ -17,3 +17,22 @@ void PHDialogView::touchEvent(PHTouch * t)
         touchEnabled = false;
     }
 }
+
+
+
+void PHDialogView::draw()
+{
+    if (!_image) return;
+    double aspectRatio = _image->width()/_image->height()*2;
+    double aspectRatioC = _bounds.width/_bounds.height;
+    if (aspectRatioC/aspectRatio >1.0f)
+    {
+        double marginLen = aspectRatio*_bounds.height/2;
+        double toRecover = _bounds.width-marginLen*2;
+        
+        renderInFramePortionTint(PHMakeRect(0, 0, marginLen, _bounds.height), PHMakeRect(0, 0, 0.5, 1.0), tint);
+        renderInFramePortionTint(PHMakeRect(marginLen+toRecover, 0, marginLen, _bounds.height), PHMakeRect(0.5, 0, 0.5, 1.0), tint);
+        renderInFramePortionTint(PHMakeRect(marginLen, 0, toRecover, _bounds.height), PHMakeRect(0.5, 0, 0, 1.0), tint);
+    } else
+        PHImageView::draw();
+}

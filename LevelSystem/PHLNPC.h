@@ -62,6 +62,8 @@ private:
     PHTextView * dialogTextView;
     void _dialogDismissed(PHLObject * sender, void * ud);
     void dialogViewFired(PHDialogView * dv);
+    void _dialogSwapBegin(PHLObject * sender, void * ud);
+    void _dialogSwapEnd(PHLObject * sender, void * ud);
     friend class PHDialogView;
 public:
     void showDialog(PHDialog * dialog);

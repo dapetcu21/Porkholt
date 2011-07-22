@@ -53,10 +53,21 @@ protected:
 public:
     void loadMatrixTree(PHView * until);
 	
+    enum Effects
+    {
+        EffectScale = 1,
+        EffectRotate = 2,
+        EffectFlip = 3
+    };
+    
 	enum EffectOrder
 	{
-		EffectOrderScaleRotate = 0,
-		EffectOrderRotateScale
+		EffectOrderScaleRotateFlip = EffectScale | EffectRotate<<2 | EffectFlip<<4,
+		EffectOrderRotateScaleFlip = EffectRotate | EffectScale<<2 | EffectFlip<<4,
+        EffectOrderScaleFlipRotate = EffectScale | EffectFlip<<2 | EffectRotate<<4,
+        EffectOrderRotateFlipScale = EffectRotate | EffectFlip<<2 | EffectScale<<4,
+        EffectOrderFlipScaleRotate = EffectFlip | EffectScale<<2 | EffectRotate<<4,
+		EffectOrderFlipRotateScale = EffectFlip | EffectRotate<<2 | EffectScale<<4
 	};
 	
 	PHView();

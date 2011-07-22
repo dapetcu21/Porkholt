@@ -15,7 +15,7 @@
 std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
-						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotate),\
+						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
 						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
@@ -94,15 +94,23 @@ void PHView::applyMatrices()
 {
 	glTranslatef(_frame.x, _frame.y, 0);
 	glScalef(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1, 1);
-	if (effOrder == EffectOrderScaleRotate)
-	{
-		apply_rotation();
-		apply_scaling();
-	} else {
-		apply_scaling();
-		apply_rotation();
-	}
-    PHGLFlip(_flipCenter,fhoriz,fvert);
+    int eo = effOrder;
+    while (eo)
+    {
+        switch (eo&3)
+        {
+            case EffectRotate:
+                apply_rotation();
+                break;
+            case EffectScale:
+                apply_scaling();
+                break;
+            case EffectFlip:
+                PHGLFlip(_flipCenter,fhoriz,fvert);
+                break;
+        }
+        eo>>=2;
+    }
 }
 extern PHView * playerView;
 void PHView::render()
