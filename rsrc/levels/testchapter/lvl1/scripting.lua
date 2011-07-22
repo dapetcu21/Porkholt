@@ -81,6 +81,11 @@ function player:questTapped(obj)
 	showtext();
 end
 
+function walkCallback(a)
+	PHLog("walkCallback: %s",a);
+end
+
 function sensor:objectExited(obj)
 	PHLog("exited: %s",obj);
+	player:walk(point(2,0),2,walkCallback,"arg");
 end

@@ -741,7 +741,22 @@ void PHLObject::commitAnimations(double el)
                             body->ApplyLinearImpulse(b2Vec2(frc.x,frc.y),body->GetWorldCenter());
                         }
                     }
+                    if (a->breaking)
+                    {
+                        b2Vec2 vel = body->GetLinearVelocity();
+                        double vlen = vel.Length();
+                        vel*=1/vlen;
+                        double impulse = vlen*body->GetMass();
+                        if (impulse>(a->breaking*elapsedTime))
+                            impulse=a->breaking*elapsedTime;
+                        if (impulse)
+                        {
+                            vel*=-impulse;
+                            body->ApplyLinearImpulse(vel,body->GetWorldCenter());
+                        }
+                    }
                 }
+                a->animationStepped(elapsedTime);
             }
             if (jobFinished)
             {

@@ -23,7 +23,7 @@ public:
     void callback()
     {
         if (!L) return;
-        lua_getglobal(L, "PHDialog_runCallback");
+        lua_getglobal(L, "PHCallbackHelper");
         PHLuaGetHardRef(L, this);
         PHLuaCall(L, 1, 0);
     }

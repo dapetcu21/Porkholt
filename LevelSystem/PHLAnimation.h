@@ -20,19 +20,8 @@ private:
     double rotate,angularImpulse,corrForce;
     double elapsed;
     double position; //f(elapsed)
+    double breaking;
     bool valid,skipped,statica,odyn;
-    
-    enum Functions
-	{
-		LinearFunction = 0,
-		BounceFunction,
-		FadeInFunction,
-		FadeOutFunction,
-		FadeInOutFunction,
-        ConstantFunction, 
-        LuaFunction,
-		NUMFUNCTIONS
-	};
     
     lua_State * L;
     int function;
@@ -46,9 +35,23 @@ private:
     
     friend class PHLObject;
 public:
+    enum Functions
+	{
+		LinearFunction = 0,
+		BounceFunction,
+		FadeInFunction,
+		FadeOutFunction,
+		FadeInOutFunction,
+        ConstantFunction, 
+        LuaFunction,
+		NUMFUNCTIONS
+	};
+    
     PHLAnimation();
     virtual ~PHLAnimation();
     
+    void setBreak(double force) { breaking = force; }
+    double breakForce() { return breaking; }
     void setMovement(PHPoint movement) { move = movement; }
     void setForce(PHPoint frc, bool objectCoordinates) { force = frc;  objCoord = objectCoordinates;}
     void setImpulse(PHPoint frc, bool objectCoordinates) { impulse = frc;  objCoord = objectCoordinates;}
@@ -97,6 +100,8 @@ public:
     static void registerLuaInterface(lua_State * L);
     
     double f(double x);
+    
+    virtual void animationStepped(double elapsed) {};
 };
 
 #endif

@@ -17,6 +17,10 @@ function PHLog(fmt, ...)
 	print(string.format("Porkholt: "..fmt,unpack(arg)));
 end
 
+function PHCallbackHelper(cb)
+	cb.callback(unpack(cb.args));
+end
+
 PHWorld = {}
 function PHWorld:insertObject(o) --not a good idea to batch-create objects mid-level, especially if not inserted at the end
 	local ud = self._insertObj;
@@ -133,6 +137,7 @@ PHLAnimation = PHObject:new{
 --PHLAnimation.rotationCenter -- in world coordinates or object coordinates if objectCoordinates is true
 ---
 --PHLAnimation.velocity --tries to maintain this vectorial velocity using a maximum force of correctorForce, can be applied infinitely
+--PHLAnimation.break --the maximum force it tries to break with
 --PHLAnimation.correctorForce --defaults to infinity, don't leave it at infinity unless you want instant velocity correction
 ---
 --PHLAnimation.force --can be applied infinitely
@@ -178,11 +183,20 @@ end
 --function PHLNPC:showsQuest();
 --function PHLNPC:setShowsQuest(s);
 --function PHLNPC:reallyShowsQuest();
-function PHLNPC:questTapped(obj) --override this to do something when the user taps the quest/info popup
+function PHLNPC:questTapped(obj) end --override this to do something when the user taps the quest/info popup
+function PHLNPC:walk(offset,speed,cb,...) --same as walkTo(position()+offset,speed), speed optional, defaults to 2
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_walk(offset,speed,call);
 end
-
-function PHDialog_runCallback(cb)
-	cb.callback(unpack(cb.args));
+function PHLNPC:walkTo(destination,speed,cb,...) -- speed optional, defaults to 2
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_walkTo(destination,speed,call);
 end
 
 PHLPlayer = PHLNPC:new()

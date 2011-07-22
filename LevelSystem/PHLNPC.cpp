@@ -19,6 +19,7 @@
 #include "PHLCamera.h"
 #include "PHDialogView.h"
 #include "PHDialog.h"
+#include "PHLAnimation.h"
 
 #include <typeinfo>
 
@@ -466,6 +467,74 @@ void PHLNPC::questHiddenItself(PHObject *sender, void *ud)
     }
 }
 
+class PHLWalkAnimation : public PHLAnimation
+{
+private:
+    PHLNPC * npc;
+    PHPoint destination;
+    bool leftSide;
+    lua_State * L;
+    virtual void animationStepped(double elapsed)
+    {
+        if (breakForce())
+        {
+            if (npc->scalarVelocity()==0)
+            {
+                invalidate();
+                if (L)
+                {
+                    lua_getglobal(L,"PHCallbackHelper");
+                    PHLuaGetHardRef(L,this);
+                    PHLuaCall(L,1,0);
+                    PHLuaDeleteHardRef(L,this);
+                    L = NULL;
+                }
+            }
+        } else
+        if (leftSide?(npc->position().x>=destination.x):(npc->position().x<=destination.x))
+        {
+            invalidate();
+            PHLWalkAnimation * anim = new PHLWalkAnimation(npc);
+            anim->setBreak(npc->mass()*6);
+            anim->setTime(INFINITY);
+            anim->setCurveFunction(PHLAnimation::ConstantFunction);
+            anim->setDisableDynamics(false);
+            PHLuaGetHardRef(L,this);
+            anim->setLuaCallback(L);
+            npc->addAnimation(anim);
+            anim->release();
+        }
+    }
+    void setLuaCallback(lua_State * l)
+    {
+        L = l;
+        if (!L) return;
+        PHLuaSetHardRef(L,this);
+    }
+    friend class PHLNPC;
+public:
+    PHLWalkAnimation(PHLNPC * n) : npc(n), leftSide(true), L(NULL) {};\
+    ~PHLWalkAnimation() { if (L) PHLuaDeleteHardRef(L,this); }
+};
+
+void PHLNPC::walkTo(const PHPoint &  destination, double speed, lua_State * l)
+{
+    if (!body) return;
+    PHPoint velocity = destination-pos;
+    velocity.normalize();
+    velocity*=speed;
+    PHLWalkAnimation * anim = new PHLWalkAnimation(this);
+    anim->setVelocity(velocity,mass()*20);
+    anim->setTime(INFINITY);
+    anim->setCurveFunction(PHLAnimation::ConstantFunction);
+    anim->setDisableDynamics(false);
+    anim->destination = destination;
+    anim->leftSide = pos.x<destination.x;
+    anim->setLuaCallback(l);
+    addAnimation(anim);
+    anim->release();
+}
+
 #pragma mark -
 #pragma mark scripting
 
@@ -560,6 +629,38 @@ static int PHLNPC_setShowsQuest(lua_State * L)
     return 0;
 }
 
+static int PHLNPC_walk(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    double speed = 2;
+    if (lua_isnumber(L,3))
+        speed = lua_tonumber(L,3);
+    if (lua_istable(L,4))
+    {
+        lua_pushvalue(L,4);
+        npc->walk(PHPoint::pointFromLua(L,2),speed,L);
+    } else
+        npc->walk(PHPoint::pointFromLua(L,2),speed);
+    return 0;
+}
+
+static int PHLNPC_walkTo(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    double speed = 2;
+    if (lua_isnumber(L,3))
+        speed = lua_tonumber(L,3);
+    if (lua_istable(L,4))
+    {
+        lua_pushvalue(L,4);
+        npc->walk(PHPoint::pointFromLua(L,2),speed,L);
+    } else
+        npc->walk(PHPoint::pointFromLua(L,2),speed);
+    return 0;
+}
+
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLNPC");
@@ -586,6 +687,10 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "setShowsQuest");
     lua_pushcfunction(L, PHLNPC_reallyShowsQuest);
     lua_setfield(L, -2, "reallyShowsQuest");
+    lua_pushcfunction(L, PHLNPC_walk);
+    lua_setfield(L, -2, "_walk");
+    lua_pushcfunction(L, PHLNPC_walkTo);
+    lua_setfield(L, -2, "_walkTo");
     
     lua_pop(L,1);
 }

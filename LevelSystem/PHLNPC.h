@@ -100,6 +100,11 @@ public:
     void showDialog(PHDialog * dialog);
     void swapDialog(PHDialog * dialog);
     void dismissDialog();
+    
+    void walk(const PHPoint & offset, double speed) { walkTo(pos+offset,speed,NULL); }
+    void walkTo(const PHPoint &  destination, double speed) { walkTo(destination,speed,NULL); }
+    void walk(const PHPoint &  offset, double speed, lua_State * l) { walkTo(pos+offset,speed,l); }
+    void walkTo(const PHPoint &  destination, double speed, lua_State * l);
 };
 
 #endif
