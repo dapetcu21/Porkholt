@@ -97,8 +97,10 @@ void PHImageAnimator::animateSection(int sect)
         sec = _image->sections.at(section);
         frm = &(sec->frames.at(frame));
     }
-    remaining = timeForFrameInSection(frame, section);
+    remaining = time = timeForFrameInSection(frame, section);
     realframe = realFrame(frame,section);
+    lastframe = realframe;
+    fade = frm->fade;
 }
 
 void PHImageAnimator::advanceAnimations(double elapsedTime)
@@ -130,8 +132,11 @@ void PHImageAnimator::advanceAnimation(double elapsedTime)
             sec = _image->sections.at(section);
             frm = &(sec->frames.at(frame));
         }
-        remaining += timeForFrameInSection(frame, section);
+        time = timeForFrameInSection(frame, section);
+        remaining += time;
+        lastframe = realframe;
         realframe = realFrame(frame,section);
+        fade = frm->fade;
     }
 }
 
@@ -147,21 +152,71 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
         frm.x,			frm.y+frm.height,
         frm.x+frm.width,frm.y+frm.height,
     };
-	
-    int nt = realframe/_image->ipt;
-    int p = realframe-nt*_image->ipt;
-    int r = p/_image->cols;
-    int c = p%_image->cols;
+
+    int actWidth,actHeight, _width, _height;
+    double xc,yc,xC,yC;
     
-    int actWidth = _image->textures[nt].awidth;
-    int actHeight = _image->textures[nt].awidth;
-    int _width = _image->_width;
-    int _height = _image->_height;
-    double xc = 0.5f/actWidth;
-    double yc = 0.5f/actHeight;
-    double xC = (double)_width/actWidth;
-	double yC = (double)_height/actHeight;
+    int nt,p,r,c;
     
+    if (fade)
+    {
+        nt = lastframe/_image->ipt;
+        p = lastframe-nt*_image->ipt;
+        r = p/_image->cols;
+        c = p%_image->cols;
+        
+        actWidth = _image->textures[nt].awidth;
+        actHeight = _image->textures[nt].aheight;
+        _width = _image->_width;
+        _height = _image->_height;
+        xc = 0.5f/actWidth;
+        yc = 0.5f/actHeight;
+        xC = (double)_width/actWidth;
+        yC = (double)_height/actHeight;
+        
+        const GLfloat squareTexCoords2[] = {
+            xC*(port.x+c)+xc				, yC*(port.y+port.height+r)-yc,
+            xC*(port.x+port.width+c)-xc     , yC*(port.y+port.height+r)-yc,
+            xC*(port.x+c)+xc				, yC*(port.y+r)+yc,
+            xC*(port.x+port.width+c)-xc     , yC*(port.y+r)+yc
+        };
+        
+        glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+        
+        int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | PHGLColorArray;
+        PHGLSetStates(states);
+        glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+        glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
+        PHColor tt = tint;
+        if (tt==PHInvalidColor)
+            tt = PHWhiteColor;
+        if (fade)
+            tt.a *= (remaining/time);
+        PH24BitColor t(tt);
+        const GLubyte colors2[] = { 
+            t.r, t.g, t.b, t.a,
+            t.r, t.g, t.b, t.a,
+            t.r, t.g, t.b, t.a,
+            t.r, t.g, t.b, t.a
+        };
+        glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors2);
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
+    }
+    
+    nt = realframe/_image->ipt;
+    p = realframe-nt*_image->ipt;
+    r = p/_image->cols;
+    c = p%_image->cols;
+    
+    actWidth = _image->textures[nt].awidth;
+    actHeight = _image->textures[nt].aheight;
+    _width = _image->_width;
+    _height = _image->_height;
+    xc = 0.5f/actWidth;
+    yc = 0.5f/actHeight;
+    xC = (double)_width/actWidth;
+	yC = (double)_height/actHeight;
 	
 	const GLfloat squareTexCoords[] = {
         xC*(port.x+c)+xc				, yC*(port.y+port.height+r)-yc,
@@ -172,13 +227,18 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
 	
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
     
-    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | ((tint==PHInvalidColor)?0:PHGLColorArray);
+    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | ((tint!=PHInvalidColor || fade)?PHGLColorArray:0);
     PHGLSetStates(states);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     if (states & PHGLColorArray)
     {
-        PH24BitColor t(tint);
+        PHColor tt = tint;
+        if (tt==PHInvalidColor)
+            tt = PHWhiteColor;
+        if (fade)
+            tt.a *= 1.0f-(remaining/time);
+        PH24BitColor t(tt);
         const GLubyte colors[] = { 
             t.r, t.g, t.b, t.a,
             t.r, t.g, t.b, t.a,
@@ -187,7 +247,6 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
         };
         glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
     }
-	PHGLSetStates(states);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
 

@@ -37,6 +37,7 @@ private:
             int section;
         };
         bool luaDuration;
+        bool fade;
     };
     
     struct section

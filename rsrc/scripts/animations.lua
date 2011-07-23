@@ -20,6 +20,15 @@ function frame(frameno,duration)
 	pntr.n = (pntr.n or 0) + 1;
 end
 
+function fade(frameno,duration)
+	if (not pntr) then
+		section("default",false);
+	end
+	local frame = { fno=frameno; d=duration; fd = true};
+	pntr[pntr.n] = frame;
+	pntr.n = (pntr.n or 0) + 1;
+end
+
 function jump(section,frameno)
 	frame(frameno,section);
 end

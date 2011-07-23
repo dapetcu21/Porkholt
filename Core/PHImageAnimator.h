@@ -24,8 +24,9 @@ private:
     
     int section;
     int frame;
-    int realframe;
-    double remaining;
+    int realframe,lastframe;
+    double remaining,time;
+    bool fade;
     
     double timeForFrameInSection(int fr, int sec);
     int realFrame(int fr, int sec);

@@ -118,6 +118,13 @@ void PHAnimatedImage::loadFromLua()
                             frm.frameno = lua_tonumber(L, -1);
                         lua_pop(L,1);
                         
+                        frm.fade = false;
+                        lua_getfield(L, -1, "fd");
+                        if (lua_isboolean(L, -1))
+                            frm.fade = lua_toboolean(L, -1);
+                        lua_pop(L,1);
+                        
+                        
                         lua_getfield(L, -1, "d");
                         if (lua_isnumber(L, -1))
                             frm.duration = lua_tonumber(L, -1);
