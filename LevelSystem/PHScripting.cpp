@@ -16,6 +16,9 @@
 #include "PHLAnimation.h"
 #include "PHLNPC.h"
 #include "PHLPlayer.h"
+#include "PHLCamera.h"
+#include "PHView.h"
+#include "PHImageView.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
@@ -25,6 +28,8 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 	PHFileManager * fileMan = PHFileManager::singleton();
 	string resourcePath = fileMan->resourcePath();
 	
+    world->setScripting(this);
+    
 	PHLuaSetIncludePath(L, level_dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
     
     if (PHLuaLoadFile(L, resourcePath+"/scripts/scripting_common.lua"))
@@ -76,6 +81,44 @@ static int PHWorld_insertObject(lua_State * L)
     return 1;
 }
 
+static int PHWorld_fadeToColor(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    void * ud = NULL;
+    if (lua_istable(L, 3))
+    {
+        ud = new uint8_t;
+        lua_pushvalue(L, 3);
+        PHLuaSetHardRef(L, ud);
+    }
+    world->fadeToColor(PHColor::colorFromLua(L, 2),ud);
+    return 0;
+}
+
+void PHScripting::worldHasFadedAway(void *ud)
+{
+    if (!ud) return;
+    lua_getglobal(L, "PHCallbackHelper");
+    PHLuaGetHardRef(L, ud);
+    PHLuaCall(L, 1, 0);
+    delete (uint8_t*)ud;
+}
+
+static int PHWorld_dismissFading(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    void * ud = NULL;
+    if (lua_istable(L, 2))
+    {
+        ud = new uint8_t;
+        lua_pushvalue(L, 2);
+        PHLuaSetHardRef(L, ud);
+    }
+    world->dismissFading(ud);
+    return 0;
+}
+
 void PHScripting::loadWorld()
 {
     lua_getglobal(L,"PHWorld");
@@ -85,6 +128,10 @@ void PHScripting::loadWorld()
     
     lua_pushcfunction(L,PHWorld_insertObject);
     lua_setfield(L, -2, "_insertObject");
+    lua_pushcfunction(L,PHWorld_fadeToColor);
+    lua_setfield(L, -2, "_fadeToColor");
+    lua_pushcfunction(L,PHWorld_dismissFading);
+    lua_setfield(L, -2, "_dismissFading");
     
     lua_pop(L, 1);
     
@@ -93,6 +140,9 @@ void PHScripting::loadWorld()
     PHLNPC::registerLuaInterface(L);
     PHLAnimation::registerLuaInterface(L);
     PHLPlayer::registerLuaInterface(L);
+    PHLCamera::registerLuaInterface(L);
+    PHView::registerLuaInterface(L);
+    PHImageView::registerLuaInterface(L);
 }
 
 void PHScripting::scriptingStep(double timeElapsed)

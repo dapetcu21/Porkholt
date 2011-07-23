@@ -24,6 +24,8 @@ public:
     virtual ~PHScripting();
     void scriptingStep(double timeElapsed);
     void loadWorld();
+        
+    void worldHasFadedAway(void * ud);
 };
 
 #endif

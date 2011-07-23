@@ -26,6 +26,7 @@ class PHLevelController;
 class PHEventQueue;
 class PHLNPC;
 class PHDialog;
+class PHScripting;
 
 class PHWorld : public PHObject 
 {
@@ -68,11 +69,15 @@ private:
 	list<layer> layers;
     
     list<PHTimer*>timers;
+    
+    PHScripting * scripting;
 	
 public:
 	PHWorld::layer * addLayer(double scale);
 	void addToLayer(layer * lyr, PHImageView * img);
 	
+    void setScripting(PHScripting * s) { scripting = s; } 
+    
 	PHWorld(const PHRect & size,PHLevelController * cnt);
 	PHView * getView() { return (PHView *)view; }
 	virtual ~PHWorld();
@@ -111,11 +116,21 @@ public:
     
 public:
     
+    void fadeToColor(PHColor color) { fadeToColor(color,NULL); }
+    void fadeToColor(PHColor color, void * ud);
+    void dismissFading() { dismissFading(NULL); }
+    void dismissFading(void * ud);
+    
     void advanceDialog();
     void updateDialogs();
     void addDialog(PHDialog* d);
     
 private:
+    
+    void _fadedToColor(PHObject * obj, void * ud);
+    
+    PHColor dimColor;
+    PHView * dimView;
     
     list<PHDialog*> dialogs;
     PHDialog * currentDialog;

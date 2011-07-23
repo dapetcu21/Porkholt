@@ -12,7 +12,6 @@ addLayer(lyr);
 Initializers._PHLPlayer = Initializers.PHLPlayer;
 function Initializers.PHLPlayer(obj)
 	Initializers._PHLPlayer(obj);
-	print("pula");
 	for i=0,obj.images.n-1 do
 		if (obj.images[i].filename == "/ball.png") then
 			obj.images[i].filename = "/ball_green.png";

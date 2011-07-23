@@ -47,6 +47,8 @@ public:
     
     static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
     static PHImageView * imageFromClass(const string & clss);
+    
+    static void registerLuaInterface(lua_State * L);
 };
 
 #endif

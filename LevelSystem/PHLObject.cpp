@@ -1081,6 +1081,17 @@ static int PHLObject_centerOfMass(lua_State * L)
     return 1;
 }
 
+static int PHLObject_viewWithTag(lua_State * L)
+{
+    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
+    luaL_checknumber(L, 2);
+    PHView * v = obj->getView()->viewWithTag(lua_tonumber(L, 2));
+    if (!v)
+        lua_pushnil(L);
+    else
+        v->getLuaHandle(L);
+    return 1;
+}
 
 void PHLObject::registerLuaInterface(lua_State * L)
 {
@@ -1138,10 +1149,12 @@ void PHLObject::registerLuaInterface(lua_State * L)
     lua_pushcfunction(L, PHLObject_centerOfMass);
     lua_setfield(L, -2, "centerOfMass");
     
+    lua_pushcfunction(L, PHLObject_viewWithTag);
+    lua_setfield(L, -2, "viewWithTag");
     
     lua_pushcfunction(L, PHLObject_invalidateAllAnimations);
     lua_setfield(L, -2, "invalidateAllAnimations");
-    lua_pushcfunction(L, PHLObject_rotate);
+    lua_pushcfunction(L, PHLObject_skipAllAnimations);
     lua_setfield(L, -2, "skipAllAnimations");
     lua_pushcfunction(L, PHLObject_addAnimation);
     lua_setfield(L, -2, "addAnimation");

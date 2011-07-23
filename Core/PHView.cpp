@@ -11,12 +11,13 @@
 #include "PHAuxLayerView.h"
 #include "PHMainEvents.h"
 #include "PHEventHandler.h"
+#include "PHLua.h"
 
 std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView")
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -235,7 +236,8 @@ void PHView::cancelAllAnimationsWithTag(int tag)
 PHView::~PHView()
 {
     cancelAnimations();
-	
+	for (set<lua_State*>::iterator i = luaStates.begin(); i!=luaStates.end(); i++)
+        PHLuaDeleteWeakRef(*i, this);
     if (auxLayer)
         auxLayer->removeView(this);
 	PHEventHandler::sharedInstance()->removeView(this);
@@ -575,4 +577,114 @@ void PHView::bindToAuxLayer(PHAuxLayerView * layer, PHView * from)
 void PHView::auxRender()
 {
     render();
+}
+
+#pragma mark -
+#pragma Scripting
+
+static int PHView_rotation(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    lua_pushnumber(L, PHWarp(-toDeg(v->rotation()),360));
+    return 1;
+}
+
+static int PHView_setRotation(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    luaL_checknumber(L, 2);
+    v->setRotation(-toRad(lua_tonumber(L, 2)));
+    return 0;
+}
+
+static int PHView_horizontallyFlipped(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    lua_pushboolean(L, v->horizontallyFlipped());
+    return 1;
+}
+
+static int PHView_setHorizontallyFlipped(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    v->setHorizontallyFlipped(lua_toboolean(L, 2));
+    return 0;
+}
+
+static int PHView_verticallyFlipped(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    lua_pushboolean(L, v->verticallyFlipped());
+    return 1;
+}
+
+static int PHView_setVerticallyFlipped(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    v->setVerticallyFlipped(lua_toboolean(L, 2));
+    return 0;
+}
+
+static int PHView_frame(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    v->frame().saveToLua(L);
+    return 1;
+}
+
+static int PHView_setFrame(lua_State * L)
+{
+    PHView * v = (PHView*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    v->setFrame(PHRect::rectFromLua(L, 2));
+    return 0;
+}
+
+void PHView::getLuaHandle(lua_State * L)
+{
+    if (!L) return;
+    PHLuaGetWeakRef(L, this);
+    if (!lua_istable(L, -1))
+    {
+        lua_pop(L,1);
+        lua_getglobal(L, luaClass.c_str());
+        lua_getfield(L, -1, "new");
+        lua_pushvalue(L, -2);
+        PHLuaCall(L, 1, 1);
+        lua_pushlightuserdata(L, this);
+        lua_setfield(L, -2, "ud");
+        lua_pushvalue(L, -1);
+        PHLuaSetWeakRef(L, this);
+        lua_remove(L, -2);
+        luaStates.insert(L);
+    }
+}
+
+void PHView::registerLuaInterface(lua_State * L)
+{
+    lua_getglobal(L, "PHView");
+    
+    lua_pushcfunction(L, PHView_rotation);
+    lua_setfield(L, -2, "rotation");
+    lua_pushcfunction(L, PHView_setRotation);
+    lua_setfield(L, -2, "setRotation");
+
+    lua_pushcfunction(L, PHView_horizontallyFlipped);
+    lua_setfield(L, -2, "horizontallyFlipped");
+    lua_pushcfunction(L, PHView_setHorizontallyFlipped);
+    lua_setfield(L, -2, "setHorizontallyFlipped");
+    
+    lua_pushcfunction(L, PHView_verticallyFlipped);
+    lua_setfield(L, -2, "verticallyFlipped");
+    lua_pushcfunction(L, PHView_setVerticallyFlipped);
+    lua_setfield(L, -2, "setVerticallyFlipped");
+
+    lua_pushcfunction(L, PHView_frame);
+    lua_setfield(L, -2, "frame");
+    lua_pushcfunction(L, PHView_setFrame);
+    lua_setfield(L, -2, "setFrame");
+    
+    lua_pop(L, 1);
 }

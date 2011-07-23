@@ -19,6 +19,7 @@ class PHLCamera : public PHLObject
 {
 protected:
 	PHRect sz;
+    bool follow;
 public:
 	PHLCamera();
 	virtual ~PHLCamera();
@@ -31,6 +32,11 @@ public:
 	virtual void loadView();
 	
 	void updateCamera(PHPoint pnt);
+    
+    void setFollowsPlayer(bool f) { follow = f; }
+    bool followsPlayer() { return follow; }
+    
+    static void registerLuaInterface(lua_State * L);
 };
 
 #endif

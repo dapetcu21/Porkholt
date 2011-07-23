@@ -156,6 +156,13 @@ protected:
 public:
     void bindToAuxLayer(PHAuxLayerView * layer, PHView * from);
     void setDontDrawToMain( bool val) { dontDrawOnMain = val; }
+//scripting
+protected:
+    set<lua_State*> luaStates;
+    string luaClass;
+public:
+    void getLuaHandle(lua_State * L);
+    static void registerLuaInterface(lua_State * L);
 };
 
 #endif

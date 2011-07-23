@@ -763,9 +763,9 @@ static int PHLNPC_walkTo(lua_State * L)
     if (lua_istable(L,4))
     {
         lua_pushvalue(L,4);
-        npc->walk(PHPoint::pointFromLua(L,2),speed,L);
+        npc->walkTo(PHPoint::pointFromLua(L,2),speed,L);
     } else
-        npc->walk(PHPoint::pointFromLua(L,2),speed);
+        npc->walkTo(PHPoint::pointFromLua(L,2),speed);
     return 0;
 }
 

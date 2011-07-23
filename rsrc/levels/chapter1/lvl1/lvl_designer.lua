@@ -17,6 +17,7 @@ addObject(obj);
 obj = objectWithClass("PHLCamera");
 obj.pos = point(3.570154,1.750000);
 obj.camH = 4.000000;
+obj.scripting = [[camera]];
 obj.levelDes = true;
 addObject(obj);
 
@@ -200,6 +201,37 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
+obj.pos = point(0.494699,-7.088417);
+objectAddBox(obj,-0.096563,-0.008047,0.100000,5.547109);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(0.436305,-7.003284);
+objectAddBox(obj,0.000000,-0.100000,7.000000,0.100000);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(0.398881,-3.747538);
+objectAddBox(obj,0.000000,-0.100000,7.000000,0.100000);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(4.504316,-5.899053);
+objectAddBox(obj,-0.090766,-0.018872,0.100000,3.869395);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(4.498797,-7.095421);
+obj.scripting = [[piperoomdoor]];
+objectAddBox(obj,-0.087748,-0.019699,0.100000,1.266018);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
 obj.pos = point(13.835214,0.000000);
 objectAddBox(obj,0.000000,0.000000,0.100000,10.000000);
 obj.levelDes = true;
@@ -208,8 +240,16 @@ addObject(obj);
 obj = objectWithClass("PHLNPC");
 obj.pos = point(3.908435,0.760000);
 obj.scripting = [[mayor]];
-objectAddImage(obj,[[mayor.png]],-0.250000,-0.250000,0.500000,0.500000);
-objectAddImage(obj,[[hat.png]],-0.200000,0.200000,0.200000,0.200000);
+obj.staticFace = true;
+obj.faceFlipping = true;
+obj.automaticFlipping = true;
+op = {};
+op.class = [[PHTrailImageView]];
+op.tag = 20.000000;
+objectAddImage(obj,[[/ball_green.png]],-0.250000,-0.250000,0.500000,0.500000,op);
+op = {};
+op.tag = 21.000000;
+objectAddImage(obj,[[mayor.png]],-0.250000,-0.250000,0.500000,0.500000,op);
 op = {};
 op.pos = point(0.001055,-0.003203);
 objectAddCircle(obj,0.250000,op);
@@ -233,6 +273,42 @@ obj.pos = point(4.826092,0.760000);
 obj.flipped = true;
 obj.scripting = [[player]];
 obj.usesForce = false;
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLSensor");
+obj.pos = point(7.722109,0.760625);
+obj.scripting = [[sensor1]];
+op = {};
+op.rotation = 0.000000;
+objectAddBox(obj,-0.250000,-0.250000,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLSensor");
+obj.pos = point(1.641609,-6.737401);
+obj.scripting = [[sensor2]];
+op = {};
+op.rotation = 0.000000;
+objectAddBox(obj,-0.243227,-0.251676,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(3.750000,-6.750000);
+obj.scripting = [[marker1]];
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(2.452546,-5.380434);
+obj.scripting = [[marker3]];
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(6.574673,-6.541522);
+obj.scripting = [[marker2]];
 obj.levelDes = true;
 addObject(obj);
 

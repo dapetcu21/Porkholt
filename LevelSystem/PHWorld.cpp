@@ -23,7 +23,7 @@
 #include "PHMainEvents.h"
 
 #include "PHDialog.h"
-
+#include "PHScripting.h"
 //304 19
 #define GAUGE_WIDTH 256
 #define GAUGE_HEIGHT 16
@@ -88,7 +88,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -126,6 +126,11 @@ PHWorld::~PHWorld()
 		worldView->removeFromSuperview();
 		worldView->release();
 	}
+    if (dimView)
+    {
+        dimView->removeFromSuperview();
+        dimView->release();
+    }
 	if (jumpGaugeView)
 	{
 		jumpGaugeView->removeFromSuperview();
@@ -412,4 +417,53 @@ void PHWorld::addDialog(PHDialog* d)
     dialogs.push_back(d);
     d->retain();
     d->inStack = true;
+}
+
+void PHWorld::_fadedToColor(PHObject * obj, void * ud)
+{
+    if (ud)
+        scripting->worldHasFadedAway(ud);
+}
+
+void PHWorld::fadeToColor(PHColor color, void * ud)
+{
+    if (color == PHInvalidColor)
+    {
+        dismissFading();
+        return;
+    }
+    if (!dimView)
+    {
+        dimView = new PHView(view->bounds());
+        view->addSubview(dimView);
+    }
+    dimColor = color;
+    dimView->cancelAnimationsWithTag(5072);
+    dimView->setBackgroundColor(PHClearColor);
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    anim->time = 0.5;
+    anim->view = dimView;
+    anim->bgColor = dimColor;
+    anim->callback = (PHCallback)&PHWorld::_fadedToColor;
+    anim->target = this;
+    anim->userdata = ud;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+void PHWorld::dismissFading(void * ud)
+{
+    if (!dimView) return;
+    dimView->cancelAnimationsWithTag(5072);
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    anim->time = 0.5;
+    anim->view = dimView;
+    anim->bgColor = PHClearColor;
+    anim->callback = (PHCallback)&PHWorld::_fadedToColor;
+    anim->target = this;
+    anim->userdata = ud;
+    PHView::addAnimation(anim);
+    anim->release();
 }

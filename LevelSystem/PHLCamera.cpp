@@ -11,7 +11,7 @@
 #include "PHLua.h"
 #include "PHMainEvents.h"
 
-PHLCamera::PHLCamera()
+PHLCamera::PHLCamera() : follow(true)
 {
 	_class = "PHLCamera";
 }
@@ -40,7 +40,8 @@ void PHLCamera::loadView()
 
 void PHLCamera::updateCamera(PHPoint pnt)
 {
-	
+	if (!follow) return;
+    
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	
 	pnt.x-=sz.width*(1.0f/3-0.5f);
@@ -69,4 +70,31 @@ void PHLCamera::updateCamera(PHPoint pnt)
     PHLowPassFilter(rot, newrot, 1.0f/fps, 2.0f+1.0f/(fabs(newrot)+1.0f));
     setRotation(rot);
      */
+}
+
+static int PHLCamera_followsPlayer(lua_State * L)
+{
+    PHLCamera * cam = (PHLCamera*)PHLuaThisPointer(L);
+    lua_pushboolean(L,cam->followsPlayer());
+    return 1;
+}
+
+static int PHLCamera_setFollowsPlayer(lua_State * L)
+{
+    PHLCamera * cam = (PHLCamera*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    cam->setFollowsPlayer(lua_toboolean(L, 2));
+    return 0;
+}
+
+void PHLCamera::registerLuaInterface(lua_State * L)
+{
+    lua_getglobal(L, "PHLCamera");
+    
+    lua_pushcfunction(L, PHLCamera_followsPlayer);
+    lua_setfield(L, -2, "followsPlayer");
+    lua_pushcfunction(L, PHLCamera_setFollowsPlayer);
+    lua_setfield(L, -2, "setFollowsPlayer");
+    
+    lua_pop(L,1);
 }

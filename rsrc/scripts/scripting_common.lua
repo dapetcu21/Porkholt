@@ -46,6 +46,21 @@ function PHWorld:insertAfter(o)
 	self._insertObj = o;
 end
 PHWorld:insertAtTheEnd();
+function PHWorld:fadeToColor(color,cb,...)
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_fadeToColor(color,call);
+end
+function PHWorld:dismissFading(cb,...)
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_dismissFading(call);
+end
+--function PHWorld:dismissFading(cb,...);
 
 PHLObject = {}
 function PHLObject:new(o,ud, ...)
@@ -83,6 +98,7 @@ end
 -- function PHLObject:applyAngularImpulse(val) -- number
 -- function PHLObject:mass();
 -- function PHLObject:centerOfMass(); --in object coordinates
+-- function PHLObject:viewWithTag(tag);
 
 PHObject = {};
 function PHObject:new(o, ...)
@@ -165,6 +181,27 @@ function PHLAnimation:animationFinished() --don't call this manually
 	end
 end
 
+PHView = PHObject:new()
+--function PHView:rotation();
+--function PHView:setRotation(rot);
+--function PHView:horizontallyFlipped();
+--function PHView:verticallyFlipped();
+--function PHView:setHorizontallyFlipped();
+--function PHView:setVerticallyFlipped();
+--function PHView:frame();
+--function PHView:setFrame(frame);
+
+PHImageView = PHView:new();
+--function PHImageView:width();
+--function PHImageView:height();
+--function PHImageView:setImage(image); --if it contains "/" image is interpreted as a path, else it's interpreted as an image name (rsrc/img/*.png)
+--function PHImageView:tint();
+--function PHImageView:setTint(color);
+--function PHImageView:textureCoordinates();
+--function PHImageView:setTextureCoordinates(tc);
+
+
+
 PHLNPC = PHLObject:new();
 --function PHLNPC:isFlipped();
 --function PHLNPC:setFlipped(f);
@@ -215,6 +252,8 @@ PHLPlayer = PHLNPC:new()
 --function PHLPlayer:setUserInput(b); --enables or disabled user input for the player. doesn't brake the body
 
 PHLCamera = PHLObject:new()
+--function PHLPlayer:followsPlayer();
+--function PHLPlayer:setFollowsPlayer(b);
 
 PHLSensor = PHLObject:new()
 function PHLSensor:objectEntered(obj) --override these. obj is either a table representing an object or a string with the object's class if the object isn't scriptable
