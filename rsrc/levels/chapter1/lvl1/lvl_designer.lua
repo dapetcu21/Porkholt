@@ -218,8 +218,8 @@ addObject(obj);
 
 obj = objectWithClass("PHLNPC");
 obj.pos = point(5.879765,0.802499);
-obj.overHead = point(0.100000,0.350000);
-obj.questPoint = point(0.100000,0.350000);
+obj.overHead = point(0.250000,0.250000);
+obj.questPoint = point(0.250000,0.250000);
 obj.scripting = [[sign]];
 obj.physics.dynamic = false;
 op = {};

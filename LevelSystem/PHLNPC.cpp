@@ -23,7 +23,7 @@
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL), quest3(true), showDialogDelayed(false)
 {
     _class = "PHLNPC";
 }
@@ -226,13 +226,18 @@ void PHLNPC::setDialog(PHDialog * dialog)
 
 void PHLNPC::showDialog(PHDialog *dialog)
 {
+    dialog->retain();
     if (currentDialog)
     {
-        currentDialog->callback();
         currentDialog->release();
     }
     currentDialog = dialog;
-    currentDialog->retain();
+    setInternalShowsQuest2(false);
+    if (animatingquest)
+    {
+        showDialogDelayed = true;
+        return;
+    }
     if (!dialogView)
     {
         dialogView = new PHDialogView(this);
@@ -291,6 +296,7 @@ void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
     dialogView->removeFromSuperview();
     dialogView->release();
     dialogView=NULL;
+    setInternalShowsQuest2(true);
 }
 
 void PHLNPC::dialogViewFired(PHDialogView * dv)
@@ -448,7 +454,7 @@ void PHLNPC::showQuest()
         questView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         getWorld()->getWorldView()->addSubview(questView);
     }
-    PHView::cancelAllAnimationsWithTag(4867);
+    questView->cancelAnimationsWithTag(4867);
     questView->setUserInput(true);
     
     double aspectRatio = PHLevelController::questImage?((double)(PHLevelController::questImage->width())/PHLevelController::questImage->height()):1.0f;
@@ -478,6 +484,11 @@ void PHLNPC::showQuest()
 void PHLNPC::questShowedUp(PHObject *sender, void *ud)
 {
     animatingquest = false;
+    if (showDialogDelayed)
+    {
+        showDialogDelayed = false;
+        showDialog(currentDialog);
+    }
 }
 
 void PHLNPC::hideQuest()
@@ -485,9 +496,14 @@ void PHLNPC::hideQuest()
     if (!questView)
     {
         animatingquest = false;
+        if (showDialogDelayed)
+        {
+            showDialogDelayed = false;
+            showDialog(currentDialog);
+        }
         return;
     }
-    PHView::cancelAllAnimationsWithTag(4867);
+    questView->cancelAnimationsWithTag(4867);
     questView->setUserInput(false);
     
     double scale = 1024;
@@ -510,6 +526,11 @@ void PHLNPC::hideQuest()
 void PHLNPC::questHiddenItself(PHObject *sender, void *ud)
 {
     animatingquest = false;
+    if (showDialogDelayed)
+    {
+        showDialogDelayed = false;
+        showDialog(currentDialog);
+    }
     if (questView)
     {
         questView->removeFromSuperview();

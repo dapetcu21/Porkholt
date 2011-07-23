@@ -69,16 +69,16 @@ private:
     
     PHDialogView * questView;
     
-    bool quest1,quest2,reallyquest,animatingquest;
+    bool quest1,quest2,quest3,reallyquest,animatingquest;
     void showQuest();
     void hideQuest();
     void questShowedUp(PHObject * sender, void * ud);
     void questHiddenItself(PHObject * sender, void * ud);
     void updateShowsQuest()
     {
-        if (quest1 && quest2 != reallyquest)
+        if ((quest1 && quest2 && quest3) != reallyquest)
         {
-            reallyquest = quest1 && quest2;
+            reallyquest = quest1 && quest2 && quest3;
             if (reallyquest)
                 showQuest();
             else
@@ -87,9 +87,11 @@ private:
     }
     void setInternalShowsQuest(bool q) { quest2 = q; updateShowsQuest(); }
     bool internalShowsQuest() { return quest2; }
+    void setInternalShowsQuest2(bool q) { quest3 = q; updateShowsQuest(); }
+    bool internalShowsQuest2() { return quest3; }
     friend class PHWorld;
     
-    bool qquest,queuedquest;
+    bool qquest,queuedquest,showDialogDelayed;
     double questHeight;
     PHPoint questPoint;
     

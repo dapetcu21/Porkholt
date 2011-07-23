@@ -2,10 +2,14 @@ mayor:setDynamic(false);
 player:setBraked(true);
 player:setUserInput(false);
 
+function sign:questTapped()
+	sign:setDialog("Tilt your device\nto move around");
+end
+
 function afterDialogs()
 	player:setBraked(false);
 	player:setUserInput(true);
-	sign:setDialog("Tilt your device\nto move around")
+	sign:setDialog("Tilt your device\nto move around",sign.setShowsQuest,sign,true)
 end
 
 function  addDialogs()
