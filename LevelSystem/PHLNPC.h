@@ -94,15 +94,18 @@ private:
     PHPoint questPoint;
     
     PHLAnimation * brakeAnimation;
+    
+    void showDialog(PHDialog * dialog);
+    void swapDialog(PHDialog * dialog);
+    void dismissDialog();
+    
 public:
     void setShowsQuest(bool q) { quest1 = q; updateShowsQuest(); }
     bool showsQuest() { return quest1; }
     bool reallyShowsQuest() { return reallyquest; }
     void queueSetShowsQuest(bool q) { qquest = q; queuedquest = true; }
     
-    void showDialog(PHDialog * dialog);
-    void swapDialog(PHDialog * dialog);
-    void dismissDialog();
+    void setDialog(PHDialog * dialog);
     
     void walk(const PHPoint & offset, double speed) { walkTo(pos+offset,speed,NULL); }
     void walkTo(const PHPoint &  destination, double speed) { walkTo(destination,speed,NULL); }

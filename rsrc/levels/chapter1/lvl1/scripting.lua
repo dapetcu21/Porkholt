@@ -5,6 +5,7 @@ player:setUserInput(false);
 function afterDialogs()
 	player:setBraked(false);
 	player:setUserInput(true);
+	sign:setDialog("Tilt your device\nto move around")
 end
 
 function  addDialogs()
@@ -16,13 +17,7 @@ function  addDialogs()
 	mayor:addDialog("Every year, the pipes that transport the Goo build up a lot of pressure")
 	mayor:addDialog("Your job is simple: Release the pressure valve.");
 	mayor:addDialog("AND DON'T TOUCH ANYTHING ELSE!");
-	player:addDialog("Yeah! That sounds simple enough!")
-	mayor:addDialog("And one last thing: You can tilt your device to move around",afterDialogs)
-	mayor:setShowsQuest(true);
-end
-
-function mayor:questTapped()
-	mayor:addDialog("Tilt your device to move");
+	player:addDialog("Yeah! That sounds simple enough!",afterDialogs);
 end
 
 local timer = PHTimer:new(nil,1,false);

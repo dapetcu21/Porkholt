@@ -180,6 +180,13 @@ function PHLNPC:addDialog(text,cb,...)
 	end
 	self:_addDialog(text,call);
 end
+function PHLNPC:setDialog(text,cb,...) --this immediately shows the dialog bypassing the stack system
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_setDialog(text,call);
+end
 --function PHLNPC:showsQuest();
 --function PHLNPC:setShowsQuest(s);
 --function PHLNPC:reallyShowsQuest();

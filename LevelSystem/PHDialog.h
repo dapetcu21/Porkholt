@@ -19,7 +19,8 @@ private:
 public:
     PHLNPC * npc;
     string text;
-    PHDialog() : npc(NULL), text(), L(NULL) {}
+    bool inStack;
+    PHDialog() : npc(NULL), text(), L(NULL), inStack(false) {}
     void callback()
     {
         if (!L) return;

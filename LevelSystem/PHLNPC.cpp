@@ -204,6 +204,20 @@ void PHLNPC::flip()
     }
 }
 
+void PHLNPC::setDialog(PHDialog * dialog)
+{
+    if (!dialog)
+    {
+        if (currentDialog)
+            dismissDialog();
+        return;
+    }
+    if (currentDialog)
+        swapDialog(dialog);
+    else
+        showDialog(dialog);
+}
+
 #define dialogFontSize 0.2
 #define dialogBorderTop 0.2
 #define dialogBorderBottom 0.2
@@ -282,7 +296,12 @@ void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
 void PHLNPC::dialogViewFired(PHDialogView * dv)
 {
     if (dialogView==dv)
-        getWorld()->advanceDialog();
+    {
+        if (currentDialog->inStack)
+            getWorld()->advanceDialog();
+        else
+            dismissDialog();
+    }
     if (questView==dv)
     {
         PHLuaGetWeakRef(L, this);
@@ -586,7 +605,6 @@ void PHLNPC::setBraked(bool b)
     }
 }
 
-
 #pragma mark -
 #pragma mark scripting
 
@@ -655,6 +673,23 @@ static int PHLNPC_addDialog(lua_State * L)
         dialog->setCallback(L);
     }
     npc->getWorld()->addDialog(dialog);
+    dialog->release();
+    return 0;
+}
+
+static int PHLNPC_setDialog(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    luaL_checkstring(L, 2);
+    PHDialog * dialog = new PHDialog;
+    dialog->text = lua_tostring(L, 2);
+    dialog->npc = npc;
+    if (lua_istable(L, 3))
+    {
+        lua_pushvalue(L, 3);
+        dialog->setCallback(L);
+    }
+    npc->setDialog(dialog);
     dialog->release();
     return 0;
 }
@@ -748,6 +783,8 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "setUsesTrail");
     lua_pushcfunction(L, PHLNPC_addDialog);
     lua_setfield(L, -2, "_addDialog");
+    lua_pushcfunction(L, PHLNPC_setDialog);
+    lua_setfield(L, -2, "_setDialog");
     lua_pushcfunction(L, PHLNPC_showsQuest);
     lua_setfield(L, -2, "showsQuest");
     lua_pushcfunction(L, PHLNPC_setShowsQuest);

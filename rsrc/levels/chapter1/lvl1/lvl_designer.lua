@@ -216,6 +216,18 @@ objectAddCircle(obj,0.250000,op);
 obj.levelDes = true;
 addObject(obj);
 
+obj = objectWithClass("PHLNPC");
+obj.pos = point(5.879765,0.802499);
+obj.overHead = point(0.100000,0.350000);
+obj.questPoint = point(0.100000,0.350000);
+obj.scripting = [[sign]];
+obj.physics.dynamic = false;
+op = {};
+op.rotation = 0.000000;
+objectAddImage(obj,[[/sign.png]],-0.346719,-0.356523,0.700000,0.700000,op);
+obj.levelDes = true;
+addObject(obj);
+
 obj = objectWithClass("PHLPlayer");
 obj.pos = point(4.826092,0.760000);
 obj.flipped = true;

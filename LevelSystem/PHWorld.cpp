@@ -360,19 +360,19 @@ void PHWorld::advanceDialog()
 {
     if (dialogs.empty() && currentDialog)
     {
-        currentDialog->npc->dismissDialog();
+        currentDialog->npc->setDialog(NULL);
         currentDialog->release();
         currentDialog = NULL;
         return;
     } 
     PHDialog * first = dialogs.front();
     if (currentDialog && currentDialog->npc == first->npc)
-        currentDialog->npc->swapDialog(first);
+        currentDialog->npc->setDialog(first);
     else
     {
         if (currentDialog)
-            currentDialog->npc->dismissDialog();
-        first->npc->showDialog(first);
+            currentDialog->npc->setDialog(NULL);
+        first->npc->setDialog(first);
     }
     if (currentDialog)
         currentDialog->release();
@@ -411,4 +411,5 @@ void PHWorld::addDialog(PHDialog* d)
 {
     dialogs.push_back(d);
     d->retain();
+    d->inStack = true;
 }
