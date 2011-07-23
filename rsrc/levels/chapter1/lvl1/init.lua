@@ -8,4 +8,16 @@ for i=-2,3 do
 end
 addLayer(lyr);
 
+--hook taranesc
+Initializers._PHLPlayer = Initializers.PHLPlayer;
+function Initializers.PHLPlayer(obj)
+	Initializers._PHLPlayer(obj);
+	print("pula");
+	for i=0,obj.images.n-1 do
+		if (obj.images[i].filename == "/ball.png") then
+			obj.images[i].filename = "/ball_green.png";
+		end	
+	end
+end
+
 require("lvl_designer");

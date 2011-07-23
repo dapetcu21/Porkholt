@@ -30,6 +30,7 @@ private:
     bool fflip,bflip,aflip,flipped;
     bool trailPossible;
     PHPoint overHeadPoint;
+    bool shouldFlipUponLoad;
 public:
     PHLNPC();
     virtual ~PHLNPC();
@@ -91,6 +92,8 @@ private:
     bool qquest,queuedquest;
     double questHeight;
     PHPoint questPoint;
+    
+    PHLAnimation * brakeAnimation;
 public:
     void setShowsQuest(bool q) { quest1 = q; updateShowsQuest(); }
     bool showsQuest() { return quest1; }
@@ -105,6 +108,9 @@ public:
     void walkTo(const PHPoint &  destination, double speed) { walkTo(destination,speed,NULL); }
     void walk(const PHPoint &  offset, double speed, lua_State * l) { walkTo(pos+offset,speed,l); }
     void walkTo(const PHPoint &  destination, double speed, lua_State * l);
+    
+    bool braked() { return brakeAnimation!=NULL; }
+    void setBraked(bool br); 
 };
 
 #endif

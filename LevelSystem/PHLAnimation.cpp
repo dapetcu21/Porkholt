@@ -9,7 +9,7 @@
 #include "PHLAnimation.h"
 #include "PHLua.h"
 
-PHLAnimation::PHLAnimation() : time(0), move(PHOriginPoint),rotateCenter(PHOriginPoint),useRotateCenter(false), objCoord(false), force(PHOriginPoint), impulse(PHOriginPoint), forceapp(PHOriginPoint), velocity(PHOriginPoint), rotate(0), angularImpulse(0), corrForce(INFINITY), elapsed(0), position(0), valid(true), skipped(false), statica(true), odyn(false), L(NULL), function(LinearFunction), next(NULL), cbTarget(NULL), cbFunction(NULL), cbUd(NULL), invalidateCallback(false), breaking(0)
+PHLAnimation::PHLAnimation() : time(0), move(PHOriginPoint),rotateCenter(PHOriginPoint),useRotateCenter(false), objCoord(false), force(PHOriginPoint), impulse(PHOriginPoint), forceapp(PHOriginPoint), velocity(PHOriginPoint), rotate(0), angularImpulse(0), corrForce(INFINITY), elapsed(0), position(0), valid(true), skipped(false), statica(true), odyn(false), L(NULL), function(LinearFunction), next(NULL), cbTarget(NULL), cbFunction(NULL), cbUd(NULL), invalidateCallback(false), braking(0)
 {
     
 }
@@ -145,9 +145,9 @@ void PHLAnimation::loadFromLua(lua_State * l)
         angularImpulse = lua_tonumber(L, -1);
     lua_pop(L,1);
     
-    lua_getfield(L, -1, "break");
+    lua_getfield(L, -1, "brakeForce");
     if (lua_isnumber(L, -1))
-        breaking = lua_tonumber(L, -1);
+        braking = lua_tonumber(L, -1);
     lua_pop(L,1);
     
     lua_getfield(L, -1, "forceApplicationPoint");

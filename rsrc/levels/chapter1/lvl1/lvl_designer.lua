@@ -205,15 +205,22 @@ objectAddBox(obj,0.000000,0.000000,0.100000,10.000000);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(3.920154,0.730000);
+obj = objectWithClass("PHLNPC");
+obj.pos = point(3.908435,0.760000);
+obj.scripting = [[mayor]];
 objectAddImage(obj,[[mayor.png]],-0.250000,-0.250000,0.500000,0.500000);
 objectAddImage(obj,[[hat.png]],-0.200000,0.200000,0.200000,0.200000);
+op = {};
+op.pos = point(0.001055,-0.003203);
+objectAddCircle(obj,0.250000,op);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlayer");
-obj.pos = point(4.820154,0.770000);
+obj.pos = point(4.826092,0.760000);
+obj.flipped = true;
+obj.scripting = [[player]];
+obj.usesForce = false;
 obj.levelDes = true;
 addObject(obj);
 

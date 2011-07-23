@@ -22,6 +22,7 @@ private:
     PHPoint normal;
     double touchesSomething;
     int forceGap;
+    bool userInp,force;
     
     PHMutex * mutex;
 public:
@@ -37,6 +38,13 @@ public:
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
     
     void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
+    
+    void setUserInput(bool ui) { userInp = ui; }
+    bool userInput() { return userInp; }
+    void setUsesForce(bool f) { force = f; }
+    bool usesForce() { return force; }
+    
+    static void registerLuaInterface(lua_State *L);
 };
 
 #endif

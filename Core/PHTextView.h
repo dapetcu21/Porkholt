@@ -71,6 +71,8 @@ public:
     
     void setText(const string & s) { needsReload = true; _text = s; }
     const string & text() { return _text; };
+    
+    void adjustFontSizeToFit(int precision);
 protected:
 	virtual void draw();
 };

@@ -243,3 +243,21 @@ void PHTextView::rebuildColorArray()
         memcpy(colors+4*i, v, sizeof(GLubyte)*4);
     colorArrayNeedsReload = false;
 }
+
+void PHTextView::adjustFontSizeToFit(int precision)
+{
+    double st = 0;
+    double en = fontSize();
+    for (int i=0; i<precision; i++)
+    {
+        double middle = (st+en)/2;
+        setFontSize(middle);
+        PHSize size = textSize();
+        if (size.width>_frame.width || size.height>_frame.height)
+        {
+            en = middle;
+        } else 
+            st = middle;
+    }
+    setFontSize(en);
+}

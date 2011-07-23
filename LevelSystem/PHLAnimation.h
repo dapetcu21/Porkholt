@@ -20,7 +20,7 @@ private:
     double rotate,angularImpulse,corrForce;
     double elapsed;
     double position; //f(elapsed)
-    double breaking;
+    double braking;
     bool valid,skipped,statica,odyn;
     
     lua_State * L;
@@ -50,8 +50,8 @@ public:
     PHLAnimation();
     virtual ~PHLAnimation();
     
-    void setBreak(double force) { breaking = force; }
-    double breakForce() { return breaking; }
+    void setBrakeForce(double force) { braking = force; }
+    double brakeForce() { return braking; }
     void setMovement(PHPoint movement) { move = movement; }
     void setForce(PHPoint frc, bool objectCoordinates) { force = frc;  objCoord = objectCoordinates;}
     void setImpulse(PHPoint frc, bool objectCoordinates) { impulse = frc;  objCoord = objectCoordinates;}

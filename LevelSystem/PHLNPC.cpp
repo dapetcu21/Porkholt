@@ -23,7 +23,7 @@
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL)
 {
     _class = "PHLNPC";
 }
@@ -77,6 +77,12 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
     lua_getfield(L, -1, "bodyFlipping");
     if (lua_isboolean(L, -1))
         bflip = lua_toboolean(L, -1);
+    lua_pop(L, 1);
+    
+    shouldFlipUponLoad = false;
+    lua_getfield(L, -1, "flipped");
+    if (lua_isboolean(L, -1))
+        shouldFlipUponLoad = lua_toboolean(L, -1);
     lua_pop(L, 1);
     
     lua_getfield(L, -1, "automaticFlipping");
@@ -150,7 +156,11 @@ void PHLNPC::updatePosition()
         ((PHTrailImageView*)bodyView)->setStopView(worldView = (bodyView->superview()->superview()));
         ((PHTrailImageView*)bodyView)->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
     }
-	
+	if (shouldFlipUponLoad)
+    {
+        setFlipped(shouldFlipUponLoad);
+        shouldFlipUponLoad = false;
+    }
     b2Vec2 speed = body->GetLinearVelocity();
     if (aflip && (fflip || bflip) && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
@@ -218,6 +228,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
         dialogView->setStretchBubble(true);
         dialogTextView = new PHTextView();
         dialogTextView->setFont(PHFont::fontNamed("Arial"));
+        dialogTextView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogTextView->setFontSize(dialogFontSize);
         dialogTextView->setFontColor(PHBlackColor);
         dialogTextView->setAlignment(PHTextView::alignBottom | PHTextView::justifyLeft);
@@ -291,7 +302,8 @@ void PHLNPC::dismissDialog()
         currentDialog = NULL;
     }
     if (!dialogView) return;
-    PHView::cancelAllAnimationsWithTag(5836);
+    dialogView->cancelAnimationsWithTag(5836);
+    dialogTextView->cancelAnimationsWithTag(5836);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
     double scale = 1024;
     anim->scaleX = 1/scale;
@@ -302,7 +314,7 @@ void PHLNPC::dismissDialog()
     anim->callback = (PHCallback)&PHLNPC::_dialogDismissed;
     anim->userdata = NULL;
     anim->view = dialogView;
-    anim->tag = 5836;
+    anim->tag = 5838;
     PHView::addAnimation(anim);
     anim->release();
 }
@@ -322,7 +334,8 @@ void PHLNPC::swapDialog(PHDialog *dialog)
         dismissDialog();
         return;
     }
-    PHView::cancelAllAnimationsWithTag(5836);
+    dialogView->cancelAnimationsWithTag(5836);
+    dialogTextView->cancelAnimationsWithTag(5836);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
     anim->customColor = PHClearColor;
     anim->time = 0.2f;
@@ -362,6 +375,21 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     dialogView->setScalingCenter(PHOriginPoint);
     dialogView->setScaleX(owidth/width);
     dialogView->setScaleY(oheight/height);
+    
+    if ((owidth>=width && oheight>=height) || (owidth/width >=1 && owidth/width>=height/oheight) || (oheight/height >=1 && oheight/height>=width/owidth))
+    {
+        dialogTextView->setScaleX(width/owidth);
+        dialogTextView->setScaleY(height/oheight);
+        PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+        anim->scaleX = owidth/width;
+        anim->scaleY = oheight/height;
+        anim->time = 0.5;
+        anim->tag = 5838;
+        anim->timeFunction = PHAnimationDescriptor::FadeInOutFunction;
+        anim->view = dialogTextView;
+        PHView::addAnimation(anim);
+        anim->release();
+    }
     
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
     anim->scaleX = width/owidth;
@@ -480,7 +508,7 @@ private:
     lua_State * L;
     virtual void animationStepped(double elapsed)
     {
-        if (breakForce())
+        if (brakeForce())
         {
             if (npc->scalarVelocity()==0)
             {
@@ -499,7 +527,7 @@ private:
         {
             invalidate();
             PHLWalkAnimation * anim = new PHLWalkAnimation(npc);
-            anim->setBreak(npc->mass()*6);
+            anim->setBrakeForce(npc->mass()*6);
             anim->setTime(INFINITY);
             anim->setCurveFunction(PHLAnimation::ConstantFunction);
             anim->setDisableDynamics(false);
@@ -538,6 +566,26 @@ void PHLNPC::walkTo(const PHPoint &  destination, double speed, lua_State * l)
     addAnimation(anim);
     anim->release();
 }
+
+void PHLNPC::setBraked(bool b)
+{
+    if (b)
+    {
+        if (brakeAnimation) return;
+        brakeAnimation = new PHLAnimation;
+        brakeAnimation->setBrakeForce(mass()*6);
+        brakeAnimation->setTime(INFINITY);
+        brakeAnimation->setCurveFunction(PHLAnimation::ConstantFunction);
+        brakeAnimation->setDisableDynamics(false);
+        addAnimation(brakeAnimation);
+    } else {
+        if (!brakeAnimation) return;
+        brakeAnimation->invalidate();
+        brakeAnimation->release();
+        brakeAnimation = NULL;
+    }
+}
+
 
 #pragma mark -
 #pragma mark scripting
@@ -665,6 +713,21 @@ static int PHLNPC_walkTo(lua_State * L)
     return 0;
 }
 
+static int PHLNPC_braked(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    lua_pushboolean(L, npc->braked());
+    return 1;
+}
+
+static int PHLNPC_setBraked(lua_State * L)
+{
+    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    npc->setBraked(lua_toboolean(L, 2));
+    return 0;
+}
+
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLNPC");
@@ -695,6 +758,11 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     lua_setfield(L, -2, "_walk");
     lua_pushcfunction(L, PHLNPC_walkTo);
     lua_setfield(L, -2, "_walkTo");
+    lua_pushcfunction(L, PHLNPC_braked);
+    lua_setfield(L, -2, "braked");
+    lua_pushcfunction(L, PHLNPC_setBraked);
+    lua_setfield(L, -2, "setBraked");
+    
     
     lua_pop(L,1);
 }

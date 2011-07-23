@@ -33,6 +33,7 @@ PHView * PHTextController::loadView(const PHRect & frame)
     pos = 0;
     textView->setText((*strings)[pos]);
     textView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
+    textView->adjustFontSizeToFit(5);
     view->addSubview(textView);
     textView->release();
     blackoutView = new PHView(fr);
@@ -77,6 +78,8 @@ void PHTextController::beginBlackout()
 
 void PHTextController::middleBlackout()
 {
+    textView->setFontSize(0.1f);
+    textView->adjustFontSizeToFit(5);
     textView->setText((*strings)[pos]);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
     anim->bgColor = PHClearColor;

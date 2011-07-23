@@ -15,8 +15,9 @@
 #include "PHMainEvents.h"
 #include <Box2D/Box2D.h>
 #include "PHMotion.h"
+#include "PHLua.h"
 
-PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL)
+PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true)
 {
 	_class = "PHLPlayer";
 }
@@ -31,6 +32,11 @@ void PHLPlayer::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
 	PHLNPC::loadFromLua(L,root,world);
     body->SetBullet(true);
+    
+    lua_getfield(L, -1, "usesForce");
+    if (lua_isboolean(L,-1))
+        force = lua_toboolean(L, -1);
+    lua_pop(L,1);
 }
 
 
@@ -42,44 +48,47 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	if (!body) return;
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	
-	b2Vec2 force;
+	b2Vec2 frc;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
 	int f = t.roll;
 	if (f>MAX_TILT)
 		f = MAX_TILT;
 	if (f<-MAX_TILT)
 		f = -MAX_TILT;
-	force.y = 0;
-	force.x = f*TILT_FORCE_FACTOR;
+	frc.y = 0;
+	frc.x = f*TILT_FORCE_FACTOR;
 	b2Vec2 center = body->GetWorldCenter();
-	body->ApplyForce(force, center);
+    if (userInp)
+        body->ApplyForce(frc, center);
 	double jumpGauge = wrld->jumpGauge();
     b2Vec2 totalJump(0,0);
     if (mutex)
         mutex->lock();
+    if (!userInp || !force)
+        queue->clear();
     bool forceUsed = !(queue->empty());
 	while (!queue->empty()) {
-		force.x = queue->front().x*TOUCH_FORCE_FACTOR;
-		force.y = queue->front().y*TOUCH_FORCE_FACTOR;
+		frc.x = queue->front().x*TOUCH_FORCE_FACTOR;
+		frc.y = queue->front().y*TOUCH_FORCE_FACTOR;
         queue->pop_front();
         if (mutex)
             mutex->unlock();
-		double length = sqrt(force.x*force.x+force.y*force.y);
-		if (force.y<0)
-			length = fabs(force.x);
+		double length = sqrt(frc.x*frc.x+frc.y*frc.y);
+		if (frc.y<0)
+			length = fabs(frc.x);
 		if (length)
 		{
 			if (length>jumpGauge)
 			{
-				force.x*=jumpGauge/length;
-				if (force.y>0)
-					force.y*=jumpGauge/length;
+				frc.x*=jumpGauge/length;
+				if (frc.y>0)
+					frc.y*=jumpGauge/length;
 				length = jumpGauge;
 			}
 			jumpGauge -= length;
 		}
-        force*=1/60.0f; //leave it 60... the fps doesn't matter
-		body->ApplyLinearImpulse(force, center);
+        frc*=1/60.0f; //leave it 60... the fps doesn't matter
+		body->ApplyLinearImpulse(frc, center);
         if (mutex)
             mutex->lock();
 	}
@@ -125,4 +134,50 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
         normal.x+=val*norm.x;
         normal.y+=val*norm.y;
     }
+}
+
+static int PHLPlayer_userInput(lua_State * L)
+{
+    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
+    lua_pushboolean(L, player->userInput());
+    return 1;
+}
+
+static int PHLPlayer_setUserInput(lua_State * L)
+{
+    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    player->setUserInput(lua_toboolean(L, 2));
+    return 0;
+}
+
+static int PHLPlayer_usesForce(lua_State * L)
+{
+    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
+    lua_pushboolean(L, player->usesForce());
+    return 1;
+}
+
+static int PHLPlayer_setUsesForce(lua_State * L)
+{
+    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TBOOLEAN);
+    player->setUsesForce(lua_toboolean(L, 2));
+    return 0;
+}
+
+void PHLPlayer::registerLuaInterface(lua_State *L)
+{
+    lua_getglobal(L, "PHLPlayer");
+    
+    lua_pushcfunction(L, PHLPlayer_setUserInput);
+    lua_setfield(L, -2, "setUserInput");
+    lua_pushcfunction(L, PHLPlayer_userInput);
+    lua_setfield(L, -2, "userInput");
+    lua_pushcfunction(L, PHLPlayer_setUsesForce);
+    lua_setfield(L, -2, "setUsesForce");
+    lua_pushcfunction(L, PHLPlayer_usesForce);
+    lua_setfield(L, -2, "usesForce");
+    
+    lua_pop(L, 1);
 }

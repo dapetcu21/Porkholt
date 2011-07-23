@@ -137,7 +137,7 @@ PHLAnimation = PHObject:new{
 --PHLAnimation.rotationCenter -- in world coordinates or object coordinates if objectCoordinates is true
 ---
 --PHLAnimation.velocity --tries to maintain this vectorial velocity using a maximum force of correctorForce, can be applied infinitely
---PHLAnimation.break --the maximum force it tries to break with
+--PHLAnimation.brakeForce --the maximum force it tries to brake with
 --PHLAnimation.correctorForce --defaults to infinity, don't leave it at infinity unless you want instant velocity correction
 ---
 --PHLAnimation.force --can be applied infinitely
@@ -198,8 +198,14 @@ function PHLNPC:walkTo(destination,speed,cb,...) -- speed optional, defaults to 
 	end
 	self:_walkTo(destination,speed,call);
 end
+--function PHLNPC:braked();
+--function PHLNPC:setBraked(); --brakes the body
 
 PHLPlayer = PHLNPC:new()
+--function PHLPlayer:usesForce();
+--function PHLPlayer:setUsesForce(b); --enables or disables the force
+--function PHLPlayer:userInput();
+--function PHLPlayer:setUserInput(b); --enables or disabled user input for the player. doesn't brake the body
 
 PHLCamera = PHLObject:new()
 
