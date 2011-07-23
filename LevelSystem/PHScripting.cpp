@@ -119,6 +119,15 @@ static int PHWorld_dismissFading(lua_State * L)
     return 0;
 }
 
+static int PHWorld_overlayText(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    luaL_checkstring(L, 2);
+    luaL_checknumber(L, 3);
+    world->overlayText(lua_tostring(L, 2), lua_tonumber(L, 3));
+    return 0;
+}
+
 void PHScripting::loadWorld()
 {
     lua_getglobal(L,"PHWorld");
@@ -132,6 +141,8 @@ void PHScripting::loadWorld()
     lua_setfield(L, -2, "_fadeToColor");
     lua_pushcfunction(L,PHWorld_dismissFading);
     lua_setfield(L, -2, "_dismissFading");
+    lua_pushcfunction(L,PHWorld_overlayText);
+    lua_setfield(L, -2, "overlayText");
     
     lua_pop(L, 1);
     

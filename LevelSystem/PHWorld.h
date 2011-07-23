@@ -27,6 +27,7 @@ class PHEventQueue;
 class PHLNPC;
 class PHDialog;
 class PHScripting;
+class PHTextView;
 
 class PHWorld : public PHObject 
 {
@@ -116,10 +117,12 @@ public:
     
 public:
     
-    void fadeToColor(PHColor color) { fadeToColor(color,NULL); }
-    void fadeToColor(PHColor color, void * ud);
+    void fadeToColor(const PHColor & color) { fadeToColor(color,NULL); }
+    void fadeToColor(const PHColor & color, void * ud);
     void dismissFading() { dismissFading(NULL); }
     void dismissFading(void * ud);
+    
+    void overlayText(const string & s, double duration);
     
     void advanceDialog();
     void updateDialogs();
@@ -128,9 +131,11 @@ public:
 private:
     
     void _fadedToColor(PHObject * obj, void * ud);
-    
+    void dismissOverlayText();
+    void _overlayDismissed(PHObject * obj, void * ud);
     PHColor dimColor;
     PHView * dimView;
+    PHTextView * overlayView;
     
     list<PHDialog*> dialogs;
     PHDialog * currentDialog;

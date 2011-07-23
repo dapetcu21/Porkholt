@@ -24,6 +24,9 @@
 
 #include "PHDialog.h"
 #include "PHScripting.h"
+
+#include "PHTextView.h"
+
 //304 19
 #define GAUGE_WIDTH 256
 #define GAUGE_HEIGHT 16
@@ -88,7 +91,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -130,6 +133,11 @@ PHWorld::~PHWorld()
     {
         dimView->removeFromSuperview();
         dimView->release();
+    }
+    if (overlayView)
+    {
+        overlayView->removeFromSuperview();
+        overlayView->release();
     }
 	if (jumpGaugeView)
 	{
@@ -425,7 +433,7 @@ void PHWorld::_fadedToColor(PHObject * obj, void * ud)
         scripting->worldHasFadedAway(ud);
 }
 
-void PHWorld::fadeToColor(PHColor color, void * ud)
+void PHWorld::fadeToColor(const PHColor & color, void * ud)
 {
     if (color == PHInvalidColor)
     {
@@ -466,4 +474,61 @@ void PHWorld::dismissFading(void * ud)
     anim->userdata = ud;
     PHView::addAnimation(anim);
     anim->release();
+}
+
+void PHWorld::_overlayDismissed(PHObject * obj, void * ud)
+{
+    if (overlayView)
+    {
+        overlayView->removeFromSuperview();
+        overlayView->release();
+        overlayView = NULL;
+    }
+}
+
+void PHWorld::dismissOverlayText()
+{
+    if (!overlayView) return;
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->customColor = PHClearColor;
+    anim->time = 0.5;
+    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
+    anim->view = overlayView;
+    anim->callback = (PHCallback)&PHWorld::_overlayDismissed;
+    anim->target = this;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+#define OVERLAYFONTSIZE 0.1
+#define OVERLAYPOS (2.0f/3)
+
+void PHWorld::overlayText(const string & s, double duration)
+{
+    if (!overlayView)
+    {
+        PHRect bounds = view->bounds();
+        overlayView = new PHTextView;
+        overlayView->setFont(PHFont::fontNamed("Arial"));
+        overlayView->setFontSize(OVERLAYFONTSIZE*bounds.height);
+        overlayView->setFrame(PHMakeRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
+        overlayView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
+        view->addSubview(overlayView);
+    }
+    overlayView->setFontColor(PHClearColor);
+    overlayView->setText(s);
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->customColor = PHMakeColor(0, 0, 1, 1);
+    anim->time = 0.5;
+    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
+    anim->view = overlayView;
+    PHView::addAnimation(anim);
+    anim->release();
+    
+    PHTimer * timer = new PHTimer;
+    timer->setTimeInterval(duration-0.5);
+    timer->setRepeats(false);
+    timer->setCallback(this, (PHCallback)&PHWorld::dismissOverlayText, NULL);
+    scheduleTimer(timer);
+    timer->release();
 }
