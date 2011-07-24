@@ -21,7 +21,6 @@
 		C1185A44131441C2004F341A /* PHTestViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A43131441C2004F341A /* PHTestViewController.cpp */; };
 		C11E56CC13436F14008881B9 /* PHMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11E56CB13436F14008881B9 /* PHMessage.cpp */; };
 		C126D6341317D6FC00DACBC0 /* PHNavigationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C126D6331317D6FC00DACBC0 /* PHNavigationController.cpp */; };
-		C132426B1304A863001AEBFE /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C13242691304A863001AEBFE /* rsrc */; };
 		C13664281337F972009B755B /* PHCaptureView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13664271337F972009B755B /* PHCaptureView.cpp */; };
 		C13E6BFE13AC780400365340 /* PHRemote.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6BFC13AC780400365340 /* PHRemote.cpp */; };
 		C13E6C1113AC78C100365340 /* URCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C0E13AC78C100365340 /* URCommon.cpp */; };
@@ -149,6 +148,7 @@
 		C1F1DE17138B963500C8051C /* PHLPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F1DE15138B963500C8051C /* PHLPlatform.cpp */; };
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 		C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */; };
+		C1FF4DD713DC1F16003B7673 /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C1FF4DD613DC1F16003B7673 /* rsrc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,6 +158,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C1A034E8132DF62700F0200C;
 			remoteInfo = Box2D;
+		};
+		C1FF4DD413DC1DE7003B7673 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1FF4DCF13DC1B6E003B7673;
+			remoteInfo = Resources;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -376,6 +383,7 @@
 		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		C1FF4DD613DC1F16003B7673 /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = rsrc; path = _/rsrc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -457,10 +465,11 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C1FF4DD613DC1F16003B7673 /* rsrc */,
 				C13242691304A863001AEBFE /* rsrc */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
@@ -795,14 +804,30 @@
 		};
 /* End PBXHeadersBuildPhase section */
 
+/* Begin PBXLegacyTarget section */
+		C1FF4DCF13DC1B6E003B7673 /* Resources */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(PROJECT_DIR)/postprocess.sh $(PROJECT_DIR) $(PROJECT_DIR)/rsrc $(ACTION)";
+			buildConfigurationList = C1FF4DD013DC1B6E003B7673 /* Build configuration list for PBXLegacyTarget "Resources" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/bash;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = Resources;
+			passBuildSettingsInEnvironment = 1;
+			productName = Resources;
+		};
+/* End PBXLegacyTarget section */
+
 /* Begin PBXNativeTarget section */
 		1D6058900D05DD3D006BFB54 /* Porkholt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Porkholt" */;
 			buildPhases = (
-				C1F2326C130550B800DE3624 /* Make External Libraries */,
-				C1CA22BC1379E49C00C19B69 /* Touch Resources */,
-				1D60588D0D05DD3D006BFB54 /* Resources */,
+				C1FF4DD313DC1D57003B7673 /* Make External Libraries */,
+				C1FF4DB913DC10CD003B7673 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
 			);
@@ -810,6 +835,7 @@
 			);
 			dependencies = (
 				C1A03618132E070E00F0200C /* PBXTargetDependency */,
+				C1FF4DD513DC1DE7003B7673 /* PBXTargetDependency */,
 			);
 			name = Porkholt;
 			productName = Porkholt;
@@ -858,37 +884,24 @@
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Porkholt */,
 				C1A034E8132DF62700F0200C /* Box2D */,
+				C1FF4DCF13DC1B6E003B7673 /* Resources */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+		C1FF4DB913DC10CD003B7673 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C132426B1304A863001AEBFE /* rsrc in Resources */,
+				C1FF4DD713DC1F16003B7673 /* rsrc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		C1CA22BC1379E49C00C19B69 /* Touch Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Touch Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "touch -cm rsrc";
-		};
-		C1F2326C130550B800DE3624 /* Make External Libraries */ = {
+		C1FF4DD313DC1D57003B7673 /* Make External Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1024,6 +1037,11 @@
 			target = C1A034E8132DF62700F0200C /* Box2D */;
 			targetProxy = C1A03617132E070E00F0200C /* PBXContainerItemProxy */;
 		};
+		C1FF4DD513DC1DE7003B7673 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1FF4DCF13DC1B6E003B7673 /* Resources */;
+			targetProxy = C1FF4DD413DC1DE7003B7673 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -1138,6 +1156,55 @@
 			};
 			name = Release;
 		};
+		C1FF4DD113DC1B6E003B7673 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C1FF4DD213DC1B6E003B7673 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1167,6 +1234,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		C1FF4DD013DC1B6E003B7673 /* Build configuration list for PBXLegacyTarget "Resources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1FF4DD113DC1B6E003B7673 /* Debug */,
+				C1FF4DD213DC1B6E003B7673 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

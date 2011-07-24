@@ -7,6 +7,7 @@ xcuserdata
 *.xcworkspace
 *.o
 *.lo
+_
 
 .DS_Store
 

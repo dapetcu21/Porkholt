@@ -48,6 +48,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	if (png_sig_cmp(header, 0, 8))
 	{
 		fclose(fp);
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
 		return;
 	}
 	
@@ -56,6 +59,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	if (!png_ptr)
 	{
 		fclose(fp);
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
 		return;
 	}
 	
@@ -64,6 +70,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	{
 		fclose(fp);
 		png_destroy_read_struct(&png_ptr,NULL,NULL);
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
 		return;
 	}
 	
@@ -71,6 +80,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	{
 		fclose(fp);
 		png_destroy_read_struct(&png_ptr,&info_ptr,NULL);
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
 		return;
 	}
 	
@@ -98,6 +110,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	{
 		fclose(fp);
 		png_destroy_read_struct(&png_ptr,&info_ptr,NULL);
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
 		return;
 	}
 	
@@ -124,14 +139,19 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	format = -1;
 	if (color_type == PNG_COLOR_TYPE_RGB)
 		format = GL_RGB;
+    if (color_type == PNG_COLOR_TYPE_GRAY)
+        format = GL_LUMINANCE;
+    if (color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+        format = GL_LUMINANCE_ALPHA;
 	if (color_type == PNG_COLOR_TYPE_RGBA)
-	{
 		format = GL_RGBA;
-	}
 	if (format == -1)
 	{
 		delete[] buffer;
         buffer = NULL;
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
 		return;
 	}
     

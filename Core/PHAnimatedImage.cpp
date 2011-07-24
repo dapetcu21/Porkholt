@@ -373,9 +373,11 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
     if (clr == PNG_COLOR_TYPE_RGB)
         format = GL_RGB;
     if (clr == PNG_COLOR_TYPE_RGBA)
-    {
         format = GL_RGBA;
-    }
+    if (clr == PNG_COLOR_TYPE_GRAY)
+        format = GL_LUMINANCE;
+    if (clr == PNG_COLOR_TYPE_GRAY_ALPHA)
+        format = GL_LUMINANCE_ALPHA;
     if (format != -1)
     {
         for (int i=0; i<textures.size(); i++)
