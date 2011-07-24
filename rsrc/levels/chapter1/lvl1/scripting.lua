@@ -20,7 +20,7 @@ timer:setCallback(function()
 	player:setUserInput(true);
 	sign:setDialog("Tilt your device\nto move around",sign.setShowsQuest,sign,true);
 	end);
-end
+end);
 timer:schedule();
 
 function sign:questTapped()
