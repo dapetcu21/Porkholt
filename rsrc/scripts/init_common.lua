@@ -99,6 +99,12 @@ function Initializers.PHLSensor(obj)
 	Initializers.PHLObject(obj)
 	obj._fixtureindex.maskBits = cPLAYER;
 end
+function Initializers.PHLMob(obj)
+	Initializers.PHLNPC(obj)
+end
+function Initializers.PHLBull(obj)
+	Initializers.PHLMob(obj)
+end
 
 function objectWithClass(class)
 	obj = {};

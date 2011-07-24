@@ -149,6 +149,8 @@
 		C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F23269130550AA00DE3624 /* libpng15.a */; };
 		C1FEC0EA1337D3CB00FEBDA6 /* PHLPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */; };
 		C1FF4DD713DC1F16003B7673 /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C1FF4DD613DC1F16003B7673 /* rsrc */; };
+		C1FF4DD913DCAB6A003B7673 /* PHLBull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FF4DD813DCAB6A003B7673 /* PHLBull.cpp */; };
+		C1FF4DDB13DCAB81003B7673 /* PHLMob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1FF4DDA13DCAB81003B7673 /* PHLMob.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -384,6 +386,10 @@
 		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1FF4DD613DC1F16003B7673 /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = rsrc; path = _/rsrc; sourceTree = "<group>"; };
+		C1FF4DD813DCAB6A003B7673 /* PHLBull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLBull.cpp; sourceTree = "<group>"; };
+		C1FF4DDA13DCAB81003B7673 /* PHLMob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLMob.cpp; sourceTree = "<group>"; };
+		C1FF4DDC13DCAB94003B7673 /* PHLMob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLMob.h; sourceTree = "<group>"; };
+		C1FF4DDD13DCABA1003B7673 /* PHLBull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLBull.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -606,6 +612,10 @@
 				C177805113BCDAB00003640D /* PHScriptableTimer.h */,
 				C17B487313C1C44200FAD712 /* PHLAnimation.cpp */,
 				C17B487413C1C44200FAD712 /* PHLAnimation.h */,
+				C1FF4DDC13DCAB94003B7673 /* PHLMob.h */,
+				C1FF4DDA13DCAB81003B7673 /* PHLMob.cpp */,
+				C1FF4DDD13DCABA1003B7673 /* PHLBull.h */,
+				C1FF4DD813DCAB6A003B7673 /* PHLBull.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -984,6 +994,8 @@
 				C1B2419213D21584005B60BF /* PHTextController.cpp in Sources */,
 				C1B2419513D2CC5F005B60BF /* PHTextControllerView.cpp in Sources */,
 				C19B4B2913D8D00F00C714FB /* PHDialogView.cpp in Sources */,
+				C1FF4DD913DCAB6A003B7673 /* PHLBull.cpp in Sources */,
+				C1FF4DDB13DCAB81003B7673 /* PHLMob.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

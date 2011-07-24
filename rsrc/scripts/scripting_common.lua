@@ -252,6 +252,10 @@ PHLPlayer = PHLNPC:new()
 --function PHLPlayer:userInput();
 --function PHLPlayer:setUserInput(b); --enables or disabled user input for the player. doesn't brake the body
 
+PHLMob = PHLNPC:new();
+
+PHLBull = PHLMob:new();
+
 PHLCamera = PHLObject:new()
 --function PHLPlayer:followsPlayer();
 --function PHLPlayer:setFollowsPlayer(b);
