@@ -40,18 +40,21 @@ downscalepng()
 {
 	#todo
 	echo "Downscaling png file \"$1\""
-	convert "$SRC_DIR/$1" -resize 50% -channel RGBA -depth 24 "$2"
+	CONVERT_FLAGS="-quality 5 -channel RGBA -depth 24"
+	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 50% "$2"
 	mv "$2" "${2}.hd"
-	convert "$SRC_DIR/$1" -resize 25% -channel RGBA -depth 24 "$2"
+	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 25% "$2"
 }
 
 find * \( -type f -or -type l \) | while read FILE
 do
 	if [ "$FILE" -nt "$DEST_DIR/$FILE" ]; then
 		mkdir -p "$(dirname "$DEST_DIR/$FILE")"
-		if    [[ -f "$FILE" ]] && [[ "${FILE#*.}" == "png" ]]; then
+		BASENAME="`basename "${FILE}"`"
+		EXTENSION="${BASENAME#*.}"
+		if    [[ -f "$FILE" ]] && [[ "$EXTENSION" == "png" ]]; then
 			downscalepng "$FILE" "$DEST_DIR/$FILE"
-		elif  [[ -f "$FILE" ]] && [[ "${FILE#*.}" == "lua" ]]; then
+		elif  [[ -f "$FILE" ]] && [[ "$EXTENSION" == "lua" ]]; then
 			compresslua "$FILE" "$DEST_DIR/$FILE"
 		else
 			cp -a "$FILE" "$DEST_DIR/$FILE"

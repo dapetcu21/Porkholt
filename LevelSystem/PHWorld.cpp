@@ -500,8 +500,8 @@ void PHWorld::dismissOverlayText()
     anim->release();
 }
 
-#define OVERLAYFONTSIZE 0.1
-#define OVERLAYPOS (2.0f/3)
+#define OVERLAYFONTSIZE 0.15
+#define OVERLAYPOS (5.1f/6)
 
 void PHWorld::overlayText(const string & s, double duration)
 {
@@ -509,7 +509,7 @@ void PHWorld::overlayText(const string & s, double duration)
     {
         PHRect bounds = view->bounds();
         overlayView = new PHTextView;
-        overlayView->setFont(PHFont::fontNamed("Arial"));
+        overlayView->setFont(PHFont::fontNamed("ArialBlack"));
         overlayView->setFontSize(OVERLAYFONTSIZE*bounds.height);
         overlayView->setFrame(PHMakeRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
         overlayView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
@@ -518,7 +518,7 @@ void PHWorld::overlayText(const string & s, double duration)
     overlayView->setFontColor(PHClearColor);
     overlayView->setText(s);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->customColor = PHMakeColor(0, 0, 1, 1);
+    anim->customColor = PHMakeColor(0.9, 0.9, 0.9, 1);
     anim->time = 0.5;
     anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
     anim->view = overlayView;

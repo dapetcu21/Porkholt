@@ -127,7 +127,7 @@
             ch = [s substringWithRange:NSMakeRange(fp, 1)];
             sz = [ch sizeWithAttributes:attributes];
         }
-        position -= ceil(maxHeight);
+        position -= ceil(maxHeight)+1;
         st = fp;
     }
     if (save)

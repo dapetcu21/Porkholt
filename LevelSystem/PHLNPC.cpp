@@ -246,7 +246,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
         dialogView->setUserInput(true);
         dialogView->setStretchBubble(true);
         dialogTextView = new PHTextView();
-        dialogTextView->setFont(PHFont::fontNamed("Arial"));
+        dialogTextView->setFont(PHFont::fontNamed("ArialBold"));
         dialogTextView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogTextView->setFontSize(dialogFontSize);
         dialogTextView->setFontColor(PHBlackColor);

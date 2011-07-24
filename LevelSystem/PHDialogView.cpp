@@ -28,7 +28,7 @@ void PHDialogView::draw()
         PHImageView::draw();
         return;
     }
-    double aspectRatio = _image->width()/_image->height()*2;
+    double aspectRatio = _image->width()/_image->height();
     double aspectRatioC = _bounds.width/_bounds.height;
     if (aspectRatioC/aspectRatio >1.0f)
     {
