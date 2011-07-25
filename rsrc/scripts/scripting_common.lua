@@ -277,3 +277,13 @@ function PHLSensor:objectEntered(obj) --override these. obj is either a table re
 end
 function PHLSensor:objectExited(obj)
 end
+
+PHLPowerup = PHLSensor:new()
+function PHLPowerup:collected()
+end
+function PHLPowerup:dismissed()
+end
+-- function PHLPowerup:dismiss()
+-- function PHLPowerup:collect()
+
+PHLShieldPowerup = PHLPowerup:new()

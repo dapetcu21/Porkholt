@@ -23,6 +23,8 @@
 #include "PHJoint.h"
 #include "PHWorld.h"
 #include "PHImageView.h"
+#include "PHLPowerup.h"
+#include "PHLShieldPowerup.h"
 
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
@@ -45,10 +47,14 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         return new PHLGround;
     if (str=="PHLSign")
         return new PHLSign;
+    if (str=="PHLShieldPowerup")
+        return new PHLShieldPowerup;
+    if (str=="PHLPowerup")
+        return new PHLPowerup;
 	return new PHLObject;
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL)
 {
 }
 
@@ -799,11 +805,11 @@ void PHLObject::scriptingCreate(lua_State * l)
 {
     L = l;
     hasScripting = true;
+    PHLog("%s",_class.c_str());
     lua_getglobal(L, _class.c_str());
-    lua_pushstring(L, "new");
-    lua_gettable(L, -2);
-    lua_remove(L, -2);
-    lua_getglobal(L, _class.c_str());
+    lua_getfield(L, -1, "new");
+    lua_pushvalue(L, -2);
+    lua_remove(L, -3);
     lua_pushnil(L);
     lua_pushlightuserdata(L, this);
     int err = lua_pcall(L,3,1,0);

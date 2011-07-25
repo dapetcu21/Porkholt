@@ -4,15 +4,15 @@
 
 obj = objectWithClass("PHLSign");
 obj.pos = point(4.751601,0.804140);
-obj.text = [[You can jump using long, ample swipes. Don't flick]];
 obj.scripting = [[sign1]];
+obj.text = [[You can jump using long, ample swipes. Don't flick]];
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLSign");
 obj.pos = point(7.595820,2.256524);
-obj.text = [[This is a life potion. It replenishes your life if you get wounded]];
 obj.scripting = [[sign2]];
+obj.text = [[This is a life potion. It replenishes your life if you get wounded]];
 obj.levelDes = true;
 addObject(obj);
 
@@ -456,11 +456,9 @@ objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(6.870450,2.205830);
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[bottle.png]],-0.250000,-0.250000,0.300000,0.600000,op);
+obj = objectWithClass("PHLShieldPowerup");
+obj.pos = point(6.633770,2.250908);
+obj.scripting = [[shieldpup]];
 obj.levelDes = true;
 addObject(obj);
 

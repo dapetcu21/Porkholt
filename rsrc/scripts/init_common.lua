@@ -116,6 +116,14 @@ function Initializers.PHLSign(obj)
 	objectAddImage(obj,"/sign.png",-0.35,-0.35,0.7,0.7);
 	addObject(obj);
 end
+function Initializers.PHLPowerup(obj)
+	Initializers.PHLSensor(obj)
+end
+function Initializers.PHLShieldPowerup(obj)
+	Initializers.PHLPowerup(obj)
+	objectAddImage(obj,"/blue_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40; });
+	objectAddBox(obj, -0.15,-0.3,0.3,0.6);
+end
 
 function objectWithClass(class)
 	obj = {};

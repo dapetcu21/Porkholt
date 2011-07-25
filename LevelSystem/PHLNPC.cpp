@@ -218,7 +218,7 @@ void PHLNPC::setDialog(PHDialog * dialog)
         showDialog(dialog);
 }
 
-#define dialogFontSize 0.2
+#define dialogFontSize 0.15
 #define dialogBorderTop 0.2
 #define dialogBorderBottom 0.2
 #define dialogBorderLeft 0.15
@@ -246,7 +246,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
         dialogView->setUserInput(true);
         dialogView->setStretchBubble(true);
         dialogTextView = new PHTextView();
-        dialogTextView->setFont(PHFont::fontNamed("ArialBold"));
+        dialogTextView->setFont(PHFont::fontNamed("BDCartoonShout"));
         dialogTextView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogTextView->setFontSize(dialogFontSize);
         dialogTextView->setFontColor(PHBlackColor);

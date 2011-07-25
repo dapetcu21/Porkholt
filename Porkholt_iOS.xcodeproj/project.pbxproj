@@ -17,6 +17,8 @@
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		C106E47A13DD427C007E6357 /* PHLGround.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47913DD427C007E6357 /* PHLGround.cpp */; };
 		C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47E13DD5E2B007E6357 /* PHLSign.cpp */; };
+		C106E48113DD76CC007E6357 /* PHLPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48013DD76CB007E6357 /* PHLPowerup.cpp */; };
+		C106E48513DD8314007E6357 /* PHLShieldPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */; };
 		C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */; };
 		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
 		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
@@ -191,6 +193,10 @@
 		C106E47C13DD4289007E6357 /* PHLGround.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLGround.h; sourceTree = "<group>"; };
 		C106E47D13DD5DAA007E6357 /* PHLSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLSign.h; sourceTree = "<group>"; };
 		C106E47E13DD5E2B007E6357 /* PHLSign.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLSign.cpp; sourceTree = "<group>"; };
+		C106E48013DD76CB007E6357 /* PHLPowerup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPowerup.cpp; sourceTree = "<group>"; };
+		C106E48213DD76EB007E6357 /* PHLPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPowerup.h; sourceTree = "<group>"; };
+		C106E48313DD82BF007E6357 /* PHLShieldPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLShieldPowerup.h; sourceTree = "<group>"; };
+		C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLShieldPowerup.cpp; sourceTree = "<group>"; };
 		C1185540130FDDB8004F341A /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
 		C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
 		C11855A2130FDF09004F341A /* PHMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMotion.h; sourceTree = "<group>"; };
@@ -626,6 +632,10 @@
 				C106E47913DD427C007E6357 /* PHLGround.cpp */,
 				C106E47D13DD5DAA007E6357 /* PHLSign.h */,
 				C106E47E13DD5E2B007E6357 /* PHLSign.cpp */,
+				C106E48213DD76EB007E6357 /* PHLPowerup.h */,
+				C106E48013DD76CB007E6357 /* PHLPowerup.cpp */,
+				C106E48313DD82BF007E6357 /* PHLShieldPowerup.h */,
+				C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -1008,6 +1018,8 @@
 				C1FF4DDB13DCAB81003B7673 /* PHLMob.cpp in Sources */,
 				C106E47A13DD427C007E6357 /* PHLGround.cpp in Sources */,
 				C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */,
+				C106E48113DD76CC007E6357 /* PHLPowerup.cpp in Sources */,
+				C106E48513DD8314007E6357 /* PHLShieldPowerup.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

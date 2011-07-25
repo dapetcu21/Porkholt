@@ -518,7 +518,7 @@ void PHWorld::overlayText(const string & s, double duration)
     overlayView->setFontColor(PHClearColor);
     overlayView->setText(s);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->customColor = PHMakeColor(0.9, 0.9, 0.9, 1);
+    anim->customColor = PHMakeColor(0, 0, 0, 0.5);
     anim->time = 0.5;
     anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
     anim->view = overlayView;

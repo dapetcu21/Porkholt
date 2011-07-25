@@ -119,13 +119,13 @@
                     chr.aspectRatio = sz.width/sz.height;
                     characters.push_back(chr);
                 }
-                [ch drawAtPoint:NSMakePoint(pointer, position-sz.height) withAttributes:attributes];
+                [ch drawInRect:NSMakeRect(pointer, position-sz.height, sz.width, sz.height) withAttributes:attributes];
             }
             pointer+=ceil(sz.width)+1;
             fp++;
             if (fp>=n) break;
             ch = [s substringWithRange:NSMakeRange(fp, 1)];
-            sz = [ch sizeWithAttributes:attributes];
+            sz = [ch boundingRectWithSize:NSMakeSize(size, size) options:0 attributes:attributes].size;
         }
         position -= ceil(maxHeight)+1;
         st = fp;
