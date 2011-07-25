@@ -114,7 +114,6 @@ function Initializers.PHLSign(obj)
 	obj.questPoint = point(0.25,0.25);
 	obj.physics.dynamic = false;
 	objectAddImage(obj,"/sign.png",-0.35,-0.35,0.7,0.7);
-	addObject(obj);
 end
 function Initializers.PHLPowerup(obj)
 	Initializers.PHLSensor(obj)
