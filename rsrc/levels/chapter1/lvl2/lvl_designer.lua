@@ -12,7 +12,7 @@ addObject(obj);
 obj = objectWithClass("PHLSign");
 obj.pos = point(7.595820,2.256524);
 obj.scripting = [[sign2]];
-obj.text = [[This is a life potion. It replenishes your life if you get wounded]];
+obj.text = [[You've just picked up a shield. Shields protect you against enemies like that jolly looking bull. Be carefull,though, once you are hit, the shield disappears.]];
 obj.levelDes = true;
 addObject(obj);
 
