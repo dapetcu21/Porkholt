@@ -19,7 +19,7 @@ struct PHRect
 //	PHRect() : x(0), y(0), width(0), height(0) {};
 	double x,y;
 	double width,height;
-    static PHRect rectFromLua(lua_State * L, int index);
+    static PHRect fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 };
 
@@ -32,7 +32,7 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
-    static PHColor colorFromLua(lua_State * L, int index);
+    static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 };
 
@@ -101,7 +101,7 @@ struct PHPoint
     PHPoint() {};
     PHPoint(double xx,double yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
-    static PHPoint pointFromLua(lua_State * L, int index);
+    static PHPoint fromLua(lua_State * L, int index);
     PHPoint & operator += (const PHPoint & othr)
     {
         x+=othr.x;

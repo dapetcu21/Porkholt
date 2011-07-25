@@ -19,6 +19,8 @@
 #include "PHLSensor.h"
 #include "PHLGround.h"
 #include "PHLSign.h"
+#include "PHLBull.h"
+#include "PHLMob.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -43,6 +45,10 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         return new PHLSensor;
     if (str=="PHLNPC")
         return new PHLNPC;
+    if (str=="PHLMob")
+        return new PHLMob;
+    if (str=="PHLBull")
+        return new PHLBull;
     if (str=="PHLGround")
         return new PHLGround;
     if (str=="PHLSign")
@@ -142,7 +148,7 @@ void PHLObject::loadBody(void *l)
                         lua_pushstring(L, "box");
                         lua_gettable(L, -2);
                         if (lua_istable(L, -1))
-                            box = PHRect::rectFromLua(L,-1);
+                            box = PHRect::fromLua(L,-1);
                         lua_pop(L,1);
                         
                         double rot = 0;
@@ -162,7 +168,7 @@ void PHLObject::loadBody(void *l)
                         lua_pushstring(L, "pos");
                         lua_gettable(L, -2);
                         if (lua_istable(L, -1))
-                            pos = PHPoint::pointFromLua(L,-1);
+                            pos = PHPoint::fromLua(L,-1);
                         lua_pop(L, 1);
                         
                         //physics attributes
@@ -283,7 +289,7 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 	lua_pushstring(L, "pos");
 	lua_gettable(L, -2);
 	if (lua_istable(L, -1))
-		pos = PHPoint::pointFromLua(L,-1);
+		pos = PHPoint::fromLua(L,-1);
 	lua_pop(L, 1);
 	
     rot = 0;
@@ -847,19 +853,9 @@ static int PHLObject_destroy(lua_State * L)
     return 0;
 }
 
-static int PHLObject_position(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    obj->position().saveToLua(L);
-    return 1;
-}
 
-static int PHLObject_rotation(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_pushnumber(L,PHWarp(-toDeg(obj->rotation()),360));
-    return 1;
-}
+PHLuaPointGetter(PHLObject, position);
+PHLuaAngleGetter(PHLObject, rotation);
 
 static int PHLObject_transform(lua_State * L)
 {
@@ -877,7 +873,7 @@ static int PHLObject_setTransform(lua_State * L)
     bool p = false, r = false;
     if (lua_istable(L, 2))
     {
-        pnt = PHPoint::pointFromLua(L,2);
+        pnt = PHPoint::fromLua(L,2);
         p =true;
     } else {
         luaL_argcheck(L,!lua_isnoneornil(L,2),2,NULL);
@@ -900,21 +896,8 @@ static int PHLObject_setTransform(lua_State * L)
     return 0;
 }
 
-static int PHLObject_setPosition(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TTABLE);
-    obj->setPosition(PHPoint::pointFromLua(L,2));
-    return 0;
-}
-
-static int PHLObject_setRotation(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    luaL_checknumber(L, 2);
-    obj->setRotation(-toRad(lua_tonumber(L, 2)));
-    return 0;
-}
+PHLuaPointSetter(PHLObject, setPosition);
+PHLuaAngleSetter(PHLObject, setRotation);
 
 static int PHLObject_rotate(lua_State * L)
 {
@@ -928,7 +911,7 @@ static int PHLObject_move(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    PHPoint pnt = PHPoint::pointFromLua(L,2);
+    PHPoint pnt = PHPoint::fromLua(L,2);
     PHPoint opnt = obj->position();
     opnt.x +=pnt.x;
     opnt.y +=pnt.y;
@@ -948,49 +931,26 @@ static int PHLObject_addAnimation(lua_State * L)
     return 0;
 }
 
-static int PHLObject_skipAllAnimations(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    obj->skipAllAnimations();
-    return 0;
-}
-
-static int PHLObject_invalidateAllAnimations(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    obj->invalidateAllAnimations();
-    return 0;
-}
+PHLuaDefineCall(PHLObject, skipAllAnimations);
+PHLuaDefineCall(PHLObject, invalidateAllAnimations);
 
 static int PHLObject_rotateAround(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checknumber(L, 2);
     luaL_checktype(L, 3, LUA_TTABLE);
-    obj->rotateAround(-toRad(lua_tonumber(L, 2)), PHPoint::pointFromLua(L,3));
+    obj->rotateAround(-toRad(lua_tonumber(L, 2)), PHPoint::fromLua(L,3));
     return 0;
 }
 
-static int PHLObject_isDynamic(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_pushboolean(L, obj->isDynamic());
-    return 1;
-}
-
-static int PHLObject_setDynamic(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    obj->setDynamic(lua_toboolean(L, 2));
-    return 0;
-}
+PHLuaBoolGetter(PHLObject, isDynamic);
+PHLuaBoolSetter(PHLObject, setDynamic);
 
 static int PHLObject_worldPoint(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    (obj->worldPoint(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    (obj->worldPoint(PHPoint::fromLua(L, 2))).saveToLua(L);
     return 1;
 }
 
@@ -998,7 +958,7 @@ static int PHLObject_localPoint(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    (obj->localPoint(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    (obj->localPoint(PHPoint::fromLua(L, 2))).saveToLua(L);
     return 1;
 }
 
@@ -1006,7 +966,7 @@ static int PHLObject_worldVector(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    (obj->worldVector(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    (obj->worldVector(PHPoint::fromLua(L, 2))).saveToLua(L);
     return 1;
 }
 
@@ -1014,7 +974,7 @@ static int PHLObject_localVector(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    (obj->localVector(PHPoint::pointFromLua(L, 2))).saveToLua(L);
+    (obj->localVector(PHPoint::fromLua(L, 2))).saveToLua(L);
     return 1;
 }
 
@@ -1024,74 +984,24 @@ static int PHLObject_applyImpulse(lua_State * L)
     luaL_checktype(L, 2, LUA_TTABLE);
     PHPoint ap;
     if (lua_istable(L, 3))
-        ap = PHPoint::pointFromLua(L, 3);
+        ap = PHPoint::fromLua(L, 3);
     else
     {
         luaL_argcheck(L, !lua_isnoneornil(L, 3), 3, NULL);
         ap = obj->worldVector(PHOriginPoint);
     }
-    obj->applyImpulse(PHPoint::pointFromLua(L, 2), ap);
+    obj->applyImpulse(PHPoint::fromLua(L, 2), ap);
     return 0;
 }
 
-static int PHLObject_velocity(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    obj->velocity().saveToLua(L);
-    return 1;
-}
-
-static int PHLObject_scalarVelocity(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_pushnumber(L, obj->scalarVelocity());
-    return 1;
-}
-
-static int PHLObject_setVelocity(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TTABLE);
-    obj->setVelocity(PHPoint::pointFromLua(L, 2));
-    return 0;
-}
-
-static int PHLObject_angularVelocity(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_pushnumber(L, obj->angularVelocity());
-    return 1;
-}
-
-static int PHLObject_setAngularVelocity(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    luaL_checknumber(L, 2);
-    obj->setAngularVelocity(lua_tonumber(L, 2));
-    return 0;
-}
-
-static int PHLObject_applyAngularImpulse(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    luaL_checknumber(L, 2);
-    obj->applyAngularImpulse(lua_tonumber(L, 2));
-    return 0;
-}
-
-static int PHLObject_mass(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_pushnumber(L, obj->mass());
-    return 1;
-}
-
-static int PHLObject_centerOfMass(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    obj->centerOfMass().saveToLua(L);
-    return 1;
-}
+PHLuaPointGetter(PHLObject, velocity);
+PHLuaNumberGetter(PHLObject, scalarVelocity);
+PHLuaPointSetter(PHLObject, setVelocity);
+PHLuaNumberGetter(PHLObject, angularVelocity);
+PHLuaNumberSetter(PHLObject, setAngularVelocity);
+PHLuaNumberSetter(PHLObject, applyAngularImpulse);
+PHLuaNumberGetter(PHLObject, mass);
+PHLuaPointGetter(PHLObject, centerOfMass);
 
 static int PHLObject_viewWithTag(lua_State * L)
 {
@@ -1109,68 +1019,38 @@ void PHLObject::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLObject");
     
-    lua_pushcfunction(L, PHLObject_destroy);
-    lua_setfield(L, -2, "destroy");
-    lua_pushcfunction(L, PHLObject_position);
-    lua_setfield(L, -2, "position");
-    lua_pushcfunction(L, PHLObject_rotation);
-    lua_setfield(L, -2, "rotation");
-    lua_pushcfunction(L, PHLObject_transform);
-    lua_setfield(L, -2, "transform");
-    lua_pushcfunction(L, PHLObject_setPosition);
-    lua_setfield(L, -2, "setPosition");
-    lua_pushcfunction(L, PHLObject_setRotation);
-    lua_setfield(L, -2, "setRotation");
-    lua_pushcfunction(L, PHLObject_setTransform);
-    lua_setfield(L, -2, "setTransform");
-    lua_pushcfunction(L, PHLObject_move);
-    lua_setfield(L, -2, "move");
-    lua_pushcfunction(L, PHLObject_rotate);
-    lua_setfield(L, -2, "rotate");
-    lua_pushcfunction(L, PHLObject_rotateAround);
-    lua_setfield(L, -2, "rotateAround");
-    lua_pushcfunction(L, PHLObject_isDynamic);
-    lua_setfield(L, -2, "isDynamic");
-    lua_pushcfunction(L, PHLObject_setDynamic);
-    lua_setfield(L, -2, "setDynamic");
-
-    lua_pushcfunction(L, PHLObject_worldPoint);
-    lua_setfield(L, -2, "worldPoint");
-    lua_pushcfunction(L, PHLObject_localPoint);
-    lua_setfield(L, -2, "localPoint");
-    lua_pushcfunction(L, PHLObject_worldVector);
-    lua_setfield(L, -2, "worldVector");
-    lua_pushcfunction(L, PHLObject_localVector);
-    lua_setfield(L, -2, "localVector");
-    lua_pushcfunction(L, PHLObject_applyImpulse);
-    lua_setfield(L, -2, "applyImpulse");
-    lua_pushcfunction(L, PHLObject_velocity);
-    lua_setfield(L, -2, "velocity");
-    lua_pushcfunction(L, PHLObject_scalarVelocity);
-    lua_setfield(L, -2, "scalarVelocity");
-    lua_pushcfunction(L, PHLObject_setVelocity);
-    lua_setfield(L, -2, "setVelocity");
-    lua_pushcfunction(L, PHLObject_angularVelocity);
-    lua_setfield(L, -2, "angularVelocity");
-    lua_pushcfunction(L, PHLObject_setAngularVelocity);
-    lua_setfield(L, -2, "setAngularVelocity");
-    lua_pushcfunction(L, PHLObject_applyAngularImpulse);
-    lua_setfield(L, -2, "applyAngularImpulse");
-    lua_pushcfunction(L, PHLObject_mass);
-    lua_setfield(L, -2, "mass");
-    lua_pushcfunction(L, PHLObject_centerOfMass);
-    lua_setfield(L, -2, "centerOfMass");
+    PHLuaAddMethod(PHLObject, destroy);
+    PHLuaAddMethod(PHLObject, position);
+    PHLuaAddMethod(PHLObject, rotation);
+    PHLuaAddMethod(PHLObject, transform);
+    PHLuaAddMethod(PHLObject, setPosition);
+    PHLuaAddMethod(PHLObject, setRotation);
+    PHLuaAddMethod(PHLObject, setTransform);
+    PHLuaAddMethod(PHLObject, move);
+    PHLuaAddMethod(PHLObject, rotate);
+    PHLuaAddMethod(PHLObject, rotateAround);
+    PHLuaAddMethod(PHLObject, isDynamic);
+    PHLuaAddMethod(PHLObject, setDynamic);
     
-    lua_pushcfunction(L, PHLObject_viewWithTag);
-    lua_setfield(L, -2, "viewWithTag");
+    PHLuaAddMethod(PHLObject, worldPoint);
+    PHLuaAddMethod(PHLObject, localPoint);
+    PHLuaAddMethod(PHLObject, worldVector);
+    PHLuaAddMethod(PHLObject, localVector);
+    PHLuaAddMethod(PHLObject, applyImpulse);
+    PHLuaAddMethod(PHLObject, velocity);
+    PHLuaAddMethod(PHLObject, scalarVelocity);
+    PHLuaAddMethod(PHLObject, setVelocity);
+    PHLuaAddMethod(PHLObject, angularVelocity);
+    PHLuaAddMethod(PHLObject, setAngularVelocity);
+    PHLuaAddMethod(PHLObject, applyAngularImpulse);
+    PHLuaAddMethod(PHLObject, mass);
+    PHLuaAddMethod(PHLObject, centerOfMass);
     
-    lua_pushcfunction(L, PHLObject_invalidateAllAnimations);
-    lua_setfield(L, -2, "invalidateAllAnimations");
-    lua_pushcfunction(L, PHLObject_skipAllAnimations);
-    lua_setfield(L, -2, "skipAllAnimations");
-    lua_pushcfunction(L, PHLObject_addAnimation);
-    lua_setfield(L, -2, "addAnimation");
+    PHLuaAddMethod(PHLObject, viewWithTag);
     
+    PHLuaAddMethod(PHLObject, invalidateAllAnimations);
+    PHLuaAddMethod(PHLObject, skipAllAnimations);
+    PHLuaAddMethod(PHLObject, addAnimation);
     
     lua_pop(L, 1);
 }

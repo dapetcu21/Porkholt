@@ -92,12 +92,12 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
     
     lua_getfield(L, -1, "overHead");
     if (lua_istable(L, -1))
-        overHeadPoint = PHPoint::pointFromLua(L, -1);
+        overHeadPoint = PHPoint::fromLua(L, -1);
     lua_pop(L, 1);
     
     lua_getfield(L, -1, "questPoint");
     if (lua_istable(L, -1))
-        questPoint = PHPoint::pointFromLua(L, -1);
+        questPoint = PHPoint::fromLua(L, -1);
     lua_pop(L, 1);
     
     lua_getfield(L, -1, "questHeight");
@@ -189,7 +189,7 @@ void PHLNPC::flip()
                 b2Vec2 * v = new b2Vec2[n];
                 for (int i=0; i<n; i++)
                 {
-                    v[i]=ss->GetVertex(i);
+                    v[i]=ss->GetVertex(n-i-1);
                     v[i].x = -v[i].x;
                 }
                 ss->Set(v,n);
@@ -303,11 +303,15 @@ void PHLNPC::dialogViewFired(PHDialogView * dv)
 {
     if (dialogView==dv)
     {
+        PHDialog * d = currentDialog;
+        d->retain();
         currentDialog->callback();
-        if (currentDialog->inStack)
+        if (d->inStack)
             getWorld()->advanceDialog();
         else
-            dismissDialog();
+            if (d==currentDialog)
+                dismissDialog();
+        d->release();
     }
     if (questView==dv)
     {
@@ -627,60 +631,21 @@ void PHLNPC::setBraked(bool b)
     }
 }
 
+void PHLNPC::lowHP()
+{
+    
+}
+
 #pragma mark -
 #pragma mark scripting
 
-static int PHLNPC_isFlipped(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    lua_pushboolean(L, npc->isFlipped());
-    return 1;
-}
-
-static int PHLNPC_setFlipped(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    npc->setFlipped(lua_toboolean(L, 2));
-    return 0;
-}
-
-static int PHLNPC_flip(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    npc->flip();
-    return 0;
-}
-
-static int PHLNPC_hasTrail(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    lua_pushboolean(L, npc->hasTrail());
-    return 1;
-}
-
-static int PHLNPC_setTrail(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    npc->setTrail(lua_toboolean(L, 2));
-    return 0;
-}
-
-static int PHLNPC_usesTrail(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    lua_pushboolean(L, npc->usesTrail());
-    return 1;
-}
-
-static int PHLNPC_setUsesTrail(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    npc->setUsesTrail(lua_toboolean(L, 2));
-    return 0;
-}
+PHLuaBoolGetter(PHLNPC, isFlipped);
+PHLuaBoolSetter(PHLNPC, setFlipped);
+PHLuaDefineCall(PHLNPC, flip);
+PHLuaBoolGetter(PHLNPC, hasTrail);
+PHLuaBoolSetter(PHLNPC, setTrail);
+PHLuaBoolGetter(PHLNPC, usesTrail);
+PHLuaBoolSetter(PHLNPC, setUsesTrail);
 
 static int PHLNPC_addDialog(lua_State * L)
 {
@@ -716,19 +681,8 @@ static int PHLNPC_setDialog(lua_State * L)
     return 0;
 }
 
-static int PHLNPC_showsQuest(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    lua_pushboolean(L, npc->showsQuest());
-    return 1;
-}
-
-static int PHLNPC_reallyShowsQuest(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    lua_pushboolean(L, npc->reallyShowsQuest());
-    return 1;
-}
+PHLuaBoolGetter(PHLNPC, showsQuest);
+PHLuaBoolGetter(PHLNPC, reallyShowsQuest);
 
 static int PHLNPC_setShowsQuest(lua_State * L)
 {
@@ -748,9 +702,9 @@ static int PHLNPC_walk(lua_State * L)
     if (lua_istable(L,4))
     {
         lua_pushvalue(L,4);
-        npc->walk(PHPoint::pointFromLua(L,2),speed,L);
+        npc->walk(PHPoint::fromLua(L,2),speed,L);
     } else
-        npc->walk(PHPoint::pointFromLua(L,2),speed);
+        npc->walk(PHPoint::fromLua(L,2),speed);
     return 0;
 }
 
@@ -764,64 +718,48 @@ static int PHLNPC_walkTo(lua_State * L)
     if (lua_istable(L,4))
     {
         lua_pushvalue(L,4);
-        npc->walkTo(PHPoint::pointFromLua(L,2),speed,L);
+        npc->walkTo(PHPoint::fromLua(L,2),speed,L);
     } else
-        npc->walkTo(PHPoint::pointFromLua(L,2),speed);
+        npc->walkTo(PHPoint::fromLua(L,2),speed);
     return 0;
 }
 
-static int PHLNPC_braked(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    lua_pushboolean(L, npc->braked());
-    return 1;
-}
-
-static int PHLNPC_setBraked(lua_State * L)
-{
-    PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    npc->setBraked(lua_toboolean(L, 2));
-    return 0;
-}
+PHLuaBoolGetter(PHLNPC, braked);
+PHLuaBoolSetter(PHLNPC, setBraked);
+PHLuaBoolSetter(PHLNPC, setHP);
+PHLuaBoolSetter(PHLNPC, setMaximumHP);
+PHLuaBoolSetter(PHLNPC, increaseHP);
+PHLuaBoolSetter(PHLNPC, decreaseHP);
+PHLuaBoolGetter(PHLNPC, healthPoints);
+PHLuaBoolGetter(PHLNPC, maximumHP);
 
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLNPC");
     
-    lua_pushcfunction(L, PHLNPC_isFlipped);
-    lua_setfield(L, -2, "isFlipped");
-    lua_pushcfunction(L, PHLNPC_setFlipped);
-    lua_setfield(L, -2, "setFlipped");
-    lua_pushcfunction(L, PHLNPC_flip);
-    lua_setfield(L, -2, "flip");
-    lua_pushcfunction(L, PHLNPC_hasTrail);
-    lua_setfield(L, -2, "hasTrail");
-    lua_pushcfunction(L, PHLNPC_setTrail);
-    lua_setfield(L, -2, "setTrail");
-    lua_pushcfunction(L, PHLNPC_usesTrail);
-    lua_setfield(L, -2, "usesTrail");
-    lua_pushcfunction(L, PHLNPC_setUsesTrail);
-    lua_setfield(L, -2, "setUsesTrail");
-    lua_pushcfunction(L, PHLNPC_addDialog);
-    lua_setfield(L, -2, "_addDialog");
-    lua_pushcfunction(L, PHLNPC_setDialog);
-    lua_setfield(L, -2, "_setDialog");
-    lua_pushcfunction(L, PHLNPC_showsQuest);
-    lua_setfield(L, -2, "showsQuest");
-    lua_pushcfunction(L, PHLNPC_setShowsQuest);
-    lua_setfield(L, -2, "setShowsQuest");
-    lua_pushcfunction(L, PHLNPC_reallyShowsQuest);
-    lua_setfield(L, -2, "reallyShowsQuest");
-    lua_pushcfunction(L, PHLNPC_walk);
-    lua_setfield(L, -2, "_walk");
-    lua_pushcfunction(L, PHLNPC_walkTo);
-    lua_setfield(L, -2, "_walkTo");
-    lua_pushcfunction(L, PHLNPC_braked);
-    lua_setfield(L, -2, "braked");
-    lua_pushcfunction(L, PHLNPC_setBraked);
-    lua_setfield(L, -2, "setBraked");
+    PHLuaAddMethod(PHLNPC, isFlipped);
+    PHLuaAddMethod(PHLNPC, setFlipped);
+    PHLuaAddMethod(PHLNPC, flip);
+    PHLuaAddMethod(PHLNPC, hasTrail);
+    PHLuaAddMethod(PHLNPC, setTrail);
+    PHLuaAddMethod(PHLNPC, usesTrail);
+    PHLuaAddMethod(PHLNPC, setUsesTrail);
+    PHLuaAddMethod_(PHLNPC, addDialog);
+    PHLuaAddMethod_(PHLNPC, setDialog);
+    PHLuaAddMethod(PHLNPC, showsQuest);
+    PHLuaAddMethod(PHLNPC, setShowsQuest);
+    PHLuaAddMethod(PHLNPC, reallyShowsQuest);
+    PHLuaAddMethod_(PHLNPC, walkTo);
+    PHLuaAddMethod_(PHLNPC, walk);
+    PHLuaAddMethod(PHLNPC, braked);
+    PHLuaAddMethod(PHLNPC, setBraked);
     
+    PHLuaAddMethod(PHLNPC, healthPoints);
+    PHLuaAddMethod(PHLNPC, setHP);
+    PHLuaAddMethod(PHLNPC, increaseHP);
+    PHLuaAddMethod(PHLNPC, decreaseHP);
+    PHLuaAddMethod(PHLNPC, maximumHP);
+    PHLuaAddMethod(PHLNPC, setMaximumHP);
     
     lua_pop(L,1);
 }

@@ -239,10 +239,10 @@ addObject(obj);
 
 obj = objectWithClass("PHLNPC");
 obj.pos = point(3.908435,0.760000);
+obj.automaticFlipping = true;
+obj.faceFlipping = true;
 obj.scripting = [[mayor]];
 obj.staticFace = true;
-obj.faceFlipping = true;
-obj.automaticFlipping = true;
 op = {};
 op.class = [[PHTrailImageView]];
 op.tag = 20.000000;
@@ -259,9 +259,8 @@ addObject(obj);
 obj = objectWithClass("PHLSign");
 obj.pos = point(5.879765,0.802499);
 obj.scripting = [[sign]];
-obj.text = "Tilt your device\nto move around";
-op = {};
-op.rotation = 0.000000;
+obj.text = [[Tilt your device
+to move around]];
 obj.levelDes = true;
 addObject(obj);
 

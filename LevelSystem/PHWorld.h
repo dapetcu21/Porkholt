@@ -28,6 +28,7 @@ class PHLNPC;
 class PHDialog;
 class PHScripting;
 class PHTextView;
+class PHHeartView;
 
 class PHWorld : public PHObject 
 {
@@ -60,6 +61,7 @@ private:
     
 	double _jumpGauge,maxJump,jumpGrowth;
 	PHGaugeView * jumpGaugeView;
+    PHHeartView * heartView;
 	
 	
 	struct layer

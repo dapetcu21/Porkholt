@@ -582,65 +582,14 @@ void PHView::auxRender()
 #pragma mark -
 #pragma Scripting
 
-static int PHView_rotation(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    lua_pushnumber(L, PHWarp(-toDeg(v->rotation()),360));
-    return 1;
-}
-
-static int PHView_setRotation(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    luaL_checknumber(L, 2);
-    v->setRotation(-toRad(lua_tonumber(L, 2)));
-    return 0;
-}
-
-static int PHView_horizontallyFlipped(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    lua_pushboolean(L, v->horizontallyFlipped());
-    return 1;
-}
-
-static int PHView_setHorizontallyFlipped(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    v->setHorizontallyFlipped(lua_toboolean(L, 2));
-    return 0;
-}
-
-static int PHView_verticallyFlipped(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    lua_pushboolean(L, v->verticallyFlipped());
-    return 1;
-}
-
-static int PHView_setVerticallyFlipped(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    v->setVerticallyFlipped(lua_toboolean(L, 2));
-    return 0;
-}
-
-static int PHView_frame(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    v->frame().saveToLua(L);
-    return 1;
-}
-
-static int PHView_setFrame(lua_State * L)
-{
-    PHView * v = (PHView*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TTABLE);
-    v->setFrame(PHRect::rectFromLua(L, 2));
-    return 0;
-}
+PHLuaAngleGetter(PHView, rotation);
+PHLuaAngleSetter(PHView, setRotation);
+PHLuaBoolGetter(PHView, horizontallyFlipped);
+PHLuaBoolSetter(PHView, setHorizontallyFlipped);
+PHLuaBoolGetter(PHView, verticallyFlipped);
+PHLuaBoolSetter(PHView, setVerticallyFlipped);
+PHLuaRectGetter(PHView, frame);
+PHLuaRectSetter(PHView, setFrame);
 
 void PHView::getLuaHandle(lua_State * L)
 {
@@ -666,25 +615,14 @@ void PHView::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHView");
     
-    lua_pushcfunction(L, PHView_rotation);
-    lua_setfield(L, -2, "rotation");
-    lua_pushcfunction(L, PHView_setRotation);
-    lua_setfield(L, -2, "setRotation");
-
-    lua_pushcfunction(L, PHView_horizontallyFlipped);
-    lua_setfield(L, -2, "horizontallyFlipped");
-    lua_pushcfunction(L, PHView_setHorizontallyFlipped);
-    lua_setfield(L, -2, "setHorizontallyFlipped");
-    
-    lua_pushcfunction(L, PHView_verticallyFlipped);
-    lua_setfield(L, -2, "verticallyFlipped");
-    lua_pushcfunction(L, PHView_setVerticallyFlipped);
-    lua_setfield(L, -2, "setVerticallyFlipped");
-
-    lua_pushcfunction(L, PHView_frame);
-    lua_setfield(L, -2, "frame");
-    lua_pushcfunction(L, PHView_setFrame);
-    lua_setfield(L, -2, "setFrame");
+    PHLuaAddMethod(PHView, rotation);
+    PHLuaAddMethod(PHView, setRotation);
+    PHLuaAddMethod(PHView, horizontallyFlipped);
+    PHLuaAddMethod(PHView, setHorizontallyFlipped);
+    PHLuaAddMethod(PHView, verticallyFlipped);
+    PHLuaAddMethod(PHView, setVerticallyFlipped);
+    PHLuaAddMethod(PHView, frame);
+    PHLuaAddMethod(PHView, setFrame);
     
     lua_pop(L, 1);
 }

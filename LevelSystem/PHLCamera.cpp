@@ -70,43 +70,17 @@ void PHLCamera::updateCamera(PHPoint pnt)
     sz.x = pos.x;
     sz.y = pos.y;
 	setPosition(pos);
-    
-    /*
-    PHTilt tilt = PHMotion::sharedInstance()->getTilt();
-    double rot = this->rotation();
-    double newrot = tilt.roll;
-    if (newrot>3)
-        newrot=3;
-    if (newrot<-3)
-        newrot=-3;
-    PHLowPassFilter(rot, newrot, 1.0f/fps, 2.0f+1.0f/(fabs(newrot)+1.0f));
-    setRotation(rot);
-     */
 }
 
-static int PHLCamera_followsPlayer(lua_State * L)
-{
-    PHLCamera * cam = (PHLCamera*)PHLuaThisPointer(L);
-    lua_pushboolean(L,cam->followsPlayer());
-    return 1;
-}
-
-static int PHLCamera_setFollowsPlayer(lua_State * L)
-{
-    PHLCamera * cam = (PHLCamera*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    cam->setFollowsPlayer(lua_toboolean(L, 2));
-    return 0;
-}
+PHLuaBoolGetter(PHLCamera, followsPlayer);
+PHLuaBoolSetter(PHLCamera, setFollowsPlayer);
 
 void PHLCamera::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLCamera");
     
-    lua_pushcfunction(L, PHLCamera_followsPlayer);
-    lua_setfield(L, -2, "followsPlayer");
-    lua_pushcfunction(L, PHLCamera_setFollowsPlayer);
-    lua_setfield(L, -2, "setFollowsPlayer");
+    PHLuaAddMethod(PHLCamera, followsPlayer);
+    PHLuaAddMethod(PHLCamera, setFollowsPlayer);
     
     lua_pop(L,1);
 }

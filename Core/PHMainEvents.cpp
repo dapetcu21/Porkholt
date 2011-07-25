@@ -57,7 +57,7 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
 	
-	PHViewController * vc = new PHChapterController(PHFileManager::singleton()->resourcePath()+"/levels/current");
+	PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
 	vc->init();
 	((PHNavigationController*)viewController)->pushViewController(vc);
 }

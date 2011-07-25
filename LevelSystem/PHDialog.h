@@ -20,8 +20,15 @@ public:
     PHLNPC * npc;
     string text;
     bool inStack;
-    PHDialog() : npc(NULL), text(), L(NULL), inStack(false) {}
-    void callback()
+    bool cbck;
+    PHDialog() : npc(NULL), text(), L(NULL), inStack(false), cbck(false) {}
+    virtual void callback()
+    {
+        if (cbck) return;
+        cbck = true;
+        _callback();
+    }
+    virtual void _callback()
     {
         if (!L) return;
         lua_getglobal(L, "PHCallbackHelper");

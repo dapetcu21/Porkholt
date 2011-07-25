@@ -101,29 +101,15 @@ void PHLPowerup::_collected()
     collected();
 }
 
-static int PHLPowerup_dismiss(lua_State * L)
-{
-    PHLPowerup * pw = (PHLPowerup*)PHLuaThisPointer(L);
-    pw->dismiss();
-    return 0;
-}
-
-static int PHLPowerup_collect(lua_State * L)
-{
-    PHLPowerup * pw = (PHLPowerup*)PHLuaThisPointer(L);
-    pw->collect();
-    return 0;
-}
+PHLuaDefineCall(PHLPowerup, dismiss);
+PHLuaDefineCall(PHLPowerup, collect);
 
 void PHLPowerup::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLPowerup");
     
-    lua_pushcfunction(L,PHLPowerup_dismiss);
-    lua_setfield(L,-2,"dismiss");
-    
-    lua_pushcfunction(L,PHLPowerup_collect);
-    lua_setfield(L,-2,"collect");
+    PHLuaAddMethod(PHLPowerup, dismiss);
+    PHLuaAddMethod(PHLPowerup, collect);
     
     lua_pop(L,1);
 }

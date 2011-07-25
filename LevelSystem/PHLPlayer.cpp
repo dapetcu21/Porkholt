@@ -136,48 +136,19 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
     }
 }
 
-static int PHLPlayer_userInput(lua_State * L)
-{
-    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
-    lua_pushboolean(L, player->userInput());
-    return 1;
-}
-
-static int PHLPlayer_setUserInput(lua_State * L)
-{
-    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    player->setUserInput(lua_toboolean(L, 2));
-    return 0;
-}
-
-static int PHLPlayer_usesForce(lua_State * L)
-{
-    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
-    lua_pushboolean(L, player->usesForce());
-    return 1;
-}
-
-static int PHLPlayer_setUsesForce(lua_State * L)
-{
-    PHLPlayer * player = (PHLPlayer*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TBOOLEAN);
-    player->setUsesForce(lua_toboolean(L, 2));
-    return 0;
-}
+PHLuaBoolGetter(PHLPlayer, userInput);
+PHLuaBoolSetter(PHLPlayer, setUserInput);
+PHLuaBoolGetter(PHLPlayer, usesForce);
+PHLuaBoolSetter(PHLPlayer, setUsesForce);
 
 void PHLPlayer::registerLuaInterface(lua_State *L)
 {
     lua_getglobal(L, "PHLPlayer");
     
-    lua_pushcfunction(L, PHLPlayer_setUserInput);
-    lua_setfield(L, -2, "setUserInput");
-    lua_pushcfunction(L, PHLPlayer_userInput);
-    lua_setfield(L, -2, "userInput");
-    lua_pushcfunction(L, PHLPlayer_setUsesForce);
-    lua_setfield(L, -2, "setUsesForce");
-    lua_pushcfunction(L, PHLPlayer_usesForce);
-    lua_setfield(L, -2, "usesForce");
+    PHLuaAddMethod(PHLPlayer, setUserInput);
+    PHLuaAddMethod(PHLPlayer, userInput);
+    PHLuaAddMethod(PHLPlayer, setUsesForce);
+    PHLuaAddMethod(PHLPlayer, usesForce);
     
     lua_pop(L, 1);
 }

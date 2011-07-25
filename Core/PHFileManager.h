@@ -13,15 +13,12 @@
 
 class PHFileManager: public PHObject
 {
-private:
-	PHFileManager() {};
 public:
-	static PHFileManager * singleton();
-	const string & resourcePath();
-	size_t fileSize(const string & path);
-	bool fileExists(const string & path);
-    bool isDirectory(const string & path);
-	uint8_t * loadFile(const string & path, size_t & size);
+    static const string & resourcePath();
+	static size_t fileSize(const string & path);
+	static bool fileExists(const string & path);
+    static bool isDirectory(const string & path);
+    static uint8_t * loadFile(const string & path, size_t & size);
 };
 
 #endif

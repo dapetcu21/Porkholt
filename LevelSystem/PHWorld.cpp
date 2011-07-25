@@ -12,6 +12,7 @@
 #include "PHTimer.h"
 #include "PHCaptureView.h"
 #include "PHGaugeView.h"
+#include "PHHeartView.h"
 #include "PHImage.h"
 #include "PHLevelController.h"
 #include <Box2D/Box2D.h>
@@ -28,8 +29,14 @@
 #include "PHTextView.h"
 
 //304 19
-#define GAUGE_WIDTH 256
-#define GAUGE_HEIGHT 16
+#define GAUGE_WIDTH (256/480.0f)
+#define GAUGE_HEIGHT (16/480.0f)
+#define GAUGE_X (2/480.0f)
+#define GAUGE_Y (5/480.0f)
+
+#define HEART_HEIGHT (16/480.0f)
+#define HEART_X (2/480.0f)
+#define HEART_Y (5/480.0f)
 
 class PHContactListener : public b2ContactListener
 {
@@ -95,10 +102,11 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
-	jumpGaugeView = new PHGaugeView(PHMakeRect(bounds.x+2, bounds.height-5-GAUGE_HEIGHT, GAUGE_WIDTH, GAUGE_HEIGHT));
+    PHRect gaugeFrame;
+	jumpGaugeView = new PHGaugeView(gaugeFrame = PHMakeRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
-    PHImageView * frameView = new PHImageView(PHMakeRect(bounds.x,bounds.height-25,bounds.width,25));
-    frameView->setImage(PHImage::imageNamed("frame"));
+    heartView = new PHHeartView(PHMakeRect(gaugeFrame.x+gaugeFrame.width, bounds.height-(HEART_Y+HEART_HEIGHT)*bounds.width, bounds.width-gaugeFrame.x-gaugeFrame.width-HEART_X*bounds.width, HEART_HEIGHT*bounds.width));
+    heartView->setImage(PHImage::imageNamed("heart"));
 	PHMutex * mutex = new PHMutex();
 	view->setMutex(mutex);
     mutex->release();
@@ -112,7 +120,7 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	worldSize = size;
 	view->addSubview(layerView);
 	view->addSubview(worldView);
-    view->addSubview(frameView);
+    view->addSubview(heartView);
 	view->addSubview(jumpGaugeView);
 	b2Vec2 grav(0,-10);
 	physicsWorld = new b2World(grav,true);
@@ -144,6 +152,11 @@ PHWorld::~PHWorld()
 		jumpGaugeView->removeFromSuperview();
 		jumpGaugeView->release();
 	}
+    if (heartView)
+    {
+        heartView->removeFromSuperview();
+        heartView->release();
+    }
 	if (layerView)
 	{
 		layerView->removeFromSuperview();

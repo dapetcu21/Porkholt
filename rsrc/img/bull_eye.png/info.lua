@@ -1,6 +1,5 @@
 section("idle");
-frame(0,100)
-jump(idle,0);
+frame(0,0)
 
 section("charging");
 frame(0,0);

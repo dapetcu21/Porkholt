@@ -245,6 +245,12 @@ function PHLNPC:walkTo(destination,speed,cb,...) -- speed optional, defaults to 
 end
 --function PHLNPC:braked();
 --function PHLNPC:setBraked(); --brakes the body
+--function PHLNPC:healthPoints();
+--function PHLNPC:setHP(hp);
+--function PHLNPC:increaseHP(ammount);
+--function PHLNPC:decreaseHP(ammount);
+--function PHLNPC:maximumHP();
+--function PHLNPC:setMaximumHP(maxHP);
 
 PHLPlayer = PHLNPC:new()
 --function PHLPlayer:usesForce();

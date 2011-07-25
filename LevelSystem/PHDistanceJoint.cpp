@@ -30,13 +30,13 @@ void PHDistanceJoint::loadFromLua(lua_State * L)
     lua_pushstring(L,"anchor1");
     lua_gettable(L, -2);
     if (lua_istable(L, -1))
-        anchor1 = PHPoint::pointFromLua(L,-1);
+        anchor1 = PHPoint::fromLua(L,-1);
     lua_pop(L, 1);
     
     lua_pushstring(L, "anchor2");
     lua_gettable(L, -2);
     if (lua_istable(L, -1))
-        anchor2 = PHPoint::pointFromLua(L,-1);
+        anchor2 = PHPoint::fromLua(L,-1);
     lua_pop(L,1);
     
     freq = 0.0f;

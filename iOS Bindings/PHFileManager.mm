@@ -61,11 +61,3 @@ uint8_t * PHFileManager::loadFile(const string & path, size_t & size)
 	}
 	return buf;
 }
-
-PHFileManager * PHFileManager::singleton()
-{
-	static PHFileManager * obj = NULL;
-	if (!obj)
-		obj = new PHFileManager();
-	return obj;
-}

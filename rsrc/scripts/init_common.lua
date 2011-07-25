@@ -101,9 +101,30 @@ function Initializers.PHLSensor(obj)
 end
 function Initializers.PHLMob(obj)
 	Initializers.PHLNPC(obj)
+	obj._fixtureindex.categoryBits = cMOB;
+	obj._fixtureindex.maskBits = cWORLD + cPLAYER;
 end
-function Initializers.PHLBull(obj)
+function Initializers.PHLBull(obj,scale)
 	Initializers.PHLMob(obj)
+	scale = scale or 1
+	obj.bodyFlipping = true;
+	obj.automaticFlipping = true;
+	obj.attackRange = 3.5;
+	obj.attackVelocity = 5;
+	obj.attackDuration = 0.5;
+	obj.cooldownDuration = 2;
+	obj.relaxTime = 1;
+	local x = -1.008398;
+	local y = -0.316404;
+	local w = 1.8;
+	local h = 0.794531;
+	local bw = 1;
+	local bh = 0.636172;
+	local hbw = 0.02;
+	objectAddImage(obj,"/bull_body.png", x*scale, y*scale, w*scale, h*scale);
+	objectAddImage(obj,"/bull_eye.png", x*scale, y*scale, w*scale, h*scale, {tag = 74; } );
+	objectAddBox(obj,(bw/2-hbw/2)*scale,-bh/2*scale,hbw*scale,bh*scale);
+	objectAddBox(obj,-bw/2*scale,-bh/2*scale,bw*scale,bh*scale);
 end
 function Initializers.PHLGround(obj)
 	Initializers.PHLObject(obj)
@@ -124,13 +145,13 @@ function Initializers.PHLShieldPowerup(obj)
 	objectAddBox(obj, -0.15,-0.3,0.3,0.6);
 end
 
-function objectWithClass(class)
+function objectWithClass(class,...)
 	obj = {};
 	obj.class = class;
 	if (Initializers[class]) then
-		Initializers[class](obj);
+		Initializers[class](obj,unpack(arg));
 	else
-		Initializers.PHLObject(obj);
+		Initializers.PHLObject(obj,unpack(arg));
 	end
 	return obj;
 end

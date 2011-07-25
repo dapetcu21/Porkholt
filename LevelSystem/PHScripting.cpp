@@ -29,8 +29,7 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
     L = lua_open();
 	luaL_openlibs(L);
     
-	PHFileManager * fileMan = PHFileManager::singleton();
-	string resourcePath = fileMan->resourcePath();
+	string resourcePath = PHFileManager::resourcePath();
 	
     world->setScripting(this);
     
@@ -45,7 +44,7 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
             obj->scriptingInit(L);
         }
         string path = level_dir+"/scripting.lua";
-        if (PHFileManager::singleton()->fileExists(path))
+        if (PHFileManager::fileExists(path))
             PHLuaLoadFile(L, path);
     }
     
@@ -96,7 +95,7 @@ static int PHWorld_fadeToColor(lua_State * L)
         lua_pushvalue(L, 3);
         PHLuaSetHardRef(L, ud);
     }
-    world->fadeToColor(PHColor::colorFromLua(L, 2),ud);
+    world->fadeToColor(PHColor::fromLua(L, 2),ud);
     return 0;
 }
 
@@ -139,15 +138,11 @@ void PHScripting::loadWorld()
     lua_pushlightuserdata(L, world);
     lua_settable(L, -3);
     
-    lua_pushcfunction(L,PHWorld_insertObject);
-    lua_setfield(L, -2, "_insertObject");
-    lua_pushcfunction(L,PHWorld_fadeToColor);
-    lua_setfield(L, -2, "_fadeToColor");
-    lua_pushcfunction(L,PHWorld_dismissFading);
-    lua_setfield(L, -2, "_dismissFading");
-    lua_pushcfunction(L,PHWorld_overlayText);
-    lua_setfield(L, -2, "overlayText");
-    
+    PHLuaAddMethod_(PHWorld, insertObject);
+    PHLuaAddMethod_(PHWorld, fadeToColor);
+    PHLuaAddMethod_(PHWorld, dismissFading)
+    PHLuaAddMethod(PHWorld, overlayText)
+
     lua_pop(L, 1);
     
     PHScriptableTimer::registerLuaInterface(L);

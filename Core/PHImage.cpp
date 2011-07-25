@@ -29,14 +29,17 @@ PHImage * PHImage::imageFromPath(const string & path)
 	if (i==images.end())
 	{
 		try {
-            if (PHFileManager::singleton()->isDirectory(path))
+            if (PHFileManager::isDirectory(path))
                 img = new PHAnimatedImage(path);
             else
                 img = new PHNormalImage(path);
 		} catch (string ex)
 		{
 			PHLog(ex);
-			return NULL;
+            if (imageExists("placeholder"))
+                return imageNamed("placeholder");
+            else
+                return NULL;
 		}
 		images[path] = img;
 	} else {
@@ -45,9 +48,15 @@ PHImage * PHImage::imageFromPath(const string & path)
 	return img;
 }
 
+bool PHImage::imageExists(const string & name)
+{
+    string path = PHFileManager::resourcePath()+"/img/"+name+".png";
+    return PHFileManager::fileExists(path);
+}
+
 PHImage * PHImage::imageNamed(const string & string)
 {
-	return PHImage::imageFromPath(PHFileManager::singleton()->resourcePath()+"/img/"+string+".png");
+	return PHImage::imageFromPath(PHFileManager::resourcePath()+"/img/"+string+".png");
 }
 
 void PHImage::collectGarbage()

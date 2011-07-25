@@ -11,6 +11,7 @@
 #include "PHButtonView.h"
 #include "PHLevelController.h"
 #include "PHNavigationController.h"
+#include "PHFileManager.h"
 #include <sstream>
 
 PHView * PHChapterController::loadView(const PHRect & frame)
@@ -30,9 +31,11 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     for (int i=0; i<columns; i++)
         for (int j=0; j<rows; j++)
         {
-            ostringstream oss1,oss2;
+            ostringstream oss1,oss2,oss;
+            oss<<path<<"/lvl"<<j*columns+i+1;
             oss1<<path<<"/lvl"<<j*columns+i+1<<"/thumb.png";
             oss2<<path<<"/lvl"<<j*columns+i+1<<"/thumb_pressed.png";
+            if (!PHFileManager::isDirectory(oss.str())) continue;
             PHRect frame = PHMakeRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*(rows-j-1), levelSize, levelSize);
             PHButtonView * vv = new PHButtonView(frame);
             vv->setImage(PHImage::imageFromPath(oss1.str()));
@@ -65,7 +68,10 @@ void PHChapterController::mouseUp(PHObject * sender, void * ud)
 
 PHChapterController::PHChapterController(const string & _path) : path(_path)
 {
-    bg = PHImage::imageFromPath(path+"/bg.png");
+    if (PHFileManager::fileExists(path+"/bg.png"))
+        bg = PHImage::imageFromPath(path+"/bg.png");
+    else
+        bg = NULL;
     
 }
 

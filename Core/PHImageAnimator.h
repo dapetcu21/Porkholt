@@ -28,6 +28,10 @@ private:
     double remaining,time;
     bool fade;
     
+    PHObject * target;
+    PHCallback callback;
+    void * userdata;
+    
     double timeForFrameInSection(int fr, int sec);
     int realFrame(int fr, int sec);
     
@@ -36,8 +40,10 @@ private:
     
 public:
     PHAnimatedImage * image() { return _image; }
-    void animateSection(const string & name);
-    void animateSection(int sec);
+    void animateSection(const string & name) { animateSection(name, NULL, NULL, NULL); }
+    void animateSection(int sec) { animateSection(sec, NULL, NULL, NULL); }
+    void animateSection(const string & name, PHObject * target, PHCallback callback, void * userdata);
+    void animateSection(int sec, PHObject * target, PHCallback callback, void * userdata);
     void reset();
     
     bool isAdvancingManually() { return advanceManually; }

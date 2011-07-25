@@ -12,7 +12,7 @@
 
 set<PHImageAnimator*> PHImageAnimator::animators;
 
-PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : _image(img), advanceManually(false)
+PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : _image(img), advanceManually(false), target(NULL), callback(NULL), userdata(NULL)
 {
     reset();
     animators.insert(this);
@@ -29,7 +29,16 @@ double PHImageAnimator::timeForFrameInSection(int fr, int sec)
         PHAnimatedImage::section * section = _image->sections.at(sec);
         PHAnimatedImage::frame & frame = section->frames.at(fr);
         if (fr>=section->frames.size()-1)
+        {
+            if (target && callback)
+            {
+                (target->*callback)(this,userdata);
+                target = NULL;
+                callback = NULL;
+                userdata = NULL;
+            }
             return INFINITY;
+        }
         if (frame.type == 1)
         {
             double res = 0;
@@ -66,9 +75,9 @@ int PHImageAnimator::realFrame(int fr, int sec)
     }
 }
 
-void PHImageAnimator::animateSection(const string & name)
+void PHImageAnimator::animateSection(const string & name, PHObject * target, PHCallback callback, void * userdata)
 {
-    animateSection(_image->sectionNo(name));
+    animateSection(_image->sectionNo(name),target,callback,userdata);
 }
 
 
@@ -77,7 +86,7 @@ void PHImageAnimator::reset()
     animateSection(_image->defaultSection);
 }
 
-void PHImageAnimator::animateSection(int sect)
+void PHImageAnimator::animateSection(int sect, PHObject * trg, PHCallback cb, void * ud)
 {
     if (sect<0 || sect>=_image->sections.size())
     {
@@ -86,6 +95,11 @@ void PHImageAnimator::animateSection(int sect)
         realframe = -1;
         return;
     }
+    
+    target = trg;
+    callback = cb;
+    userdata = ud;
+    
     section = sect;
     frame = 0;
     PHAnimatedImage::section * sec = _image->sections.at(section);

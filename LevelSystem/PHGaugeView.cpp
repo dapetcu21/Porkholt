@@ -11,14 +11,16 @@
 #include "PHGaugeView.h"
 #include "PHNormalImage.h"
 #include "PHAnimatedImage.h"
+#include "PHImageAnimator.h"
 
 void PHGaugeView::draw()
 {
+    if (!_image) return;
 	PHRect bounds = _bounds;
 	bounds.width*=lvl;
 	PHRect portion = PHWholeRect;
 	portion.width*=lvl;
-	if (_image)
-        if (_image->isNormal())
-            ((PHNormalImage*)_image)->renderInFramePortion(bounds,portion);
+    
+    renderInFramePortionTint(_bounds,PHWholeRect,PHMakeColor(1.0f, 1.0f, 1.0f, 0.5f));
+    renderInFramePortionTint(bounds, portion, PHInvalidColor);
 }

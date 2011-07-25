@@ -117,22 +117,22 @@ void PHLAnimation::loadFromLua(lua_State * l)
     
     lua_getfield(L, -1, "movement");
     if (lua_istable(L, -1))
-        move = PHPoint::pointFromLua(L, -1);
+        move = PHPoint::fromLua(L, -1);
     lua_pop(L,1);
     
     lua_getfield(L, -1, "force");
     if (lua_istable(L, -1))
-        force = PHPoint::pointFromLua(L, -1);
+        force = PHPoint::fromLua(L, -1);
     lua_pop(L,1);
     
     lua_getfield(L, -1, "impulse");
     if (lua_istable(L, -1))
-        impulse = PHPoint::pointFromLua(L, -1);
+        impulse = PHPoint::fromLua(L, -1);
     lua_pop(L,1);
     
     lua_getfield(L, -1, "velocity");
     if (lua_istable(L, -1))
-        velocity = PHPoint::pointFromLua(L, -1);
+        velocity = PHPoint::fromLua(L, -1);
     lua_pop(L,1);
     
     lua_getfield(L, -1, "correctorForce");
@@ -152,7 +152,7 @@ void PHLAnimation::loadFromLua(lua_State * l)
     
     lua_getfield(L, -1, "forceApplicationPoint");
     if (lua_istable(L, -1))
-        forceapp = PHPoint::pointFromLua(L, -1);
+        forceapp = PHPoint::fromLua(L, -1);
     lua_pop(L,1);
     
     objCoord = false;
@@ -178,7 +178,7 @@ void PHLAnimation::loadFromLua(lua_State * l)
     if (lua_istable(L, -1))
     {
         useRotateCenter = true;
-        rotateCenter = PHPoint::pointFromLua(L, -1);
+        rotateCenter = PHPoint::fromLua(L, -1);
     }
     lua_pop(L, 1);
     
@@ -210,46 +210,19 @@ void PHLAnimation::loadFromLua(lua_State * l)
     lua_pop(L, 1);
 }
 
-int PHLAnimation_skip(lua_State * L)
-{
-    PHLAnimation * anim = (PHLAnimation*)PHLuaThisPointer(L);
-    anim->skip();
-    return 0;
-}
-
-int PHLAnimation_skipChain(lua_State * L)
-{
-    PHLAnimation * anim = (PHLAnimation*)PHLuaThisPointer(L);
-    anim->skipChain();
-    return 0;
-}
-
-int PHLAnimation_invalidate(lua_State * L)
-{
-    PHLAnimation * anim = (PHLAnimation*)PHLuaThisPointer(L);
-    anim->invalidate();
-    return 0;
-}
-
-int PHLAnimation_invalidateChain(lua_State * L)
-{
-    PHLAnimation * anim = (PHLAnimation*)PHLuaThisPointer(L);
-    anim->invalidateChain();
-    return 0;
-}
+PHLuaDefineCall(PHLAnimation, skip);
+PHLuaDefineCall(PHLAnimation, skipChain);
+PHLuaDefineCall(PHLAnimation, invalidate);
+PHLuaDefineCall(PHLAnimation, invalidateChain);
 
 void PHLAnimation::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLAnimation");
     
-    lua_pushcfunction(L, PHLAnimation_invalidate);
-    lua_setfield(L, -2, "invalidate");
-    lua_pushcfunction(L, PHLAnimation_invalidateChain);
-    lua_setfield(L, -2, "invalidateChain");
-    lua_pushcfunction(L, PHLAnimation_skip);
-    lua_setfield(L, -2, "skip");
-    lua_pushcfunction(L, PHLAnimation_skipChain);
-    lua_setfield(L, -2, "skipChain");
+    PHLuaAddMethod(PHLAnimation, skip);
+    PHLuaAddMethod(PHLAnimation, skipChain);
+    PHLuaAddMethod(PHLAnimation, invalidate);
+    PHLuaAddMethod(PHLAnimation, invalidateChain);
     
     lua_pop(L,1);
 }

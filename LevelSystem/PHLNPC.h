@@ -116,6 +116,20 @@ public:
     
     bool braked() { return brakeAnimation!=NULL; }
     void setBraked(bool br); 
+    
+private:
+    double hp;
+    double maxHP;
+    
+    virtual void lowHP();
+    
+public:
+    void setHP(double HP) { hp = HP; if (hp<=0) lowHP(); if (hp>maxHP) hp=maxHP; }
+    void decreaseHP(double HP) { hp-=HP; if (hp<=0) lowHP(); }
+    void increaseHP(double HP) { hp-=HP; if (hp>maxHP) hp=maxHP; }
+    double healthPoints() { return hp; }
+    double maximumHP() { return maxHP; }
+    void setMaximumHP(double mhp) { maxHP = mhp; if (hp>maxHP) hp=maxHP; }
 };
 
 #endif

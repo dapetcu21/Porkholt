@@ -26,11 +26,11 @@ PHAnimatedImage::PHAnimatedImage(const string & s) : PHImage(s), thread(NULL), d
         L = lua_open();
         luaL_openlibs(L);
         PHLuaSeedRandom(L);
-        PHLuaLoadFile(L, PHFileManager::singleton()->resourcePath()+"/scripts/animations.lua");
+        PHLuaLoadFile(L, PHFileManager::resourcePath()+"/scripts/animations.lua");
     }
     string initPath = s+"/info.lua";
-    antialiasing = PHFileManager::singleton()->fileExists(s+".aa");
-    if (!PHFileManager::singleton()->fileExists(initPath))
+    antialiasing = PHFileManager::fileExists(s+".aa");
+    if (!PHFileManager::fileExists(initPath))
     {
         luaMutex->unlock();
         throw PHIOError;
@@ -175,6 +175,11 @@ void PHAnimatedImage::loadFromLua()
                 delete s;
             }
         }
+        frame f = sec->frames.back();;
+        f.duration = 0;
+        f.fade = false;
+        f.type = 0;
+        sec->frames.push_back(f);
     }
 }
 
@@ -348,8 +353,8 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
         {
             uint8_t * buffer = textures[i].buffer;
             size_t size = textures[i].size/scale;
-            for (int j=0; i<size; j++)
-                buffer[i] = buffer[i*scale];
+            for (int j=0; j<size; j++)
+                buffer[j] = buffer[j*scale];
         }
     }
     

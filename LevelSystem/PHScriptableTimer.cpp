@@ -80,22 +80,16 @@ static int PHTimer_invalidate(lua_State *L)
 {
     PHScriptableTimer * timer = (PHScriptableTimer*)PHLuaThisPointer(L);
     lua_pop(L,1);
-    if (!timer)
-    {
-        lua_pushstring(L,"WTF? NULL?");
-        return lua_error(L);
-    }
-    timer->invalidate();
-    
+    timer->invalidate();    
     return 0;
 }
 
 void PHScriptableTimer::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHTimer");
-    lua_pushcfunction(L, PHTimer_schedule);
-    lua_setfield(L, -2, "schedule");
-    lua_pushcfunction(L, PHTimer_invalidate);
-    lua_setfield(L, -2, "invalidate");
+    
+    PHLuaAddMethod(PHTimer, schedule);
+    PHLuaAddMethod(PHTimer, invalidate);
+    
     lua_pop(L,1);
 }

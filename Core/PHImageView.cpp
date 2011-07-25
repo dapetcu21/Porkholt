@@ -93,7 +93,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
         
         if (fn[0]=='/')
         {
-            filename = PHFileManager::singleton()->resourcePath() + "/img";
+            filename = PHFileManager::resourcePath() + "/img";
         }
         filename = filename + fn;
         
@@ -111,13 +111,13 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
             lua_pushstring(L, "pos");
             lua_gettable(L, -2);
             if (lua_istable(L, -1))
-                frame = PHRect::rectFromLua(L,-1);
+                frame = PHRect::fromLua(L,-1);
             lua_pop(L, 1);
             
             lua_pushstring(L, "texCoord");
             lua_gettable(L, -2);
             if (lua_istable(L, -1))
-                portion = PHRect::rectFromLua(L,-1);
+                portion = PHRect::fromLua(L,-1);
             lua_pop(L, 1);
             
             int tag = 0;
@@ -150,7 +150,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
             
             lua_pushstring(L, "tint");
             lua_gettable(L, -2);
-            PHColor tint = PHColor::colorFromLua(L,-1);
+            PHColor tint = PHColor::fromLua(L,-1);
             lua_pop(L, 1);
             
             lua_pushstring(L, "alpha");
@@ -208,20 +208,8 @@ static int PHImageView_height(lua_State * L)
     return 1;
 }
 
-static int PHImageView_textureCoordinates(lua_State * L)
-{
-    PHImageView * v = (PHImageView*)PHLuaThisPointer(L);
-    v->textureCoordinates().saveToLua(L);
-    return 1;
-}
-
-static int PHImageView_setTextureCoordinates(lua_State * L)
-{
-    PHImageView * v = (PHImageView*)PHLuaThisPointer(L);
-    luaL_checktype(L, 2, LUA_TTABLE);
-    v->setTextureCoordinates(PHRect::rectFromLua(L, 2));
-    return 0;
-}
+PHLuaRectGetter(PHImageView, textureCoordinates);
+PHLuaRectSetter(PHImageView, setTextureCoordinates);
 
 static int PHImageView_tint(lua_State * L)
 {
@@ -234,7 +222,7 @@ static int PHImageView_setTint(lua_State * L)
 {
     PHImageView * v = (PHImageView*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    v->setTintColor(PHColor::colorFromLua(L, 2));
+    v->setTintColor(PHColor::fromLua(L, 2));
     return 0;
 }
 
@@ -257,20 +245,13 @@ void PHImageView::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHImageView");
     
-    lua_pushcfunction(L, PHImageView_width);
-    lua_setfield(L, -2, "width");
-    lua_pushcfunction(L, PHImageView_height);
-    lua_setfield(L, -2, "height");
-    lua_pushcfunction(L, PHImageView_setImage);
-    lua_setfield(L, -2, "setImage");
-    lua_pushcfunction(L, PHImageView_tint);
-    lua_setfield(L, -2, "tint");
-    lua_pushcfunction(L, PHImageView_setTint);
-    lua_setfield(L, -2, "setTint");
-    lua_pushcfunction(L, PHImageView_textureCoordinates);
-    lua_setfield(L, -2, "textureCoordinates");
-    lua_pushcfunction(L, PHImageView_setTextureCoordinates);
-    lua_setfield(L, -2, "setTextureCoordinates");
+    PHLuaAddMethod(PHImageView, width);
+    PHLuaAddMethod(PHImageView, height);
+    PHLuaAddMethod(PHImageView, setImage);
+    PHLuaAddMethod(PHImageView, tint);
+    PHLuaAddMethod(PHImageView, setTint);
+    PHLuaAddMethod(PHImageView, textureCoordinates);
+    PHLuaAddMethod(PHImageView, setTextureCoordinates);
 
     lua_pop(L,1);
 }

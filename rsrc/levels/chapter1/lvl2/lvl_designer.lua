@@ -3,7 +3,7 @@
 --file is reset every time you use the Level Designer
 
 obj = objectWithClass("PHLSign");
-obj.pos = point(4.751601,0.804140);
+obj.pos = point(4.758593,0.799492);
 obj.scripting = [[sign1]];
 obj.text = [[You can jump using long, ample swipes. Don't flick]];
 obj.levelDes = true;
@@ -12,7 +12,7 @@ addObject(obj);
 obj = objectWithClass("PHLSign");
 obj.pos = point(7.595820,2.256524);
 obj.scripting = [[sign2]];
-obj.text = [[You've just picked up a shield. Shields protect you against enemies like that jolly looking bull. Be carefull,though, once you are hit, the shield disappears.]];
+obj.text = [[You've just picked up a shield.|Shields protect you against enemies like that jolly looking bull.|Be carefull, though, once you are hit, the shield disappears.]];
 obj.levelDes = true;
 addObject(obj);
 
@@ -462,16 +462,8 @@ obj.scripting = [[shieldpup]];
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(12.199888,0.992093);
-obj.physics.dynamic = true;
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
-op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj = objectWithClass("PHLBull");
+obj.pos = point(11.462495,0.820086);
 obj.levelDes = true;
 addObject(obj);
 

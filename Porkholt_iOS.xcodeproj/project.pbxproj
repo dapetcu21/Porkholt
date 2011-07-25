@@ -30,6 +30,7 @@
 		C13E6C1113AC78C100365340 /* URCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C0E13AC78C100365340 /* URCommon.cpp */; };
 		C13E6C1213AC78C100365340 /* URField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C0F13AC78C100365340 /* URField.cpp */; };
 		C13E6C1313AC78C100365340 /* URServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C1013AC78C100365340 /* URServer.cpp */; };
+		C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
 		C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177803D13BBA4F50003640D /* PHTimer.cpp */; };
@@ -222,6 +223,8 @@
 		C13E6C0E13AC78C100365340 /* URCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = URCommon.cpp; path = src/URCommon.cpp; sourceTree = "<group>"; };
 		C13E6C0F13AC78C100365340 /* URField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = URField.cpp; path = src/URField.cpp; sourceTree = "<group>"; };
 		C13E6C1013AC78C100365340 /* URServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = URServer.cpp; path = src/URServer.cpp; sourceTree = "<group>"; };
+		C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHHeartView.cpp; sourceTree = "<group>"; };
+		C143AF1113DE124A00EBCF8D /* PHHeartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHHeartView.h; sourceTree = "<group>"; };
 		C152809412B97169009067A7 /* PHMainEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMainEvents.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHMainEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMainEvents.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
@@ -604,6 +607,8 @@
 				C13664271337F972009B755B /* PHCaptureView.cpp */,
 				C1AF893113387B850046179B /* PHGaugeView.h */,
 				C1AF893213387B850046179B /* PHGaugeView.cpp */,
+				C143AF1113DE124A00EBCF8D /* PHHeartView.h */,
+				C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */,
 				C1707D77137D13D400395313 /* PHJoint.cpp */,
 				C1707D78137D13D400395313 /* PHJoint.h */,
 				C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */,
@@ -1020,6 +1025,7 @@
 				C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */,
 				C106E48113DD76CC007E6357 /* PHLPowerup.cpp in Sources */,
 				C106E48513DD8314007E6357 /* PHLShieldPowerup.cpp in Sources */,
+				C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,7 +17,7 @@ PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thr
     fp = fopen(path.c_str(), "rb");
 	if (!fp)
 		throw PHIOError;
-    antialiasing = PHFileManager::singleton()->fileExists(path+".aa");
+    antialiasing = PHFileManager::fileExists(path+".aa");
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
     thread = new PHThread;
     thread->setFunction(this, (PHCallback)&PHNormalImage::loadFromFile, NULL);

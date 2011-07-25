@@ -8,8 +8,14 @@
 
 #include "PHLBull.h"
 #include "PHLua.h"
+#include "PHLAnimation.h"
+#include "PHTimer.h"
+#include "PHWorld.h"
+#include "PHLPlayer.h"
+#include "PHImageView.h"
+#include "PHImageAnimator.h"
 
-PHLBull::PHLBull() : PHLMob()
+PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDuration(0.5f), unrageTime(1.0f), attacking(false), cooldownDuration(2.0f)
 {
     _class = "PHLBull";
 }
@@ -17,6 +23,95 @@ PHLBull::PHLBull() : PHLMob()
 PHLBull::~PHLBull()
 {
     
+}
+
+void PHLBull::cooldownEnded(PHObject * sender, void * ud)
+{
+    attacking = false;
+}
+
+void PHLBull::attacked(PHObject * sender, void * ud)
+{
+    PHImageView * v = (PHImageView*)view->viewWithTag(74);
+    PHImageAnimator * animator;
+    if (v && ((animator=v->animator())))
+        animator->animateSection("relaxing");
+}
+
+void PHLBull::reallyAttack(PHObject * sender, void * ud)
+{
+    PHPoint d = getWorld()->getPlayer()->position()-position();
+    PHPoint v = PHMakePoint(attackVelocity*((d.x>=0)?1:-1), 0);
+    
+    PHLAnimation * anim = new PHLAnimation;
+    anim->setVelocity(v,mass()*20);
+    anim->setTime(attackDuration);
+    anim->setCurveFunction(PHLAnimation::ConstantFunction);
+    anim->setDisableDynamics(false);
+    addAnimation(anim);
+    anim->release();
+    
+    PHTimer * timer = new PHTimer;
+    timer->setTimeInterval(attackDuration+cooldownDuration);
+    timer->setCallback(this, (PHCallback)&PHLBull::cooldownEnded, NULL);
+    getWorld()->scheduleTimer(timer);
+    timer->release();
+    
+    timer = new PHTimer;
+    timer->setTimeInterval(unrageTime);
+    timer->setCallback(this, (PHCallback)&PHLBull::attacked, NULL);
+    getWorld()->scheduleTimer(timer);
+    timer->release();
+}
+
+void PHLBull::attack()
+{
+    setFlipped((getWorld()->getPlayer()->position()-position()).x<0);
+    
+    PHImageView * v = (PHImageView*)view->viewWithTag(74);
+    PHImageAnimator * animator;
+    if (v && ((animator=v->animator())))
+        animator->animateSection("charging",this,(PHCallback)&PHLBull::reallyAttack,NULL);
+    else
+        reallyAttack(NULL,NULL);
+    attacking = true;
+}
+
+void PHLBull::updatePosition()
+{
+    PHLMob::updatePosition();
+    if (!attacking && fabs((getWorld()->getPlayer()->position()-position()).x)<=attackRange)
+        attack();
+}
+
+void PHLBull::loadFromLua(lua_State *L, const string &root, b2World *world)
+{
+    PHLMob::loadFromLua(L, root, world);
+    
+    lua_getfield(L, -1, "attackRange");
+    if (lua_isnumber(L, -1))
+        attackRange = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "attackVelocity");
+    if (lua_isnumber(L, -1))
+        attackVelocity = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "attackDuration");
+    if (lua_isnumber(L, -1))
+        attackDuration = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "cooldownDuration");
+    if (lua_isnumber(L, -1))
+        cooldownDuration = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    
+    lua_getfield(L, -1, "relaxTime");
+    if (lua_isnumber(L, -1))
+        unrageTime = lua_tonumber(L, -1);
+    lua_pop(L,1);
 }
 
 void PHLBull::registerLuaInterface(lua_State * L)

@@ -23,7 +23,7 @@ map<string,PHFont*> PHFont::fonts;
 PHFont::PHFont(const string & path) : loaded(false), texID(-1)
 {
     size_t len;
-    uint8_t * d = data = PHFileManager::singleton()->loadFile(path, len);
+    uint8_t * d = data = PHFileManager::loadFile(path, len);
     dataRetainCount = 1;
     bool failed = false;
     
@@ -154,7 +154,7 @@ PHFont* PHFont::fontFromPath(const string & path)
 
 PHFont* PHFont::fontNamed(const string & name)
 {
-    return PHFont::fontFromPath(PHFileManager::singleton()->resourcePath()+"/fnt/"+name+".phf");
+    return PHFont::fontFromPath(PHFileManager::resourcePath()+"/fnt/"+name+".phf");
 }
 
 void PHFont::collectGarbage()

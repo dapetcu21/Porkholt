@@ -20,6 +20,7 @@ class PHImage : public PHObject
 {
 public:
 	static PHImage* imageFromPath(const string & path);
+    static bool imageExists(const string & name);
 	static PHImage* imageNamed(const string & name);
 	static void collectGarbage();
 #ifdef PHIMAGE_ORDERED_LOADING

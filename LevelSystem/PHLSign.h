@@ -11,15 +11,20 @@
 
 #include "PHLNPC.h"
 
+class PHDialog;
 class PHLSign : public PHLNPC
 {
 private:
     string text;
+    list<PHDialog*> dialogs;
+    void advance();
+    friend class PHSignDialog;
 public:
     PHLSign();
     virtual ~PHLSign();
     
-    void display();
+    void display() { display(NULL); }
+    void display(lua_State * L);
     
     void loadFromLua(lua_State * L, const string & root, b2World * world);
     

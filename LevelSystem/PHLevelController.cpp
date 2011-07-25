@@ -156,8 +156,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
-	PHFileManager * fileMan = PHFileManager::singleton();
-	string resourcePath = fileMan->resourcePath();
+	string resourcePath = PHFileManager::resourcePath();
 	
 	PHLuaSetIncludePath(L, dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
 	
