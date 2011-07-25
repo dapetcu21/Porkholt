@@ -105,6 +105,17 @@ end
 function Initializers.PHLBull(obj)
 	Initializers.PHLMob(obj)
 end
+function Initializers.PHLGround(obj)
+	Initializers.PHLObject(obj)
+end
+function Initializers.PHLSign(obj)
+	Initializers.PHLNPC(obj)
+	obj.overHead = point(0.25,0.25);
+	obj.questPoint = point(0.25,0.25);
+	obj.physics.dynamic = false;
+	objectAddImage(obj,"/sign.png",-0.35,-0.35,0.7,0.7);
+	addObject(obj);
+end
 
 function objectWithClass(class)
 	obj = {};

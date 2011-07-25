@@ -18,14 +18,10 @@ timer:setCallback(function()
 	player:addDialog("Yeah! That sounds simple enough!",function()
 	player:setBraked(false);
 	player:setUserInput(true);
-	sign:setDialog("Tilt your device\nto move around",sign.setShowsQuest,sign,true);
+	sign:display();
 	end);
 end);
 timer:schedule();
-
-function sign:questTapped()
-	sign:setDialog("Tilt your device\nto move around");
-end
 
 function sensor1:objectEntered()
 	PHWorld:fadeToColor(colorWithRGBA(0,0,0,1),function()

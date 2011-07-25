@@ -57,8 +57,9 @@ do
 		elif  [[ -f "$FILE" ]] && [[ "$EXTENSION" == "lua" ]]; then
 			compresslua "$FILE" "$DEST_DIR/$FILE"
 		else
-			cp -a "$FILE" "$DEST_DIR/$FILE"
 			echo "Copying file \"$FILE\""
+			rm -f "$DEST_DIR/$FILE"
+			cp -af "$FILE" "$DEST_DIR/$FILE"
 		fi
 	fi
 done

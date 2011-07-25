@@ -27,6 +27,8 @@ public:
         lua_getglobal(L, "PHCallbackHelper");
         PHLuaGetHardRef(L, this);
         PHLuaCall(L, 1, 0);
+        PHLuaDeleteHardRef(L, this);
+        L = NULL;
     }
     void setCallback(lua_State * l)
     {

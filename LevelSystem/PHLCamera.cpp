@@ -11,7 +11,7 @@
 #include "PHLua.h"
 #include "PHMainEvents.h"
 
-PHLCamera::PHLCamera() : follow(true)
+PHLCamera::PHLCamera() : follow(true), strict(false), strictcount(0), sstrict(0)
 {
 	_class = "PHLCamera";
 }
@@ -44,15 +44,27 @@ void PHLCamera::updateCamera(PHPoint pnt)
     
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	
+    if (sstrict>0)
+    {
+        sstrict-=1.0f/fps;
+        if (sstrict<=0)
+            strict = false;
+    }
+    
 	pnt.x-=sz.width*(1.0f/3-0.5f);
-	PHPoint pos = position();
-	if (pnt.y<pos.y-sz.height*0.25f)
-		pnt.y+=sz.height*0.25f;
-	else
-	if (pnt.y>pos.y+sz.height*0.25f)
-		pnt.y-=sz.height*0.25f;
-	else
-		pnt.y=pos.y;
+    if (strict)
+        pnt.y-=sz.height*(1.0f/4-0.5f);
+    else
+    {
+        PHPoint pos = position();
+        if (pnt.y<pos.y-sz.height*0.25f)
+            pnt.y+=sz.height*0.25f;
+        else
+        if (pnt.y>pos.y+sz.height*0.25f)
+            pnt.y-=sz.height*0.25f;
+        else
+            pnt.y=pos.y;
+    }
 	PHLowPassFilter(pos.x, pnt.x, 1.0f/fps, 5.0f);
 	PHLowPassFilter(pos.y, pnt.y, 1.0f/fps, 5.0f);
     sz.x = pos.x;

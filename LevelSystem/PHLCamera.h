@@ -19,7 +19,9 @@ class PHLCamera : public PHLObject
 {
 protected:
 	PHRect sz;
-    bool follow;
+    bool follow, strict;
+    int strictcount;
+    double sstrict;
 public:
 	PHLCamera();
 	virtual ~PHLCamera();
@@ -37,6 +39,14 @@ public:
     bool followsPlayer() { return follow; }
     
     static void registerLuaInterface(lua_State * L);
+    
+    void setStrictTracking(bool f) { strict = f; }
+    bool strictTracking() { return strict; }
+    
+    void setSmoothStrictTracking(bool f) { if (f) { strict = f; sstrict = 0; } else { sstrict = 1.0f; } }
+    
+    void incrementStrictTracking() { strictcount++; setSmoothStrictTracking(strictcount); } 
+    void decrementStrictTracking() { strictcount--; setSmoothStrictTracking(strictcount); }
 };
 
 #endif

@@ -21,6 +21,7 @@
 #include "PHImageView.h"
 #include "PHLMob.h"
 #include "PHLBull.h"
+#include "PHLSign.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
@@ -158,6 +159,7 @@ void PHScripting::loadWorld()
     PHImageView::registerLuaInterface(L);
     PHLMob::registerLuaInterface(L);
     PHLBull::registerLuaInterface(L);
+    PHLSign::registerLuaInterface(L);
 }
 
 void PHScripting::scriptingStep(double timeElapsed)

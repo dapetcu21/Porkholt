@@ -15,6 +15,8 @@
 		28FD14FE0DC6FC130079059D /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FD14FD0DC6FC130079059D /* EAGLView.m */; };
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		C106E47A13DD427C007E6357 /* PHLGround.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47913DD427C007E6357 /* PHLGround.cpp */; };
+		C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47E13DD5E2B007E6357 /* PHLSign.cpp */; };
 		C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */; };
 		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
 		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
@@ -185,6 +187,10 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Porkholt_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Porkholt-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Porkholt-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C106E47913DD427C007E6357 /* PHLGround.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLGround.cpp; sourceTree = "<group>"; };
+		C106E47C13DD4289007E6357 /* PHLGround.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLGround.h; sourceTree = "<group>"; };
+		C106E47D13DD5DAA007E6357 /* PHLSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLSign.h; sourceTree = "<group>"; };
+		C106E47E13DD5E2B007E6357 /* PHLSign.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLSign.cpp; sourceTree = "<group>"; };
 		C1185540130FDDB8004F341A /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
 		C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
 		C11855A2130FDF09004F341A /* PHMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMotion.h; sourceTree = "<group>"; };
@@ -616,6 +622,10 @@
 				C1FF4DDA13DCAB81003B7673 /* PHLMob.cpp */,
 				C1FF4DDD13DCABA1003B7673 /* PHLBull.h */,
 				C1FF4DD813DCAB6A003B7673 /* PHLBull.cpp */,
+				C106E47C13DD4289007E6357 /* PHLGround.h */,
+				C106E47913DD427C007E6357 /* PHLGround.cpp */,
+				C106E47D13DD5DAA007E6357 /* PHLSign.h */,
+				C106E47E13DD5E2B007E6357 /* PHLSign.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -996,6 +1006,8 @@
 				C19B4B2913D8D00F00C714FB /* PHDialogView.cpp in Sources */,
 				C1FF4DD913DCAB6A003B7673 /* PHLBull.cpp in Sources */,
 				C1FF4DDB13DCAB81003B7673 /* PHLMob.cpp in Sources */,
+				C106E47A13DD427C007E6357 /* PHLGround.cpp in Sources */,
+				C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1254,6 +1266,7 @@
 				C1FF4DD213DC1B6E003B7673 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

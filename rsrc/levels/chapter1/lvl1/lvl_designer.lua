@@ -256,15 +256,12 @@ objectAddCircle(obj,0.250000,op);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLNPC");
+obj = objectWithClass("PHLSign");
 obj.pos = point(5.879765,0.802499);
-obj.overHead = point(0.250000,0.250000);
-obj.questPoint = point(0.250000,0.250000);
 obj.scripting = [[sign]];
-obj.physics.dynamic = false;
+obj.text = "Tilt your device\nto move around";
 op = {};
 op.rotation = 0.000000;
-objectAddImage(obj,[[/sign.png]],-0.346719,-0.356523,0.700000,0.700000,op);
 obj.levelDes = true;
 addObject(obj);
 

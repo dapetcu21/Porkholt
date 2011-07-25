@@ -17,6 +17,8 @@
 #include "PHEventQueue.h"
 #include "PHLAnimation.h"
 #include "PHLSensor.h"
+#include "PHLGround.h"
+#include "PHLSign.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -39,6 +41,10 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         return new PHLSensor;
     if (str=="PHLNPC")
         return new PHLNPC;
+    if (str=="PHLGround")
+        return new PHLGround;
+    if (str=="PHLSign")
+        return new PHLSign;
 	return new PHLObject;
 }
 

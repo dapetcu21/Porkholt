@@ -303,6 +303,7 @@ void PHLNPC::dialogViewFired(PHDialogView * dv)
 {
     if (dialogView==dv)
     {
+        currentDialog->callback();
         if (currentDialog->inStack)
             getWorld()->advanceDialog();
         else

@@ -260,6 +260,18 @@ PHLCamera = PHLObject:new()
 --function PHLPlayer:followsPlayer();
 --function PHLPlayer:setFollowsPlayer(b);
 
+PHLSign = PHLNPC:new()
+function PHLSign:display(cb,...)
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_display(call);
+end
+function PHLSign:questTapped()
+	self:display();
+end
+
 PHLSensor = PHLObject:new()
 function PHLSensor:objectEntered(obj) --override these. obj is either a table representing an object or a string with the object's class if the object isn't scriptable
 end
