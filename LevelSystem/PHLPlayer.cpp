@@ -104,7 +104,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         }
     }
     normal.x = normal.y = 0;
-    if (touchesSomething>0)
+    if (touchesSomething>0 && !forceGap)
     {
         jumpGauge+=touchesSomething * wrld->jumpGaugeGrowth()/(double)fps;
         double max = wrld->maxJumpGauge();
