@@ -292,4 +292,6 @@ end
 -- function PHLPowerup:dismiss()
 -- function PHLPowerup:collect()
 
+PHLLevelEnd = PHLSensor:new();
+
 PHLShieldPowerup = PHLPowerup:new()

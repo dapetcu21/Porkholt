@@ -21,6 +21,7 @@
 #include "PHLSign.h"
 #include "PHLBull.h"
 #include "PHLMob.h"
+#include "PHLLevelEnd.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -57,6 +58,8 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         return new PHLShieldPowerup;
     if (str=="PHLPowerup")
         return new PHLPowerup;
+    if (str=="PHLLevelEnd")
+        return new PHLLevelEnd;
 	return new PHLObject;
 }
 

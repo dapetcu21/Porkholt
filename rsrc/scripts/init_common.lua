@@ -139,6 +139,13 @@ end
 function Initializers.PHLPowerup(obj)
 	Initializers.PHLSensor(obj)
 end
+function Initializers.PHLLevelEnd(obj)
+	Initializers.PHLSensor(obj);
+	local h = 4.0;
+	local w = h*0.75;
+	objectAddImage(obj,"/sunshaft.png", -w/2,-0.5, w, h);
+	objectAddBox(obj,-0.25,-0.25,0.5,0.5);
+end
 function Initializers.PHLShieldPowerup(obj)
 	Initializers.PHLPowerup(obj)
 	objectAddImage(obj,"/blue_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40; });

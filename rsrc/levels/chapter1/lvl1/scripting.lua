@@ -69,7 +69,6 @@ function sensor2:objectEntered()
 	--destroy the sensor and put a godray instead
 	local obj = objectWithClass("PHLLevelEnd");
 	obj.pos = sensor1:position();
-	objectAddBox(obj,-0.25,-0.25,0.5,0.5);
 	PHWorld:insertObject(obj);
 	sensor1:destroy();
 	
