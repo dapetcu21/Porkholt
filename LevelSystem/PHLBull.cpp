@@ -39,7 +39,7 @@ void PHLBull::attacked(PHObject * sender, void * ud)
 
 void PHLBull::reallyAttack(PHObject * sender, void * ud)
 {
-    PHPoint v = PHMakePoint(attackVelocity*(isFlipped()?-1:1), 0);
+    PHPoint v = PHPoint(attackVelocity*(isFlipped()?-1:1), 0);
     
     PHLAnimation * anim = new PHLAnimation;
     anim->setVelocity(v,mass()*20);
@@ -96,30 +96,11 @@ void PHLBull::loadFromLua(lua_State *L, const string &root, b2World *world)
 {
     PHLMob::loadFromLua(L, root, world);
     
-    lua_getfield(L, -1, "attackRange");
-    if (lua_isnumber(L, -1))
-        attackRange = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "attackVelocity");
-    if (lua_isnumber(L, -1))
-        attackVelocity = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "attackDuration");
-    if (lua_isnumber(L, -1))
-        attackDuration = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "cooldownDuration");
-    if (lua_isnumber(L, -1))
-        cooldownDuration = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "relaxTime");
-    if (lua_isnumber(L, -1))
-        unrageTime = lua_tonumber(L, -1);
-    lua_pop(L,1);
+    PHLuaGetNumberField(attackRange, "attackRange");
+    PHLuaGetNumberField(attackVelocity, "attackVelocity");
+    PHLuaGetNumberField(attackDuration, "attackDuration");
+    PHLuaGetNumberField(cooldownDuration, "cooldownDuration");
+    PHLuaGetNumberField(unrageTime, "relaxTime");
 }
 
 void PHLBull::registerLuaInterface(lua_State * L)

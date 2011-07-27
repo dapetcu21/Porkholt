@@ -102,56 +102,19 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
             PHRect portion = PHWholeRect;
             PHRect frame = PHWholeRect;
             string clss;
-            lua_pushstring(L, "class");
-            lua_gettable(L, -2);
-            if (lua_isstring(L, -1))
-                clss = lua_tostring(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "pos");
-            lua_gettable(L, -2);
-            if (lua_istable(L, -1))
-                frame = PHRect::fromLua(L,-1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "texCoord");
-            lua_gettable(L, -2);
-            if (lua_istable(L, -1))
-                portion = PHRect::fromLua(L,-1);
-            lua_pop(L, 1);
-            
             int tag = 0;
-            lua_pushstring(L, "tag");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                tag = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-
             double rot = 0;
-            lua_pushstring(L, "rotation");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                rot = -toRad(lua_tonumber(L, -1));
-            lua_pop(L, 1);
-
             bool flipHoriz = false;
-            lua_pushstring(L, "horizontallyFlipped");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                flipHoriz = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
             bool flipVert = false;
-            lua_pushstring(L, "verticallyFlipped");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                flipVert = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
-            lua_pushstring(L, "tint");
-            lua_gettable(L, -2);
-            PHColor tint = PHColor::fromLua(L,-1);
-            lua_pop(L, 1);
+            PHColor tint = PHInvalidColor;
+            PHLuaGetStringField(clss, "class");
+            PHLuaGetRectField(frame, "pos");
+            PHLuaGetRectField(portion , "texCoord");
+            PHLuaGetNumberField(tag, "tag");
+            PHLuaGetAngleField(rot, "rotation");
+            PHLuaGetBoolField(flipHoriz, "horizontallyFlipped");
+            PHLuaGetBoolField(flipVert, "verticallyFlipped");
+            PHLuaGetColorField(tint, "tint");
             
             lua_pushstring(L, "alpha");
             lua_gettable(L, -2);

@@ -35,7 +35,7 @@ private:
 public:
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
-	PHRect screenBounds() { return PHMakeRect(0, 0, _screenWidth, _screenHeight); };
+	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
 	int framesPerSecond() { return fps; }
 	static PHMainEvents * sharedInstance();
 	void renderFrame(double timeElapsed);

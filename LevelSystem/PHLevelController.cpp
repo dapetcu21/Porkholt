@@ -64,7 +64,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	pSem2 = new PHSemaphore(1);
     running = true;
 	paused = true;
-	world = new PHWorld(PHMakeRect(0, 0, 1000, 1000),this);
+	world = new PHWorld(PHRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
 	backgroundView->setImage(PHImage::imageFromPath(directory+"/bg.png"));
 	view->addSubview(backgroundView);
@@ -168,11 +168,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	if (lua_istable(L, -1))
 	{
-		lua_pushstring(L, "n");
-		lua_gettable(L, -2);
-		if (lua_isnumber(L, -1))
-			n = lua_tonumber(L, -1);
-		lua_pop(L,1);
+        PHLuaGetNumberField(n,"n");
 		for (int i=0; i<n; i++)
 		{
 			lua_pushnumber(L, i);
@@ -180,18 +176,10 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			if (lua_istable(L, -1))
 			{
 				double scale = 1.0f;
-				lua_pushstring(L, "scale");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					scale = lua_tonumber(L, -1);
-				lua_pop(L, 1);
+                PHLuaGetNumberField(scale, "scale");
 				
 				int n = 0;
-				lua_pushstring(L, "n");
-				lua_gettable(L, -2);
-				if (lua_isnumber(L, -1))
-					n = lua_tonumber(L, -1);
-				lua_pop(L,1);
+				PHLuaGetNumberField(n, "n");
 				
 				PHWorld::layer * lyr = NULL;
 				
@@ -224,11 +212,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 
 	if (lua_istable(L , -1))
 	{
-		lua_pushstring(L, "n");
-		lua_gettable(L, -2);
-		if (lua_isnumber(L, -1))
-			n = lua_tonumber(L, -1);
-		lua_pop(L,1);
+        PHLuaGetNumberField(n, "n");
 		
 		for (int i=0; i<n; i++)
 		{
@@ -236,12 +220,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			lua_gettable(L, -2);
 			if (lua_istable(L , -1))
 			{
-				lua_pushstring(L, "class");
-				lua_gettable(L, -2);
-				string clss = "PHLObject";
-				if (lua_isstring(L, -1))
-					clss = lua_tostring(L, -1);
-				lua_pop(L,1);
+                string clss = "PHLObject";
+                PHLuaGetStringField(clss,"class");
 				
 				PHLObject * obj = PHLObject::objectWithClass(clss);
 				obj->loadFromLua(L,dir,fWorld);
@@ -261,24 +241,15 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     n=0;
     if (lua_istable(L, -1))
     {
-        lua_pushstring(L, "n");
-		lua_gettable(L, -2);
-		if (lua_isnumber(L, -1))
-			n = lua_tonumber(L, -1);
-		lua_pop(L,1);
-		
+        PHLuaGetNumberField(n, "n");
 		for (int i=0; i<n; i++)
 		{
 			lua_pushnumber(L, i);
 			lua_gettable(L, -2);
 			if (lua_istable(L , -1))
 			{
-				lua_pushstring(L, "class");
-				lua_gettable(L, -2);
-				string clss = "PHJoint";
-				if (lua_isstring(L, -1))
-					clss = lua_tostring(L, -1);
-				lua_pop(L,1);
+                string clss = "PHJoint";
+                PHLuaGetStringField(clss, "class");
                 
                 mutex->lock();
 				PHJoint * joint = PHJoint::jointWithClassAndWorld(clss,world);

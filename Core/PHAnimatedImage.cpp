@@ -73,11 +73,7 @@ void PHAnimatedImage::loadFromLua()
     if (lua_istable(L, -1))
     {
         int n = 0;
-        lua_getfield(L, -1, "n");
-        if (lua_isnumber(L, -1))
-            n = lua_tonumber(L, -1);
-        lua_pop(L,1);
-        
+        PHLuaGetNumberField(n, "n");
         for (int i=0; i<n; i++)
         {
             lua_pushnumber(L, i);
@@ -91,17 +87,10 @@ void PHAnimatedImage::loadFromLua()
                 
                 section * sec = new section;
 
-                lua_getfield(L, -1, "nm");
-                if (lua_isstring(L, -1))
-                    sec->name = lua_tostring(L, -1);
-                lua_pop(L, 1);
+                PHLuaGetStringField(sec->name, "nm");
                 
                 int m = 0;
-                lua_getfield(L, -1, "n");
-                if (lua_isnumber(L, -1))
-                    m = lua_tonumber(L, -1);
-                lua_pop(L, 1);
-                
+                PHLuaGetNumberField(m, "n");
                 for (int j=0; j<m; j++)
                 {
                     lua_pushnumber(L, j);
@@ -112,18 +101,10 @@ void PHAnimatedImage::loadFromLua()
                         frm.frameno = 0;
                         frm.duration = 1.0f;
                         frm.type = 0;
-                        
-                        lua_getfield(L, -1, "fno");
-                        if (lua_isnumber(L, -1))
-                            frm.frameno = lua_tonumber(L, -1);
-                        lua_pop(L,1);
-                        
                         frm.fade = false;
-                        lua_getfield(L, -1, "fd");
-                        if (lua_isboolean(L, -1))
-                            frm.fade = lua_toboolean(L, -1);
-                        lua_pop(L,1);
                         
+                        PHLuaGetNumberField(frm.frameno, "fno");
+                        PHLuaGetBoolField(frm.fade, "fd");
                         
                         lua_getfield(L, -1, "d");
                         if (lua_isnumber(L, -1))

@@ -25,18 +25,13 @@ void PHLAuxLayer::loadFromLua(lua_State * L, const string & root,b2World * world
     PHLObject::loadFromLua(L, root, world);
     
     name = rand();
-    lua_pushstring(L, "name");
-    lua_gettable(L, -2);
-    if (lua_isnumber(L, -1))
-        name = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
+    PHLuaGetNumberField(name, "name");
 }
 
 void PHLAuxLayer::loadView()
 {
     view = new PHAuxLayerView(name);
-    view->setFrame(PHMakeRect(pos.x, pos.y, 1.0f,1.0f));
+    view->setFrame(PHRect(pos.x, pos.y, 1.0f,1.0f));
     view->setRotationalCenter(PHOriginPoint);
     view->setRotation(rot);
 }

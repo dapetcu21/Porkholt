@@ -23,13 +23,7 @@ PHLCamera::~PHLCamera()
 void PHLCamera::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
 	PHLObject::loadFromLua(L,root,world);
-	
-	lua_pushstring(L, "camH");
-	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		sz.height = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-	
+    PHLuaGetNumberField(sz.height,"camH");	
 	PHRect bnd = PHMainEvents::sharedInstance()->screenBounds();
 	sz.width = sz.height*bnd.width/bnd.height;
 }

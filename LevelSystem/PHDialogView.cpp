@@ -35,9 +35,9 @@ void PHDialogView::draw()
         double marginLen = aspectRatio*_bounds.height/2;
         double toRecover = _bounds.width-marginLen*2;
         
-        renderInFramePortionTint(PHMakeRect(0, 0, marginLen, _bounds.height), PHMakeRect(0, 0, 0.5, 1.0), tint);
-        renderInFramePortionTint(PHMakeRect(marginLen+toRecover, 0, marginLen, _bounds.height), PHMakeRect(0.5, 0, 0.5, 1.0), tint);
-        renderInFramePortionTint(PHMakeRect(marginLen, 0, toRecover, _bounds.height), PHMakeRect(0.5, 0, 0, 1.0), tint);
+        renderInFramePortionTint(PHRect(0, 0, marginLen, _bounds.height), PHRect(0, 0, 0.5, 1.0), tint);
+        renderInFramePortionTint(PHRect(marginLen+toRecover, 0, marginLen, _bounds.height), PHRect(0.5, 0, 0.5, 1.0), tint);
+        renderInFramePortionTint(PHRect(marginLen, 0, toRecover, _bounds.height), PHRect(0.5, 0, 0, 1.0), tint);
     } else
         PHImageView::draw();
 }

@@ -18,6 +18,6 @@ void PHHeartView::draw()
     for (int i=0; i<heartNo; i++)
     {
         bool isactive = (flipped?(heartNo-i<=active):(i<active));
-        renderInFramePortionTint(PHMakeRect(i*width,0,height,width),PHWholeRect,isactive?PHInvalidColor:PHMakeColor(1.0f,1.0f,1.0f,0.5f));
+        renderInFramePortionTint(PHRect(i*width,0,height,width),PHWholeRect,isactive?PHInvalidColor:PHColor(1.0f,1.0f,1.0f,0.5f));
     }
 }

@@ -40,12 +40,10 @@ PHJoint::~PHJoint()
 
 void PHJoint::loadFromLua(lua_State * L)
 {
-    lua_pushstring(L, "body1");
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, "body1");
     if (lua_istable(L, -1))
     {
-        lua_pushstring(L, "index");
-        lua_gettable(L, -2);
+        lua_getfield(L, -1, "index");
         if (lua_isnumber(L, -1))
         {
             int index = lua_tonumber(L, -1);
@@ -55,12 +53,10 @@ void PHJoint::loadFromLua(lua_State * L)
     }
     lua_pop(L,1);
     
-    lua_pushstring(L, "body2");
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, "body2");
     if (lua_istable(L, -1))
     {
-        lua_pushstring(L, "index");
-        lua_gettable(L, -2);
+        lua_getfield(L, -1, "index");
         if (lua_isnumber(L, -1))
         {
             int index = lua_tonumber(L, -1);
@@ -71,18 +67,9 @@ void PHJoint::loadFromLua(lua_State * L)
     lua_pop(L,1);
     
     worldCoord = false;
-    lua_pushstring(L, "worldCoordinates");
-    lua_gettable(L, -2);
-    if (lua_isboolean(L, -1))
-        worldCoord = lua_toboolean(L, -1);
-    lua_pop(L,1);
-    
     collideConnected = true;
-    lua_pushstring(L, "collideConnected");
-    lua_gettable(L, -2);
-    if (lua_isboolean(L, -1))
-        collideConnected = lua_toboolean(L, -1);
-    lua_pop(L,1);
+    PHLuaGetBoolField(worldCoord, "worldCoordinates");
+    PHLuaGetBoolField(collideConnected, "collideConnected");
 }
 
 void PHJoint::recreateJoint()

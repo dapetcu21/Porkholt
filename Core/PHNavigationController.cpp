@@ -134,7 +134,7 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 	{
 		PHView * lastV = lastVC->getView();
 		view->addSubview(lastV);
-		lastV->setPosition(PHMakePoint(0,0));
+		lastV->setPosition(PHPoint(0,0));
 		PHAnimationDescriptor * anim = new PHAnimationDescriptor;
 		anim->moveX=x;
 		anim->moveY=y;
@@ -151,7 +151,7 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 	{
 		PHView * currentV = currentVC->getView();
 		view->addSubview(currentV);
-		currentV->setPosition(PHMakePoint(-x, -y));
+		currentV->setPosition(PHPoint(-x, -y));
 		PHAnimationDescriptor * anim = new PHAnimationDescriptor;
 		anim->moveX=x;
 		anim->moveY=y;

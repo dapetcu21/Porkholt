@@ -26,34 +26,15 @@ void PHDistanceJoint::loadFromLua(lua_State * L)
     PHJoint::loadFromLua(L);
     anchor1 = PHOriginPoint;
     anchor2 = PHOriginPoint;
-    
-    lua_pushstring(L,"anchor1");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        anchor1 = PHPoint::fromLua(L,-1);
-    lua_pop(L, 1);
-    
-    lua_pushstring(L, "anchor2");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        anchor2 = PHPoint::fromLua(L,-1);
-    lua_pop(L,1);
-    
     freq = 0.0f;
-    lua_pushstring(L, "frequency");
-    lua_gettable(L, -2);
-    if (lua_isnumber(L, -1))
-        freq = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
     damp = 0.0f;
-    lua_pushstring(L, "dampening");
-    lua_gettable(L, -2);
-    if (lua_isnumber(L, -1))
-        damp = lua_tonumber(L, -1);
-    lua_pop(L,1);
     
+    PHLuaGetPointField(anchor1,"anchor1");
+    PHLuaGetPointField(anchor2,"anchor2");
+    PHLuaGetNumberField(freq,"frequency");
+    PHLuaGetNumberField(damp,"dampening");    
 }
+
 void PHDistanceJoint::recreateJoint()
 {
     destroyJoint();

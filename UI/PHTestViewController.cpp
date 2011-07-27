@@ -33,9 +33,9 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	PHView * view = new PHView(frame);
 	view->setUserInput(true);
 	
-	view2 = new PHTestView(PHMakeRect(50, 50, 100, 100));
-	view4 = new PHTestView(PHMakeRect(150, 150, 100, 100));
-	PHView * view3 = new PHTestView(PHMakeRect(0,0,30,30));
+	view2 = new PHTestView(PHRect(50, 50, 100, 100));
+	view4 = new PHTestView(PHRect(150, 150, 100, 100));
+	PHView * view3 = new PHTestView(PHRect(0,0,30,30));
 	
 	view3->setCenter(view2->boundsCenter());
 	view3->setUserInput(true);
@@ -53,8 +53,8 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	
 	for (int i=0; i<PHNavigationController::NUMANIMATIONS; i++)
 	{
-		PHButtonView * button1 = new PHButtonView(PHMakeRect(i*60+0, 0, 25, 40));
-		PHButtonView * button2 = new PHButtonView(PHMakeRect(i*60+25, 0, 25, 40));
+		PHButtonView * button1 = new PHButtonView(PHRect(i*60+0, 0, 25, 40));
+		PHButtonView * button2 = new PHButtonView(PHRect(i*60+25, 0, 25, 40));
 		button1->setImage(PHImage::imageNamed("stop"));
 		button1->setPressedImage(PHImage::imageNamed("start"));
 	

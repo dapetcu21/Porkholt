@@ -38,7 +38,7 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
     remote->start();
 #endif
 	
-	view = new PHView(PHMakeRect(0,0,_screenWidth,_screenHeight));
+	view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
 	view->setBackgroundColor(PHGrayColor);
 	view->setUserInput(true);
 	

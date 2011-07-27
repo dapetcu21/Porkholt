@@ -36,7 +36,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             oss1<<path<<"/lvl"<<j*columns+i+1<<"/thumb.png";
             oss2<<path<<"/lvl"<<j*columns+i+1<<"/thumb_pressed.png";
             if (!PHFileManager::isDirectory(oss.str())) continue;
-            PHRect frame = PHMakeRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*(rows-j-1), levelSize, levelSize);
+            PHRect frame = PHRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*(rows-j-1), levelSize, levelSize);
             PHButtonView * vv = new PHButtonView(frame);
             vv->setImage(PHImage::imageFromPath(oss1.str()));
             vv->setPressedImage(PHImage::imageFromPath(oss2.str()));

@@ -174,4 +174,26 @@ if (lua_isboolean(L, -1)) \
     var = lua_toboolean(L, -1); \
 lua_pop(L,1)
 
+#define PHLuaGetStringField(var,name) \
+lua_getfield(L, -1, name); \
+if (lua_isstring(L, -1)) \
+    var = lua_tostring(L, -1); \
+lua_pop(L,1)
+
+#define PHLuaGetAngleField(var,name) \
+lua_getfield(L, -1, name); \
+if (lua_isnumber(L, -1)) \
+    var = -toRad(lua_tonumber(L, -1)); \
+lua_pop(L,1)
+
+#define PHLuaGetStructField(var,name,structname) \
+lua_getfield(L, -1, name); \
+if (lua_istable(L, -1)) \
+    var = structname::fromLua(L,-1); \
+lua_pop(L,1);
+
+#define PHLuaGetPointField(var,name) PHLuaGetStructField(var,name,PHPoint)
+#define PHLuaGetRectField(var,name) PHLuaGetStructField(var,name,PHRect)
+#define PHLuaGetColorField(var,name) PHLuaGetStructField(var,name,PHColor)
+
 #endif

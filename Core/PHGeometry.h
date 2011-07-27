@@ -54,6 +54,7 @@ struct PHColor
         return res;
     }
     PHColor(double red, double green, double blue, double alpha) : r(red), g(green), b(blue), a(alpha) {};
+    PHColor(double red, double green, double blue) : r(red), g(green), b(blue), a(1.0f) {};
     PHColor() {};
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
@@ -72,27 +73,6 @@ struct PH24BitColor
     PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
 };
 
-
-inline PHColor PHMakeColor(double red, double green, double blue, double alpha)
-{
-	PHColor tmp;
-	tmp.r = red;
-	tmp.g = green;
-	tmp.b = blue;
-	tmp.a = alpha;
-	return tmp;
-}
-
-inline PHColor PHMakeColor(double red, double green, double blue)
-{
-	PHColor tmp;
-	tmp.r = red;
-	tmp.g = green;
-	tmp.b = blue;
-	tmp.a = 1.0f;
-	return tmp;
-}
-
 extern PHColor PHClearColor;
 extern PHColor PHBlackColor;
 extern PHColor PHGrayColor;
@@ -100,16 +80,6 @@ extern PHColor PHWhiteColor;
 extern PHColor PHInvalidColor;
 
 extern PHRect PHWholeRect;
-
-inline PHRect PHMakeRect(double x, double y, double width, double height)
-{
-	PHRect tmp;
-	tmp.x = x;
-	tmp.y= y;
-	tmp.width = width;
-	tmp.height = height;
-	return tmp;
-}
 
 struct PHPoint
 {
@@ -190,18 +160,9 @@ struct PHPoint
 };
 
 typedef PHPoint PHSize;
-#define PHMakeSize PHMakePoint
 #define PHNullSize PHOriginPoint
 
 extern PHPoint PHOriginPoint;
-
-inline PHPoint PHMakePoint(double x, double y)
-{
-	PHPoint tmp;
-	tmp.x = x;
-	tmp.y = y;
-	return tmp;
-}
 
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse);
 PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt);

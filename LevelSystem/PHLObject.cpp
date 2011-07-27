@@ -106,28 +106,17 @@ PHLObject::~PHLObject()
 void PHLObject::loadBody(void *l)
 {
 	lua_State * L = (lua_State*)l;
-	lua_pushstring(L, "physics");
-	lua_gettable(L, -2);
+    lua_getfield(L, -1, "physics");
 	if (lua_istable(L, -1))
 	{
-		bool isstatic = true;
-		lua_pushstring(L, "dynamic");
-		lua_gettable(L, -2);
-		if (lua_isboolean(L,-1))
-			isstatic = !lua_toboolean(L, -1);
-		lua_pop(L,1);	
+		bool dynamic = false;
+        PHLuaGetBoolField(dynamic, "dynamic");
         
-        lua_pushstring(L, "fixtures");
-        lua_gettable(L, -2);
+        lua_getfield(L,-1, "fixtures");
         if (lua_istable(L, -1))
         {
             int n = 0;
-            lua_pushstring(L, "n");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L, -1))
-                n = (int)lua_tonumber(L, -1);
-            lua_pop(L, 1);
-            
+            PHLuaGetNumberField(n, "n");
             if (n)
             {
             
@@ -135,7 +124,7 @@ void PHLObject::loadBody(void *l)
                 def.position.Set(pos.x,pos.y);
                 def.angle = rot;
                 def.userData = this;
-                def.type = isstatic?b2_staticBody:b2_dynamicBody;
+                def.type = dynamic?b2_dynamicBody:b2_staticBody;
                 body = world->CreateBody(&def);
                 
                 for (int i=0; i<n; i++)
@@ -147,85 +136,33 @@ void PHLObject::loadBody(void *l)
                         
                         //shape attributes
                         const char * typ = "";
-                        lua_pushstring(L, "shape");
-                        lua_gettable(L, -2);
-                        if (lua_isstring(L, -1))
-                            typ = lua_tostring(L,-1);
-                        lua_pop(L,1);
-                        PHRect box = PHMakeRect(-0.5f, -0.5f, 1, 1);
                         double circleR=1;
-                        
-                        lua_pushstring(L, "box");
-                        lua_gettable(L, -2);
-                        if (lua_istable(L, -1))
-                            box = PHRect::fromLua(L,-1);
-                        lua_pop(L,1);
-                        
+                        PHRect box = PHRect(-0.5f, -0.5f, 1, 1);
                         double rot = 0;
-                        lua_pushstring(L, "rotation");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            rot = -toRad(lua_tonumber(L, -1));
-                        lua_pop(L,1);
-                        
-                        lua_pushstring(L, "circleR");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            circleR = lua_tonumber(L, -1);
-                        lua_pop(L,1);
-                        
                         PHPoint pos = PHOriginPoint;
-                        lua_pushstring(L, "pos");
-                        lua_gettable(L, -2);
-                        if (lua_istable(L, -1))
-                            pos = PHPoint::fromLua(L,-1);
-                        lua_pop(L, 1);
+                        PHLuaGetStringField(typ,"shape");
+                        PHLuaGetRectField(box,"box");
+                        PHLuaGetAngleField(rot,"rotation");
+                        PHLuaGetNumberField(circleR,"circleR");
+                        PHLuaGetPointField(pos,"pos");
                         
                         //physics attributes
                         double friction = 0.3f;
                         double restitution = 0.0f;
                         double density = 1.0f;
                         
-                        lua_pushstring(L, "friction");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            friction = lua_tonumber(L, -1);
-                        lua_pop(L,1);
-                        
-                        lua_pushstring(L, "restitution");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            restitution = lua_tonumber(L, -1);
-                        lua_pop(L,1);
-                        
-                        lua_pushstring(L, "density");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            density = lua_tonumber(L, -1);
-                        lua_pop(L,1);
+                        PHLuaGetNumberField(friction,"friction");
+                        PHLuaGetNumberField(restitution,"restitution");
+                        PHLuaGetNumberField(density,"density");
                         
                         b2FixtureDef * fdef = new b2FixtureDef;
                         fdef->friction = friction;
                         fdef->density = density;
-                        fdef->restitution = restitution;				
-
-                        lua_pushstring(L, "groupIndex");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            fdef->filter.groupIndex = lua_tonumber(L, -1);
-                        lua_pop(L,1);
+                        fdef->restitution = restitution;		
                         
-                        lua_pushstring(L, "categoryBits");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            fdef->filter.categoryBits = lua_tonumber(L, -1);
-                        lua_pop(L,1);
-                        
-                        lua_pushstring(L, "maskBits");
-                        lua_gettable(L, -2);
-                        if (lua_isnumber(L, -1))
-                            fdef->filter.maskBits = lua_tonumber(L, -1);
-                        lua_pop(L,1);
+                        PHLuaGetNumberField(fdef->filter.groupIndex,"groupIndex");
+                        PHLuaGetNumberField(fdef->filter.categoryBits,"categoryBits");
+                        PHLuaGetNumberField(fdef->filter.maskBits,"maskBits");
                         
                         if (strcmp(typ, "box")==0)
                         {
@@ -286,8 +223,7 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 	world = _world;
     
     hasScripting = false;
-    lua_pushstring(L, "scripting");
-    lua_gettable(L, -2);
+    lua_getfield(L, -1, "scripting");
     if (lua_isstring(L, -1))
     {
         hasScripting = true;
@@ -296,36 +232,12 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
     lua_pop(L,1);
     
     pos = PHOriginPoint;
-	lua_pushstring(L, "pos");
-	lua_gettable(L, -2);
-	if (lua_istable(L, -1))
-		pos = PHPoint::fromLua(L,-1);
-	lua_pop(L, 1);
-	
+    PHLuaGetPointField(pos, "pos");
     rot = 0;
-	lua_pushstring(L, "rotation");
-	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		rot = -toRad(lua_tonumber(L, -1));
-	lua_pop(L, 1);
-	
-	lua_pushstring(L, "maxVelocity");
-	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		maxSpeed = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-	
-	lua_pushstring(L, "maxVelocityX");
-	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		maxSpeedX = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-	
-	lua_pushstring(L, "maxVelocityY");
-	lua_gettable(L, -2);
-	if (lua_isnumber(L, -1))
-		maxSpeedY = lua_tonumber(L, -1);
-	lua_pop(L, 1);
+    PHLuaGetAngleField(rot, "rotation");
+	PHLuaGetNumberField(maxSpeed,"maxVelocity");
+    PHLuaGetNumberField(maxSpeedX,"maxVelocityX");
+    PHLuaGetNumberField(maxSpeedY,"maxVelocityY");
 	
 	PHRect min;
 	min.x = 0x3f3f3f3f;
@@ -333,19 +245,13 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 	min.height = -0x3f3f3f3f;
 	min.width = -0x3f3f3f3f;
 	
-	lua_pushstring(L, "images");
-	lua_gettable(L, -2);
+    lua_getfield(L, -1, "images");
 	if (lua_istable(L, -1))
 	{
-		lua_pushstring(L, "n");
-		lua_gettable(L, -2);
-		int n=0;
-		if (lua_isnumber(L, -1))
-			n = lua_tonumber(L, -1);
-		lua_pop(L, 1);
-		
+        int n=0;
+        PHLuaGetNumberField(n, "n");		
 		if (n==0)
-			min = PHMakeRect(0, 0, 0, 0);
+			min = PHRect(0, 0, 0, 0);
 		
 		for (int i=0; i<n; i++)
 		{
@@ -397,8 +303,8 @@ void PHLObject::loadImages()
 
 void PHLObject::loadView()
 {
-	view = new PHView(PHMakeRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
-    view->setRotationalCenter(PHMakePoint(-viewSize.x, -viewSize.y));
+	view = new PHView(PHRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
+    view->setRotationalCenter(PHPoint(-viewSize.x, -viewSize.y));
 	loadImages();
 	view->setRotation(rot);
 }
@@ -546,7 +452,7 @@ void PHLObject::updatePosition()
 	if (!body)
 		return;
 	b2Vec2 p = body->GetPosition();
-    pos = PHMakePoint(p.x, p.y);
+    pos = PHPoint(p.x, p.y);
     rot = body->GetAngle();
 }
 
@@ -554,7 +460,7 @@ void PHLObject::updateView()
 {
     if (view)
     {
-        view->setPosition(PHMakePoint(pos.x+viewSize.x, pos.y+viewSize.y));
+        view->setPosition(PHPoint(pos.x+viewSize.x, pos.y+viewSize.y));
         view->setRotation(rot);
     }
 }

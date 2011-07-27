@@ -18,40 +18,15 @@ void PHPrismaticJoint::loadFromLua(lua_State * L)
     PHMotorJoint::loadFromLua(L);
 
     anchor = PHOriginPoint;
-    lua_pushstring(L,"anchor");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        anchor = PHPoint::fromLua(L,-1);
-    lua_pop(L, 1);
-    
-    _lowerTranslation = 0.0f;
-    lua_pushstring(L, "lowerTranslation");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        _lowerTranslation = lua_isnumber(L, -1);
-    lua_pop(L, 1);
-    
-    _upperTranslation = 1.0f;
-    lua_pushstring(L, "upperTranslation");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        _upperTranslation = lua_isnumber(L, -1);
-    lua_pop(L, 1);
-    
+    _lowerTranslation = _upperTranslation = 0.0f;
     _enableLimit = true;
-    lua_pushstring(L, "limitEnabled");
-    lua_gettable(L, -2);
-    if (lua_isboolean(L, -1))
-        _enableLimit = lua_toboolean(L, -1);
-    lua_pop(L, 1);
+    axis = PHPoint(0,1);
     
-    axis.x = 0;
-    axis.y = 1;
-    lua_pushstring(L,"axis");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        anchor = PHPoint::fromLua(L,-1);
-    lua_pop(L, 1);
+    PHLuaGetPointField(anchor, "anchor");
+    PHLuaGetNumberField(_lowerTranslation, "lowerTranslation");
+    PHLuaGetNumberField(_upperTranslation, "upperTranslation");
+    PHLuaGetBoolField(_enableLimit, "limitEnabled");
+    PHLuaGetPointField(axis, "axis");
 }
 
 void PHPrismaticJoint::recreateJoint()

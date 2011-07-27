@@ -62,11 +62,7 @@ void PHLSign::display(lua_State * L)
 void PHLSign::loadFromLua(lua_State * L, const string & root, b2World * world)
 {
     PHLNPC::loadFromLua(L,root,world);
-    
-    lua_getfield(L, -1, "text");
-    if (lua_isstring(L,-1))
-        text = lua_tostring(L,-1);
-    lua_pop(L,1);
+    PHLuaGetStringField(text, "text");
 }
 
 static int PHLSign_display(lua_State * L)

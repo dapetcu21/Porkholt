@@ -15,13 +15,13 @@
 
 std::list<PHAnimationDescriptor*> PHView::animations;
 
-#define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
+#define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
 						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
-	setFrame(PHMakeRect(0, 0, 0, 0));
+	setFrame(PHRect(0, 0, 0, 0));
 }
 
 PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
@@ -64,7 +64,7 @@ PHPoint PHView::center() const
 
 void PHView::setCenter(const PHPoint &_center)
 {
-	setFrame(PHMakeRect(_center.x-_frame.width/2, _center.y-_frame.height/2, _frame.width, _frame.height));
+	setFrame(PHRect(_center.x-_frame.width/2, _center.y-_frame.height/2, _frame.width, _frame.height));
 }
 
 PHPoint PHView::boundsCenter() const
@@ -138,13 +138,13 @@ void PHView::render()
 			minY = pnt.y;\
 		if (pnt.y>maxY)\
 			maxY = pnt.y;
-		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x,_bounds.y));
+		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x,_bounds.y));
 		test;
-		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x+_bounds.width,_bounds.y));
+		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x+_bounds.width,_bounds.y));
 		test;
-		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x+_bounds.width,_bounds.y+_bounds.height));
+		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x+_bounds.width,_bounds.y+_bounds.height));
 		test;
-		pnt = PHTransformPointMatrix(m, PHMakePoint(_bounds.x,_bounds.y+_bounds.height));
+		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x,_bounds.y+_bounds.height));
 		test;
 		
 		PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();

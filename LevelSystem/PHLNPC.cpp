@@ -48,78 +48,24 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
 {
     PHLObject::loadFromLua(L,root,world);
     
-    lua_getfield(L, -1, "trail");
-    if (lua_isboolean(L, -1))
-        trail = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "usesTrail");
-    if (lua_isboolean(L, -1))
-        utrail = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
-    if (utrail)
+    PHLuaGetBoolField(trail,"trail");
+    PHLuaGetBoolField(utrail,"usesTrail");
+    if (utrail)       
         trail = true;
-    
-    lua_getfield(L, -1, "trailLength");
-    if (lua_isnumber(L, -1))
-        traillen = lua_tonumber(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "staticFace");
-    if (lua_isboolean(L, -1))
-        staticFace = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "faceFlipping");
-    if (lua_isboolean(L, -1))
-        fflip = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "bodyFlipping");
-    if (lua_isboolean(L, -1))
-        bflip = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
+    PHLuaGetNumberField(traillen, "trailLength");
+    PHLuaGetBoolField(staticFace,"staticFace");
+    PHLuaGetBoolField(fflip,"faceFlipping");
+    PHLuaGetBoolField(bflip,"bodyFlipping");
     shouldFlipUponLoad = false;
-    lua_getfield(L, -1, "flipped");
-    if (lua_isboolean(L, -1))
-        shouldFlipUponLoad = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "automaticFlipping");
-    if (lua_isboolean(L, -1))
-        aflip = lua_toboolean(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "overHead");
-    if (lua_istable(L, -1))
-        overHeadPoint = PHPoint::fromLua(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "questPoint");
-    if (lua_istable(L, -1))
-        questPoint = PHPoint::fromLua(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "questHeight");
-    if (lua_isnumber(L, -1))
-        questHeight = lua_tonumber(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "hurtInvulnerableTime");
-    if (lua_isnumber(L, -1))
-        hInvulnTime = lua_tonumber(L, -1);
-    lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "healthPoints");
-    if (lua_isnumber(L, -1))
-    {
-        setMaximumHP(lua_tonumber(L, -1));
-        hp = maxHP;
-    }
-    lua_pop(L, 1);
-    
+    PHLuaGetBoolField(shouldFlipUponLoad,"flipped");
+    PHLuaGetBoolField(aflip,"automaticFlipping");
+    PHLuaGetPointField(overHeadPoint,"overHead");
+    PHLuaGetPointField(questPoint,"questPoint");
+    PHLuaGetNumberField(questHeight, "questHeight");
+    PHLuaGetNumberField(hInvulnTime, "hurtInvulnerableTime");
+    PHLuaGetNumberField(maxHP, "healthPoints");
+    hp = maxHP;
+    PHLuaGetNumberField(questHeight, "questHeight");
     lua_getfield(L, -1, "startingHealthPoints");
     if (lua_isnumber(L, -1))
         setHP(lua_tonumber(L, -1));
@@ -128,8 +74,8 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
 
 void PHLNPC::loadView()
 {
-	view = new PHPlayerView(PHMakeRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
-    PHPoint center = PHMakePoint(-viewSize.x, -viewSize.y);
+	view = new PHPlayerView(PHRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
+    PHPoint center = PHPoint(-viewSize.x, -viewSize.y);
     view->setRotationalCenter(center);
     view->setFlipCenter(center);
 	loadImages();
@@ -149,12 +95,12 @@ void PHLNPC::updateView()
     if (dialogView)
     {
         bool flipped = dialogView->horizontallyFlipped();
-        dialogView->setPosition(PHMakePoint(pos.x+(flipped?-1:1)*overHeadPoint.x-(flipped?dialogView->frame().width:0), pos.y+overHeadPoint.y));
+        dialogView->setPosition(PHPoint(pos.x+(flipped?-1:1)*overHeadPoint.x-(flipped?dialogView->frame().width:0), pos.y+overHeadPoint.y));
     }
     if (questView)
     {
         double width = questView->frame().width;
-        questView->setFrame(PHMakeRect(pos.x+(flipped?(-questPoint.x-width):(questPoint.x)), pos.y+questPoint.y, width, questHeight));
+        questView->setFrame(PHRect(pos.x+(flipped?(-questPoint.x-width):(questPoint.x)), pos.y+questPoint.y, width, questHeight));
         questView->setHorizontallyFlipped(flipped);
         questView->setScalingCenter(PHOriginPoint);
     }
@@ -297,17 +243,17 @@ void PHLNPC::showDialog(PHDialog *dialog)
     if (width>camwidth*0.6)
         width=camwidth*0.6;
     double height = dialogFontSize/(1.0f-dialogBorderTop-dialogBorderBottom);
-    dialogView->setFrame(PHMakeRect(bubblePoint.x, bubblePoint.y, width, height));
+    dialogView->setFrame(PHRect(bubblePoint.x, bubblePoint.y, width, height));
     dialogView->setFlipCenter(PHOriginPoint);
     dialogView->setHorizontallyFlipped(flipped);
     dialogTextView->setHorizontallyFlipped(flipped);
-    dialogTextView->setFrame(PHMakeRect(width*dialogBorderLeft, height*dialogBorderBottom, width*(1.0f-dialogBorderLeft-dialogBorderright), dialogFontSize));
+    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, width*(1.0f-dialogBorderLeft-dialogBorderright), dialogFontSize));
     dialogTextView->setText(currentDialog->text);
     PHPoint sz =  dialogTextView->textSize();
     width = sz.x/(1.0f-dialogBorderLeft-dialogBorderright);
     height = sz.y/(1.0f-dialogBorderTop-dialogBorderBottom);
-    dialogView->setFrame(PHMakeRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
-    dialogTextView->setFrame(PHMakeRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
+    dialogView->setFrame(PHRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
+    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
     double scale = 1024;
     dialogView->setScaleX(1/scale);
     dialogView->setScaleY(1/scale);
@@ -442,8 +388,8 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     double oheight = dialogView->frame().height;
     double width = sz.x/(1.0f-dialogBorderLeft-dialogBorderright);
     double height = sz.y/(1.0f-dialogBorderTop-dialogBorderBottom);
-    dialogView->setFrame(PHMakeRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
-    dialogTextView->setFrame(PHMakeRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
+    dialogView->setFrame(PHRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
+    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
     
     dialogView->setScalingCenter(PHOriginPoint);
     dialogView->setScaleX(owidth/width);
@@ -510,7 +456,7 @@ void PHLNPC::showQuest()
     
     double aspectRatio = PHLevelController::questImage?((double)(PHLevelController::questImage->width())/PHLevelController::questImage->height()):1.0f;
     
-    questView->setFrame(PHMakeRect(pos.x+(flipped?(-questPoint.x-questHeight*aspectRatio):(questPoint.x)), pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
+    questView->setFrame(PHRect(pos.x+(flipped?(-questPoint.x-questHeight*aspectRatio):(questPoint.x)), pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
     questView->setHorizontallyFlipped(flipped);
     questView->setScalingCenter(PHOriginPoint);
 

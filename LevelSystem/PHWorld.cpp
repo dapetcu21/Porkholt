@@ -104,9 +104,9 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
     PHRect gaugeFrame;
-	jumpGaugeView = new PHGaugeView(gaugeFrame = PHMakeRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
+	jumpGaugeView = new PHGaugeView(gaugeFrame = PHRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
-    heartView = new PHHeartView(PHMakeRect(gaugeFrame.x+gaugeFrame.width, bounds.height-(HEART_Y+HEART_HEIGHT)*bounds.width, bounds.width-gaugeFrame.x-gaugeFrame.width-HEART_X*bounds.width, HEART_HEIGHT*bounds.width));
+    heartView = new PHHeartView(PHRect(gaugeFrame.x+gaugeFrame.width, bounds.height-(HEART_Y+HEART_HEIGHT)*bounds.width, bounds.width-gaugeFrame.x-gaugeFrame.width-HEART_X*bounds.width, HEART_HEIGHT*bounds.width));
     heartView->setHorizontallyFlipped(true);
     heartView->setFlippedOrder(true);
     heartView->setImage(PHImage::imageNamed("heart"));
@@ -555,7 +555,7 @@ void PHWorld::overlayText(const string & s, double duration)
         overlayView = new PHTextView;
         overlayView->setFont(PHFont::fontNamed("ArialBlack"));
         overlayView->setFontSize(OVERLAYFONTSIZE*bounds.height);
-        overlayView->setFrame(PHMakeRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
+        overlayView->setFrame(PHRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
         overlayView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
         overlayView->mutex();
         view->addSubview(overlayView);
@@ -564,7 +564,7 @@ void PHWorld::overlayText(const string & s, double duration)
     overlayView->setFontColor(PHClearColor);
     overlayView->setText(s);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->customColor = PHMakeColor(0, 0, 0, 0.5);
+    anim->customColor = PHColor(0, 0, 0, 0.5);
     anim->time = 0.5;
     anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
     anim->view = overlayView;

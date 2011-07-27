@@ -110,70 +110,22 @@ void PHLAnimation::loadFromLua(lua_State * l)
     lua_pushlightuserdata(L, this);
     lua_setfield(L, -2, "ud");
     
-    lua_getfield(L, -1, "rotation");
-    if (lua_isnumber(L, -1))
-        rotate = -toRad(lua_tonumber(L, -1));
-    lua_pop(L,1);
+    PHLuaGetAngleField(rotate, "rotation");
+    PHLuaGetPointField(move, "movement");
+    PHLuaGetPointField(force, "force");
+    PHLuaGetPointField(impulse, "impulse");
+    PHLuaGetPointField(velocity, "velocity");
+    PHLuaGetPointField(move, "movement");
+    PHLuaGetPointField(forceapp, "forceApplicationPoint");
+    PHLuaGetNumberField(corrForce, "correctorForce");
+    PHLuaGetNumberField(angularImpulse, "angularImpulse");
+    PHLuaGetNumberField(braking, "brakeForce");
+    objCoord = statica = invalidateCallback = useRotateCenter = false;
+    PHLuaGetBoolField(objCoord, "objectCoordinates");
+    PHLuaGetBoolField(statica, "disableDynamics");
+    PHLuaGetBoolField(invalidateCallback, "callbackOnInvalidate");
+    PHLuaGetNumberField(time, "time");
     
-    lua_getfield(L, -1, "movement");
-    if (lua_istable(L, -1))
-        move = PHPoint::fromLua(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "force");
-    if (lua_istable(L, -1))
-        force = PHPoint::fromLua(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "impulse");
-    if (lua_istable(L, -1))
-        impulse = PHPoint::fromLua(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "velocity");
-    if (lua_istable(L, -1))
-        velocity = PHPoint::fromLua(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "correctorForce");
-    if (lua_isnumber(L, -1))
-        corrForce = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "angularImpulse");
-    if (lua_isnumber(L, -1))
-        angularImpulse = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "brakeForce");
-    if (lua_isnumber(L, -1))
-        braking = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
-    lua_getfield(L, -1, "forceApplicationPoint");
-    if (lua_istable(L, -1))
-        forceapp = PHPoint::fromLua(L, -1);
-    lua_pop(L,1);
-    
-    objCoord = false;
-    lua_getfield(L, -1, "objectCoordinates");
-    if (lua_isboolean(L, -1))
-        objCoord = lua_toboolean(L, -1);
-    lua_pop(L,1);
-
-    statica = true;
-    lua_getfield(L, -1, "disableDynamics");
-    if (lua_isboolean(L, -1))
-        statica = lua_toboolean(L, -1);
-    lua_pop(L,1);
-    
-    invalidateCallback = false;
-    lua_getfield(L, -1, "callbackOnInvalidate");
-    if (lua_isboolean(L, -1))
-        invalidateCallback = lua_toboolean(L, -1);
-    lua_pop(L,1);
-
-    useRotateCenter = false;
     lua_getfield(L, -1, "rotationCenter");
     if (lua_istable(L, -1))
     {
@@ -191,11 +143,6 @@ void PHLAnimation::loadFromLua(lua_State * l)
         anim->release();
     }
     lua_pop(L, 1);
-    
-    lua_getfield(L, -1, "time");
-    if (lua_isnumber(L, -1))
-        time = lua_tonumber(L, -1);
-    lua_pop(L,1);
     
     lua_getfield(L, -1, "curveFunction");
     if (lua_isnumber(L, -1))

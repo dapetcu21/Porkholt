@@ -18,32 +18,12 @@ void PHRevoluteJoint::loadFromLua(lua_State * L)
     PHMotorJoint::loadFromLua(L);
     anchor = PHOriginPoint;
     
-    lua_pushstring(L,"anchor");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        anchor = PHPoint::fromLua(L,-1);
-    lua_pop(L, 1);
-    
-    _lowerAngle = 0.0f;
-    lua_pushstring(L, "lowerAngle");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        _lowerAngle = lua_isnumber(L, -1);
-    lua_pop(L, 1);
-    
-    _upperAngle = 0.0f;
-    lua_pushstring(L, "upperAngle");
-    lua_gettable(L, -2);
-    if (lua_istable(L, -1))
-        _upperAngle = lua_isnumber(L, -1);
-    lua_pop(L, 1);
-    
+    _lowerAngle = _upperAngle = 0.0f;
     _enableLimit = false;
-    lua_pushstring(L, "limitEnabled");
-    lua_gettable(L, -2);
-    if (lua_isboolean(L, -1))
-        _enableLimit = lua_toboolean(L, -1);
-    lua_pop(L, 1);
+    PHLuaGetPointField(anchor, "anchor");
+    PHLuaGetNumberField(_lowerAngle, "lowerAngle");
+    PHLuaGetNumberField(_upperAngle, "upperAngle");
+    PHLuaGetBoolField(_enableLimit, "limitEnabled");
 }
 
 void PHRevoluteJoint::recreateJoint()

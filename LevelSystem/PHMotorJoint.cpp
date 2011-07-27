@@ -18,25 +18,11 @@ void PHMotorJoint::loadFromLua(lua_State * L)
 {
     PHJoint::loadFromLua(L);
     enableMotor = false;
-    lua_pushstring(L, "motorEnabled");
-    lua_gettable(L, -2);
-    if (lua_isboolean(L, -1))
-        enableMotor = lua_toboolean(L, -1);
-    lua_pop(L,1);
-    
     _motorPower = 1.0f;
-    lua_pushstring(L, "motorMaxPower");
-    lua_gettable(L, -2);
-    if (lua_isnumber(L, -1))
-        _motorPower = lua_tonumber(L, -1);
-    lua_pop(L,1);
-    
     _motorSpeed = 1.0f;
-    lua_pushstring(L, "motorSpeed");
-    lua_gettable(L, -2);
-    if (lua_isnumber(L, -1))
-        _motorSpeed = lua_tonumber(L, -1);
-    lua_pop(L,1);
+    PHLuaGetBoolField(enableMotor,"motorEnabled");
+    PHLuaGetNumberField(_motorPower,"motorMaxPower");
+    PHLuaGetNumberField(_motorSpeed,"motorSpeed");
 }
 
 void PHMotorJoint::setMotorEnabled(bool val)
