@@ -15,6 +15,6 @@ void PHLPit::objectEntered(PHLObject * obj)
     PHLPlayer * p = getWorld()->getPlayer();
     if (obj == p)
     {
-        p->decreaseHP(INFINITY);
+        p->setHP(0);
     }
 }
