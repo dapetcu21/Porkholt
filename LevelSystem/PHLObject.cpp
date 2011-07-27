@@ -806,6 +806,10 @@ void PHLObject::commitAnimations(double el)
     }
 }
 
+void PHLObject::destroy()
+{
+    getWorld()->removeObject(this);
+}
 
 #pragma mark -
 #pragma mark scripting
@@ -845,20 +849,23 @@ void PHLObject::scriptingInit(lua_State * l)
     lua_setglobal(l, scriptingName.c_str());
 }
 
-static int PHLObject_destroy(lua_State * L)
-{
-    PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
-    lua_getglobal(L, "PHWorld");
-    lua_getfield(L,-1,"ud");
-    PHWorld * world = (PHWorld*)lua_touserdata(L, -1);
-    lua_pop(L,2);
-    world->removeObject(obj);
-    return 0;
-}
-
-
 PHLuaPointGetter(PHLObject, position);
 PHLuaAngleGetter(PHLObject, rotation);
+PHLuaPointSetter(PHLObject, setPosition);
+PHLuaAngleSetter(PHLObject, setRotation);
+PHLuaDefineCall(PHLObject, skipAllAnimations);
+PHLuaDefineCall(PHLObject, invalidateAllAnimations);
+PHLuaBoolGetter(PHLObject, isDynamic);
+PHLuaBoolSetter(PHLObject, setDynamic);
+PHLuaPointGetter(PHLObject, velocity);
+PHLuaNumberGetter(PHLObject, scalarVelocity);
+PHLuaPointSetter(PHLObject, setVelocity);
+PHLuaNumberGetter(PHLObject, angularVelocity);
+PHLuaNumberSetter(PHLObject, setAngularVelocity);
+PHLuaNumberSetter(PHLObject, applyAngularImpulse);
+PHLuaNumberGetter(PHLObject, mass);
+PHLuaPointGetter(PHLObject, centerOfMass);
+PHLuaDefineCall(PHLObject, destroy);
 
 static int PHLObject_transform(lua_State * L)
 {
@@ -899,9 +906,6 @@ static int PHLObject_setTransform(lua_State * L)
     return 0;
 }
 
-PHLuaPointSetter(PHLObject, setPosition);
-PHLuaAngleSetter(PHLObject, setRotation);
-
 static int PHLObject_rotate(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
@@ -934,9 +938,6 @@ static int PHLObject_addAnimation(lua_State * L)
     return 0;
 }
 
-PHLuaDefineCall(PHLObject, skipAllAnimations);
-PHLuaDefineCall(PHLObject, invalidateAllAnimations);
-
 static int PHLObject_rotateAround(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
@@ -945,9 +946,6 @@ static int PHLObject_rotateAround(lua_State * L)
     obj->rotateAround(-toRad(lua_tonumber(L, 2)), PHPoint::fromLua(L,3));
     return 0;
 }
-
-PHLuaBoolGetter(PHLObject, isDynamic);
-PHLuaBoolSetter(PHLObject, setDynamic);
 
 static int PHLObject_worldPoint(lua_State * L)
 {
@@ -996,15 +994,6 @@ static int PHLObject_applyImpulse(lua_State * L)
     obj->applyImpulse(PHPoint::fromLua(L, 2), ap);
     return 0;
 }
-
-PHLuaPointGetter(PHLObject, velocity);
-PHLuaNumberGetter(PHLObject, scalarVelocity);
-PHLuaPointSetter(PHLObject, setVelocity);
-PHLuaNumberGetter(PHLObject, angularVelocity);
-PHLuaNumberSetter(PHLObject, setAngularVelocity);
-PHLuaNumberSetter(PHLObject, applyAngularImpulse);
-PHLuaNumberGetter(PHLObject, mass);
-PHLuaPointGetter(PHLObject, centerOfMass);
 
 static int PHLObject_viewWithTag(lua_State * L)
 {

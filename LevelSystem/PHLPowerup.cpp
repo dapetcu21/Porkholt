@@ -73,7 +73,7 @@ void PHLPowerup::updatePosition()
     if (remaining<=0)
     {
         dismissed();
-        getWorld()->removeObject(this);
+        destroy();
     }
 }
 

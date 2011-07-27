@@ -23,7 +23,7 @@ private:
     double touchesSomething;
     int forceGap;
     bool userInp,force;
-    
+    double damage;
     PHMutex * mutex;
 public:
 	PHLPlayer();
@@ -43,6 +43,9 @@ public:
     bool userInput() { return userInp; }
     void setUsesForce(bool f) { force = f; }
     bool usesForce() { return force; }
+    void setAttackDamage( double dmg ) { damage = dmg; }
+    double attackDamage() { return damage; }
+    
     
     static void registerLuaInterface(lua_State *L);
 };

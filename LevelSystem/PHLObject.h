@@ -117,6 +117,8 @@ public:
     
     PHWorld * getWorld() { return wrld; }
     
+    void destroy();
+    
 private:
     
     virtual bool customizeFixture(lua_State * L, b2FixtureDef & fixtureDef);

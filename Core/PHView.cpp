@@ -17,7 +17,7 @@ std::list<PHAnimationDescriptor*> PHView::animations;
 
 #define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHMakeRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView")
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -116,6 +116,7 @@ void PHView::applyMatrices()
 extern PHView * playerView;
 void PHView::render()
 {
+    if (mtx) mtx->lock();
 	glPushMatrix();
 	applyMatrices();
 	
@@ -167,12 +168,14 @@ void PHView::render()
 		}
 	}
 	glPopMatrix();
+    if (mtx) mtx->unlock();
 }
 
 void PHView::addSubview(PHView * view)
 {
 	if (!view)
 		return;
+    if (mtx) mtx->lock();
 	view->retain();
 	view->removeFromSuperview();
 	PHView::ViewEl * tmp = new PHView::ViewEl;
@@ -186,11 +189,15 @@ void PHView::addSubview(PHView * view)
 		tmp->prev->next = tmp;
 	view->currPos = tmp;
 	view->superView = this;
+    if (mtx) mtx->unlock();
 }
 
 void PHView::removeFromSuperview()
 {
 	if (!superView) return;
+    PHMutex * m = superView->mtx;
+    if (m) m->lock();
+    if (mtx) mtx->lock();
 	if (currPos->prev)
 		currPos->prev->next = currPos->next;
 	else
@@ -202,6 +209,8 @@ void PHView::removeFromSuperview()
 	delete currPos;
 	superView = NULL;
 	currPos = NULL;
+    if (mtx) mtx->unlock();
+    if (m) m->unlock();
 	release();
 }
 
@@ -249,6 +258,7 @@ PHView::~PHView()
 		p=p->next;
 		view->removeFromSuperview();
 	}
+    if (mtx) mtx->release();
 }
 
 void PHView::bringToFront()

@@ -20,10 +20,12 @@
 #include "PHDialogView.h"
 #include "PHDialog.h"
 #include "PHLAnimation.h"
+#include "PHMainEvents.h"
+#include "PHEventQueue.h"
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL), quest3(true), showDialogDelayed(false)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL), quest3(true), showDialogDelayed(false), hp(1.0f),maxHP(1.0f), invuln(false), hinvuln(false), hInvulnTime(1.0f), hInvulnRemTime(0), hInvulnFadeColor(PHBlackColor)
 {
     _class = "PHLNPC";
 }
@@ -104,6 +106,24 @@ void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
     if (lua_isnumber(L, -1))
         questHeight = lua_tonumber(L, -1);
     lua_pop(L, 1);
+    
+    lua_getfield(L, -1, "hurtInvulnerableTime");
+    if (lua_isnumber(L, -1))
+        hInvulnTime = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_getfield(L, -1, "healthPoints");
+    if (lua_isnumber(L, -1))
+    {
+        setMaximumHP(lua_tonumber(L, -1));
+        hp = maxHP;
+    }
+    lua_pop(L, 1);
+    
+    lua_getfield(L, -1, "startingHealthPoints");
+    if (lua_isnumber(L, -1))
+        setHP(lua_tonumber(L, -1));
+    lua_pop(L, 1);
 }
 
 void PHLNPC::loadView()
@@ -113,7 +133,7 @@ void PHLNPC::loadView()
     view->setRotationalCenter(center);
     view->setFlipCenter(center);
 	loadImages();
-    bodyView = (PHTrailImageView*)(view->viewWithTag(20));
+    bodyView = (PHImageView*)(view->viewWithTag(20));
     faceView = (PHImageView*)(view->viewWithTag(21));
     if (staticFace) 
         ((PHPlayerView*)view)->setDesignatedTag(21);
@@ -162,8 +182,18 @@ void PHLNPC::updatePosition()
         shouldFlipUponLoad = false;
     }
     b2Vec2 speed = body->GetLinearVelocity();
+    double elapsed = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
     if (aflip && (fflip || bflip) && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
+    if (hInvulnRemTime)
+    {
+        hInvulnRemTime-=elapsed;
+        if (hInvulnRemTime<=0)
+        {
+            hInvulnRemTime = 0;
+            hinvuln = false;
+        }
+    }
 }
 
 void PHLNPC::flip()
@@ -241,6 +271,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
     if (!dialogView)
     {
         dialogView = new PHDialogView(this);
+        dialogView->mutex();
         dialogView->setImage(PHLevelController::dialogImage);
         dialogView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogView->setUserInput(true);
@@ -255,6 +286,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
         dialogTextView->release();
         getWorld()->getWorldView()->addSubview(dialogView);
     }
+    dialogView->mutex()->lock();
     PHView::cancelAllAnimationsWithTag(5836);
     PHPoint bubblePoint = pos;
     bubblePoint.y+=overHeadPoint.y;
@@ -289,6 +321,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
     anim->timeFunction = PHAnimationDescriptor::BounceFunction;
     PHView::addAnimation(anim);
     anim->release();
+    dialogView->mutex()->unlock();
 }
 
 void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
@@ -300,6 +333,11 @@ void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
 }
 
 void PHLNPC::dialogViewFired(PHDialogView * dv)
+{
+    getWorld()->modelEventQueue()->schedule(this, (PHCallback)&PHLNPC::_dialogViewFired, dv, false);
+}
+
+void PHLNPC::_dialogViewFired(PHObject * sender, PHDialogView * dv)
 {
     if (dialogView==dv)
     {
@@ -332,6 +370,7 @@ void PHLNPC::dismissDialog()
         currentDialog = NULL;
     }
     if (!dialogView) return;
+    dialogView->mutex()->lock();
     dialogView->cancelAnimationsWithTag(5836);
     dialogTextView->cancelAnimationsWithTag(5836);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
@@ -347,6 +386,7 @@ void PHLNPC::dismissDialog()
     anim->tag = 5838;
     PHView::addAnimation(anim);
     anim->release();
+    dialogView->mutex()->unlock();
 }
 
 void PHLNPC::swapDialog(PHDialog *dialog)
@@ -364,6 +404,7 @@ void PHLNPC::swapDialog(PHDialog *dialog)
         dismissDialog();
         return;
     }
+    dialogView->mutex()->lock();
     dialogView->cancelAnimationsWithTag(5836);
     dialogTextView->cancelAnimationsWithTag(5836);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
@@ -377,10 +418,12 @@ void PHLNPC::swapDialog(PHDialog *dialog)
     anim->tag = 5838;
     PHView::addAnimation(anim);
     anim->release();
+    dialogView->mutex()->unlock();
 }
 
 void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
 {
+    dialogView->mutex()->lock();
     PHPoint bubblePoint = pos;
     bubblePoint.y+=overHeadPoint.y;
     bool flipped = dialogView->horizontallyFlipped();
@@ -442,6 +485,7 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     anim->tag = 5838;
     PHView::addAnimation(anim);
     anim->release();
+    dialogView->mutex()->unlock();
 }
 
 void PHLNPC::_dialogSwapEnd(PHLObject * sender, void * ud)
@@ -455,10 +499,12 @@ void PHLNPC::showQuest()
     if (!questView)
     {
         questView = new PHDialogView(this);
+        questView->mutex();
         questView->setImage(PHLevelController::questImage);
         questView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         getWorld()->getWorldView()->addSubview(questView);
     }
+    questView->mutex()->lock();
     questView->cancelAnimationsWithTag(4867);
     questView->setUserInput(true);
     
@@ -484,6 +530,7 @@ void PHLNPC::showQuest()
     anim->timeFunction = PHAnimationDescriptor::BounceFunction;
     PHView::addAnimation(anim);
     anim->release();
+    questView->mutex()->unlock();
 }
 
 void PHLNPC::questShowedUp(PHObject *sender, void *ud)
@@ -508,6 +555,7 @@ void PHLNPC::hideQuest()
         }
         return;
     }
+    questView->mutex()->lock();
     questView->cancelAnimationsWithTag(4867);
     questView->setUserInput(false);
     
@@ -525,6 +573,7 @@ void PHLNPC::hideQuest()
     anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
     PHView::addAnimation(anim);
     anim->release();
+    questView->mutex()->unlock();
 
 }
 
@@ -631,9 +680,63 @@ void PHLNPC::setBraked(bool b)
     }
 }
 
+void PHLNPC::die()
+{
+    animateHurtInvuln();
+}
+
 void PHLNPC::lowHP()
 {
+    die();
+}
+
+void PHLNPC::increasedHP()
+{
     
+}
+
+void PHLNPC::decreasedHP()
+{
+    animateHurtInvuln();
+}
+
+void PHLNPC::_animateHurtInvulnEnd(PHObject * sender, void * ud)
+{
+    if (!bodyView) return;
+    
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->time = hInvulnTime/2;
+    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
+    anim->view = bodyView;
+    anim->customColor = PHWhiteColor;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+void PHLNPC::_animateHurtInvuln(PHObject * sender, void * ud)
+{
+    if (hInvulnFadeColor == PHInvalidColor) return;
+    if (!bodyView) return;
+    bodyView->setTintColor(PHWhiteColor);
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->time = hInvulnTime/2;
+    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    anim->view = bodyView;
+    anim->customColor = hInvulnFadeColor;
+    anim->callback = (PHCallback)&PHLNPC::_animateHurtInvulnEnd;
+    anim->target = this;
+    PHView::addAnimation(anim);
+    anim->release();
+}
+
+void PHLNPC::animateHurtInvuln()
+{
+    hInvulnRemTime = hInvulnTime;
+    hinvuln = true;
+    if (hInvulnFadeColor == PHInvalidColor) return;
+    if (!bodyView) return;
+    
+    getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLNPC::_animateHurtInvuln,NULL,false);
 }
 
 #pragma mark -
@@ -726,12 +829,16 @@ static int PHLNPC_walkTo(lua_State * L)
 
 PHLuaBoolGetter(PHLNPC, braked);
 PHLuaBoolSetter(PHLNPC, setBraked);
-PHLuaBoolSetter(PHLNPC, setHP);
-PHLuaBoolSetter(PHLNPC, setMaximumHP);
-PHLuaBoolSetter(PHLNPC, increaseHP);
-PHLuaBoolSetter(PHLNPC, decreaseHP);
-PHLuaBoolGetter(PHLNPC, healthPoints);
-PHLuaBoolGetter(PHLNPC, maximumHP);
+PHLuaNumberSetter(PHLNPC, setHP);
+PHLuaNumberSetter(PHLNPC, setMaximumHP);
+PHLuaNumberSetter(PHLNPC, increaseHP);
+PHLuaNumberSetter(PHLNPC, decreaseHP);
+PHLuaNumberGetter(PHLNPC, healthPoints);
+PHLuaNumberGetter(PHLNPC, maximumHP);
+PHLuaDefineCall(PHLNPC, die);
+PHLuaBoolGetter(PHLNPC, invulnerable);
+PHLuaBoolGetter(PHLNPC, isInvulnerable);
+PHLuaBoolSetter(PHLNPC, setInvulnerable);
 
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
@@ -760,6 +867,10 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     PHLuaAddMethod(PHLNPC, decreaseHP);
     PHLuaAddMethod(PHLNPC, maximumHP);
     PHLuaAddMethod(PHLNPC, setMaximumHP);
+    PHLuaAddMethod(PHLNPC, die);
+    PHLuaAddMethod(PHLNPC, invulnerable);
+    PHLuaAddMethod(PHLNPC, isInvulnerable);
+    PHLuaAddMethod(PHLNPC, setInvulnerable);
     
     lua_pop(L,1);
 }

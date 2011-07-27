@@ -24,6 +24,8 @@ private:
     void attacked(PHObject * sender, void * ud);
     void cooldownEnded(PHObject * sender, void * ud);
     void reallyAttack(PHObject * sender, void * ud);
+    virtual bool vulnerableFixture(b2Fixture * f);
+    virtual double speedNeededForDamagingFixture(b2Fixture * f);
 public:
     PHLBull();
     virtual ~PHLBull();

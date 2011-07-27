@@ -17,9 +17,10 @@
 #include "PHMotion.h"
 #include "PHLua.h"
 
-PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true)
+PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1)
 {
 	_class = "PHLPlayer";
+    maxHP = hp = 3.0f;
 }
 
 PHLPlayer::~PHLPlayer()
@@ -33,10 +34,8 @@ void PHLPlayer::loadFromLua(lua_State * L, const string & root,b2World * world)
 	PHLNPC::loadFromLua(L,root,world);
     body->SetBullet(true);
     
-    lua_getfield(L, -1, "usesForce");
-    if (lua_isboolean(L,-1))
-        force = lua_toboolean(L, -1);
-    lua_pop(L,1);
+    PHLuaGetNumberField(damage, "attackDamage");
+    PHLuaGetBoolField(force, "usesForce");
 }
 
 
@@ -140,11 +139,15 @@ PHLuaBoolGetter(PHLPlayer, userInput);
 PHLuaBoolSetter(PHLPlayer, setUserInput);
 PHLuaBoolGetter(PHLPlayer, usesForce);
 PHLuaBoolSetter(PHLPlayer, setUsesForce);
+PHLuaNumberGetter(PHLPlayer, attackDamage);
+PHLuaNumberSetter(PHLPlayer, setAttackDamage);
 
 void PHLPlayer::registerLuaInterface(lua_State *L)
 {
     lua_getglobal(L, "PHLPlayer");
     
+    PHLuaAddMethod(PHLPlayer, attackDamage);
+    PHLuaAddMethod(PHLPlayer, setAttackDamage);
     PHLuaAddMethod(PHLPlayer, setUserInput);
     PHLuaAddMethod(PHLPlayer, userInput);
     PHLuaAddMethod(PHLPlayer, setUsesForce);

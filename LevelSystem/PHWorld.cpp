@@ -106,6 +106,8 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	jumpGaugeView = new PHGaugeView(gaugeFrame = PHMakeRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
     heartView = new PHHeartView(PHMakeRect(gaugeFrame.x+gaugeFrame.width, bounds.height-(HEART_Y+HEART_HEIGHT)*bounds.width, bounds.width-gaugeFrame.x-gaugeFrame.width-HEART_X*bounds.width, HEART_HEIGHT*bounds.width));
+    heartView->setHorizontallyFlipped(true);
+    heartView->setFlippedOrder(true);
     heartView->setImage(PHImage::imageNamed("heart"));
 	PHMutex * mutex = new PHMutex();
 	view->setMutex(mutex);
@@ -235,6 +237,9 @@ void PHWorld::updateScene()
 		}
 	}
 	jumpGaugeView->setLevel(_jumpGauge/maxJump);
+    int hn = round(player->maximumHP());
+    heartView->setHeartNumber(hn);
+    heartView->setActiveHearts(round(player->healthPoints()/player->maximumHP()*hn));
 }
 
 void PHWorld::addObject(PHLObject * obj)

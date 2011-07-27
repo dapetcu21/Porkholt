@@ -251,6 +251,10 @@ end
 --function PHLNPC:decreaseHP(ammount);
 --function PHLNPC:maximumHP();
 --function PHLNPC:setMaximumHP(maxHP);
+--function PHLNPC:die();
+--function PHLNPC:invulnerable();
+--function PHLNPC:setInvulnerable(b);
+--function PHLNPC:isInvulnerable(); --this also accounts for hurt vulnerability
 
 PHLPlayer = PHLNPC:new()
 --function PHLPlayer:usesForce();

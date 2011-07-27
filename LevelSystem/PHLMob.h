@@ -11,13 +11,27 @@
 
 #include "PHLNPC.h"
 
+class b2Fixture;
+
 class PHLMob: public PHLNPC
 {
+private:
+    double damage;
+    
+    virtual void contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold);
+    
+    virtual bool vulnerableFixture(b2Fixture * f);
+    virtual double speedNeededForDamagingFixture(b2Fixture * f);
 public:
     PHLMob();
     virtual ~PHLMob();
     
+    virtual void loadFromLua(lua_State *L, const string &root, b2World *world);
+    
     static void registerLuaInterface(lua_State * L);
+    
+    void setAttackDamage(double power) { damage = power; }
+    double attackDamage() { return damage; }
 };
 
 #endif

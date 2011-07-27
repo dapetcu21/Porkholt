@@ -14,6 +14,7 @@
 #include "PHAnimationDescriptor.h"
 #include "PHTouch.h"
 
+class PHMutex;
 class PHAuxLayerView;
 class PHView : public PHObject
 {
@@ -38,6 +39,7 @@ protected:
 	int effOrder;
     int _tag;
     bool eventHandled;
+    PHMutex * mtx;
     
     virtual void auxRender();
 	virtual void render();
@@ -163,6 +165,8 @@ protected:
 public:
     void getLuaHandle(lua_State * L);
     static void registerLuaInterface(lua_State * L);
+public:
+    PHMutex * mutex() { if (!mtx) mtx = new PHMutex; return mtx; }
 };
 
 #endif

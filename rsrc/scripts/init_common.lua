@@ -108,7 +108,7 @@ function Initializers.PHLBull(obj,scale)
 	Initializers.PHLMob(obj)
 	scale = scale or 1
 	obj.bodyFlipping = true;
-	obj.automaticFlipping = true;
+--	obj.automaticFlipping = true;
 	obj.attackRange = 3.5;
 	obj.attackVelocity = 5;
 	obj.attackDuration = 0.5;
@@ -120,11 +120,11 @@ function Initializers.PHLBull(obj,scale)
 	local h = 0.794531;
 	local bw = 1;
 	local bh = 0.636172;
-	local hbw = 0.02;
-	objectAddImage(obj,"/bull_body.png", x*scale, y*scale, w*scale, h*scale);
-	objectAddImage(obj,"/bull_eye.png", x*scale, y*scale, w*scale, h*scale, {tag = 74; } );
-	objectAddBox(obj,(bw/2-hbw/2)*scale,-bh/2*scale,hbw*scale,bh*scale);
-	objectAddBox(obj,-bw/2*scale,-bh/2*scale,bw*scale,bh*scale);
+	local hbw = 0.1;
+	objectAddImage(obj,"/bull_body.png", x*scale, y*scale, w*scale, h*scale, {tag = 20; });
+	objectAddImage(obj,"/bull_eye.png", x*scale, y*scale, w*scale, h*scale, {tag = 21; } );
+	objectAddBox(obj,(bw/2-hbw)*scale,-bh/2*scale,hbw*scale,bh*scale);
+	objectAddBox(obj,-bw/2*scale,-bh/2*scale,(bw-hbw)*scale,bh*scale);
 end
 function Initializers.PHLGround(obj)
 	Initializers.PHLObject(obj)

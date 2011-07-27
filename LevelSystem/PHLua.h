@@ -162,4 +162,16 @@ static int classn ## _ ## method (lua_State * L) \
     return 1; \
 }
 
+#define PHLuaGetNumberField(var,name) \
+lua_getfield(L, -1, name); \
+if (lua_isnumber(L, -1)) \
+    var = lua_tonumber(L, -1); \
+lua_pop(L,1)
+
+#define PHLuaGetBoolField(var,name) \
+lua_getfield(L, -1, name); \
+if (lua_isboolean(L, -1)) \
+var = lua_isboolean(L, -1); \
+lua_pop(L,1)
+
 #endif

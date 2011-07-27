@@ -66,6 +66,7 @@ private:
     void _dialogSwapBegin(PHLObject * sender, void * ud);
     void _dialogSwapEnd(PHLObject * sender, void * ud);
     friend class PHDialogView;
+    void _dialogViewFired(PHObject * sender, PHDialogView * dv);
     
     PHDialogView * questView;
     
@@ -117,19 +118,35 @@ public:
     bool braked() { return brakeAnimation!=NULL; }
     void setBraked(bool br); 
     
-private:
+protected:
     double hp;
     double maxHP;
+    bool invuln,hinvuln;
+    double hInvulnTime;
+    double hInvulnRemTime;
+    PHColor hInvulnFadeColor;
     
     virtual void lowHP();
+    virtual void increasedHP();
+    virtual void decreasedHP();
+    
+    void animateHurtInvuln();
+    void _animateHurtInvuln(PHObject * sender, void * ud);
+    void _animateHurtInvulnEnd(PHObject * sender, void * ud);
     
 public:
     void setHP(double HP) { hp = HP; if (hp<=0) lowHP(); if (hp>maxHP) hp=maxHP; }
-    void decreaseHP(double HP) { hp-=HP; if (hp<=0) lowHP(); }
-    void increaseHP(double HP) { hp-=HP; if (hp>maxHP) hp=maxHP; }
+    void decreaseHP(double HP) { if (invuln || hinvuln) return; hp-=HP; if (hp<=0) { hp = 0; lowHP(); } else decreasedHP(); }
+    void increaseHP(double HP) { hp-=HP; if (hp>maxHP) hp=maxHP; increasedHP(); }
     double healthPoints() { return hp; }
     double maximumHP() { return maxHP; }
     void setMaximumHP(double mhp) { maxHP = mhp; if (hp>maxHP) hp=maxHP; }
+    
+    virtual void die();
+    
+    void setInvulnerable(bool i) { invuln = i; }
+    bool invulnerable() { return invuln; }
+    bool isInvulnerable() { return invuln || hinvuln; }
 };
 
 #endif

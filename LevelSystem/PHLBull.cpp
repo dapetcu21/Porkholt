@@ -32,16 +32,14 @@ void PHLBull::cooldownEnded(PHObject * sender, void * ud)
 
 void PHLBull::attacked(PHObject * sender, void * ud)
 {
-    PHImageView * v = (PHImageView*)view->viewWithTag(74);
     PHImageAnimator * animator;
-    if (v && ((animator=v->animator())))
+    if (faceView && ((animator=faceView->animator())))
         animator->animateSection("relaxing");
 }
 
 void PHLBull::reallyAttack(PHObject * sender, void * ud)
 {
-    PHPoint d = getWorld()->getPlayer()->position()-position();
-    PHPoint v = PHMakePoint(attackVelocity*((d.x>=0)?1:-1), 0);
+    PHPoint v = PHMakePoint(attackVelocity*(isFlipped()?-1:1), 0);
     
     PHLAnimation * anim = new PHLAnimation;
     anim->setVelocity(v,mass()*20);
@@ -68,9 +66,8 @@ void PHLBull::attack()
 {
     setFlipped((getWorld()->getPlayer()->position()-position()).x<0);
     
-    PHImageView * v = (PHImageView*)view->viewWithTag(74);
     PHImageAnimator * animator;
-    if (v && ((animator=v->animator())))
+    if (faceView&& ((animator=faceView->animator())))
         animator->animateSection("charging",this,(PHCallback)&PHLBull::reallyAttack,NULL);
     else
         reallyAttack(NULL,NULL);
@@ -82,6 +79,17 @@ void PHLBull::updatePosition()
     PHLMob::updatePosition();
     if (!attacking && fabs((getWorld()->getPlayer()->position()-position()).x)<=attackRange)
         attack();
+}
+
+bool PHLBull::vulnerableFixture(b2Fixture * f)
+{
+    if (f==fixtures[0]) return false;
+    return true;
+}
+
+double PHLBull::speedNeededForDamagingFixture(b2Fixture * f)
+{
+    return 2.0f;
 }
 
 void PHLBull::loadFromLua(lua_State *L, const string &root, b2World *world)
