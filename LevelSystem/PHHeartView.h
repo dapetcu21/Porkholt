@@ -11,7 +11,7 @@
 
 #include "PHImageView.h"
 
-#define PHHEARTVIEW_INIT heartNo(3), active(3), flipped(false)
+#define PHHEARTVIEW_INIT heartNo(3), active(3), flipped(false), gap(0)
 
 class PHHeartView : public PHImageView
 {
@@ -19,6 +19,7 @@ private:
     int heartNo;
     int active;
     bool flipped;
+    double gap;
 public:
     PHHeartView() : PHImageView(), PHHEARTVIEW_INIT {}
     PHHeartView(const PHRect & frame) : PHImageView(frame), PHHEARTVIEW_INIT {}
@@ -29,6 +30,8 @@ public:
     bool flippedOrder() { return flipped; }
     void setFlippedOrder(bool f) { flipped = f; }
     virtual void draw();
+    void setHeartGap(double g) { gap = g; }
+    double heartGap() { return gap; }
 };
 
 #endif

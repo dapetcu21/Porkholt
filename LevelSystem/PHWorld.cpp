@@ -36,8 +36,9 @@
 #define GAUGE_Y (5/480.0f)
 
 #define HEART_HEIGHT (16/480.0f)
-#define HEART_X (2/480.0f)
+#define HEART_X (5/480.0f)
 #define HEART_Y (5/480.0f)
+#define HEART_GAP (5/480.0f)
 
 class PHContactListener : public b2ContactListener
 {
@@ -107,6 +108,7 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	jumpGaugeView = new PHGaugeView(gaugeFrame = PHRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
 	jumpGaugeView->setImage(PHImage::imageNamed("gauge"));
     heartView = new PHHeartView(PHRect(gaugeFrame.x+gaugeFrame.width, bounds.height-(HEART_Y+HEART_HEIGHT)*bounds.width, bounds.width-gaugeFrame.x-gaugeFrame.width-HEART_X*bounds.width, HEART_HEIGHT*bounds.width));
+    heartView->setHeartGap(HEART_GAP*bounds.width);
     heartView->setHorizontallyFlipped(true);
     heartView->setFlippedOrder(true);
     heartView->setImage(PHImage::imageNamed("heart"));

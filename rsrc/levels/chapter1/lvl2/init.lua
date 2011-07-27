@@ -2,7 +2,7 @@ require("init_common");
 
 lyr = { scale = 0.3; }
 for i=-2,20 do
-	layerAddImage(lyr,"/hills.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
+	layerAddImage(lyr,"/hills.png",i*6/0.3,-6/5*2/0.3,6.06/0.3,6/5*2/0.3*2);
 end
 addLayer(lyr);
 

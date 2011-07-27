@@ -14,10 +14,10 @@ void PHHeartView::draw()
 {
     if (!_image) return;
     double height = _bounds.height;
-    double width = _image->width()/((double)_image->height())*height;
+    double width = height/_image->height()*_image->width();
     for (int i=0; i<heartNo; i++)
     {
         bool isactive = (flipped?(heartNo-i<=active):(i<active));
-        renderInFramePortionTint(PHRect(i*width,0,height,width),PHWholeRect,isactive?PHInvalidColor:PHColor(1.0f,1.0f,1.0f,0.5f));
+        renderInFramePortionTint(PHRect(i*(width+gap),0,width,height),PHWholeRect,isactive?PHInvalidColor:PHColor(1.0f,1.0f,1.0f,0.5f));
     }
 }

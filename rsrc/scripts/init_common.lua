@@ -108,7 +108,6 @@ function Initializers.PHLBull(obj,scale)
 	Initializers.PHLMob(obj)
 	scale = scale or 1
 	obj.bodyFlipping = true;
---	obj.automaticFlipping = true;
 	obj.attackRange = 3.5;
 	obj.attackVelocity = 5;
 	obj.attackDuration = 0.5;

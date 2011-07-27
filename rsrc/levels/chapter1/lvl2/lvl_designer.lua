@@ -353,7 +353,6 @@ obj.scripting = [[player]];
 obj.trail = false;
 obj.barHidden = true;
 obj.maximumForce = 50.000000;
-obj.hasTrail = false;
 obj.levelDes = true;
 addObject(obj);
 
