@@ -131,10 +131,12 @@ public:
     void addDialog(PHDialog* d);
     
 private:
-    
+    void fadedToColor(PHObject * obj, void * ud);
     void _fadedToColor(PHObject * obj, void * ud);
+    void _fadeToColor(PHObject * sender, void * ud);
     void dismissOverlayText();
     void _overlayDismissed(PHObject * obj, void * ud);
+    void _dismissFading(PHObject * sender, void * ud);
     PHColor dimColor;
     PHView * dimView;
     PHTextView * overlayView;

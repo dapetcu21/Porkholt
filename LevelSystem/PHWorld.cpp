@@ -27,6 +27,7 @@
 #include "PHScripting.h"
 
 #include "PHTextView.h"
+#include "PHEventQueue.h"
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
@@ -445,10 +446,37 @@ void PHWorld::addDialog(PHDialog* d)
     d->inStack = true;
 }
 
+void PHWorld::fadedToColor(PHObject * obj, void * ud)
+{
+    viewQueue->schedule(this,(PHCallback)&PHWorld::_fadedToColor,ud,false);
+}
+
+
 void PHWorld::_fadedToColor(PHObject * obj, void * ud)
 {
     if (ud)
         scripting->worldHasFadedAway(ud);
+}
+
+void PHWorld::_fadeToColor(PHObject * sender, void * ud)
+{
+    if (!dimView)
+    {
+        dimView = new PHView(view->bounds());
+        view->addSubview(dimView);
+    }
+    dimView->cancelAnimationsWithTag(5072);
+    dimView->setBackgroundColor(PHClearColor);
+    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    anim->time = 0.5;
+    anim->view = dimView;
+    anim->bgColor = dimColor;
+    anim->callback = (PHCallback)&PHWorld::fadedToColor;
+    anim->target = this;
+    anim->userdata = ud;
+    PHView::addAnimation(anim);
+    anim->release();
 }
 
 void PHWorld::fadeToColor(const PHColor & color, void * ud)
@@ -458,27 +486,11 @@ void PHWorld::fadeToColor(const PHColor & color, void * ud)
         dismissFading();
         return;
     }
-    if (!dimView)
-    {
-        dimView = new PHView(view->bounds());
-        view->addSubview(dimView);
-    }
     dimColor = color;
-    dimView->cancelAnimationsWithTag(5072);
-    dimView->setBackgroundColor(PHClearColor);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    anim->time = 0.5;
-    anim->view = dimView;
-    anim->bgColor = dimColor;
-    anim->callback = (PHCallback)&PHWorld::_fadedToColor;
-    anim->target = this;
-    anim->userdata = ud;
-    PHView::addAnimation(anim);
-    anim->release();
+    viewQueue->schedule(this,(PHCallback)&PHWorld::_fadeToColor,ud,false);
 }
 
-void PHWorld::dismissFading(void * ud)
+void PHWorld::_dismissFading(PHObject * sender, void * ud)
 {
     if (!dimView) return;
     dimView->cancelAnimationsWithTag(5072);
@@ -492,6 +504,12 @@ void PHWorld::dismissFading(void * ud)
     anim->userdata = ud;
     PHView::addAnimation(anim);
     anim->release();
+
+}
+
+void PHWorld::dismissFading(void * ud)
+{
+    viewQueue->schedule(this,(PHCallback)&PHWorld::_dismissFading,ud,false);
 }
 
 void PHWorld::_overlayDismissed(PHObject * obj, void * ud)
@@ -507,6 +525,7 @@ void PHWorld::_overlayDismissed(PHObject * obj, void * ud)
 void PHWorld::dismissOverlayText()
 {
     if (!overlayView) return;
+    overlayView->mutex()->lock();
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
     anim->customColor = PHClearColor;
     anim->time = 0.5;
@@ -516,6 +535,7 @@ void PHWorld::dismissOverlayText()
     anim->target = this;
     PHView::addAnimation(anim);
     anim->release();
+    overlayView->mutex()->unlock();
 }
 
 #define OVERLAYFONTSIZE 0.15
@@ -531,8 +551,10 @@ void PHWorld::overlayText(const string & s, double duration)
         overlayView->setFontSize(OVERLAYFONTSIZE*bounds.height);
         overlayView->setFrame(PHMakeRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
         overlayView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
+        overlayView->mutex();
         view->addSubview(overlayView);
     }
+    overlayView->mutex()->lock();
     overlayView->setFontColor(PHClearColor);
     overlayView->setText(s);
     PHAnimationDescriptor * anim = new PHAnimationDescriptor;
@@ -549,4 +571,5 @@ void PHWorld::overlayText(const string & s, double duration)
     timer->setCallback(this, (PHCallback)&PHWorld::dismissOverlayText, NULL);
     scheduleTimer(timer);
     timer->release();
+    overlayView->mutex()->unlock();
 }
