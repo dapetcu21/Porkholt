@@ -12,12 +12,12 @@
 #include <Box2D/Box2D.h>
 
 PHPoint PHOriginPoint(0,0);
-PHRect PHWholeRect = {0,0,1,1};
-PHColor PHClearColor = {0,0,0,0};
-PHColor PHBlackColor = {0,0,0,1};
-PHColor PHWhiteColor = {1,1,1,1};
-PHColor PHGrayColor = {0.5,0.5,0.5,1};
-PHColor PHInvalidColor = {-1,-1,-1,-1};
+PHRect PHWholeRect(0,0,1,1);
+PHColor PHClearColor(0,0,0,0);
+PHColor PHBlackColor(0,0,0,1);
+PHColor PHWhiteColor(1,1,1,1);
+PHColor PHGrayColor(0.5,0.5,0.5,1);
+PHColor PHInvalidColor(-1,-1,-1,-1);
 
 PHColor PHColor::fromLua(lua_State * L, int index)
 {

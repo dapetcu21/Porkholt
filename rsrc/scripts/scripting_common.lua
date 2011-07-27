@@ -261,6 +261,14 @@ PHLPlayer = PHLNPC:new()
 --function PHLPlayer:setUsesForce(b); --enables or disables the force
 --function PHLPlayer:userInput();
 --function PHLPlayer:setUserInput(b); --enables or disabled user input for the player. doesn't brake the body
+--function PHLPlayer:forceGauge();
+--function PHLPlayer:setForceGauge(f);
+--function PHLPlayer:maximumForce();
+--function PHLPlayer:setMaximumForce(f);
+--function PHLPlayer:forceGrowth();
+--function PHLPlayer:setForceGrowth(g);
+--function PHLPlayer:isBarHidden();
+--function PHLPlayer:setBarHidden(b);
 
 PHLMob = PHLNPC:new();
 

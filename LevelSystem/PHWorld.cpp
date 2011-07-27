@@ -99,7 +99,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), _jumpGauge(0.0f), maxJump(100), jumpGrowth(100), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL)
+PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL)
 {
 	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -237,7 +237,13 @@ void PHWorld::updateScene()
             ly.container->setRotation(-rot);
 		}
 	}
-	jumpGaugeView->setLevel(_jumpGauge/maxJump);
+    if (!player || player->isBarHidden() || !player->usesForce())
+        jumpGaugeView->setTintColor(PHClearColor);
+    else
+    {
+        jumpGaugeView->setLevel(player->forceGauge()/player->maximumForce());
+        jumpGaugeView->setTintColor(PHInvalidColor);
+    }
     int hn = round(player->maximumHP());
     heartView->setHeartNumber(hn);
     heartView->setActiveHearts(round(player->healthPoints()/player->maximumHP()*hn));

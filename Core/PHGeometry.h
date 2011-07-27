@@ -14,9 +14,9 @@
 
 struct PHRect
 {
-//	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
-//	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
-//	PHRect() : x(0), y(0), width(0), height(0) {};
+	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
+	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
+	PHRect() {};
 	double x,y;
 	double width,height;
     static PHRect fromLua(lua_State * L, int index);
@@ -32,6 +32,29 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
+    const PHColor & operator *= (double d)
+    {
+        if (a>0) a*=d;
+        return * this;
+    }
+    PHColor operator * (double d) const
+    {
+        if (a<0) return *this;
+        PHColor res(r,g,b,a*d);
+        return res;
+    }
+    const PHColor & operator *= (const PHColor & d)
+    {
+        a*=d.a; r*=d.r; g*=d.g; b*=d.b;
+        return * this;
+    }
+    PHColor operator * (const PHColor & d) const
+    {
+        PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
+        return res;
+    }
+    PHColor(double red, double green, double blue, double alpha) : r(red), g(green), b(blue), a(alpha) {};
+    PHColor() {};
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 };

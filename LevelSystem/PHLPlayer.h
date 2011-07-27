@@ -25,6 +25,7 @@ private:
     bool userInp,force;
     double damage;
     PHMutex * mutex;
+    
 public:
 	PHLPlayer();
 	virtual ~PHLPlayer();
@@ -48,6 +49,18 @@ public:
     
     
     static void registerLuaInterface(lua_State *L);
+private:
+    double _forceGauge,maxForce,_forceGrowth;
+    bool barHidden;
+public:
+    double forceGauge() { return _forceGauge; }
+	void setForceGauge(double j) { _forceGauge = j; }
+	double maximumForce() { return maxForce; }
+	void setMaximumForce(double j) { maxForce = j; }
+	double forceGrowth() { return _forceGrowth; }
+	void setForceGrowth(double g) { _forceGrowth = g; }
+    bool isBarHidden() { return barHidden; } 
+    void setBarHidden(bool s) { barHidden = s; }
 };
 
 #endif

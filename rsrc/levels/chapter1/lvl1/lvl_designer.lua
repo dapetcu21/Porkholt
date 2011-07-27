@@ -269,6 +269,7 @@ obj.pos = point(4.826092,0.760000);
 obj.flipped = true;
 obj.scripting = [[player]];
 obj.usesForce = false;
+obj.barHidden = true;
 obj.levelDes = true;
 addObject(obj);
 

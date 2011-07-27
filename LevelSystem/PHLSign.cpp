@@ -28,7 +28,7 @@ class PHSignDialog : public PHDialog
     {
         PHLSign * s = (PHLSign*)npc;
         s->advance();
-        PHDialog::callback();
+        PHDialog::_callback();
     }
 };
 

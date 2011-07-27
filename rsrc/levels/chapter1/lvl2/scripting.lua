@@ -4,9 +4,11 @@ player:setBraked(true);
 timer = PHTimer:new(nil,1,false)
 timer:setCallback(function()
 player:addDialog("...jump",function ()
+sign1:display(function()
 player:setUserInput(true);
 player:setBraked(false);
-sign1:display();
+PHLog("hello");
+end);
 end);
 end);
 timer:schedule();

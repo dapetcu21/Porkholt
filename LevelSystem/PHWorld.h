@@ -59,7 +59,6 @@ private:
 	friend class PHJoint;
     friend class PHScripting;
     
-	double _jumpGauge,maxJump,jumpGrowth;
 	PHGaugeView * jumpGaugeView;
     PHHeartView * heartView;
 	
@@ -96,13 +95,6 @@ public:
     
     void updatePositions();
 	void updateScene();
-	
-	double jumpGauge() { return _jumpGauge; }
-	void setJumpGauge(double j) { _jumpGauge = j; }
-	double maxJumpGauge() { return maxJump; }
-	void setMaxJumpGauge(double j) { maxJump = j; }
-	double jumpGaugeGrowth() { return jumpGrowth; }
-	void setJumpGaugeGrowth(double g) { jumpGrowth = g; }
     
     b2World * getPhysicsWorld() { return physicsWorld; }
     

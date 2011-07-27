@@ -825,7 +825,6 @@ void PHLObject::scriptingCreate(lua_State * l)
 {
     L = l;
     hasScripting = true;
-    PHLog("%s",_class.c_str());
     lua_getglobal(L, _class.c_str());
     lua_getfield(L, -1, "new");
     lua_pushvalue(L, -2);

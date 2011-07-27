@@ -5,7 +5,7 @@
 obj = objectWithClass("PHLSign");
 obj.pos = point(4.758593,0.799492);
 obj.scripting = [[sign1]];
-obj.text = [[You can jump using long, ample swipes. Don't flick]];
+obj.text = [[You can jump using long, ample swipes. Don't flick|Try bouncing by swiping down mid-air then up again after hitting the ground to jump higher]];
 obj.levelDes = true;
 addObject(obj);
 
@@ -350,6 +350,10 @@ addObject(obj);
 obj = objectWithClass("PHLPlayer");
 obj.pos = point(1.901328,0.871719);
 obj.scripting = [[player]];
+obj.trail = false;
+obj.barHidden = true;
+obj.maximumForce = 50.000000;
+obj.hasTrail = false;
 obj.levelDes = true;
 addObject(obj);
 
@@ -366,21 +370,21 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(17.778842,1.849970);
+obj.pos = point(18.546811,1.770986);
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000);
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(20.777630,2.809023);
+obj.pos = point(21.090599,2.643906);
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000);
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(23.744512,3.890977);
+obj.pos = point(23.564278,3.768204);
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000);
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;
@@ -394,7 +398,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLPlatform");
-obj.pos = point(26.766803,4.879570);
+obj.pos = point(26.326217,4.790937);
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000);
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000);
 obj.levelDes = true;

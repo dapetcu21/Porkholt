@@ -17,7 +17,7 @@
 #include "PHMotion.h"
 #include "PHLua.h"
 
-PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1)
+PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1),  _forceGauge(0.0f), maxForce(100), _forceGrowth(100), barHidden(false)
 {
 	_class = "PHLPlayer";
     maxHP = hp = 3.0f;
@@ -35,7 +35,11 @@ void PHLPlayer::loadFromLua(lua_State * L, const string & root,b2World * world)
     body->SetBullet(true);
     
     PHLuaGetNumberField(damage, "attackDamage");
+    PHLuaGetNumberField(_forceGauge, "forceGauge");
+    PHLuaGetNumberField(maxForce, "maximumForce");
+    PHLuaGetNumberField(_forceGrowth, "forceGrowth");
     PHLuaGetBoolField(force, "usesForce");
+    PHLuaGetBoolField(barHidden, "barHidden");
 }
 
 
@@ -59,7 +63,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	b2Vec2 center = body->GetWorldCenter();
     if (userInp)
         body->ApplyForce(frc, center);
-	double jumpGauge = wrld->jumpGauge();
+	double jumpGauge = _forceGauge;
     b2Vec2 totalJump(0,0);
     if (mutex)
         mutex->lock();
@@ -103,15 +107,14 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         }
     }
     normal.x = normal.y = 0;
-    if (touchesSomething>0 && !forceGap)
+    if (touchesSomething>0 && (touchesSomething<1 || !forceGap))
     {
-        jumpGauge+=touchesSomething * wrld->jumpGaugeGrowth()/(double)fps;
-        double max = wrld->maxJumpGauge();
-        if (jumpGauge > max)
-            jumpGauge = max;
+        jumpGauge+=touchesSomething * _forceGrowth/(double)fps;
+        if (jumpGauge > maxForce)
+            jumpGauge = maxForce;
         touchesSomething -= 1.0f/(double)fps;
     }
-	wrld->setJumpGauge(jumpGauge);
+    _forceGauge = jumpGauge;
     if (forceUsed)
         forceGap = 4;
     setUsesTrail(forceGap>0);
@@ -141,6 +144,14 @@ PHLuaBoolGetter(PHLPlayer, usesForce);
 PHLuaBoolSetter(PHLPlayer, setUsesForce);
 PHLuaNumberGetter(PHLPlayer, attackDamage);
 PHLuaNumberSetter(PHLPlayer, setAttackDamage);
+PHLuaNumberGetter(PHLPlayer, forceGauge);
+PHLuaNumberSetter(PHLPlayer, setForceGauge);
+PHLuaNumberGetter(PHLPlayer, maximumForce);
+PHLuaNumberSetter(PHLPlayer, setMaximumForce);
+PHLuaNumberGetter(PHLPlayer, forceGrowth);
+PHLuaNumberSetter(PHLPlayer, setForceGrowth);
+PHLuaBoolGetter(PHLPlayer, isBarHidden);
+PHLuaBoolSetter(PHLPlayer, setBarHidden);
 
 void PHLPlayer::registerLuaInterface(lua_State *L)
 {
@@ -152,6 +163,14 @@ void PHLPlayer::registerLuaInterface(lua_State *L)
     PHLuaAddMethod(PHLPlayer, userInput);
     PHLuaAddMethod(PHLPlayer, setUsesForce);
     PHLuaAddMethod(PHLPlayer, usesForce);
+    PHLuaAddMethod(PHLPlayer, forceGauge);
+    PHLuaAddMethod(PHLPlayer, setForceGauge);
+    PHLuaAddMethod(PHLPlayer, maximumForce);
+    PHLuaAddMethod(PHLPlayer, setMaximumForce);
+    PHLuaAddMethod(PHLPlayer, forceGrowth);
+    PHLuaAddMethod(PHLPlayer, setForceGrowth);
+    PHLuaAddMethod(PHLPlayer, isBarHidden);
+    PHLuaAddMethod(PHLPlayer, setBarHidden);
     
     lua_pop(L, 1);
 }
