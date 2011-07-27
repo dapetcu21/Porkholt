@@ -115,7 +115,7 @@ objectAddBox(obj,0.000000,-0.250000,52.400000,0.500000);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
+obj = objectWithClass("PHLPit");
 obj.pos = point(51.054632,-0.091171);
 op = {};
 op.rotation = 0.000000;

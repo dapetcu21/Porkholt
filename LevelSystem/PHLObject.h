@@ -108,6 +108,9 @@ public:
 	virtual void loadFromLua(lua_State * L, const string & root, b2World * world);
 	virtual void loadView();
 	
+    typedef PHLObject * (*initializer)();
+    static map<string,initializer> initMap;
+    static bool initialized;
 	static PHLObject * objectWithClass(const string & str);
 	
     virtual void updatePosition();

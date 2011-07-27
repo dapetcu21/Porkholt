@@ -22,6 +22,7 @@
 #include "PHLBull.h"
 #include "PHLMob.h"
 #include "PHLLevelEnd.h"
+#include "PHLPit.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -32,35 +33,41 @@
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
+template <class T>
+PHLObject * newObject() { return (PHLObject*)(new T); }
+
+map<string,PHLObject::initializer> PHLObject::initMap;
+bool PHLObject::initialized;
+
+#define addClass(name) initMap.insert(make_pair<string,initializer>(#name,(initializer)(newObject<name>)))
+
 PHLObject * PHLObject::objectWithClass(const string & str)
 {
-	if (str=="PHLCamera")
-		return new PHLCamera;
-	if (str=="PHLPlayer")
-		return new PHLPlayer;
-    if (str=="PHLAuxLayer")
-        return new PHLAuxLayer;
-    if (str=="PHLPlatform")
-        return new PHLPlatform;
-    if (str=="PHLSensor")
-        return new PHLSensor;
-    if (str=="PHLNPC")
-        return new PHLNPC;
-    if (str=="PHLMob")
-        return new PHLMob;
-    if (str=="PHLBull")
-        return new PHLBull;
-    if (str=="PHLGround")
-        return new PHLGround;
-    if (str=="PHLSign")
-        return new PHLSign;
-    if (str=="PHLShieldPowerup")
-        return new PHLShieldPowerup;
-    if (str=="PHLPowerup")
-        return new PHLPowerup;
-    if (str=="PHLLevelEnd")
-        return new PHLLevelEnd;
-	return new PHLObject;
+    if (!initialized)
+    {
+        addClass(PHLObject);
+        addClass(PHLCamera);
+        addClass(PHLPlayer);
+        addClass(PHLAuxLayer);
+        addClass(PHLPlatform);
+        addClass(PHLSensor);
+        addClass(PHLNPC);
+        addClass(PHLMob);
+        addClass(PHLBull);
+        addClass(PHLGround);
+        addClass(PHLSign);
+        addClass(PHLShieldPowerup);
+        addClass(PHLPowerup);
+        addClass(PHLLevelEnd);
+        addClass(PHLPit);
+        
+        initialized = true;
+    }
+    
+    map<string,initializer>::iterator i = initMap.find(str);
+    if (i==initMap.end())
+        return new PHLObject;
+    return (i->second)();
 }
 
 PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL)

@@ -65,7 +65,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         mutex->lock();
     if (!userInp || !force)
         queue->clear();
-    bool forceUsed = !(queue->empty());
+    bool forceUsed = (!(queue->empty()))&&jumpGauge;
 	while (!queue->empty()) {
 		frc.x = queue->front().x*TOUCH_FORCE_FACTOR;
 		frc.y = queue->front().y*TOUCH_FORCE_FACTOR;
