@@ -131,6 +131,8 @@ static int PHWorld_overlayText(lua_State * L)
     return 0;
 }
 
+PHLuaStringGetter(PHWorld, resourcePath);
+
 void PHScripting::loadWorld()
 {
     lua_getglobal(L,"PHWorld");
@@ -140,8 +142,9 @@ void PHScripting::loadWorld()
     
     PHLuaAddMethod_(PHWorld, insertObject);
     PHLuaAddMethod_(PHWorld, fadeToColor);
-    PHLuaAddMethod_(PHWorld, dismissFading)
-    PHLuaAddMethod(PHWorld, overlayText)
+    PHLuaAddMethod_(PHWorld, dismissFading);
+    PHLuaAddMethod(PHWorld, overlayText);
+    PHLuaAddMethod(PHWorld, resourcePath);
 
     lua_pop(L, 1);
     

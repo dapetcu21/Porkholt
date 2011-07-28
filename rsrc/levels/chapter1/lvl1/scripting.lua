@@ -9,12 +9,12 @@ local timer = PHTimer:new(nil,1,false);
 timer:setCallback(function()
 	mayor:addDialog("Benno, I know that you are a good guy and I know that your actions are noble in origin,");
 	mayor:addDialog("but the results are destroying this city and I, as the mayor of Beansville,");
-	mayor:addDialog("feel responsible to firstly assure the safety of the citizens.",function() PHWorld:overlayText("Chapter I: ORIGINS",3.0); end);
+	mayor:addDialog("feel responsable to firstly assure the safety of the citizens.",function() PHWorld:overlayText("Chapter I: ORIGINS",3.0); end);
 	mayor:addDialog("That's why I'm gonna give you one last chance");
 	mayor:addDialog([[As you know, Beansville's energy source is a strong elixir of unknown origins simply called "The Goo"]])
 	mayor:addDialog("Every year, the pipes that transport the Goo build up a lot of pressure")
 	mayor:addDialog("Your job is simple: Release the pressure valve.");
-	mayor:addDialog("AND DON'T TOUCH ANYTHING ELSE!");
+	mayor:addDialog("AND DON'T TOUCH ANYTHING ELSE!"); 
 	player:addDialog("Yeah! That sounds simple enough!",function()
 	player:setBraked(false);
 	player:setUserInput(true);
@@ -39,6 +39,8 @@ function sensor2:objectEntered()
 	player:setUserInput(false);
 	PHWorld:fadeToColor(colorWithRGBA(0.9,0.1,0.1,1),function()
 	player:viewWithTag(20):setImage("ball");
+	pipe:destroy();
+	pipe_bg:viewWithTag(50):setImage(PHWorld:resourcePath().."/pipes_bg_boom.png");
 	player:setVelocity(vector(0,0));
 	player:setAngularVelocity(0);
 	player:setFlipped(false);

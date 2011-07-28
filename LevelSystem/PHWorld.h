@@ -122,6 +122,8 @@ public:
     void updateDialogs();
     void addDialog(PHDialog* d);
     
+    const string & resourcePath();
+    
 private:
     void fadedToColor(PHObject * obj, void * ud);
     void _fadedToColor(PHObject * obj, void * ud);

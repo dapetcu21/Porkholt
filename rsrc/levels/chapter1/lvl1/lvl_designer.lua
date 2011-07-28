@@ -195,37 +195,79 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
+obj.pos = point(0.438208,-7.266471);
+obj.scripting = [[pipe_bg]];
+op = {};
+op.tag = 50.000000;
+objectAddImage(obj,[[pipes_bg.png]],-0.061361,-0.918797,7.370341,5.527756,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(0.786866,-7.024255);
+obj.scripting = [[pipe]];
+objectAddImage(obj,[[pipes.png]],0.007037,-0.009971,3.164470,1.186676);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(0.426369,-7.264169);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],-2.000000,-0.750000,2.200000,1.000000,op);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],0.000000,-0.750000,2.200000,1.000000,op);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],2.000000,-0.750000,2.200000,1.000000,op);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],4.000000,-0.750000,2.200000,1.000000,op);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],6.000000,-0.750000,2.200000,1.000000,op);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],8.007305,-0.751367,2.200000,1.000000,op);
+op = {};
+op.verticallyFlipped = true;
+objectAddImage(obj,[[/ground.png]],26.000000,-0.750000,2.200000,1.000000,op);
+objectAddBox(obj,0.016865,-0.271421,10.063547,0.500000);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
 obj.pos = point(0.000000,0.000000);
 objectAddBox(obj,-0.100000,0.000000,0.100000,10.000000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.494699,-7.088417);
+obj.pos = point(0.877815,-7.118507);
 objectAddBox(obj,-0.096563,-0.008047,0.100000,5.547109);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
 obj.pos = point(0.436305,-7.003284);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLObject");
+obj.pos = point(0.380686,-2.725236);
 objectAddBox(obj,0.000000,-0.100000,7.000000,0.100000);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(0.398881,-3.747538);
-objectAddBox(obj,0.000000,-0.100000,7.000000,0.100000);
-obj.levelDes = true;
-addObject(obj);
-
-obj = objectWithClass("PHLObject");
-obj.pos = point(4.504316,-5.899053);
+obj.pos = point(6.657902,-5.825408);
 objectAddBox(obj,-0.090766,-0.018872,0.100000,3.869395);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(4.498797,-7.095421);
+obj.pos = point(6.647059,-7.011181);
 obj.scripting = [[piperoomdoor]];
 objectAddBox(obj,-0.087748,-0.019699,0.100000,1.266018);
 obj.levelDes = true;
@@ -251,6 +293,10 @@ op = {};
 op.tag = 21.000000;
 objectAddImage(obj,[[mayor.png]],-0.250000,-0.250000,0.500000,0.500000,op);
 op = {};
+op.rotation = 356.830792;
+op.tag = 21.000000;
+objectAddImage(obj,[[hat.png]],-0.265547,0.182486,0.328047,0.258074,op);
+op = {};
 op.pos = point(0.001055,-0.003203);
 objectAddCircle(obj,0.250000,op);
 obj.levelDes = true;
@@ -266,10 +312,10 @@ addObject(obj);
 
 obj = objectWithClass("PHLPlayer");
 obj.pos = point(4.826092,0.760000);
+obj.barHidden = true;
 obj.flipped = true;
 obj.scripting = [[player]];
 obj.usesForce = false;
-obj.barHidden = true;
 obj.levelDes = true;
 addObject(obj);
 
@@ -283,7 +329,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLSensor");
-obj.pos = point(1.641609,-6.737401);
+obj.pos = point(2.014719,-6.505729);
 obj.scripting = [[sensor2]];
 op = {};
 op.rotation = 0.000000;
@@ -292,19 +338,19 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(3.750000,-6.750000);
+obj.pos = point(5.267081,-6.342086);
 obj.scripting = [[marker1]];
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(2.452546,-5.380434);
+obj.pos = point(3.804370,-5.530881);
 obj.scripting = [[marker3]];
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(6.574673,-6.541522);
+obj.pos = point(8.157470,-6.554914);
 obj.scripting = [[marker2]];
 obj.levelDes = true;
 addObject(obj);

@@ -16,6 +16,13 @@ obj.text = [[You've just picked up a shield.|Shields protect you against enemies
 obj.levelDes = true;
 addObject(obj);
 
+obj = objectWithClass("PHLSign");
+obj.pos = point(17.076015,0.827540);
+obj.scripting = [[sign3]];
+obj.text = [[Wait! Where are you going? Do you know how to dash?|Dashing is simple. Swipe your finger across the screen horizontally. Exactly like jumping. Again, don't flick|You will find dashing useful in defeating the next bull by yourself.|Also, try jumping on these platforms to the top. You will find simething nice.]];
+obj.levelDes = true;
+addObject(obj);
+
 obj = objectWithClass("PHLObject");
 obj.pos = point(0.003799,0.257536);
 objectAddImage(obj,[[/ground.png]],-8.000000,-0.750000,2.200000,1.000000);
@@ -112,6 +119,15 @@ op = {};
 op.rotation = 0.000000;
 objectAddImage(obj,[[/ground.png]],65.858271,-2.544077,2.200000,1.000000,op);
 objectAddBox(obj,0.000000,-0.250000,52.400000,0.500000);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLSensor");
+obj.pos = point(18.229922,0.747734);
+obj.scripting = [[sensordash]];
+op = {};
+op.rotation = 0.000000;
+objectAddBox(obj,0.089258,-0.236094,0.500000,5.126914,op);
 obj.levelDes = true;
 addObject(obj);
 
@@ -349,10 +365,10 @@ addObject(obj);
 
 obj = objectWithClass("PHLPlayer");
 obj.pos = point(1.901328,0.871719);
-obj.scripting = [[player]];
-obj.trail = false;
 obj.barHidden = true;
 obj.maximumForce = 50.000000;
+obj.scripting = [[player]];
+obj.trail = false;
 obj.levelDes = true;
 addObject(obj);
 
@@ -470,86 +486,58 @@ obj.pos = point(11.462495,0.820086);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(25.823586,0.992093);
-obj.physics.dynamic = true;
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
-op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj = objectWithClass("PHLBull");
+obj.pos = point(25.845773,0.822952);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(102.170346,-0.246906);
-obj.physics.dynamic = true;
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.500000,1.500000,op);
-op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.500000,1.500000,op);
+obj = objectWithClass("PHLBull");
+obj.pos = point(68.694163,0.812012);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(22.921595,7.869349);
+obj = objectWithClass("PHLBigBull");
+obj.pos = point(102.259910,0.047121);
+obj.attackDuration = 0.500000;
+obj.attackRange = 3.500000;
+obj.attackVelocity = 5.000000;
+obj.bodyFlipping = true;
+obj.cooldownDuration = 2.000000;
+obj.overHead = point(0.150000,0.300000);
+obj.questHeight = 0.500000;
+obj.questPoint = point(0.150000,0.300000);
+obj.relaxTime = 1.000000;
 obj.physics.dynamic = true;
 op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
+op.tag = 20.000000;
+objectAddImage(obj,[[/bull_body.png]],-1.008398,-0.316404,1.800000,0.794531,op);
 op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+op.tag = 21.000000;
+objectAddImage(obj,[[/bull_eye.png]],-1.008398,-0.316404,1.800000,0.794531,op);
+objectAddBox(obj,0.400000,-0.318086,0.100000,0.636172);
+objectAddBox(obj,-0.500000,-0.318086,0.900000,0.636172);
 obj.levelDes = true;
 addObject(obj);
 
-obj = objectWithClass("PHLObject");
-obj.pos = point(34.368602,6.311790);
+obj = objectWithClass("PHLBull");
+obj.pos = point(62.859638,0.842849);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLShieldPowerup");
+obj.pos = point(23.120384,7.565872);
+obj.scripting = [[hppotion]];
 obj.physics.dynamic = true;
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
-op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLBull");
+obj.pos = point(33.028446,6.147337);
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
 obj.pos = point(42.996001,0.976771);
-obj.physics.dynamic = true;
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
-op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
-obj.levelDes = true;
-addObject(obj);
-
-obj = objectWithClass("PHLObject");
-obj.pos = point(63.513565,0.976771);
-obj.physics.dynamic = true;
-op = {};
-op.rotation = 0.000000;
-objectAddImage(obj,[[/box.png]],-0.500000,-0.500000,1.000000,1.000000,op);
-op = {};
-op.density = 0.300000;
-op.rotation = 0.000000;
-objectAddBox(obj,-0.500000,-0.500000,1.000000,1.000000,op);
-obj.levelDes = true;
-addObject(obj);
-
-obj = objectWithClass("PHLObject");
-obj.pos = point(68.652579,1.014875);
 obj.physics.dynamic = true;
 op = {};
 op.rotation = 0.000000;
@@ -857,6 +845,13 @@ op = {};
 op.density = 0.300000;
 op.rotation = 0.000000;
 objectAddBox(obj,-0.500000,-0.500000,0.500000,0.500000,op);
+obj.levelDes = true;
+addObject(obj);
+
+obj = objectWithClass("PHLSign");
+obj.pos = point(22.033515,7.641876);
+obj.scripting = [[sign3]];
+obj.text = [[Now, this is a health potion. As it's name implies, it replenishes your health in case you get hurt.]];
 obj.levelDes = true;
 addObject(obj);
 

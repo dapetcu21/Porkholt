@@ -581,3 +581,8 @@ void PHWorld::overlayText(const string & s, double duration)
     timer->release();
     overlayView->mutex()->unlock();
 }
+
+const string & PHWorld::resourcePath()
+{
+    levelController()->bundlePath();
+}

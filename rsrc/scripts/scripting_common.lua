@@ -61,7 +61,8 @@ function PHWorld:dismissFading(cb,...)
 	self:_dismissFading(call);
 end
 --function PHWorld:dismissFading(cb,...);
---function PHWorld:overlayText(text,duration)
+--function PHWorld:overlayText(text,duration);
+--function PHWorld:resourcePath();
 
 PHLObject = {}
 function PHLObject:new(o,ud, ...)
