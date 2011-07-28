@@ -33,7 +33,8 @@ void PHLBull::cooldownEnded(PHObject * sender, void * ud)
 void PHLBull::attacked(PHObject * sender, void * ud)
 {
     PHImageAnimator * animator;
-    if (faceView && ((animator=faceView->animator())))
+    PHImageView * iv;
+    if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
         animator->animateSection("relaxing");
 }
 
@@ -67,7 +68,8 @@ void PHLBull::attack()
     setFlipped((getWorld()->getPlayer()->position()-position()).x<0);
     
     PHImageAnimator * animator;
-    if (faceView&& ((animator=faceView->animator())))
+    PHImageView * iv;
+    if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
         animator->animateSection("charging",this,(PHCallback)&PHLBull::reallyAttack,NULL);
     else
         reallyAttack(NULL,NULL);

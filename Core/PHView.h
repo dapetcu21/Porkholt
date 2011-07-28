@@ -77,6 +77,7 @@ public:
 	
 	void setFrame(const PHRect &frame);
 	void setPosition(const PHPoint &pos);
+    PHPoint position() { return PHPoint(_frame.x,_frame.y); }
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
 	void setBounds(const PHRect &bnd);
@@ -116,14 +117,20 @@ public:
 	void removeFromSuperview();
 	void bringToFront();
 
-	PHPoint toMyCoordinates(PHPoint pnt);
-	void toMyCoordinates(PHPoint * pnt, int n);
-	PHPoint fromMyCoordinates(PHPoint pnt);
-	void fromMyCoordinates(PHPoint * pnt, int n);
+	PHPoint toMyCoordinates(const PHPoint & pnt, PHView * until);
+	void toMyCoordinates(PHPoint * pnt, int n, PHView * until);
+	PHPoint fromMyCoordinates(const PHPoint & pnt, PHView * until);
+	void fromMyCoordinates(PHPoint * pnt, int n, PHView * until);
+    
+	PHPoint toMyCoordinates(const PHPoint & pnt) { return toMyCoordinates(pnt, NULL); }
+	void toMyCoordinates(PHPoint * pnt, int n) { toMyCoordinates(pnt, n, NULL); }
+	PHPoint fromMyCoordinates(const PHPoint & pnt) { return fromMyCoordinates(pnt, NULL); }
+	void fromMyCoordinates(PHPoint * pnt, int n) { fromMyCoordinates(pnt, n, NULL); }
 	
     void setTag(int tag) { _tag = tag; };
     int tag() { return _tag; }
     PHView * viewWithTag(int tag);
+    PHView * viewWithTagAfter(int tag, PHView * v);
 	
 	virtual ~PHView();
 	friend class PHMainEvents;

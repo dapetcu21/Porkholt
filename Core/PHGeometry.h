@@ -94,6 +94,7 @@ struct PHPoint
     PHPoint() {};
     PHPoint(double xx,double yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
+    PHPoint(const PHRect & o) : x(o.x), y(o.y) {};
     static PHPoint fromLua(lua_State * L, int index);
     PHPoint & operator += (const PHPoint & othr)
     {

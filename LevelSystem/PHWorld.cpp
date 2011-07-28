@@ -584,5 +584,5 @@ void PHWorld::overlayText(const string & s, double duration)
 
 const string & PHWorld::resourcePath()
 {
-    levelController()->bundlePath();
+    return levelController()->bundlePath();
 }

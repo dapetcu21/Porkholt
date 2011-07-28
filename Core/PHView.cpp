@@ -520,23 +520,23 @@ void PHView::loadMatrixTree(PHView * until)
 	applyMatrices();
 }
 
-PHPoint PHView::toMyCoordinates(PHPoint pnt)
+PHPoint PHView::toMyCoordinates(const PHPoint & pnt, PHView * until)
 {
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree(NULL);
+	loadMatrixTree(until);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	return PHUnTransformPointMatrix(m, pnt);
 }
 
-void PHView::toMyCoordinates(PHPoint * pnt, int n)
+void PHView::toMyCoordinates(PHPoint * pnt, int n, PHView * until)
 {
 	GLfloat m[16],inverse[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree(NULL);
+	loadMatrixTree(until);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	PHInvertMatrix(m, inverse);
@@ -544,23 +544,25 @@ void PHView::toMyCoordinates(PHPoint * pnt, int n)
 		pnt[i] = PHTransformPointMatrix(inverse, pnt[i]);
 }
 
-PHPoint PHView::fromMyCoordinates(PHPoint pnt)
+PHPoint PHView::fromMyCoordinates(const PHPoint & pnt, PHView * until)
 {
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree(NULL);
+	loadMatrixTree(until);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
+    PHLog("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n",
+          m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9],m[10],m[11],m[12],m[13],m[14],m[15]);
 	return PHTransformPointMatrix(m, pnt);
 }
 
-void PHView::fromMyCoordinates(PHPoint * pnt, int n)
+void PHView::fromMyCoordinates(PHPoint * pnt, int n, PHView * until)
 {
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
-	loadMatrixTree(NULL);
+	loadMatrixTree(until);
 	glGetFloatv(GL_MODELVIEW, m);
 	glPopMatrix();
 	for (int i=0; i<n; i++)
@@ -572,6 +574,18 @@ PHView * PHView::viewWithTag(int tag)
     for (ViewEl * ve = viewsSt; ve; ve=ve->next)
         if (ve->el->tag()==tag)
             return ve->el;
+    return NULL;
+}
+
+PHView * PHView::viewWithTagAfter(int tag, PHView * v)
+{
+    for (ViewEl * ve = viewsSt; ve; ve=ve->next)
+    {
+        if (ve->el==v) { v = NULL; continue; }
+        if (v) continue;
+        if (ve->el->tag()==tag)
+            return ve->el;
+    }
     return NULL;
 }
 

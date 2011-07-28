@@ -20,7 +20,7 @@ class PHLNPC : public PHLObject
 {
 protected:
     PHImageView * bodyView;
-    PHImageView * faceView;
+    PHView * faceView;
     
 private:
     bool trail,utrail;

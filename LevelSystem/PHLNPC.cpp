@@ -32,6 +32,11 @@ PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL)
 
 PHLNPC::~PHLNPC()
 {
+    if (faceView)
+    {
+        faceView->removeFromSuperview();
+        faceView->release();
+    }
     if (dialogView)
     {
         dialogView->removeFromSuperview();
@@ -80,9 +85,25 @@ void PHLNPC::loadView()
     view->setFlipCenter(center);
 	loadImages();
     bodyView = (PHImageView*)(view->viewWithTag(20));
-    faceView = (PHImageView*)(view->viewWithTag(21));
+    PHView * v;
+    do {
+        v=view->viewWithTag(21);
+        if (!v) break;
+        if (!faceView)
+        {
+            faceView = new PHView(view->bounds());
+            faceView->setRotationalCenter(center);
+            faceView->setFlipCenter(center);
+            faceView->setTag(-21);
+            view->addSubview(faceView);
+        }
+        v->retain();
+        v->removeFromSuperview();
+        faceView->addSubview(v);
+        v->release();
+    } while (v);
     if (staticFace) 
-        ((PHPlayerView*)view)->setDesignatedTag(21);
+        ((PHPlayerView*)view)->setDesignatedTag(-21);
     if ((trailPossible = (dynamic_cast<PHTrailImageView*>(bodyView)!=NULL)))
         ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
 	view->setRotation(rot);
