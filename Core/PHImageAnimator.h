@@ -44,7 +44,8 @@ public:
     void animateSection(int sec) { animateSection(sec, NULL, NULL, NULL); }
     void animateSection(const string & name, PHObject * target, PHCallback callback, void * userdata);
     void animateSection(int sec, PHObject * target, PHCallback callback, void * userdata);
-    void reset();
+    void reset(PHObject * target, PHCallback callback, void * userdata);
+    void reset() { reset(NULL,NULL,NULL); }
     
     bool isAdvancingManually() { return advanceManually; }
     void setAdvanceManually(bool s) { advanceManually = s; }

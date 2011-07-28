@@ -173,7 +173,7 @@ public:
     void getLuaHandle(lua_State * L);
     static void registerLuaInterface(lua_State * L);
 public:
-    PHMutex * mutex() { if (!mtx) mtx = new PHMutex; return mtx; }
+    PHMutex * mutex() { if (!mtx) mtx = new PHMutex(true); return mtx; }
 };
 
 #endif

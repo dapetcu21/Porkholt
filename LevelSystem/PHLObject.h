@@ -121,8 +121,11 @@ public:
     PHWorld * getWorld() { return wrld; }
     
     void destroy();
+    void poof();
     
 private:
+    PHRect poofRect;
+    void _poof();
     
     virtual bool customizeFixture(lua_State * L, b2FixtureDef & fixtureDef);
     

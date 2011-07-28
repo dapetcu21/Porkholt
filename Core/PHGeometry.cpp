@@ -19,6 +19,10 @@ PHColor PHBlackColor(0,0,0,1);
 PHColor PHWhiteColor(1,1,1,1);
 PHColor PHGrayColor(0.5,0.5,0.5,1);
 PHColor PHInvalidColor(-1,-1,-1,-1);
+PHRect PHInvalidRect(0,0,-1,-1);
+PHRect PHNullRect(0,0,0,0);
+
+PHPoint::PHPoint(const PHRect & o) : x(o.x), y(o.y){};
 
 PHColor PHColor::fromLua(lua_State * L, int index)
 {

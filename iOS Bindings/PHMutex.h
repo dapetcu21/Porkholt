@@ -19,6 +19,13 @@ private:
 	pthread_mutex_t mutex;
 public:
 	PHMutex() { pthread_mutex_init(&mutex, NULL); };
+    PHMutex(bool recursive) {
+        pthread_mutexattr_t attr;
+        pthread_mutexattr_init(&attr);
+        if (recursive)
+            pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&mutex, &attr);
+    }
 	void lock() { pthread_mutex_lock(&mutex); };
 	void unlock() { pthread_mutex_unlock(&mutex); };
 	~PHMutex() { pthread_mutex_destroy(&mutex); };

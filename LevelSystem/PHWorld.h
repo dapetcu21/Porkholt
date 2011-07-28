@@ -70,7 +70,7 @@ private:
 	};
 	list<layer> layers;
     
-    list<PHTimer*>timers;
+    multimap<void *,PHTimer*>timers;
     
     PHScripting * scripting;
 	
@@ -98,8 +98,11 @@ public:
     
     b2World * getPhysicsWorld() { return physicsWorld; }
     
-    void scheduleTimer(PHTimer * timer);
+    void scheduleTimer(PHTimer * timer) { scheduleTimer(timer, NULL); }
+    void scheduleTimer(PHTimer * timer, void * ud);
     void updateTimers(double timeElapsed);
+    void invalidateTimersWithUserdata(void * ud);
+    void invalidateAllTimers();
     
     PHLevelController * levelController() { return controller; }
     PHEventQueue * viewEventQueue() { return viewQueue; }

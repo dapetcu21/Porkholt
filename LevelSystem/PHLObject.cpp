@@ -30,6 +30,9 @@
 #include "PHLPowerup.h"
 #include "PHLShieldPowerup.h"
 
+#include "PHImage.h"
+#include "PHPoofView.h"
+
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
@@ -70,7 +73,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect)
 {
 }
 
@@ -238,6 +241,7 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 	PHLuaGetNumberField(maxSpeed,"maxVelocity");
     PHLuaGetNumberField(maxSpeedX,"maxVelocityX");
     PHLuaGetNumberField(maxSpeedY,"maxVelocityY");
+    PHLuaGetRectField(poofRect, "poofRect");
 	
 	PHRect min;
 	min.x = 0x3f3f3f3f;
@@ -724,6 +728,37 @@ void PHLObject::destroy()
     getWorld()->removeObject(this);
 }
 
+void PHLObject::poof()
+{
+    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLObject::_poof, NULL, false);
+}
+
+void PHLObject::_poof()
+{
+    if (!poofRect.width || !poofRect.height)
+    {
+        poofRect = viewSize;
+    }
+    PHImage * iv = PHPoofView::poofImage();
+    double w = iv->width();
+    double h = iv->height();
+    double dar = w/h;
+    double ar = poofRect.width/poofRect.height;
+    if (ar>dar)
+    {   poofRect.x -= (poofRect.width/dar-poofRect.height)/2;
+        poofRect.height = poofRect.width/dar;
+    }
+    else
+    {
+        poofRect.y -= (poofRect.height*dar-poofRect.width)/2;
+        poofRect.width = poofRect.height*dar;
+    }
+    PHPoofView * v = new PHPoofView(poofRect+position());
+    getWorld()->getWorldView()->addSubview(v);
+    v->release();
+    destroy();
+}
+
 #pragma mark -
 #pragma mark scripting
 
@@ -778,6 +813,7 @@ PHLuaNumberSetter(PHLObject, applyAngularImpulse);
 PHLuaNumberGetter(PHLObject, mass);
 PHLuaPointGetter(PHLObject, centerOfMass);
 PHLuaDefineCall(PHLObject, destroy);
+PHLuaDefineCall(PHLObject, poof);
 
 static int PHLObject_transform(lua_State * L)
 {
@@ -924,6 +960,7 @@ void PHLObject::registerLuaInterface(lua_State * L)
     lua_getglobal(L, "PHLObject");
     
     PHLuaAddMethod(PHLObject, destroy);
+    PHLuaAddMethod(PHLObject, poof);
     PHLuaAddMethod(PHLObject, position);
     PHLuaAddMethod(PHLObject, rotation);
     PHLuaAddMethod(PHLObject, transform);

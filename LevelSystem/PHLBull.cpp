@@ -22,7 +22,7 @@ PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDu
 
 PHLBull::~PHLBull()
 {
-    
+    getWorld()->invalidateTimersWithUserdata(this);
 }
 
 void PHLBull::cooldownEnded(PHObject * sender, void * ud)
@@ -53,13 +53,13 @@ void PHLBull::reallyAttack(PHObject * sender, void * ud)
     PHTimer * timer = new PHTimer;
     timer->setTimeInterval(attackDuration+cooldownDuration);
     timer->setCallback(this, (PHCallback)&PHLBull::cooldownEnded, NULL);
-    getWorld()->scheduleTimer(timer);
+    getWorld()->scheduleTimer(timer, this);
     timer->release();
     
     timer = new PHTimer;
     timer->setTimeInterval(unrageTime);
     timer->setCallback(this, (PHCallback)&PHLBull::attacked, NULL);
-    getWorld()->scheduleTimer(timer);
+    getWorld()->scheduleTimer(timer, this);
     timer->release();
 }
 

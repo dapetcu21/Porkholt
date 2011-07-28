@@ -40,10 +40,10 @@ downscalepng()
 {
 	#todo
 	echo "Downscaling png file \"$1\""
-	CONVERT_FLAGS="-quality 5 -channel RGBA -depth 24"
-	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 50% "$2"
+	CONVERT_FLAGS="-quality 5 -channel RGBA -depth 24 -colorspace RGB"
+	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 50% "png32:$2"
 	mv "$2" "${2}.hd"
-	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 25% "$2"
+	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 25% "png32:$2"
 }
 
 find * \( -type f -or -type l \) | while read FILE

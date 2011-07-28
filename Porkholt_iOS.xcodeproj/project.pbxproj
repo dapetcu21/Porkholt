@@ -144,6 +144,7 @@
 		C1B70F6A13E011D00070D722 /* PHLPit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B70F6913E011D00070D722 /* PHLPit.cpp */; };
 		C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */; };
 		C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */; };
+		C1B9E41013E1E40600B1C0C6 /* PHPoofView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B9E40F13E1E40600B1C0C6 /* PHPoofView.cpp */; };
 		C1C0398113CEE6DB004BCC24 /* PHLSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C0397F13CEE6DB004BCC24 /* PHLSensor.cpp */; };
 		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
 		C1C359251323C08000D3A95A /* PHLua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C359241323C08000D3A95A /* PHLua.cpp */; };
@@ -385,6 +386,8 @@
 		C1B7ECD21323ED6E0004C8EA /* PHLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLCamera.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLCamera.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
+		C1B9E40D13E1E3A100B1C0C6 /* PHPoofView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPoofView.h; sourceTree = "<group>"; };
+		C1B9E40F13E1E40600B1C0C6 /* PHPoofView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPoofView.cpp; sourceTree = "<group>"; };
 		C1C0397F13CEE6DB004BCC24 /* PHLSensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLSensor.cpp; sourceTree = "<group>"; };
 		C1C0398013CEE6DB004BCC24 /* PHLSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLSensor.h; sourceTree = "<group>"; };
 		C1C358241323B6E700D3A95A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
@@ -651,6 +654,8 @@
 				C1B70F6713DF60000070D722 /* PHLLevelEnd.cpp */,
 				C1B70F6913E011D00070D722 /* PHLPit.cpp */,
 				C1B70F6B13E011DE0070D722 /* PHLPit.h */,
+				C1B9E40D13E1E3A100B1C0C6 /* PHPoofView.h */,
+				C1B9E40F13E1E40600B1C0C6 /* PHPoofView.cpp */,
 			);
 			path = LevelSystem;
 			sourceTree = "<group>";
@@ -1038,6 +1043,7 @@
 				C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */,
 				C1B70F6813DF60000070D722 /* PHLLevelEnd.cpp in Sources */,
 				C1B70F6A13E011D00070D722 /* PHLPit.cpp in Sources */,
+				C1B9E41013E1E40600B1C0C6 /* PHPoofView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

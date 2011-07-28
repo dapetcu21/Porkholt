@@ -135,6 +135,7 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 
 PHWorld::~PHWorld()
 {
+    invalidateAllTimers();
 	removeAllObjects();
     removeAllJoints();
 	if (worldView)
@@ -300,7 +301,6 @@ void PHWorld::removeObject(PHLObject * obj)
 		if (*i == obj)
 		{
 			objects.erase(i);
-			obj->wrld = NULL;
 			obj->getView()->removeFromSuperview();
 			obj->release();
 			break;
@@ -313,7 +313,6 @@ void PHWorld::removeAllObjects()
 	player = NULL;
 	for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
 	{
-		(*i)->wrld = NULL;
 		(*i)->getView()->removeFromSuperview();
 		(*i)->release();
 	}
@@ -361,25 +360,40 @@ void PHWorld::addToLayer(layer * lyr, PHImageView * img)
 	lyr->container->addSubview(img);
 }
 
-void PHWorld::scheduleTimer(PHTimer * timer)
+void PHWorld::scheduleTimer(PHTimer * timer, void * ud)
 {
     if (!timer || !timer->isValid())
         return;
     timer->setLastUpdatedAt(PHTime::getTime());
-    timers.push_back(timer);
+    timers.insert(make_pair<void *,PHTimer*>(ud,timer));
     timer->retain();
+}
+
+void PHWorld::invalidateAllTimers()
+{
+    for(multimap<void *,PHTimer*>::iterator i=timers.begin(); i!=timers.end(); i++)
+        i->second->release();
+    timers.clear();
+}
+
+void PHWorld::invalidateTimersWithUserdata(void * ud)
+{
+    pair<multimap<void *,PHTimer*>::iterator,multimap<void *,PHTimer*>::iterator> range = timers.equal_range(ud);
+    for(multimap<void *,PHTimer*>::iterator i = range.first; i!=range.second; i++)
+        i->second->release();
+    timers.erase(range.first,range.second);
 }
 
 void PHWorld::updateTimers(double timeElapsed)
 {
     double time = PHTime::getTime();
     
-    list<PHTimer*>::iterator i,nx;
+    multimap<void *,PHTimer*>::iterator i,nx;
     for (i=timers.begin(); i!=timers.end(); i=nx)
     {
         nx = i;
         nx++;
-        PHTimer * timer = *i;
+        PHTimer * timer = i->second;
         double real = time-timer->lastUpdatedAt();
         if (real>timeElapsed)
             real=timeElapsed;

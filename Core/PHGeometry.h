@@ -12,75 +12,7 @@
 
 #include "PHMain.h"
 
-struct PHRect
-{
-	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
-	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
-	PHRect() {};
-	double x,y;
-	double width,height;
-    static PHRect fromLua(lua_State * L, int index);
-    void saveToLua(lua_State * L) const;
-};
-
-struct PHColor
-{
-	double r,g,b,a;
-    bool operator == (const PHColor & o) const {
-        return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
-    }
-    bool operator != (const PHColor & o) const {
-        return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
-    }
-    const PHColor & operator *= (double d)
-    {
-        if (a>0) a*=d;
-        return * this;
-    }
-    PHColor operator * (double d) const
-    {
-        if (a<0) return *this;
-        PHColor res(r,g,b,a*d);
-        return res;
-    }
-    const PHColor & operator *= (const PHColor & d)
-    {
-        a*=d.a; r*=d.r; g*=d.g; b*=d.b;
-        return * this;
-    }
-    PHColor operator * (const PHColor & d) const
-    {
-        PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
-        return res;
-    }
-    PHColor(double red, double green, double blue, double alpha) : r(red), g(green), b(blue), a(alpha) {};
-    PHColor(double red, double green, double blue) : r(red), g(green), b(blue), a(1.0f) {};
-    PHColor() {};
-    static PHColor fromLua(lua_State * L, int index);
-    void saveToLua(lua_State * L) const;
-};
-
-struct PH24BitColor
-{
-    uint8_t r,g,b,a;
-    bool operator == (const PH24BitColor & o) const {
-        return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
-    }
-    bool operator != (const PH24BitColor & o) const {
-        return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
-    }
-    PH24BitColor() {};
-    PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
-};
-
-extern PHColor PHClearColor;
-extern PHColor PHBlackColor;
-extern PHColor PHGrayColor;
-extern PHColor PHWhiteColor;
-extern PHColor PHInvalidColor;
-
-extern PHRect PHWholeRect;
-
+struct PHRect;
 struct PHPoint
 {
     union {
@@ -94,7 +26,7 @@ struct PHPoint
     PHPoint() {};
     PHPoint(double xx,double yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
-    PHPoint(const PHRect & o) : x(o.x), y(o.y) {};
+    PHPoint(const PHRect & o);
     static PHPoint fromLua(lua_State * L, int index);
     PHPoint & operator += (const PHPoint & othr)
     {
@@ -164,6 +96,118 @@ typedef PHPoint PHSize;
 #define PHNullSize PHOriginPoint
 
 extern PHPoint PHOriginPoint;
+
+struct PHRect
+{
+	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
+	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
+	PHRect() {};
+	double x,y;
+	double width,height;
+    static PHRect fromLua(lua_State * L, int index);
+    void saveToLua(lua_State * L) const;
+    
+    PHRect & operator += (const PHPoint & othr)
+    {
+        x+=othr.x;
+        y+=othr.y;
+        return *this;
+    }
+    PHRect operator + (const PHPoint & o) const
+    {
+        return PHRect(x+o.x,y+o.y,width,height);
+    }
+    PHRect & operator -= (const PHPoint & othr)
+    {
+        x-=othr.x;
+        y-=othr.y;
+        return *this;
+    }
+    PHRect operator - (const PHPoint & o) const
+    {
+        return PHRect(x-o.x,y-o.y,width,height);
+    }
+    const PHRect & operator *= (double d)
+    {
+        width*=d;
+        height*=d;
+        return * this;
+    }
+    PHRect operator * (double d) const
+    {
+        return PHRect(x,y,width*d,height*d);
+    }
+    const PHRect & operator /= (double d)
+    {
+        width/=d;
+        height/=d;
+        return * this;
+    }
+    PHRect operator / (double d) const
+    {
+        return PHRect(x,y,width/d,height/d);
+    }
+};
+
+struct PHColor
+{
+	double r,g,b,a;
+    bool operator == (const PHColor & o) const {
+        return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
+    }
+    bool operator != (const PHColor & o) const {
+        return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
+    }
+    const PHColor & operator *= (double d)
+    {
+        if (a>0) a*=d;
+        return * this;
+    }
+    PHColor operator * (double d) const
+    {
+        if (a<0) return *this;
+        PHColor res(r,g,b,a*d);
+        return res;
+    }
+    const PHColor & operator *= (const PHColor & d)
+    {
+        a*=d.a; r*=d.r; g*=d.g; b*=d.b;
+        return * this;
+    }
+    PHColor operator * (const PHColor & d) const
+    {
+        PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
+        return res;
+    }
+    PHColor(double red, double green, double blue, double alpha) : r(red), g(green), b(blue), a(alpha) {};
+    PHColor(double red, double green, double blue) : r(red), g(green), b(blue), a(1.0f) {};
+    PHColor() {};
+    static PHColor fromLua(lua_State * L, int index);
+    void saveToLua(lua_State * L) const;
+};
+
+struct PH24BitColor
+{
+    uint8_t r,g,b,a;
+    bool operator == (const PH24BitColor & o) const {
+        return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
+    }
+    bool operator != (const PH24BitColor & o) const {
+        return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
+    }
+    PH24BitColor() {};
+    PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
+};
+
+extern PHColor PHClearColor;
+extern PHColor PHBlackColor;
+extern PHColor PHGrayColor;
+extern PHColor PHWhiteColor;
+extern PHColor PHInvalidColor;
+
+extern PHRect PHWholeRect;
+extern PHRect PHInvalidRect;
+extern PHRect PHNullRect;
 
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse);
 PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt);

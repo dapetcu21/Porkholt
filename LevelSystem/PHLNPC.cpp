@@ -649,7 +649,7 @@ void PHLNPC::setBraked(bool b)
 
 void PHLNPC::die()
 {
-    animateHurtInvuln();
+    poof();
 }
 
 void PHLNPC::lowHP()

@@ -81,9 +81,9 @@ void PHImageAnimator::animateSection(const string & name, PHObject * target, PHC
 }
 
 
-void PHImageAnimator::reset()
+void PHImageAnimator::reset(PHObject * target, PHCallback callback, void * userdata)
 {
-    animateSection(_image->defaultSection);
+    animateSection(_image->defaultSection,target,callback,userdata);
 }
 
 void PHImageAnimator::animateSection(int sect, PHObject * trg, PHCallback cb, void * ud)
