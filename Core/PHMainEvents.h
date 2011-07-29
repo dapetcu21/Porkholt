@@ -41,6 +41,8 @@ public:
 	void renderFrame(double timeElapsed);
 	void appSuspended();
 	void appResumed();
+    void _appResumed(PHObject * sender, void * ud);
+    void _appSuspended(PHObject * sender, void * ud);
 	void appQuits();
 	void memoryWarning();
 	void init(double screenX, double screenY,int FPS);

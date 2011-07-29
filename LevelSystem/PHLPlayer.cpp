@@ -17,8 +17,10 @@
 #include <Box2D/Box2D.h>
 #include "PHMotion.h"
 #include "PHLua.h"
+#include "PHEventQueue.h"
+#include "PHShieldView.h"
 
-PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1),  _forceGauge(0.0f), maxForce(100), _forceGrowth(100), barHidden(false)
+PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1),  _forceGauge(0.0f), maxForce(100), _forceGrowth(100), barHidden(false), shield(false), shieldView(NULL)
 {
 	_class = "PHLPlayer";
     maxHP = hp = 3.0f;
@@ -137,6 +139,41 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
         normal.x+=val*norm.x;
         normal.y+=val*norm.y;
     }
+}
+
+void PHLPlayer::_activateShield(PHObject * sender, void * ud)
+{
+    if (shieldView)
+    {
+        shieldView->removeFromSuperview();
+        shieldView->release();
+    }
+    PHRect r = view->bounds();
+    if (bodyView)
+        r = bodyView->frame();
+    shieldView = new PHShieldView(r);
+    view->addSubview(shieldView);
+}
+
+void PHLPlayer::_deactivateShield(PHObject * sender, void * ud)
+{
+    if (!shieldView) return;
+    shieldView->dismiss();
+    shieldView->release();
+}
+
+void PHLPlayer::deactivateShield()
+{
+    if (!shield) return;
+    shield = false;
+    getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLPlayer::_deactivateShield,NULL,false);
+}
+
+void PHLPlayer::activateShield()
+{
+    if (shield) return;
+    shield = true;
+    getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLPlayer::_activateShield,NULL,false);
 }
 
 PHLuaBoolGetter(PHLPlayer, userInput);

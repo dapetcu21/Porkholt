@@ -23,6 +23,10 @@ PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDu
 PHLBull::~PHLBull()
 {
     getWorld()->invalidateTimersWithUserdata(this);
+    PHImageAnimator * animator;
+    PHImageView * iv;
+    if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
+        animator->pause();
 }
 
 void PHLBull::cooldownEnded(PHObject * sender, void * ud)
@@ -36,11 +40,14 @@ void PHLBull::attacked(PHObject * sender, void * ud)
     PHImageView * iv;
     if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
         animator->animateSection("relaxing");
+    setBraked(true);
 }
 
 void PHLBull::reallyAttack(PHObject * sender, void * ud)
 {
     PHPoint v = PHPoint(attackVelocity*(isFlipped()?-1:1), 0);
+    
+    setBraked(false);
     
     PHLAnimation * anim = new PHLAnimation;
     anim->setVelocity(v,mass()*20);
@@ -79,7 +86,18 @@ void PHLBull::attack()
 void PHLBull::updatePosition()
 {
     PHLMob::updatePosition();
-    if (!attacking && fabs((getWorld()->getPlayer()->position()-position()).x)<=attackRange)
+    double ang = PHWarp(rotation(),M_PI*2);
+    if (ang>M_PI) ang-=M_PI*2;
+    if (abs(ang)>=0.0001)
+        PHLog("%lf",ang);
+    if (abs(ang)>=M_PI_4)
+    {
+        poof();
+        return;
+    }
+    PHPoint posi = getWorld()->getPlayer()->position();
+    PHRect fr = view->frame();
+    if (!attacking && posi.y>=fr.y && posi.y<=fr.y+fr.height && fabs(posi.x-position().x)<=attackRange)
         attack();
 }
 

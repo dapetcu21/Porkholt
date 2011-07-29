@@ -88,7 +88,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	view->render();
 }
 
-void PHMainEvents::appSuspended()
+void PHMainEvents::_appSuspended(PHObject * sender, void * ud)
 {
 	if (suspended) return;
 	suspended = true;
@@ -104,7 +104,7 @@ void PHMainEvents::appSuspended()
 #endif
 }
 
-void PHMainEvents::appResumed()
+void PHMainEvents::_appResumed(PHObject * sender, void * ud)
 {
 	if (!suspended) return;
 	suspended = false;
@@ -123,6 +123,17 @@ void PHMainEvents::appResumed()
     }
 #endif
 }
+
+void PHMainEvents::appSuspended()
+{
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHMainEvents::_appSuspended, NULL, false);
+}
+
+void PHMainEvents::appResumed()
+{
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHMainEvents::_appResumed, NULL, false);
+}
+
 
 void PHMainEvents::appQuits()
 {

@@ -35,13 +35,14 @@ double PHLMob::speedNeededForDamagingFixture(b2Fixture * f)
 void PHLMob::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold)
 {
     if (hinvuln) return;
+    PHLPlayer * p = getWorld()->getPlayer();
+    if (p->hurt()) return;
     b2Fixture * f1 = contact->GetFixtureA();
     b2Fixture * f2 = contact->GetFixtureB();
     b2Body * bodyA = f1->GetBody();
     b2Body * bodyB = f2->GetBody();
     PHLObject * o1 = (PHLObject*)bodyA->GetUserData();
     PHLObject * o2 = (PHLObject*)bodyB->GetUserData();
-    PHLPlayer * p = getWorld()->getPlayer();
     if (o2==this && o1 == p)
     {
         PHLObject * aux = o1;
@@ -77,6 +78,12 @@ void PHLMob::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldMan
             if (!p->isInvulnerable())
             {
                 p->decreaseHP(attackDamage());
+            } else {
+                if (p->hasShield())
+                {
+                    p->deactivateShield();
+                    decreaseHP(p->attackDamage());
+                }
             }
         }
     }

@@ -38,6 +38,8 @@ private:
     static set<PHImageAnimator*> animators;
     bool advanceManually;
     
+    bool running;
+    
 public:
     PHAnimatedImage * image() { return _image; }
     void animateSection(const string & name) { animateSection(name, NULL, NULL, NULL); }
@@ -46,6 +48,11 @@ public:
     void animateSection(int sec, PHObject * target, PHCallback callback, void * userdata);
     void reset(PHObject * target, PHCallback callback, void * userdata);
     void reset() { reset(NULL,NULL,NULL); }
+    
+    bool isPaused() { return !running; }
+    void setPaused(bool p) { running=!p; }
+    void pause() { running = false; }
+    void resume() { running = true; }
     
     bool isAdvancingManually() { return advanceManually; }
     void setAdvanceManually(bool s) { advanceManually = s; }

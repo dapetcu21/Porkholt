@@ -29,6 +29,8 @@
 #include "PHImageView.h"
 #include "PHLPowerup.h"
 #include "PHLShieldPowerup.h"
+#include "PHLHPPowerup.h"
+#include "PHLPowerPowerup.h"
 
 #include "PHImage.h"
 #include "PHPoofView.h"
@@ -42,7 +44,8 @@ PHLObject * newObject() { return (PHLObject*)(new T); }
 map<string,PHLObject::initializer> PHLObject::initMap;
 bool PHLObject::initialized;
 
-#define addClass(name) initMap.insert(make_pair<string,initializer>(#name,(initializer)(newObject<name>)))
+#define addClassForName(class,name) initMap.insert(make_pair<string,initializer>(#name,(initializer)(newObject<class>)))
+#define addClass(name) addClassForName(name,name) 
 
 PHLObject * PHLObject::objectWithClass(const string & str)
 {
@@ -60,6 +63,8 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         addClass(PHLGround);
         addClass(PHLSign);
         addClass(PHLShieldPowerup);
+        addClass(PHLHPPowerup);
+        addClass(PHLPowerPowerup);
         addClass(PHLPowerup);
         addClass(PHLLevelEnd);
         addClass(PHLPit);
@@ -725,6 +730,11 @@ void PHLObject::commitAnimations(double el)
 
 void PHLObject::destroy()
 {
+    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLObject::_destroy, NULL, false);
+}
+
+void PHLObject::_destroy()
+{
     getWorld()->removeObject(this);
 }
 
@@ -745,13 +755,18 @@ void PHLObject::_poof()
     double dar = w/h;
     double ar = poofRect.width/poofRect.height;
     if (ar>dar)
-    {   poofRect.x -= (poofRect.width/dar-poofRect.height)/2;
+    {   poofRect.y -= (poofRect.width/dar-poofRect.height)/2;
         poofRect.height = poofRect.width/dar;
     }
     else
     {
-        poofRect.y -= (poofRect.height*dar-poofRect.width)/2;
+        poofRect.x -= (poofRect.height*dar-poofRect.width)/2;
         poofRect.width = poofRect.height*dar;
+    }
+    PHLNPC * npc = dynamic_cast<PHLNPC*>(this);
+    if (npc && npc->isFlipped())
+    {
+        poofRect.x = -poofRect.x-poofRect.width;
     }
     PHPoofView * v = new PHPoofView(poofRect+position());
     getWorld()->getWorldView()->addSubview(v);

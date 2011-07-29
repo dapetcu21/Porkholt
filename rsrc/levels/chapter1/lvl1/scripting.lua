@@ -1,6 +1,5 @@
 mayor:setDynamic(false);
-player:setBraked(true);
-player:setUserInput(false);
+player:setFreezed(true);
 player.initialPosition = player:position();
 mayor.initialPosition = mayor:position();
 camera.initialPosition = camera:position();
@@ -16,8 +15,7 @@ timer:setCallback(function()
 	mayor:addDialog("Your job is simple: Release the pressure valve.");
 	mayor:addDialog("AND DON'T TOUCH ANYTHING ELSE!");
 	player:addDialog("Yeah! That sounds simple enough!",function()
-	player:setBraked(false);
-	player:setUserInput(true);
+	player:setFreezed(false);
 	sign:display();
 	end);
 end);
@@ -35,8 +33,7 @@ function sensor1:objectEntered()
 end
 
 function sensor2:objectEntered()
-	player:setBraked(true);
-	player:setUserInput(false);
+	player:setFreezed(true);
 	PHWorld:fadeToColor(colorWithRGBA(0.9,0.1,0.1,1),function()
 	player:viewWithTag(20):setImage("ball");
 	pipe:destroy();
@@ -80,8 +77,7 @@ function sensor2:objectEntered()
 	mayor:addDialog("You'll leave this city right now and never return again!");
 	player:addDialog("Wait! Wait!\nI'm sorry!\nBut I can...");
 	mayor:addDialog("GET OUT!",function()
-	player:setBraked(false);
-	player:setUserInput(true);
+	player:setFreezed(false);
 	end);
 	
 	end);

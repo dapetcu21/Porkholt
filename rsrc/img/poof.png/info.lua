@@ -1,5 +1,9 @@
+local time = 0.5;
+local frames = 10;
+
 section("poof");
-frame(0,0);
-fade(1,1);
+for i=0,frames-1 do
+	frame(i,time/frames);
+end
 
 default("poof");

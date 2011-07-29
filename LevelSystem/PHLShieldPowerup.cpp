@@ -7,6 +7,8 @@
 //
 
 #include "PHLShieldPowerup.h"
+#include "PHLPlayer.h"
+#include "PHWorld.h"
 
 PHLShieldPowerup::PHLShieldPowerup()
 {
@@ -15,5 +17,7 @@ PHLShieldPowerup::PHLShieldPowerup()
 
 void PHLShieldPowerup::collected()
 {
-    
+    PHLPlayer * p = getWorld()->getPlayer();
+    if (p)
+        p->activateShield();
 }

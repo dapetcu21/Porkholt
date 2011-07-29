@@ -15,12 +15,14 @@ class PHPoofView : public PHImageView
 {
 public:
     static PHImage * poofImage();
+    static void poofImageRelease();
     PHPoofView(const PHRect & frame);
     PHPoofView();
 private:
     void init();
-    
     void destroy(PHObject * sender, void * ud);
+    
+    static PHImage * img;
 };
 
 #endif

@@ -21,6 +21,8 @@
 #include "PHTextController.h"
 #include "PHLPlayer.h"
 #include "PHLCamera.h"
+#include "PHPoofView.h"
+#include "PHShieldView.h"
 
 #include <fstream>
 
@@ -144,6 +146,8 @@ PHLevelController::~PHLevelController()
 	PHMainEvents::sharedInstance()->setIndependentTiming(false);
     releaseImage(dialogImage);
     releaseImage(questImage);
+    PHPoofView::poofImageRelease();
+    PHShieldView::shieldImageRelease();
 }
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
@@ -270,6 +274,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
     retainImage(dialogImage, "dialogbubble");
     retainImage(questImage, "quest");
+    PHPoofView::poofImage();
+    PHShieldView::shieldImage();
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());

@@ -150,10 +150,27 @@ function Initializers.PHLShieldPowerup(obj)
 	objectAddImage(obj,"/blue_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40; });
 	objectAddBox(obj, -0.15,-0.3,0.3,0.6);
 end
+function Initializers.PHLHPPowerup(obj)
+	Initializers.PHLPowerup(obj)
+	objectAddImage(obj,"/red_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40; });
+	objectAddBox(obj, -0.15,-0.3,0.3,0.6);
+end
+function Initializers.PHLPowerPowerup(obj)
+	Initializers.PHLPowerup(obj)
+	objectAddImage(obj,"/green_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40; });
+	objectAddBox(obj, -0.15,-0.3,0.3,0.6);
+end
+function Initializers.PHLBigBull(obj)
+	Initializers.PHLBull(obj,1.5)
+	obj.class = "PHLBull";
+end
+
 
 function objectWithClass(class,...)
 	obj = {};
-	obj.class = class;
+	if (not obj.class) then
+		obj.class = class;
+	end
 	if (Initializers[class]) then
 		Initializers[class](obj,unpack(arg));
 	else

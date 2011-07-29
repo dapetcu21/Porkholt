@@ -101,6 +101,7 @@ end
 -- function PHLObject:mass();
 -- function PHLObject:centerOfMass(); --in object coordinates
 -- function PHLObject:viewWithTag(tag);
+-- function PHLObject:poof();
 
 PHObject = {};
 function PHObject:new(o, ...)
@@ -270,6 +271,10 @@ PHLPlayer = PHLNPC:new()
 --function PHLPlayer:setForceGrowth(g);
 --function PHLPlayer:isBarHidden();
 --function PHLPlayer:setBarHidden(b);
+function PHLPlayer:setFreezed(b)
+	self:setBraked(b);
+	self:setUserInput(not b);
+end
 
 PHLMob = PHLNPC:new();
 
@@ -307,4 +312,6 @@ end
 
 PHLLevelEnd = PHLSensor:new();
 
-PHLShieldPowerup = PHLPowerup:new()
+PHLShieldPowerup = PHLPowerup:new();
+PHLHPPowerup = PHLPowerup:new();
+PHLPowerPowerup = PHLPowerup:new();

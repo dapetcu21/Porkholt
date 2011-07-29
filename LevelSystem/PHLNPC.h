@@ -136,8 +136,8 @@ protected:
     
 public:
     void setHP(double HP) { hp = HP; if (hp<=0) lowHP(); if (hp>maxHP) hp=maxHP; }
-    void decreaseHP(double HP) { if (invuln || hinvuln) return; hp-=HP; if (hp<=0) { hp = 0; lowHP(); } else decreasedHP(); }
-    void increaseHP(double HP) { hp-=HP; if (hp>maxHP) hp=maxHP; increasedHP(); }
+    void decreaseHP(double HP) { if (isInvulnerable()) return; hp-=HP; if (hp<=0) { hp = 0; lowHP(); } else decreasedHP(); }
+    void increaseHP(double HP) { hp+=HP; if (hp>maxHP) hp=maxHP; increasedHP(); }
     double healthPoints() { return hp; }
     double maximumHP() { return maxHP; }
     void setMaximumHP(double mhp) { maxHP = mhp; if (hp>maxHP) hp=maxHP; }
@@ -146,7 +146,8 @@ public:
     
     void setInvulnerable(bool i) { invuln = i; }
     bool invulnerable() { return invuln; }
-    bool isInvulnerable() { return invuln || hinvuln; }
+    virtual bool isInvulnerable() { return invuln || hinvuln; }
+    bool hurt() { return hinvuln; }
 };
 
 #endif

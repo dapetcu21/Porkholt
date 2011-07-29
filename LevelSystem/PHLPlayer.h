@@ -14,6 +14,7 @@
 #include "PHLNPC.h"
 
 class PHTrailImageView;
+class PHShieldView;
 
 class PHLPlayer : public PHLNPC
 {
@@ -52,6 +53,12 @@ public:
 private:
     double _forceGauge,maxForce,_forceGrowth;
     bool barHidden;
+    bool shield;
+    
+    PHShieldView * shieldView;
+    void _activateShield(PHObject * sender, void * ud);
+    void _deactivateShield(PHObject * sender, void * ud);
+    
 public:
     double forceGauge() { return _forceGauge; }
 	void setForceGauge(double j) { _forceGauge = j; }
@@ -61,6 +68,12 @@ public:
 	void setForceGrowth(double g) { _forceGrowth = g; }
     bool isBarHidden() { return barHidden; } 
     void setBarHidden(bool s) { barHidden = s; }
+    
+    void activateShield();
+    void deactivateShield();
+    bool hasShield() { return shield; }
+    virtual bool isInvulnerable() { return shield || PHLNPC::isInvulnerable(); }
+    
 };
 
 #endif

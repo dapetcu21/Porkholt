@@ -145,6 +145,9 @@
 		C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECAB1323E1250004C8EA /* PHLObject.cpp */; };
 		C1B7ECD41323ED6E0004C8EA /* PHLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B7ECD31323ED6E0004C8EA /* PHLCamera.cpp */; };
 		C1B9E41013E1E40600B1C0C6 /* PHPoofView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B9E40F13E1E40600B1C0C6 /* PHPoofView.cpp */; };
+		C1B9E41213E27D5700B1C0C6 /* PHLHPPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B9E41113E27D5700B1C0C6 /* PHLHPPowerup.cpp */; };
+		C1B9E41613E27ECA00B1C0C6 /* PHLPowerPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B9E41513E27EC900B1C0C6 /* PHLPowerPowerup.cpp */; };
+		C1B9E41813E2BD7600B1C0C6 /* PHShieldView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B9E41713E2BD7500B1C0C6 /* PHShieldView.cpp */; };
 		C1C0398113CEE6DB004BCC24 /* PHLSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C0397F13CEE6DB004BCC24 /* PHLSensor.cpp */; };
 		C1C358251323B6E700D3A95A /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C358241323B6E700D3A95A /* liblua.a */; };
 		C1C359251323C08000D3A95A /* PHLua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C359241323C08000D3A95A /* PHLua.cpp */; };
@@ -388,6 +391,12 @@
 		C1B9D658130264F0002BE2BE /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
 		C1B9E40D13E1E3A100B1C0C6 /* PHPoofView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPoofView.h; sourceTree = "<group>"; };
 		C1B9E40F13E1E40600B1C0C6 /* PHPoofView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPoofView.cpp; sourceTree = "<group>"; };
+		C1B9E41113E27D5700B1C0C6 /* PHLHPPowerup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLHPPowerup.cpp; sourceTree = "<group>"; };
+		C1B9E41313E27D7300B1C0C6 /* PHLHPPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLHPPowerup.h; sourceTree = "<group>"; };
+		C1B9E41413E27E7500B1C0C6 /* PHLPowerPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPowerPowerup.h; sourceTree = "<group>"; };
+		C1B9E41513E27EC900B1C0C6 /* PHLPowerPowerup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPowerPowerup.cpp; sourceTree = "<group>"; };
+		C1B9E41713E2BD7500B1C0C6 /* PHShieldView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHShieldView.cpp; sourceTree = "<group>"; };
+		C1B9E41913E2BD8500B1C0C6 /* PHShieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHShieldView.h; sourceTree = "<group>"; };
 		C1C0397F13CEE6DB004BCC24 /* PHLSensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLSensor.cpp; sourceTree = "<group>"; };
 		C1C0398013CEE6DB004BCC24 /* PHLSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLSensor.h; sourceTree = "<group>"; };
 		C1C358241323B6E700D3A95A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
@@ -650,6 +659,12 @@
 				C106E48013DD76CB007E6357 /* PHLPowerup.cpp */,
 				C106E48313DD82BF007E6357 /* PHLShieldPowerup.h */,
 				C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */,
+				C1B9E41913E2BD8500B1C0C6 /* PHShieldView.h */,
+				C1B9E41713E2BD7500B1C0C6 /* PHShieldView.cpp */,
+				C1B9E41313E27D7300B1C0C6 /* PHLHPPowerup.h */,
+				C1B9E41113E27D5700B1C0C6 /* PHLHPPowerup.cpp */,
+				C1B9E41413E27E7500B1C0C6 /* PHLPowerPowerup.h */,
+				C1B9E41513E27EC900B1C0C6 /* PHLPowerPowerup.cpp */,
 				C1B70F6513DF5FF20070D722 /* PHLLevelEnd.h */,
 				C1B70F6713DF60000070D722 /* PHLLevelEnd.cpp */,
 				C1B70F6913E011D00070D722 /* PHLPit.cpp */,
@@ -1044,6 +1059,9 @@
 				C1B70F6813DF60000070D722 /* PHLLevelEnd.cpp in Sources */,
 				C1B70F6A13E011D00070D722 /* PHLPit.cpp in Sources */,
 				C1B9E41013E1E40600B1C0C6 /* PHPoofView.cpp in Sources */,
+				C1B9E41213E27D5700B1C0C6 /* PHLHPPowerup.cpp in Sources */,
+				C1B9E41613E27ECA00B1C0C6 /* PHLPowerPowerup.cpp in Sources */,
+				C1B9E41813E2BD7600B1C0C6 /* PHShieldView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -121,6 +121,7 @@ public:
     PHWorld * getWorld() { return wrld; }
     
     void destroy();
+    void _destroy();
     void poof();
     
 private:

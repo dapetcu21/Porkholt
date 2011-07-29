@@ -588,7 +588,7 @@ private:
         {
             invalidate();
             PHLWalkAnimation * anim = new PHLWalkAnimation(npc);
-            anim->setBrakeForce(npc->mass()*6);
+            anim->setBrakeForce(npc->mass()*9);
             anim->setTime(INFINITY);
             anim->setCurveFunction(PHLAnimation::ConstantFunction);
             anim->setDisableDynamics(false);
@@ -634,7 +634,7 @@ void PHLNPC::setBraked(bool b)
     {
         if (brakeAnimation) return;
         brakeAnimation = new PHLAnimation;
-        brakeAnimation->setBrakeForce(mass()*6);
+        brakeAnimation->setBrakeForce(mass()*9);
         brakeAnimation->setTime(INFINITY);
         brakeAnimation->setCurveFunction(PHLAnimation::ConstantFunction);
         brakeAnimation->setDisableDynamics(false);

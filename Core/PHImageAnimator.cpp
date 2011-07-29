@@ -12,7 +12,7 @@
 
 set<PHImageAnimator*> PHImageAnimator::animators;
 
-PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : _image(img), advanceManually(false), target(NULL), callback(NULL), userdata(NULL)
+PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : _image(img), advanceManually(false), target(NULL), callback(NULL), userdata(NULL), running(true)
 {
     reset();
     animators.insert(this);
@@ -129,6 +129,7 @@ void PHImageAnimator::advanceAnimations(double elapsedTime)
 void PHImageAnimator::advanceAnimation(double elapsedTime)
 {
     if (section==-1 || frame==-1) return;
+    if (!running) return;
     
     remaining-=elapsedTime;
     PHAnimatedImage::section * sec = _image->sections.at(section);
