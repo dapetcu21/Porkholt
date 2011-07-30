@@ -24,6 +24,9 @@ public:
     virtual ~PHChapterController();
     
 	void mouseUp(PHObject * sender, void * ud);
+    
+    void levelEnded(PHObject * sender, void *ud);
+    void loadLevel(int nr,bool replace);
 };
 
 #endif

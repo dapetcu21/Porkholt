@@ -19,6 +19,7 @@
 #include "PHLua.h"
 #include "PHEventQueue.h"
 #include "PHShieldView.h"
+#include "PHLevelController.h"
 
 PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1),  _forceGauge(0.0f), maxForce(100), _forceGrowth(100), barHidden(false), shield(false), shieldView(NULL)
 {
@@ -174,6 +175,11 @@ void PHLPlayer::activateShield()
     if (shield) return;
     shield = true;
     getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLPlayer::_activateShield,NULL,false);
+}
+
+void PHLPlayer::die()
+{
+    getWorld()->levelController()->endLevelWithOutcome(PHLevelController::LevelDied);
 }
 
 PHLuaBoolGetter(PHLPlayer, userInput);

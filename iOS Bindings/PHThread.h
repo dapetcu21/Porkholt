@@ -27,7 +27,7 @@ private:
 	PHEventQueue * eventQueue;
     
 	void * ud;
-	bool running;
+	bool running,autorelease;
 public:
 	void executeOnThread(PHObject * trg, PHCallback cb, void * userdata,bool waitUntilDone);
 	void processQueue();
@@ -42,6 +42,9 @@ public:
 	PHThread();
 	~PHThread();
 	
+    bool autoRelease() { return autorelease; }
+    void setAutoRelease(bool b) { autorelease = b; }
+    
 private:
 	PHThread(pthread_t);
 	static map<pthread_t,PHThread*> threads;

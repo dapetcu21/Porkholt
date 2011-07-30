@@ -7,6 +7,8 @@
 //
 
 #include "PHLLevelEnd.h"
+#include "PHWorld.h"
+#include "PHLevelController.h"
 
 PHLLevelEnd::PHLLevelEnd() 
 {
@@ -15,5 +17,5 @@ PHLLevelEnd::PHLLevelEnd()
 
 void PHLLevelEnd::objectEntered(PHLObject * obj)
 {
-    PHLog("Level should have ended");
+    getWorld()->levelController()->endLevelWithOutcome(PHLevelController::LevelWon);
 }

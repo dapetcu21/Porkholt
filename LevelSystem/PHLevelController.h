@@ -41,10 +41,32 @@ protected:
     virtual void viewWillAppear();
     
     PHAnimatorPool * animPool;
+    
+    PHObject * ec_target;
+    PHCallback ec_cb;
+    void * ec_ud;
+    int _outcome;
+    
+    void destroyThread(PHObject * sender, void * ud);
+    void deleteObject(PHObject * sender, void * ud);
 public:
 	
+    void setEndLevelCallback(PHObject * target, PHCallback cb, void * ud){
+        ec_target = target; ec_cb = cb; ec_ud = ud;
+    }
+    
 	void pause();
 	void resume();
+    void destroy();
+    
+    enum {
+        LevelRunning = 0,
+        LevelWon,
+        LevelDied
+    };
+    
+    void endLevelWithOutcome(int outcome);
+    int outcome() { return _outcome; }
 	
 	void auxThread(PHThread * sender, void * ud);
 	
@@ -68,6 +90,8 @@ public:
     
     static PHImage * dialogImage;
     static PHImage * questImage;
+    
+    bool specialDestroyTactic() { return true; }
 };
 
 #endif

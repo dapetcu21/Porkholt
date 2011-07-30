@@ -88,8 +88,6 @@ void PHLBull::updatePosition()
     PHLMob::updatePosition();
     double ang = PHWarp(rotation(),M_PI*2);
     if (ang>M_PI) ang-=M_PI*2;
-    if (abs(ang)>=0.0001)
-        PHLog("%lf",ang);
     if (abs(ang)>=M_PI_4)
     {
         poof();

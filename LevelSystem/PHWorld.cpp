@@ -301,7 +301,9 @@ void PHWorld::removeObject(PHLObject * obj)
 		if (*i == obj)
 		{
 			objects.erase(i);
-			obj->getView()->removeFromSuperview();
+            PHView * v = obj->getView();
+            if (v)
+                v->removeFromSuperview();
 			obj->release();
 			break;
 		}
@@ -313,7 +315,9 @@ void PHWorld::removeAllObjects()
 	player = NULL;
 	for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
 	{
-		(*i)->getView()->removeFromSuperview();
+        PHView * v = (*i)->getView();
+        if (v)
+            v->removeFromSuperview();
 		(*i)->release();
 	}
 	objects.clear();

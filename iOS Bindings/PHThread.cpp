@@ -29,11 +29,13 @@ void PHThread::execute()
 		initMutex->lock();
 		initMutex->unlock();
 	}
-	if (target)
+	if (target && callback)
 		(target->*callback)(this,ud);
+    if (autorelease)
+        release();
 }
 
-#define PHTHREAD_INILIST running(false), target(NULL), eventQueue(new PHEventQueue)
+#define PHTHREAD_INILIST running(false), target(NULL), eventQueue(new PHEventQueue), autorelease(false)
 
 PHThread::PHThread() : PHTHREAD_INILIST
 {

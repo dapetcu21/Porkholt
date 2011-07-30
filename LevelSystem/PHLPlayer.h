@@ -59,6 +59,8 @@ private:
     void _activateShield(PHObject * sender, void * ud);
     void _deactivateShield(PHObject * sender, void * ud);
     
+    virtual void die();
+    
 public:
     double forceGauge() { return _forceGauge; }
 	void setForceGauge(double j) { _forceGauge = j; }

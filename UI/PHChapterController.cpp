@@ -52,18 +52,42 @@ void PHChapterController::updateScene(double timeElapsed)
     
 }
 
+void PHChapterController::levelEnded(PHObject * sender, void *ud)
+{
+    int nr = (int)ud;
+    PHLevelController * lvl = (PHLevelController*)sender;
+    bool ret = true;
+    if (lvl->outcome()==PHLevelController::LevelWon)
+    {
+        ostringstream oss;
+        oss<<path<<"/lvl"<<nr+1;
+        ret = !PHFileManager::isDirectory(oss.str());
+    }
+    if (ret)
+    {
+        navController->popViewController(PHNavigationController::FadeToColor);
+    } else
+        loadLevel(nr+1, true);
+}
+
 void PHChapterController::mouseUp(PHObject * sender, void * ud)
 {
     if (getViewState()!=StateAppeared) return;
-    
+    loadLevel((int)ud, false);
+}
+
+void PHChapterController::loadLevel(int nr,bool replace)
+{
     ostringstream oss;
-    oss<<path<<"/lvl"<<(int)ud;
+    oss<<path<<"/lvl"<<nr;
     PHLevelController * lvlvc = new PHLevelController(oss.str());
     lvlvc->init();
+    lvlvc->setEndLevelCallback(this, (PHCallback)&PHChapterController::levelEnded, (void*)nr);
     PHViewController * vc = lvlvc->mainViewController();
-    navController->pushViewController(vc,PHNavigationController::FadeToColor);
+    navController->pushViewController(vc,PHNavigationController::FadeToColor,replace);
     vc->release();
     lvlvc->release();
+
 }
 
 PHChapterController::PHChapterController(const string & _path) : path(_path)

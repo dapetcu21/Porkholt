@@ -49,6 +49,7 @@ void PHLevelController::pause()
 
 void PHLevelController::resume()
 {
+    if (_outcome!=LevelRunning) return;
 	if (!paused) return;
     if (!ready1 || !ready2) return;
 	paused = false;
@@ -80,7 +81,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false), ec_target(NULL), ec_cb(NULL), ec_ud(NULL), _outcome(LevelRunning)
 {
 }
 
@@ -92,8 +93,40 @@ void PHLevelController::viewWillAppear()
 
 void PHLevelController::textViewControllerFinished(PHTextController * sender, void * ud)
 {
-    sender->navigationController()->pushViewController(this, PHNavigationController::FadeToColor, true);
-    this->release();
+    if ((int)ud==1)
+    {
+        sender->navigationController()->pushViewController(this, PHNavigationController::FadeToColor, true);
+    }
+    if ((int)ud==2)
+    {
+        if (ec_target && ec_cb)
+            (ec_target->*ec_cb)(this,ec_ud);
+    }
+    this->destroy();
+}
+
+void PHLevelController::endLevelWithOutcome(int outcome){
+    _outcome = outcome;
+    if (outcome == LevelDied)
+    {
+        vector<string> * v = new vector<string>;
+        v->push_back("You're dead!\n Live with it.");
+        PHTextController * vc = new PHTextController(v);
+        vc->init();
+        vc->setForegroundColor(PHWhiteColor);
+        vc->setBackgroundColor(PHBlackColor);
+        vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, (void*)2);
+        this->retain();
+        navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+        vc->release();
+    }
+    if (outcome == LevelWon)
+    {
+        if (ec_target && ec_cb)
+            (ec_target->*ec_cb)(this,ec_ud);
+    }
+    pause();
+    view->setUserInput(false);
 }
 
 PHViewController * PHLevelController::mainViewController()
@@ -115,7 +148,7 @@ PHViewController * PHLevelController::mainViewController()
     vc->init();
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
-    vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, NULL);
+    vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, (void*)1);
     this->retain();
     return vc;
 }
@@ -124,22 +157,55 @@ void PHLevelController::updateScene(double timeElapsed)
 {
 }
 
+void PHLevelController::destroy()
+{
+    if (referenceCount()>1)
+    {
+        release();
+        return;
+    }
+    PHThread * t = new PHThread;
+    t->setAutoRelease(true);
+    t->setFunction(this, (PHCallback)&PHLevelController::destroyThread, NULL);
+    t->start();
+}
+
+void PHLevelController::destroyThread(PHObject * sender, void * ud)
+{
+    running = false;
+    if (thread)
+    {
+        thread->join();
+        thread->release();
+        thread=NULL;
+    }
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHLevelController::deleteObject, NULL, false);
+}
+
+void PHLevelController::deleteObject(PHObject * sender, void * ud)
+{
+    delete (PHLevelController*)this;
+}
+
 PHLevelController::~PHLevelController()
 {
-	if (backgroundView)
-		backgroundView->release();
 	running = false;
-	thread->join();
-	thread->release();
-    if (scripingEngine)
+    if (thread)
     {
-        scripingEngine->release();
+        thread->join();
+        thread->release();
     }
+    if (backgroundView)
+		backgroundView->release();
 	if (world)
 	{
 		world->getView()->removeFromSuperview();
 		world->release();
 	}
+    if (scripingEngine)
+    {
+        scripingEngine->release();
+    }
 	mutex->release();
 	pSem1->release();
 	pSem2->release();

@@ -25,9 +25,10 @@ protected:
 	friend class PHNavigationController;
 	friend class PHMainEvents;
 	int viewState;
+    bool rmNav;
 public:
 	PHView * getView() { return view; };
-	PHViewController() : navController(NULL),view(NULL),viewState(StateNotAppeared) {};
+	PHViewController() : navController(NULL),view(NULL),viewState(StateNotAppeared),rmNav(false) {};
 	virtual ~PHViewController();
 	
 	void init();
@@ -79,7 +80,10 @@ public:
 			viewWillDisappear();
 		}
 	}
-	
+    
+    virtual bool specialDestroyTactic() { return false; }
+    virtual void destroy() {};
+    
 private:
 	virtual void viewDidAppear();
 	virtual void viewWillAppear();
