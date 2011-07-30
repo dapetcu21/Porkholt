@@ -81,9 +81,6 @@ public:
 		}
 	}
     
-    virtual bool specialDestroyTactic() { return false; }
-    virtual void destroy() {};
-    
 private:
 	virtual void viewDidAppear();
 	virtual void viewWillAppear();

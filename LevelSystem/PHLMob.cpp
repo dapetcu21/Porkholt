@@ -69,8 +69,6 @@ void PHLMob::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldMan
         b2Vec2 vB = bodyB->GetLinearVelocityFromWorldPoint(point);
         double approachVelocity = fabs(b2Dot(vB - vA, worldManifold.normal));
         
-        PHLog("approachVelocity: %lf",approachVelocity);
-        
         if (!isInvulnerable() && (approachVelocity > speedNeededForDamagingFixture(f1) || p->isUsingForce()) && vulnerableFixture(f1))
         {
             decreaseHP(p->attackDamage());

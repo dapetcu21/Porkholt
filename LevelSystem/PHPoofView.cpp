@@ -16,7 +16,6 @@ PHImage * PHPoofView::poofImage()
     if (!img)
     {
         img = PHImage::imageNamed("poof");
-        img->retain();
     }
     return img;
 }

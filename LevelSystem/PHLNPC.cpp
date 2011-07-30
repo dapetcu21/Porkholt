@@ -592,8 +592,13 @@ private:
             anim->setTime(INFINITY);
             anim->setCurveFunction(PHLAnimation::ConstantFunction);
             anim->setDisableDynamics(false);
-            PHLuaGetHardRef(L,this);
-            anim->setLuaCallback(L);
+            if (L)
+            {
+                PHLuaGetHardRef(L,this);
+                anim->setLuaCallback(L);
+                PHLuaDeleteHardRef(L,this);
+                L = NULL;
+            }
             npc->addAnimation(anim);
             anim->release();
         }

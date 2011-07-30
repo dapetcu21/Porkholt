@@ -313,12 +313,15 @@ void PHWorld::removeAllObjects()
 {
 	camera = NULL;
 	player = NULL;
-	for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+    int n = objects.size();
+	for (int i = 0; i<n; i++)
 	{
-        PHView * v = (*i)->getView();
+        PHLObject * o = objects[i];
+        if (o==NULL) continue;
+        PHView * v = o->getView();
         if (v)
             v->removeFromSuperview();
-		(*i)->release();
+		o->release();
 	}
 	objects.clear();
 }

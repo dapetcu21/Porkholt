@@ -57,7 +57,6 @@ public:
     
 	void pause();
 	void resume();
-    void destroy();
     
     enum {
         LevelRunning = 0,
@@ -91,7 +90,6 @@ public:
     static PHImage * dialogImage;
     static PHImage * questImage;
     
-    bool specialDestroyTactic() { return true; }
 };
 
 #endif

@@ -163,6 +163,7 @@ end
 function Initializers.PHLBigBull(obj)
 	Initializers.PHLBull(obj,1.5)
 	obj.class = "PHLBull";
+	print("big boss bull loaded");
 end
 
 
@@ -171,6 +172,7 @@ function objectWithClass(class,...)
 	if (not obj.class) then
 		obj.class = class;
 	end
+	obj.realClass = class;
 	if (Initializers[class]) then
 		Initializers[class](obj,unpack(arg));
 	else

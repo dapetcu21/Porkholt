@@ -39,7 +39,8 @@ void PHImageAnimator::setAnimatorPool(PHAnimatorPool * p)
 
 PHImageAnimator::~PHImageAnimator()
 {
-    pool->removeAnimator(this);
+    if (pool)
+        pool->removeAnimator(this);
 }
 
 double PHImageAnimator::timeForFrameInSection(int fr, int sec)

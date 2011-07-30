@@ -49,7 +49,6 @@ PHImage * PHShieldView::shieldImage() {
     if (!img)
     {
         img = PHImage::imageNamed("shield");
-        img->retain();
     }
     return img;
 }

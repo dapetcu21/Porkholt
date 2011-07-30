@@ -237,10 +237,7 @@ void PHNavigationController::stopAnimating()
 	{
         if (lastVC->rmNav)
             lastVC->navController = NULL;
-        if (lastVC->specialDestroyTactic())
-            lastVC->destroy();
-        else
-            lastVC->release();
+        lastVC->release();
 		lastVC = NULL;
 	}
 	animation = NoAnim;
@@ -255,10 +252,7 @@ void PHNavigationController::pushViewController(PHViewController * vc, int anim,
 		if (!stack.empty())
 		{
             PHViewController * b = stack.back();
-            if (b->specialDestroyTactic())
-                b->destroy();
-            else
-                b->release();
+            b->release();
 			stack.pop_back();
 		}
 	}
@@ -279,10 +273,7 @@ void PHNavigationController::popViewController(int anim)
 		return;
 	cancelAnimation();
     PHViewController * b = stack.back();
-    if (b->specialDestroyTactic())
-        b->destroy();
-    else
-        b->release();
+    b->release();
 	stack.pop_back();
 	lastVC = currentVC;
     if (lastVC)

@@ -15,7 +15,8 @@ function tableSubsetOfTable( tbl2, tbl1 )
 end
 
 function describeObject(obj)
-	obj.class = obj.class or "PHLObject";
+	obj.class = obj.realClass or "PHLObject";
+    obj.realClass = nil;
 	obj.pos = obj.pos or {};
     obj.pos.x = obj.pos.x or 0;
     obj.pos.y = obj.pos.y or 0;

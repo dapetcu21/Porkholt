@@ -5,7 +5,7 @@
 obj = objectWithClass("PHLSign");
 obj.pos = point(4.758593,0.799492);
 obj.scripting = [[sign1]];
-obj.text = [[You can jump using long, ample swipes. Don't flick!|Try bouncing by swiping down mid-air then up again after hitting the ground to jump way higher]];
+obj.text = [[You can jump using long, ample swipes. Don't flick!|Try bouncing by swiping down mid-air then up again after hitting the ground to jump way higher|Bouncing is really important. Try to master it]];
 obj.levelDes = true;
 addObject(obj);
 
@@ -147,11 +147,11 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLSensor");
-obj.pos = point(17.696918,0.641316);
+obj.pos = point(17.915160,0.798660);
 obj.scripting = [[sensordash]];
 op = {};
 op.rotation = 0.000000;
-objectAddBox(obj,0.089258,-0.236094,0.500000,5.126914,op);
+objectAddBox(obj,-0.233672,-0.331094,0.500000,5.126914,op);
 obj.levelDes = true;
 addObject(obj);
 
@@ -325,7 +325,7 @@ objectAddImage(obj,[[/ground.png]],8.370868,-2.620122,2.200000,1.000000,op);
 op = {};
 op.rotation = 180.000000;
 objectAddImage(obj,[[/ground.png]],8.377770,-1.736215,2.200000,1.000000,op);
-objectAddBox(obj,0.000000,-0.250000,32.400000,0.500000);
+objectAddBox(obj,0.015062,-0.250000,32.384938,0.500798);
 obj.levelDes = true;
 addObject(obj);
 
@@ -472,38 +472,42 @@ addObject(obj);
 
 obj = objectWithClass("PHLBull");
 obj.pos = point(11.462495,0.820086);
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLBull");
 obj.pos = point(25.845773,0.822952);
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLBull");
 obj.pos = point(42.948468,0.829983);
 obj.attackVelocity = 7.000000;
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLBull");
 obj.pos = point(69.738017,0.825293);
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLBigBull");
-obj.pos = point(102.259910,0.047121);
-obj.attackDuration = 0.500000;
+obj.pos = point(102.286199,-0.450262);
 obj.attackRange = 5.000000;
 obj.attackVelocity = 6.000000;
-obj.bodyFlipping = true;
 obj.cooldownDuration = 2.500000;
-obj.overHead = point(0.150000,0.300000);
+obj.flipped = true;
+obj.healthPoints = 3.000000;
 obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLBull");
 obj.pos = point(63.673884,0.824130);
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
@@ -514,7 +518,7 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLLevelEnd");
-obj.pos = point(140.138758,0.807074);
+obj.pos = point(140.162274,0.631801);
 objectAddBox(obj,-0.250000,-0.250000,0.502930,8.102695);
 obj.levelDes = true;
 addObject(obj);
@@ -555,6 +559,7 @@ addObject(obj);
 obj = objectWithClass("PHLBull");
 obj.pos = point(80.115651,0.827932);
 obj.attackVelocity = 7.000000;
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
@@ -576,6 +581,7 @@ addObject(obj);
 
 obj = objectWithClass("PHLBull");
 obj.pos = point(118.135939,0.785518);
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 
@@ -599,6 +605,7 @@ addObject(obj);
 obj = objectWithClass("PHLBull");
 obj.pos = point(128.513573,0.788157);
 obj.attackVelocity = 7.000000;
+obj.flipped = true;
 obj.levelDes = true;
 addObject(obj);
 

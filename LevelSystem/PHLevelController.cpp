@@ -102,7 +102,7 @@ void PHLevelController::textViewControllerFinished(PHTextController * sender, vo
         if (ec_target && ec_cb)
             (ec_target->*ec_cb)(this,ec_ud);
     }
-    this->destroy();
+    this->release();
 }
 
 void PHLevelController::endLevelWithOutcome(int outcome){
@@ -157,41 +157,13 @@ void PHLevelController::updateScene(double timeElapsed)
 {
 }
 
-void PHLevelController::destroy()
-{
-    if (referenceCount()>1)
-    {
-        release();
-        return;
-    }
-    PHThread * t = new PHThread;
-    t->setAutoRelease(true);
-    t->setFunction(this, (PHCallback)&PHLevelController::destroyThread, NULL);
-    t->start();
-}
-
-void PHLevelController::destroyThread(PHObject * sender, void * ud)
-{
-    running = false;
-    if (thread)
-    {
-        thread->join();
-        thread->release();
-        thread=NULL;
-    }
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHLevelController::deleteObject, NULL, false);
-}
-
-void PHLevelController::deleteObject(PHObject * sender, void * ud)
-{
-    delete (PHLevelController*)this;
-}
-
 PHLevelController::~PHLevelController()
 {
 	running = false;
     if (thread)
     {
+        if (pSem2)
+            pSem2->signal();
         thread->join();
         thread->release();
     }
@@ -199,6 +171,7 @@ PHLevelController::~PHLevelController()
 		backgroundView->release();
 	if (world)
 	{
+        ((PHCaptureView*)world->getView())->setSemaphores(NULL, NULL);
 		world->getView()->removeFromSuperview();
 		world->release();
 	}
@@ -342,8 +315,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
     retainImage(dialogImage, "dialogbubble");
     retainImage(questImage, "quest");
-    PHPoofView::poofImage();
-    PHShieldView::shieldImage();
+    PHPoofView::poofImage()->retain();
+    PHShieldView::shieldImage()->retain();
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
@@ -378,6 +351,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             scripingEngine->scriptingStep(frameInterval);
             world->updateTimers(frameInterval);
             pSem2->wait();
+            if (!running) break;
             mutex->lock();
             animPool->advanceAnimation(frameInterval);
             world->updateScene();
