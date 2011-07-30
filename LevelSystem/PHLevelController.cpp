@@ -23,6 +23,7 @@
 #include "PHLCamera.h"
 #include "PHPoofView.h"
 #include "PHShieldView.h"
+#include "PHAnimatorPool.h"
 
 #include <fstream>
 
@@ -71,6 +72,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	backgroundView->setImage(PHImage::imageFromPath(directory+"/bg.png"));
 	view->addSubview(backgroundView);
 	view->addSubview(world->getView());
+    animPool = new PHAnimatorPool;
 	thread = new PHThread;
 	thread->setFunction(this,(PHCallback)&PHLevelController::auxThread, NULL);
 	thread->start();
@@ -141,6 +143,7 @@ PHLevelController::~PHLevelController()
 	mutex->release();
 	pSem1->release();
 	pSem2->release();
+    animPool->release();
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
 	PHMainEvents::sharedInstance()->setIndependentTiming(false);
@@ -153,7 +156,6 @@ PHLevelController::~PHLevelController()
 void PHLevelController::auxThread(PHThread * sender, void * ud)
 {
 	mutex->lock();
-	string dir = directory;
 	b2World * fWorld = world->physicsWorld;
 	mutex->unlock();
 	
@@ -162,9 +164,9 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
 	string resourcePath = PHFileManager::resourcePath();
 	
-	PHLuaSetIncludePath(L, dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
+	PHLuaSetIncludePath(L, directory+"/?.lua;"+resourcePath+"/scripts/?.lua");
 	
-    PHLuaLoadFile(L,dir+"/init.lua");
+    PHLuaLoadFile(L,directory+"/init.lua");
 	
 	lua_getglobal(L,"layers");
 	
@@ -192,7 +194,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 					lua_pushnumber(L, j);
 					lua_gettable(L, -2);
                     
-                    PHImageView * img = PHImageView::imageFromLua(L,dir+"/");
+                    PHImageView * img = PHImageView::imageFromLua(L,directory, animPool);
                     if (img)
                     {
                         mutex->lock();
@@ -228,7 +230,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
                 PHLuaGetStringField(clss,"class");
 				
 				PHLObject * obj = PHLObject::objectWithClass(clss);
-				obj->loadFromLua(L,dir,fWorld);
+				obj->loadFromLua(L,fWorld,this);
 				obj->loadView();
 				mutex->lock();
 				world->addObject(obj);
@@ -268,7 +270,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	lua_close(L);
     
-    scripingEngine = new PHScripting(world,dir);
+    scripingEngine = new PHScripting(world,directory);
 	
 	mutex->lock();
     
@@ -311,6 +313,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             world->updateTimers(frameInterval);
             pSem2->wait();
             mutex->lock();
+            animPool->advanceAnimation(frameInterval);
             world->updateScene();
             mutex->unlock();
             pSem1->signal();

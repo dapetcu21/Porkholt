@@ -35,7 +35,7 @@ public:
     
 	void updateControls(list<PHPoint> * queue);
 	
-	virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
+	virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
     
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
     

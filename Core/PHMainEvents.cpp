@@ -13,7 +13,7 @@
 #include "PHChapterController.h"
 #include "PHFileManager.h"
 #include "PHImageAnimator.h"
-
+#include "PHAnimatorPool.h"
 
 PHMainEvents * PHMainEvents::sharedInstance()
 {
@@ -78,7 +78,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	glLoadIdentity();
     
 	PHView::updateAnimation(timeElapsed);
-    PHImageAnimator::advanceAnimations(timeElapsed);
+    PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
     
 	if (viewController)  
 		viewController->updateScene(timeElapsed);

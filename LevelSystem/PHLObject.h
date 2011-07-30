@@ -24,6 +24,7 @@ class PHView;
 class PHLAnimation;
 struct b2FixtureDef;
 class b2Fixture;
+class PHLevelController;
 
 class PHLObject : public PHObject
 {
@@ -105,7 +106,7 @@ public:
     PHPoint worldVector(const PHPoint & p);
     PHPoint localVector(const PHPoint & p);
     
-	virtual void loadFromLua(lua_State * L, const string & root, b2World * world);
+	virtual void loadFromLua(lua_State * L, b2World * _world, PHLevelController * lvlc);
 	virtual void loadView();
 	
     typedef PHLObject * (*initializer)();

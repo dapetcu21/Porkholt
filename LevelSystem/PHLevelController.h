@@ -18,6 +18,7 @@ class PHImageView;
 class PHScripting;
 class PHTextController;
 class PHImage;
+class PHAnimatorPool;
 
 class PHLevelController : public PHViewController
 {
@@ -38,6 +39,8 @@ protected:
     volatile bool ready1,ready2;
     
     virtual void viewWillAppear();
+    
+    PHAnimatorPool * animPool;
 public:
 	
 	void pause();
@@ -60,6 +63,8 @@ public:
     PHViewController * mainViewController();
 	
     void textViewControllerFinished(PHTextController * sender, void * ud);
+    
+    PHAnimatorPool * animatorPool() { return animPool; }
     
     static PHImage * dialogImage;
     static PHImage * questImage;

@@ -30,7 +30,7 @@ public:
     PHLBull();
     virtual ~PHLBull();
     
-    virtual void loadFromLua(lua_State *L, const string &root, b2World *world);
+    virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
     
     static void registerLuaInterface(lua_State * L);
     

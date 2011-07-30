@@ -12,6 +12,7 @@
 #include "PHImage.h"
 
 class PHImageAnimator;
+class PHAnimatorPool;
 
 class PHAnimatedImage: public PHImage
 {
@@ -84,6 +85,7 @@ public:
     int sectionNo(const string & sectionName);
     
     PHImageAnimator * newAnimator();
+    PHImageAnimator * newAnimator(PHAnimatorPool * p);
 };
 
 #endif

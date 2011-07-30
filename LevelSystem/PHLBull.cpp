@@ -112,9 +112,9 @@ double PHLBull::speedNeededForDamagingFixture(b2Fixture * f)
     return 2.0f;
 }
 
-void PHLBull::loadFromLua(lua_State *L, const string &root, b2World *world)
+void PHLBull::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
 {
-    PHLMob::loadFromLua(L, root, world);
+    PHLMob::loadFromLua(L, world,lvlc);
     
     PHLuaGetNumberField(attackRange, "attackRange");
     PHLuaGetNumberField(attackVelocity, "attackVelocity");

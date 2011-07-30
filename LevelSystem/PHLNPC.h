@@ -54,7 +54,7 @@ public:
     virtual void updatePosition();
     virtual void updateView();
     virtual void loadView();
-    virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
+    virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
     static void registerLuaInterface(lua_State * L);
     
 private:

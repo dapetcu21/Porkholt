@@ -16,8 +16,9 @@
 #include "PHNormalImage.h"
 #include "PHAnimatedImage.h"
 #include "PHImageAnimator.h"
+#include "PHAnimatorPool.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool())
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -31,7 +32,15 @@ PHImageView::PHImageView(const PHRect &frame) : PHView(frame), PHIMAGEVIEW_INIT
 
 PHImageView::PHImageView(PHImage * image) : PHView(), PHIMAGEVIEW_INIT
 {
+    luaClass = "PHImageView";
 	setImage(image);
+}
+
+void PHImageView::setAnimatorPool(PHAnimatorPool * p) 
+{
+    pool = p; 
+    if (_animator)
+        _animator->setAnimatorPool(p);
 }
 
 void PHImageView::setImage(PHImage * img)
@@ -45,7 +54,7 @@ void PHImageView::setImage(PHImage * img)
     {
         img->retain();
         if (img->isAnimated())
-            _animator = ((PHAnimatedImage*)img)->newAnimator();
+            _animator = ((PHAnimatedImage*)img)->newAnimator(pool);
     }
     if (_image)
         _image->release();
@@ -78,6 +87,11 @@ void PHImageView::draw()
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
+{
+    return imageFromLua(L, root, PHAnimatorPool::mainAnimatorPool());
+}
+
+PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAnimatorPool * pool)
 {
     PHImageView * img = NULL;
     if (lua_istable(L, -1))
@@ -127,6 +141,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
             lua_pop(L,1);
             
             img = PHImageView::imageFromClass(clss);
+            img->setAnimatorPool(pool);
             img->setImage(PHImage::imageFromPath(filename));
             img->setTintColor(tint);
             img->setTextureCoordinates(portion);

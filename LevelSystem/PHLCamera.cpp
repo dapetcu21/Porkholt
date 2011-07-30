@@ -20,9 +20,9 @@ PHLCamera::~PHLCamera()
 {
 }
 
-void PHLCamera::loadFromLua(lua_State * L, const string & root,b2World * world)
+void PHLCamera::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
 {
-	PHLObject::loadFromLua(L,root,world);
+	PHLObject::loadFromLua(L,world,lvlc);
     PHLuaGetNumberField(sz.height,"camH");	
 	PHRect bnd = PHMainEvents::sharedInstance()->screenBounds();
 	sz.width = sz.height*bnd.width/bnd.height;

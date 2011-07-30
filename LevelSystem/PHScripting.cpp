@@ -73,7 +73,7 @@ static int PHWorld_insertObject(lua_State * L)
         lua_pop(L,1);
         PHLObject * obj = PHLObject::objectWithClass(clss);
         lua_pushvalue(L,2);
-        obj->loadFromLua(L, world->levelController()->bundlePath(), world->getPhysicsWorld());
+        obj->loadFromLua(L, world->getPhysicsWorld(),world->levelController());
         lua_pop(L,1);
         obj->scriptingCreate(L);
         obj->defferedLoading(world, pos, obj2);

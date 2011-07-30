@@ -8,19 +8,38 @@
 
 #include "PHImageAnimator.h"
 #include "PHAnimatedImage.h"
+#include "PHAnimatorPool.h"
 #include "PHLua.h"
 
-set<PHImageAnimator*> PHImageAnimator::animators;
 
-PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : _image(img), advanceManually(false), target(NULL), callback(NULL), userdata(NULL), running(true)
+#define INIT _image(img), advanceManually(false), target(NULL), callback(NULL), userdata(NULL), running(true)
+
+PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : pool(PHAnimatorPool::mainAnimatorPool()), INIT
 {
     reset();
-    animators.insert(this);
+    if (pool)
+        pool->insertAnimator(this);
+}
+
+PHImageAnimator::PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p) : pool(p), INIT
+{
+    reset();
+    if (pool)
+        pool->insertAnimator(this);
+}
+
+void PHImageAnimator::setAnimatorPool(PHAnimatorPool * p)
+{
+    if (pool)
+        pool->removeAnimator(this);
+    pool = p;
+    if (pool)
+        pool->insertAnimator(this);
 }
 
 PHImageAnimator::~PHImageAnimator()
 {
-    animators.erase(this);
+    pool->removeAnimator(this);
 }
 
 double PHImageAnimator::timeForFrameInSection(int fr, int sec)
@@ -115,15 +134,6 @@ void PHImageAnimator::animateSection(int sect, PHObject * trg, PHCallback cb, vo
     realframe = realFrame(frame,section);
     lastframe = realframe;
     fade = frm->fade;
-}
-
-void PHImageAnimator::advanceAnimations(double elapsedTime)
-{
-    for (set<PHImageAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
-    {
-        if (!((*i)->advanceManually))
-            (*i)->advanceAnimation(elapsedTime);
-    }
 }
 
 void PHImageAnimator::advanceAnimation(double elapsedTime)

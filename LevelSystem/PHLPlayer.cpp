@@ -32,9 +32,9 @@ PHLPlayer::~PHLPlayer()
         mutex->release();
 }
 
-void PHLPlayer::loadFromLua(lua_State * L, const string & root,b2World * world)
+void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
 {
-	PHLNPC::loadFromLua(L,root,world);
+	PHLNPC::loadFromLua(L,world,lvlc);
     body->SetBullet(true);
     
     PHLuaGetNumberField(damage, "attackDamage");

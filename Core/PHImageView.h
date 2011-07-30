@@ -15,6 +15,7 @@
 
 class PHImage;
 class PHImageAnimator;
+class PHAnimatorPool;
 
 class PHImageView : public PHView
 {
@@ -26,7 +27,11 @@ protected:
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
     
+    PHAnimatorPool * pool;
+    
 public:
+    PHAnimatorPool * animatorPool() { return pool; }
+    void setAnimatorPool(PHAnimatorPool * p);
 	PHImage * image() { return _image; };
     PHImageAnimator * animator() { return _animator; }
 	void setImage(PHImage * image);
@@ -46,6 +51,7 @@ public:
     virtual void setAnimatedColor(const PHColor & c) { setTintColor(c); }
     
     static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
+    static PHImageView * imageFromLua(lua_State * L,const string & root, PHAnimatorPool * pool);
     static PHImageView * imageFromClass(const string & clss);
     
     static void registerLuaInterface(lua_State * L);

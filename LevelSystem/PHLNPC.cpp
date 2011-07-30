@@ -49,9 +49,9 @@ PHLNPC::~PHLNPC()
     }
 }
 
-void PHLNPC::loadFromLua(lua_State * L, const string & root,b2World * world)
+void PHLNPC::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
 {
-    PHLObject::loadFromLua(L,root,world);
+    PHLObject::loadFromLua(L,world,lvlc);
     
     PHLuaGetBoolField(trail,"trail");
     PHLuaGetBoolField(utrail,"usesTrail");

@@ -411,3 +411,8 @@ PHImageAnimator * PHAnimatedImage::newAnimator()
 {
     return new PHImageAnimator(this);
 }
+
+PHImageAnimator * PHAnimatedImage::newAnimator(PHAnimatorPool * p)
+{
+    return new PHImageAnimator(this,p);
+}

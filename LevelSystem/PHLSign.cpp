@@ -59,9 +59,9 @@ void PHLSign::display(lua_State * L)
     setShowsQuest(true);
 }
 
-void PHLSign::loadFromLua(lua_State * L, const string & root, b2World * world)
+void PHLSign::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
 {
-    PHLNPC::loadFromLua(L,root,world);
+    PHLNPC::loadFromLua(L,world,lvlc);
     PHLuaGetStringField(text, "text");
 }
 

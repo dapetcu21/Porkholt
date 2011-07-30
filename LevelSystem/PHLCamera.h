@@ -30,7 +30,7 @@ public:
     double width() { return sz.width; }
     double height() { return sz.height; }
 	
-	virtual void loadFromLua(lua_State * L, const string & root,b2World * world);
+	virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
 	virtual void loadView();
 	
 	void updateCamera(PHPoint pnt);

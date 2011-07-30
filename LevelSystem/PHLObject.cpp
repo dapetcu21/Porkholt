@@ -23,6 +23,7 @@
 #include "PHLMob.h"
 #include "PHLLevelEnd.h"
 #include "PHLPit.h"
+#include "PHLevelController.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -226,9 +227,10 @@ bool PHLObject::customizeFixture(lua_State * L, b2FixtureDef & fixtureDef)
     return true;
 }
 
-void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world)
+void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController * lvlc)
 {
 	world = _world;
+    const string & root = lvlc->bundlePath();
     
     hasScripting = false;
     lua_getfield(L, -1, "scripting");
@@ -268,7 +270,7 @@ void PHLObject::loadFromLua(lua_State * L, const string & root, b2World * _world
 			lua_gettable(L, -2);
             
             Image img;
-            PHImageView * image = PHImageView::imageFromLua(L,root);    
+            PHImageView * image = PHImageView::imageFromLua(L,root,lvlc->animatorPool());    
             if (image)
             {
                 img.img = image;

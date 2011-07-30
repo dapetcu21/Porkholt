@@ -89,9 +89,9 @@ void PHLMob::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldMan
     }
 }
 
-void PHLMob::loadFromLua(lua_State *L, const string &root, b2World *world)
+void PHLMob::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
 {
-    PHLNPC::loadFromLua(L, root, world);
+    PHLNPC::loadFromLua(L, world,lvlc);
     PHLuaGetNumberField(damage, "attackDamage");
 }
 

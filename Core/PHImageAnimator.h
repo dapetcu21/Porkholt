@@ -12,15 +12,18 @@
 #include "PHMain.h"
 
 class PHAnimatedImage;
+class PHAnimatorPool;
 
 class PHImageAnimator : public PHObject
 {
 private:
     PHAnimatedImage * _image;
     PHImageAnimator(PHAnimatedImage * img);
+    PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p);
     virtual ~PHImageAnimator();
     
     friend class PHAnimatedImage;
+    friend class PHAnimatorPool;
     
     int section;
     int frame;
@@ -35,10 +38,11 @@ private:
     double timeForFrameInSection(int fr, int sec);
     int realFrame(int fr, int sec);
     
-    static set<PHImageAnimator*> animators;
     bool advanceManually;
     
     bool running;
+    
+    PHAnimatorPool * pool;
     
 public:
     PHAnimatedImage * image() { return _image; }
@@ -57,7 +61,8 @@ public:
     bool isAdvancingManually() { return advanceManually; }
     void setAdvanceManually(bool s) { advanceManually = s; }
     void advanceAnimation(double elapsedTime);
-    static void advanceAnimations(double elapsedTime);
+    void setAnimatorPool(PHAnimatorPool * p);
+    PHAnimatorPool * animatorPool() { return pool; }
     
     void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHInvalidColor); }
 	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(frm, cnstr,PHInvalidColor); }
