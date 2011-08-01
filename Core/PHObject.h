@@ -10,7 +10,7 @@
 #ifndef PHOBJECT_H
 #define PHOBJECT_H
 
-#define VIRTUAL_PHOBJECT
+//#define VIRTUAL_PHOBJECT
 
 #ifdef VIRTUAL_PHOBJECT
 #define PHOBJECT_PREFIX virtual

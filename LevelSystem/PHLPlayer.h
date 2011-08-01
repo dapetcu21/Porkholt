@@ -85,12 +85,12 @@ public:
     void activatePower();
     void deactivatePower();
     
-    PHObject * retain() { 
+ /*   PHObject * retain() { 
         PHLog("%x: retain %d",this,referenceCount()); return PHObject::retain();
     }
     PHObject * release() { 
         PHLog("%x: release %d",this, referenceCount()); return PHObject::release(); 
-    }
+    } */
 };
 
 #endif
