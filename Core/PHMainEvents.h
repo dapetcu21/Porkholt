@@ -26,6 +26,7 @@ private:
 	int fps;
 	bool suspended;
 	bool indTiming;
+    bool loaded;
     
 #ifdef PH_SIMULATOR
     PHRemote * remote;
@@ -33,6 +34,7 @@ private:
     
     
 public:
+    PHMainEvents();
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };

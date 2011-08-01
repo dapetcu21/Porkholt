@@ -169,7 +169,10 @@ PHWorld::~PHWorld()
 		layerView->release();
 	}
 	if (view)
+    {
+        view->removeFromSuperview();
 		view->release();
+    }
 	delete physicsWorld;
     delete contactListener;
     delete contactFilter;
@@ -200,6 +203,7 @@ void PHWorld::updateScene()
         PHLObject * obj = *i;
         obj->updateView();
     }
+    //printObjects();
     camera->updateCamera(player->position());
 	if (camera)
 	{
@@ -304,6 +308,7 @@ void PHWorld::removeObject(PHLObject * obj)
             PHView * v = obj->getView();
             if (v)
                 v->removeFromSuperview();
+            obj->setDontRemoveFromWorld(true);
 			obj->release();
 			break;
 		}
@@ -311,16 +316,16 @@ void PHWorld::removeObject(PHLObject * obj)
 
 void PHWorld::removeAllObjects()
 {
-	camera = NULL;
-	player = NULL;
-    int n = objects.size();
-	for (int i = 0; i<n; i++)
+    //printObjects();
+    camera = NULL;
+    player = NULL;
+    for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++) 
 	{
-        PHLObject * o = objects[i];
-        if (o==NULL) continue;
+        PHLObject * o = *i;
         PHView * v = o->getView();
         if (v)
             v->removeFromSuperview();
+        o->setDontRemoveFromWorld(true);
 		o->release();
 	}
 	objects.clear();
@@ -607,3 +612,11 @@ const string & PHWorld::resourcePath()
 {
     return levelController()->bundlePath();
 }
+
+/*void PHWorld::printObjects()
+{
+    PHLog("objects: p:%x c:%x n:%d",player,camera,objects.size());
+    for (int i=0; i<objects.size(); i++)
+        PHLog("%x",objects[i]);
+    PHLog("------");
+}*/

@@ -27,6 +27,9 @@ private:
     double damage;
     PHMutex * mutex;
     
+    double powerTime;
+    bool resumeTrail;
+    
 public:
 	PHLPlayer();
 	virtual ~PHLPlayer();
@@ -48,6 +51,7 @@ public:
     void setAttackDamage( double dmg ) { damage = dmg; }
     double attackDamage() { return damage; }
     
+    virtual void updatePosition();
     
     static void registerLuaInterface(lua_State *L);
 private:
@@ -58,6 +62,8 @@ private:
     PHShieldView * shieldView;
     void _activateShield(PHObject * sender, void * ud);
     void _deactivateShield(PHObject * sender, void * ud);
+    void _activatePower(PHObject * sender, void * ud);
+    void _deactivatePower(PHObject * sender, void * ud);
     
     virtual void die();
     
@@ -76,6 +82,15 @@ public:
     bool hasShield() { return shield; }
     virtual bool isInvulnerable() { return shield || PHLNPC::isInvulnerable(); }
     
+    void activatePower();
+    void deactivatePower();
+    
+    PHObject * retain() { 
+        PHLog("%x: retain %d",this,referenceCount()); return PHObject::retain();
+    }
+    PHObject * release() { 
+        PHLog("%x: release %d",this, referenceCount()); return PHObject::release(); 
+    }
 };
 
 #endif

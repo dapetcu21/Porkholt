@@ -177,6 +177,8 @@ void PHTextView::recalculatePositions()
         delete[] vertices;
     if (colors)
         delete[] colors;
+    if (indices)
+        delete[] indices;
     colors = NULL;
     colorArrayNeedsReload = true;
     

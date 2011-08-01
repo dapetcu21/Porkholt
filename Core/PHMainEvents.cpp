@@ -23,6 +23,10 @@ PHMainEvents * PHMainEvents::sharedInstance()
 	return inst;
 }
 
+PHMainEvents::PHMainEvents() : view(NULL), viewController(NULL), loaded(false)
+{
+}
+
 void PHMainEvents::init(double screenX, double screenY, int FPS)
 {
 	fps = FPS;
@@ -30,6 +34,7 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	_screenHeight = screenY;
 	suspended = 0;
 	indTiming = false;
+    loaded = true;
 	
 	PHThread::mainThread();
 
@@ -90,6 +95,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 
 void PHMainEvents::_appSuspended(PHObject * sender, void * ud)
 {
+    if (!loaded) return;
 	if (suspended) return;
 	suspended = true;
 	PHMessage::messageWithName("appSuspended")->broadcast(this, NULL);
@@ -126,17 +132,20 @@ void PHMainEvents::_appResumed(PHObject * sender, void * ud)
 
 void PHMainEvents::appSuspended()
 {
+    if (!loaded) return;
     PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHMainEvents::_appSuspended, NULL, false);
 }
 
 void PHMainEvents::appResumed()
 {
+    if (!loaded) return;
     PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHMainEvents::_appResumed, NULL, false);
 }
 
 
 void PHMainEvents::appQuits()
 {
+    if (!loaded) return;
 	//This isn't guaranteed to be called
 	//Save all stuff in PHMainEvents::appSuspended()
 	PHLog("appQuits");

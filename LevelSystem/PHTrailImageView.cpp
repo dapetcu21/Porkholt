@@ -8,7 +8,7 @@
 
 #include "PHTrailImageView.h"
 
-#define INIT_LIST ,snap(1),ssnap(0),trail(0),_stopView(NULL)
+#define INIT_LIST ,snap(1),ssnap(0),trail(0),_stopView(NULL), auxImg(NULL)
 
 PHTrailImageView::PHTrailImageView() : PHImageView() INIT_LIST { dontDrawOnMain = false; }
 
@@ -16,7 +16,10 @@ PHTrailImageView::PHTrailImageView(const PHRect &frame): PHImageView(frame) INIT
 
 PHTrailImageView::PHTrailImageView(PHImage * image) : PHImageView(image) INIT_LIST { dontDrawOnMain = false;}
 
-PHTrailImageView::~PHTrailImageView() {}
+PHTrailImageView::~PHTrailImageView() {
+    if (auxImg)
+        auxImg->release();
+}
 
 void PHTrailImageView::saveState(pframe & fr)
 {
@@ -66,7 +69,11 @@ void PHTrailImageView::auxRender()
         //tint.g*=0.6;
         //tint.b*=0.6;
         drawBackground();
+        PHImage * im = _image;
+        if (auxImg)
+            _image = auxImg;
         draw();
+        _image = im;
         glPopMatrix();
     }
     loadMinState(fr);

@@ -21,7 +21,7 @@
 #include "PHShieldView.h"
 #include "PHLevelController.h"
 
-PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1),  _forceGauge(0.0f), maxForce(100), _forceGrowth(100), barHidden(false), shield(false), shieldView(NULL)
+PHLPlayer::PHLPlayer() : touchesSomething(false), normal(PHOriginPoint), forceGap(0), mutex(NULL), userInp(true), force(true), damage(1),  _forceGauge(0.0f), maxForce(100), _forceGrowth(100), barHidden(false), shield(false), shieldView(NULL), powerTime(0)
 {
 	_class = "PHLPlayer";
     maxHP = hp = 3.0f;
@@ -126,6 +126,21 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         forceGap--;
 }
 
+void PHLPlayer::updatePosition()
+{
+    PHLNPC::updatePosition();
+    double interval = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
+    if (powerTime)
+    {
+        powerTime-=interval;
+        if (powerTime<=0)
+        {
+            powerTime = 0;
+            deactivatePower();
+        }
+    }
+}
+
 void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)
 {
     touchesSomething = 1.0f;
@@ -175,6 +190,38 @@ void PHLPlayer::activateShield()
     if (shield) return;
     shield = true;
     getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLPlayer::_activateShield,NULL,false);
+}
+
+void PHLPlayer::_activatePower(PHObject * sender, void * ud)
+{
+    PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);
+    if (iv)
+        iv->setAuxImage(PHImage::imageNamed("ball_green"));
+    resumeTrail = hasTrail();
+    setTrail(true);
+}
+
+void PHLPlayer::_deactivatePower(PHObject * sender, void * ud)
+{
+    PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);
+    if (iv)
+        iv->setAuxImage(NULL);
+    setTrail(resumeTrail);
+}
+
+void PHLPlayer::activatePower()
+{
+    powerTime = 10.0f;
+    setMaximumForce(maximumForce()*2);
+    setForceGrowth(forceGrowth()*2);
+    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLPlayer::_activatePower, NULL, false);
+}
+
+void PHLPlayer::deactivatePower()
+{
+    setMaximumForce(maximumForce()/2);
+    setForceGrowth(forceGrowth()/2);
+    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLPlayer::_deactivatePower, NULL, false);
 }
 
 void PHLPlayer::die()

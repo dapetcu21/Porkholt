@@ -56,6 +56,7 @@ protected:
     
     bool hasScripting;
     string scriptingName;
+    bool drfw;
     
 	friend class PHLevelController;
 	friend class PHWorld;
@@ -125,6 +126,9 @@ public:
     void _destroy();
     void poof();
     
+protected:
+    PHPoint offset;
+    
 private:
     PHRect poofRect;
     void _poof();
@@ -142,6 +146,7 @@ private:
     
 public:
     
+    void setDontRemoveFromWorld(bool s) { drfw = s; }
     void scriptingCreate(lua_State * L);
     void scriptingDestroy();
     void scriptingInit(lua_State * L);

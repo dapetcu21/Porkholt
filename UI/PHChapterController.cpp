@@ -12,6 +12,8 @@
 #include "PHLevelController.h"
 #include "PHNavigationController.h"
 #include "PHFileManager.h"
+#include "PHTextView.h"
+#include "PHFont.h"
 #include <sstream>
 
 PHView * PHChapterController::loadView(const PHRect & frame)
@@ -44,6 +46,14 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             view->addSubview(vv);
             vv->release();
         }
+    PHTextView * dadoamne = new PHTextView(PHRect(leftBorder,frame.height-upperBorder,frame.width-rightBorder-leftBorder, upperBorder));
+    dadoamne->setFont(PHFont::fontNamed("BDCartoonShout"));
+    dadoamne->setText("Da doamne sa mearga");
+    dadoamne->setFontSize(25);
+    dadoamne->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
+    dadoamne->setFontColor(PHWhiteColor);
+    view->addSubview(dadoamne);
+    dadoamne->release();
     return view;
 }
 

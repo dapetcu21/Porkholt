@@ -7,6 +7,9 @@
 //
 
 #include "PHLPowerPowerup.h"
+#include "PHWorld.h"
+#include "PHLPlayer.h"
+
 
 PHLPowerPowerup::PHLPowerPowerup()
 {
@@ -15,5 +18,5 @@ PHLPowerPowerup::PHLPowerPowerup()
 
 void PHLPowerPowerup::collected()
 {
-    
+    getWorld()->getPlayer()->activatePower();
 }

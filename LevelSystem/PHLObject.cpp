@@ -79,7 +79,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false)
 {
 }
 
@@ -89,7 +89,7 @@ PHLObject::~PHLObject()
     for (list<PHLAnimation*>::iterator i = animations.begin(); i!=animations.end(); i++)
         if (*i)
             (*i)->release();
-	if (wrld)
+	if (wrld&&!drfw)
 		wrld->removeObject(this);
     list<PHJoint*> jnts = joints;
     joints.clear();
@@ -471,7 +471,7 @@ void PHLObject::updateView()
 {
     if (view)
     {
-        view->setPosition(PHPoint(pos.x+viewSize.x, pos.y+viewSize.y));
+        view->setPosition(pos+viewSize+offset);
         view->setRotation(rot);
     }
 }

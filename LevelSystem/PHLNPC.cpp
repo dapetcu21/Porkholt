@@ -22,10 +22,14 @@
 #include "PHLAnimation.h"
 #include "PHMainEvents.h"
 #include "PHEventQueue.h"
+#include "PHAnimatedImage.h"
+#include "PHImage.h"
+#include "PHImageAnimator.h"
+#include "PHImageView.h"
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), utrail(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL), quest3(true), showDialogDelayed(false), hp(1.0f),maxHP(1.0f), invuln(false), hinvuln(false), hInvulnTime(1.0f), hInvulnRemTime(0), hInvulnFadeColor(PHBlackColor)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), utrail(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL), quest3(true), showDialogDelayed(false), hp(1.0f),maxHP(1.0f), invuln(false), hinvuln(false), hInvulnTime(1.0f), hInvulnRemTime(0), hInvulnFadeColor(PHBlackColor), hover(false), hoverAmmount(0), _idle(false), canBlink(false)
 {
     _class = "PHLNPC";
 }
@@ -69,6 +73,8 @@ void PHLNPC::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvl
     PHLuaGetNumberField(questHeight, "questHeight");
     PHLuaGetNumberField(hInvulnTime, "hurtInvulnerableTime");
     PHLuaGetNumberField(maxHP, "healthPoints");
+    PHLuaGetBoolField(hover, "hovers");
+    PHLuaGetBoolField(canBlink, "canBlink");
     hp = maxHP;
     PHLuaGetNumberField(questHeight, "questHeight");
     lua_getfield(L, -1, "startingHealthPoints");
@@ -85,9 +91,9 @@ void PHLNPC::loadView()
     view->setFlipCenter(center);
 	loadImages();
     bodyView = (PHImageView*)(view->viewWithTag(20));
-    PHView * v;
+    PHView * v = NULL;
     do {
-        v=view->viewWithTag(21);
+        v=view->viewWithTagAfter(21,v);
         if (!v) break;
         if (!faceView)
         {
@@ -112,6 +118,12 @@ void PHLNPC::loadView()
 
 void PHLNPC::updateView()
 {
+    if (hover)
+    {
+        offset.y = sin(hoverAmmount)*0.1;
+        double frameInterval = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
+        hoverAmmount = PHWarp(hoverAmmount+frameInterval*2, M_PI*2);
+    }
     PHLObject::updateView();
     if (dialogView)
     {
@@ -152,6 +164,7 @@ void PHLNPC::updatePosition()
     double elapsed = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
     if (aflip && (fflip || bflip) && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
+    setIdle(abs(speed.x)<0.1);
     if (hInvulnRemTime)
     {
         hInvulnRemTime-=elapsed;
@@ -159,6 +172,27 @@ void PHLNPC::updatePosition()
         {
             hInvulnRemTime = 0;
             hinvuln = false;
+        }
+    }
+}
+
+void PHLNPC::setIdle(bool i)
+{
+    if (i==_idle) return;
+    _idle = i;
+    if (!canBlink) return;
+    const list<PHView*> & l = faceView->subViews();
+    list<PHView*>::const_iterator j;
+    for (j = l.begin(); j!=l.end(); j++)
+    {
+        PHImageView * v= dynamic_cast<PHImageView*>(*j);
+        if (v)
+        {
+            PHImageAnimator * a = v->animator();
+            if (a)
+            {
+                a->animateSection(_idle?"idle":"moving");
+            }
         }
     }
 }
@@ -811,6 +845,8 @@ PHLuaDefineCall(PHLNPC, die);
 PHLuaBoolGetter(PHLNPC, invulnerable);
 PHLuaBoolGetter(PHLNPC, isInvulnerable);
 PHLuaBoolSetter(PHLNPC, setInvulnerable);
+PHLuaBoolGetter(PHLNPC, hovers);
+PHLuaBoolSetter(PHLNPC, setHovers);
 
 void PHLNPC::registerLuaInterface(lua_State * L)
 {
@@ -832,6 +868,8 @@ void PHLNPC::registerLuaInterface(lua_State * L)
     PHLuaAddMethod_(PHLNPC, walk);
     PHLuaAddMethod(PHLNPC, braked);
     PHLuaAddMethod(PHLNPC, setBraked);
+    PHLuaAddMethod(PHLNPC, hovers);
+    PHLuaAddMethod(PHLNPC, setHovers);
     
     PHLuaAddMethod(PHLNPC, healthPoints);
     PHLuaAddMethod(PHLNPC, setHP);

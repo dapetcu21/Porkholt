@@ -62,7 +62,16 @@ function PHWorld:dismissFading(cb,...)
 end
 --function PHWorld:dismissFading(cb,...);
 --function PHWorld:overlayText(text,duration);
+function PHWorld:curtainText(text,cb,...)
+	local call = nil;
+	if (cb) then
+		call = { callback = cb; args = arg; }
+	end
+	self:_curtainText(text,call);
+end
 --function PHWorld:resourcePath();
+--function PHWorld:win();
+--function PHWorld:die();
 
 PHLObject = {}
 function PHLObject:new(o,ud, ...)

@@ -49,6 +49,9 @@ protected:
     
     void destroyThread(PHObject * sender, void * ud);
     void deleteObject(PHObject * sender, void * ud);
+    void _curtainText(PHObject * sender, void * ud);
+    void curtainEnded(PHTextController * sender, void * ud);
+    void _endLevelWithOutcome(PHObject * sender, void * ud);
 public:
 	
     void setEndLevelCallback(PHObject * target, PHCallback cb, void * ud){
@@ -57,6 +60,8 @@ public:
     
 	void pause();
 	void resume();
+    void curtainText(const string & s) { curtainText(s,NULL); }
+    void curtainText(const string & s, lua_State * L);
     
     enum {
         LevelRunning = 0,

@@ -29,12 +29,22 @@ private:
     PHView * worldView;
     bool fflip,bflip,aflip,flipped;
     bool trailPossible;
+    bool canBlink;
+    
+    
     PHPoint overHeadPoint;
     bool shouldFlipUponLoad;
+    bool hover;
+    bool _idle;
+    
+    double hoverAmmount;
 public:
     PHLNPC();
     virtual ~PHLNPC();
     
+    void setIdle(bool i);
+    void setHovers(bool hv) { hover = hv; }
+    bool hovers() { return hover; }
     void setTrail(bool tr) { trail = tr; }
     bool hasTrail() { return trail; }
     void setUsesTrail(bool tr) { utrail = tr; }

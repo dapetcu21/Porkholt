@@ -127,6 +127,8 @@ public:
     
     const string & resourcePath();
     
+    //void printObjects();
+    
 private:
     void fadedToColor(PHObject * obj, void * ud);
     void _fadedToColor(PHObject * obj, void * ud);

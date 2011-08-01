@@ -106,9 +106,16 @@ void PHTextController::advance()
     if (pos>=strings->size())
     {
         delete strings;
+        strings = NULL;
         if (trg&&cb)
             (trg->*cb)(this,ud);
     } else {
         beginBlackout();
     }
+}
+
+PHTextController::~PHTextController()
+{
+    if (strings)
+        delete strings;
 }

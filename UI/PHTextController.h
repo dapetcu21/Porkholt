@@ -40,6 +40,7 @@ protected:
     
 public:
     PHTextController(vector<string> * strings);
+    ~PHTextController();
     
     PHColor backgroundColor() { return bColor; }
     PHColor foregroundColor() { return fColor; }

@@ -26,6 +26,7 @@ protected:
     list<pframe> frames;
     
     PHView * _stopView;
+    PHImage * auxImg;
     
     void saveState(pframe & fr);
     void loadState(const pframe & fr);
@@ -45,6 +46,9 @@ public:
     void setSnapshotInterval(int s) { snap = s; }
     PHView * stopView() { return _stopView; }
     void setStopView(PHView * vw) { _stopView = vw; frames.clear(); }
+    
+    void setAuxImage(PHImage * img) { if (auxImg) auxImg->release(); auxImg=img; if (auxImg) auxImg->retain(); }
+    PHImage * auxImage() { return auxImg; }
     
     void pushFrame();
 };

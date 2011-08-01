@@ -133,6 +133,31 @@ static int PHWorld_overlayText(lua_State * L)
 
 PHLuaStringGetter(PHWorld, resourcePath);
 
+static int PHWorld_win(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    world->levelController()->endLevelWithOutcome(PHLevelController::LevelWon);
+    return 0;
+}
+
+static int PHWorld_die(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    world->levelController()->endLevelWithOutcome(PHLevelController::LevelDied);
+    return 0;
+}
+
+static int PHWorld_curtainText(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    luaL_checkstring(L, 2);
+    lua_State * l = NULL;
+    if (lua_istable(L, 3))
+        l = L;
+    world->levelController()->curtainText(lua_tostring(L, 2),l);
+    return 0;
+}
+
 void PHScripting::loadWorld()
 {
     lua_getglobal(L,"PHWorld");
@@ -144,7 +169,10 @@ void PHScripting::loadWorld()
     PHLuaAddMethod_(PHWorld, fadeToColor);
     PHLuaAddMethod_(PHWorld, dismissFading);
     PHLuaAddMethod(PHWorld, overlayText);
+    PHLuaAddMethod_(PHWorld, curtainText);
     PHLuaAddMethod(PHWorld, resourcePath);
+    PHLuaAddMethod(PHWorld, win);
+    PHLuaAddMethod(PHWorld, die);
 
     lua_pop(L, 1);
     

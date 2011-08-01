@@ -24,8 +24,10 @@
 #include "PHPoofView.h"
 #include "PHShieldView.h"
 #include "PHAnimatorPool.h"
+#include "PHEventQueue.h"
 
 #include <fstream>
+#include <sstream>
 
 #define releaseImage(img) if (img) img = (PHImage*)img->release()
 #define retainImage(img,fname) if (!img) img = PHImage::imageNamed((fname)); if (img) img->retain()
@@ -105,12 +107,34 @@ void PHLevelController::textViewControllerFinished(PHTextController * sender, vo
     this->release();
 }
 
-void PHLevelController::endLevelWithOutcome(int outcome){
-    _outcome = outcome;
-    if (outcome == LevelDied)
+void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
+{
+    vector<string> * v = NULL;
+    if (_outcome == LevelWon)
     {
-        vector<string> * v = new vector<string>;
-        v->push_back("You're dead!\n Live with it.");
+        ifstream file((directory+"/outro.txt").c_str());
+        v = new vector<string>;
+        while (file.good())
+        {
+            v->push_back(string());
+            getline(file,v->back(),'|');
+        };
+        if (v->empty())
+        {
+            delete v;
+            v = NULL;
+        }
+        if (!v && ec_target && ec_cb)
+            (ec_target->*ec_cb)(this,ec_ud);
+    }
+    if (_outcome == LevelDied || ((_outcome==LevelWon)&&(v)))
+    {
+        if (!v)
+        {
+            v = new vector<string>;
+            v->push_back("You're dead!\n Live with it.");
+        }
+        PHLog("_endLevel");
         PHTextController * vc = new PHTextController(v);
         vc->init();
         vc->setForegroundColor(PHWhiteColor);
@@ -120,13 +144,84 @@ void PHLevelController::endLevelWithOutcome(int outcome){
         navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
     }
-    if (outcome == LevelWon)
-    {
-        if (ec_target && ec_cb)
-            (ec_target->*ec_cb)(this,ec_ud);
-    }
-    pause();
     view->setUserInput(false);
+    pause();
+}
+
+void PHLevelController::endLevelWithOutcome(int outcome){
+    if (_outcome != LevelRunning) return;
+    PHLog("endLevel");
+    _outcome = outcome;
+    world->viewEventQueue()->schedule(this, (PHCallback)&PHLevelController::_endLevelWithOutcome, NULL, false);
+}
+
+class curtainData : public PHLObject
+{
+public:
+    vector<string> * v;
+    lua_State * L;
+    
+    void setLuaCallback(lua_State * l) 
+    {
+        L = l;
+        if (L)
+        {
+            PHLuaSetHardRef(L, this);
+        }
+    }
+    void callback()
+    {
+        if (L)
+        {
+            lua_getglobal(L, "PHCallbackHelper");
+            PHLuaGetHardRef(L, this);
+            PHLuaCall(L, 1, 0);
+            PHLuaDeleteHardRef(L, this);
+            L = NULL;
+        }
+    }
+    
+    curtainData() : v(NULL), L(NULL) {};
+    ~curtainData() 
+    { 
+        if (L)
+            PHLuaDeleteHardRef(L, this);
+    }
+};
+
+void PHLevelController::curtainEnded(PHTextController * sender, void * ud)
+{
+    curtainData * cd = (curtainData*)ud;
+    cd->callback();
+    cd->release();
+    sender->navigationController()->popViewController(PHNavigationController::FadeToColor);
+}
+
+void PHLevelController::_curtainText(PHObject * sender, void * ud)
+{
+    curtainData * cd = (curtainData*)ud;
+    PHTextController * vc = new PHTextController(cd->v);
+    vc->init();
+    vc->setForegroundColor(PHWhiteColor);
+    vc->setBackgroundColor(PHBlackColor);
+    vc->setDoneCallback(this, (PHCallback)&PHLevelController::curtainEnded, ud);
+    navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, false);
+    vc->release();
+}
+
+void PHLevelController::curtainText(const string & s, lua_State * L)
+{
+    istringstream iss(s);
+    vector<string> * v = new vector<string>;
+    while (iss.good())
+    {
+        v->push_back(string());
+        getline(iss,v->back(),'|');
+    }
+    curtainData * cd = new curtainData;
+    cd->v = v;
+    cd->setLuaCallback(L);
+    world->viewEventQueue()->schedule(this, (PHCallback)&PHLevelController::_curtainText, cd, false);
 }
 
 PHViewController * PHLevelController::mainViewController()

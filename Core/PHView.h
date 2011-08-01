@@ -14,11 +14,17 @@
 #include "PHAnimationDescriptor.h"
 #include "PHTouch.h"
 
+#define PHVIEW_STD_LIST
+
 class PHMutex;
 class PHAuxLayerView;
 class PHView : public PHObject
 {
 protected:
+#ifdef PHVIEW_STD_LIST
+    list<PHView*> views;
+    list<PHView*>::iterator currPos;
+#else
 	struct ViewEl
     {
         PHView * el;
@@ -27,6 +33,7 @@ protected:
 	ViewEl * viewsSt;
 	ViewEl * viewsEn;
 	ViewEl * currPos;
+#endif
 	PHView * superView;
 	PHRect _frame,_bounds;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
@@ -74,6 +81,8 @@ public:
 	
 	PHView();
 	PHView(const PHRect &frame);
+    
+    const list<PHView*> & subViews() { return views; }
 	
 	void setFrame(const PHRect &frame);
 	void setPosition(const PHPoint &pos);

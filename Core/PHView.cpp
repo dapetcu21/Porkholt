@@ -15,7 +15,12 @@
 
 std::list<PHAnimationDescriptor*> PHView::animations;
 
-#define PHVIEW_INITLIST viewsSt(NULL), viewsEn(NULL), superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
+#ifdef PHVIEW_STD_LIST
+#define PREFIX
+#else
+#define PREFIX viewsSt(NULL), viewsEn(NULL),
+#endif
+#define PHVIEW_INITLIST PREFIX superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
 						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL)
 
@@ -160,12 +165,17 @@ void PHView::render()
             drawBackground();
             draw();
         }
+#ifdef PHVIEW_STD_LIST
+        for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
+            (*i)->render();
+#else
 		PHView::ViewEl * p = viewsSt;
 		while (p)
 		{
 			p->el->render();
 			p=p->next;
 		}
+#endif
 	}
 	glPopMatrix();
     if (mtx) mtx->unlock();
@@ -178,6 +188,12 @@ void PHView::addSubview(PHView * view)
     if (mtx) mtx->lock();
 	view->retain();
 	view->removeFromSuperview();
+#ifdef PHVIEW_STD_LIST
+    views.push_back(view);
+    list<PHView*>::iterator i = views.end();
+    i--;
+    view->currPos = i;
+#else
 	PHView::ViewEl * tmp = new PHView::ViewEl;
 	tmp->el = view;
 	tmp->prev = viewsEn;
@@ -188,6 +204,7 @@ void PHView::addSubview(PHView * view)
 	else
 		tmp->prev->next = tmp;
 	view->currPos = tmp;
+#endif
 	view->superView = this;
     if (mtx) mtx->unlock();
 }
@@ -198,6 +215,9 @@ void PHView::removeFromSuperview()
     PHMutex * m = superView->mtx;
     if (m) m->lock();
     if (mtx) mtx->lock();
+#ifdef PHVIEW_STD_LIST
+    superView->views.erase(currPos);
+#else
 	if (currPos->prev)
 		currPos->prev->next = currPos->next;
 	else
@@ -207,8 +227,9 @@ void PHView::removeFromSuperview()
 	else
 		superView->viewsEn = currPos->prev;
 	delete currPos;
+    currPos = NULL;
+#endif
 	superView = NULL;
-	currPos = NULL;
     if (mtx) mtx->unlock();
     if (m) m->unlock();
 	release();
@@ -251,6 +272,12 @@ PHView::~PHView()
         auxLayer->removeView(this);
 	PHEventHandler::sharedInstance()->removeView(this);
 	
+    removeFromSuperview();
+#ifdef PHVIEW_STD_LIST
+    list<PHView*>::iterator i, it;
+    for (i = views.begin(); (it = i),(it++),(i!=views.end()); i=it)
+        (*i)->removeFromSuperview();
+#else
 	PHView::ViewEl * p = viewsSt;
 	while (p)
 	{
@@ -258,6 +285,7 @@ PHView::~PHView()
 		p=p->next;
 		view->removeFromSuperview();
 	}
+#endif
     if (mtx) mtx->release();
 }
 
@@ -485,6 +513,17 @@ PHView * PHView::pointerDeepFirst(PHTouch * touch)
 	glPushMatrix();
 	applyMatrices();
 	PHView * view = NULL;
+#ifdef PHVIEW_STD_LIST
+    for (list<PHView*>::reverse_iterator i = views.rbegin(); i!= views.rend(); i++)
+    {
+        PHView * v = (*i)->pointerDeepFirst(touch);
+        if (v)
+        {
+            view = v;
+            break;
+        }
+    }
+#else
 	PHView::ViewEl * p = viewsEn;
 	while (p)
 	{
@@ -496,6 +535,7 @@ PHView * PHView::pointerDeepFirst(PHTouch * touch)
 		}
 		p=p->prev;
 	}
+#endif
 	if (!view)
 	{
 		PHPoint pnt = PHUnTransformedPoint(touch->location());
@@ -571,14 +611,29 @@ void PHView::fromMyCoordinates(PHPoint * pnt, int n, PHView * until)
 
 PHView * PHView::viewWithTag(int tag)
 {
+#ifdef PHVIEW_STD_LIST
+    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
+        if ((*i)->tag() == tag)
+            return *i;
+#else
     for (ViewEl * ve = viewsSt; ve; ve=ve->next)
         if (ve->el->tag()==tag)
             return ve->el;
+#endif
     return NULL;
 }
 
 PHView * PHView::viewWithTagAfter(int tag, PHView * v)
 {
+#ifdef PHVIEW_STD_LIST
+    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
+    {
+        if (*i == v) { v = NULL; continue; }
+        if (v) continue;
+        if ((*i)->tag() == tag)
+            return *i;
+    }
+#else
     for (ViewEl * ve = viewsSt; ve; ve=ve->next)
     {
         if (ve->el==v) { v = NULL; continue; }
@@ -586,6 +641,7 @@ PHView * PHView::viewWithTagAfter(int tag, PHView * v)
         if (ve->el->tag()==tag)
             return ve->el;
     }
+#endif
     return NULL;
 }
 
