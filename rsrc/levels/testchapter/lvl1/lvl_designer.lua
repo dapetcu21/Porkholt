@@ -17,21 +17,9 @@ obj.levelDes = true;
 addObject(obj);
 
 obj = objectWithClass("PHLObject");
-obj.pos = point(3.350000,0.730000);
-objectAddImage(obj,[[mayor.png]],-0.250000,-0.250000,0.500000,0.500000);
-objectAddImage(obj,[[hat.png]],-0.200000,0.200000,0.200000,0.200000);
-obj.levelDes = true;
-addObject(obj);
-
-obj = objectWithClass("PHLObject");
-obj.pos = point(5.020469,0.706211);
-objectAddImage(obj,[[bull_idle.png]],-0.235312,-0.176484,1.900000,0.839361);
-obj.levelDes = true;
-addObject(obj);
-
-obj = objectWithClass("PHLObject");
 obj.pos = point(3.244219,1.082617);
-objectAddImage(obj,[[master.png]],6.957336,-0.372015,1.400000,1.058473);
+objectAddImage(obj,[[/master_body.png]],6.957336,-0.372015,1.400000,1.058473);
+objectAddImage(obj,[[/master_face.png]],6.957336,-0.372015,1.400000,1.058473);
 obj.levelDes = true;
 addObject(obj);
 
