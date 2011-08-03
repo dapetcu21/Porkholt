@@ -8,6 +8,7 @@ xcuserdata
 *.o
 *.lo
 _
+.swp
 
 .DS_Store
 
