@@ -13,7 +13,7 @@
 #include "PHChapterController.h"
 #include "PHFileManager.h"
 
-#define POS_BG_Y 0.6
+#define POS_BG_Y 0.65
 #define BORDER_BG_LEFT 0.05
 #define SIZ_BG_WID 0.6
 

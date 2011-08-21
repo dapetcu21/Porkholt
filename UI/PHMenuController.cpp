@@ -12,10 +12,10 @@
 #include "PHTitleScreen.h"
 #include "PHImageView.h"
 
-static const double cloudX[] = {0.0f,1.0f,0.0f};
-static const double cloudY[] = {0.4f,0.6f,0.2f};
+static const double cloudX[] = {0.0f,1.0f,0.3f};
+static const double cloudY[] = {0.5f,0.7f,0.12f};
 static const double cloudW[] = {0.4f,0.4f,0.4f};
-static const double cloudS[] = {0.01f,-0.01f,0.02f};
+static const double cloudS[] = {0.015f,-0.01f,0.02f};
 static const char * const cloudP[] = {"cloud1","cloud2","cloud3"};
 
 
