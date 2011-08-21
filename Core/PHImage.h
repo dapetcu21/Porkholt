@@ -22,6 +22,7 @@ public:
 	static PHImage* imageFromPath(const string & path);
     static bool imageExists(const string & name);
 	static PHImage* imageNamed(const string & name);
+    static void loadAllImages();
 	static void collectGarbage();
 #ifdef PHIMAGE_ORDERED_LOADING
     static PHMutex * loadingMutex;
@@ -35,10 +36,10 @@ protected:
     int _width;
     
     bool loaded;
-    void load() { if (!loaded) _load(); }
     virtual void _load() = 0;
 	
 public:
+    void load() { if (!loaded) _load(); }
 	int height() { load(); return _height; };
 	int width() { load(); return _width; };
 

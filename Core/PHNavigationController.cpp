@@ -171,7 +171,7 @@ void PHNavigationController::startAnimating()
 	if (currentVC)
 	{
 		currentVC->retain();
-		currentVC->navController = this;
+		currentVC->setNavigationController(this);
 	}
     if (animation!=FadeToColor)
 	if (currentVC&&!hidden)
@@ -236,7 +236,7 @@ void PHNavigationController::stopAnimating()
 	if (lastVC)
 	{
         if (lastVC->rmNav)
-            lastVC->navController = NULL;
+            lastVC->setNavigationController(NULL);
         lastVC->release();
 		lastVC = NULL;
 	}
@@ -288,7 +288,7 @@ void PHNavigationController::popViewController(int anim)
 void PHNavigationController::updateScene(double timeElapsed)
 {
 	if (currentVC)
-		currentVC->updateScene(timeElapsed);
+		currentVC->_updateScene(timeElapsed);
 	if (lastVC)
-		lastVC->updateScene(timeElapsed);
+		lastVC->_updateScene(timeElapsed);
 }

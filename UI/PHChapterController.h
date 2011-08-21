@@ -18,15 +18,13 @@ private:
     PHImage * bg;
 protected:
     virtual PHView * loadView(const PHRect & frame);
+    void mouseUp(PHObject * sender, void * ud);
+    void levelEnded(PHObject * sender, void *ud);
+    void backPressed(PHObject * sender, void *ud);
+    void loadLevel(int nr,bool replace);
 public:
-    virtual void updateScene(double timeElapsed);
     PHChapterController(const string & path);
     virtual ~PHChapterController();
-    
-	void mouseUp(PHObject * sender, void * ud);
-    
-    void levelEnded(PHObject * sender, void *ud);
-    void loadLevel(int nr,bool replace);
 };
 
 #endif

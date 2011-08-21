@@ -16,6 +16,10 @@
 #include "PHFont.h"
 #include <sstream>
 
+#define SIZ_BK_WID 0.09
+#define BORDER_BK_RIGHT 0 
+#define BORDER_BK_DOWN 0
+
 PHView * PHChapterController::loadView(const PHRect & frame)
 {
     PHImageView * view = new PHImageView(frame);
@@ -42,24 +46,28 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             PHButtonView * vv = new PHButtonView(frame);
             vv->setImage(PHImage::imageFromPath(oss1.str()));
             vv->setPressedImage(PHImage::imageFromPath(oss2.str()));
-            vv->setUpCallBack(this, (PHCallback)&PHChapterController::mouseUp, (void*)(j*columns+i+1));
+            vv->setUpCallback(this, (PHCallback)&PHChapterController::mouseUp, (void*)(j*columns+i+1));
             view->addSubview(vv);
             vv->release();
         }
     PHTextView * dadoamne = new PHTextView(PHRect(leftBorder,frame.height-upperBorder,frame.width-rightBorder-leftBorder, upperBorder));
     dadoamne->setFont(PHFont::fontNamed("BDCartoonShout"));
-    dadoamne->setText("Da doamne sa mearga");
+    dadoamne->setText("Chapter 1");
     dadoamne->setFontSize(25);
     dadoamne->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
     dadoamne->setFontColor(PHWhiteColor);
     view->addSubview(dadoamne);
     dadoamne->release();
-    return view;
-}
-
-void PHChapterController::updateScene(double timeElapsed)
-{
     
+    PHImage * img = PHImage::imageNamed("back");
+    double hi = ((double)img->height())/((double)img->width())*(SIZ_BK_WID*frame.width);
+    PHButtonView * back = new PHButtonView(PHRect((1.0f-BORDER_BK_RIGHT-SIZ_BK_WID)*frame.width,BORDER_BK_DOWN*frame.height,SIZ_BK_WID*frame.width,hi));
+    back->setImage(img);
+    back->setPressedImage(PHImage::imageNamed("back_pressed"));
+    back->setUpCallback(this,(PHCallback)&PHChapterController::backPressed,NULL);
+    view->addSubview(back);
+    back->release();
+    return view;
 }
 
 void PHChapterController::levelEnded(PHObject * sender, void *ud)
@@ -75,7 +83,7 @@ void PHChapterController::levelEnded(PHObject * sender, void *ud)
     }
     if (ret)
     {
-        navController->popViewController(PHNavigationController::FadeToColor);
+        navController->navigationController()->popViewController(PHNavigationController::FadeToColor);
     } else
         loadLevel(nr+1, true);
 }
@@ -86,6 +94,12 @@ void PHChapterController::mouseUp(PHObject * sender, void * ud)
     loadLevel((int)ud, false);
 }
 
+void PHChapterController::backPressed(PHObject * sender, void *ud)
+{
+    if (getViewState()!=StateAppeared) return;
+    navController->popViewController(PHNavigationController::SlideRight);
+}
+
 void PHChapterController::loadLevel(int nr,bool replace)
 {
     ostringstream oss;
@@ -94,7 +108,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
     lvlvc->init();
     lvlvc->setEndLevelCallback(this, (PHCallback)&PHChapterController::levelEnded, (void*)nr);
     PHViewController * vc = lvlvc->mainViewController();
-    navController->pushViewController(vc,PHNavigationController::FadeToColor,replace);
+    navController->navigationController()->pushViewController(vc,PHNavigationController::FadeToColor,replace);
     vc->release();
     lvlvc->release();
 
@@ -111,5 +125,6 @@ PHChapterController::PHChapterController(const string & _path) : path(_path)
 
 PHChapterController::~PHChapterController()
 {
-    bg->release();
+    if (bg)
+        bg->release();
 }

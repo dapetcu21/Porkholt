@@ -248,10 +248,6 @@ PHViewController * PHLevelController::mainViewController()
     return vc;
 }
 
-void PHLevelController::updateScene(double timeElapsed)
-{
-}
-
 PHLevelController::~PHLevelController()
 {
 	running = false;
@@ -445,6 +441,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             world->updatePositions();
             scripingEngine->scriptingStep(frameInterval);
             world->updateTimers(frameInterval);
+            //PHLog("s2t2: wait");
             pSem2->wait();
             if (!running) break;
             mutex->lock();
@@ -452,6 +449,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             world->updateScene();
             mutex->unlock();
             pSem1->signal();
+            //PHLog("s1t2: signal");
         }
                                       
 		double currentTime = PHTime::getTime();

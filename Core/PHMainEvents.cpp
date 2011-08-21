@@ -10,10 +10,11 @@
 #include "PHMainEvents.h"
 #include "PHRemote.h"
 #include "PHView.h"
-#include "PHChapterController.h"
+#include "PHMenuController.h"
 #include "PHFileManager.h"
 #include "PHImageAnimator.h"
 #include "PHAnimatorPool.h"
+#include "PHChapterController.h"
 
 PHMainEvents * PHMainEvents::sharedInstance()
 {
@@ -62,7 +63,8 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
 	
-	PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
+//	PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
+    PHViewController * vc = new PHMenuController();
 	vc->init();
 	((PHNavigationController*)viewController)->pushViewController(vc);
 }
@@ -86,7 +88,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
     PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
     
 	if (viewController)  
-		viewController->updateScene(timeElapsed);
+		viewController->_updateScene(timeElapsed);
 	
 	PHThread::mainThread()->processQueue();
 	

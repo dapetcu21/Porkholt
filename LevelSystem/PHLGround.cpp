@@ -29,10 +29,7 @@ void PHLGround::contactBegin(bool b,b2Contact* contact)
     PHWorld * w = getWorld();
     PHLPlayer * p = w->getPlayer();
     if (o1==p || o2==p)
-    {
-        PHLog("entered");
         w->getCamera()->incrementStrictTracking();
-    }
 }
 
 void PHLGround::contactEnd(bool b,b2Contact* contact)
@@ -42,8 +39,5 @@ void PHLGround::contactEnd(bool b,b2Contact* contact)
     PHWorld * w = getWorld();
     PHLPlayer * p = w->getPlayer();
     if (o1==p || o2==p)
-    {
-        PHLog("exited");
         w->getCamera()->decrementStrictTracking();
-    }
 }

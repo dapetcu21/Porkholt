@@ -75,7 +75,6 @@ public:
 	void auxThread(PHThread * sender, void * ud);
 	
 	PHLevelController(string path);
-	virtual void updateScene(double timeElapsed);
 	
 	~PHLevelController();
 	

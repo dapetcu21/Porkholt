@@ -26,6 +26,11 @@ protected:
 	friend class PHMainEvents;
 	int viewState;
     bool rmNav;
+    
+    void setNavigationController(PHNavigationController * nc);
+    virtual void updateScene(double timeElapsed);
+    
+    set<PHViewController*> managedControllers;
 public:
 	PHView * getView() { return view; };
 	PHViewController() : navController(NULL),view(NULL),viewState(StateNotAppeared),rmNav(false) {};
@@ -36,7 +41,7 @@ public:
 	
     PHNavigationController * navigationController() { return navController; }
     
-	virtual void updateScene(double timeElapsed);
+	virtual void _updateScene(double timeElapsed);
 	
 	enum ViewStates
 	{
@@ -53,6 +58,8 @@ public:
 		if (viewState==StateAppearing)
 		{
 			viewState = StateAppeared;
+            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+                (*i)->_viewDidAppear();
 			viewDidAppear();
 		}
 	}
@@ -61,6 +68,8 @@ public:
 		if (viewState==StateNotAppeared)
 		{
 			viewState = StateAppearing;
+            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+                (*i)->_viewWillAppear();
 			viewWillAppear();
 		}
 	}
@@ -69,6 +78,8 @@ public:
 		if (viewState==StateAppeared)
 		{
 			viewState = StateDisappearing;
+            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+                (*i)->_viewWillDisappear();
 			viewWillDisappear();
 		}
 	}
@@ -77,9 +88,14 @@ public:
 		if (viewState==StateDisappearing)
 		{
 			viewState = StateNotAppeared;
+            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+                (*i)->_viewDidDisappear();
 			viewWillDisappear();
 		}
 	}
+    
+    void manageViewController(PHViewController *vc);
+    void stopManagingViewController(PHViewController *vc);
     
 private:
 	virtual void viewDidAppear();

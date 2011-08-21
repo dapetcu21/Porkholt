@@ -636,7 +636,6 @@ obj.pos = point(1.901328,0.871719);
 obj.barHidden = true;
 obj.maxVelocityX = 2.500000;
 obj.maximumForce = 40.000000;
-obj.canBlink = true;
 obj.scripting = [[player]];
 obj.trail = false;
 obj.levelDes = true;

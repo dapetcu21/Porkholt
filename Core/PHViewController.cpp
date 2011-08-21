@@ -28,6 +28,13 @@ void PHViewController::init(const PHRect & frame)
 	view = loadView(frame);
 }
 
+void PHViewController::_updateScene(double timeElapsed)
+{
+    for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+        (*i)->_updateScene(timeElapsed);
+    updateScene(timeElapsed);
+}
+
 void PHViewController::updateScene(double timeElapsed)
 {	
 }
@@ -50,6 +57,31 @@ void PHViewController::viewDidDisappear()
 
 PHViewController::~PHViewController()
 {
+    for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+        (*i)->release();
 	if (view) 
 		view->release();
+}
+
+void PHViewController::setNavigationController(PHNavigationController * nc)
+{
+    navController = nc;
+    for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
+        (*i)->setNavigationController(nc);
+}
+
+void PHViewController::manageViewController(PHViewController *vc)
+{
+    vc->retain();
+    vc->setNavigationController(navController);
+    managedControllers.insert(vc);
+}
+
+void PHViewController::stopManagingViewController(PHViewController *vc)
+{
+    if (managedControllers.erase(vc))
+    {
+        vc->setNavigationController(NULL);
+        vc->release();
+    }
 }

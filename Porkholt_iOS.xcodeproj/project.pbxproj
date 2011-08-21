@@ -33,6 +33,8 @@
 		C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */; };
 		C152809612B97169009067A7 /* PHMainEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHMainEvents.cpp */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
+		C1748C5F1400258300FB2796 /* PHMenuController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C5E1400258300FB2796 /* PHMenuController.cpp */; };
+		C1748C63140042ED00FB2796 /* PHTitleScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */; };
 		C177803F13BBA4F50003640D /* PHTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177803D13BBA4F50003640D /* PHTimer.cpp */; };
 		C177805213BCDAB50003640D /* PHScriptableTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */; };
 		C17B480C130719FF00C2EC8D /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B480B130719FF00C2EC8D /* PHTestView.cpp */; };
@@ -238,6 +240,10 @@
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
 		C1707D77137D13D400395313 /* PHJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1707D78137D13D400395313 /* PHJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C1748C5E1400258300FB2796 /* PHMenuController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMenuController.cpp; sourceTree = "<group>"; };
+		C1748C601400259C00FB2796 /* PHMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMenuController.h; sourceTree = "<group>"; };
+		C1748C61140042DE00FB2796 /* PHTitleScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTitleScreen.h; sourceTree = "<group>"; };
+		C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTitleScreen.cpp; sourceTree = "<group>"; };
 		C177803D13BBA4F50003640D /* PHTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTimer.cpp; sourceTree = "<group>"; };
 		C177803E13BBA4F50003640D /* PHTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTimer.h; sourceTree = "<group>"; };
 		C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScriptableTimer.cpp; sourceTree = "<group>"; };
@@ -822,6 +828,10 @@
 				C192A11313185B5000C18BA2 /* PHButtonView.cpp */,
 				C1AF4FBE13A6589A00ED2ED7 /* PHChapterController.h */,
 				C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */,
+				C1748C601400259C00FB2796 /* PHMenuController.h */,
+				C1748C5E1400258300FB2796 /* PHMenuController.cpp */,
+				C1748C61140042DE00FB2796 /* PHTitleScreen.h */,
+				C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1068,6 +1078,8 @@
 				C1B9E41613E27ECA00B1C0C6 /* PHLPowerPowerup.cpp in Sources */,
 				C1B9E41813E2BD7600B1C0C6 /* PHShieldView.cpp in Sources */,
 				C1B9E42113E3DC6B00B1C0C6 /* PHAnimatorPool.cpp in Sources */,
+				C1748C5F1400258300FB2796 /* PHMenuController.cpp in Sources */,
+				C1748C63140042ED00FB2796 /* PHTitleScreen.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

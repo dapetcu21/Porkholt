@@ -31,9 +31,16 @@ void PHCaptureView::render()
 {
     bool p = *paused;
 	if (p || ((!p)&&lastPaused))
+    {
 		sm1->trywait();
+        //PHLog("s1t1: trywait");
+    }
 	else
+    {
+        //PHLog("s1t1: wait");
 		sm1->wait();
+    }
+    
 
 	lastPaused = p;
 	
@@ -44,6 +51,9 @@ void PHCaptureView::render()
 	if (mutex)
 		mutex->unlock();
 	
-	if (!(p))
+	if (!p)
+    {
 		sm2->signal();
+        //PHLog("s2t1: signal");
+    }
 }

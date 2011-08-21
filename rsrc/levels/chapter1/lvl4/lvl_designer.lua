@@ -15,7 +15,6 @@ obj.maxVelocityX = 2.500000;
 obj.maximumForce = 40.000000;
 obj.scripting = [[player]];
 obj.trail = false;
-obj.canBlink = true;
 obj.levelDes = true;
 addObject(obj);
 

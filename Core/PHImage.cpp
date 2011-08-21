@@ -72,3 +72,10 @@ void PHImage::collectGarbage()
 	}
 	images = tmp;
 }
+
+void PHImage::loadAllImages()
+{
+    map<string,PHImage*>::iterator i;
+    for (i = images.begin(); i!=images.end(); i++)
+        i->second->load();
+}
