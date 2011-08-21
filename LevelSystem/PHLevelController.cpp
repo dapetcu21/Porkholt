@@ -25,6 +25,7 @@
 #include "PHShieldView.h"
 #include "PHAnimatorPool.h"
 #include "PHEventQueue.h"
+#include "PHButtonView.h"
 
 #include <fstream>
 #include <sstream>
@@ -34,12 +35,213 @@
 
 void PHLevelController::appSuspended()
 {
-	pause();
+    pauseWithMenu();
 }
 
 void PHLevelController::appResumed()
 {
-	resume();
+}
+
+#define BT_SIZE 0.2
+#define BT_GAP 0.1
+
+void PHLevelController::pauseWithMenu()
+{
+    pause();
+    if (!ready1 || !ready2) return;
+    PHButtonView * rb = NULL;
+    PHButtonView * qb = NULL;
+    PHView * rv = NULL;
+    PHRect fr = view->bounds();
+    world->getView()->setUserInput(false);
+    if (menuView)
+    {
+        menuView->cancelAnimationsWithTag(3752);
+        rv = menuView->viewWithTag(66);
+        if (rv)
+        {
+            rb = (PHButtonView*)rv->viewWithTag(64);
+            qb = (PHButtonView*)rv->viewWithTag(65);
+        }
+    }
+    else 
+    {
+        menuView = new PHView(fr);
+        view->addSubview(menuView);
+        menuView->setUserInput(true);
+        menuView->release();
+    }
+    if (!rv)
+    {
+        rv = new PHView(fr);
+        menuView->addSubview(rv);
+        rv->setUserInput(true);
+        rv->setTag(66);
+        rv->release();
+    }
+    if (!rb)
+    {
+        rb = new PHButtonView;
+        rb->setTag(64);
+        rb->setImage(PHImage::imageNamed("play"));
+        rb->setPressedImage(PHImage::imageNamed("play_pressed"));
+        rv->addSubview(rb);
+        rb->setUpCallback(this, (PHCallback)&PHLevelController::resume, NULL);
+        rb->release();
+    }
+    if (!qb)
+    {
+        qb = new PHButtonView;
+        qb->setTag(65);
+        qb->setImage(PHImage::imageNamed("quit"));
+        qb->setPressedImage(PHImage::imageNamed("quit_pressed"));
+        rv->addSubview(qb);
+        qb->setUpCallback(this, (PHCallback)&PHLevelController::returnToMenu, NULL);
+        qb->release();
+    }
+    menuView->setBackgroundColor(PHInvalidColor);
+    PHAnimationDescriptor * a = new PHAnimationDescriptor;
+    a->time = 0.5;
+    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    a->bgColor = PHColor(0.0f,0.0f,0.0f,0.5f);
+    a->view = menuView;
+    a->tag = 3752;
+    PHView::addAnimation(a);
+    a->release();
+    rv->setRotation(3*M_PI/2);
+    
+    a = new PHAnimationDescriptor;
+    a->time = 1;
+    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    a->tag = 3752;
+    a->view = rv;
+    a->rotate = -3*M_PI/2;
+    PHView::addAnimation(a);
+    a->release();
+    
+    double rs = fr.width*BT_SIZE;
+    double rg = rs/2+fr.width*BT_GAP/2;
+    double off = fr.height/2+rs/2-rg;
+    rb->setFrame(PHRect(fr.width/2+rg+off-rs/2,fr.height/2-rs/2,rs,rs));
+    qb->setFrame(PHRect(fr.width/2-rg-off-rs/2,fr.height/2-rs/2,rs,rs));
+    
+    
+    a = new PHAnimationDescriptor;
+    a->time = 1;
+    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    a->tag = 3752;
+    a->view = rb;
+    a->moveX = -off;
+    PHView::addAnimation(a);
+    a->release();
+
+    a = new PHAnimationDescriptor;
+    a->time = 1;
+    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+    a->tag = 3752;
+    a->view = qb;
+    a->moveX = off;
+    PHView::addAnimation(a);
+    a->release();
+    
+}
+
+void PHLevelController::dismissMenu()
+{
+    if (!menuView) return;
+    world->getView()->setUserInput(true);
+    PHButtonView * rb = NULL;
+    PHButtonView * qb = NULL;
+    PHView * rv = NULL;
+    PHRect fr = view->bounds();
+    rv = menuView->viewWithTag(66);
+    if (rv)
+    {
+        rb = (PHButtonView*)rv->viewWithTag(64);
+        qb = (PHButtonView*)rv->viewWithTag(65);
+    }
+    
+    PHAnimationDescriptor * a;
+    
+    bool cb = false;
+    
+    if (rv)
+    {
+        a = new PHAnimationDescriptor;
+        a->time = 0.5;
+        a->timeFunction = PHAnimationDescriptor::FadeInFunction;
+        a->tag = 3752;
+        a->view = rv;
+        a->rotate = -M_PI/2;
+        if (!cb)
+        {
+            a->callback = (PHCallback)&PHLevelController::menuDismissed;
+            a->target = this;
+            a->userdata = NULL;
+            cb = true;
+        }
+        PHView::addAnimation(a);
+        a->release();
+    }
+    
+    double rs = fr.width*BT_SIZE;
+    double rg = rs/2+fr.width*BT_GAP/2;
+    double off = fr.height/2+rs/2-rg;    
+    
+    if (rb)
+    {
+        a = new PHAnimationDescriptor;
+        a->time = 0.5;
+        a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+        a->tag = 3752;
+        a->view = rb;
+        a->moveX = off;
+        PHView::addAnimation(a);
+        a->release();
+    }
+    
+    if (qb)
+    {
+        a = new PHAnimationDescriptor;
+        a->time = 0.5;
+        a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
+        a->tag = 3752;
+        a->view = qb;
+        a->moveX = -off;
+        PHView::addAnimation(a);
+        a->release();
+    }
+    
+    a = new PHAnimationDescriptor;
+    a->time = 0.5;
+    a->timeFunction = PHAnimationDescriptor::FadeInFunction;
+    a->bgColor = PHClearColor;
+    a->view = menuView;
+    a->tag = 3752;
+    if (!cb)
+    {
+        a->callback = (PHCallback)&PHLevelController::menuDismissed;
+        a->target = this;
+        a->userdata = NULL;
+        cb = true;
+    }
+    PHView::addAnimation(a);
+    a->release();
+    
+}
+
+void PHLevelController::menuDismissed(PHObject *, void *)
+{
+    if (menuView)
+    {
+        menuView->removeFromSuperview();
+        menuView = NULL;
+    }
+}
+
+void PHLevelController::returnToMenu()
+{
+    endLevelWithOutcome(LevelQuit);
 }
 
 void PHLevelController::pause()
@@ -56,6 +258,7 @@ void PHLevelController::resume()
     if (!ready1 || !ready2) return;
 	paused = false;
 	PHMainEvents::sharedInstance()->setIndependentTiming(true);
+    dismissMenu();
 }
 
 PHView * PHLevelController::loadView(const PHRect & frame)
@@ -83,7 +286,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false), ec_target(NULL), ec_cb(NULL), ec_ud(NULL), _outcome(LevelRunning)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false), ec_target(NULL), ec_cb(NULL), ec_ud(NULL), _outcome(LevelRunning), menuView(NULL)
 {
 }
 
@@ -125,6 +328,11 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
             v = NULL;
         }
         if (!v && ec_target && ec_cb)
+            (ec_target->*ec_cb)(this,ec_ud);
+    }
+    if (_outcome == LevelQuit)
+    {
+        if (ec_target && ec_cb)
             (ec_target->*ec_cb)(this,ec_ud);
     }
     if (_outcome == LevelDied || ((_outcome==LevelWon)&&(v)))

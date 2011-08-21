@@ -28,6 +28,7 @@
 
 #include "PHTextView.h"
 #include "PHEventQueue.h"
+#include "PHButtonView.h"
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
@@ -36,9 +37,14 @@
 #define GAUGE_Y (5/480.0f)
 
 #define HEART_HEIGHT (16/480.0f)
-#define HEART_X (5/480.0f)
+#define HEART_X (32/480.0f)
 #define HEART_Y (5/480.0f)
 #define HEART_GAP (5/480.0f)
+
+#define PAUSE_SIZE (20/480.0f)
+#define PAUSE_X (5/480.0f)
+#define PAUSE_Y (5/480.0f)
+
 
 class PHContactListener : public b2ContactListener
 {
@@ -112,6 +118,12 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
     heartView->setHorizontallyFlipped(true);
     heartView->setFlippedOrder(true);
     heartView->setImage(PHImage::imageNamed("heart"));
+    
+    PHButtonView * pauseButton = new PHButtonView(PHRect(bounds.width*(1.0f-PAUSE_SIZE-PAUSE_X),bounds.height-(PAUSE_Y+PAUSE_SIZE)*bounds.width,bounds.width*PAUSE_SIZE,bounds.width*PAUSE_SIZE));
+    pauseButton->setImage(PHImage::imageNamed("pause"));
+    pauseButton->setPressedImage(pauseButton->image());
+    pauseButton->setDownCallback(controller, (PHCallback)&PHLevelController::pauseWithMenu, NULL);
+    
 	PHMutex * mutex = new PHMutex();
 	view->setMutex(mutex);
     mutex->release();
@@ -127,6 +139,8 @@ PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), ca
 	view->addSubview(worldView);
     view->addSubview(heartView);
 	view->addSubview(jumpGaugeView);
+    view->addSubview(pauseButton);
+    pauseButton->release();
 	b2Vec2 grav(0,-10);
 	physicsWorld = new b2World(grav,true);
     physicsWorld->SetContactFilter(contactFilter = new PHContactFilter);

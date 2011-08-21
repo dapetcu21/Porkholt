@@ -30,6 +30,7 @@ protected:
 	PHSemaphore * pSem1, * pSem2;
 	PHThread * thread;
 	PHImageView * backgroundView;
+    PHView * menuView;
 	volatile bool running;
 	bool paused;
 	string directory;
@@ -52,6 +53,9 @@ protected:
     void _curtainText(PHObject * sender, void * ud);
     void curtainEnded(PHTextController * sender, void * ud);
     void _endLevelWithOutcome(PHObject * sender, void * ud);
+    void dismissMenu();
+    void returnToMenu();
+    void menuDismissed(PHObject * sender, void * ud);
 public:
 	
     void setEndLevelCallback(PHObject * target, PHCallback cb, void * ud){
@@ -60,13 +64,15 @@ public:
     
 	void pause();
 	void resume();
+    void pauseWithMenu();
     void curtainText(const string & s) { curtainText(s,NULL); }
     void curtainText(const string & s, lua_State * L);
     
     enum {
         LevelRunning = 0,
         LevelWon,
-        LevelDied
+        LevelDied,
+        LevelQuit
     };
     
     void endLevelWithOutcome(int outcome);
