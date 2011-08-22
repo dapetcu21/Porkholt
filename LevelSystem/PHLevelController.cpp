@@ -111,7 +111,7 @@ void PHLevelController::pauseWithMenu()
     rv->setRotation(3*M_PI/2);
     
     a = new PHAnimationDescriptor;
-    a->time = 1;
+    a->time = 0.5;
     a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
     a->tag = 3752;
     a->view = rv;
@@ -127,7 +127,7 @@ void PHLevelController::pauseWithMenu()
     
     
     a = new PHAnimationDescriptor;
-    a->time = 1;
+    a->time = 0.5;
     a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
     a->tag = 3752;
     a->view = rb;
@@ -136,7 +136,7 @@ void PHLevelController::pauseWithMenu()
     a->release();
 
     a = new PHAnimationDescriptor;
-    a->time = 1;
+    a->time = 0.5;
     a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
     a->tag = 3752;
     a->view = qb;
@@ -168,7 +168,7 @@ void PHLevelController::dismissMenu()
     if (rv)
     {
         a = new PHAnimationDescriptor;
-        a->time = 0.5;
+        a->time = 0.25;
         a->timeFunction = PHAnimationDescriptor::FadeInFunction;
         a->tag = 3752;
         a->view = rv;
@@ -191,7 +191,7 @@ void PHLevelController::dismissMenu()
     if (rb)
     {
         a = new PHAnimationDescriptor;
-        a->time = 0.5;
+        a->time = 0.25;
         a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
         a->tag = 3752;
         a->view = rb;
@@ -203,7 +203,7 @@ void PHLevelController::dismissMenu()
     if (qb)
     {
         a = new PHAnimationDescriptor;
-        a->time = 0.5;
+        a->time = 0.25;
         a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
         a->tag = 3752;
         a->view = qb;
@@ -213,7 +213,7 @@ void PHLevelController::dismissMenu()
     }
     
     a = new PHAnimationDescriptor;
-    a->time = 0.5;
+    a->time = 0.25;
     a->timeFunction = PHAnimationDescriptor::FadeInFunction;
     a->bgColor = PHClearColor;
     a->view = menuView;
