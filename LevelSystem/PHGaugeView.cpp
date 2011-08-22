@@ -21,6 +21,6 @@ void PHGaugeView::draw()
 	PHRect portion = PHWholeRect;
 	portion.width*=lvl;
     
-    renderInFramePortionTint(_bounds,PHWholeRect,tint*0.5f);
+    renderInFramePortionTint(_bounds,PHWholeRect,((tint==PHInvalidColor)?PHWhiteColor:tint)*0.5f);
     renderInFramePortionTint(bounds, portion, tint);
 }
