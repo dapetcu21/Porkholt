@@ -42,9 +42,6 @@
 
 - (bool) dumbDevice
 {
-//#ifdef PH_SIMULATOR
-//    return true;
-//#endif
 	NSString * platform = [self platform];
 	PHLog("Running on %s",[platform UTF8String]);
 	if ([platform isEqual:@"iPhone1,1"]|| //iPhone 1G
@@ -89,26 +86,46 @@
 	[super dealloc];
 }
 
+- (void)dummy
+{
+    
+}
+
 - (void)openGLThread
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [v initMain];
     [v setFramebuffer];
-    
-    CADisplayLink * displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(openGLFrame:)];
-    displayLink.frameInterval = round(60.0f/fps);
-    PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width,1.0f/(1.0f/60*displayLink.frameInterval));
-    displayLink.paused = YES;
-    dl = displayLink;
-    
     NSRunLoop *theRL = [NSRunLoop currentRunLoop];
-    [displayLink addToRunLoop:theRL forMode:NSDefaultRunLoopMode];
+    
+    double FPS = fps;
+#ifdef PH_SIMULATOR
+    BOOL useDisplayLink = NO;
+#else
+    BOOL useDisplayLink = [[[UIDevice currentDevice] systemVersion] compare:@"3.1" options:NSNumericSearch] != NSOrderedAscending;
+#endif
+
+    if (useDisplayLink)
+    {
+        CADisplayLink * displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(openGLFrame:)];
+        displayLink.frameInterval = round(60.0f/fps);
+        FPS = 1.0f/(1.0f/60*displayLink.frameInterval);
+        displayLink.paused = YES;
+        dl = displayLink;
+        [displayLink addToRunLoop:theRL forMode:NSDefaultRunLoopMode];
+    } else {
+        [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES];
+        timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f/fps) target:self selector:@selector(openGLFrame:) userInfo:nil repeats:YES];
+    }
+    
+    PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
+    
     while (![thread isCancelled] && [theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
     
     [exitCondition lock];
     [exitCondition unlockWithCondition: 1];
     [pool drain];
-    [displayLink release];
+    [dl release];
 }
 
 - (void)openGLFrame:(CADisplayLink*)displayLink
@@ -118,7 +135,15 @@
     mainClass->processInput();
     [v setFramebuffer];
     
-    double elapsedTime = displayLink.duration * displayLink.frameInterval;
+    static double time = 0;
+    static double lastTime = 0;
+    
+    double frameInterval = 1.0f/mainClass->framesPerSecond();
+    lastTime = time;
+    time = PHTime::getTime();
+    double elapsedTime = time-lastTime;
+    if (elapsedTime>1.5*frameInterval)
+        elapsedTime = 1.5*frameInterval;
     mainClass->renderFrame(elapsedTime);
     
     if (![v presentFramebuffer])
@@ -157,7 +182,15 @@
 
 - (void)defferedSetPaused:(NSNumber*)val
 {
-    dl.paused = [val boolValue];
+    if (dl)
+        dl.paused = [val boolValue];
+    else
+    {
+        if ([val boolValue])
+            [timer invalidate];
+        else
+            timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f/fps) target:self selector:@selector(openGLFrame:) userInfo:nil repeats:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning

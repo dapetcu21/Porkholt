@@ -1153,6 +1153,7 @@
 				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Externals/lib/darwin\"",
@@ -1172,6 +1173,7 @@
 				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Externals/lib/darwin\"",

@@ -24,6 +24,7 @@ class PHThread;
     BOOL animating;
 	
     CADisplayLink * dl;
+    NSTimer * timer;
     EAGLView * v;
     NSConditionLock * exitCondition;
 	NSThread * thread;
