@@ -9,27 +9,34 @@
 #include "PHAnimatorPool.h"
 #include "PHImageAnimator.h"
 
-PHAnimatorPool::PHAnimatorPool()
+PHAnimatorPool::PHAnimatorPool() : mutex(new PHMutex)
 {
     
 }
 
 PHAnimatorPool::~PHAnimatorPool()
 {
+    mutex->lock();
     for (set<PHImageAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
     {
-        (*i)->setAnimatorPool(NULL);
+        (*i)->pool = NULL;
     }
+    mutex->unlock();
+    mutex->release();
 }
 
 void PHAnimatorPool::insertAnimator(PHImageAnimator * a)
 {
+    mutex->lock();
     animators.insert(a);
+    mutex->unlock();
 }
 
 void PHAnimatorPool::removeAnimator(PHImageAnimator * a)
 {
+    mutex->lock();
     animators.erase(a);
+    mutex->unlock();
 }
 
 PHAnimatorPool * PHAnimatorPool::mainAnimatorPool()
@@ -43,9 +50,11 @@ PHAnimatorPool * PHAnimatorPool::mainAnimatorPool()
 
 void PHAnimatorPool::advanceAnimation(double elapsedTime)
 {
+    mutex->lock();
     for (set<PHImageAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
     {
         if (!((*i)->advanceManually))
             (*i)->advanceAnimation(elapsedTime);
     }
+    mutex->unlock();
 }

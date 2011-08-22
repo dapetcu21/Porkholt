@@ -16,6 +16,7 @@ class PHAnimatorPool : public PHObject
 {
 private:
     set<PHImageAnimator*> animators;
+    PHMutex * mutex;
 public:
     PHAnimatorPool();
     ~PHAnimatorPool();
