@@ -42,7 +42,9 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
     PHLuaGetNumberField(_forceGauge, "forceGauge");
     PHLuaGetNumberField(maxForce, "maximumForce");
     PHLuaGetNumberField(_forceGrowth, "forceGrowth");
+#ifndef PH_SIMULATOR
     PHLuaGetBoolField(force, "usesForce");
+#endif
     PHLuaGetBoolField(barHidden, "barHidden");
 }
 

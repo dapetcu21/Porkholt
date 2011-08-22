@@ -140,6 +140,7 @@ public:
     int tag() { return _tag; }
     PHView * viewWithTag(int tag);
     PHView * viewWithTagAfter(int tag, PHView * v);
+    list<PHView*> * viewsWithTag(int tag); //this returns a new-allocated list
 	
 	virtual ~PHView();
 	friend class PHMainEvents;

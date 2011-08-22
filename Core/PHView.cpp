@@ -645,6 +645,21 @@ PHView * PHView::viewWithTagAfter(int tag, PHView * v)
     return NULL;
 }
 
+list<PHView*> * PHView::viewsWithTag(int tag)
+{
+    list<PHView*> * l = new list<PHView*>;
+#ifdef PHVIEW_STD_LIST
+    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
+        if ((*i)->tag() == tag)
+            l->push_back(*i);
+#else
+    for (ViewEl * ve = viewsSt; ve; ve=ve->next)
+        if (ve->el->tag()==tag)
+            l->push_back(ve->el);
+#endif
+    return l;
+}
+
 void PHView::bindToAuxLayer(PHAuxLayerView * layer, PHView * from)
 {
     if (auxLayer)

@@ -91,9 +91,10 @@ void PHLNPC::loadView()
     view->setFlipCenter(center);
 	loadImages();
     bodyView = (PHImageView*)(view->viewWithTag(20));
-    PHView * v = NULL;
-    do {
-        v=view->viewWithTagAfter(21,v);
+    list<PHView*> * l = view->viewsWithTag(21);
+    for(list<PHView*>::iterator i = l->begin(); i!=l->end(); i++)
+    {
+        PHView * v=*i;
         if (!v) break;
         if (!faceView)
         {
@@ -107,7 +108,8 @@ void PHLNPC::loadView()
         v->removeFromSuperview();
         faceView->addSubview(v);
         v->release();
-    } while (v);
+    };
+    delete l;
     if (staticFace) 
         ((PHPlayerView*)view)->setDesignatedTag(-21);
     if ((trailPossible = (dynamic_cast<PHTrailImageView*>(bodyView)!=NULL)))
