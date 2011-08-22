@@ -241,6 +241,7 @@ void PHLevelController::menuDismissed(PHObject *, void *)
 
 void PHLevelController::returnToMenu()
 {
+    resume();
     endLevelWithOutcome(LevelQuit);
 }
 
