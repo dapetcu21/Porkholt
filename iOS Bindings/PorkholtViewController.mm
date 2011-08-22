@@ -42,9 +42,9 @@
 
 - (bool) dumbDevice
 {
-#ifdef PH_SIMULATOR
-    return true;
-#endif
+//#ifdef PH_SIMULATOR
+//    return true;
+//#endif
 	NSString * platform = [self platform];
 	PHLog("Running on %s",[platform UTF8String]);
 	if ([platform isEqual:@"iPhone1,1"]|| //iPhone 1G
