@@ -114,8 +114,7 @@
         dl = displayLink;
         [displayLink addToRunLoop:theRL forMode:NSDefaultRunLoopMode];
     } else {
-        [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES];
-        timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f/fps) target:self selector:@selector(openGLFrame:) userInfo:nil repeats:YES];
+        [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES]; //to keep the run loop blocking
     }
     
     PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
