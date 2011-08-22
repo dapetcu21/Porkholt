@@ -29,64 +29,6 @@
 
 @synthesize animating, context;
 
-class PHRenderThread : public PHObject
-{
-public:
-	PHMutex * pauseMutex;
-	EAGLView * view;
-	volatile bool running;
-	int fps;
-	void renderingThread()
-	{
-        NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-        [view initMain];
-		[view setFramebuffer];
-		PHMainEvents * mainClass = PHMainEvents::sharedInstance();
-		
-		mainClass->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width,fps);
-		
-		double frameInterval = 1.0f/fps;
-		
-		double lastTime = 0;
-		double time = 0;
-		pauseMutex->lock();
-		double targetTime = PHTime::getTime();
-		while (running)
-		{
-			pauseMutex->unlock();
-			targetTime+= frameInterval;
-			
-			[PHTouchInterfaceSingleton processQueue];
-            mainClass->processInput();
-			[view setFramebuffer];
-			
-			lastTime = time;
-			time = PHTime::getTime();
-			double elapsedTime = time-lastTime;
-			if (elapsedTime>1.5*frameInterval)
-				elapsedTime = 1.5*frameInterval;
-			mainClass->renderFrame(elapsedTime);
-			
-			if (![view presentFramebuffer])
-				PHLog("ERROR: Couldn't swap buffers");
-			if (!mainClass->independentTiming())
-			{
-				double currentTime = PHTime::getTime();
-				double sleepTime = targetTime-currentTime;
-				if (sleepTime>0)
-					PHTime::sleep(sleepTime);
-				else
-					targetTime = currentTime;
-			}
-            [pool release];
-            pool = [[NSAutoreleasePool alloc] init];
-			pauseMutex->lock();
-		}
-		pauseMutex->unlock();	
-        [pool release];
-	}
-} renderThread;
-
 - (NSString *) platform
 {
 	size_t size;
@@ -100,6 +42,9 @@ public:
 
 - (bool) dumbDevice
 {
+#ifdef PH_SIMULATOR
+    return true;
+#endif
 	NSString * platform = [self platform];
 	PHLog("Running on %s",[platform UTF8String]);
 	if ([platform isEqual:@"iPhone1,1"]|| //iPhone 1G
@@ -122,29 +67,62 @@ public:
 	self.view = view;
 	
 	animating = FALSE;
-	
-	PHThread::mainThread();
-	
-	pausemutex = new PHMutex;
-	pausemutex->lock();
-	thread = new PHThread;
-	thread->setFunction(&renderThread, (PHCallback)&PHRenderThread::renderingThread, NULL);
-	renderThread.view = view;
-	renderThread.pauseMutex = pausemutex;
-	renderThread.running = true;
-	renderThread.fps = 60;
+    
+    thread = [[NSThread alloc] initWithTarget:self
+                                     selector:@selector(openGLThread) 
+                                       object:nil];
+    exitCondition = [[NSConditionLock alloc] init];
+    v = view;
+    fps = 60;
 	if ([self dumbDevice])
-		renderThread.fps = 40;
-	thread->start();
+		fps = 30;
+    [thread start];
 }
 
 - (void)dealloc
 {
-	renderThread.running = false;
-	thread->join();
-	pausemutex->release();
-	thread->release();
+	[thread cancel];
+    [exitCondition lockWhenCondition: 1];
+    [exitCondition unlock];
+    [thread release];
+    [exitCondition release];
 	[super dealloc];
+}
+
+- (void)openGLThread
+{
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    [v initMain];
+    [v setFramebuffer];
+    
+    CADisplayLink * displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(openGLFrame:)];
+    displayLink.frameInterval = round(60.0f/fps);
+    PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width,1.0f/(1.0f/60*displayLink.frameInterval));
+    displayLink.paused = YES;
+    dl = displayLink;
+    
+    NSRunLoop *theRL = [NSRunLoop currentRunLoop];
+    [displayLink addToRunLoop:theRL forMode:NSDefaultRunLoopMode];
+    while (![thread isCancelled] && [theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
+    
+    [exitCondition lock];
+    [exitCondition unlockWithCondition: 1];
+    [pool drain];
+    [displayLink release];
+}
+
+- (void)openGLFrame:(CADisplayLink*)displayLink
+{
+    [PHTouchInterfaceSingleton processQueue];
+    PHMainEvents * mainClass = PHMainEvents::sharedInstance();
+    mainClass->processInput();
+    [v setFramebuffer];
+    
+    double elapsedTime = displayLink.duration * displayLink.frameInterval;
+    mainClass->renderFrame(elapsedTime);
+    
+    if (![v presentFramebuffer])
+        PHLog("ERROR: Couldn't swap buffers");
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -164,7 +142,7 @@ public:
     if (!animating)
     {
         animating = TRUE;
-		pausemutex->unlock();
+        [self performSelector:@selector(defferedSetPaused:) onThread:thread withObject:[NSNumber numberWithBool:NO] waitUntilDone:NO];
     }
 }
 
@@ -173,8 +151,13 @@ public:
     if (animating)
     {
         animating = FALSE;
-		pausemutex->lock();
+        [self performSelector:@selector(defferedSetPaused:) onThread:thread withObject:[NSNumber numberWithBool:YES] waitUntilDone:NO];
     }
+}
+
+- (void)defferedSetPaused:(NSNumber*)val
+{
+    dl.paused = [val boolValue];
 }
 
 - (void)didReceiveMemoryWarning

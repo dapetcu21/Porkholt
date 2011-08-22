@@ -17,14 +17,17 @@
 
 class PHMutex;
 class PHThread;
+@class EAGLView;
 
 @interface PorkholtViewController : UIViewController
 {
     BOOL animating;
-	volatile BOOL running;
 	
-	PHMutex * pausemutex;
-	PHThread * thread;
+    CADisplayLink * dl;
+    EAGLView * v;
+    NSConditionLock * exitCondition;
+	NSThread * thread;
+    int fps;
 }
 
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;

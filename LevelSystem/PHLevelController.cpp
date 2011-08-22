@@ -249,7 +249,7 @@ void PHLevelController::pause()
 {
 	if (paused) return;
 	paused = true;
-	PHMainEvents::sharedInstance()->setIndependentTiming(false);
+	//PHMainEvents::sharedInstance()->setIndependentTiming(false);
 }
 
 void PHLevelController::resume()
@@ -258,7 +258,7 @@ void PHLevelController::resume()
 	if (!paused) return;
     if (!ready1 || !ready2) return;
 	paused = false;
-	PHMainEvents::sharedInstance()->setIndependentTiming(true);
+	//PHMainEvents::sharedInstance()->setIndependentTiming(true);
     dismissMenu();
 }
 
@@ -485,7 +485,7 @@ PHLevelController::~PHLevelController()
     animPool->release();
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
-	PHMainEvents::sharedInstance()->setIndependentTiming(false);
+	//PHMainEvents::sharedInstance()->setIndependentTiming(false);
     releaseImage(dialogImage);
     releaseImage(questImage);
     PHPoofView::poofImageRelease();
@@ -622,27 +622,28 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
     PHImage::collectGarbage();
     PHFont::collectGarbage();
-    PHMainEvents::sharedInstance()->setIndependentTiming(true);
+    //PHMainEvents::sharedInstance()->setIndependentTiming(true);
     ready1 = true;
     resume();
 	mutex->unlock();
 	
     
     
-	double targetTime = PHTime::getTime();
+	//double targetTime = PHTime::getTime();
 	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
 	double frameInterval = 1.0f/fps;
 	
 	while (running)
 	{
-		targetTime+=frameInterval;
+		//targetTime+=frameInterval;
 		
-        if (!paused)
+        bool p = paused;
+        if (!p)
         {
             world->player->updateControls(q);
             
             if (fps<=40)
-                fWorld->Step(frameInterval, 10, 4);
+                fWorld->Step(frameInterval, 10, 6);
             else
                 fWorld->Step(frameInterval, 6, 3);
 
@@ -650,23 +651,23 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             world->updatePositions();
             scripingEngine->scriptingStep(frameInterval);
             world->updateTimers(frameInterval);
-            //PHLog("s2t2: wait");
+        }
             pSem2->wait();
-            if (!running) break;
             mutex->lock();
+        if(!p)
+        {
             animPool->advanceAnimation(frameInterval);
             world->updateScene();
+        }
             mutex->unlock();
             pSem1->signal();
-            //PHLog("s1t2: signal");
-        }
                                       
-		double currentTime = PHTime::getTime();
+		/*double currentTime = PHTime::getTime();
 		double time = targetTime - currentTime;
 		if (time>0)
 			PHTime::sleep(time);
 		else
-			targetTime = currentTime;
+			targetTime = currentTime;*/
 	}
 }
 
