@@ -9,7 +9,7 @@
 #include "PHAnimatorPool.h"
 #include "PHImageAnimator.h"
 
-PHAnimatorPool::PHAnimatorPool() : mutex(new PHMutex)
+PHAnimatorPool::PHAnimatorPool() : mutex(new PHMutex(true)), insideJob(false)
 {
     
 }
@@ -28,14 +28,26 @@ PHAnimatorPool::~PHAnimatorPool()
 void PHAnimatorPool::insertAnimator(PHImageAnimator * a)
 {
     mutex->lock();
-    animators.insert(a);
+    if (!insideJob)
+        animators.insert(a);
+    else
+    {
+        insertQueue.insert(a);
+        deleteQueue.erase(a);
+    }
     mutex->unlock();
 }
 
 void PHAnimatorPool::removeAnimator(PHImageAnimator * a)
 {
     mutex->lock();
-    animators.erase(a);
+    if (!insideJob)
+        animators.erase(a);
+    else
+    {
+        deleteQueue.insert(a);
+        insertQueue.erase(a);
+    }
     mutex->unlock();
 }
 
@@ -51,10 +63,17 @@ PHAnimatorPool * PHAnimatorPool::mainAnimatorPool()
 void PHAnimatorPool::advanceAnimation(double elapsedTime)
 {
     mutex->lock();
+    insideJob = true;
     for (set<PHImageAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
     {
+        if (deleteQueue.count(*i))
+            continue;
         if (!((*i)->advanceManually))
             (*i)->advanceAnimation(elapsedTime);
     }
+    for (set<PHImageAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
+        animators.erase(*i);
+    animators.insert(insertQueue.begin(),insertQueue.end());
+    insideJob = false;
     mutex->unlock();
 }

@@ -15,7 +15,8 @@ class PHImageAnimator;
 class PHAnimatorPool : public PHObject
 {
 private:
-    set<PHImageAnimator*> animators;
+    set<PHImageAnimator*> animators,insertQueue,deleteQueue;
+    bool insideJob;
     PHMutex * mutex;
 public:
     PHAnimatorPool();
