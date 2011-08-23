@@ -52,6 +52,7 @@ public:
     double attackDamage() { return damage; }
     
     virtual void updatePosition();
+    virtual void updateView();
     
     static void registerLuaInterface(lua_State *L);
 private:

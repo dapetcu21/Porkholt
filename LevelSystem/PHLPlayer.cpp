@@ -132,7 +132,7 @@ void PHLPlayer::updatePosition()
 {
     PHLNPC::updatePosition();
     double interval = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
-    if (powerTime)
+    if (powerTime>0)
     {
         powerTime-=interval;
         if (powerTime<=0)
@@ -194,6 +194,25 @@ void PHLPlayer::activateShield()
     getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLPlayer::_activateShield,NULL,false);
 }
 
+void PHLPlayer::updateView()
+{
+    PHLNPC::updateView();
+    if (powerTime<0)
+    {
+        PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);
+        if (iv)
+        {
+            if (iv->actualTrailSize() == 0)
+            {
+                powerTime = 0;
+                iv->setAuxImage(NULL);
+            }
+        }
+        else
+            powerTime = 0;
+    }
+}
+
 void PHLPlayer::_activatePower(PHObject * sender, void * ud)
 {
     PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);
@@ -205,22 +224,24 @@ void PHLPlayer::_activatePower(PHObject * sender, void * ud)
 
 void PHLPlayer::_deactivatePower(PHObject * sender, void * ud)
 {
-    PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);
-    if (iv)
-        iv->setAuxImage(NULL);
     setTrail(resumeTrail);
 }
 
 void PHLPlayer::activatePower()
 {
+    double pt = powerTime;
     powerTime = 10.0f;
-    setMaximumForce(maximumForce()*2);
-    setForceGrowth(forceGrowth()*2);
-    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLPlayer::_activatePower, NULL, false);
+    if (pt<=0)
+    {
+        setMaximumForce(maximumForce()*2);
+        setForceGrowth(forceGrowth()*2);
+        getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLPlayer::_activatePower, NULL, false);
+    }
 }
 
 void PHLPlayer::deactivatePower()
 {
+    powerTime = -1;
     setMaximumForce(maximumForce()/2);
     setForceGrowth(forceGrowth()/2);
     getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLPlayer::_deactivatePower, NULL, false);
