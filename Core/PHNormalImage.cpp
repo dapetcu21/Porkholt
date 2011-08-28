@@ -231,21 +231,10 @@ void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & p
 	
 	bindToTexture();
 	
-    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | ((tint==PHInvalidColor)?0:PHGLColorArray);
+    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
     PHGLSetStates(states);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
-    if (states & PHGLColorArray)
-    {
-        PH24BitColor t(tint);
-        const GLubyte colors[] = { 
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a
-        };
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-    }
-    
+    PHGLSetColor(tint);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

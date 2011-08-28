@@ -46,7 +46,7 @@ void PHPoofView::destroy(PHObject * sender, void * ud)
     if (ud)
         removeFromSuperview();
     else
-        PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHPoofView::destroy, (void*)1, false);
+        PHThread::mainThread()->scheduleOnThread(this, (PHCallback)&PHPoofView::destroy, (void*)1, false);
 }
 
 void PHPoofView::poofImageRelease()

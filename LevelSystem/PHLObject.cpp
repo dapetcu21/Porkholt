@@ -309,7 +309,10 @@ void PHLObject::loadImages()
 {
 	if (view)
 		for (list<Image>::iterator i = images.begin(); i!=images.end(); i++)
+        {
 			view->addSubview(i->img);
+            i->img->release();
+        }
 }
 
 void PHLObject::loadView()

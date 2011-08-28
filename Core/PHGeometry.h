@@ -243,4 +243,18 @@ enum PHGLStates
 };
 void PHGLSetStates(int states);
 
+extern PHColor PHGLCurrentColor;
+
+inline void PHGLSetColor(PHColor clr)
+{
+    if (clr.a<0)
+        clr = PHWhiteColor;
+    if (clr != PHGLCurrentColor)
+    {
+        PHGLCurrentColor = clr;
+        PH24BitColor t(clr);
+        glColor4ub(t.r,t.g,t.b,t.a);
+    }
+}
+
 #endif

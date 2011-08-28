@@ -308,17 +308,9 @@ void PHView::drawBackground()
         _bounds.width,  _bounds.height,
     };
 	
-    PH24BitColor t(_backColor);
-    const GLubyte squareColors[] = { 
-        t.r, t.g, t.b, t.a,
-        t.r, t.g, t.b, t.a,
-        t.r, t.g, t.b, t.a,
-        t.r, t.g, t.b, t.a
-    };
-	
-    PHGLSetStates(PHGLVertexArray | PHGLColorArray);
+    PHGLSetStates(PHGLVertexArray);
+    PHGLSetColor(_backColor);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

@@ -183,6 +183,9 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
     double xc,yc,xC,yC;
     
     int nt,p,r,c;
+    PHColor tt = tint;
+    if (tt==PHInvalidColor)
+        tt = PHWhiteColor;
     
     if (fade)
     {
@@ -209,25 +212,12 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
         
         glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
         
-        int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | PHGLColorArray;
+        int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
         PHGLSetStates(states);
         glVertexPointer(2, GL_FLOAT, 0, squareVertices);
         glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
-        PHColor tt = tint;
-        if (tt==PHInvalidColor)
-            tt = PHWhiteColor;
-        if (fade)
-            tt.a *= (remaining/time);
-        PH24BitColor t(tt);
-        const GLubyte colors2[] = { 
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a
-        };
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors2);
-
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
+        PHGLSetColor(tt*(remaining/time));
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
     
     nt = realframe/_image->ipt;
@@ -253,27 +243,14 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
 	
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
     
-    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture  | ((tint!=PHInvalidColor || fade)?PHGLColorArray:0);
+    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture ;
     PHGLSetStates(states);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
-    if (states & PHGLColorArray)
+    if (fade)
     {
-        PHColor tt = tint;
-        if (tt==PHInvalidColor)
-            tt = PHWhiteColor;
-        if (fade)
-            tt.a *= 1.0f-(remaining/time);
-        PH24BitColor t(tt);
-        const GLubyte colors[] = { 
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a,
-            t.r, t.g, t.b, t.a
-        };
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+        tt.a *= 1.0f-(remaining/time);
     }
-    
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
-
+    PHGLSetColor(tt);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

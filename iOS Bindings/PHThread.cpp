@@ -121,6 +121,11 @@ void PHThread::executeOnThread(PHObject * trg, PHCallback cb, void * userdata,bo
     eventQueue->schedule(trg,cb,userdata,waitUntilDone);
 }
 
+void PHThread::scheduleOnThread(PHObject * trg, PHCallback cb, void * userdata, bool waitUntilDone)
+{
+    eventQueue->schedule(trg,cb,userdata,waitUntilDone);
+}
+
 void PHThread::processQueue()
 {
     eventQueue->processQueue();

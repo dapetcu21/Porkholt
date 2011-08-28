@@ -30,6 +30,7 @@ private:
 	bool running,autorelease;
 public:
 	void executeOnThread(PHObject * trg, PHCallback cb, void * userdata,bool waitUntilDone);
+    void scheduleOnThread(PHObject * trg, PHCallback cb, void * userdata, bool waitUntilDone);
 	void processQueue();
 public:
 	void execute(); //DON'T USE THIS

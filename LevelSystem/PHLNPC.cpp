@@ -226,6 +226,7 @@ void PHLNPC::flip()
                     v[i].x = -v[i].x;
                 }
                 ss->Set(v,n);
+                delete v;
             }
         }
         rebuildFixtures();

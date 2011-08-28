@@ -21,6 +21,7 @@ PHColor PHGrayColor(0.5,0.5,0.5,1);
 PHColor PHInvalidColor(-1,-1,-1,-1);
 PHRect PHInvalidRect(0,0,-1,-1);
 PHRect PHNullRect(0,0,0,0);
+PHColor PHGLCurrentColor(-1,-1,-1,-1);
 
 PHPoint::PHPoint(const PHRect & o) : x(o.x), y(o.y){};
 

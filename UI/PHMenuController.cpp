@@ -80,5 +80,13 @@ void PHMenuController::updateScene(double timeElapsed)
     if (!v) return;
     double w = v->bounds().width;
     for (int i=0; i<clouds.size(); i++)
-        clouds[i]->setFrame(clouds[i]->frame()+PHPoint(cloudS[i]*w*timeElapsed,0));
+    {
+        PHRect fr = clouds[i]->frame()+PHPoint(cloudS[i]*w*timeElapsed,0);
+        if (fr.x>=w)
+            fr.x=-fr.width;
+        else
+        if (fr.x<=-fr.width)
+            fr.x=w;
+        clouds[i]->setFrame(fr);
+    }
 }
