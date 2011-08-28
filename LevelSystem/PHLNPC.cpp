@@ -26,6 +26,7 @@
 #include "PHImage.h"
 #include "PHImageAnimator.h"
 #include "PHImageView.h"
+#include "PHLPlayer.h"
 
 #include <typeinfo>
 
@@ -698,6 +699,16 @@ void PHLNPC::lowHP()
 {
     die();
 }
+
+#ifdef PH_GOD_MODE
+void PHLNPC::lowHPGod()
+{
+    if (dynamic_cast<PHLPlayer*>(this))
+        PHLog("You should have died, bastard!");
+    else
+        lowHP();
+}
+#endif
 
 void PHLNPC::increasedHP()
 {

@@ -12,9 +12,7 @@
 
 void PHLPit::objectEntered(PHLObject * obj)
 {
-    PHLPlayer * p = getWorld()->getPlayer();
-    if (obj == p)
-    {
+    PHLNPC * p = dynamic_cast<PHLNPC*>(obj);
+    if (p)
         p->setHP(0);
-    }
 }

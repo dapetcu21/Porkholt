@@ -10,6 +10,7 @@
 #define PHLNPC_H
 
 #include "PHLObject.h"
+#define PH_GOD_MODE
 
 class PHTrailImageView;
 class PHDialog;
@@ -140,13 +141,21 @@ protected:
     virtual void increasedHP();
     virtual void decreasedHP();
     
+#ifdef PH_GOD_MODE
+    void lowHPGod();
+#endif
+    
     void animateHurtInvuln();
     void _animateHurtInvuln(PHObject * sender, void * ud);
     void _animateHurtInvulnEnd(PHObject * sender, void * ud);
     
 public:
-    void setHP(double HP) { hp = HP; if (hp<=0) lowHP(); if (hp>maxHP) hp=maxHP; }
+    void setHP(double HP) { hp = HP; if (hp<=0) { hp=0; lowHP(); } if (hp>maxHP) hp=maxHP; }
+#ifdef PH_GOD_MODE 
+#define lowHP lowHPGod
+#endif
     void decreaseHP(double HP) { if (isInvulnerable()) return; hp-=HP; if (hp<=0) { hp = 0; lowHP(); } else decreasedHP(); }
+#undef lowHP
     void increaseHP(double HP) { hp+=HP; if (hp>maxHP) hp=maxHP; increasedHP(); }
     double healthPoints() { return hp; }
     double maximumHP() { return maxHP; }
