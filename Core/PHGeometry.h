@@ -216,10 +216,7 @@ PHPoint PHTransformedPoint(const PHPoint & pnt);
 PHPoint PHUnTransformedPoint(const PHPoint & pnt);
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
 
-
 void PHLowPassFilter(double & var, double newval, double period, double cutoff);
-struct b2Vec2;
-void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around);
 
 #define toRad(x) ((x)/180.0f*M_PI)
 #define toDeg(x) ((x)/M_PI*180.0f)

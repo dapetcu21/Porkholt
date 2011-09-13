@@ -8,13 +8,14 @@
  */
 
 #include "PHMainEvents.h"
+#ifdef PH_SIMULATOR
 #include "PHRemote.h"
+#endif
 #include "PHView.h"
-#include "PHMenuController.h"
 #include "PHFileManager.h"
 #include "PHImageAnimator.h"
 #include "PHAnimatorPool.h"
-#include "PHChapterController.h"
+#include "PHNavigationController.h"
 
 PHMainEvents * PHMainEvents::sharedInstance()
 {
@@ -34,7 +35,6 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	_screenWidth = screenX;
 	_screenHeight = screenY;
 	suspended = 0;
-	indTiming = false;
     loaded = true;
 	
 	PHThread::mainThread();
@@ -48,10 +48,7 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	view->setBackgroundColor(PHGrayColor);
 	view->setUserInput(true);
 	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glTranslatef(-1.0f, -1.0f, 0.0f);
-	glScalef(2.0f/(_screenWidth), 2.0f/(_screenHeight), 1.0f);
+    setProjection();
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -62,11 +59,23 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	viewController->_viewWillAppear();
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
-	
-//	PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
-    PHViewController * vc = new PHMenuController();
-	vc->init();
-	((PHNavigationController*)viewController)->pushViewController(vc);
+    
+    entryPoint();
+}
+
+void PHMainEvents::setProjection()
+{
+    glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glTranslatef(-1.0f, -1.0f, 0.0f);
+	glScalef(2.0f/(_screenWidth), 2.0f/(_screenHeight), 1.0f);
+}
+
+void PHMainEvents::setScreenSize(double w, double h)
+{
+    _screenWidth = w;
+    _screenHeight = h;
+    setProjection(); 
 }
 
 void PHMainEvents::processInput()

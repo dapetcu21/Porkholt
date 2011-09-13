@@ -7,7 +7,10 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#ifdef PH_IPHONE_OS
+    #import <UIKit/UIKit.h>
+#endif
+
 #include "PHFileManager.h"
 #include <fstream>
 #include <sys/stat.h>

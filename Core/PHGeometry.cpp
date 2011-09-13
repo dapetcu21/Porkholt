@@ -10,7 +10,6 @@
 
 #include "PHGeometry.h"
 #include "PHLua.h"
-#include <Box2D/Box2D.h>
 
 PHPoint PHOriginPoint(0,0);
 PHRect PHWholeRect(0,0,1,1);
@@ -234,16 +233,6 @@ void PHLowPassFilter(double & var, double newval, double period, double cutoff)
 	double alpha=period/(period+RC);
 	//alpha = 0.000005;
 	var = newval * alpha + var * (1.0 - alpha);
-}
-
-void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around)
-{
-    p = p-around;
-    b2Vec2 pp = p;
-    pp.x = cos(angle)*p.x-sin(angle)*p.y;
-    pp.y = sin(angle)*p.x+cos(angle)*p.y;
-    p = pp;
-    p = p+around;
 }
 
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)

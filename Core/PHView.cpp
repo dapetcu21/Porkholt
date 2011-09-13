@@ -100,6 +100,7 @@ void PHView::applyMatrices()
 {
 	glTranslatef(_frame.x, _frame.y, 0);
 	glScalef(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1, 1);
+//    glTranslatef(-_bounds.x, -_bounds.y, 0);
     int eo = effOrder;
     while (eo)
     {

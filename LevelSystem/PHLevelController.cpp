@@ -103,7 +103,7 @@ void PHLevelController::pauseWithMenu()
     PHAnimationDescriptor * a = new PHAnimationDescriptor;
     a->time = 0.5;
     a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    a->bgColor = PHColor(0.0f,0.0f,0.0f,0.5f);
+    a->bgColor = PHColor(0.0f,0.0f,0.0f,0.8f);
     a->view = menuView;
     a->tag = 3752;
     PHView::addAnimation(a);

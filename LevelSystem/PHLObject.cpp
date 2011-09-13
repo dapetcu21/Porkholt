@@ -112,6 +112,16 @@ PHLObject::~PHLObject()
 		view->release();
 }
 
+static void b2RotatePoint(b2Vec2 & p, double angle, b2Vec2 around)
+{
+    p = p-around;
+    b2Vec2 pp = p;
+    pp.x = cos(angle)*p.x-sin(angle)*p.y;
+    pp.y = sin(angle)*p.x+cos(angle)*p.y;
+    p = pp;
+    p = p+around;
+}
+
 void PHLObject::loadBody(void *l)
 {
 	lua_State * L = (lua_State*)l;

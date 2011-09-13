@@ -14,25 +14,30 @@
 
 class PHView;
 class PHViewController;
+class PHNavigationController;
 class PHRemote;
 
 class PHMainEvents : public PHObject
 {
 private:
 	PHView * view;
-	PHViewController * viewController;
+	PHNavigationController * viewController;
 	double _screenWidth;
 	double _screenHeight;
 	int fps;
 	bool suspended;
-	bool indTiming;
     bool loaded;
     
 #ifdef PH_SIMULATOR
     PHRemote * remote;
 #endif
     
+    void entryPoint();
     
+    void setProjection();
+    void setScreenSize(double w, double h);
+    
+    void * ud;
 public:
     PHMainEvents();
 	double screenWidth() { return _screenWidth; };
@@ -50,9 +55,9 @@ public:
 	void init(double screenX, double screenY,int FPS);
 	PHView * mainView() { return view; };
 	void remove(void * ud);
-	
-	bool independentTiming() { return indTiming; };
-	void setIndependentTiming(bool i) { indTiming = i; };
+    
+    void * userData() { return ud; }
+    void setUserData(void * u) { ud = u; }
     
     void processInput();
 

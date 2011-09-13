@@ -50,9 +50,10 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             view->addSubview(vv);
             vv->release();
         }
+   
     PHTextView * dadoamne = new PHTextView(PHRect(leftBorder,frame.height-upperBorder,frame.width-rightBorder-leftBorder, upperBorder));
     dadoamne->setFont(PHFont::fontNamed("BDCartoonShout"));
-    dadoamne->setText("Chapter 1");
+    dadoamne->setText("Da Doamne sa mearga");
     dadoamne->setFontSize(25);
     dadoamne->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
     dadoamne->setFontColor(PHWhiteColor);
