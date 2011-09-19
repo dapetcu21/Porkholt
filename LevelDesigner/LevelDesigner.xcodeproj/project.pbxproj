@@ -13,6 +13,9 @@
 		C11EA9F01425B7A300795880 /* PLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C11EA9EF1425B7A300795880 /* PLDocument.m */; };
 		C11EAA1C1425BC3700795880 /* PLAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C11EAA191425BC3700795880 /* PLAppController.m */; };
 		C11EAA1D1425BC3700795880 /* PLDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = C11EAA1B1425BC3700795880 /* PLDocumentController.m */; };
+		C12F36D814270CC2008DAFE8 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12F36D714270CC2008DAFE8 /* liblua.a */; };
+		C12F36DB14271593008DAFE8 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DA14271593008DAFE8 /* InterfaceController.m */; };
+		C12F36DE14271861008DAFE8 /* PLTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DD14271861008DAFE8 /* PLTableView.m */; };
 		C14D11A01425C3DA000A9CFC /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */; };
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
 		C15331FA1425DD61005E6806 /* PLDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F71425DD61005E6806 /* PLDocument.xib */; };
@@ -47,6 +50,11 @@
 		C11EAA191425BC3700795880 /* PLAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLAppController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C11EAA1A1425BC3700795880 /* PLDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLDocumentController.h; sourceTree = "<group>"; };
 		C11EAA1B1425BC3700795880 /* PLDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLDocumentController.m; sourceTree = "<group>"; };
+		C12F36D714270CC2008DAFE8 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
+		C12F36D914271593008DAFE8 /* InterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
+		C12F36DA14271593008DAFE8 /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
+		C12F36DC14271861008DAFE8 /* PLTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLTableView.h; sourceTree = "<group>"; };
+		C12F36DD14271861008DAFE8 /* PLTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLTableView.m; sourceTree = "<group>"; };
 		C14D119E1425C3DA000A9CFC /* ImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAndTextCell.h; sourceTree = "<group>"; };
 		C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImageAndTextCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C15331F61425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -54,11 +62,11 @@
 		C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResourcePathAccesory.xib; sourceTree = "<group>"; };
 		C16B38C81425F5AF00260851 /* ObjectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ObjectController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38C91425F5AF00260851 /* ObjectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ObjectController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		C16B38D0142622D800260851 /* PLEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = PLEntity.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C16B38D0142622D800260851 /* PLEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLEntity.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38D1142622D900260851 /* PLEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLEntity.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		C16B38D31426270700260851 /* PLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = PLObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C16B38D31426270700260851 /* PLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38D41426270700260851 /* PLObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLObject.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		C16B38D61426272A00260851 /* PLJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = PLJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C16B38D61426272A00260851 /* PLJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38D71426272A00260851 /* PLJoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLJoint.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C1A15B591425C283004B2706 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = init_common.lua; path = ../../rsrc/scripts/init_common.lua; sourceTree = "<group>"; };
 		C1A15B5C1425C296004B2706 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = level_des.lua; sourceTree = "<group>"; };
@@ -79,6 +87,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */,
+				C12F36D814270CC2008DAFE8 /* liblua.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,6 +115,7 @@
 		C11EA9DB1425B7A300795880 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C12F36D714270CC2008DAFE8 /* liblua.a */,
 				C11EA9DC1425B7A300795880 /* Cocoa.framework */,
 				C11EA9FD1425B7A300795880 /* SenTestingKit.framework */,
 				C11EA9DE1425B7A300795880 /* Other Frameworks */,
@@ -184,6 +194,10 @@
 		C16B38C61425F54600260851 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				C12F36D914271593008DAFE8 /* InterfaceController.h */,
+				C12F36DA14271593008DAFE8 /* InterfaceController.m */,
+				C12F36DC14271861008DAFE8 /* PLTableView.h */,
+				C12F36DD14271861008DAFE8 /* PLTableView.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -293,6 +307,8 @@
 				C16B38D2142622D900260851 /* PLEntity.m in Sources */,
 				C16B38D51426270700260851 /* PLObject.m in Sources */,
 				C16B38D81426272A00260851 /* PLJoint.m in Sources */,
+				C12F36DB14271593008DAFE8 /* InterfaceController.m in Sources */,
+				C12F36DE14271861008DAFE8 /* PLTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +364,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../Externals/lua/include;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx10.6;
@@ -368,6 +385,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../Externals/lua/include;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx10.6;
 			};
@@ -379,6 +397,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LevelDesigner/LevelDesigner-Prefix.pch";
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -390,6 +412,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LevelDesigner/LevelDesigner-Prefix.pch";
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

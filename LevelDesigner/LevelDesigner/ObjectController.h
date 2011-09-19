@@ -22,10 +22,12 @@ class WorldController;
 @interface ObjectController : NSObject
 {
     WorldController * worldController;
+    IBOutlet InterfaceController * interfaceController;
     NSMutableArray * arrays[ObjectController_numberOfArrays]; //arrays[0] = objects; arrays[1] = joints;
     NSMutableIndexSet * selection[ObjectController_numberOfArrays];
     BOOL needsReindexing[ObjectController_numberOfArrays];
     NSUndoManager * undoManager;
+    NSUInteger readOnly[ObjectController_numberOfArrays];
 }
 
 @property(nonatomic,retain) NSUndoManager * undoManager;
@@ -34,6 +36,7 @@ class WorldController;
 -(NSArray*)objects;
 -(NSArray*)joints;
 -(NSArray*)arrayAtIndex:(NSUInteger)array;
+-(NSUInteger)readOnlyEntitiesInArray:(NSUInteger)array;
 
 -(NSArray*)entitiesForIndexes:(NSIndexSet*)indexes inArray:(NSUInteger)array;
 -(PLEntity*)entityForIndex:(NSUInteger)index inArray:(NSUInteger)array;
@@ -66,8 +69,17 @@ class WorldController;
 -(void)insertEntities:(NSArray*)entities inSelectionForArray:(NSUInteger)array;
 -(void)removeEntities:(NSArray*)entities inSelectionForArray:(NSUInteger)array;
 
-#pragma Loading and saving to file
+#pragma mark Loading and saving to file
 -(void)loadFromFile:(NSURL*)file;
 -(void)saveToFile:(NSMutableString*)file;
+
+#pragma mark Copy paste
+-(void)newInArray:(NSUInteger)array;
+-(void)delete;
+-(void)copy;
+-(void)paste;
+-(void)duplicate;
+
+#pragma mark Drag & drop
 
 @end

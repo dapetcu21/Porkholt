@@ -13,6 +13,22 @@
 @synthesize selected;
 @synthesize index;
 @synthesize array;
+@synthesize readOnly;
+
+
+-(id)initFromLua:(lua_State*)L
+{
+    if (self = [super init])
+    {
+        
+    }
+    return self;
+}
+
+-(void)saveToFile:(NSMutableString*)file
+{
+    
+}
 
 -(void)setIndex:(NSUInteger)idx andArray:(NSUInteger)arr
 {
