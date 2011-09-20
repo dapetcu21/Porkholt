@@ -11,6 +11,10 @@
 #import "PLTableView.h"
 #import "PLEntity.h"
 
+#define kDragObjectPBoardType @"PLObjectPBoardType"
+#define kDragObjectLocationPBoardType @"PLObjectLocationPBoardType"
+#define kDragObjectPointerPBoardType @"PLObjectPointerPBoardType"
+
 @implementation InterfaceController
 
 - (id)init
@@ -25,7 +29,8 @@
 
 - (void)awakeFromNib
 {
-    
+    [objectView registerForDraggedTypes:[NSArray arrayWithObjects:kDragObjectPBoardType,kDragObjectLocationPBoardType,kDragObjectPointerPBoardType,nil]];
+    [jointView registerForDraggedTypes:[NSArray arrayWithObjects:kDragObjectPBoardType,kDragObjectLocationPBoardType,kDragObjectPointerPBoardType,nil]];
 }
 
 -(NSUInteger)indexForView:(id)sender
@@ -95,7 +100,91 @@
     [cell setEnabled:!entity.readOnly];
 }
 
+- (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
+{
+    NSUInteger array = [self indexForView:tableView];
+    if (array==NSNotFound) return NO;
+    NSArray * a = [model arrayAtIndex:array];
+    __block BOOL ret = YES;
+    [rowIndexes enumerateIndexesUsingBlock: ^(NSUInteger idx, BOOL *stop) {
+        PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
+        if (e.readOnly) { ret = NO; *stop = NO; }
+    }];
+    if (!ret) return NO;
+    
+    NSData * pos = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
+    id pnt = tableView;
+    NSData * pointer = [NSData dataWithBytes:&pnt length:sizeof(id)];
+    [pboard declareTypes:[NSArray arrayWithObjects:/*kDragObjectPBoardType,*/kDragObjectLocationPBoardType,kDragObjectPointerPBoardType,kDragObjectPointerPBoardType,nil ] owner:self];
+    [pboard setData:pos forType:kDragObjectLocationPBoardType];
+    [pboard setData:pointer forType:kDragObjectPointerPBoardType];
+    //[pboard setData:[model copyEntitiesToData:[model entitiesForIndexes:rowIndexes inArray:array]] forType:kDragObjectPBoardType];
+    return YES;
+}
+
+- (NSDragOperation)tableView:(NSTableView*)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation
+{
+    if (operation==NSTableViewDropOn) 
+        return NSDragOperationNone;
+    NSUInteger array = [self indexForView:tableView];
+    if (array==NSNotFound) return NSDragOperationNone;
+    if (row<[model readOnlyEntitiesInArray:array]) 
+        return NSDragOperationNone;
+    return NSDragOperationEvery;
+}
+
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation
+{
+    NSUInteger array = [self indexForView:tableView];
+    if (array==NSNotFound) return NO;
+    if (row<[model readOnlyEntitiesInArray:array])
+        return NO;
+    NSPasteboard * pb = [info draggingPasteboard];
+    NSData * dt;
+    dt = [pb dataForType:kDragObjectPointerPBoardType];
+    if ( dt && [dt length]>=sizeof(id) && (((id*)[dt bytes])[0]==tableView) )
+    {
+        dt = [pb dataForType:kDragObjectLocationPBoardType];
+        NSIndexSet * indexSet = (NSIndexSet*)[NSKeyedUnarchiver unarchiveObjectWithData:dt];
+        if (![indexSet isKindOfClass:[NSIndexSet class]])
+            return NO;
+        __block NSUInteger r = row;
+        [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+            if (idx<row)
+                r--;
+            else
+                *stop = YES;
+        }];
+        NSArray * e = [model entitiesForIndexes:indexSet inArray:array];
+        [model removeEntitiesAtIndexes:indexSet fromArray:array];
+        NSIndexSet * newIndexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(r, [e count])];
+        [model insertEntities:e atIndexes:newIndexSet inArray:array];
+        [model setSelectedIndexes:newIndexSet forArray:array];
+        return YES;
+    } 
+    dt = [pb dataForType:kDragObjectPBoardType];
+    if (dt)
+    {
+        [model pasteData:dt atRow:row inArray:array];
+        return YES;
+    }
+    return NO;
+}
+
+
+
 #pragma mark NSTableViewDelegate
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    NSTableView * tv = (NSTableView*)[aNotification object];
+    NSUInteger array = [self indexForView:tv];
+    if (array==NSNotFound) return;
+    selectionChangeFromWithin = YES;
+    [model setSelectedIndexes:[tv selectedRowIndexes] forArray:array];
+    selectionChangeFromWithin = NO;
+}
+
 
 #pragma mark copy paste
 -(void)new:(id)sender

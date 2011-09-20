@@ -38,8 +38,8 @@
 {
     [super windowControllerDidLoadNib:aController];
 	[browserController setRootURL:[self fileURL]];
-	[objectController loadFromFile:[self fileURL]];
     [objectController setUndoManager:self.undoManager];
+	[objectController loadFromFile:[self fileURL]];
 }
 
 - (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation originalContentsURL:(NSURL *)absoluteOriginalContentsURL error:(NSError **)outError
@@ -73,7 +73,6 @@
 {
 	[browserController setRootURL:url];
 	[objectController loadFromFile:url];
-    [self.undoManager removeAllActions];
     return YES;
 }
 

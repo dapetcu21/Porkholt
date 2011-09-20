@@ -128,9 +128,16 @@
 {
     if ([indexes count]==0) return;
     [[undoManager prepareWithInvocationTarget:self] removeEntitiesAtIndexes:indexes fromArray:array];
-    for (PLEntity * e in entities)
+    NSMutableIndexSet * s = selection[array];
+    __block NSInteger offset = 0;
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        PLEntity * e = (PLEntity*)[entities objectAtIndex:offset];
+        e.selected = NO;
         if (e.readOnly)
             readOnly[array]++;
+        [s shiftIndexesStartingAtIndex:idx+offset by:1];
+        offset++;
+    }];
     [arrays[array] insertObjects:entities atIndexes:indexes];
     needsReindexing[array] = YES;
     [self arrayChanged:array];
@@ -146,11 +153,16 @@
     if ([indexes count]==0) return;
     [[undoManager prepareWithInvocationTarget:self] insertEntities:[self entitiesForIndexes:indexes inArray:array] atIndexes:indexes inArray:array];
     NSMutableArray * a = arrays[array];
+    NSMutableIndexSet * s = selection[array];
+    __block NSInteger offset = 0;
     [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
         [e resetIndex];
         if (e.readOnly)
             readOnly[array]--;
+        e.selected = NO;
+        [s shiftIndexesStartingAtIndex:idx-offset by:-1];
+        offset++;
     }];
     [a removeObjectsAtIndexes:indexes];
     needsReindexing[array] = YES;
@@ -179,9 +191,30 @@
     return selection[array];
 }
 
+
+-(void)_insertIndexes:(NSIndexSet*)indexes inSelectionForArray:(NSUInteger)array
+{
+    [selection[array] addIndexes:indexes];
+    NSMutableArray * a = arrays[array];
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
+        e.selected = YES;
+    }];
+}
+
+-(void)_removeIndexes:(NSIndexSet*)indexes inSelectionForArray:(NSUInteger)array
+{
+    [selection[array] removeIndexes:indexes];
+    NSMutableArray * a = arrays[array];
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
+        e.selected = NO;
+    }];
+}
+
 -(void)clearSelectionForArray:(NSUInteger)array
 {
-    [selection[array] removeAllIndexes];
+    [self _removeIndexes:selection[array] inSelectionForArray:array];
     [self selectionForArrayChanged:array];
 }
 
@@ -194,8 +227,9 @@
 
 -(void)setSelectedIndex:(NSUInteger)index forArray:(NSUInteger)array
 {
-    [selection[array] removeAllIndexes];
+    [self _removeIndexes:selection[array] inSelectionForArray:array];
     [selection[array] addIndex:index];
+    ((PLEntity*)[arrays[array] objectAtIndex:index]).selected = YES;
     [self selectionForArrayChanged:array];
 }
 
@@ -206,8 +240,8 @@
 
 -(void)setSelectedIndexes:(NSIndexSet*)indexes forArray:(NSUInteger)array
 {
-    [selection[array] removeAllIndexes];
-    [selection[array] addIndexes:indexes];
+    [self _removeIndexes:selection[array] inSelectionForArray:array];
+    [self _insertIndexes:indexes inSelectionForArray:array];
     [self selectionForArrayChanged:array];
 }
 
@@ -218,25 +252,27 @@
 
 -(void)insertIndex:(NSUInteger)index inSelectionForArray:(NSUInteger)array
 {
+    ((PLEntity*)[arrays[array] objectAtIndex:index]).selected = YES;
     [selection[array] addIndex:index];
     [self selectionForArrayChanged:array];
 }
 
 -(void)removeIndex:(NSUInteger)index inSelectionForArray:(NSUInteger)array
 {
+    ((PLEntity*)[arrays[array] objectAtIndex:index]).selected = NO;
     [selection[array] removeIndex:index];
     [self selectionForArrayChanged:array];
 }
 
 -(void)insertIndexes:(NSIndexSet*)indexes inSelectionForArray:(NSUInteger)array
 {
-    [selection[array] addIndexes:indexes];
+    [self _insertIndexes:indexes inSelectionForArray:array];
     [self selectionForArrayChanged:array];
 }
 
 -(void)removeIndexes:(NSIndexSet*)indexes inSelectionForArray:(NSUInteger)array
 {
-    [selection[array] removeIndexes:indexes];
+    [self _removeIndexes:indexes inSelectionForArray:array];
     [self selectionForArrayChanged:array];
 }
 
@@ -342,10 +378,10 @@
 	
 	lua_close(L);
 	
-    //PLObject * obj = [[[PLObject alloc] initFromLua:L] autorelease];
-    //obj.owner = self;
-    //obj.readOnly = YES;
-    //[robjs addObject:obj];
+    PLObject * obj = [[[PLObject alloc] initFromLua:L] autorelease];
+    obj.owner = self;
+    obj.readOnly = YES;
+    [robjs addObject:obj];
     
 	NSUInteger n = [robjs count];
     NSUInteger m = [objs count];
