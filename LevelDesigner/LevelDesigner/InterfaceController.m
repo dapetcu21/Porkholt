@@ -141,10 +141,10 @@
     NSData * pos = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
     id pnt = tableView;
     NSData * pointer = [NSData dataWithBytes:&pnt length:sizeof(id)];
-    [pboard declareTypes:[NSArray arrayWithObjects:/*PLObjectPBoardType,*/PLObjectLocationPBoardType,PLObjectPointerPBoardType,PLObjectPointerPBoardType,nil ] owner:self];
+    [pboard declareTypes:[NSArray arrayWithObjects:PLObjectPBoardType,PLObjectLocationPBoardType,PLObjectPointerPBoardType,PLObjectPointerPBoardType,nil ] owner:self];
     [pboard setData:pos forType:PLObjectLocationPBoardType];
     [pboard setData:pointer forType:PLObjectPointerPBoardType];
-    //[pboard setData:[model copyEntitiesToData:[model entitiesForIndexes:rowIndexes inArray:array]] forType:PLObjectPBoardType];
+    [pboard setData:[model copyEntitiesToData:[model entitiesForIndexes:rowIndexes inArray:array]] forType:PLObjectPBoardType];
     return YES;
 }
 
