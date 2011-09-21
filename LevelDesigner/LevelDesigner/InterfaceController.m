@@ -11,10 +11,6 @@
 #import "PLTableView.h"
 #import "PLEntity.h"
 
-#define kDragObjectPBoardType @"PLObjectPBoardType"
-#define kDragObjectLocationPBoardType @"PLObjectLocationPBoardType"
-#define kDragObjectPointerPBoardType @"PLObjectPointerPBoardType"
-
 @implementation InterfaceController
 
 - (id)init
@@ -29,8 +25,8 @@
 
 - (void)awakeFromNib
 {
-    [objectView registerForDraggedTypes:[NSArray arrayWithObjects:kDragObjectPBoardType,kDragObjectLocationPBoardType,kDragObjectPointerPBoardType,nil]];
-    [jointView registerForDraggedTypes:[NSArray arrayWithObjects:kDragObjectPBoardType,kDragObjectLocationPBoardType,kDragObjectPointerPBoardType,nil]];
+    [objectView registerForDraggedTypes:[NSArray arrayWithObjects:PLObjectPBoardType,PLObjectLocationPBoardType,PLObjectPointerPBoardType,nil]];
+    [jointView registerForDraggedTypes:[NSArray arrayWithObjects:PLObjectPBoardType,PLObjectLocationPBoardType,PLObjectPointerPBoardType,nil]];
 }
 
 -(NSUInteger)indexForView:(id)sender
@@ -55,17 +51,47 @@
     }
 }
 
+-(void)switchTabs
+{
+    int current = [[[tabView selectedTabViewItem] identifier] intValue];
+    int tab=current;
+    int i;
+    BOOL done = NO;
+    for (i=0; i<ObjectController_numberOfArrays; i++)
+        if ([[model selectionForArray:i] count]!=0)
+        {
+            if (done)
+            {
+                tab=current;
+                break;
+            } else
+                tab = i;
+        }
+    if (tab!=current)
+        [tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d",tab]];
+}
+
 -(void)arrayChanged:(NSUInteger)array
 {
     if (arrayChangeFromWithin) return;
+    selectionChangeFromWithin = YES;
     [[self viewForIndex:array] reloadData];
+    selectionChangeFromWithin = NO;
 }
 
 -(void)selectionForArrayChanged:(NSUInteger)array
 {
     if (selectionChangeFromWithin) return;
-    [[self viewForIndex:array] selectRowIndexes:[model selectionForArray:array] byExtendingSelection:NO];
+    selectionChangeFromWithin = YES;
+    NSTableView * tv = [self viewForIndex:array];
+    NSIndexSet * is = [model selectionForArray:array];
+    [tv selectRowIndexes:is byExtendingSelection:NO];
+    if ([is count]!=0)
+        [tv scrollRowToVisible:[is lastIndex]];
+    [self switchTabs];
+    selectionChangeFromWithin = NO;
 }
+
 
 #pragma mark NSTableViewDataSource
 
@@ -115,10 +141,10 @@
     NSData * pos = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
     id pnt = tableView;
     NSData * pointer = [NSData dataWithBytes:&pnt length:sizeof(id)];
-    [pboard declareTypes:[NSArray arrayWithObjects:/*kDragObjectPBoardType,*/kDragObjectLocationPBoardType,kDragObjectPointerPBoardType,kDragObjectPointerPBoardType,nil ] owner:self];
-    [pboard setData:pos forType:kDragObjectLocationPBoardType];
-    [pboard setData:pointer forType:kDragObjectPointerPBoardType];
-    //[pboard setData:[model copyEntitiesToData:[model entitiesForIndexes:rowIndexes inArray:array]] forType:kDragObjectPBoardType];
+    [pboard declareTypes:[NSArray arrayWithObjects:/*PLObjectPBoardType,*/PLObjectLocationPBoardType,PLObjectPointerPBoardType,PLObjectPointerPBoardType,nil ] owner:self];
+    [pboard setData:pos forType:PLObjectLocationPBoardType];
+    [pboard setData:pointer forType:PLObjectPointerPBoardType];
+    //[pboard setData:[model copyEntitiesToData:[model entitiesForIndexes:rowIndexes inArray:array]] forType:PLObjectPBoardType];
     return YES;
 }
 
@@ -141,10 +167,10 @@
         return NO;
     NSPasteboard * pb = [info draggingPasteboard];
     NSData * dt;
-    dt = [pb dataForType:kDragObjectPointerPBoardType];
+    dt = [pb dataForType:PLObjectPointerPBoardType];
     if ( dt && [dt length]>=sizeof(id) && (((id*)[dt bytes])[0]==tableView) )
     {
-        dt = [pb dataForType:kDragObjectLocationPBoardType];
+        dt = [pb dataForType:PLObjectLocationPBoardType];
         NSIndexSet * indexSet = (NSIndexSet*)[NSKeyedUnarchiver unarchiveObjectWithData:dt];
         if (![indexSet isKindOfClass:[NSIndexSet class]])
             return NO;
@@ -162,7 +188,7 @@
         [model setSelectedIndexes:newIndexSet forArray:array];
         return YES;
     } 
-    dt = [pb dataForType:kDragObjectPBoardType];
+    dt = [pb dataForType:PLObjectPBoardType];
     if (dt)
     {
         [model pasteData:dt atRow:row inArray:array];
@@ -177,11 +203,22 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
+    if (selectionChangeFromWithin) return;
     NSTableView * tv = (NSTableView*)[aNotification object];
     NSUInteger array = [self indexForView:tv];
     if (array==NSNotFound) return;
     selectionChangeFromWithin = YES;
     [model setSelectedIndexes:[tv selectedRowIndexes] forArray:array];
+    if (([NSEvent modifierFlags] & (NSShiftKeyMask | NSCommandKeyMask))==0)
+    {
+        int i;
+        for (i=0; i<ObjectController_numberOfArrays; i++)
+            if (i!=array)
+            {
+                [model setSelectedIndexes:[NSIndexSet indexSet] forArray:i];
+                [[self viewForIndex:i] selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+            }
+    }
     selectionChangeFromWithin = NO;
 }
 

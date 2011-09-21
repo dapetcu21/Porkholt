@@ -15,6 +15,7 @@
     IBOutlet PLTableView * objectView;
     IBOutlet PLTableView * jointView;
     IBOutlet ObjectController * model;
+    IBOutlet NSTabView * tabView;
     BOOL arrayChangeFromWithin;
     BOOL selectionChangeFromWithin;
 }

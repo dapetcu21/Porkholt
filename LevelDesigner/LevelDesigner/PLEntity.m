@@ -41,4 +41,18 @@
     array=index=NSNotFound;
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [self init])
+    {
+        
+    }
+    return self;
+}
+
 @end
