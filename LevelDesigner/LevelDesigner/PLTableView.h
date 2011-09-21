@@ -15,6 +15,6 @@
 -(IBAction)copy:(id)sender;
 -(IBAction)paste:(id)sender;
 -(IBAction)duplicate:(id)sender;
--(BOOL)validateMenuItem:(NSMenuItem*)menuItem sentFrom:(id)sender;
+-(BOOL)validateMenuItem:(NSMenuItem*)menuItem;
 
 @end

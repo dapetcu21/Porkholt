@@ -194,7 +194,7 @@
     NSMutableArray * a = arrays[array];
     NSMutableIndexSet * s = selection[array];
     __block NSInteger offset = 0;
-    NSUInteger initialCount = [s count];
+    BOOL selectNext=(selectNextAfterDelete&&([s count]==1));
     NSIndexSet * backup = [[s copy] autorelease];
     [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
@@ -202,7 +202,7 @@
         if (e.readOnly)
             readOnly[array]--;
         e.selected = NO;
-        if (!initialCount==1 || ![s containsIndex:idx-offset])
+        if (!selectNext || ![s containsIndex:idx-offset])
         {
             [s shiftIndexesStartingAtIndex:idx-offset+1 by:-1];
             offset++;
@@ -210,7 +210,7 @@
     }];
     NSUInteger index;
     NSUInteger n = [a count]-[indexes count];
-    if (initialCount==1 && (((index=[s lastIndex])==NSNotFound) || (index>=n)))
+    if (selectNext && (((index=[s lastIndex])==NSNotFound) || (index>=n)))
     {
         if (index!=NSNotFound)
             [s removeIndex:index];
@@ -432,6 +432,11 @@
 
 -(void)delete
 {
+    [self deleteInArray:NSNotFound];
+}
+
+-(void)deleteInArray:(NSUInteger)carray;
+{
     int array;
     NSUInteger ni=0;
     for (array = 0; array<numberOfArrays; array++)
@@ -445,7 +450,10 @@
         }];
         if ([is count])
         {
+            if (array==carray)
+                selectNextAfterDelete = YES;
             [self removeEntitiesAtIndexes:is fromArray:array];
+            selectNextAfterDelete = NO;
             ni+=[is count];
         }
     }

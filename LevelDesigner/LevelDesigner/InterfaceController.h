@@ -18,6 +18,7 @@
     IBOutlet NSTabView * tabView;
     BOOL arrayChangeFromWithin;
     BOOL selectionChangeFromWithin;
+    int tabToMoveTo;
 }
 
 -(void)new:(id)sender;

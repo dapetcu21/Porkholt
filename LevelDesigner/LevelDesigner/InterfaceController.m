@@ -51,10 +51,16 @@
     }
 }
 
--(void)switchTabs
+-(void)_switchTabs
 {
     int current = [[[tabView selectedTabViewItem] identifier] intValue];
-    int tab=current;
+    if (tabToMoveTo!=-1 && tabToMoveTo!=current)
+        [tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d",tabToMoveTo]];
+}
+
+-(void)switchTabs
+{
+    tabToMoveTo = -1;
     int i;
     BOOL done = NO;
     for (i=0; i<ObjectController_numberOfArrays; i++)
@@ -62,13 +68,12 @@
         {
             if (done)
             {
-                tab=current;
+                tabToMoveTo=-1;
                 break;
             } else
-                tab = i;
+                tabToMoveTo = i;
         }
-    if (tab!=current)
-        [tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d",tab]];
+    [self performSelectorOnMainThread:@selector(_switchTabs) withObject:nil waitUntilDone:NO];
 }
 
 -(void)arrayChanged:(NSUInteger)array
@@ -231,7 +236,7 @@
 
 -(void)delete:(id)sender
 {
-    [model delete];
+    [model deleteInArray:[self indexForView:sender]];
 }
 
 -(void)copy:(id)sender

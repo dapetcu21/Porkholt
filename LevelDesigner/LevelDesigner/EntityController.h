@@ -20,6 +20,7 @@
     NSUInteger * readOnly;
     BOOL * arrayChanged;
     BOOL * selectionChanged;
+    BOOL selectNextAfterDelete;
 }
 
 -(id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType;
@@ -72,6 +73,7 @@
 -(PLEntity*)newEntityForArray:(NSUInteger)array;
 -(void)newInArray:(NSUInteger)array;
 -(void)delete;
+-(void)deleteInArray:(NSUInteger)array;
 -(void)copy;
 -(NSData*)copyEntitiesToData:(NSArray*)entities;
 -(void)paste;
