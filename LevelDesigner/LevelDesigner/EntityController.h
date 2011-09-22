@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 @class PLEntity;
+@class MultipleListController;
+
 @interface EntityController : NSObject
 {
     NSUndoManager * undoManager;
@@ -26,8 +28,10 @@
 -(id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType;
 
 @property(nonatomic,retain) NSUndoManager * undoManager;
+@property(nonatomic,assign) IBOutlet MultipleListController * controller;
 
 #pragma mark Array access
+-(PLEntity*)selectedEntity;
 -(NSArray*)arrayAtIndex:(NSUInteger)array;
 -(NSUInteger)readOnlyEntitiesInArray:(NSUInteger)array;
 

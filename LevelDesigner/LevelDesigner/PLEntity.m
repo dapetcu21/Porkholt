@@ -25,6 +25,11 @@
     return self;
 }
 
+-(id)init
+{
+    return [self initFromLua:NULL];
+}
+
 -(void)saveToFile:(NSMutableString*)file
 {
     

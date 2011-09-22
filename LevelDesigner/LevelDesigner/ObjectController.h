@@ -24,7 +24,6 @@ class WorldController;
 @interface ObjectController : EntityController
 {
     WorldController * worldController;
-    IBOutlet InterfaceController * interfaceController;
 }
 
 #pragma Array Access

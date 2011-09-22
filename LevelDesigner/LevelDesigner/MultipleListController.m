@@ -13,6 +13,20 @@
 
 @implementation MultipleListController
 
+-(void)setModel:(EntityController*)m
+{
+    [model setController:nil];
+    [m setController:self];
+    [m retain];
+    [model release];
+    model = m;
+}
+
+-(EntityController*)model
+{
+    return model;
+}
+
 
 -(id)           initWithTables:(NSUInteger)array 
              andPasteboardType:(NSString*)pbType
@@ -34,6 +48,8 @@
 
 -(void)dealloc
 {
+    [model setController:nil];
+    [model release];
     for (int i=0; i<numberOfTables; i++)
         [tables[i] release];
     free(tables);

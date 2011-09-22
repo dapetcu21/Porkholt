@@ -9,8 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "MultipleListController.h"
 
+@class PLEntity;
+@class PropertyController;
+@class JointController;
 @interface InterfaceController : MultipleListController
 {
+    IBOutlet NSView * jointDetailView;    
+    IBOutlet NSView * objectDetailView;
+    IBOutlet NSView * detailView;
+    PLEntity * currentEntity;
+    IBOutlet PropertyController * propertyController;
+    IBOutlet MultipleListController * subentitiesController;
+    IBOutlet JointController * jointController;
 }
 
 @property(nonatomic,retain) IBOutlet PLTableView * objectView;

@@ -1,14 +1,14 @@
 //
-//  PLJoint.m
+//  PLImage.m
 //  LevelDesigner
 //
-//  Created by Marius Petcu on 9/18/11.
+//  Created by Marius Petcu on 9/22/11.
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#import "PLJoint.h"
+#import "PLImage.h"
 
-@implementation PLJoint
+@implementation PLImage
 
 - (id)initFromLua:(lua_State *)L
 {

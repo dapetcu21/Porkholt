@@ -16,10 +16,7 @@
 
 - (id)init
 {
-    if (self = [super initWithArrays:ObjectController_numberOfArrays andPasteboardType:PLObjectPBoardType])
-    {
-        
-    }
+    self = [super initWithArrays:ObjectController_numberOfArrays andPasteboardType:PLObjectPBoardType];
     return self;
 }
 
@@ -44,17 +41,6 @@
             return NULL;
     }
 }
-
--(void)arrayChanged:(NSUInteger)array
-{
-    [interfaceController arrayChanged:array];
-}
-
--(void)selectionForArrayChanged:(NSUInteger)array
-{
-    [interfaceController selectionForArrayChanged:array];
-}
-
 
 #pragma Loading and saving to file
 -(void)lua:(lua_State*)L setPath:(NSString*)path

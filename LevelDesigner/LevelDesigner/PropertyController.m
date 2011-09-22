@@ -1,18 +1,18 @@
 //
-//  PLJoint.m
+//  PropertyController.m
 //  LevelDesigner
 //
-//  Created by Marius Petcu on 9/18/11.
+//  Created by Marius Petcu on 9/22/11.
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#import "PLJoint.h"
+#import "PropertyController.h"
 
-@implementation PLJoint
+@implementation PropertyController
 
-- (id)initFromLua:(lua_State *)L
+- (id)init
 {
-    self = [super initFromLua:L];
+    self = [super init];
     if (self) {
         // Initialization code here.
     }

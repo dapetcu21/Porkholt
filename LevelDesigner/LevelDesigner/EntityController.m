@@ -11,16 +11,7 @@
 
 @implementation EntityController
 @synthesize undoManager;
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-    }
-    
-    return self;
-}
+@synthesize controller;
 
 - (id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType
 {
@@ -129,10 +120,12 @@
 
 -(void)arrayChanged:(NSUInteger)array
 {
+    [controller arrayChanged:array];
 }
 
 -(void)selectionForArrayChanged:(NSUInteger)array
 {
+    [controller selectionForArrayChanged:array];
 }
 
 -(void)_arrayChanged:(NSUInteger)array
@@ -251,12 +244,28 @@
 -(NSArray*)selectedEntities
 {
     NSMutableArray * a = [[[NSMutableArray alloc] init] autorelease];
-    int i;
-    for (i=0; i<numberOfArrays; i++)
+    for (int i=0; i<numberOfArrays; i++)
         [a addObjectsFromArray:[self entitiesForIndexes:selection[i] inArray:i]];
     return a;
 }
 
+-(PLEntity*)selectedEntity
+{
+    PLEntity * found = nil;
+    for (int i=0; i<numberOfArrays; i++)
+    {
+        NSUInteger n = [selection[i] count];
+        if (!n)
+            continue;
+        if (n && found)
+            return nil;
+        if (n==1)
+            found = [arrays[i] objectAtIndex:[selection[i] lastIndex]];
+        else
+            return nil;
+    }
+    return found;
+}
 
 -(void)_insertIndexes:(NSIndexSet*)indexes inSelectionForArray:(NSUInteger)array
 {

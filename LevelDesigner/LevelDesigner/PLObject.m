@@ -7,17 +7,28 @@
 //
 
 #import "PLObject.h"
+#import "SubentityController.h"
 
 @implementation PLObject
+@synthesize rootProperty;
+@synthesize subentityModel;
 
-- (id)init
+-(id)initFromLua:(lua_State*)L;
 {
-    self = [super init];
+    self = [super initFromLua:L];
     if (self) {
-        // Initialization code here.
+        //rootProperty = [[PLProperty alloc] init];
+        subentityModel = [[SubentityController alloc] initWithObject:self];
     }
     
     return self;
+}
+
+-(void)dealloc
+{
+    [rootProperty release];
+    [subentityModel release];
+    [super dealloc];
 }
 
 @end

@@ -8,6 +8,15 @@
 
 #import "PLEntity.h"
 
+@class PLProperty;
+@class EntityController;
 @interface PLObject : PLEntity
+{
+    PLProperty * rootProperty;
+    EntityController * subentityModel;
+}
+
+@property(nonatomic,readonly) PLProperty * rootProperty;
+@property(nonatomic,readonly) EntityController * subentityModel;
 
 @end

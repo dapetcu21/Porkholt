@@ -14,7 +14,7 @@
 
 @interface MultipleListController : NSObject<NSTableViewDataSource,NSTableViewDelegate>
 {
-    IBOutlet EntityController * model;
+    EntityController * model;
     IBOutlet NSTabView * tabView;
     BOOL arrayChangeFromWithin;
     BOOL selectionChangeFromWithin;
@@ -26,6 +26,8 @@
     NSString * locationPasteboardType;
     NSString * pointerPasteboardType;
 }
+
+@property(nonatomic,retain) IBOutlet EntityController * model;
 
 -(id)           initWithTables:(NSUInteger)array 
              andPasteboardType:(NSString*)pbType

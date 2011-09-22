@@ -7,7 +7,7 @@
 //
 
 #import "PLTableView.h"
-#import "InterfaceController.h"
+#import "MultipleListController.h"
 
 @implementation PLTableView
 
@@ -23,32 +23,32 @@
 
 -(void)new:(id)sender
 {
-    [(InterfaceController*)self.delegate new:self];
+    [(MultipleListController*)self.delegate new:self];
 }
 
 -(void)delete:(id)sender
 {
-    [(InterfaceController*)self.delegate delete:self];
+    [(MultipleListController*)self.delegate delete:self];
 }
 
 -(void)copy:(id)sender
 {
-    [(InterfaceController*)self.delegate copy:self];    
+    [(MultipleListController*)self.delegate copy:self];    
 }
 
 -(void)paste:(id)sender
 {
-    [(InterfaceController*)self.delegate paste:self];    
+    [(MultipleListController*)self.delegate paste:self];    
 }
 
 -(void)duplicate:(id)sender
 {
-    [(InterfaceController*)self.delegate duplicate:self];    
+    [(MultipleListController*)self.delegate duplicate:self];    
 }
 
 -(BOOL)validateMenuItem:(NSMenuItem*)menuItem
 {
-    return [(InterfaceController*)self.delegate validateMenuItem:menuItem sentFrom:self];
+    return [(MultipleListController*)self.delegate validateMenuItem:menuItem sentFrom:self];
 }
 
 @end
