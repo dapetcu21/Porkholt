@@ -7,28 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MultipleListController.h"
 
-@class ObjectController;
-@class PLTableView;
-@interface InterfaceController : NSObject<NSTableViewDataSource,NSTableViewDelegate>
+@interface InterfaceController : MultipleListController
 {
-    IBOutlet PLTableView * objectView;
-    IBOutlet PLTableView * jointView;
-    IBOutlet ObjectController * model;
-    IBOutlet NSTabView * tabView;
-    BOOL arrayChangeFromWithin;
-    BOOL selectionChangeFromWithin;
-    int tabToMoveTo;
 }
 
--(void)new:(id)sender;
--(void)delete:(id)sender;
--(void)copy:(id)sender;
--(void)paste:(id)sender;
--(void)duplicate:(id)sender;
--(BOOL)validateMenuItem:(NSMenuItem*)menuItem sentFrom:(id)sender;
-
--(void)arrayChanged:(NSUInteger)array;
--(void)selectionForArrayChanged:(NSUInteger)array;
+@property(nonatomic,retain) IBOutlet PLTableView * objectView;
+@property(nonatomic,retain) IBOutlet PLTableView * jointView;
 
 @end
