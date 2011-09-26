@@ -20,6 +20,8 @@
     [m retain];
     [model release];
     model = m;
+    for (NSUInteger i=0; i<numberOfTables; i++)
+        [self arrayChanged:i];
 }
 
 -(EntityController*)model

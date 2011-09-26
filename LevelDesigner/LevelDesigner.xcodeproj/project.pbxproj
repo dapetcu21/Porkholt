@@ -24,6 +24,8 @@
 		C16B38D2142622D900260851 /* PLEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D1142622D900260851 /* PLEntity.m */; };
 		C16B38D51426270700260851 /* PLObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D41426270700260851 /* PLObject.m */; };
 		C16B38D81426272A00260851 /* PLJoint.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D71426272A00260851 /* PLJoint.m */; };
+		C19D7D08142CBE75003E92C1 /* PLProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D07142CBE75003E92C1 /* PLProperty.m */; };
+		C19D7D0B142DFD6F003E92C1 /* PLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */; };
 		C1A15B5A1425C283004B2706 /* init_common.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1A15B591425C283004B2706 /* init_common.lua */; };
 		C1A15B5D1425C296004B2706 /* level_des.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1A15B5C1425C296004B2706 /* level_des.lua */; };
 		C1A15B5F1425C2A8004B2706 /* prototype.phlevel in Resources */ = {isa = PBXBuildFile; fileRef = C1A15B5E1425C2A8004B2706 /* prototype.phlevel */; };
@@ -76,10 +78,14 @@
 		C16B38D41426270700260851 /* PLObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLObject.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C16B38D61426272A00260851 /* PLJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38D71426272A00260851 /* PLJoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLJoint.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C19D7D06142CBE75003E92C1 /* PLProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLProperty.h; sourceTree = "<group>"; };
+		C19D7D07142CBE75003E92C1 /* PLProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLProperty.m; sourceTree = "<group>"; };
+		C19D7D09142DFD6F003E92C1 /* PLOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLOutlineView.h; sourceTree = "<group>"; };
+		C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLOutlineView.m; sourceTree = "<group>"; };
 		C1A15B591425C283004B2706 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = init_common.lua; path = ../../rsrc/scripts/init_common.lua; sourceTree = "<group>"; };
 		C1A15B5C1425C296004B2706 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = level_des.lua; sourceTree = "<group>"; };
 		C1A15B5E1425C2A8004B2706 /* prototype.phlevel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = prototype.phlevel; sourceTree = "<group>"; };
-		C1A33CAC142A43550051912D /* EntityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityController.h; sourceTree = "<group>"; };
+		C1A33CAC142A43550051912D /* EntityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EntityController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1A33CAD142A43550051912D /* EntityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityController.m; sourceTree = "<group>"; };
 		C1A33CB0142B67B40051912D /* MultipleListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultipleListController.h; sourceTree = "<group>"; };
 		C1A33CB1142B67B40051912D /* MultipleListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultipleListController.m; sourceTree = "<group>"; };
@@ -219,6 +225,8 @@
 				C1A33CB4142BCB870051912D /* PLImage.m */,
 				C1A33CB6142BCB9A0051912D /* PLFixture.h */,
 				C1A33CB7142BCB9A0051912D /* PLFixture.m */,
+				C19D7D06142CBE75003E92C1 /* PLProperty.h */,
+				C19D7D07142CBE75003E92C1 /* PLProperty.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -228,16 +236,18 @@
 			children = (
 				C12F36D914271593008DAFE8 /* InterfaceController.h */,
 				C12F36DA14271593008DAFE8 /* InterfaceController.m */,
+				C1A33CBC142BCD620051912D /* SubentityViewController.h */,
+				C1A33CBD142BCD620051912D /* SubentityViewController.m */,
 				C1A33CC2142BCF8B0051912D /* JointController.h */,
 				C1A33CC3142BCF8B0051912D /* JointController.m */,
 				C1A33CBF142BCE500051912D /* PropertyController.h */,
 				C1A33CC0142BCE500051912D /* PropertyController.m */,
-				C1A33CBC142BCD620051912D /* SubentityViewController.h */,
-				C1A33CBD142BCD620051912D /* SubentityViewController.m */,
-				C12F36DC14271861008DAFE8 /* PLTableView.h */,
-				C12F36DD14271861008DAFE8 /* PLTableView.m */,
 				C1A33CB0142B67B40051912D /* MultipleListController.h */,
 				C1A33CB1142B67B40051912D /* MultipleListController.m */,
+				C12F36DC14271861008DAFE8 /* PLTableView.h */,
+				C12F36DD14271861008DAFE8 /* PLTableView.m */,
+				C19D7D09142DFD6F003E92C1 /* PLOutlineView.h */,
+				C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -357,6 +367,8 @@
 				C1A33CBE142BCD620051912D /* SubentityViewController.m in Sources */,
 				C1A33CC1142BCE500051912D /* PropertyController.m in Sources */,
 				C1A33CC4142BCF8B0051912D /* JointController.m in Sources */,
+				C19D7D08142CBE75003E92C1 /* PLProperty.m in Sources */,
+				C19D7D0B142DFD6F003E92C1 /* PLOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

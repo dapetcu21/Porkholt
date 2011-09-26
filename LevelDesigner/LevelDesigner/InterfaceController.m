@@ -8,6 +8,7 @@
 
 #import "InterfaceController.h"
 #import "ObjectController.h"
+#import "PropertyController.h"
 #import "PLEntity.h"
 #import "PLObject.h"
 #import "PLJoint.h"

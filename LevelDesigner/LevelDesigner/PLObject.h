@@ -19,4 +19,6 @@
 @property(nonatomic,readonly) PLProperty * rootProperty;
 @property(nonatomic,readonly) EntityController * subentityModel;
 
+-(void)propertyChanged:(PLProperty*)p;
+
 @end

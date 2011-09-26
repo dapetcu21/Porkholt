@@ -11,16 +11,6 @@
 
 @implementation PLTableView
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-    }
-    
-    return self;
-}
-
 -(void)new:(id)sender
 {
     [(MultipleListController*)self.delegate new:self];

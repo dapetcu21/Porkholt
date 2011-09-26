@@ -8,17 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-@class EntityController;
+//@class EntityController;
 @interface PLEntity : NSObject<NSCoding>
 {
     BOOL selected,readOnly;
-    EntityController * owner;
+    id owner;
     NSUInteger index,array;
 }
 
 @property(nonatomic,assign) BOOL selected;
 @property(nonatomic,assign) BOOL readOnly;
-@property(nonatomic,assign) EntityController * owner;
+@property(nonatomic,assign) id owner;
 @property(nonatomic,assign) NSUInteger index;
 @property(nonatomic,assign) NSUInteger array;
 

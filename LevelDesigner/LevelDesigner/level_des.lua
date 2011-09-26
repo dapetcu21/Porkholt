@@ -1,21 +1,7 @@
 require("init_common");
 
-function tableSubsetOfTable( tbl2, tbl1 )
-    for k,v in tbl2 do
-        if (tbl1[k] ~= v) then
-            if ((type(tbl1[k])~="table") or (type(v)~="table")) then
-                return false
-            end
-            if (not Loc_CoveringContents( tbl1[k], v )) then
-                return false
-            end
-        end
-    end    
-    return true
-end
-
 function describeObject(obj)
-	obj.class = obj.realClass or "PHLObject";
+	obj.class = obj.class or "PHLObject";
     obj.realClass = nil;
 	obj.pos = obj.pos or {};
     obj.pos.x = obj.pos.x or 0;
@@ -28,21 +14,10 @@ function describeObject(obj)
 		des.readOnly = false;
 	end
 	obj.levelDes = nil;
-
-	local j = 0;
-	for i,v in pairs(obj) do
-        if ( not (type(i)=="string" and string.sub(i,1,1)=="_")) then
-            if (type(v)=="table") then
-                des[j] = { key = i;};
-                des[j].value = describeTable(obj[i]);
-            else
-                des[j] = { key = i; value = v; };
-            end
-            j = j+1;
-        end
-	end
-	des.n = j;
-	return des;
+	
+	local des = {};
+	des.rootProperty = { key = "__root__"; value = describeTable(obj); }
+	return des
 end
 
 function describeTable(obj)
@@ -63,13 +38,15 @@ function describeTable(obj)
         end
     else
         for i,v in pairs(obj) do
-            if (type(v)=="table") then
-                des[j] = { key = i;};
-                des[j].value = describeTable(obj[i]);
-            else
-                des[j] = { key = i; value = v; };
-            end
-            j = j+1;
+			if ( not (type(i)=="string" and string.sub(i,1,1)=="_")) then
+            	if (type(v)=="table") then
+	                des[j] = { key = i;};
+	                des[j].value = describeTable(obj[i]);
+	            else
+	                des[j] = { key = i; value = v; };
+	            end
+	            j = j+1;
+			end
         end
         des.n = j;
     end
