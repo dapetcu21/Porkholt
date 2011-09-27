@@ -150,7 +150,7 @@
     NSUInteger array = [self indexForView:tableView];
     if (array==NSNotFound) return;
     PLEntity * entity = [[model arrayAtIndex:array] objectAtIndex:row];
-    [cell setEnabled:!entity.readOnly];
+    [cell setEnabled:(!model.readOnly && !entity.readOnly)];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
@@ -161,7 +161,7 @@
     __block BOOL ret = YES;
     [rowIndexes enumerateIndexesUsingBlock: ^(NSUInteger idx, BOOL *stop) {
         PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
-        if (e.readOnly) { ret = NO; *stop = NO; }
+        if (e.readOnly) { ret = NO; *stop = YES; }
     }];
     if (!ret) return NO;
     

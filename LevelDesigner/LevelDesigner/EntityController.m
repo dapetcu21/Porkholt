@@ -401,7 +401,7 @@
 {
     NSPasteboard * pb = [NSPasteboard generalPasteboard];
     NSData * d = [pb dataForType:pasteboardType];
-    if (!d)
+    if (!d || ro)
     {
         NSBeep();
         return;
@@ -411,13 +411,24 @@
 
 -(void)copy
 {
+    NSArray * selected = [self selectedEntities];
+    if (![selected count])
+    {
+        NSBeep();
+        return;
+    }
     NSPasteboard * pb = [NSPasteboard generalPasteboard];
     [pb declareTypes:[NSArray arrayWithObject:pasteboardType] owner:self];
-    [pb setData:[self copyEntitiesToData:[self selectedEntities]] forType:pasteboardType];
+    [pb setData:[self copyEntitiesToData:selected] forType:pasteboardType];
 }
 
 -(void)duplicate
 {
+    if (ro)
+    {
+        NSBeep();
+        return;
+    }
     [self pasteData:[self copyEntitiesToData:[self selectedEntities]] atRow:-1 inArray:-1];
 }
 
@@ -430,6 +441,11 @@
 
 -(void)newInArray:(NSUInteger)array
 {
+    if (ro) 
+    {
+        NSBeep();
+        return;
+    }
     NSIndexSet * s = selection[array];
     NSUInteger p = [arrays[array] count];
     if ([s count]!=0)
@@ -446,6 +462,11 @@
 
 -(void)deleteInArray:(NSUInteger)carray;
 {
+    if (ro) 
+    {
+        NSBeep();
+        return;
+    };
     int array;
     NSUInteger ni=0;
     for (array = 0; array<numberOfArrays; array++)
@@ -482,6 +503,7 @@
 
 -(void)pasteData:(NSData *)data atRow:(NSUInteger)row inArray:(NSUInteger)array
 {
+    if (ro) return;
     NSArray * entities = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSMutableArray * objects [numberOfArrays];
     NSUInteger i;
@@ -506,6 +528,22 @@
                 p = [selection[i] lastIndex]+1;
         [self insertEntities:objects[i] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(p, [objects[i] count])] inArray:i];
     }
+}
+
+-(void)entityDescriptionChanged:(PLEntity*)e
+{
+    [self arrayChanged:e.array];
+}
+
+-(BOOL)readOnly
+{
+    return ro;
+}
+
+-(void)setReadOnly:(BOOL)readO
+{
+    if (ro==readO) return;
+    ro = readO;
 }
 
 @end

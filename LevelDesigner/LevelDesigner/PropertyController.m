@@ -9,6 +9,10 @@
 #import "PropertyController.h"
 #import "PLProperty.h"
 
+#define PLPropertyPbType @"PLPropertyPbType"
+#define PLPropertyLocationPbType @"PLPropertyLocationPbType"
+#define PLPropertyPointerPbType @"PLPropertyPointerPbType"
+
 @implementation PropertyController
 
 - (id)init
@@ -19,6 +23,11 @@
     }
     
     return self;
+}
+
+-(void)awakeFromNib
+{
+    [outlineView registerForDraggedTypes:[NSArray arrayWithObjects:PLPropertyPbType, PLPropertyLocationPbType, PLPropertyPointerPbType, nil]];
 }
 
 -(void)propertyChanged:(PLProperty*)p
@@ -225,6 +234,11 @@
         idx = item.index+1;
         item = item.parent;
     }
+    if (item.readOnly)
+    {
+        NSBeep();
+        return;
+    }
     PLProperty * p = [[[PLProperty alloc] initFromLua:NULL] autorelease];
     p.stringValue = @"";
     [item insertProperty:p atIndex:idx];
@@ -273,6 +287,104 @@
     [outlineView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 }
 
+-(void)copy:(id)sender
+{
+    NSArray * items = [self itemsAtRows:[outlineView selectedRowIndexes]];
+    if (![items count])
+    {
+        NSBeep();
+        return;
+    }
+    NSPasteboard * pb = [NSPasteboard generalPasteboard];
+    [pb declareTypes:[NSArray arrayWithObject:PLPropertyPbType] owner:self];
+    [pb setData:[NSKeyedArchiver archivedDataWithRootObject:items] forType:PLPropertyPbType];
+}
+
+-(void)pasteData:(NSData*)dt atIndex:(NSInteger)idx andItem:(PLProperty*)item
+{
+    if (item.readOnly)
+    {
+        NSBeep();
+        return;
+    }
+    if (idx<0)
+        idx = [item childrenCount];
+    NSArray * props = [NSKeyedUnarchiver unarchiveObjectWithData:dt]; //data validationul lui pula
+    [item insertProperties:props atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx, [props count])]];
+    [outlineView selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([outlineView rowForItem:[props objectAtIndex:0]], [props count])] byExtendingSelection:NO];
+}
+
+-(void)pasteData:(NSData*)dt atIndex:(NSInteger)idx
+{
+    PLProperty * item;
+    if (idx>=0)
+        item = (PLProperty*)[outlineView itemAtRow:idx];
+    else
+        item = model;
+    if ([item isCollection])
+        idx = [item childrenCount];
+    else
+    {
+        idx = item.index+1;
+        item = item.parent;
+    }
+    [self pasteData:dt atIndex:idx andItem:item];
+}
+
+-(void)paste:(id)sender
+{
+    [self pasteData:[[NSPasteboard generalPasteboard] dataForType:PLPropertyPbType] atIndex:[outlineView selectedRow]];
+}
+
+-(NSArray*)indicesForItems:(NSArray*)items
+{
+    NSMutableArray * array = [[NSMutableArray alloc] initWithCapacity:[items count]];
+    for (PLProperty * p in items)
+        [array addObject:[NSNumber numberWithUnsignedInteger:p.index]];
+    return array;
+}
+
+-(BOOL)outlineView:(NSOutlineView *)ov writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard
+{
+    if (![items count])
+        return NO;
+    NSArray * props = [self itemsAtRows:[outlineView selectedRowIndexes]];
+    BOOL movable = ([[self filteredPropertiesWithoutChildren:props] count] == [props count]);
+    [pasteboard declareTypes:[NSArray arrayWithObjects:PLPropertyPbType, PLPropertyPointerPbType, movable?PLPropertyLocationPbType:nil, nil] owner:self];
+    [pasteboard setData:[NSKeyedArchiver archivedDataWithRootObject:props] forType:PLPropertyPbType];
+    [pasteboard setData:[NSData dataWithBytes:&outlineView length:sizeof(id)] forType:PLPropertyPointerPbType];
+    if (movable)
+        [pasteboard setData:[NSKeyedArchiver archivedDataWithRootObject:[self indicesForItems:props]] forType:PLPropertyLocationPbType];
+    return YES;
+}
+
+-(NSDragOperation)outlineView:(NSOutlineView *)ov validateDrop:(id<NSDraggingInfo>)info proposedItem:(PLProperty*)item proposedChildIndex:(NSInteger)index
+{
+    NSPasteboard * pb = [info draggingPasteboard];
+    if (!item)
+        item = model;
+    return (item.readOnly || readOnlyModel || ![item isCollection] || (![pb dataForType:PLPropertyLocationPbType] && (*(id*)[[pb dataForType:PLPropertyPointerPbType] bytes] == ov)))?NSDragOperationNone:NSDragOperationEvery;
+}
+
+-(BOOL)outlineView:(NSOutlineView *)ov acceptDrop:(id<NSDraggingInfo>)info item:(PLProperty*)item childIndex:(NSInteger)index
+{
+    NSPasteboard * pb = [info draggingPasteboard];
+    if (!item)
+        item = model;
+    NSData * locData = [pb dataForType:PLPropertyLocationPbType];
+    NSData * objData = [pb dataForType:PLPropertyPbType];
+    BOOL copy = objData && !((*(id*)[[pb dataForType:PLPropertyPointerPbType] bytes] == ov) && locData);
+    if (copy)
+    {
+        [self pasteData:objData atIndex:index andItem:item];
+        return YES;
+    }
+    else
+    {
+        
+    }
+    return NO;
+}
 
 -(BOOL)validateMenuItem:(NSMenuItem*)menuItem sentFrom:(id)sender
 {

@@ -108,6 +108,71 @@
     return self;
 }
 
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [self initFromLua:NULL];
+    if (self)
+    {
+        int t = [aDecoder decodeIntForKey:@"type"];
+        self.name = (NSString*)[aDecoder decodeObjectForKey:@"name"];
+        switch (t) {
+            case PLPropertyArray:
+                self.arrayValue = (NSArray*)[aDecoder decodeObjectForKey:@"array"];
+                break;
+            case PLPropertyDictionary:
+                [self setDictionaryValue:(NSDictionary*)[aDecoder decodeObjectForKey:@"dict"] order:(NSArray*)[aDecoder decodeObjectForKey:@"orderedKeys"]];
+                break;
+            case PLPropertyNumber:
+                self.numberValue = [aDecoder decodeDoubleForKey:@"number"];
+                break;
+            case PLPropertyBoolean:
+                self.booleanValue = [aDecoder decodeBoolForKey:@"boolean"];
+                break;
+            case PLPropertyString:
+                self.stringValue = (NSString*)[aDecoder decodeObjectForKey:@"string"];
+                break;
+            case PLPropertyPoint:
+                self.pointValue = [aDecoder decodePointForKey:@"point"];
+                break;
+            case PLPropertyRect:
+                self.rectValue = [aDecoder decodeRectForKey:@"rect"];
+                break;
+        }
+    }
+    return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInt:type forKey:@"type"];
+    [aCoder encodeObject:name forKey:@"name"];
+    switch (type) {
+        case PLPropertyArray:
+            [aCoder encodeObject:value.array forKey:@"array"];
+            break;
+        case PLPropertyDictionary:
+            [aCoder encodeObject:value.dictionary.value forKey:@"dict"];
+            [aCoder encodeObject:value.dictionary.orderedKeys forKey:@"orderedKeys"];
+            break;
+        case PLPropertyNumber:
+            [aCoder encodeDouble:value.number forKey:@"number"];
+            break;
+        case PLPropertyBoolean:
+            [aCoder encodeBool:value.boolean forKey:@"boolean"];
+            break;
+        case PLPropertyString:
+            [aCoder encodeObject:value.string forKey:@"string"];
+            break;
+        case PLPropertyPoint:
+            [aCoder encodePoint:value.point forKey:@"point"];
+            break;
+        case PLPropertyRect:
+            [aCoder encodeRect:value.rect forKey:@"rect"];
+            break;
+        default:
+            break;
+    }
+}
 
 -(void)_setNil
 {
@@ -503,14 +568,14 @@
 -(void)setPointValueFromString:(NSString*)s
 {
     double x,y;
-    sscanf([s UTF8String],"x:%lly:%lf",&x,&y);
+    sscanf([s UTF8String],"%lf %lf",&x,&y);
     [self setPointValue:NSMakePoint(x, y)];
 }
 
 -(void)setRectValueFromString:(NSString*)s
 {
     double x,y,w,h;
-    sscanf([s UTF8String],"x:%lly:%lfw:%lfh:%lf",&x,&y,&w,&h);
+    sscanf([s UTF8String],"%lf %lf %lf %lf",&x,&y,&w,&h);
     [self setRectValue:NSMakeRect(x, y, w, h)];
 }
 

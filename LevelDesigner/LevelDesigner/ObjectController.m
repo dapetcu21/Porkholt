@@ -124,7 +124,7 @@
 	
 	lua_close(L);
 	
-    PLObject * obj = [[[PLObject alloc] initFromLua:L] autorelease];
+    PLObject * obj = [[[PLObject alloc] initFromLua:NULL] autorelease];
     obj.owner = self;
     obj.readOnly = YES;
     [robjs addObject:obj];

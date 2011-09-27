@@ -23,12 +23,14 @@
     BOOL * arrayChanged;
     BOOL * selectionChanged;
     BOOL selectNextAfterDelete;
+    BOOL ro;
 }
 
 -(id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType;
 
 @property(nonatomic,retain) NSUndoManager * undoManager;
 @property(nonatomic,assign) IBOutlet MultipleListController * controller;
+@property(nonatomic,assign) BOOL readOnly;
 
 #pragma mark Array access
 -(PLEntity*)selectedEntity;
@@ -83,5 +85,7 @@
 -(void)paste;
 -(void)pasteData:(NSData*)data atRow:(NSUInteger)row inArray:(NSUInteger)array;
 -(void)duplicate;
+
+-(void)entityDescriptionChanged:(PLEntity*)e;
 
 @end
