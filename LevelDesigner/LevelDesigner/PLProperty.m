@@ -564,18 +564,97 @@
     [self propertyChanged];
 }
 
+BOOL number_char(char c);
 
--(void)setPointValueFromString:(NSString*)s
+BOOL number_char(char c)
 {
-    double x,y;
-    sscanf([s UTF8String],"%lf %lf",&x,&y);
+    switch (c) {
+        case '.':
+        case '+':
+        case '-':
+        case 'E':
+        case 'e':
+            return YES;
+        default:
+            return c>='0' && c<='9';
+    }
+}
+
+-(void)setPointValueFromString:(NSString*)str
+{
+    double x=0,y=0;
+    const char * s = [str UTF8String];
+    bool ok[2] = {false, false};
+    double * v[2] = {&x, &y};
+    int p;
+    for (int i=0; i<2; i++)
+    {
+        if (!*s) break;
+        p = -1;
+        while (*s && !number_char(*s))
+        {
+            switch (*s) {
+                case 'x':
+                    p = 0;
+                    break;
+                case 'y':
+                    p = 1;
+                    break;
+            }
+            s++;
+        }
+        if (!*s) break;
+        if (p<0)
+            for (int j=0; j<2; j++)
+                if (!ok[j])
+                {
+                    p = j;
+                    break;
+                }
+        char * end;
+        (*(v[p])) = strtod(s, &end);
+        s = end;
+        ok[p] = true;
+    }
     [self setPointValue:NSMakePoint(x, y)];
 }
 
--(void)setRectValueFromString:(NSString*)s
+-(void)setRectValueFromString:(NSString*)str
 {
-    double x,y,w,h;
-    sscanf([s UTF8String],"%lf %lf %lf %lf",&x,&y,&w,&h);
+    double x=0,y=0,w=0,h=0;
+    const char * s = [str UTF8String];
+    bool ok[4] = {false, false, false, false};
+    double * v[4] = {&x, &y, &w, &h};
+    int p;
+    for (int i=0; i<4; i++)
+    {
+        if (!*s) break;
+        p = -1;
+        while (*s && !number_char(*s))
+        {
+            switch (*s) {
+                case 'x':
+                    p = 0;
+                    break;
+                case 'y':
+                    p = 1;
+                    break;
+            }
+            s++;
+        }
+        if (!*s) break;
+        if (p<0)
+            for (int j=0; j<4; j++)
+                if (!ok[j])
+                {
+                    p = j;
+                    break;
+                }
+        char * end;
+        (*(v[p])) = strtod(s, &end);
+        s = end;
+        ok[p] = true;
+    }
     [self setRectValue:NSMakeRect(x, y, w, h)];
 }
 
@@ -657,9 +736,9 @@
         case PLPropertyNumber:
             return [NSString stringWithFormat:@"%.6f",value.number];
         case PLPropertyPoint:
-            return [NSString stringWithFormat:@"x:%.3f y:%.3f",value.point.x,value.point.y];
+            return [NSString stringWithFormat:@"x:%.4f y:%.4f",value.point.x,value.point.y];
         case PLPropertyRect:
-            return [NSString stringWithFormat:@"x:%.3f y:%.3f w:%.3f h:%.3f",value.rect.origin.x,value.rect.origin.y,value.rect.size.width,value.rect.size.height];
+            return [NSString stringWithFormat:@"%.3f %.3f %.3f %.3f",value.rect.origin.x,value.rect.origin.y,value.rect.size.width,value.rect.size.height];
         default:
             return @"";
     }

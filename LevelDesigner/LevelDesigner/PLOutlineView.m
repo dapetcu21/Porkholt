@@ -110,9 +110,6 @@
 		[menuitem setAction:@selector(convertToRect)];
 		[menu addItem:menuitem];
         
-		[self setMenu:menu];
-		menu = [super menuForEvent:event];
-		[self setMenu:nil];
 		return menu;
 	}
 	return nil;
