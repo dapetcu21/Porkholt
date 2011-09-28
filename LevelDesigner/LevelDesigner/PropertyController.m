@@ -282,6 +282,8 @@
         {
             NSArray * a = [sortedItems subarrayWithRange:NSMakeRange(lastIndex, i-lastIndex)];
             [last removeProperties:a];
+            last = current;
+            lastIndex = i;
         }
     }
     [outlineView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
@@ -310,6 +312,11 @@
     if (idx<0)
         idx = [item childrenCount];
     NSArray * props = [NSKeyedUnarchiver unarchiveObjectWithData:dt]; //data validationul lui pula
+    if (![props count])
+    {
+        NSBeep();
+        return;
+    }
     [item insertProperties:props atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx, [props count])]];
     [outlineView selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([outlineView rowForItem:[props objectAtIndex:0]], [props count])] byExtendingSelection:NO];
 }
@@ -336,25 +343,24 @@
     [self pasteData:[[NSPasteboard generalPasteboard] dataForType:PLPropertyPbType] atIndex:[outlineView selectedRow]];
 }
 
--(NSArray*)indicesForItems:(NSArray*)items
+-(NSIndexSet*)rowIndexesForItems:(NSArray*)items
 {
-    NSMutableArray * array = [[NSMutableArray alloc] initWithCapacity:[items count]];
+    NSMutableIndexSet * is = [NSMutableIndexSet indexSet];
     for (PLProperty * p in items)
-        [array addObject:[NSNumber numberWithUnsignedInteger:p.index]];
-    return array;
+        [is addIndex:[outlineView rowForItem:p]];
+    return is;
 }
 
--(BOOL)outlineView:(NSOutlineView *)ov writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard
+-(BOOL)outlineView:(NSOutlineView *)ov writeItems:(NSArray *)props toPasteboard:(NSPasteboard *)pasteboard
 {
-    if (![items count])
+    if (![props count])
         return NO;
-    NSArray * props = [self itemsAtRows:[outlineView selectedRowIndexes]];
     BOOL movable = ([[self filteredPropertiesWithoutChildren:props] count] == [props count]);
     [pasteboard declareTypes:[NSArray arrayWithObjects:PLPropertyPbType, PLPropertyPointerPbType, movable?PLPropertyLocationPbType:nil, nil] owner:self];
     [pasteboard setData:[NSKeyedArchiver archivedDataWithRootObject:props] forType:PLPropertyPbType];
     [pasteboard setData:[NSData dataWithBytes:&outlineView length:sizeof(id)] forType:PLPropertyPointerPbType];
     if (movable)
-        [pasteboard setData:[NSKeyedArchiver archivedDataWithRootObject:[self indicesForItems:props]] forType:PLPropertyLocationPbType];
+        [pasteboard setData:[NSKeyedArchiver archivedDataWithRootObject:[self rowIndexesForItems:props]] forType:PLPropertyLocationPbType];
     return YES;
 }
 
@@ -371,6 +377,8 @@
     NSPasteboard * pb = [info draggingPasteboard];
     if (!item)
         item = model;
+    if (index<0)
+        index = [item childrenCount];
     NSData * locData = [pb dataForType:PLPropertyLocationPbType];
     NSData * objData = [pb dataForType:PLPropertyPbType];
     BOOL copy = objData && !((*(id*)[[pb dataForType:PLPropertyPointerPbType] bytes] == ov) && locData);
@@ -381,7 +389,37 @@
     }
     else
     {
-        
+        NSIndexSet * is = (NSIndexSet*)[NSKeyedUnarchiver unarchiveObjectWithData:locData];
+        NSArray * unsortedItems = [self filteredPropertiesWithoutChildren:[self itemsAtRows:is]];
+        NSArray * sortedItems = [unsortedItems sortedArrayUsingComparator: ^NSComparisonResult(PLProperty * obj1, PLProperty * obj2) {
+            if (obj1.parent == obj1.parent)
+                return NSOrderedSame;
+            return (obj1.parent < obj2.parent)?NSOrderedAscending:NSOrderedDescending;
+        }];
+        PLProperty * current = (PLProperty*)[sortedItems objectAtIndex:0];
+        PLProperty * last = current.parent;
+        NSUInteger lastIndex = 0;
+        NSUInteger n = [sortedItems count];
+        NSInteger idx = index;
+        if (current==item && last.index<index)
+            idx--;
+        for (NSUInteger i = 1; i<=n; i++)
+        {
+            PLProperty * p = (i==n)?nil:((PLProperty*)[sortedItems objectAtIndex:i]);
+            PLProperty * current = p.parent;
+            if (current==item && p.index<index)
+                idx--;
+            if (last!=current)
+            {
+                NSArray * a = [sortedItems subarrayWithRange:NSMakeRange(lastIndex, i-lastIndex)];
+                [last removeProperties:a];
+                last = current;
+                lastIndex = i;
+            }
+        }
+        [item insertProperties:unsortedItems atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx, [unsortedItems count])]];
+        [outlineView selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([outlineView rowForItem:[unsortedItems objectAtIndex:0]], [unsortedItems count])] byExtendingSelection:NO];
+        return YES;
     }
     return NO;
 }
