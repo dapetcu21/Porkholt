@@ -123,11 +123,6 @@
 	lua_pop(L,1);
 	
 	lua_close(L);
-	
-    PLObject * obj = [[[PLObject alloc] initFromLua:NULL] autorelease];
-    obj.owner = self;
-    obj.readOnly = YES;
-    [robjs addObject:obj];
     
 	NSUInteger n = [robjs count];
     NSUInteger m = [objs count];

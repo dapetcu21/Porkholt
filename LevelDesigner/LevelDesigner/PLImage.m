@@ -7,6 +7,7 @@
 //
 
 #import "PLImage.h"
+#import "PLProperty.h"
 
 @implementation PLImage
 
@@ -18,6 +19,11 @@
     }
     
     return self;
+}
+
++(NSArray*)imagesFromProperty:(PLProperty*)prop
+{
+    return [NSArray array];
 }
 
 @end

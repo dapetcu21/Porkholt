@@ -37,6 +37,8 @@
 		C1A33CBE142BCD620051912D /* SubentityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CBD142BCD620051912D /* SubentityViewController.m */; };
 		C1A33CC1142BCE500051912D /* PropertyController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC0142BCE500051912D /* PropertyController.m */; };
 		C1A33CC4142BCF8B0051912D /* JointController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC3142BCF8B0051912D /* JointController.m */; };
+		C1AF1A7C1434365200A6905D /* PrototypeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7B1434365200A6905D /* PrototypeController.m */; };
+		C1AF1A7F143439DB00A6905D /* PLPrototype.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7E143439DB00A6905D /* PLPrototype.m */; };
 		C1DE6A0F1425C04600B1282C /* FileBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A081425C04600B1282C /* FileBrowserController.m */; };
 		C1DE6A101425C04600B1282C /* FileSystemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A0A1425C04600B1282C /* FileSystemNode.m */; };
 		C1DE6A111425C04600B1282C /* BrowserOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A0C1425C04600B1282C /* BrowserOutlineView.m */; };
@@ -86,9 +88,9 @@
 		C1A15B5C1425C296004B2706 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = level_des.lua; sourceTree = "<group>"; };
 		C1A15B5E1425C2A8004B2706 /* prototype.phlevel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = prototype.phlevel; sourceTree = "<group>"; };
 		C1A33CAC142A43550051912D /* EntityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EntityController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		C1A33CAD142A43550051912D /* EntityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityController.m; sourceTree = "<group>"; };
+		C1A33CAD142A43550051912D /* EntityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EntityController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C1A33CB0142B67B40051912D /* MultipleListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultipleListController.h; sourceTree = "<group>"; };
-		C1A33CB1142B67B40051912D /* MultipleListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultipleListController.m; sourceTree = "<group>"; };
+		C1A33CB1142B67B40051912D /* MultipleListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MultipleListController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C1A33CB3142BCB870051912D /* PLImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLImage.h; sourceTree = "<group>"; };
 		C1A33CB4142BCB870051912D /* PLImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLImage.m; sourceTree = "<group>"; };
 		C1A33CB6142BCB9A0051912D /* PLFixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLFixture.h; sourceTree = "<group>"; };
@@ -101,6 +103,10 @@
 		C1A33CC0142BCE500051912D /* PropertyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyController.m; sourceTree = "<group>"; };
 		C1A33CC2142BCF8B0051912D /* JointController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JointController.h; sourceTree = "<group>"; };
 		C1A33CC3142BCF8B0051912D /* JointController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JointController.m; sourceTree = "<group>"; };
+		C1AF1A7A1434365200A6905D /* PrototypeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrototypeController.h; sourceTree = "<group>"; };
+		C1AF1A7B1434365200A6905D /* PrototypeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrototypeController.m; sourceTree = "<group>"; };
+		C1AF1A7D143439DB00A6905D /* PLPrototype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPrototype.h; sourceTree = "<group>"; };
+		C1AF1A7E143439DB00A6905D /* PLPrototype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLPrototype.m; sourceTree = "<group>"; };
 		C1DE6A071425C04600B1282C /* FileBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileBrowserController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1DE6A081425C04600B1282C /* FileBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FileBrowserController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C1DE6A091425C04600B1282C /* FileSystemNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileSystemNode.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -227,6 +233,10 @@
 				C1A33CB7142BCB9A0051912D /* PLFixture.m */,
 				C19D7D06142CBE75003E92C1 /* PLProperty.h */,
 				C19D7D07142CBE75003E92C1 /* PLProperty.m */,
+				C1AF1A7A1434365200A6905D /* PrototypeController.h */,
+				C1AF1A7B1434365200A6905D /* PrototypeController.m */,
+				C1AF1A7D143439DB00A6905D /* PLPrototype.h */,
+				C1AF1A7E143439DB00A6905D /* PLPrototype.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -369,6 +379,8 @@
 				C1A33CC4142BCF8B0051912D /* JointController.m in Sources */,
 				C19D7D08142CBE75003E92C1 /* PLProperty.m in Sources */,
 				C19D7D0B142DFD6F003E92C1 /* PLOutlineView.m in Sources */,
+				C1AF1A7C1434365200A6905D /* PrototypeController.m in Sources */,
+				C1AF1A7F143439DB00A6905D /* PLPrototype.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

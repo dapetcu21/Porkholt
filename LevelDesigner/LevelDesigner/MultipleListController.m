@@ -134,7 +134,7 @@
     PLEntity * entity = [[model arrayAtIndex:array] objectAtIndex:row];
     id columnId = [tableColumn identifier];
     if ([columnId isEqualToString:@"Index"])
-        return [NSNumber numberWithInt:(int)row-(int)[model readOnlyEntitiesInArray:array]];
+        return [NSNumber numberWithInt:(int)row-(int)[model numberOfReadOnlyEntitiesInArray:array]];
     if ([columnId isEqualToString:@"Name"])
         return [entity description];
     return nil;
@@ -181,7 +181,7 @@
         return NSDragOperationNone;
     NSUInteger array = [self indexForView:tableView];
     if (array==NSNotFound) return NSDragOperationNone;
-    if (row<[model readOnlyEntitiesInArray:array]) 
+    if (row<[model numberOfReadOnlyEntitiesInArray:array]) 
         return NSDragOperationNone;
     return NSDragOperationEvery;
 }
@@ -190,7 +190,7 @@
 {
     NSUInteger array = [self indexForView:tableView];
     if (array==NSNotFound) return NO;
-    if (row<[model readOnlyEntitiesInArray:array])
+    if (row<[model numberOfReadOnlyEntitiesInArray:array])
         return NO;
     NSPasteboard * pb = [info draggingPasteboard];
     NSData * dt;

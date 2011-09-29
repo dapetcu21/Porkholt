@@ -7,6 +7,7 @@
 //
 
 #import "PLFixture.h"
+#import "PLProperty.h"
 
 @implementation PLFixture
 
@@ -18,6 +19,11 @@
     }
     
     return self;
+}
+
++(NSArray*)fixturesFromProperty:(PLProperty*)prop
+{
+    return [NSArray array];
 }
 
 @end

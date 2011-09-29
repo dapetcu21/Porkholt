@@ -10,15 +10,22 @@
 
 @class PLProperty;
 @class EntityController;
+@class PLPrototype;
 @interface PLObject : PLEntity
 {
     PLProperty * rootProperty;
     EntityController * subentityModel;
+    PLPrototype * prototype;
+    NSString * className;
 }
 
 @property(nonatomic,readonly) PLProperty * rootProperty;
 @property(nonatomic,readonly) EntityController * subentityModel;
+@property(nonatomic,readonly) NSString * className;
+@property(nonatomic,readonly) PLPrototype * prototype;
 
 -(void)propertyChanged:(PLProperty*)p;
+
+-(PLProperty*)propertyAtKeyPath:(NSString*)keyPath;
 
 @end

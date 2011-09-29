@@ -9,13 +9,12 @@ function describeObject(obj)
 	obj.rotation = obj.rotation or 0;
     obj.index = nil;
 	
-	des = {};
+    local des = { readOnly = true };
 	if (obj.levelDes) then
 		des.readOnly = false;
 	end
+    print(des.readOnly);
 	obj.levelDes = nil;
-	
-	local des = {};
 	des.rootProperty = { key = "__root__"; value = describeTable(obj); }
 	return des
 end

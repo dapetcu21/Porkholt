@@ -64,7 +64,17 @@
     return arrays[array];
 }
 
--(NSUInteger)readOnlyEntitiesInArray:(NSUInteger)array
+-(NSArray*)readWriteEntitiesInArray:(NSUInteger)array
+{
+    return [arrays[array] subarrayWithRange:NSMakeRange(readOnly[array], [arrays[array] count]-readOnly[array])];
+}
+
+-(NSArray*)readOnlyEntitiesInArray:(NSUInteger)array
+{
+    return [arrays[array] subarrayWithRange:NSMakeRange(0, readOnly[array])];
+}
+
+-(NSUInteger)numberOfReadOnlyEntitiesInArray:(NSUInteger)array
 {
     return readOnly[array];
 }
@@ -151,6 +161,11 @@
 -(void)insertEntity:(PLEntity*)entity atIndex:(NSUInteger)index inArray:(NSUInteger)array
 {
     [self insertEntities:[NSArray arrayWithObject:entity] atIndexes:[NSIndexSet indexSetWithIndex:index] inArray:array];
+}
+
+-(void)insertEntities:(NSArray*)entities atIndex:(NSUInteger)index inArray:(NSUInteger)array
+{
+    [self insertEntities:entities atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, [entities count])] inArray:array];
 }
 
 -(void)insertEntities:(NSArray*)entities atIndexes:(NSIndexSet*)indexes inArray:(NSUInteger)array

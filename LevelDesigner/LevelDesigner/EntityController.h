@@ -35,7 +35,7 @@
 #pragma mark Array access
 -(PLEntity*)selectedEntity;
 -(NSArray*)arrayAtIndex:(NSUInteger)array;
--(NSUInteger)readOnlyEntitiesInArray:(NSUInteger)array;
+-(NSUInteger)numberOfReadOnlyEntitiesInArray:(NSUInteger)array;
 
 -(NSArray*)entitiesForIndexes:(NSIndexSet*)indexes inArray:(NSUInteger)array;
 -(PLEntity*)entityForIndex:(NSUInteger)index inArray:(NSUInteger)array;
@@ -47,8 +47,11 @@
 -(void)endCommitGrouping;
 
 #pragma mark Array editing
+-(NSArray*)readWriteEntitiesInArray:(NSUInteger)array;
+-(NSArray*)readOnlyEntitiesInArray:(NSUInteger)array;
 -(void)insertEntity:(PLEntity*)entity atIndex:(NSUInteger)index inArray:(NSUInteger)array;
 -(void)insertEntities:(NSArray*)entities atIndexes:(NSIndexSet*)indexes inArray:(NSUInteger)array;
+-(void)insertEntities:(NSArray*)entities atIndex:(NSUInteger)index inArray:(NSUInteger)array;
 -(void)removeEntityAtIndex:(NSUInteger)index fromArray:(NSUInteger)array;
 -(void)removeEntitiesAtIndexes:(NSIndexSet*)indexes fromArray:(NSUInteger)array;
 -(void)removeEntity:(PLEntity*)entity fromArray:(NSUInteger)array;

@@ -315,6 +315,11 @@
 	[self insertProperties:[NSArray arrayWithObject:p] atIndexes:[NSIndexSet indexSetWithIndex:idx]];
 }
 
+-(void)insertProperties:(NSArray*)props atIndex:(NSUInteger)idx
+{
+    [self insertProperties:props atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx, [props count])]];
+}
+
 -(void)removeProperties:(NSArray*)props
 {
 	[self removeProperties:props atIndexes:[self indexesForProperties:props]];
@@ -639,6 +644,12 @@ BOOL number_char(char c)
                 case 'y':
                     p = 1;
                     break;
+                case 'w':
+                    p = 2;
+                    break;
+                case 'h':
+                    p = 3;
+                    break;
             }
             s++;
         }
@@ -848,12 +859,12 @@ BOOL number_char(char c)
     }
 }
 
--(PLProperty*)propertyWithKeyPath:(NSString *)path
+-(PLProperty*)propertyAtKeyPath:(NSString *)path
 {
     NSUInteger idx = [path rangeOfString:@"."].location;
     if (idx>=[path length]) 
         return [self propertyWithKey:path];
-    return [[self propertyWithKey:[path substringToIndex:idx]] propertyWithKeyPath:[path substringFromIndex:idx+1]];
+    return [[self propertyWithKey:[path substringToIndex:idx]] propertyAtKeyPath:[path substringFromIndex:idx+1]];
 }
 
 -(NSString*)proposedKeyForName:(NSString*)nm
@@ -902,6 +913,39 @@ BOOL number_char(char c)
 -(BOOL)isCollection
 {
     return (type==PLPropertyArray)||(type==PLPropertyDictionary);
+}
+
+-(BOOL)isEqual:(PLProperty*)prop
+{
+    if (!prop || ![prop isKindOfClass:[PLProperty class]] || type!=prop.type) return NO;
+    switch (type) {
+        case PLPropertyNil:
+            return YES;
+        case PLPropertyBoolean:
+            return self.booleanValue == prop.booleanValue;
+        case PLPropertyNumber:
+            return self.numberValue == prop.numberValue;
+        case PLPropertyString:
+            return [self.stringValue isEqual:prop.stringValue];
+        case PLPropertyPoint:
+            return NSEqualPoints(self.pointValue, prop.pointValue);
+        case PLPropertyRect:
+            return NSEqualRects(self.rectValue, prop.rectValue);
+        case PLPropertyDictionary:
+            if ([self childrenCount]!=[prop childrenCount]) return NO;
+            for (PLProperty * p in [self.dictionaryValue allValues])
+                if (![p isEqual:[prop propertyWithKey:p.name]])
+                    return NO;
+            return YES;
+        case PLPropertyArray:
+            if ([self childrenCount]!=[prop childrenCount]) return NO;
+            for (PLProperty * p in self.arrayValue)
+                if (![p isEqual:[prop propertyAtIndex:p.index]])
+                    return NO;
+            return YES;
+        default:
+            return NO;
+    }
 }
 
 @end

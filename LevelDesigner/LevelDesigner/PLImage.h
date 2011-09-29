@@ -8,6 +8,9 @@
 
 #import "PLEntity.h"
 
+@class PLProperty;
 @interface PLImage : PLEntity
+
++(NSArray*)imagesFromProperty:(PLProperty*)prop;
 
 @end

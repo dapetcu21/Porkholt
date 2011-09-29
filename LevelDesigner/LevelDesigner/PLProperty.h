@@ -79,7 +79,7 @@ enum PLPropertyTypes
 -(void)convertToPoint;
 -(void)convertToRect;
 
--(PLProperty*)propertyWithKeyPath:(NSString*)path;
+-(PLProperty*)propertyAtKeyPath:(NSString*)path;
 -(PLProperty*)propertyWithKey:(NSString*)key;
 -(PLProperty*)propertyAtIndex:(NSUInteger)index;
 -(NSUInteger)childrenCount;
@@ -94,6 +94,7 @@ enum PLPropertyTypes
 -(NSArray*)propertiesForIndexes:(NSIndexSet*)indexes;
 
 -(void)insertProperties:(NSArray*)props atIndexes:(NSIndexSet*)indexes;
+-(void)insertProperties:(NSArray*)props atIndex:(NSUInteger)index;
 -(void)insertProperty:(PLProperty*)p atIndex:(NSUInteger)index;
 -(void)removeProperties:(NSArray*)props;
 -(void)removePropertiesAtIndexes:(NSIndexSet*)indexes;

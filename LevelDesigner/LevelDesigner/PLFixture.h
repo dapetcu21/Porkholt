@@ -8,6 +8,9 @@
 
 #import "PLEntity.h"
 
+@class PLProperty;
 @interface PLFixture : PLEntity
+
++(NSArray*)fixturesFromProperty:(PLProperty*)prop;
 
 @end
