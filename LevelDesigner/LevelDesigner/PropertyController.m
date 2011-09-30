@@ -343,6 +343,17 @@
     [self pasteData:[[NSPasteboard generalPasteboard] dataForType:PLPropertyPbType] atIndex:[outlineView selectedRow]];
 }
 
+-(void)duplicate:(id)sender
+{
+    NSArray * items = [self itemsAtRows:[outlineView selectedRowIndexes]];
+    if (![items count])
+    {
+        NSBeep();
+        return;
+    }
+    [self pasteData:[NSKeyedArchiver archivedDataWithRootObject:items] atIndex:[outlineView selectedRow]];
+}
+
 -(NSIndexSet*)rowIndexesForItems:(NSArray*)items
 {
     NSMutableIndexSet * is = [NSMutableIndexSet indexSet];

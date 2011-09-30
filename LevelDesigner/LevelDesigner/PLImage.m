@@ -19,6 +19,21 @@ static inline struct PLColor PLMakeColor(double r, double g, double b, double a)
     return c;
 }
 
+static inline void addToken(NSMutableString * file,NSString * token, int * count)
+{
+    if (!*count)
+        [file appendFormat:@",{ %@",token];
+    else
+        [file appendFormat:@", %@",token];
+    (*count)++;
+}
+
+static inline void endToken(NSMutableString * file, int * count)
+{
+    if (*count)
+        [file appendFormat:@" }"];
+}
+
 @implementation PLImage
 
 -(id)initFromProperty:(PLProperty*)prop
@@ -68,6 +83,37 @@ static inline struct PLColor PLMakeColor(double r, double g, double b, double a)
         
     }
     return self;
+}
+
+-(void)writeToFile:(NSMutableString*)file
+{
+    [file appendFormat:@"objectAddImage(obj,[[%@]],%lf,%lf,%lf,%lf",fileName,frame.origin.x,frame.origin.y,frame.size.width,frame.size.height];
+    int count = 0;
+    if (imageClass && ![imageClass isEqual:@""])
+        addToken(file,[NSString stringWithFormat:@"class = [[%@]]",imageClass],&count);
+    if (!NSEqualRects(portion, NSMakeRect(0, 0, 1, 1)))
+        addToken(file,[NSString stringWithFormat:@"texCoord = rect(%lf,%lf,%lf,%lf)",portion.origin.x,portion.origin.y,portion.size.width,portion.size.height],&count);
+    if (tag)
+        addToken(file,[NSString stringWithFormat:@"tag = %d",tag],&count);
+    if (alpha!=1)
+        addToken(file,[NSString stringWithFormat:@"alpha = %lf",alpha],&count);
+    if (rotation)
+        addToken(file,[NSString stringWithFormat:@"rotation = %lf",rotation],&count);
+    if (horizontallyFlipped)
+        addToken(file,@"horizontallyFlipped = true",&count);
+    if (verticallyFlipped)
+        addToken(file,@"verticallyFlipped = true",&count);
+    if (tint.a>=0 && !(tint.r==1 && tint.g==1 && tint.b==1 && tint.a==1))
+        addToken(file,[NSString stringWithFormat:@"tint = rgba(%lf,%lf,%lf,%lf)",tint.r,tint.g,tint.b,tint.a],&count);
+    endToken(file, &count);
+    [file appendString:@")\n"];
+}
+
+-(void)dealloc
+{
+    [fileName release];
+    [imageClass release];
+    [super dealloc];
 }
 
 +(NSArray*)imagesFromProperty:(PLProperty*)prop

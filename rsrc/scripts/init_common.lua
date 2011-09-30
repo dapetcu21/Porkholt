@@ -217,6 +217,8 @@ function colorWithRGBA(r,g,b,a)
     };
 end
 
+rgba = colorWithRGBA;
+
 function point(x,y)
     return {
         x = x or 0;

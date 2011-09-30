@@ -42,6 +42,11 @@
 	[objectController loadFromFile:[self fileURL]];
 }
 
+-(void)reloadBrowser
+{
+    [browserController setRootURL:[self fileURL]];
+}
+
 - (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation originalContentsURL:(NSURL *)absoluteOriginalContentsURL error:(NSError **)outError
 {
 	NSFileManager * man = [NSFileManager defaultManager];
@@ -49,7 +54,8 @@
 	if (!absoluteOriginalContentsURL)
 		absoluteOriginalContentsURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"prototype.phlevel"];
     
-	[man copyItemAtURL:absoluteOriginalContentsURL toURL:absoluteURL error:&err];
+    if (![absoluteOriginalContentsURL isEqual:absoluteURL])
+        [man copyItemAtURL:absoluteOriginalContentsURL toURL:absoluteURL error:&err];
 	if (err&&outError)
 	{
 		*outError = [NSError errorWithDomain:@"PorkholtDomain" code:-2 userInfo:
@@ -65,7 +71,7 @@
                      [NSDictionary dictionaryWithObject:@"Can't write lvl_designer.lua" forKey:NSLocalizedDescriptionKey]];
 		return NO;
 	}
-	[browserController performSelector:@selector(reload:) withObject:self afterDelay:0];
+	[self performSelector:@selector(reloadBrowser) withObject:nil afterDelay:0];
 	return YES;
 }
 

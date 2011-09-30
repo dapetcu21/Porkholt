@@ -193,10 +193,16 @@
     {
         PLProperty * p = [rootProperty propertyAtIndex:i];
         if ([p.name isEqual:@"class"]) continue;
-        if ([p isCollection] && ![p.name isEqual:@"fixtures"])
+        if ([p isCollection] && ![p.name isEqual:@"physics"])
             [file appendFormat:@"obj.%@ = {}\n",p.name];
         [p writeToFile:file withIndexPath:[NSString stringWithFormat:@"obj.%@",p.name]];
     }
+    for (PLImage * img in [subentityModel arrayAtIndex:0])
+        if (!img.readOnly)
+            [img writeToFile:file];
+    for (PLFixture * fxt in [subentityModel arrayAtIndex:1])
+        if (!fxt.readOnly)
+            [fxt writeToFile:file];
     [file appendString:@"addObject(obj)\n\n"];
 }
 

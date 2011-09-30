@@ -27,6 +27,6 @@
 -(void)propertyChanged:(PLProperty*)p;
 
 -(PLProperty*)propertyAtKeyPath:(NSString*)keyPath;
--(void)saveToFile:(NSMutableString*)file;
+-(void)writeToFile:(NSMutableString*)file;
 
 @end

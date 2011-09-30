@@ -1,5 +1,17 @@
 require("init_common");
 
+function rawpairs(t)
+	return function(table,index)
+		local i,v = next(table,index);
+		while (i and not rawget(table,i)) do
+			print("bad props:",i,v)
+			i,v = next(table,i);
+		end
+		print("good props:",i,v)
+		return i,v;
+	end, t, nil
+end
+
 function describeObject(obj)
 	obj.class = obj.class or "PHLObject";
     obj.realClass = nil;
@@ -35,8 +47,8 @@ function describeTable(obj)
             end
         end
     else
-        for i,v in pairs(obj) do
-			if ( not (type(i)=="string" and string.sub(i,1,1)=="_")) then
+        for i,v in rawpairs(obj) do
+			if ( not (type(i)=="string" and string.sub(i,1,1)=="_") ) then
             	if (type(v)=="table") then
 	                des[j] = { key = i;};
 	                des[j].value = describeTable(obj[i]);

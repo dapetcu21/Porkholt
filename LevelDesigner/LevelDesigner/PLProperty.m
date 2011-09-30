@@ -973,7 +973,7 @@ BOOL number_char(char c)
             [file appendFormat:@"rect(%lf,%lf,%lf,%lf)",self.rectValue.origin.x,self.rectValue.origin.y,self.rectValue.size.width,self.rectValue.size.height];
             break;
         case PLPropertyArray:
-            [file appendFormat:@"%@.n = %d",indexPath,(int)[self childrenCount]];
+            [file appendFormat:@"%@.n = %d\n",indexPath,(int)[self childrenCount]];
             for (PLProperty * p in self.arrayValue)
             {
                 NSString * ip = [indexPath stringByAppendingFormat:@"[%d]",(int)p.index];
@@ -981,6 +981,7 @@ BOOL number_char(char c)
                     [file appendFormat:@"%@ = {}\n",ip];
                 [p writeToFile:file withIndexPath:ip];
             }
+            break;
         case PLPropertyDictionary:
             for (PLProperty * p in [self.dictionaryValue allValues])
             {
@@ -989,6 +990,7 @@ BOOL number_char(char c)
                     [file appendFormat:@"%@ = {}\n",ip];
                 [p writeToFile:file withIndexPath:ip];
             }
+            break;
         default:
             [file appendString:@"nil"];
             break;

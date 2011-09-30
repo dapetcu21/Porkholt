@@ -41,6 +41,7 @@ struct PLColor
 @property(nonatomic,assign) double alpha;
 
 -(id)initFromProperty:(PLProperty*)prop;
+-(void)writeToFile:(NSMutableString*)file;
 +(NSArray*)imagesFromProperty:(PLProperty*)prop;
 
 @end
