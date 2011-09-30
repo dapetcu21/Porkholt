@@ -13,7 +13,6 @@ function describeObject(obj)
 	if (obj.levelDes) then
 		des.readOnly = false;
 	end
-    print(des.readOnly);
 	obj.levelDes = nil;
 	des.rootProperty = { key = "__root__"; value = describeTable(obj); }
 	return des

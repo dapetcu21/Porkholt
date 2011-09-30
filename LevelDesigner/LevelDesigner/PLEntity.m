@@ -30,11 +30,6 @@
     return [self initFromLua:NULL];
 }
 
--(void)saveToFile:(NSMutableString*)file
-{
-    
-}
-
 -(void)setIndex:(NSUInteger)idx andArray:(NSUInteger)arr
 {
     array=arr; 

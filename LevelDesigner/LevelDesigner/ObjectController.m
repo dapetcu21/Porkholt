@@ -139,6 +139,7 @@
 	[file appendString:@"--This file was generated with the Porkholt Level Designer\n"];
 	[file appendString:@"--Do not modify this file. If you do, please note that this\n"];
 	[file appendString:@"--file is reset every time you use the Level Designer\n"];
+    [file appendString:@"\nlocal obj\n\n"];
 	for (PLObject * object in arrays[0])
 		if (!object.readOnly)
 			[object saveToFile:file];

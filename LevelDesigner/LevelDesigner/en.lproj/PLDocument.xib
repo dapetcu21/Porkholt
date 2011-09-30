@@ -52,7 +52,7 @@
 			<object class="NSWindowTemplate" id="275939982">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{133, 235}, {1204, 717}}</string>
+				<string key="NSWindowRect">{{60, 37}, {1204, 717}}</string>
 				<int key="NSWTFlags">1886912512</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -90,7 +90,6 @@
 															<string key="NSFrame">{{-7, -10}, {271, 449}}</string>
 															<reference key="NSSuperview" ref="815635863"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="504394639"/>
 															<string key="NSReuseIdentifierKey">_NS:461</string>
 															<object class="NSMutableArray" key="NSTabViewItems">
 																<bool key="EncodedWithXMLCoder">YES</bool>
@@ -195,7 +194,7 @@
 																								<string key="NSFrameSize">{254, 360}</string>
 																								<reference key="NSSuperview" ref="879134151"/>
 																								<reference key="NSWindow"/>
-																								<reference key="NSNextKeyView" ref="958943690"/>
+																								<reference key="NSNextKeyView" ref="611322288"/>
 																								<string key="NSReuseIdentifierKey">_NS:1197</string>
 																								<bool key="NSEnabled">YES</bool>
 																								<object class="NSTableHeaderView" key="NSHeaderView" id="422288744">
@@ -383,7 +382,7 @@
 																				<string key="NSFrame">{{0, 22}, {251, 378}}</string>
 																				<reference key="NSSuperview" ref="504394639"/>
 																				<reference key="NSWindow"/>
-																				<reference key="NSNextKeyView" ref="611322288"/>
+																				<reference key="NSNextKeyView" ref="879134151"/>
 																				<string key="NSReuseIdentifierKey">_NS:1193</string>
 																				<int key="NSsFlags">133810</int>
 																				<reference key="NSVScroller" ref="611322288"/>
@@ -495,7 +494,7 @@
 																								<int key="NSvFlags">256</int>
 																								<string key="NSFrameSize">{254, 360}</string>
 																								<reference key="NSSuperview" ref="1072262655"/>
-																								<reference key="NSNextKeyView" ref="644252388"/>
+																								<reference key="NSNextKeyView" ref="61287539"/>
 																								<string key="NSReuseIdentifierKey">_NS:1197</string>
 																								<bool key="NSEnabled">YES</bool>
 																								<object class="NSTableHeaderView" key="NSHeaderView" id="915527949">
@@ -638,7 +637,7 @@
 																				</object>
 																				<string key="NSFrame">{{0, 22}, {251, 378}}</string>
 																				<reference key="NSSuperview" ref="822893952"/>
-																				<reference key="NSNextKeyView" ref="61287539"/>
+																				<reference key="NSNextKeyView" ref="1072262655"/>
 																				<string key="NSReuseIdentifierKey">_NS:1193</string>
 																				<int key="NSsFlags">133810</int>
 																				<reference key="NSVScroller" ref="61287539"/>
@@ -703,7 +702,7 @@
 																								<int key="NSvFlags">256</int>
 																								<string key="NSFrameSize">{249, 360}</string>
 																								<reference key="NSSuperview" ref="186315104"/>
-																								<reference key="NSNextKeyView" ref="941071787"/>
+																								<reference key="NSNextKeyView" ref="171224315"/>
 																								<bool key="NSEnabled">YES</bool>
 																								<object class="NSTableHeaderView" key="NSHeaderView" id="820822043">
 																									<reference key="NSNextResponder" ref="675767540"/>
@@ -845,7 +844,7 @@
 																				</object>
 																				<string key="NSFrame">{{0, 22}, {251, 378}}</string>
 																				<reference key="NSSuperview" ref="1048139023"/>
-																				<reference key="NSNextKeyView" ref="171224315"/>
+																				<reference key="NSNextKeyView" ref="186315104"/>
 																				<int key="NSsFlags">133682</int>
 																				<reference key="NSVScroller" ref="171224315"/>
 																				<reference key="NSHScroller" ref="97764170"/>
@@ -912,7 +911,6 @@
 									<string key="NSFrame">{{258, 0}, {946, 717}}</string>
 									<reference key="NSSuperview" ref="963903192"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:601</string>
 									<string key="NSClassName">NSView</string>
 								</object>
@@ -931,7 +929,7 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="963903192"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMinSize">{94, 108}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -3257,6 +3255,8 @@
 					<string>100235.IBPluginDependency</string>
 					<string>100236.IBPluginDependency</string>
 					<string>100245.IBPluginDependency</string>
+					<string>5.IBNSWindowAutoPositionCentersHorizontal</string>
+					<string>5.IBNSWindowAutoPositionCentersVertical</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.IBWindowTemplateEditedContentRect</string>
 					<string>6.IBPluginDependency</string>
@@ -3387,6 +3387,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<boolean value="YES"/>
+					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{133, 170}, {507, 413}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

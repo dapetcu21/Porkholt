@@ -184,6 +184,22 @@
     return self;
 }
 
+
+-(void)saveToFile:(NSMutableString*)file
+{
+    [file appendFormat:@"obj = objectWithClass(\"%@\")\nobj.levelDes = true\n",className];
+    NSUInteger i,n=[rootProperty childrenCount];
+    for (i=0; i<n; i++)
+    {
+        PLProperty * p = [rootProperty propertyAtIndex:i];
+        if ([p.name isEqual:@"class"]) continue;
+        if ([p isCollection] && ![p.name isEqual:@"fixtures"])
+            [file appendFormat:@"obj.%@ = {}\n",p.name];
+        [p writeToFile:file withIndexPath:[NSString stringWithFormat:@"obj.%@",p.name]];
+    }
+    [file appendString:@"addObject(obj)\n\n"];
+}
+
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];

@@ -65,9 +65,10 @@
                      [NSDictionary dictionaryWithObject:@"Can't write lvl_designer.lua" forKey:NSLocalizedDescriptionKey]];
 		return NO;
 	}
-	[self performSelector:@selector(reloadBrowser) withObject:nil afterDelay:0];
+	[browserController performSelector:@selector(reload:) withObject:self afterDelay:0];
 	return YES;
 }
+
 
 - (BOOL)readFromURL:(NSURL*)url ofType:(NSString *)typeName error:(NSError **)outError
 {

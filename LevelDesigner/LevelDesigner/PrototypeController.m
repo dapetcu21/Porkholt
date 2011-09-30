@@ -78,6 +78,8 @@
         p.rootProperty = prop;
         p.images = [PLImage imagesFromProperty:images];
         p.fixtures = [PLFixture fixturesFromProperty:fixtures];
+        [images release];
+        [fixtures release];
         
         for (PLImage * img in p.images)
             img.readOnly = YES;

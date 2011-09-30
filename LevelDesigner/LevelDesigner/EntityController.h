@@ -83,7 +83,7 @@
 -(void)newInArray:(NSUInteger)array;
 -(void)delete;
 -(void)deleteInArray:(NSUInteger)array;
--(void)copy;
+-(void)copyToPasteboard;
 -(NSData*)copyEntitiesToData:(NSArray*)entities;
 -(void)paste;
 -(void)pasteData:(NSData*)data atRow:(NSUInteger)row inArray:(NSUInteger)array;

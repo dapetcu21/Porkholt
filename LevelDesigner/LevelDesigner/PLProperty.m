@@ -948,4 +948,53 @@ BOOL number_char(char c)
     }
 }
 
+-(void)writeToFile:(NSMutableString*)file withIndexPath:(NSString*)indexPath
+{
+    BOOL col = [self isCollection];
+    if (!col)
+    {
+        [file appendString:indexPath];
+        [file appendString:@" = "];
+    }
+    switch (type) {
+        case PLPropertyString:
+            [file appendFormat:@"[[%@]]",self.stringValue];
+            break;
+        case PLPropertyNumber:
+            [file appendFormat:@"%lf",self.numberValue];
+            break;
+        case PLPropertyBoolean:
+            [file appendString:self.booleanValue?@"true":@"false"];
+            break;
+        case PLPropertyPoint:
+            [file appendFormat:@"point(%lf,%lf)",self.pointValue.x,self.pointValue.y];
+            break;
+        case PLPropertyRect:
+            [file appendFormat:@"rect(%lf,%lf,%lf,%lf)",self.rectValue.origin.x,self.rectValue.origin.y,self.rectValue.size.width,self.rectValue.size.height];
+            break;
+        case PLPropertyArray:
+            [file appendFormat:@"%@.n = %d",indexPath,(int)[self childrenCount]];
+            for (PLProperty * p in self.arrayValue)
+            {
+                NSString * ip = [indexPath stringByAppendingFormat:@"[%d]",(int)p.index];
+                if ([p isCollection])
+                    [file appendFormat:@"%@ = {}\n",ip];
+                [p writeToFile:file withIndexPath:ip];
+            }
+        case PLPropertyDictionary:
+            for (PLProperty * p in [self.dictionaryValue allValues])
+            {
+                NSString * ip = [indexPath stringByAppendingFormat:@".%@",p.name];
+                if ([p isCollection])
+                    [file appendFormat:@"%@ = {}\n",ip];
+                [p writeToFile:file withIndexPath:ip];
+            }
+        default:
+            [file appendString:@"nil"];
+            break;
+    }
+    if (!col)
+        [file appendString:@"\n"];
+}
+
 @end

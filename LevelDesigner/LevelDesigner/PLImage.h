@@ -9,8 +9,38 @@
 #import "PLEntity.h"
 
 @class PLProperty;
-@interface PLImage : PLEntity
 
+struct PLColor
+{
+    double r,g,b,a;
+};
+
+@interface PLImage : PLEntity
+{
+    NSString * imageClass;
+    NSRect portion;
+    NSRect frame;
+    int tag;
+    double rotation;
+    BOOL horizontallyFlipped;
+    BOOL verticallyFlipped;
+    struct PLColor tint;
+    double alpha;
+    NSString * fileName;
+}
+
+@property(nonatomic,retain) NSString * imageClass;
+@property(nonatomic,assign) NSRect portion;
+@property(nonatomic,assign) NSRect frame;
+@property(nonatomic,assign) int tag;
+@property(nonatomic,assign) double rotation;
+@property(nonatomic,assign) BOOL horizontallyFlipped;
+@property(nonatomic,assign) BOOL verticallyFlipped;
+@property(nonatomic,assign) struct PLColor tint;
+@property(nonatomic,retain) NSString * fileName;
+@property(nonatomic,assign) double alpha;
+
+-(id)initFromProperty:(PLProperty*)prop;
 +(NSArray*)imagesFromProperty:(PLProperty*)prop;
 
 @end

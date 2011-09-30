@@ -26,6 +26,5 @@
 -(void)resetIndex;
 
 -(id)initFromLua:(lua_State*)L;
--(void)saveToFile:(NSMutableString*)file;
 
 @end

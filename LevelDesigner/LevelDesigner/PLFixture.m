@@ -11,19 +11,23 @@
 
 @implementation PLFixture
 
-- (id)initFromLua:(lua_State *)L
+-(id)initFromProperty:(PLProperty*)prop
 {
-    self = [super initFromLua:L];
-    if (self) {
-        // Initialization code here.
+    if (self = [super initFromLua:NULL])
+    {
+        
     }
-    
     return self;
 }
 
 +(NSArray*)fixturesFromProperty:(PLProperty*)prop
 {
-    return [NSArray array];
+    if (prop.type!=PLPropertyArray)
+        return [NSArray array];
+    NSMutableArray * a = [[[NSMutableArray alloc] initWithCapacity:[prop childrenCount]] autorelease];
+    for (PLProperty * p in prop.arrayValue)
+        [a addObject:[[[PLFixture alloc] initFromProperty:p] autorelease]];
+    return a;
 }
 
 @end

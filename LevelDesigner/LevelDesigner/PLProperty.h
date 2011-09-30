@@ -106,4 +106,6 @@ enum PLPropertyTypes
 
 -(BOOL)isCollection;
 
+-(void)writeToFile:(NSMutableString*)file withIndexPath:(NSString*)indexPath;
+
 @end

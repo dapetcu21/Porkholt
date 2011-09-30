@@ -424,7 +424,7 @@
     [self pasteData:d atRow:-1 inArray:-1];
 }
 
--(void)copy
+-(void)copyToPasteboard
 {
     NSArray * selected = [self selectedEntities];
     if (![selected count])

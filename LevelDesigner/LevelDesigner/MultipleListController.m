@@ -263,7 +263,7 @@
 
 -(void)copy:(id)sender
 {
-    [model copy];
+    [model copyToPasteboard];
 }
 
 -(void)paste:(id)sender
