@@ -13,12 +13,20 @@
 #import "PLFixture.h"
 #import "PLPrototype.h"
 #import "PrototypeController.h"
+#import "EntityController.h"
 
 @implementation PLObject
 @synthesize rootProperty;
 @synthesize subentityModel;
 @synthesize className;
 @synthesize prototype;
+
+-(NSUndoManager*)undoManager
+{
+    if ([owner isKindOfClass:[EntityController class]])
+        return ((EntityController*)owner).undoManager;
+    return nil;
+}
 
 -(void)markMandatory
 {

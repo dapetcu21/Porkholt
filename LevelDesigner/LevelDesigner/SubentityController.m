@@ -10,8 +10,14 @@
 #import "PLImage.h"
 #import "PLFixture.h"
 #import "PLEntity.h"
+#import "PLObject.h"
 
 @implementation SubentityController
+
+-(NSUndoManager*)undoManager
+{
+    return [((PLObject*)owner) undoManager];
+}
 
 - (id)initWithObject:(PLEntity*)e
 {

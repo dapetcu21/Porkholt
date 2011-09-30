@@ -28,5 +28,7 @@
 
 -(PLProperty*)propertyAtKeyPath:(NSString*)keyPath;
 -(void)writeToFile:(NSMutableString*)file;
+-(NSUndoManager*)undoManager;
+
 
 @end
