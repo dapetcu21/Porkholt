@@ -11,6 +11,7 @@
 
 @implementation EntityController
 @synthesize undoManager;
+@synthesize disableUndo;
 @synthesize controller;
 
 - (id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType
@@ -171,7 +172,8 @@
 -(void)insertEntities:(NSArray*)entities atIndexes:(NSIndexSet*)indexes inArray:(NSUInteger)array
 {
     if ([indexes count]==0) return;
-    [[self.undoManager prepareWithInvocationTarget:self] removeEntitiesAtIndexes:indexes fromArray:array];
+    if (!disableUndo)
+        [[self.undoManager prepareWithInvocationTarget:self] removeEntitiesAtIndexes:indexes fromArray:array];
     NSMutableIndexSet * s = selection[array];
     __block NSInteger offset = 0;
     NSIndexSet * backup = [[s copy] autorelease];
@@ -198,7 +200,8 @@
 -(void)removeEntitiesAtIndexes:(NSIndexSet*)indexes fromArray:(NSUInteger)array
 {
     if ([indexes count]==0) return;
-    [[self.undoManager prepareWithInvocationTarget:self] insertEntities:[self entitiesForIndexes:indexes inArray:array] atIndexes:indexes inArray:array];
+    if (!disableUndo)
+        [[self.undoManager prepareWithInvocationTarget:self] insertEntities:[self entitiesForIndexes:indexes inArray:array] atIndexes:indexes inArray:array];
     NSMutableArray * a = arrays[array];
     NSMutableIndexSet * s = selection[array];
     __block NSInteger offset = 0;

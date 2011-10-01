@@ -24,6 +24,7 @@
     BOOL * selectionChanged;
     BOOL selectNextAfterDelete;
     BOOL ro;
+    BOOL disableUndo;
 }
 
 -(id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType;
@@ -90,5 +91,7 @@
 -(void)duplicate;
 
 -(void)entityDescriptionChanged:(PLEntity*)e;
+
+@property(nonatomic,assign) BOOL disableUndo;
 
 @end
