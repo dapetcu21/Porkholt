@@ -1,0 +1,3 @@
+[submodule "PHRemote"]
+	path = PHRemote
+	url = git://github.com/dapetcu21/PHRemote.git

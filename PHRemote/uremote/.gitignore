@@ -1,7 +1,0 @@
-.DS_Store
-*.a
-*.dylib
-examples/client
-examples/server
-*.so
-*.o
