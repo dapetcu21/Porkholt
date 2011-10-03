@@ -8,7 +8,7 @@
 
 #import "PorkholtAppDelegate.h"
 #import "PorkholtViewController.h"
-#import "PHMainEvents.h"
+#import "PHGameManager.h"
 
 @implementation PorkholtAppDelegate
 
@@ -18,8 +18,9 @@
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
 	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	viewController = [[PorkholtViewController alloc] init];
-
+    
+    viewController = [[PorkholtViewController alloc] init];
+    
 	[window addSubview:viewController.view];
 	[window layoutSubviews];
 	[window makeKeyAndVisible];
@@ -28,19 +29,28 @@
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [viewController stopAnimation];
-	PHMainEvents::sharedInstance()->appSuspended();
+    if (!gameManager)
+        gameManager = [viewController gameManager];
+    if (gameManager)
+        gameManager->appSuspended();
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [viewController startAnimation];
-	PHMainEvents::sharedInstance()->appResumed();
+    if (!gameManager)
+        gameManager = [viewController gameManager];
+    if (gameManager)
+        gameManager->appResumed();
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     [viewController stopAnimation];
-	PHMainEvents::sharedInstance()->appQuits();
+    if (!gameManager)
+        gameManager = [viewController gameManager];
+    if (gameManager)
+        gameManager->appQuits();
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application

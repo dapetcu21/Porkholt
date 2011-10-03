@@ -14,20 +14,18 @@
 
 class PHTouch;
 class PHView;
+class PHGameManager;
 
 class PHEventHandler : public PHObject
 {
-public:
-	static PHEventHandler * sharedInstance()
-	{
-		static PHEventHandler * obj = new PHEventHandler();
-		return obj;
-	}
 private:
 	list<PHTouch*> touches;
-	PHEventHandler() {};
+	PHEventHandler(PHGameManager * gm) : gameManager(gm) {};
 	PHTouch * touchForUserData(void * ud, list<PHTouch*>::iterator & i);
-	
+    PHGameManager * gameManager;
+    
+    friend class PHGameManager;
+    
 public:
 	void touchDown(PHPoint pnt,void * ud);
 	void touchUp(PHPoint pnt, void * ud);

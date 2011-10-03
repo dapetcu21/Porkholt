@@ -6,14 +6,14 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHMenuController.h"
 #include "PHChapterController.h"
 
-void PHMainEvents::entryPoint()
+void PHGameManager::entryPoint()
 {
     //	PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
     PHViewController * vc = new PHMenuController();
-	vc->init();
+	vc->init(this);
     viewController->pushViewController(vc);
 }

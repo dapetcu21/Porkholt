@@ -29,6 +29,7 @@ class PHDialog;
 class PHScripting;
 class PHTextView;
 class PHHeartView;
+class PHGameManager;
 
 class PHWorld : public PHObject 
 {
@@ -73,6 +74,8 @@ private:
     multimap<void *,PHTimer*>timers;
     
     PHScripting * scripting;
+    
+    PHGameManager * _gameManager;
 	
 public:
 	PHWorld::layer * addLayer(double scale);
@@ -80,7 +83,7 @@ public:
 	
     void setScripting(PHScripting * s) { scripting = s; } 
     
-	PHWorld(const PHRect & size,PHLevelController * cnt);
+	PHWorld(PHGameManager * mgr, const PHRect & size,PHLevelController * cnt);
 	PHView * getView() { return (PHView *)view; }
 	virtual ~PHWorld();
 	
@@ -111,6 +114,8 @@ public:
     PHLCamera * getCamera() { return camera; }
     PHLPlayer * getPlayer() { return player; }
     PHView * getWorldView() { return worldView; }
+    
+    PHGameManager * gameManager() { return _gameManager; }
     
 public:
     

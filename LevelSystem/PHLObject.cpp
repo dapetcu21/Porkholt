@@ -10,7 +10,7 @@
 #include "PHLObject.h"
 
 #include "PHLCamera.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHLPlatform.h"
 #include "PHLAuxLayer.h"
 #include "PHLPlayer.h"
@@ -79,7 +79,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL)
 {
 }
 
@@ -241,6 +241,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
 {
 	world = _world;
     const string & root = lvlc->bundlePath();
+    _gameManager = lvlc->gameManager();
     
     hasScripting = false;
     lua_getfield(L, -1, "scripting");
@@ -501,7 +502,7 @@ void PHLObject::limitVelocity()
 		return;
 	}
 	
-	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	int fps = _gameManager->framesPerSecond();
 	double period = 1.0f/fps;
 	
 	b2Vec2 v = body->GetLinearVelocity();

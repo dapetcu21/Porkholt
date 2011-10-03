@@ -8,7 +8,7 @@
  */
 
 #include "PHEventHandler.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHTouch.h"
 #include "PHView.h"
 
@@ -28,7 +28,7 @@ void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 	touch->updateLocation(pnt, PHTime::getTime(), PHTouch::touchDownState);
 	touch->ud = ud;
 	touches.push_back(touch);
-	touch->_ownerView = PHMainEvents::sharedInstance()->mainView()->pointerDeepFirst(touch);
+	touch->_ownerView = gameManager->mainView()->pointerDeepFirst(touch);
 }
 
 void PHEventHandler::touchUp(PHPoint pnt, void * ud)

@@ -11,7 +11,7 @@
 #include "PHWorld.h"
 #include "PHView.h"
 #include "PHLPlayer.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 PHLPowerup::PHLPowerup() : dismissing(false)
 {
     _class = "PHLPowerup";
@@ -65,7 +65,7 @@ void PHLPowerup::updatePosition()
     PHLSensor::updatePosition();
     if (!dismissing) return;
     PHPoint p = getWorld()->getPlayer()->position() - position();
-    double elapsed = 1.0f/(PHMainEvents::sharedInstance()->framesPerSecond());
+    double elapsed = 1.0f/(_gameManager->framesPerSecond());
     if (elapsed>remaining) elapsed = remaining;
     p*=(animationTime/remaining)*elapsed;
     remaining-=elapsed;

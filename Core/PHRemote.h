@@ -11,12 +11,14 @@
 
 #include "URServer.h"
 
-class PHMainEvents;
+class PHGameManager;
 
 class PHRemote : public URServer
 {
+private:
+    PHGameManager * me;
 public:
-    PHRemote();
+    PHRemote(PHGameManager * gameManager);
     
     virtual bool acceptsSignature(uint8_t signature);
 	virtual void recievedPacket(uint8_t signature, const URField * const * fields, int nrfields); 

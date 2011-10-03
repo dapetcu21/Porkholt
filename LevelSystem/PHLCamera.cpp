@@ -9,7 +9,7 @@
 
 #include "PHLCamera.h"
 #include "PHLua.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 
 PHLCamera::PHLCamera() : follow(true), strict(false), strictcount(0), sstrict(0)
 {
@@ -24,7 +24,7 @@ void PHLCamera::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 {
 	PHLObject::loadFromLua(L,world,lvlc);
     PHLuaGetNumberField(sz.height,"camH");	
-	PHRect bnd = PHMainEvents::sharedInstance()->screenBounds();
+	PHRect bnd = _gameManager->screenBounds();
 	sz.width = sz.height*bnd.width/bnd.height;
 }
 
@@ -36,7 +36,7 @@ void PHLCamera::updateCamera(PHPoint pnt)
 {
 	if (!follow) return;
     
-	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	int fps = _gameManager->framesPerSecond();
 	
     if (sstrict>0)
     {

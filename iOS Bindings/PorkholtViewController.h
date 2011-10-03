@@ -17,7 +17,10 @@
 
 class PHMutex;
 class PHThread;
+class PHGameManager;
 @class EAGLView;
+
+extern PHGameManager * PHGameManagerSingleton;
 
 @interface PorkholtViewController : UIViewController
 {
@@ -29,11 +32,15 @@ class PHThread;
     NSConditionLock * exitCondition;
 	NSThread * thread;
     int fps;
+    
+    PHGameManager * gameManager;
 }
 
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 
 - (void)startAnimation;
 - (void)stopAnimation;
+
+-(PHGameManager*)gameManager;
 
 @end

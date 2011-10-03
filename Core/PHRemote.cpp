@@ -8,12 +8,13 @@
 
 #include "PHRemote.h"
 #include "PHAccelInterface.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHEventHandler.h"
 
-PHRemote::PHRemote()
+PHRemote::PHRemote(PHGameManager * gameManager)
 {
     setPort("2221");
+    me = gameManager;
 }
 
 bool PHRemote::acceptsSignature(uint8_t signature)
@@ -47,8 +48,7 @@ void PHRemote::recievedPacket(uint8_t signature, const URField * const * fields,
                 h = fields[i]->asInt32();
             if (tag==0x08)
             {
-                PHMainEvents * me = PHMainEvents::sharedInstance();
-                PHEventHandler * eh = PHEventHandler::sharedInstance();
+                PHEventHandler * eh = me->eventHandler();
                 pnt.x = ((double)(int32_t)x)/w*me->screenWidth();
                 pnt.y = (1-((double)(int32_t)y)/h)*me->screenHeight();
                 switch (state) {

@@ -8,7 +8,7 @@
  */
 
 #include "PHMain.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHLevelController.h"
 #include "PHWorld.h"
 #include "PHScripting.h"
@@ -249,7 +249,7 @@ void PHLevelController::pause()
 {
 	if (paused) return;
 	paused = true;
-	//PHMainEvents::sharedInstance()->setIndependentTiming(false);
+	//PHGameManager::sharedInstance()->setIndependentTiming(false);
 }
 
 void PHLevelController::resume()
@@ -258,7 +258,7 @@ void PHLevelController::resume()
 	if (!paused) return;
     if (!ready1 || !ready2) return;
 	paused = false;
-	//PHMainEvents::sharedInstance()->setIndependentTiming(true);
+	//PHGameManager::sharedInstance()->setIndependentTiming(true);
     dismissMenu();
 }
 
@@ -274,7 +274,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	pSem2 = new PHSemaphore(1);
     running = true;
 	paused = true;
-	world = new PHWorld(PHRect(0, 0, 1000, 1000),this);
+	world = new PHWorld(_gameManager,PHRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
 	backgroundView->setImage(PHImage::imageFromPath(directory+"/bg.png"));
 	view->addSubview(backgroundView);
@@ -345,7 +345,7 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
         }
         PHLog("_endLevel");
         PHTextController * vc = new PHTextController(v);
-        vc->init();
+        vc->init(_gameManager);
         vc->setForegroundColor(PHWhiteColor);
         vc->setBackgroundColor(PHBlackColor);
         vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, (void*)2);
@@ -410,7 +410,7 @@ void PHLevelController::_curtainText(PHObject * sender, void * ud)
 {
     curtainData * cd = (curtainData*)ud;
     PHTextController * vc = new PHTextController(cd->v);
-    vc->init();
+    vc->init(_gameManager);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
     vc->setDoneCallback(this, (PHCallback)&PHLevelController::curtainEnded, ud);
@@ -449,7 +449,7 @@ PHViewController * PHLevelController::mainViewController()
         return this;
     }
     PHTextController * vc = new PHTextController(v);
-    vc->init();
+    vc->init(_gameManager);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
     vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, (void*)1);
@@ -485,7 +485,7 @@ PHLevelController::~PHLevelController()
     animPool->release();
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
-	//PHMainEvents::sharedInstance()->setIndependentTiming(false);
+	//PHGameManager::sharedInstance()->setIndependentTiming(false);
     releaseImage(dialogImage);
     releaseImage(questImage);
     PHPoofView::poofImageRelease();
@@ -622,7 +622,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
     PHImage::collectGarbage();
     PHFont::collectGarbage();
-    //PHMainEvents::sharedInstance()->setIndependentTiming(true);
+    //PHGameManager::sharedInstance()->setIndependentTiming(true);
     ready1 = true;
     resume();
 	mutex->unlock();
@@ -630,7 +630,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
     
 	//double targetTime = PHTime::getTime();
-	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	int fps = _gameManager->framesPerSecond();
 	double frameInterval = 1.0f/fps;
 	
 	while (running)

@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @class PorkholtViewController;
+class PHGameManager;
 
 @interface PorkholtAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     PorkholtViewController *viewController;
+    PHGameManager * gameManager;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

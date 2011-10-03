@@ -25,6 +25,7 @@ class PHLAnimation;
 struct b2FixtureDef;
 class b2Fixture;
 class PHLevelController;
+class PHGameManager;
 
 class PHLObject : public PHObject
 {
@@ -67,6 +68,8 @@ protected:
     vector<b2FixtureDef*>fixturesDefinitions;
     vector<b2Fixture*>fixtures;
     void rebuildFixtures();
+    
+    PHGameManager * _gameManager;
     
 public:
 	PHLObject();
@@ -168,6 +171,8 @@ public:
     void commitAnimations(double elapsedTime);
 private:
     list<PHLAnimation*>animations;
-
+public:
+    PHGameManager * gameManager() { return _gameManager; }
+    void setGameManager(PHGameManager * gm) { _gameManager = gm; }
 };
 #endif

@@ -1,5 +1,5 @@
 /*
- *  PHMainEvents.cpp
+ *  PHGameManager.cpp
  *  Porkholt
  *
  *  Created by Marius Petcu on 12/15/10.
@@ -7,7 +7,7 @@
  *
  */
 
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #ifdef PH_SIMULATOR
 #include "PHRemote.h"
 #endif
@@ -16,20 +16,14 @@
 #include "PHImageAnimator.h"
 #include "PHAnimatorPool.h"
 #include "PHNavigationController.h"
+#include "PHEventHandler.h"
 
-PHMainEvents * PHMainEvents::sharedInstance()
+PHGameManager::PHGameManager(double sx, double sy, int f) : view(NULL), viewController(NULL), loaded(false)
 {
-	static PHMainEvents * inst = NULL;
-	if (!inst)
-		inst = new PHMainEvents;
-	return inst;
+    init(sx, sy, f);
 }
 
-PHMainEvents::PHMainEvents() : view(NULL), viewController(NULL), loaded(false)
-{
-}
-
-void PHMainEvents::init(double screenX, double screenY, int FPS)
+void PHGameManager::init(double screenX, double screenY, int FPS)
 {
 	fps = FPS;
 	_screenWidth = screenX;
@@ -40,11 +34,14 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	PHThread::mainThread();
 
 #ifdef PH_SIMULATOR
-    remote = new PHRemote;
+    remote = new PHRemote(this);
     remote->start();
 #endif
 	
+    evtHandler = new PHEventHandler(this);
+    
 	view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
+    view->setGameManager(this);
 	view->setBackgroundColor(PHGrayColor);
 	view->setUserInput(true);
 	
@@ -55,7 +52,7 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
 	
 	
 	viewController = new PHNavigationController();
-	viewController->init();
+	viewController->init(this);
 	viewController->_viewWillAppear();
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
@@ -63,7 +60,7 @@ void PHMainEvents::init(double screenX, double screenY, int FPS)
     entryPoint();
 }
 
-void PHMainEvents::setProjection()
+void PHGameManager::setProjection()
 {
     glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -71,21 +68,21 @@ void PHMainEvents::setProjection()
 	glScalef(2.0f/(_screenWidth), 2.0f/(_screenHeight), 1.0f);
 }
 
-void PHMainEvents::setScreenSize(double w, double h)
+void PHGameManager::setScreenSize(double w, double h)
 {
     _screenWidth = w;
     _screenHeight = h;
     setProjection(); 
 }
 
-void PHMainEvents::processInput()
+void PHGameManager::processInput()
 {
 #ifdef PH_SIMULATOR
     remote->processPendingPackets();
 #endif
 }
 
-void PHMainEvents::renderFrame(double timeElapsed)
+void PHGameManager::renderFrame(double timeElapsed)
 {	
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -104,7 +101,7 @@ void PHMainEvents::renderFrame(double timeElapsed)
 	view->render();
 }
 
-void PHMainEvents::_appSuspended(PHObject * sender, void * ud)
+void PHGameManager::_appSuspended(PHObject * sender, void * ud)
 {
     if (!loaded) return;
 	if (suspended) return;
@@ -121,7 +118,7 @@ void PHMainEvents::_appSuspended(PHObject * sender, void * ud)
 #endif
 }
 
-void PHMainEvents::_appResumed(PHObject * sender, void * ud)
+void PHGameManager::_appResumed(PHObject * sender, void * ud)
 {
 	if (!suspended) return;
 	suspended = false;
@@ -141,38 +138,38 @@ void PHMainEvents::_appResumed(PHObject * sender, void * ud)
 #endif
 }
 
-void PHMainEvents::appSuspended()
+void PHGameManager::appSuspended()
 {
     if (!loaded) return;
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHMainEvents::_appSuspended, NULL, false);
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHGameManager::_appSuspended, NULL, false);
 }
 
-void PHMainEvents::appResumed()
+void PHGameManager::appResumed()
 {
     if (!loaded) return;
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHMainEvents::_appResumed, NULL, false);
+    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHGameManager::_appResumed, NULL, false);
 }
 
 
-void PHMainEvents::appQuits()
+void PHGameManager::appQuits()
 {
     if (!loaded) return;
 	//This isn't guaranteed to be called
-	//Save all stuff in PHMainEvents::appSuspended()
+	//Save all stuff in PHGameManager::appSuspended()
 	PHLog("appQuits");
 #ifdef PH_SIMULATOR
     delete remote;
 #endif
 }
 
-void PHMainEvents::memoryWarning()
+void PHGameManager::memoryWarning()
 {
 	PHLog("memoryWarning");
 }
 
-int PHMainEvents::interfaceType()
+int PHGameManager::interfaceType()
 {
-    if (_screenHeight >= 400)
-        return interfaceHD;
+//    if (_screenHeight >= 400)
+//        return interfaceHD;
     return interfaceSD;
 }

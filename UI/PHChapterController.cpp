@@ -106,7 +106,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
     ostringstream oss;
     oss<<path<<"/lvl"<<nr;
     PHLevelController * lvlvc = new PHLevelController(oss.str());
-    lvlvc->init();
+    lvlvc->init(_gameManager);
     lvlvc->setEndLevelCallback(this, (PHCallback)&PHChapterController::levelEnded, (void*)nr);
     PHViewController * vc = lvlvc->mainViewController();
     navController->navigationController()->pushViewController(vc,PHNavigationController::FadeToColor,replace);

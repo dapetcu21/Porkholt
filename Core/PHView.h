@@ -18,6 +18,7 @@
 
 class PHMutex;
 class PHAuxLayerView;
+class PHGameManager;
 class PHView : public PHObject
 {
 protected:
@@ -34,6 +35,9 @@ protected:
 	ViewEl * viewsEn;
 	ViewEl * currPos;
 #endif
+    
+    PHGameManager * _gameManager;
+    
 	PHView * superView;
 	PHRect _frame,_bounds;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
@@ -143,7 +147,7 @@ public:
     list<PHView*> * viewsWithTag(int tag); //this returns a new-allocated list
 	
 	virtual ~PHView();
-	friend class PHMainEvents;
+	friend class PHGameManager;
 	friend class PHEventHandler;
 	
 //animation system
@@ -184,6 +188,10 @@ public:
     static void registerLuaInterface(lua_State * L);
 public:
     PHMutex * mutex() { if (!mtx) mtx = new PHMutex(true); return mtx; }
+    
+public:
+    PHGameManager * gameManager() { return _gameManager; }
+    void setGameManager(PHGameManager * gm);
 };
 
 #endif

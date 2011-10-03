@@ -1,5 +1,5 @@
 /*
- *  PHMainEvents.h
+ *  PHGameManager.h
  *  Porkholt
  *
  *  Created by Marius Petcu on 12/15/10.
@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef PHMAINEVENTS_H
-#define PHMAINEVENTS_H
+#ifndef PHGAMEMANAGER_H
+#define PHGAMEMANAGER_H
 
 #include "PHMain.h"
 
@@ -16,12 +16,14 @@ class PHView;
 class PHViewController;
 class PHNavigationController;
 class PHRemote;
+class PHEventHandler;
 
-class PHMainEvents : public PHObject
+class PHGameManager : public PHObject
 {
 private:
 	PHView * view;
 	PHNavigationController * viewController;
+    PHEventHandler * evtHandler;
 	double _screenWidth;
 	double _screenHeight;
 	int fps;
@@ -38,13 +40,15 @@ private:
     void setScreenSize(double w, double h);
     
     void * ud;
+    
+    void init(double screenX, double screenY,int FPS);
+    
 public:
-    PHMainEvents();
+    PHGameManager(double screenX, double screenY, int FPS);
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
 	int framesPerSecond() { return fps; }
-	static PHMainEvents * sharedInstance();
 	void renderFrame(double timeElapsed);
 	void appSuspended();
 	void appResumed();
@@ -52,7 +56,6 @@ public:
     void _appSuspended(PHObject * sender, void * ud);
 	void appQuits();
 	void memoryWarning();
-	void init(double screenX, double screenY,int FPS);
 	PHView * mainView() { return view; };
 	void remove(void * ud);
     
@@ -60,6 +63,7 @@ public:
     void setUserData(void * u) { ud = u; }
     
     void processInput();
+    PHEventHandler * eventHandler() { return evtHandler; }
 
     enum interfaceType
     {
@@ -67,7 +71,7 @@ public:
         interfaceHD,
         numInterfaceTypes
     };
-    int interfaceType();
+    static int interfaceType();
 };
 
 #endif

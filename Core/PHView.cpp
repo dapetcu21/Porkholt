@@ -9,7 +9,7 @@
 
 #include "PHView.h"
 #include "PHAuxLayerView.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHEventHandler.h"
 #include "PHLua.h"
 
@@ -22,7 +22,7 @@ std::list<PHAnimationDescriptor*> PHView::animations;
 #endif
 #define PHVIEW_INITLIST PREFIX superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), _gameManager(NULL)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -32,6 +32,24 @@ PHView::PHView() :  PHVIEW_INITLIST
 PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
 {
 	setFrame(frame);
+}
+
+void PHView::setGameManager(PHGameManager * gm)
+{
+    if (_gameManager == gm)
+        return;
+    _gameManager = gm;
+#ifdef PHVIEW_STD_LIST
+    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
+        (*i)->setGameManager(gm);
+#else
+    PHView::ViewEl * p = viewsSt;
+    while (p)
+    {
+        p->el->setGameManager(gm);
+        p=p->next;
+    }
+#endif
 }
 
 void PHView::setFrame(const PHRect &frame)
@@ -153,7 +171,7 @@ void PHView::render()
 		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x,_bounds.y+_bounds.height));
 		test;
 		
-		PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
+		PHRect bounds = _gameManager->screenBounds();
 		
 		optimizeOut =	(minX<bounds.x && maxX<bounds.x) || (minY<bounds.y && maxY<bounds.y) ||
 						(minX>bounds.x+bounds.width && maxX>bounds.x+bounds.width) || (minY>bounds.y+bounds.height && maxY>bounds.y+bounds.height);
@@ -188,6 +206,7 @@ void PHView::addSubview(PHView * view)
 		return;
     if (mtx) mtx->lock();
 	view->retain();
+    view->setGameManager(_gameManager);
 	view->removeFromSuperview();
 #ifdef PHVIEW_STD_LIST
     views.push_back(view);
@@ -271,8 +290,8 @@ PHView::~PHView()
         PHLuaDeleteWeakRef(*i, this);
     if (auxLayer)
         auxLayer->removeView(this);
-	PHEventHandler::sharedInstance()->removeView(this);
-	
+    if (_gameManager)
+        _gameManager->eventHandler()->removeView(this);	
     removeFromSuperview();
 #ifdef PHVIEW_STD_LIST
     list<PHView*>::iterator i, it;

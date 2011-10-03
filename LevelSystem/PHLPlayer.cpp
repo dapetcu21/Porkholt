@@ -13,7 +13,7 @@
 #include "PHPlayerView.h"
 #include "PHWorld.h"
 #include "PHTrailImageView.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include <Box2D/Box2D.h>
 #include "PHMotion.h"
 #include "PHLua.h"
@@ -55,7 +55,7 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
-	int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+	int fps = _gameManager->framesPerSecond();
 	
 	b2Vec2 frc;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
@@ -131,7 +131,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 void PHLPlayer::updatePosition()
 {
     PHLNPC::updatePosition();
-    double interval = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
+    double interval = 1.0f/_gameManager->framesPerSecond();
     if (powerTime>0)
     {
         powerTime-=interval;

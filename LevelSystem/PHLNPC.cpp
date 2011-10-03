@@ -9,7 +9,7 @@
 #include "PHLNPC.h"
 #include "PHTrailImageView.h"
 #include "PHPlayerView.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHAuxLayerView.h"
 #include <Box2D/Box2D.h>
 #include "PHLua.h"
@@ -20,7 +20,7 @@
 #include "PHDialogView.h"
 #include "PHDialog.h"
 #include "PHLAnimation.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHEventQueue.h"
 #include "PHAnimatedImage.h"
 #include "PHImage.h"
@@ -114,7 +114,8 @@ void PHLNPC::loadView()
     if (staticFace) 
         ((PHPlayerView*)view)->setDesignatedTag(-21);
     if ((trailPossible = (dynamic_cast<PHTrailImageView*>(bodyView)!=NULL)))
-        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/PHMainEvents::sharedInstance()->framesPerSecond()));
+        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/_gameManager->framesPerSecond()));
+    view->setGameManager(_gameManager);
 	view->setRotation(rot);
 }
 
@@ -124,7 +125,7 @@ void PHLNPC::updateView()
     if (hover)
     {
         offset.y = sin(hoverAmmount)*0.1;
-        double frameInterval = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
+        double frameInterval = 1.0f/_gameManager->framesPerSecond();
         hoverAmmount = PHWarp(hoverAmmount+frameInterval*2, M_PI*2);
     }
     PHLObject::updateView();
@@ -164,7 +165,7 @@ void PHLNPC::updatePosition()
         shouldFlipUponLoad = false;
     }
     b2Vec2 speed = body->GetLinearVelocity();
-    double elapsed = 1.0f/PHMainEvents::sharedInstance()->framesPerSecond();
+    double elapsed = 1.0f/_gameManager->framesPerSecond();
     if (aflip && (fflip || bflip) && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
     setIdle(abs(speed.x)<0.1);

@@ -29,7 +29,7 @@ void PHTestViewController::callback1(PHObject * sender, void * ud)
 void PHTestViewController::callback2(PHObject * sender, void * ud)
 {
 	PHTestViewController * vc = new PHTestViewController();
-	vc->init();
+	vc->init(_gameManager);
 	if (navController)
     {
 #ifdef __x86_64__

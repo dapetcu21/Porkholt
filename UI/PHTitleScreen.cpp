@@ -63,7 +63,7 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
 void PHTitleScreen::buttonPressed(PHObject * sender, void * ud)
 {
     PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
-	vc->init();
+	vc->init(_gameManager);
     PHImage::loadAllImages();
     navigationController()->pushViewController(vc,PHNavigationController::SlideLeft);
     vc->release();

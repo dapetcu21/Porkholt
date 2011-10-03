@@ -8,7 +8,7 @@
  */
 
 #include "PHViewController.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 #include "PHView.h"
 
 PHView * PHViewController::loadView(const PHRect & frame)
@@ -18,14 +18,18 @@ PHView * PHViewController::loadView(const PHRect & frame)
 	return view;
 }
 
-void PHViewController::init()
+void PHViewController::init(PHGameManager * gm)
 {
-	view = loadView(PHMainEvents::sharedInstance()->screenBounds());
+    _gameManager = gm;
+	view = loadView(gm->screenBounds());
+    view->setGameManager(gm);
 }
 
-void PHViewController::init(const PHRect & frame)
+void PHViewController::init(PHGameManager * gm,const PHRect & frame)
 {
+    _gameManager = gm;
 	view = loadView(frame);
+    view->setGameManager(gm);
 }
 
 void PHViewController::_updateScene(double timeElapsed)

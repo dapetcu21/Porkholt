@@ -9,7 +9,7 @@
 #include "PHTextController.h"
 #include "PHTextControllerView.h"
 #include "PHTextView.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 
 PHTextController::PHTextController(vector<string> * s) : PHViewController(), bColor(PHBlackColor), fColor(PHWhiteColor), strings(s), canAdvance(false), pos(0), textView(NULL), blackoutView(NULL), cb(NULL), trg(NULL), ud(NULL)
 {
@@ -19,7 +19,7 @@ PHTextController::PHTextController(vector<string> * s) : PHViewController(), bCo
 PHView * PHTextController::loadView(const PHRect & frame)
 {
     PHTextControllerView * view = new PHTextControllerView(this);
-    PHRect fr = PHMainEvents::sharedInstance()->screenBounds();
+    PHRect fr = _gameManager->screenBounds();
     view->setFrame(fr);
     fr.width/=fr.height;
     fr.height = 1;

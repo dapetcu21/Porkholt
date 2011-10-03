@@ -9,7 +9,7 @@
 #include "PHFont.h"
 #include "PHFileManager.h"
 #include "PHSerialization.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 
 map<string,PHFont*> PHFont::fonts;
 
@@ -33,7 +33,7 @@ PHFont::PHFont(const string & path) : loaded(false), texID(-1)
     {
         size_t txc = PHDecode(uint32At(d, 4));
         size_t img;
-        if (PHMainEvents::sharedInstance()->interfaceType() == PHMainEvents::interfaceHD)
+        if (PHGameManager::interfaceType() == PHGameManager::interfaceHD)
             img = PHDecode(uint32At(d, 12));
         else
             img = PHDecode(uint32At(d, 8));

@@ -23,7 +23,7 @@ protected:
 	virtual PHView * loadView(const PHRect & frame);
 	PHNavigationController * navController;
 	friend class PHNavigationController;
-	friend class PHMainEvents;
+	friend class PHGameManager;
 	int viewState;
     bool rmNav;
     
@@ -31,13 +31,16 @@ protected:
     virtual void updateScene(double timeElapsed);
     
     set<PHViewController*> managedControllers;
+    
+    PHGameManager * _gameManager;
+    
 public:
 	PHView * getView() { return view; };
 	PHViewController() : navController(NULL),view(NULL),viewState(StateNotAppeared),rmNav(false) {};
 	virtual ~PHViewController();
 	
-	void init();
-	void init(const PHRect & frame);
+	void init(PHGameManager * gm);
+	void init(PHGameManager * gm, const PHRect & frame);
 	
     PHNavigationController * navigationController() { return navController; }
     
@@ -96,6 +99,9 @@ public:
     
     void manageViewController(PHViewController *vc);
     void stopManagingViewController(PHViewController *vc);
+    
+    void setGameManager(PHGameManager * gm) { _gameManager = gm; }
+    PHGameManager * gameManager() { return _gameManager; }
     
 private:
 	virtual void viewDidAppear();

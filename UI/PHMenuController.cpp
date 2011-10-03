@@ -37,14 +37,14 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     resetClouds(v);
     
     nav = new PHNavigationController();
-    nav->init(frame);
+    nav->init(_gameManager,frame);
     nav->_viewWillAppear();
     v->addSubview(nav->getView());
     nav->_viewDidAppear();
     manageViewController(nav);
     
     PHViewController * vc = new PHTitleScreen();
-	vc->init(v->bounds());
+	vc->init(_gameManager,v->bounds());
 	nav->pushViewController(vc);
     vc->release();
     nav->release();

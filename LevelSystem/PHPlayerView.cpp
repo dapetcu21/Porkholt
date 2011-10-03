@@ -8,7 +8,7 @@
 
 
 #include "PHPlayerView.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 
 void PHPlayerView::setRotation( double rot)
 {
@@ -19,7 +19,7 @@ void PHPlayerView::setRotation( double rot)
         dif+=360;
     while (abs(dif-360)<abs(dif))
         dif-=360;
-    int fps = PHMainEvents::sharedInstance()->framesPerSecond();
+    int fps = _gameManager->framesPerSecond();
     PHLowPassFilter(lastDif, dif, 1.0f/fps, 50.0f);
 #ifdef PHVIEW_STD_LIST
     for (list<PHView*>::iterator i = views.begin(); i!= views.end(); i++)

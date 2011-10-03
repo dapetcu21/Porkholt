@@ -21,7 +21,7 @@
 #include "PHLPlayer.h"
 #include "PHLNPC.h"
 #include "PHLCamera.h"
-#include "PHMainEvents.h"
+#include "PHGameManager.h"
 
 #include "PHDialog.h"
 #include "PHScripting.h"
@@ -106,9 +106,9 @@ public:
     }
 };
 
-PHWorld::PHWorld(const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL)
+PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), _gameManager(mgr)
 {
-	PHRect bounds = PHMainEvents::sharedInstance()->screenBounds();
+	PHRect bounds = _gameManager->screenBounds();
 	view = new PHCaptureView(bounds);
     PHRect gaugeFrame;
 	jumpGaugeView = new PHGaugeView(gaugeFrame = PHRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
@@ -196,7 +196,7 @@ PHWorld::~PHWorld()
 
 void PHWorld::updatePositions()
 {
-    double frameInterval = 1.0f/(PHMainEvents::sharedInstance()->framesPerSecond());
+    double frameInterval = 1.0f/(_gameManager->framesPerSecond());
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -305,6 +305,7 @@ void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * in
 	if (obj->getClass()=="PHLPlayer")
 		player = (PHLPlayer*)obj;
 	obj->wrld = this;
+    obj->setGameManager(_gameManager);
 	worldView->addSubview(obj->getView());
 }
 

@@ -10,12 +10,14 @@
 #import <mach/mach.h>
 #import <mach/mach_time.h>
 #import "PorkholtViewController.h"
-#import "PHMainEvents.h"
+#import "PHGameManager.h"
 #import "PHTouchInterface.h"
 #import "PHMain.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #import "EAGLView.h"
+
+PHGameManager * PHGameManagerSingleton;
 
 @interface PorkholtViewController ()
 @property (nonatomic, retain) EAGLContext *context;
@@ -117,7 +119,8 @@
         [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES]; //to keep the run loop blocking
     }
     
-    PHMainEvents::sharedInstance()->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
+    gameManager = new PHGameManager([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
+    PHGameManagerSingleton = gameManager;
     
     while (![thread isCancelled] && [theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
     
@@ -130,20 +133,19 @@
 - (void)openGLFrame:(CADisplayLink*)displayLink
 {
     [PHTouchInterfaceSingleton processQueue];
-    PHMainEvents * mainClass = PHMainEvents::sharedInstance();
-    mainClass->processInput();
+    gameManager->processInput();
     [v setFramebuffer];
     
     static double time = 0;
     static double lastTime = 0;
     
-    double frameInterval = 1.0f/mainClass->framesPerSecond();
+    double frameInterval = 1.0f/gameManager->framesPerSecond();
     lastTime = time;
     time = PHTime::getTime();
     double elapsedTime = time-lastTime;
     if (elapsedTime>1.5*frameInterval)
         elapsedTime = 1.5*frameInterval;
-    mainClass->renderFrame(elapsedTime);
+    gameManager->renderFrame(elapsedTime);
     
     if (![v presentFramebuffer])
         PHLog("ERROR: Couldn't swap buffers");
@@ -194,12 +196,18 @@
 
 - (void)didReceiveMemoryWarning
 {
-	PHMainEvents::sharedInstance()->memoryWarning();
+    gameManager->memoryWarning();
     [super didReceiveMemoryWarning];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+}
+
+
+-(PHGameManager*)gameManager
+{
+    return gameManager;
 }
 
 /*

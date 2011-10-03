@@ -9,6 +9,8 @@
 #import "PHTouchInterface.h"
 #import "PHAccelInterface.h"
 #include "PHEventHandler.h"
+#include "PHGameManager.h"
+#import "PorkholtViewController.h"
 
 PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 
@@ -59,22 +61,22 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 		{
 			case 0:
 			{
-				PHEventHandler::sharedInstance()->touchDown(pnt, event);
+				PHGameManagerSingleton->eventHandler()->touchDown(pnt, event);
 				break;
 			}
 			case 1:
 			{
-				PHEventHandler::sharedInstance()->touchUp(pnt, event);
+                PHGameManagerSingleton->eventHandler()->touchUp(pnt, event);
 				break;
 			}
 			case 2:
 			{
-				PHEventHandler::sharedInstance()->touchCancelled(pnt, event);
+                PHGameManagerSingleton->eventHandler()->touchCancelled(pnt, event);
 				break;
 			}
 			case 3:
 			{
-				PHEventHandler::sharedInstance()->touchMoved(pnt, event);
+                PHGameManagerSingleton->eventHandler()->touchMoved(pnt, event);
 				break;
 			}
 		}
