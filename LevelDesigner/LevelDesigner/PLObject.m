@@ -13,12 +13,20 @@
 #import "PLFixture.h"
 #import "PLPrototype.h"
 #import "PrototypeController.h"
+#import "EntityController.h"
 
 @implementation PLObject
 @synthesize rootProperty;
 @synthesize subentityModel;
 @synthesize className;
 @synthesize prototype;
+
+-(NSUndoManager*)undoManager
+{
+    if ([owner isKindOfClass:[EntityController class]])
+        return ((EntityController*)owner).undoManager;
+    return nil;
+}
 
 -(void)markMandatory
 {
@@ -60,10 +68,12 @@
     PLPrototype * oldPrototype = prototype;
     PLPrototype * newPrototype = [[PrototypeController singleton] prototypeForClass:className];
     
+    [subentityModel disableUndo];
     [subentityModel removeEntitiesAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [subentityModel numberOfReadOnlyEntitiesInArray:0])] fromArray:0];
     [subentityModel removeEntitiesAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [subentityModel numberOfReadOnlyEntitiesInArray:1])] fromArray:1];
     [subentityModel insertEntities:newPrototype.images atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newPrototype.images count])] inArray:0];
     [subentityModel insertEntities:newPrototype.fixtures atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newPrototype.fixtures count])] inArray:1];
+    [subentityModel enableUndo];
     
     prototype = newPrototype;
     [newPrototype retain];
@@ -185,7 +195,7 @@
 }
 
 
--(void)saveToFile:(NSMutableString*)file
+-(void)writeToFile:(NSMutableString*)file;
 {
     [file appendFormat:@"obj = objectWithClass(\"%@\")\nobj.levelDes = true\n",className];
     NSUInteger i,n=[rootProperty childrenCount];

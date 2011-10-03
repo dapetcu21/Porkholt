@@ -13,6 +13,30 @@
 @synthesize undoManager;
 @synthesize controller;
 
+-(BOOL)isUndoDisabled
+{
+    return disableUndo!=0;
+}
+
+-(void)setUndoDisabled:(BOOL)du
+{
+    if (du)
+        disableUndo++;
+    else
+        if (disableUndo>0)
+            disableUndo--;
+}
+
+-(void)disableUndo
+{
+    [self setUndoDisabled:YES];
+}
+
+-(void)enableUndo
+{
+    [self setUndoDisabled:NO];
+}
+
 - (id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType
 {
     self = [super init];
@@ -171,7 +195,8 @@
 -(void)insertEntities:(NSArray*)entities atIndexes:(NSIndexSet*)indexes inArray:(NSUInteger)array
 {
     if ([indexes count]==0) return;
-    [[undoManager prepareWithInvocationTarget:self] removeEntitiesAtIndexes:indexes fromArray:array];
+    if (!disableUndo)
+        [[self.undoManager prepareWithInvocationTarget:self] removeEntitiesAtIndexes:indexes fromArray:array];
     NSMutableIndexSet * s = selection[array];
     __block NSInteger offset = 0;
     NSIndexSet * backup = [[s copy] autorelease];
@@ -198,7 +223,8 @@
 -(void)removeEntitiesAtIndexes:(NSIndexSet*)indexes fromArray:(NSUInteger)array
 {
     if ([indexes count]==0) return;
-    [[undoManager prepareWithInvocationTarget:self] insertEntities:[self entitiesForIndexes:indexes inArray:array] atIndexes:indexes inArray:array];
+    if (!disableUndo)
+        [[self.undoManager prepareWithInvocationTarget:self] insertEntities:[self entitiesForIndexes:indexes inArray:array] atIndexes:indexes inArray:array];
     NSMutableArray * a = arrays[array];
     NSMutableIndexSet * s = selection[array];
     __block NSInteger offset = 0;
