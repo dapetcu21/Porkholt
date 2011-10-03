@@ -17,7 +17,7 @@ exec_prefix=$(prefix)
 # Where the zlib library and include files are located
 #ZLIBLIB=/usr/local/lib
 #ZLIBINC=/usr/local/include
-ZLIBLIB=../zlib
+ZLIBLIB=../lib
 ZLIBINC=../zlib
 
 # Library name:
@@ -37,10 +37,11 @@ MKDIR_P=mkdir -p
 LN_SF=ln -sf
 RANLIB=ranlib
 RM_F=/bin/rm -f
+ARCH=
 
 # CFLAGS=-I$(ZLIBINC) -W -Wall -O3 -funroll-loops
-CFLAGS=-I$(ZLIBINC) -W -Wall -O -funroll-loops
-LDFLAGS=-L. -L$(ZLIBLIB) -lpng15 -lz
+CFLAGS=-I$(ZLIBINC) -W -Wall -O -funroll-loops $(ARCH)
+LDFLAGS=-L. -L$(ZLIBLIB) -lpng15 -lz $(ARCH)
 
 INCPATH=$(prefix)/include
 LIBPATH=$(exec_prefix)/lib
@@ -107,7 +108,7 @@ $(LIBSOMAJ): $(OBJSDLL)
 	 -install_name $(LIBPATH)/$(LIBSOMAJ) \
 	 -current_version 15 -compatibility_version 15 \
 	 -o $(LIBSOMAJ) \
-	 $(OBJSDLL) -L$(ZLIBLIB) -lz
+	 $(OBJSDLL) -L$(ZLIBLIB) -lz $(ARCH)
 
 pngtest: pngtest.o $(LIBSO)
 	$(CC) -o pngtest $(CFLAGS) pngtest.o $(LDFLAGS)

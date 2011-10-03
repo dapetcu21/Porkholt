@@ -7,11 +7,14 @@ xcuserdata
 *.xcworkspace
 *.o
 *.lo
+*.a
+*.dylib
 _
 .swp
 
 .DS_Store
 
+Externals/libpng/pngtest
 Externals/libpng/.deps/
 Externals/libpng/.libs/
 Externals/libpng/Makefile
