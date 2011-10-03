@@ -24,7 +24,7 @@
     BOOL * selectionChanged;
     BOOL selectNextAfterDelete;
     BOOL ro;
-    BOOL disableUndo;
+    int disableUndo;
 }
 
 -(id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType;
@@ -92,6 +92,8 @@
 
 -(void)entityDescriptionChanged:(PLEntity*)e;
 
-@property(nonatomic,assign) BOOL disableUndo;
+@property(nonatomic,getter=isUndoDisabled) BOOL undoDisabled;
+-(void)disableUndo;
+-(void)enableUndo;
 
 @end

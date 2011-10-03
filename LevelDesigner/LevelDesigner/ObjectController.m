@@ -142,7 +142,7 @@
     [file appendString:@"\nlocal obj\n\n"];
 	for (PLObject * object in arrays[0])
 		if (!object.readOnly)
-			[object saveToFile:file];
+			[object writeToFile:file];
 	[file appendString:@"\n"];
 }
 

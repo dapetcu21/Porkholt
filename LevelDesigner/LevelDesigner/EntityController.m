@@ -11,8 +11,31 @@
 
 @implementation EntityController
 @synthesize undoManager;
-@synthesize disableUndo;
 @synthesize controller;
+
+-(BOOL)isUndoDisabled
+{
+    return disableUndo!=0;
+}
+
+-(void)setUndoDisabled:(BOOL)du
+{
+    if (du)
+        disableUndo++;
+    else
+        if (disableUndo>0)
+            disableUndo--;
+}
+
+-(void)disableUndo
+{
+    [self setUndoDisabled:YES];
+}
+
+-(void)enableUndo
+{
+    [self setUndoDisabled:NO];
+}
 
 - (id)initWithArrays:(NSUInteger)array andPasteboardType:(NSString*)pbType
 {
