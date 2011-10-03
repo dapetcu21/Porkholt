@@ -18,10 +18,8 @@
 #include "PHNavigationController.h"
 #include "PHEventHandler.h"
 
-PHGameManager::PHGameManager(double sx, double sy, int f) : view(NULL), viewController(NULL), loaded(false)
-{
-    init(sx, sy, f);
-}
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false)
+{}
 
 void PHGameManager::init(double screenX, double screenY, int FPS)
 {
@@ -30,7 +28,8 @@ void PHGameManager::init(double screenX, double screenY, int FPS)
 	_screenHeight = screenY;
 	suspended = 0;
     loaded = true;
-	
+	setUserData(ud);
+    
 	PHThread::mainThread();
 
 #ifdef PH_SIMULATOR
@@ -62,6 +61,7 @@ void PHGameManager::init(double screenX, double screenY, int FPS)
 
 void PHGameManager::setProjection()
 {
+    glViewport(0, 0, _screenWidth, _screenHeight);
     glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glTranslatef(-1.0f, -1.0f, 0.0f);
@@ -73,6 +73,7 @@ void PHGameManager::setScreenSize(double w, double h)
     _screenWidth = w;
     _screenHeight = h;
     setProjection(); 
+    view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
 }
 
 void PHGameManager::processInput()

@@ -20,6 +20,7 @@
 			<string>NSScrollView</string>
 			<string>NSButtonCell</string>
 			<string>NSTextFieldCell</string>
+			<string>NSOpenGLView</string>
 			<string>NSTableView</string>
 			<string>NSTabView</string>
 			<string>NSOutlineView</string>
@@ -90,6 +91,7 @@
 															<string key="NSFrame">{{-7, -10}, {271, 449}}</string>
 															<reference key="NSSuperview" ref="815635863"/>
 															<reference key="NSWindow"/>
+															<reference key="NSNextKeyView" ref="504394639"/>
 															<string key="NSReuseIdentifierKey">_NS:461</string>
 															<object class="NSMutableArray" key="NSTabViewItems">
 																<bool key="EncodedWithXMLCoder">YES</bool>
@@ -194,7 +196,7 @@
 																								<string key="NSFrameSize">{254, 360}</string>
 																								<reference key="NSSuperview" ref="879134151"/>
 																								<reference key="NSWindow"/>
-																								<reference key="NSNextKeyView" ref="611322288"/>
+																								<reference key="NSNextKeyView" ref="958943690"/>
 																								<string key="NSReuseIdentifierKey">_NS:1197</string>
 																								<bool key="NSEnabled">YES</bool>
 																								<object class="NSTableHeaderView" key="NSHeaderView" id="422288744">
@@ -382,7 +384,7 @@
 																				<string key="NSFrame">{{0, 22}, {251, 378}}</string>
 																				<reference key="NSSuperview" ref="504394639"/>
 																				<reference key="NSWindow"/>
-																				<reference key="NSNextKeyView" ref="879134151"/>
+																				<reference key="NSNextKeyView" ref="611322288"/>
 																				<string key="NSReuseIdentifierKey">_NS:1193</string>
 																				<int key="NSsFlags">133810</int>
 																				<reference key="NSVScroller" ref="611322288"/>
@@ -667,7 +669,6 @@
 																				<int key="NSvFlags">292</int>
 																				<string key="NSFrame">{{0, 2}, {26, 17}}</string>
 																				<reference key="NSSuperview" ref="1048139023"/>
-																				<reference key="NSNextKeyView" ref="141527784"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSButtonCell" key="NSCell" id="150351430">
 																					<int key="NSCellFlags">67239424</int>
@@ -908,9 +909,28 @@
 								<object class="NSCustomView" id="113595676">
 									<reference key="NSNextResponder" ref="963903192"/>
 									<int key="NSvFlags">256</int>
+									<object class="NSMutableArray" key="NSSubviews">
+										<bool key="EncodedWithXMLCoder">YES</bool>
+										<object class="NSOpenGLView" id="422149458">
+											<reference key="NSNextResponder" ref="113595676"/>
+											<int key="NSvFlags">1298</int>
+											<object class="NSPSMatrix" key="NSDrawMatrix"/>
+											<string key="NSFrameSize">{946, 717}</string>
+											<reference key="NSSuperview" ref="113595676"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView"/>
+											<string key="NSReuseIdentifierKey">_NS:9</string>
+											<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
+												<object class="NSMutableData" key="NSPixelAttributes">
+													<bytes key="NS.bytes">AAAAYAAAAAA</bytes>
+												</object>
+											</object>
+										</object>
+									</object>
 									<string key="NSFrame">{{258, 0}, {946, 717}}</string>
 									<reference key="NSSuperview" ref="963903192"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="422149458"/>
 									<string key="NSReuseIdentifierKey">_NS:601</string>
 									<string key="NSClassName">NSView</string>
 								</object>
@@ -2283,6 +2303,7 @@
 						<reference key="object" ref="113595676"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="422149458"/>
 						</object>
 						<reference key="parent" ref="963903192"/>
 					</object>
@@ -3125,6 +3146,11 @@
 						<reference key="object" ref="679711001"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100317</int>
+						<reference key="object" ref="422149458"/>
+						<reference key="parent" ref="113595676"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3255,6 +3281,8 @@
 					<string>100235.IBPluginDependency</string>
 					<string>100236.IBPluginDependency</string>
 					<string>100245.IBPluginDependency</string>
+					<string>100317.CustomClassName</string>
+					<string>100317.IBPluginDependency</string>
 					<string>5.IBNSWindowAutoPositionCentersHorizontal</string>
 					<string>5.IBNSWindowAutoPositionCentersVertical</string>
 					<string>5.IBPluginDependency</string>
@@ -3387,6 +3415,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>PLPorkholtView</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="NO"/>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3406,7 +3436,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">100316</int>
+			<int key="maxID">100317</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3800,6 +3830,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/PLOutlineView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">PLPorkholtView</string>
+					<string key="superclassName">NSOpenGLView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PLPorkholtView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

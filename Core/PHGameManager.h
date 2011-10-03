@@ -37,17 +37,15 @@ private:
     void entryPoint();
     
     void setProjection();
-    void setScreenSize(double w, double h);
-    
     void * ud;
     
-    void init(double screenX, double screenY,int FPS);
-    
 public:
-    PHGameManager(double screenX, double screenY, int FPS);
+    PHGameManager();
+    void init(double screenX, double screenY,int FPS);
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
+    void setScreenSize(double w, double h);
 	int framesPerSecond() { return fps; }
 	void renderFrame(double timeElapsed);
 	void appSuspended();
@@ -72,6 +70,8 @@ public:
         numInterfaceTypes
     };
     static int interfaceType();
+    
+    PHNavigationController * navigationController() { return viewController; }
 };
 
 #endif
