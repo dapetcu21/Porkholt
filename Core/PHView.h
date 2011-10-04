@@ -12,7 +12,7 @@
 
 #include "PHMain.h"
 #include "PHAnimationDescriptor.h"
-#include "PHTouch.h"
+#include "PHEvent.h"
 
 #define PHVIEW_STD_LIST
 
@@ -61,7 +61,7 @@ protected:
 	void apply_scaling();
 	void applyMatrices();
 	
-	virtual void touchEvent(PHTouch * touch);
+	virtual void touchEvent(PHEvent * touch);
 	
 public:
     void loadMatrixTree(PHView * until);
@@ -88,7 +88,7 @@ public:
     
     const list<PHView*> & subViews() { return views; }
 	
-	void setFrame(const PHRect &frame);
+	virtual void setFrame(const PHRect &frame);
 	void setPosition(const PHPoint &pos);
     PHPoint position() { return PHPoint(_frame.x,_frame.y); }
 	PHRect frame() const { return _frame; }
@@ -153,7 +153,7 @@ public:
 //animation system
 private:
 	static std::list<PHAnimationDescriptor*> animations;
-	PHView * pointerDeepFirst(PHTouch * touch);
+	PHView * pointerDeepFirst(PHEvent * touch);
 	static double animFunction(double time,int ftype);
 public:
     

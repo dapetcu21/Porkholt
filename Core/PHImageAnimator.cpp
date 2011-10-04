@@ -147,7 +147,7 @@ void PHImageAnimator::advanceAnimation(double elapsedTime)
     PHAnimatedImage::frame * frm;
     while (remaining<=0)
     {
-        int nframes = sec->frames.size();
+        int nframes = (int)sec->frames.size();
         if (!nframes) return;
         frame++;
         frm = &(sec->frames.at(frame));

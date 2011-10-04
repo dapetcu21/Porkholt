@@ -38,7 +38,7 @@ public:
 	void setDownCallback(PHObject * tg, PHCallback cb, void * ud ) { tgDown = tg; cbDown = cb; udDown = ud; };
 protected:
 	virtual void draw();
-	virtual void touchEvent(PHTouch * touch);
+	virtual void touchEvent(PHEvent * touch);
 };
 
 #endif

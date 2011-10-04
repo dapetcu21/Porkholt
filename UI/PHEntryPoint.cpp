@@ -12,7 +12,17 @@
 
 void PHGameManager::entryPoint()
 {
-    //	PHViewController * vc = new PHChapterController(PHFileManager::resourcePath()+"/levels/current");
+    view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
+    view->setGameManager(this);
+	view->setBackgroundColor(PHGrayColor);
+	view->setUserInput(true);
+	
+	viewController = new PHNavigationController();
+	viewController->init(this);
+	viewController->_viewWillAppear();
+	view->addSubview(viewController->getView());
+	viewController->_viewDidAppear();
+    
     PHViewController * vc = new PHMenuController();
 	vc->init(this);
     viewController->pushViewController(vc);

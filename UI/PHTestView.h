@@ -20,7 +20,7 @@ public:
 	
 protected:
 	virtual void draw();
-	virtual void touchEvent(PHTouch * touch);
+	virtual void touchEvent(PHEvent * touch);
 	
 };
 

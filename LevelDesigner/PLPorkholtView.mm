@@ -12,6 +12,16 @@
 #import "PHTestViewController.h"
 #import "PHNavigationController.h"
 #import "OpenGLTimer.h"
+#import "PHScrollerView.h"
+#import "PHEventHandler.h"
+
+@interface NSEvent (PLDeviceDelta)
+- (float)deviceDeltaX;
+- (float)deviceDeltaY;
+- (CGFloat)scrollingDeltaX;
+- (CGFloat)scrollingDeltaY;
+- (BOOL)hasPreciseScrollingDeltas;
+@end
 
 @implementation PLPorkholtView
 
@@ -30,6 +40,11 @@
     return gameManager;
 }
 
+-(PHView*)worldView
+{
+    return worldView;
+}
+
 -(void)setNeedsDisplayYes
 {
     [self setNeedsDisplay:YES];
@@ -38,6 +53,9 @@
 -(void)awakeFromNib
 {
     [[self openGLContext] makeCurrentContext];
+    
+    GLint swapInt = 1;
+    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
 
     NSRect frame = [self bounds];
     gameManager = new PHGameManager;
@@ -82,15 +100,130 @@
 
 -(void)entryPoint
 {
-    PHViewController * vc = new PHTestViewController();
-    vc->init(gameManager);
-    gameManager->navigationController()->pushViewController(vc, PHNavigationController::SlideLeft, false);
-    vc->release();
+    worldView = new PHView(PHWholeRect);
+    ((PHScrollerView*)gameManager->rootView())->setContentView(worldView);
+}
+
+-(void)mouseDown:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchDown(PHPoint(p.x,p.y), (void*)1);
+}
+
+-(void)mouseDragged:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchMoved(PHPoint(p.x,p.y), (void*)1);
+}
+
+-(void)mouseUp:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchUp(PHPoint(p.x,p.y), (void*)1);
+}
+
+-(void)rightMouseDown:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchDown(PHPoint(p.x,p.y), (void*)2);
+}
+
+-(void)rightMouseDragged:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchMoved(PHPoint(p.x,p.y), (void*)2);
+}
+
+-(void)rightMouseUp:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchUp(PHPoint(p.x,p.y), (void*)2);
+}
+
+-(void)otherMouseDown:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchDown(PHPoint(p.x,p.y), (void*)([event buttonNumber]+1));
+}
+
+-(void)otherMouseDragged:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchMoved(PHPoint(p.x,p.y), (void*)([event buttonNumber]+1));
+}
+
+-(void)otherMouseUp:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->touchUp(PHPoint(p.x,p.y), (void*)([event buttonNumber]+1));
+}
+
+
+- (void)scrollWheel:(NSEvent*)event
+{
+    double dx = event.deltaX * 10;
+    double dy = event.deltaY * 10;
+    if ([event respondsToSelector:@selector(hasPreciseScrollingDeltas)])
+    {
+        if ([event hasPreciseScrollingDeltas])
+        {
+            dx = [event scrollingDeltaX];
+            dy = [event scrollingDeltaY];
+        }
+    } else
+    if (CGEventGetIntegerValueField([event CGEvent ],kCGScrollWheelEventIsContinuous))
+    {
+        dx = [event deviceDeltaX];
+        dy = [event deviceDeltaY];
+    }
+    PHLog("%lf %lf",dx,dy);
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->scrollWheel(PHPoint(p.x,p.y), PHPoint(dx,-dy), event);
+}
+
+-(void)magnifyWithEvent:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->pinchZoom(PHPoint(p.x,p.y), [event magnification], event);
+}
+
+- (void)rotateWithEvent:(NSEvent *)event
+{
+    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    gameManager->eventHandler()->pinchRotate(PHPoint(p.x,p.y), [event rotation], event);
+}
+
+- (void)beginGestureWithEvent:(NSEvent *)event
+{
+    gameManager->eventHandler()->multitouchBegin(event);
+}
+
+- (void)endGestureWithEvent:(NSEvent *)event
+{
+    gameManager->eventHandler()->multitouchEnd(event);
 }
 
 void PHGameManager::entryPoint()
 {
+    PHScrollerView * v = new PHScrollerView;
+    v->setScale(50,PHOriginPoint);
+    view = v;
     [(PLPorkholtView*)(this->userData()) entryPoint];
+}
+
+int PHEventHandler::modifierMask()
+{
+    int mask = 0;
+    NSUInteger nsmask = [NSEvent modifierFlags];
+    if (nsmask & NSShiftKeyMask)
+        mask |= shiftModifier;
+    if (nsmask & NSAlternateKeyMask)
+        mask |= optionModifier;
+    if (nsmask & NSCommandKeyMask)
+        mask |= commandModifier;
+    if (nsmask & NSControlKeyMask)
+        mask |= controlModifier;
+    return mask;
 }
 
 @end

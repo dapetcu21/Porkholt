@@ -32,9 +32,9 @@ void PHTestView::draw()
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void PHTestView::touchEvent(PHTouch * touch)
+void PHTestView::touchEvent(PHEvent * touch)
 {
-	if (touch->phase() == PHTouch::touchMovedState)
+	if (touch->type() == PHEvent::touchMoved)
 	{
 		PHPoint p[2];
 		p[0] = touch->location();
@@ -48,6 +48,5 @@ void PHTestView::touchEvent(PHTouch * touch)
 		frame.x+=p[0].x-p[1].x;
 		frame.y+=p[0].y-p[1].y;
 		setFrame(frame);
-		
 	}
 }

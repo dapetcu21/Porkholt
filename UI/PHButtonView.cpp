@@ -36,24 +36,24 @@ void PHButtonView::draw()
 	}
 }
 
-void PHButtonView::touchEvent(PHTouch * touch)
+void PHButtonView::touchEvent(PHEvent * touch)
 {
-	if (touch->phase() == PHTouch::touchDownState)
+	if (touch->type() == PHEvent::touchDown)
 	{
 		_state = StateDown;
 		if (tgDown)
 			(tgDown->*cbDown)(this,udDown);
 			
 	}
-	if (touch->phase() == PHTouch::touchUpState)
+	if (touch->type() == PHEvent::touchUp)
 	{
 		_state = StateUp;
 		if (tgUp && PHPointInRect(toMyCoordinates(touch->location()),bounds()))
 			(tgUp->*cbUp)(this,udUp);
 	}
-    if (touch->phase() == PHTouch::touchMovedState)
+    if (touch->type() == PHEvent::touchMoved)
         _state = PHPointInRect(toMyCoordinates(touch->location()),bounds())?StateDown:StateUp;
-    if (touch->phase() == PHTouch::touchCancelledState)
+    if (touch->type() == PHEvent::touchCancelled)
         _state = StateUp;
 }
 

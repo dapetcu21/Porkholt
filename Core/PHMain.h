@@ -27,20 +27,18 @@ using namespace std;
 #ifdef __APPLE__
     #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
         #define PH_IPHONE_OS
+        #ifdef __i386__
+            #define PH_SIMULATOR
+        #endif
     #else
         #define PH_MAC_OS
     #endif
 	#define PH_DARWIN
-	#ifdef __i386__
-		#define PH_SIMULATOR
-	#endif
 #endif
 
 #ifdef PH_IPHONE_OS
 	#import <OpenGLES/ES1/gl.h>
 	#import <OpenGLES/ES1/glext.h>
-	#import <OpenGLES/ES2/gl.h>
-	#import <OpenGLES/ES2/glext.h>
 #endif
 #ifdef PH_MAC_OS
     #import <OpenGL/gl.h>

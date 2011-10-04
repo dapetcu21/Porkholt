@@ -119,7 +119,8 @@ PHGameManager * PHGameManagerSingleton;
         [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES]; //to keep the run loop blocking
     }
     
-    gameManager = new PHGameManager([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
+    gameManager = new PHGameManager;
+    gameManager->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
     PHGameManagerSingleton = gameManager;
     
     while (![thread isCancelled] && [theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);

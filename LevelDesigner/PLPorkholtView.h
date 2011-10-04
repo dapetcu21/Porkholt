@@ -9,12 +9,15 @@
 #import <AppKit/AppKit.h>
 
 class PHGameManager;
+class PHView;
 @interface PLPorkholtView : NSOpenGLView
 {
     PHGameManager * gameManager;
     NSTimer * timer;
+    PHView * worldView;
 }
 
 -(PHGameManager*)gameManager;
+-(PHView*)worldView;
 
 @end

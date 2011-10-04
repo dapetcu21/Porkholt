@@ -72,6 +72,7 @@ public:
     static int interfaceType();
     
     PHNavigationController * navigationController() { return viewController; }
+    PHView * rootView() { return view; }
 };
 
 #endif

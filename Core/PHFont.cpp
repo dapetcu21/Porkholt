@@ -124,7 +124,7 @@ void PHFont::loadToTexture(PHObject * sender, void * ud)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, (int)width, (int)height, 0, 
 				 GL_ALPHA, GL_UNSIGNED_BYTE, imageData);	
     
     dataRetainCount--;

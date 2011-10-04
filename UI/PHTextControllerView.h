@@ -18,7 +18,7 @@ private:
     PHTextController * delegate;
 public:
     PHTextControllerView(PHTextController * delegate);
-    void touchEvent(PHTouch * touch);
+    void touchEvent(PHEvent * touch);
 };
 
 #endif

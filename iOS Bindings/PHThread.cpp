@@ -17,7 +17,7 @@ PHMutex * PHThread::threads_mutex;
 
 PHThread * PHMainEventThread = NULL;
 
-void new_thread ( void * ud )
+static void new_thread ( void * ud )
 {
 	((PHThread*)ud)->execute();
 }

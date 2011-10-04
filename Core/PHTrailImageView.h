@@ -46,7 +46,7 @@ public:
     void setSnapshotInterval(int s) { snap = s; }
     PHView * stopView() { return _stopView; }
     void setStopView(PHView * vw) { _stopView = vw; frames.clear(); }
-    int actualTrailSize() { return frames.size(); }
+    int actualTrailSize() { return (int)(frames.size()); }
     
     void setAuxImage(PHImage * img) { if (auxImg) auxImg->release(); auxImg=img; if (auxImg) auxImg->retain(); }
     PHImage * auxImage() { return auxImg; }

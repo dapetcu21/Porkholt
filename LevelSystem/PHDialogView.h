@@ -17,7 +17,7 @@ class PHDialogView : public PHImageView
 private:
     PHLNPC * delegate;
     bool touchEnabled;
-    virtual void touchEvent(PHTouch * t);
+    virtual void touchEvent(PHEvent * t);
     virtual void draw();
     bool stretch;
 public:

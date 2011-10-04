@@ -55,7 +55,7 @@ void PHTrailImageView::auxRender()
     glLoadIdentity();
     if (_stopView)
         _stopView->loadMatrixTree(NULL);
-    int n = frames.size();
+    int n = (int)frames.size();
     int nr = 1;
     for (list<pframe>::iterator i = frames.begin(); i!=frames.end(); i++)
     {

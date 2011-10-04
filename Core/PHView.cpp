@@ -339,7 +339,7 @@ void PHView::draw()
 {	
 }
 
-void PHView::touchEvent(PHTouch * touch)
+void PHView::touchEvent(PHEvent * touch)
 {
     eventHandled = false;
 }
@@ -519,7 +519,7 @@ void PHView::updateAnimation(double time)
 }
 
 //stuff
-PHView * PHView::pointerDeepFirst(PHTouch * touch)
+PHView * PHView::pointerDeepFirst(PHEvent * touch)
 {
 	if (!_userInput) return NULL;
 	glPushMatrix();
@@ -555,7 +555,7 @@ PHView * PHView::pointerDeepFirst(PHTouch * touch)
         {
             eventHandled = true;
             touchEvent(touch);
-			view = eventHandled?this:false;
+			view = eventHandled?this:NULL;
         }
 	}
 	glPopMatrix();

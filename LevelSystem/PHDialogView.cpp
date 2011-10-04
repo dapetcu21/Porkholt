@@ -9,9 +9,9 @@
 #include "PHDialogView.h"
 #include "PHLNPC.h"
 
-void PHDialogView::touchEvent(PHTouch * t)
+void PHDialogView::touchEvent(PHEvent * t)
 {
-    if (t->phase() == PHTouch::touchDownState && touchEnabled && delegate)
+    if (t->type() == PHEvent::touchDown && touchEnabled && delegate)
     {
         delegate->dialogViewFired(this);
         touchEnabled = false;

@@ -7,16 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreVideo/CoreVideo.h>
 
 @class PLPorkholtView;
+
 @interface OpenGLTimer : NSObject
 {
     NSMutableSet * views;
-    NSTimer * timer;
+    CVDisplayLinkRef displayLink;
 }
 
 -(void)addView:(PLPorkholtView*)v;
 -(void)removeView:(PLPorkholtView*)v;
+-(void)timerFired;
 
 +(OpenGLTimer*)retainedInstance;
 +(OpenGLTimer*)sharedInstance;

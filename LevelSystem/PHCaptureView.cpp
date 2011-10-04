@@ -9,10 +9,10 @@
 
 #include "PHCaptureView.h"
 
-void PHCaptureView::touchEvent(PHTouch * touch)
+void PHCaptureView::touchEvent(PHEvent * touch)
 {
 	if (!l) return;
-	if (touch->phase() == PHTouch::touchMovedState)
+	if (touch->type() == PHEvent::touchMoved)
 	{
 		PHPoint p1,p2,p;
 		p1 = toMyCoordinates(touch->location());

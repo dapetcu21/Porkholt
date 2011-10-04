@@ -12,16 +12,17 @@
 
 #include "PHMain.h"
 
-class PHTouch;
+class PHEvent;
 class PHView;
 class PHGameManager;
 
 class PHEventHandler : public PHObject
 {
 private:
-	list<PHTouch*> touches;
+	list<PHEvent*> touches;
+    set<PHView*> mtviews;
 	PHEventHandler(PHGameManager * gm) : gameManager(gm) {};
-	PHTouch * touchForUserData(void * ud, list<PHTouch*>::iterator & i);
+	PHEvent * touchForUserData(void * ud, list<PHEvent*>::iterator & i);
     PHGameManager * gameManager;
     
     friend class PHGameManager;
@@ -31,7 +32,24 @@ public:
 	void touchUp(PHPoint pnt, void * ud);
 	void touchMoved(PHPoint pnt, void * ud);
 	void touchCancelled(PHPoint pnt, void *ud);
-	void removeView(PHView * view);
+    void scrollWheel(PHPoint pnt, PHPoint delta, void *ud);
+    void pinchZoom(PHPoint pnt, double zoom, void *ud);
+    void pinchRotate(PHPoint pnt, double rotation, void *ud);
+    void multitouchBegin(void *ud);
+    void multitouchEnd(void *ud);
+	
+    enum modifiers
+    {
+        shiftModifier = (1<<0),
+        optionModifier = (1<<1),
+        controlModifier = (1<<2),
+        commandModifier = (1<<3)
+    };
+    static int modifierMask();
+    
+    void registerViewForMultitouchEvents(PHView*);
+    void unregisterViewForMultitouchEvents(PHView*);
+    void removeView(PHView * view);
 };
 
 #endif

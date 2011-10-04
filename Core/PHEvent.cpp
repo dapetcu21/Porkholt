@@ -1,5 +1,5 @@
 /*
- *  PHTouch.cpp
+ *  PHEvent.cpp
  *  Porkholt_iOS
  *
  *  Created by Marius Petcu on 2/18/11.
@@ -7,11 +7,11 @@
  *
  */
 
-#include "PHTouch.h"
+#include "PHEvent.h"
 
-void PHTouch::updateLocation(const PHPoint & pnt, double time, int nstate)
+void PHEvent::updateLocation(const PHPoint & pnt, double time, int nstate)
 {
-	if (nstate == touchDownState)
+	if (nstate == touchDown)
 	{
 		_lastTime = time;
 		_time = time;

@@ -37,7 +37,7 @@ void PHTime::sleep(double time)
 	s1.tv_nsec = (int)((time-(int)time)*1000000000);
 	s1.tv_sec = (int)time;
 	int res;
-	while (res=nanosleep(&s1, &s2))
+	while ((res=nanosleep(&s1, &s2)))
 	{
 		if (errno!=EINTR)
 		{

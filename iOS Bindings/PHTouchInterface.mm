@@ -155,3 +155,8 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 
 
 @end
+
+int PHEventHandler::modifierMask()
+{
+    return 0;
+}

@@ -8,8 +8,25 @@
 
 #import "OpenGLTimer.h"
 #import "PLPorkholtView.h"
+#import "PHScrollerView.h"
+#import <CoreVideo/CoreVideo.h>
 
 static OpenGLTimer * OpenGLTimer_singleton = nil;
+
+
+static CVReturn MyDisplayLinkCallback (
+                                CVDisplayLinkRef displayLink,
+                                const CVTimeStamp *inNow,
+                                const CVTimeStamp *inOutputTime,
+                                CVOptionFlags flagsIn,
+                                CVOptionFlags *flagsOut,
+                                void *displayLinkContext
+                                )
+{
+    [[OpenGLTimer sharedInstance] timerFired];
+    return kCVReturnSuccess;
+}
+
 
 @implementation OpenGLTimer
 
@@ -27,7 +44,10 @@ static OpenGLTimer * OpenGLTimer_singleton = nil;
     self = [super init];
     if (self) {
         views = [[NSMutableSet alloc] init];
-        timer = [NSTimer scheduledTimerWithTimeInterval:1.0f/60.0f target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
+        CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
+        CVDisplayLinkSetOutputCallback(displayLink, &MyDisplayLinkCallback, self);
+        CVDisplayLinkSetCurrentCGDisplay(displayLink,0);
+        CVDisplayLinkStart(displayLink);
     }
     
     return self;
@@ -35,7 +55,7 @@ static OpenGLTimer * OpenGLTimer_singleton = nil;
 
 -(void)dealloc
 {
-    [timer invalidate];
+    CVDisplayLinkRelease(displayLink);
     [views release];
     OpenGLTimer_singleton = nil;
     [super dealloc];

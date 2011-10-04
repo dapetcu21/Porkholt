@@ -39,22 +39,10 @@ void PHGameManager::init(double screenX, double screenY, int FPS)
 	
     evtHandler = new PHEventHandler(this);
     
-	view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
-    view->setGameManager(this);
-	view->setBackgroundColor(PHGrayColor);
-	view->setUserInput(true);
-	
     setProjection();
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	
-	viewController = new PHNavigationController();
-	viewController->init(this);
-	viewController->_viewWillAppear();
-	view->addSubview(viewController->getView());
-	viewController->_viewDidAppear();
     
     entryPoint();
 }
@@ -73,7 +61,8 @@ void PHGameManager::setScreenSize(double w, double h)
     _screenWidth = w;
     _screenHeight = h;
     setProjection(); 
-    view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
+    if (view)
+        view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
 }
 
 void PHGameManager::processInput()

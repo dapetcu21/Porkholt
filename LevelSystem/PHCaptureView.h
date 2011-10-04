@@ -36,7 +36,7 @@ public:
 	void setPaused(bool * p) { paused = p; lastPaused=(*p); }
 protected:
 	virtual void render();
-	virtual void touchEvent(PHTouch * touch);
+	virtual void touchEvent(PHEvent * touch);
 };
 
 #endif

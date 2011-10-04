@@ -81,12 +81,12 @@
 		[self openInFinder];
 }
 
--(void)keyDown:(NSEvent *)theEvent
+-(void)keyDown:(NSEvent *)event
 {
-    if ([[theEvent characters] isEqualToString:@"r"] && ([theEvent modifierFlags] & NSCommandKeyMask))
+    if ([[event characters] isEqualToString:@"r"] && ([event modifierFlags] & NSCommandKeyMask))
         [(FileBrowserController*)[self delegate] reload:self];
     else
-        [super keyDown:theEvent];
+        [super keyDown:event];
 }
 
 @end

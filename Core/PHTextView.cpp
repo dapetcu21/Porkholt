@@ -96,7 +96,7 @@ void PHTextView::recalculatePositions()
     double width = bounds().width;
     int p = 0;
     int st = 0;
-    int n = _text.size();
+    int n = (int)_text.size();
     while (p<=n)
     {
         bool isBreak = p>=n || PHIsBreakCharacter(_text[p]);
@@ -123,7 +123,7 @@ void PHTextView::recalculatePositions()
     int last = st;
     int stW = 0;
     double lineLen = 0;
-    n = words.size();
+    n = (int)words.size();
     p = 0;
     
     int totalGlyphs = 0;
@@ -160,7 +160,7 @@ void PHTextView::recalculatePositions()
     for (int i =0; i<lines.size(); i++)
         PHLog("%d %d %f \"%s\"",lines[i].first,lines[i].second,lines[i].length,_text.substr(lines[i].first,lines[i].second-lines[i].first+1).c_str());*/
     
-    n = lines.size();
+    n = (int)(lines.size());
     double blockHeight = n*size + (n>=1?(n-1)*lineSpace*size:0);
     double startY;
     if ((_alignment & 3) == alignBottom)

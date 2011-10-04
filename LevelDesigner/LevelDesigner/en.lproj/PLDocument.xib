@@ -54,7 +54,7 @@
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{367, 184}, {1204, 717}}</string>
-				<int key="NSWTFlags">1886912512</int>
+				<int key="NSWTFlags">1618477056</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<string key="NSViewClass">View</string>
@@ -91,7 +91,6 @@
 															<string key="NSFrame">{{-7, -10}, {271, 449}}</string>
 															<reference key="NSSuperview" ref="815635863"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="504394639"/>
 															<string key="NSReuseIdentifierKey">_NS:461</string>
 															<object class="NSMutableArray" key="NSTabViewItems">
 																<bool key="EncodedWithXMLCoder">YES</bool>
@@ -196,7 +195,7 @@
 																								<string key="NSFrameSize">{254, 360}</string>
 																								<reference key="NSSuperview" ref="879134151"/>
 																								<reference key="NSWindow"/>
-																								<reference key="NSNextKeyView" ref="958943690"/>
+																								<reference key="NSNextKeyView" ref="611322288"/>
 																								<string key="NSReuseIdentifierKey">_NS:1197</string>
 																								<bool key="NSEnabled">YES</bool>
 																								<object class="NSTableHeaderView" key="NSHeaderView" id="422288744">
@@ -384,7 +383,7 @@
 																				<string key="NSFrame">{{0, 22}, {251, 378}}</string>
 																				<reference key="NSSuperview" ref="504394639"/>
 																				<reference key="NSWindow"/>
-																				<reference key="NSNextKeyView" ref="611322288"/>
+																				<reference key="NSNextKeyView" ref="879134151"/>
 																				<string key="NSReuseIdentifierKey">_NS:1193</string>
 																				<int key="NSsFlags">133810</int>
 																				<reference key="NSVScroller" ref="611322288"/>
@@ -918,7 +917,6 @@
 											<string key="NSFrameSize">{946, 717}</string>
 											<reference key="NSSuperview" ref="113595676"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 												<object class="NSMutableData" key="NSPixelAttributes">
