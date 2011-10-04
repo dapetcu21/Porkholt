@@ -179,8 +179,8 @@ void PHScrollerView::draw()
     if (inertial && (inscroll.x || inscroll.y))
     {
         move(inscroll);
-        PHLowPassFilter(inscroll.x, 0, 1/60.0f, 2.0f);
-        PHLowPassFilter(inscroll.y, 0, 1/60.0f, 2.0f);
+        PHLowPassFilter(inscroll.x, 0, 1/60.0f, 4.0f);
+        PHLowPassFilter(inscroll.y, 0, 1/60.0f, 4.0f);
         if (fabs(inscroll.x)<0.001)
             inscroll.x=0;
         if (fabs(inscroll.y)<0.001)

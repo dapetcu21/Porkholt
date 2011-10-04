@@ -45,7 +45,6 @@
 		C127D37A143A1C4E004DEB16 /* PHTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C127D36C143A1C4E004DEB16 /* PHTime.cpp */; };
 		C127D381143A2921004DEB16 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C127D37F143A2921004DEB16 /* libpng15.a */; };
 		C127D382143A2921004DEB16 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C127D380143A2921004DEB16 /* libz.a */; };
-		C127D384143A2956004DEB16 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C127D383143A2956004DEB16 /* OpenGL.framework */; };
 		C127D386143A2960004DEB16 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C127D385143A2960004DEB16 /* OpenGL.framework */; };
 		C127D38A143A2E0E004DEB16 /* PLPorkholtView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C127D389143A2E0E004DEB16 /* PLPorkholtView.mm */; };
 		C127D395143A55E8004DEB16 /* OpenGLTimer.mm in Sources */ = {isa = PBXBuildFile; fileRef = C127D394143A55E8004DEB16 /* OpenGLTimer.mm */; };
@@ -53,7 +52,6 @@
 		C12F36DB14271593008DAFE8 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DA14271593008DAFE8 /* InterfaceController.m */; };
 		C12F36DE14271861008DAFE8 /* PLTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DD14271861008DAFE8 /* PLTableView.m */; };
 		C14AAAEB143ACDB8006D71ED /* PHScrollerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */; };
-		C14AAAEE143AF8C2006D71ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14AAAED143AF8C2006D71ED /* CoreVideo.framework */; };
 		C14AAAF0143AF8CC006D71ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */; };
 		C14D11A01425C3DA000A9CFC /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */; };
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
@@ -170,7 +168,6 @@
 		C127D36C143A1C4E004DEB16 /* PHTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTime.cpp; sourceTree = "<group>"; };
 		C127D37F143A2921004DEB16 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 		C127D380143A2921004DEB16 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../Externals/lib/darwin/libz.a; sourceTree = "<group>"; };
-		C127D383143A2956004DEB16 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		C127D385143A2960004DEB16 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		C127D388143A2E0E004DEB16 /* PLPorkholtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPorkholtView.h; sourceTree = "<group>"; };
 		C127D389143A2E0E004DEB16 /* PLPorkholtView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = PLPorkholtView.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -183,7 +180,6 @@
 		C12F36DD14271861008DAFE8 /* PLTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLTableView.m; sourceTree = "<group>"; };
 		C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScrollerView.cpp; sourceTree = "<group>"; };
 		C14AAAEC143ACDE4006D71ED /* PHScrollerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScrollerView.h; sourceTree = "<group>"; };
-		C14AAAED143AF8C2006D71ED /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		C14D119E1425C3DA000A9CFC /* ImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAndTextCell.h; sourceTree = "<group>"; };
 		C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImageAndTextCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -240,8 +236,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C14AAAEE143AF8C2006D71ED /* CoreVideo.framework in Frameworks */,
-				C127D384143A2956004DEB16 /* OpenGL.framework in Frameworks */,
 				C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */,
 				C12F36D814270CC2008DAFE8 /* liblua.a in Frameworks */,
 				C127D381143A2921004DEB16 /* libpng15.a in Frameworks */,
@@ -257,8 +251,6 @@
 		C11EA9CD1425B7A200795880 = {
 			isa = PBXGroup;
 			children = (
-				C14AAAED143AF8C2006D71ED /* CoreVideo.framework */,
-				C127D383143A2956004DEB16 /* OpenGL.framework */,
 				C127D2F0143A1A54004DEB16 /* Porkholt Engine */,
 				C127D387143A2BA4004DEB16 /* PHE Canvas */,
 				C16B38C41425F07900260851 /* Resources */,
@@ -279,10 +271,10 @@
 		C11EA9DB1425B7A300795880 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */,
 				C127D37F143A2921004DEB16 /* libpng15.a */,
 				C127D380143A2921004DEB16 /* libz.a */,
 				C12F36D714270CC2008DAFE8 /* liblua.a */,
+				C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */,
 				C127D385143A2960004DEB16 /* OpenGL.framework */,
 				C11EA9DC1425B7A300795880 /* Cocoa.framework */,
 				C11EA9FD1425B7A300795880 /* SenTestingKit.framework */,
