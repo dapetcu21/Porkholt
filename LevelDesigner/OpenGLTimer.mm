@@ -35,7 +35,7 @@ static CVReturn MyDisplayLinkCallback (
     for (PLPorkholtView * v in views)
     {
         [[v openGLContext] makeCurrentContext];
-        [v drawRect:[v bounds]];
+        [v render];
     }
 }
 

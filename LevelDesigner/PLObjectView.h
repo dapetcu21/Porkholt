@@ -1,0 +1,32 @@
+//
+//  PLObjectView.h
+//  LevelDesigner
+//
+//  Created by Marius Petcu on 10/5/11.
+//  Copyright 2011 Porkholt Labs!. All rights reserved.
+//
+
+#ifndef PLOBJECTVIEW_H
+#define PLOBJECTVIEW_H
+
+@class PLObject;
+#include "PHView.h"
+
+class PLObjectView : public PHView
+{
+protected:
+    PLObject * model;
+    void draw();
+    bool sel;
+public:
+    PLObject * modelObject() { return model; }
+    PLObjectView(PLObject * model);
+    ~PLObjectView();
+    
+    void modelChanged();
+    
+    bool selected() { return sel; }
+    void setSelected(bool s) { sel = s; }
+};
+
+#endif

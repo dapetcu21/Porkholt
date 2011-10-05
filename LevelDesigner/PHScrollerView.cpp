@@ -42,6 +42,7 @@ void PHScrollerView::resetToOrigin()
     {
         content->setPosition(PHPoint(_bounds.width/2,_bounds.height/2));
     }
+    lastin = inscroll = PHOriginPoint;
 }
 
 void PHScrollerView::move(const PHPoint & p)

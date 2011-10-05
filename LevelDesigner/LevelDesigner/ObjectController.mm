@@ -11,6 +11,7 @@
 #import "PLEntity.h"
 #import "PLObject.h"
 #import "PLJoint.h"
+#import "WorldController.h"
 
 @implementation ObjectController
 
@@ -50,11 +51,19 @@
 -(void)arrayChanged:(NSUInteger)array
 {
     [super arrayChanged:array];
+    if (array==0)
+        [worldController objectsChanged];
+    if (array==1)
+        [worldController jointsChanged];
 }
 
 -(void)selectionForArrayChanged:(NSUInteger)array
 {
     [super selectionForArrayChanged:array];
+    if (array==0)
+        [worldController objectSelectionChanged];
+    if (array==1)
+        [worldController jointSelectionChanged];
 }
 
 #pragma Loading and saving to file

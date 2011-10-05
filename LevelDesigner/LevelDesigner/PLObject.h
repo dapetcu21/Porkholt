@@ -11,12 +11,20 @@
 @class PLProperty;
 @class EntityController;
 @class PLPrototype;
+
+#ifndef __cplusplus
+#define PLObjectView void
+#else
+class PLObjectView;
+#endif
+
 @interface PLObject : PLEntity
 {
     PLProperty * rootProperty;
     EntityController * subentityModel;
     PLPrototype * prototype;
     NSString * className;
+    PLObjectView * actor;
 }
 
 @property(nonatomic,readonly) PLProperty * rootProperty;
@@ -30,5 +38,6 @@
 -(void)writeToFile:(NSMutableString*)file;
 -(NSUndoManager*)undoManager;
 
+@property(nonatomic,assign) PLObjectView * actor;
 
 @end

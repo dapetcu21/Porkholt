@@ -86,7 +86,7 @@
     [super dealloc];
 }
 
--(void)drawRect:(NSRect)dirtyRect
+-(void)render
 {
     gameManager->processInput();
     
@@ -216,12 +216,22 @@
     gameManager->eventHandler()->multitouchEnd(event);
 }
 
+-(IBAction)resetToOrigin:(id)sender
+{
+    ((PHScrollerView*)gameManager->rootView())->resetToOrigin();
+}
+
 void PHGameManager::entryPoint()
 {
     PHScrollerView * v = new PHScrollerView;
     v->setScale(50,PHOriginPoint);
     view = v;
     [(PLPorkholtView*)(this->userData()) entryPoint];
+}
+
+-(BOOL)acceptsFirstResponder
+{
+    return YES;
 }
 
 int PHEventHandler::modifierMask()

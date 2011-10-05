@@ -54,12 +54,14 @@
 		C14AAAEB143ACDB8006D71ED /* PHScrollerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */; };
 		C14AAAF0143AF8CC006D71ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */; };
 		C14D11A01425C3DA000A9CFC /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */; };
+		C14DC668143C23D000F0C82D /* WorldController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC667143C23D000F0C82D /* WorldController.mm */; };
+		C14DC66B143C2C5B00F0C82D /* PLObjectView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */; };
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
 		C15331FA1425DD61005E6806 /* PLDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F71425DD61005E6806 /* PLDocument.xib */; };
 		C16B38C31425EF6700260851 /* ResourcePathAccesory.xib in Resources */ = {isa = PBXBuildFile; fileRef = C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */; };
-		C16B38CA1425F5AF00260851 /* ObjectController.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38C91425F5AF00260851 /* ObjectController.m */; };
+		C16B38CA1425F5AF00260851 /* ObjectController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C16B38C91425F5AF00260851 /* ObjectController.mm */; };
 		C16B38D2142622D900260851 /* PLEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D1142622D900260851 /* PLEntity.m */; };
-		C16B38D51426270700260851 /* PLObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D41426270700260851 /* PLObject.m */; };
+		C16B38D51426270700260851 /* PLObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D41426270700260851 /* PLObject.mm */; };
 		C16B38D81426272A00260851 /* PLJoint.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D71426272A00260851 /* PLJoint.m */; };
 		C19D7D08142CBE75003E92C1 /* PLProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D07142CBE75003E92C1 /* PLProperty.m */; };
 		C19D7D0B142DFD6F003E92C1 /* PLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */; };
@@ -183,15 +185,19 @@
 		C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		C14D119E1425C3DA000A9CFC /* ImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAndTextCell.h; sourceTree = "<group>"; };
 		C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImageAndTextCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C14DC666143C23D000F0C82D /* WorldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldController.h; path = LevelDesigner/WorldController.h; sourceTree = "<group>"; };
+		C14DC667143C23D000F0C82D /* WorldController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WorldController.mm; path = LevelDesigner/WorldController.mm; sourceTree = "<group>"; };
+		C14DC669143C2C4C00F0C82D /* PLObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLObjectView.h; sourceTree = "<group>"; };
+		C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLObjectView.mm; sourceTree = "<group>"; };
 		C15331F61425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C15331F81425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/PLDocument.xib; sourceTree = "<group>"; };
 		C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResourcePathAccesory.xib; sourceTree = "<group>"; };
 		C16B38C81425F5AF00260851 /* ObjectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ObjectController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		C16B38C91425F5AF00260851 /* ObjectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ObjectController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C16B38C91425F5AF00260851 /* ObjectController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ObjectController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C16B38D0142622D800260851 /* PLEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLEntity.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38D1142622D900260851 /* PLEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLEntity.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C16B38D31426270700260851 /* PLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		C16B38D41426270700260851 /* PLObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLObject.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C16B38D41426270700260851 /* PLObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = PLObject.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C16B38D61426272A00260851 /* PLJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PLJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38D71426272A00260851 /* PLJoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PLJoint.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C19D7D06142CBE75003E92C1 /* PLProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLProperty.h; sourceTree = "<group>"; };
@@ -435,6 +441,10 @@
 				C127D394143A55E8004DEB16 /* OpenGLTimer.mm */,
 				C14AAAEC143ACDE4006D71ED /* PHScrollerView.h */,
 				C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */,
+				C14DC669143C2C4C00F0C82D /* PLObjectView.h */,
+				C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */,
+				C14DC666143C23D000F0C82D /* WorldController.h */,
+				C14DC667143C23D000F0C82D /* WorldController.mm */,
 			);
 			name = "PHE Canvas";
 			sourceTree = "<group>";
@@ -456,13 +466,13 @@
 				C1A33CAC142A43550051912D /* EntityController.h */,
 				C1A33CAD142A43550051912D /* EntityController.m */,
 				C16B38C81425F5AF00260851 /* ObjectController.h */,
-				C16B38C91425F5AF00260851 /* ObjectController.m */,
+				C16B38C91425F5AF00260851 /* ObjectController.mm */,
 				C1A33CB9142BCBB70051912D /* SubentityController.h */,
 				C1A33CBA142BCBB70051912D /* SubentityController.m */,
 				C16B38D0142622D800260851 /* PLEntity.h */,
 				C16B38D1142622D900260851 /* PLEntity.m */,
 				C16B38D31426270700260851 /* PLObject.h */,
-				C16B38D41426270700260851 /* PLObject.m */,
+				C16B38D41426270700260851 /* PLObject.mm */,
 				C16B38D61426272A00260851 /* PLJoint.h */,
 				C16B38D71426272A00260851 /* PLJoint.m */,
 				C1A33CB3142BCB870051912D /* PLImage.h */,
@@ -601,9 +611,9 @@
 				C1DE6A111425C04600B1282C /* BrowserOutlineView.m in Sources */,
 				C1DE6A121425C04600B1282C /* BrowserTreeNode.m in Sources */,
 				C14D11A01425C3DA000A9CFC /* ImageAndTextCell.m in Sources */,
-				C16B38CA1425F5AF00260851 /* ObjectController.m in Sources */,
+				C16B38CA1425F5AF00260851 /* ObjectController.mm in Sources */,
 				C16B38D2142622D900260851 /* PLEntity.m in Sources */,
-				C16B38D51426270700260851 /* PLObject.m in Sources */,
+				C16B38D51426270700260851 /* PLObject.mm in Sources */,
 				C16B38D81426272A00260851 /* PLJoint.m in Sources */,
 				C12F36DB14271593008DAFE8 /* InterfaceController.m in Sources */,
 				C12F36DE14271861008DAFE8 /* PLTableView.m in Sources */,
@@ -652,6 +662,8 @@
 				C127D38A143A2E0E004DEB16 /* PLPorkholtView.mm in Sources */,
 				C127D395143A55E8004DEB16 /* OpenGLTimer.mm in Sources */,
 				C14AAAEB143ACDB8006D71ED /* PHScrollerView.cpp in Sources */,
+				C14DC668143C23D000F0C82D /* WorldController.mm in Sources */,
+				C14DC66B143C2C5B00F0C82D /* PLObjectView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

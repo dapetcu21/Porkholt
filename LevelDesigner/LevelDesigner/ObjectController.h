@@ -9,12 +9,7 @@
 #import "EntityController.h"
 
 @class InterfaceController;
-
-#ifdef __cplusplus
-class WorldController;
-#else
-#define WorldController void
-#endif
+@class WorldController;
 
 #define ObjectController_numberOfArrays 2
 #define PLObjectPBoardType @"PLObjectPBoardType"
@@ -23,7 +18,7 @@ class WorldController;
 
 @interface ObjectController : EntityController
 {
-    WorldController * worldController;
+    IBOutlet WorldController * worldController;
 }
 
 #pragma Array Access

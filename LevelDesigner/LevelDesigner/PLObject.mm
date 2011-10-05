@@ -14,12 +14,14 @@
 #import "PLPrototype.h"
 #import "PrototypeController.h"
 #import "EntityController.h"
+#import "PLObjectView.h"
 
 @implementation PLObject
 @synthesize rootProperty;
 @synthesize subentityModel;
 @synthesize className;
 @synthesize prototype;
+@synthesize actor;
 
 -(NSUndoManager*)undoManager
 {
@@ -249,6 +251,8 @@
 -(void)objectChanged
 {
     [(EntityController*)owner entityChanged:self];
+    if (actor)
+        actor->modelChanged();
 }
 
 -(NSString*)description

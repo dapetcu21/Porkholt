@@ -19,5 +19,7 @@ class PHView;
 
 -(PHGameManager*)gameManager;
 -(PHView*)worldView;
+-(IBAction)resetToOrigin:(id)sender;
+-(void)render;
 
 @end

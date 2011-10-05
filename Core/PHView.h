@@ -128,6 +128,7 @@ public:
 	
 	void addSubview(PHView * view);
 	void removeFromSuperview();
+    void removeAllSubviews();
 	void bringToFront();
 
 	PHPoint toMyCoordinates(const PHPoint & pnt, PHView * until);

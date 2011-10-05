@@ -255,6 +255,13 @@ void PHView::removeFromSuperview()
 	release();
 }
 
+void PHView::removeAllSubviews()
+{
+    list<PHView*>::iterator i, it;
+    for (i = views.begin(); (it = i),(it++),(i!=views.end()); i=it)
+        (*i)->removeFromSuperview();
+}
+
 void PHView::cancelAnimationsWithTag(int tag)
 {
 	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i++)
@@ -293,19 +300,7 @@ PHView::~PHView()
     if (_gameManager)
         _gameManager->eventHandler()->removeView(this);	
     removeFromSuperview();
-#ifdef PHVIEW_STD_LIST
-    list<PHView*>::iterator i, it;
-    for (i = views.begin(); (it = i),(it++),(i!=views.end()); i=it)
-        (*i)->removeFromSuperview();
-#else
-	PHView::ViewEl * p = viewsSt;
-	while (p)
-	{
-		PHView * view = p->el;
-		p=p->next;
-		view->removeFromSuperview();
-	}
-#endif
+    removeAllSubviews();
     if (mtx) mtx->release();
 }
 

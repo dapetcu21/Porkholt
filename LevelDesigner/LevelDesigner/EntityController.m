@@ -428,6 +428,7 @@
 {
     NSUInteger i;
     if (!grouping) return;
+    grouping--;
     for (i=0; i<numberOfArrays; i++)
         if (arrayChanged[i])
         {
@@ -440,7 +441,6 @@
             selectionChanged[i] = NO;
             [self _selectionForArrayChanged:i];
         }
-    grouping--;
 }
 
 -(void)paste
