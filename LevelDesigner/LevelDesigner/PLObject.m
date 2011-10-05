@@ -194,7 +194,6 @@
     return self;
 }
 
-
 -(void)writeToFile:(NSMutableString*)file;
 {
     [file appendFormat:@"obj = objectWithClass(\"%@\")\nobj.levelDes = true\n",className];
@@ -247,6 +246,11 @@
     [aCoder encodeObject:[subentityModel readWriteEntitiesInArray:1] forKey:@"fixtures"];
 }
 
+-(void)objectChanged
+{
+    [(EntityController*)owner entityChanged:self];
+}
+
 -(NSString*)description
 {
     PLProperty * p = [rootProperty propertyWithKey:@"scripting"];
@@ -283,13 +287,15 @@
             [(EntityController*)owner entityDescriptionChanged:self]; 
         }
     }
-        
+    [self objectChanged];
 }
 
 -(void)setReadOnly:(BOOL)ro
 {
+    if (readOnly==ro) return;
     [super setReadOnly:ro];
     subentityModel.readOnly = ro;
+    [self objectChanged];
 }
 
 @end

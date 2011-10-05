@@ -59,6 +59,9 @@
 -(void)removeEntities:(NSArray*)entities fromArray:(NSUInteger)array;
 
 #pragma mark Array selection
+
+-(void)arrayChanged:(NSUInteger)array;
+-(void)selectionForArrayChanged:(NSUInteger)array;
 -(NSIndexSet*)selectionForArray:(NSUInteger)array;
 -(NSArray*)selectedEntitiesForArray:(NSUInteger)array;
 -(NSArray*)selectedEntities;
@@ -91,6 +94,7 @@
 -(void)duplicate;
 
 -(void)entityDescriptionChanged:(PLEntity*)e;
+-(void)entityChanged:(PLEntity*)e;
 
 @property(nonatomic,getter=isUndoDisabled) BOOL undoDisabled;
 -(void)disableUndo;

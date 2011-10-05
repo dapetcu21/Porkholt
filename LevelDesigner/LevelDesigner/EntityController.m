@@ -152,6 +152,11 @@
 
 #pragma mark Array editing
 
+-(void)entityChanged:(PLEntity *)e
+{
+    
+}
+
 -(void)arrayChanged:(NSUInteger)array
 {
     [controller arrayChanged:array];

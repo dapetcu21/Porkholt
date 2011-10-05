@@ -42,6 +42,21 @@
     }
 }
 
+-(void)entityChanged:(PLEntity *)e
+{
+    [super entityChanged:e];
+}
+
+-(void)arrayChanged:(NSUInteger)array
+{
+    [super arrayChanged:array];
+}
+
+-(void)selectionForArrayChanged:(NSUInteger)array
+{
+    [super selectionForArrayChanged:array];
+}
+
 #pragma Loading and saving to file
 -(void)lua:(lua_State*)L setPath:(NSString*)path
 {

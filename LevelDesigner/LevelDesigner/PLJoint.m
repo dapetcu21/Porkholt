@@ -7,6 +7,7 @@
 //
 
 #import "PLJoint.h"
+#import "EntityController.h"
 
 @implementation PLJoint
 
@@ -18,6 +19,11 @@
     }
     
     return self;
+}
+
+-(void)jointChanged
+{
+    [(EntityController*)owner entityChanged:self];
 }
 
 @end

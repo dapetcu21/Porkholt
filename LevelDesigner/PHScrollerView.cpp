@@ -186,9 +186,9 @@ void PHScrollerView::draw()
         if (fabs(inscroll.y)<0.001)
             inscroll.y=0;
     }
-    drawGrid(1.0,0.05,PHColor(0,5,0,0.6));
-    drawGrid(0.5,0.025,PHColor(0,5,0,0.3));
-    drawGrid(0.1,0.015,PHColor(0,5,0,0.2));
+    drawGrid(1.0,0.05,PHColor(0,1,0,0.6));
+    drawGrid(0.5,0.025,PHColor(0,1,0,0.3));
+    drawGrid(0.1,0.015,PHColor(0,1,0,0.2));
     
     if (content)
     {

@@ -25,18 +25,46 @@
 
 @implementation PLPorkholtView
 
-- (id)init
+-(void)load
 {
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-    }
+    if (gameManager) return;
+    [[self openGLContext] makeCurrentContext];
     
+    GLint swapInt = 1;
+    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
+    
+    NSRect frame = [self bounds];
+    gameManager = new PHGameManager;
+    gameManager->setUserData(self);
+    gameManager->init(frame.size.width, frame.size.height, 60);
+    
+    [[OpenGLTimer retainedInstance] addView:self];
+}
+
+-(id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat *)format
+{
+    self = [super initWithFrame:frameRect pixelFormat:format];
+    if (self)
+        [self load];
     return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self)
+        [self load];
+    return self;
+}
+
+-(void)awakeFromNib
+{
+    [self load];
 }
 
 -(PHGameManager*)gameManager
 {
+    [self load];
     return gameManager;
 }
 
@@ -48,21 +76,6 @@
 -(void)setNeedsDisplayYes
 {
     [self setNeedsDisplay:YES];
-}
-
--(void)awakeFromNib
-{
-    [[self openGLContext] makeCurrentContext];
-    
-    GLint swapInt = 1;
-    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
-
-    NSRect frame = [self bounds];
-    gameManager = new PHGameManager;
-    gameManager->setUserData(self);
-    gameManager->init(frame.size.width, frame.size.height, 60);
-    
-    [[OpenGLTimer retainedInstance] addView:self];
 }
 
 -(void)dealloc
