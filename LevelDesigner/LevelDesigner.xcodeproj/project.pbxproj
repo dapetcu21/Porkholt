@@ -78,6 +78,9 @@
 		C1A33CC4142BCF8B0051912D /* JointController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC3142BCF8B0051912D /* JointController.m */; };
 		C1AF1A7C1434365200A6905D /* PrototypeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7B1434365200A6905D /* PrototypeController.m */; };
 		C1AF1A7F143439DB00A6905D /* PLPrototype.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7E143439DB00A6905D /* PLPrototype.m */; };
+		C1C23EB6143CBDDC002CA3D9 /* OverlayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */; };
+		C1C23EB9143CD608002CA3D9 /* OverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB8143CD608002CA3D9 /* OverlayView.m */; };
+		C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EBB143CE1BF002CA3D9 /* OverlayWindow.m */; };
 		C1DE6A0F1425C04600B1282C /* FileBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A081425C04600B1282C /* FileBrowserController.m */; };
 		C1DE6A101425C04600B1282C /* FileSystemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A0A1425C04600B1282C /* FileSystemNode.m */; };
 		C1DE6A111425C04600B1282C /* BrowserOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A0C1425C04600B1282C /* BrowserOutlineView.m */; };
@@ -227,6 +230,12 @@
 		C1AF1A7B1434365200A6905D /* PrototypeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrototypeController.m; sourceTree = "<group>"; };
 		C1AF1A7D143439DB00A6905D /* PLPrototype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPrototype.h; sourceTree = "<group>"; };
 		C1AF1A7E143439DB00A6905D /* PLPrototype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLPrototype.m; sourceTree = "<group>"; };
+		C1C23EB4143CBDDC002CA3D9 /* OverlayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayController.h; sourceTree = "<group>"; };
+		C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OverlayController.mm; sourceTree = "<group>"; };
+		C1C23EB7143CD608002CA3D9 /* OverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayView.h; sourceTree = "<group>"; };
+		C1C23EB8143CD608002CA3D9 /* OverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayView.m; sourceTree = "<group>"; };
+		C1C23EBA143CE1BF002CA3D9 /* OverlayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayWindow.h; sourceTree = "<group>"; };
+		C1C23EBB143CE1BF002CA3D9 /* OverlayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayWindow.m; sourceTree = "<group>"; };
 		C1DE6A071425C04600B1282C /* FileBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileBrowserController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1DE6A081425C04600B1282C /* FileBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FileBrowserController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C1DE6A091425C04600B1282C /* FileSystemNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileSystemNode.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -258,7 +267,6 @@
 			isa = PBXGroup;
 			children = (
 				C127D2F0143A1A54004DEB16 /* Porkholt Engine */,
-				C127D387143A2BA4004DEB16 /* PHE Canvas */,
 				C16B38C41425F07900260851 /* Resources */,
 				C11EA9E21425B7A300795880 /* LevelDesigner */,
 				C11EA9DB1425B7A300795880 /* Frameworks */,
@@ -305,6 +313,7 @@
 				C16B38C51425F53A00260851 /* Models */,
 				C16B38C71425F55000260851 /* World */,
 				C16B38C61425F54600260851 /* Interface */,
+				C127D387143A2BA4004DEB16 /* PHE Canvas */,
 				C15331F51425DD61005E6806 /* MainMenu.xib */,
 				C15331F71425DD61005E6806 /* PLDocument.xib */,
 				C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */,
@@ -447,6 +456,7 @@
 				C14DC667143C23D000F0C82D /* WorldController.mm */,
 			);
 			name = "PHE Canvas";
+			path = ..;
 			sourceTree = "<group>";
 		};
 		C16B38C41425F07900260851 /* Resources */ = {
@@ -506,6 +516,12 @@
 				C12F36DD14271861008DAFE8 /* PLTableView.m */,
 				C19D7D09142DFD6F003E92C1 /* PLOutlineView.h */,
 				C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */,
+				C1C23EB4143CBDDC002CA3D9 /* OverlayController.h */,
+				C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */,
+				C1C23EB7143CD608002CA3D9 /* OverlayView.h */,
+				C1C23EB8143CD608002CA3D9 /* OverlayView.m */,
+				C1C23EBA143CE1BF002CA3D9 /* OverlayWindow.h */,
+				C1C23EBB143CE1BF002CA3D9 /* OverlayWindow.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -664,6 +680,9 @@
 				C14AAAEB143ACDB8006D71ED /* PHScrollerView.cpp in Sources */,
 				C14DC668143C23D000F0C82D /* WorldController.mm in Sources */,
 				C14DC66B143C2C5B00F0C82D /* PLObjectView.mm in Sources */,
+				C1C23EB6143CBDDC002CA3D9 /* OverlayController.mm in Sources */,
+				C1C23EB9143CD608002CA3D9 /* OverlayView.m in Sources */,
+				C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,6 +14,7 @@
 #import "OpenGLTimer.h"
 #import "PHScrollerView.h"
 #import "PHEventHandler.h"
+#import "OverlayController.h"
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
@@ -24,6 +25,12 @@
 @end
 
 @implementation PLPorkholtView
+@synthesize overlay;
+
+-(void)resizeOverlay
+{
+    [overlay reshapeToRect:[self convertRect:[self bounds] toView:nil]];
+}
 
 -(void)load
 {
@@ -60,6 +67,7 @@
 -(void)awakeFromNib
 {
     [self load];
+    [self resizeOverlay];
 }
 
 -(PHGameManager*)gameManager
@@ -83,6 +91,7 @@
     gameManager->release();
     [[OpenGLTimer sharedInstance] removeView:self];
     [[OpenGLTimer sharedInstance] release];
+    [overlay release];
     [super dealloc];
 }
 
@@ -106,9 +115,16 @@
 -(void)reshape
 {
     [super reshape];
+    [self resizeOverlay];
     NSRect frame = [self bounds];
     if (gameManager)
         gameManager->setScreenSize(frame.size.width, frame.size.height);
+}
+
+-(void)update
+{
+    [super update];
+    [self resizeOverlay];
 }
 
 -(void)entryPoint

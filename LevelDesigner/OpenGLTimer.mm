@@ -23,7 +23,7 @@ static CVReturn MyDisplayLinkCallback (
                                 void *displayLinkContext
                                 )
 {
-    [[OpenGLTimer sharedInstance] timerFired];
+    [[OpenGLTimer sharedInstance] performSelectorOnMainThread:@selector(timerFired) withObject:nil waitUntilDone:YES];
     return kCVReturnSuccess;
 }
 

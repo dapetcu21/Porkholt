@@ -10,16 +10,20 @@
 
 class PHGameManager;
 class PHView;
+@class OverlayController;
 @interface PLPorkholtView : NSOpenGLView
 {
     PHGameManager * gameManager;
     NSTimer * timer;
     PHView * worldView;
+    OverlayController * overlay;
 }
 
 -(PHGameManager*)gameManager;
 -(PHView*)worldView;
 -(IBAction)resetToOrigin:(id)sender;
 -(void)render;
+
+@property(nonatomic,retain) IBOutlet OverlayController * overlay;
 
 @end
