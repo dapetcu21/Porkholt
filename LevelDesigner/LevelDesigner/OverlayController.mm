@@ -13,6 +13,7 @@
 
 @implementation OverlayController
 @synthesize parentWindow;
+@synthesize window;
 
 -(OverlayView*)bottomView
 {
@@ -79,10 +80,8 @@
     [window setFrame:rect display:YES];
     rect.origin = NSZeroPoint;
     [[window contentView] setFrame:rect];
-    [rightView removeTrackingRect:rightDummyTag];
-    rightDummyTag = [rightView addTrackingRect:[rightView bounds] owner:rightView userData:nil assumeInside:NO];
-    [bottomView removeTrackingRect:bottomDummyTag];
-    bottomDummyTag = [bottomView addTrackingRect:[bottomView bounds] owner:bottomView userData:nil assumeInside:NO];
+    [rightView reshape];
+    [bottomView reshape];
     [[openGLView openGLContext] makeCurrentContext];
     [openGLView render];
 }
@@ -95,24 +94,8 @@
     return self;
 }
 
--(void)_show
-{
-    [[[window contentView] animator] setAlphaValue:1.0f];
-    [window makeKeyWindow];
-}
-
--(void)_hide
-{
-    [[[window contentView] animator] setAlphaValue:0.1f];
-    [parentWindow makeKeyWindow];
-}
-
 -(void)awakeFromNib
 {
-    //bottomDummy = [[DummyOverlayView alloc] init];
-    //((DummyOverlayView*)bottomDummy).overlayController = self;
-    //rightDummy = [[DummyOverlayView alloc] init];
-    //((DummyOverlayView*)rightDummy).overlayController = self;
     window = [[OverlayWindow alloc] initWithContentRect:bounds styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
     [parentWindow addChildWindow:window ordered:NSWindowAbove];
     NSView * rootView = [[NSView alloc] init];
@@ -126,7 +109,6 @@
     [self reshapeToRect:bounds];
     [self addBottomView];
     [self addRightView];
-    [self _hide];
 }
 
 -(void)dealloc
@@ -136,23 +118,6 @@
     [bottomView release];
     [openGLView setOverlay:nil];
     [super dealloc];
-}
-
--(void)show
-{
-    showcount++;
-    if (showcount==1)
-        [self _show];
-}
-
--(void)hide
-{
-    if (showcount)
-    {
-        showcount--;
-        if (!showcount)
-            [self _hide];
-    }
 }
 
 @end

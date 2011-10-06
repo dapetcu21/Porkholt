@@ -205,7 +205,6 @@
         dx = [event deviceDeltaX];
         dy = [event deviceDeltaY];
     }
-    PHLog("%lf %lf",dx,dy);
     NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
     gameManager->eventHandler()->scrollWheel(PHPoint(p.x,p.y), PHPoint(dx,-dy), event);
 }

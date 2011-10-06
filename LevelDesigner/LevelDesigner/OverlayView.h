@@ -22,9 +22,15 @@ enum OverlayViewCornerMask
 {
     int cornerMask : OverlayViewAllCorners;
     OverlayController * overlayController;
+    int showcount;
+    NSTrackingRectTag trackingRect;
 }
 
 @property(nonatomic,assign) int cornerMask;
 @property(nonatomic,assign) OverlayController * overlayController;
+
+-(void)reshape;
+-(void)show;
+-(void)hide;
 
 @end

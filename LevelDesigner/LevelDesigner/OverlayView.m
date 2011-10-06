@@ -13,6 +13,23 @@
 @synthesize cornerMask;
 @synthesize overlayController;
 
+-(id)initWithFrame:(NSRect)frameRect
+{
+    self = [super initWithFrame:frameRect];
+    if (self)
+    {
+        [self setAlphaValue:0.3f];
+        trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nil assumeInside:NO];
+    }
+    return self;
+}
+
+-(void)reshape
+{
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nil assumeInside:NO];
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     NSRect bounds = [self bounds];
@@ -31,13 +48,42 @@
         [[NSBezierPath bezierPathWithRect:NSMakeRect(bounds.size.width-radiusY, bounds.size.height-radiusY, radiusX, radiusY)] fill];
 }
 
+-(void)_show
+{
+    [[self animator] setAlphaValue:1.0f];
+    [[overlayController window] makeKeyWindow];
+}
+
+-(void)_hide
+{
+    [[self animator] setAlphaValue:0.3f];
+    [[overlayController parentWindow] makeKeyWindow];
+}
+
+-(void)show
+{
+    showcount++;
+    if (showcount==1)
+        [self _show];
+}
+
+-(void)hide
+{
+    if (showcount)
+    {
+        showcount--;
+        if (!showcount)
+            [self _hide];
+    }
+}
+
 -(void)mouseEntered:(NSEvent *)theEvent
 {
-    [overlayController show];
+    [self show];
 }
 
 -(void)mouseExited:(NSEvent *)theEvent
 {
-    [overlayController hide];
+    [self hide];
 }
 @end

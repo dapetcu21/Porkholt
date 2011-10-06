@@ -17,17 +17,12 @@
     NSWindow * window;
     NSWindow * parentWindow;
     IBOutlet PLPorkholtView * openGLView;
-    int showcount;
-    NSTrackingRectTag rightDummyTag, bottomDummyTag;
 }
 
 @property(nonatomic,retain) IBOutlet NSView * bottomView;
 @property(nonatomic,retain) IBOutlet NSView * rightView;
 @property(nonatomic,assign) IBOutlet NSWindow * parentWindow;
-
+@property(nonatomic,readonly) NSWindow * window;
 -(void)reshapeToRect:(NSRect)rect;
-
--(void)show;
--(void)hide;
 
 @end
