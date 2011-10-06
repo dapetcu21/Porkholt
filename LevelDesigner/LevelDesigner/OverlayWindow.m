@@ -10,8 +10,8 @@
 
 @implementation OverlayWindow
 
-- (BOOL) canBecomeKeyWindow { return NO; }
-- (BOOL) canBecomeMainWindow { return YES; }
+- (BOOL) canBecomeKeyWindow { return YES; }
+- (BOOL) canBecomeMainWindow { return NO; }
 - (BOOL) acceptsFirstResponder { return YES; }
 - (BOOL) becomeFirstResponder { return YES; }
 - (BOOL) resignFirstResponder { return YES; }

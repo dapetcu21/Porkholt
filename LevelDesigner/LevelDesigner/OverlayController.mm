@@ -12,6 +12,7 @@
 #import "OverlayView.h"
 
 @implementation OverlayController
+@synthesize parentWindow;
 
 -(OverlayView*)bottomView
 {
@@ -32,6 +33,7 @@
     [[window contentView] addSubview:bottomView];
     [bottomView setFrame:pos];
     [bottomView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin];
+    [bottomView setCornerMask:OverlayViewTopRightCorner];
 }
 
 -(void)addRightView
@@ -46,6 +48,7 @@
     [[window contentView] addSubview:rightView];
     [rightView setFrame:pos];
     [rightView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [rightView setCornerMask:OverlayViewBottomLeftCorner];
 }
 
 
@@ -95,11 +98,13 @@
 -(void)_show
 {
     [[[window contentView] animator] setAlphaValue:1.0f];
+    [window makeKeyWindow];
 }
 
 -(void)_hide
 {
     [[[window contentView] animator] setAlphaValue:0.1f];
+    [parentWindow makeKeyWindow];
 }
 
 -(void)awakeFromNib
@@ -129,6 +134,7 @@
     [window release];
     [rightView release];
     [bottomView release];
+    [openGLView setOverlay:nil];
     [super dealloc];
 }
 

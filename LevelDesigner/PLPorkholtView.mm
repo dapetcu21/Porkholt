@@ -29,7 +29,7 @@
 
 -(void)resizeOverlay
 {
-    [overlay reshapeToRect:[self convertRect:[self bounds] toView:nil]];
+    [overlay reshapeToRect:[self convertRectToBase:[self bounds]]];
 }
 
 -(void)load
