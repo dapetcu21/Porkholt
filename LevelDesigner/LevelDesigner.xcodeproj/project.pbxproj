@@ -57,6 +57,7 @@
 		C14D11A01425C3DA000A9CFC /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */; };
 		C14DC668143C23D000F0C82D /* WorldController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC667143C23D000F0C82D /* WorldController.mm */; };
 		C14DC66B143C2C5B00F0C82D /* PLObjectView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */; };
+		C14DC687143EEABA00F0C82D /* FixtureViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC686143EEABA00F0C82D /* FixtureViewController.mm */; };
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
 		C15331FA1425DD61005E6806 /* PLDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F71425DD61005E6806 /* PLDocument.xib */; };
 		C16B38C31425EF6700260851 /* ResourcePathAccesory.xib in Resources */ = {isa = PBXBuildFile; fileRef = C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */; };
@@ -195,6 +196,8 @@
 		C14DC667143C23D000F0C82D /* WorldController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WorldController.mm; path = LevelDesigner/WorldController.mm; sourceTree = "<group>"; };
 		C14DC669143C2C4C00F0C82D /* PLObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLObjectView.h; sourceTree = "<group>"; };
 		C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLObjectView.mm; sourceTree = "<group>"; };
+		C14DC685143EEABA00F0C82D /* FixtureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixtureViewController.h; sourceTree = "<group>"; };
+		C14DC686143EEABA00F0C82D /* FixtureViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FixtureViewController.mm; sourceTree = "<group>"; };
 		C15331F61425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C15331F81425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/PLDocument.xib; sourceTree = "<group>"; };
 		C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResourcePathAccesory.xib; sourceTree = "<group>"; };
@@ -511,6 +514,8 @@
 				C1A33CBD142BCD620051912D /* SubentityViewController.m */,
 				C11DF2A1143E28500002A811 /* ImageViewController.h */,
 				C11DF2A2143E28500002A811 /* ImageViewController.mm */,
+				C14DC685143EEABA00F0C82D /* FixtureViewController.h */,
+				C14DC686143EEABA00F0C82D /* FixtureViewController.mm */,
 				C1A33CC2142BCF8B0051912D /* JointController.h */,
 				C1A33CC3142BCF8B0051912D /* JointController.m */,
 				C1A33CBF142BCE500051912D /* PropertyController.h */,
@@ -689,6 +694,7 @@
 				C1C23EB9143CD608002CA3D9 /* OverlayView.m in Sources */,
 				C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */,
 				C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */,
+				C14DC687143EEABA00F0C82D /* FixtureViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

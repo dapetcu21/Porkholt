@@ -16,6 +16,8 @@ enum PLFixtureShapes
 
 @class PLProperty;
 @class PLObject;
+@class FixtureViewController;
+
 @interface PLFixture : PLEntity
 {
     int shape;
@@ -29,6 +31,8 @@ enum PLFixtureShapes
     int groupIndex;
     int categoryBits;
     int maskBits;
+    
+    FixtureViewController * viewController;
 }
 
 @property(nonatomic,assign) int shape;
@@ -48,5 +52,6 @@ enum PLFixtureShapes
 +(NSArray*)fixturesFromProperty:(PLProperty*)prop;
 
 @property(nonatomic,readonly) PLObject * object;
+@property(nonatomic,assign) FixtureViewController * viewController;
 
 @end

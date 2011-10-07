@@ -1,36 +1,30 @@
 //
-//  ImageViewController.m
+//  FixtureViewController.m
 //  LevelDesigner
 //
-//  Created by Marius Petcu on 10/6/11.
+//  Created by Marius Petcu on 10/7/11.
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#import "ImageViewController.h"
-#import "PLImage.h"
+#import "FixtureViewController.h"
+#import "OverlayController.h"
+#import "PLFixture.h"
 #import "PLObject.h"
-#import "PHGeometry.h"
 
+@implementation FixtureViewController
 
-@implementation ImageViewController
-
--(PLImage*)model
+-(PLFixture*)model
 {
     return model;
 }
 
 #define setNumberField(f,n) [(f) setStringValue:[NSString stringWithFormat:@"%.4lf",(double)(n)]]
 
-static PHColor PHColorFromPLColor(const struct PLColor & c)
-{
-    return PHColor(c.r,c.g,c.b,c.a);
-}
-
 -(void)populateView
 {
     BOOL enabled = (model && !model.readOnly && !model.object.readOnly);
-
-    [className setEnabled:enabled];
+    
+    /*[className setEnabled:enabled];
     [frame_x setEnabled:enabled];
     [frame_y setEnabled:enabled];
     [frame_w setEnabled:enabled];
@@ -45,11 +39,11 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     [vFlipped setEnabled:enabled];
     [tag setEnabled:enabled];
     [tint setEnabled:enabled];
-    [alphaSlider setEnabled:enabled];
+    [alphaSlider setEnabled:enabled];*/
     
     if (!model) return;
     
-    [className selectItemWithTitle:model.imageClass];
+    /*[className selectItemWithTitle:model.imageClass];
     NSRect frame = model.frame;
     setNumberField(frame_x, frame.origin.x);
     setNumberField(frame_y, frame.origin.y);
@@ -73,13 +67,13 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     NSString * fn = model.fileName;
     if (!fn) 
         fn = @"";
-    [fileName setStringValue:fn];
+    [fileName setStringValue:fn];*/
 }
 
 -(IBAction)valueChanged:(id)sender
 {
     modifyFromInside = YES;
-    if (sender == className)
+/*    if (sender == className)
         model.imageClass = [[className selectedItem] title];
     if (sender == fileName)
         model.fileName = [fileName stringValue];
@@ -108,17 +102,17 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
         if (c.a == 1 && c.r == 1 && c.g == 1 && c.b == 1)
             c.a=c.r=c.g=c.b=-1;
         model.tint = c;
-    }
+    }*/
     modifyFromInside = NO;
 }
 
--(void)imageChanged
+-(void)fixtureChanged
 {
     if (modifyFromInside) return;
     [self populateView];
 }
 
--(void)setModel:(PLImage *)_model
+-(void)setModel:(PLFixture*)_model
 {
     model.viewController = nil;
     [model release];
@@ -127,7 +121,6 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     model = _model;
     [self populateView];
 }
-
 
 
 @end

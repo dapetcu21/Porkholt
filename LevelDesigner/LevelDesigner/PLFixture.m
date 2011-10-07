@@ -10,8 +10,11 @@
 #import "PLProperty.h"
 #import "EntityController.h"
 #import "SubentityController.h"
+#import "FixtureViewController.h"
+#import "PLObject.h"
 
 @implementation PLFixture
+@synthesize viewController;
 
 static inline void addToken(NSMutableString * file,NSString * token, int * count)
 {
@@ -206,7 +209,8 @@ static inline void endToken(NSMutableString * file, int * count)
 
 -(void)fixtureChanged
 {
-    
+    [[self object] subobjectChanged:self];
+    [viewController fixtureChanged];
 }
 
 -(int)shape
@@ -262,6 +266,11 @@ static inline void endToken(NSMutableString * file, int * count)
 -(int)maskBits
 {
     return maskBits;
+}
+
+-(NSUndoManager*)undoManager
+{
+    return [(EntityController*)owner undoManager];
 }
 
 -(void)setShape:(int)s
