@@ -9,6 +9,9 @@
 #import "PLImage.h"
 #import "PLProperty.h"
 #import "EntityController.h"
+#import "SubentityController.h"
+#import "ImageViewController.h"
+#import "PLObject.h"
 
 static inline struct PLColor PLMakeColor(double r, double g, double b, double a)
 {
@@ -36,6 +39,7 @@ static inline void endToken(NSMutableString * file, int * count)
 }
 
 @implementation PLImage
+@synthesize viewController;
 
 -(id)initFromProperty:(PLProperty*)prop
 {
@@ -201,7 +205,8 @@ static inline void endToken(NSMutableString * file, int * count)
 
 -(void)imageChanged
 {
-    
+    [[self object] subobjectChanged:self];
+    [viewController imageChanged];
 }
 
 -(NSString*)imageClass
@@ -254,8 +259,15 @@ static inline void endToken(NSMutableString * file, int * count)
     return alpha;
 }
 
+-(NSUndoManager*)undoManager
+{
+    return [(EntityController*)owner undoManager];
+}
+
 -(void)setImageClass:(NSString *)cls
 {
+    if ([imageClass isEqual:cls]) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setImageClass:imageClass];
     [cls retain];
     [imageClass release];
     imageClass = cls;
@@ -265,6 +277,8 @@ static inline void endToken(NSMutableString * file, int * count)
 
 -(void)setFileName:(NSString *)fn
 {
+    if ([fn isEqual:fileName]) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setFileName:fileName];
     [fn retain];
     [fileName release];
     fileName = fn;
@@ -274,48 +288,64 @@ static inline void endToken(NSMutableString * file, int * count)
 
 -(void)setPortion:(NSRect)p
 {
+    if (NSEqualRects(portion, p)) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setPortion:portion];
     portion = p;
     [self imageChanged];
 }
 
 -(void)setFrame:(NSRect)fr
 {
+    if (NSEqualRects(fr, frame)) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setFrame:frame];
     frame = fr;
     [self imageChanged];
 }
 
 -(void)setTag:(int)t
 {
+    if (tag == t) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setTag:tag];
     tag= t;
     [self imageChanged];
 }
 
 -(void)setRotation:(double)rot
 {
+    if (rotation == rot) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
     rotation = rot;
     [self imageChanged];
 }
 
 -(void)setHorizontallyFlipped:(BOOL)h
 {
+    if (horizontallyFlipped == h) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setHorizontallyFlipped:horizontallyFlipped];
     horizontallyFlipped = h;
     [self imageChanged];
 }
 
 -(void)setVerticallyFlipped:(BOOL)v
 {
+    if (verticallyFlipped==v) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setVerticallyFlipped:verticallyFlipped];
     verticallyFlipped = v;
     [self imageChanged];
 }
 
 -(void)setTint:(struct PLColor)t
 {
+    if (t.r == tint.r && t.g == tint.g && t.b == tint.b && t.a == tint.a) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setTint:t];
     tint = t;
     [self imageChanged];
 }
 
 -(void)setAlpha:(double)a
 {
+    if (a==alpha) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setAlpha:alpha];
     alpha = a;
     [self imageChanged];
 }
@@ -333,6 +363,11 @@ static inline void endToken(NSMutableString * file, int * count)
     for (PLProperty * p in prop.arrayValue)
         [a addObject:[[[PLImage alloc] initFromProperty:p] autorelease]];
     return a;
+}
+
+-(PLObject*)object
+{
+    return (PLObject*)[(SubentityController*)owner object];
 }
 
 @end

@@ -294,6 +294,11 @@
     [self objectChanged];
 }
 
+-(void)subobjectChanged:(PLEntity*)so
+{
+    [self objectChanged];
+}
+
 -(void)setReadOnly:(BOOL)ro
 {
     if (readOnly==ro) return;

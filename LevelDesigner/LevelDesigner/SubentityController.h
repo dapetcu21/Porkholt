@@ -21,4 +21,6 @@
 
 - (id)initWithObject:(PLEntity*)e;
 
+-(PLEntity*)object;
+
 @end

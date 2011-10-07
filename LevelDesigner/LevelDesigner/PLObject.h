@@ -33,6 +33,7 @@ class PLObjectView;
 @property(nonatomic,readonly) PLPrototype * prototype;
 
 -(void)propertyChanged:(PLProperty*)p;
+-(void)subobjectChanged:(PLEntity*)so;
 
 -(PLProperty*)propertyAtKeyPath:(NSString*)keyPath;
 -(void)writeToFile:(NSMutableString*)file;

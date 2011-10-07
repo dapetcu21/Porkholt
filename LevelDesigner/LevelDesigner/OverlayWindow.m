@@ -16,4 +16,9 @@
 - (BOOL) becomeFirstResponder { return YES; }
 - (BOOL) resignFirstResponder { return YES; }
 
+-(void)undo:(id)sender
+{
+    
+}
+
 @end

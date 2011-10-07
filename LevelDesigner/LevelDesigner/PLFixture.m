@@ -9,6 +9,7 @@
 #import "PLFixture.h"
 #import "PLProperty.h"
 #import "EntityController.h"
+#import "SubentityController.h"
 
 @implementation PLFixture
 
@@ -338,6 +339,11 @@ static inline void endToken(NSMutableString * file, int * count)
     for (PLProperty * p in prop.arrayValue)
         [a addObject:[[[PLFixture alloc] initFromProperty:p] autorelease]];
     return a;
+}
+
+-(PLObject*)object
+{
+    return (PLObject*)[(SubentityController*)owner object];
 }
 
 @end

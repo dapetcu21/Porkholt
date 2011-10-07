@@ -207,6 +207,7 @@
     NSIndexSet * backup = [[s copy] autorelease];
     [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PLEntity * e = (PLEntity*)[entities objectAtIndex:offset];
+        e.owner = self;
         e.selected = NO;
         if (e.readOnly)
             readOnly[array]++;
@@ -237,6 +238,7 @@
     NSIndexSet * backup = [[s copy] autorelease];
     [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
+        e.owner = nil;
         [e resetIndex];
         if (e.readOnly)
             readOnly[array]--;

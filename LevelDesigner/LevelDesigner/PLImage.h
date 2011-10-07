@@ -9,12 +9,14 @@
 #import "PLEntity.h"
 
 @class PLProperty;
+@class PLObject;
 
 struct PLColor
 {
     double r,g,b,a;
 };
 
+@class ImageViewController;
 @interface PLImage : PLEntity
 {
     NSString * imageClass;
@@ -27,6 +29,8 @@ struct PLColor
     struct PLColor tint;
     double alpha;
     NSString * fileName;
+    
+    ImageViewController * viewController;
 }
 
 @property(nonatomic,retain) NSString * imageClass;
@@ -43,5 +47,8 @@ struct PLColor
 -(id)initFromProperty:(PLProperty*)prop;
 -(void)writeToFile:(NSMutableString*)file;
 +(NSArray*)imagesFromProperty:(PLProperty*)prop;
+
+@property(nonatomic,readonly) PLObject * object;
+@property(nonatomic,assign) ImageViewController * viewController;
 
 @end

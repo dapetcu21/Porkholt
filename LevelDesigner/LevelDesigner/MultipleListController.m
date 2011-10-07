@@ -21,7 +21,10 @@
     [model release];
     model = m;
     for (NSUInteger i=0; i<numberOfTables; i++)
+    {
         [self arrayChanged:i];
+        [self selectionForArrayChanged:i];
+    }
 }
 
 -(EntityController*)model

@@ -29,6 +29,11 @@
     return self;
 }
 
+-(PLEntity*)object
+{
+    return owner;
+}
+
 -(Class)classForArray:(NSUInteger)array
 {
     switch (array) {

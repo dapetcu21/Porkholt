@@ -71,9 +71,8 @@
 {
     if (showcount)
     {
-        showcount--;
-        if (!showcount)
-            [self _hide];
+        showcount=0;
+        [self _hide];
     }
 }
 
@@ -86,4 +85,21 @@
 {
     [self hide];
 }
+
+- (BOOL) acceptsFirstResponder { return YES; }
+- (BOOL) becomeFirstResponder { return YES; }
+- (BOOL) resignFirstResponder { return YES; }
+
+-(void)undo:(id)sender
+{
+    if (!([[[overlayController parentWindow] undoManager] canUndo] && [[[overlayController parentWindow] firstResponder] tryToPerform:@selector(undo:) with:sender]))
+        NSBeep();
+}
+
+-(void)redo:(id)sender
+{
+    if (!([[[overlayController parentWindow] undoManager] canRedo] && [[[overlayController parentWindow] firstResponder] tryToPerform:@selector(redo:) with:sender]))
+        NSBeep();
+}
+
 @end

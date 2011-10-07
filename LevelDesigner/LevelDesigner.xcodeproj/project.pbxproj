@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A2143E28500002A811 /* ImageViewController.mm */; };
 		C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11EA9DC1425B7A300795880 /* Cocoa.framework */; };
 		C11EA9E71425B7A300795880 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C11EA9E51425B7A300795880 /* InfoPlist.strings */; };
 		C11EA9E91425B7A300795880 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C11EA9E81425B7A300795880 /* main.m */; };
@@ -88,6 +89,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C11DF2A1143E28500002A811 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		C11DF2A2143E28500002A811 /* ImageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageViewController.mm; sourceTree = "<group>"; };
 		C11EA9D81425B7A300795880 /* LevelDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LevelDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11EA9DC1425B7A300795880 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		C11EA9DF1425B7A300795880 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -506,6 +509,8 @@
 				C12F36DA14271593008DAFE8 /* InterfaceController.m */,
 				C1A33CBC142BCD620051912D /* SubentityViewController.h */,
 				C1A33CBD142BCD620051912D /* SubentityViewController.m */,
+				C11DF2A1143E28500002A811 /* ImageViewController.h */,
+				C11DF2A2143E28500002A811 /* ImageViewController.mm */,
 				C1A33CC2142BCF8B0051912D /* JointController.h */,
 				C1A33CC3142BCF8B0051912D /* JointController.m */,
 				C1A33CBF142BCE500051912D /* PropertyController.h */,
@@ -683,6 +688,7 @@
 				C1C23EB6143CBDDC002CA3D9 /* OverlayController.mm in Sources */,
 				C1C23EB9143CD608002CA3D9 /* OverlayView.m in Sources */,
 				C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */,
+				C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

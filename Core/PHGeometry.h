@@ -182,6 +182,7 @@ struct PHColor
     PHColor(double red, double green, double blue, double alpha) : r(red), g(green), b(blue), a(alpha) {};
     PHColor(double red, double green, double blue) : r(red), g(green), b(blue), a(1.0f) {};
     PHColor() {};
+    bool isValid() { return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1); }
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 };

@@ -15,6 +15,7 @@ enum PLFixtureShapes
 };
 
 @class PLProperty;
+@class PLObject;
 @interface PLFixture : PLEntity
 {
     int shape;
@@ -46,6 +47,6 @@ enum PLFixtureShapes
 -(void)writeToFile:(NSMutableString*)file;
 +(NSArray*)fixturesFromProperty:(PLProperty*)prop;
 
-
+@property(nonatomic,readonly) PLObject * object;
 
 @end
