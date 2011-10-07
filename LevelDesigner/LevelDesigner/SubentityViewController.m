@@ -11,6 +11,7 @@
 #import "PLImage.h"
 #import "PLFixture.h"
 #import "ImageViewController.h"
+#import "FixtureViewController.h"
 #import "OverlayController.h"
 #import "OverlayView.h"
 

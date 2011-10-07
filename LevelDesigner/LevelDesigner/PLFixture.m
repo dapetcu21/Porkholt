@@ -201,7 +201,7 @@ static inline void endToken(NSMutableString * file, int * count)
         case PLFixtureCircle:
             return @"Circle";
         case PLFixtureRect:
-            return @"Rect";
+            return @"Box";
         default:
             return @"Fixture";
     }
@@ -275,67 +275,89 @@ static inline void endToken(NSMutableString * file, int * count)
 
 -(void)setShape:(int)s
 {
+    if (shape==s) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setShape:shape];
     shape = s;
-    [(EntityController*)owner entityDescriptionChanged:self];
     [self fixtureChanged];
+    [(EntityController*)owner entityDescriptionChanged:self];
 }
 
 -(void)setBox:(NSRect)b
 {
+    if (NSEqualRects(b, box)) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setBox:box];
     box = b;
     [self fixtureChanged];
 }
 
 -(void)setPosition:(NSPoint)pos
 {
+    if (NSEqualPoints(pos, position)) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setPosition:position];
     position = pos;
     [self fixtureChanged];
 }
 
 -(void)setRotation:(double)rot
 {
+    if (rotation==rot) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
     rotation = rot;
     [self fixtureChanged];
 }
 
 -(void)setFriction:(double)f
 {
+    if (friction==f) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setFriction:friction];
     friction = f;
     [self fixtureChanged];
 }
 
 -(void)setDensity:(double)d
 {
+    if (density==d) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setDensity:density];
     density = d;
     [self fixtureChanged];
 }
 
 -(void)setRestitution:(double)r
 {
+    if (r==restitution) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setRestitution:restitution];
     restitution = r;
     [self fixtureChanged];
 }
 
 -(void)setRadius:(double)r
 {
+    if (radius==r) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setRadius:radius];
     radius = r;
     [self fixtureChanged];
 }
 
 -(void)setGroupIndex:(int)g
 {
+    if (groupIndex==g) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setGroupIndex:groupIndex];
     groupIndex = g;
     [self fixtureChanged];
 }
 
 -(void)setCategoryBits:(int)c
 {
+    if (categoryBits==c) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setCategoryBits:categoryBits];
     categoryBits = c;
     [self fixtureChanged];
 }
 
 -(void)setMaskBits:(int)m
 {
+    if (maskBits==m) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setMaskBits:maskBits];
     maskBits = m;
     [self fixtureChanged];
 }

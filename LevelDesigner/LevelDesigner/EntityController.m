@@ -580,6 +580,8 @@
 
 -(void)entityDescriptionChanged:(PLEntity*)e
 {
+    for (int i=0; i<numberOfArrays; i++)
+        [self reindexArray:i];
     [self arrayChanged:e.array];
 }
 

@@ -83,6 +83,22 @@
     return YES;
 }
 
+-(void)undo:(id)sender
+{
+    if (![[window undoManager] canUndo])
+        NSBeep();
+    else
+        [[window undoManager] undo];
+}
+
+-(void)redo:(id)sender
+{
+    if (![[window undoManager] canRedo])
+        NSBeep();
+    else
+        [[window undoManager] redo];
+}
+
 + (BOOL)autosavesInPlace
 {
     return NO;

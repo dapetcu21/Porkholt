@@ -211,6 +211,12 @@ void PHScrollerView::draw()
 
 void PHScrollerView::touchEvent(PHEvent * event)
 {
+    if (content && content->userInput())
+    {
+        redirectEvent(content, event);
+        if (eventHandled) return;
+        eventHandled = true;
+    }
     if (event->type() == PHEvent::touchDown)
     {
         lastin = PHOriginPoint;
@@ -243,5 +249,7 @@ void PHScrollerView::touchEvent(PHEvent * event)
             sc = 0.1;
         setScale(scale()*sc, toMyCoordinates(event->location()));
     } else
+    {
         eventHandled = false;
+    }
 }

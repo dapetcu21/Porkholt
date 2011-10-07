@@ -8,13 +8,16 @@
 
 @class ObjectController;
 @class PLPorkholtView;
-class PHView;
+class PLWorldView;
+#import "PHGeometry.h"
 
 @interface WorldController : NSObject
 {
     ObjectController * model;
     PLPorkholtView * view;
-    PHView * worldView;
+    PLWorldView * worldView;
+    int type;
+    NSIndexSet * initialIndexSet;
 }
 
 -(void)objectsChanged;
@@ -24,4 +27,9 @@ class PHView;
 -(void)reloadViews;
 @property(nonatomic,retain) IBOutlet PLPorkholtView * view;
 @property(nonatomic,retain) IBOutlet ObjectController * model;
+
+-(void)startSelectionOfType:(int)type atPoint:(PHPoint)p;
+-(void)moveSelection:(PHRect)area;
+-(void)endSelection:(PHRect)area;
+
 @end

@@ -18,7 +18,12 @@
 
 -(void)undo:(id)sender
 {
-    
+    //this must be here or else the undo won't work
+}
+
+-(void)redo:(id)sender
+{
+    //this must be here or else the redo won't work
 }
 
 @end

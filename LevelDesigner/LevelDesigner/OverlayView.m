@@ -52,6 +52,8 @@
 {
     [[self animator] setAlphaValue:1.0f];
     [[overlayController window] makeKeyWindow];
+    if ([[overlayController window] firstResponder] == [overlayController window])
+        [[overlayController window] makeFirstResponder:self];
 }
 
 -(void)_hide

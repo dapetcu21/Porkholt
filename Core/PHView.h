@@ -147,6 +147,13 @@ public:
     PHView * viewWithTagAfter(int tag, PHView * v);
     list<PHView*> * viewsWithTag(int tag); //this returns a new-allocated list
 	
+    void redirectEvent(PHView * view, PHEvent * event)
+    {
+        view->eventHandled = true;
+        view->touchEvent(event);
+        eventHandled = view->eventHandled;
+    }
+    
 	virtual ~PHView();
 	friend class PHGameManager;
 	friend class PHEventHandler;

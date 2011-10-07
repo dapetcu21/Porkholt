@@ -58,6 +58,7 @@ public:
     double rotation() { return _rotation; }
     double zoom() { return _zoom; }
 	int type() { return state; };
+    void * userData() { return ud; }
 };
 
 #endif

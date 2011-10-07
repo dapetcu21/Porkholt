@@ -10,6 +10,7 @@
 #import "OverlayController.h"
 #import "PLFixture.h"
 #import "PLObject.h"
+#import "OverlayView.h"
 
 @implementation FixtureViewController
 
@@ -19,90 +20,106 @@
 }
 
 #define setNumberField(f,n) [(f) setStringValue:[NSString stringWithFormat:@"%.4lf",(double)(n)]]
+#define setIntField(f,n) [(f) setStringValue:[NSString stringWithFormat:@"%d",(int)(n)]]
 
 -(void)populateView
 {
     BOOL enabled = (model && !model.readOnly && !model.object.readOnly);
     
-    /*[className setEnabled:enabled];
-    [frame_x setEnabled:enabled];
-    [frame_y setEnabled:enabled];
-    [frame_w setEnabled:enabled];
-    [frame_h setEnabled:enabled];
-    [portion_x setEnabled:enabled];
-    [portion_y setEnabled:enabled];
-    [portion_w setEnabled:enabled];
-    [portion_h setEnabled:enabled];
+    [type setEnabled:enabled];
+    [pos_x setEnabled:enabled];
+    [pos_y setEnabled:enabled];
+    [box_x setEnabled:enabled];
+    [box_y setEnabled:enabled];
+    [box_w setEnabled:enabled];
+    [box_h setEnabled:enabled];
     [rotation setEnabled:enabled];
-    [fileName setEnabled:enabled];
-    [hFlipped setEnabled:enabled];
-    [vFlipped setEnabled:enabled];
-    [tag setEnabled:enabled];
-    [tint setEnabled:enabled];
-    [alphaSlider setEnabled:enabled];*/
+    [radius setEnabled:enabled];
+    [friction setEditable:enabled];
+    [density setEditable:enabled];
+    [restitution setEditable:enabled];
+    [groupIndex setEditable:enabled];
+    [categoryBits setEditable:enabled];
+    [maskBits setEditable:enabled];
     
     if (!model) return;
     
-    /*[className selectItemWithTitle:model.imageClass];
-    NSRect frame = model.frame;
-    setNumberField(frame_x, frame.origin.x);
-    setNumberField(frame_y, frame.origin.y);
-    setNumberField(frame_w, frame.size.width);
-    setNumberField(frame_h, frame.size.height);
-    NSRect portion = model.portion;
-    setNumberField(portion_x, portion.origin.x);
-    setNumberField(portion_y, portion.origin.y);
-    setNumberField(portion_w, portion.size.width);
-    setNumberField(portion_h, portion.size.height);
+    [type selectItemWithTag:model.shape];
+    NSPoint p = model.position;
+    setNumberField(pos_x, p.x);
+    setNumberField(pos_y, p.y);
+    NSRect r = model.box;
+    setNumberField(box_x, r.origin.x);
+    setNumberField(box_y, r.origin.y);
+    setNumberField(box_w, r.size.width);
+    setNumberField(box_h, r.size.height);
     setNumberField(rotation, model.rotation);
-    [tag setStringValue:[NSString stringWithFormat:@"%d",(int)model.tag]];
-    [alphaSlider setFloatValue:model.alpha];
-    [hFlipped setState:model.horizontallyFlipped?NSOnState:NSOffState];
-    [vFlipped setState:model.verticallyFlipped?NSOnState:NSOffState];
-    PHColor color = PHColorFromPLColor(model.tint);
-    NSColor * clr = [NSColor colorWithCalibratedRed:1 green:1 blue:1 alpha:1];
-    if (color.isValid())
-        clr = [NSColor colorWithCalibratedRed:color.r green:color.g blue:color.b alpha:color.a];
-    [tint setColor:clr];
-    NSString * fn = model.fileName;
-    if (!fn) 
-        fn = @"";
-    [fileName setStringValue:fn];*/
+    setNumberField(radius, model.radius);
+    setNumberField(friction, model.friction);
+    setNumberField(density, model.density);
+    setNumberField(restitution, model.restitution);
+    setIntField(groupIndex, model.groupIndex);
+    setIntField(categoryBits, model.categoryBits);
+    setIntField(maskBits, model.maskBits);
+    
+    [circleView removeFromSuperview];
+    [boxView removeFromSuperview];
+    [freestyleView removeFromSuperview];
+    NSView * v = nil;
+    switch (model.shape) {
+        case PLFixtureCircle:
+            v = circleView;
+            break;
+        case PLFixtureRect:
+            v = boxView;
+            break;
+        case PLFixtureFreestyle:
+            v = freestyleView;
+            break;
+    }
+    double delta = v.frame.size.height-dummyView.frame.size.height;
+    r = [dummyView frame];
+    r.size.height+=delta;
+    r.origin.y-=delta;
+    [dummyView setFrame:r];
+    r = [view frame];
+    r.size.height+=delta;
+    r.origin.y-=delta;
+    [view setFrame:r];
+    [view reshape];
+    [v setFrame:[dummyView bounds]];
+    [dummyView addSubview:v];
+    
 }
 
 -(IBAction)valueChanged:(id)sender
 {
     modifyFromInside = YES;
-/*    if (sender == className)
-        model.imageClass = [[className selectedItem] title];
-    if (sender == fileName)
-        model.fileName = [fileName stringValue];
-    if (sender == tag)
-        model.tag = [tag intValue];
-    if (sender == alphaSlider)
-        model.alpha = [alphaSlider floatValue];
-    if (sender == hFlipped) 
-        model.horizontallyFlipped = ([hFlipped state] == NSOnState);
-    if (sender == vFlipped)
-        model.verticallyFlipped = ([vFlipped state] == NSOnState);
+    if (sender == type)
+    {
+        modifyFromInside = NO;
+        model.shape = (int)[[type selectedItem] tag];
+    }
+    if (sender == pos_x || sender == pos_y)
+        model.position = NSMakePoint([pos_x floatValue], [pos_y floatValue]);
+    if (sender == radius)
+        model.radius = [radius floatValue];
     if (sender == rotation)
         model.rotation = [rotation floatValue];
-    if (sender == frame_x || sender == frame_y || sender == frame_w || sender == frame_h)
-        model.frame = NSMakeRect([frame_x floatValue], [frame_y floatValue], [frame_w floatValue], [frame_h floatValue]);
-    if (sender == portion_x || sender == portion_y || sender == portion_w || sender == portion_h)
-        model.portion = NSMakeRect([portion_x floatValue], [portion_y floatValue], [portion_w floatValue], [portion_h floatValue]);
-    if (sender == tint)
-    {
-        PLColor c;
-        NSColor * clr = [[tint color] colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"];
-        c.r = [clr redComponent];
-        c.g = [clr greenComponent];
-        c.b = [clr blueComponent];
-        c.a = [clr alphaComponent];
-        if (c.a == 1 && c.r == 1 && c.g == 1 && c.b == 1)
-            c.a=c.r=c.g=c.b=-1;
-        model.tint = c;
-    }*/
+    if (sender == box_x || sender == box_y || sender == box_w || sender == box_h)
+        model.box = NSMakeRect([box_x floatValue], [box_y floatValue], [box_w floatValue], [box_h floatValue]);
+    if (sender == friction)
+        model.friction = [friction floatValue];
+    if (sender == density)
+        model.density = [density floatValue];
+    if (sender == restitution)
+        model.restitution = [restitution floatValue];
+    if (sender == groupIndex)
+        model.groupIndex = [groupIndex intValue];
+    if (sender == categoryBits)
+        model.categoryBits = [categoryBits intValue];
+    if (sender == maskBits)
+        model.maskBits = [maskBits intValue];
     modifyFromInside = NO;
 }
 

@@ -10,6 +10,7 @@
 #define PLOBJECTVIEW_H
 
 @class PLObject;
+@class WorldController;
 #include "PHView.h"
 
 class PLObjectView : public PHView
@@ -18,6 +19,10 @@ protected:
     PLObject * model;
     void draw();
     bool sel;
+    WorldController * worldController;
+    
+    void touchEvent(PHEvent * evt);
+    
 public:
     PLObject * modelObject() { return model; }
     PLObjectView(PLObject * model);
@@ -27,6 +32,11 @@ public:
     
     bool selected() { return sel; }
     void setSelected(bool s) { sel = s; }
+    
+    WorldController * controller() { return worldController; }
+    void setController(WorldController *c) { worldController = c; }
+    
+    bool intersectsRect(const PHRect & rect);
 };
 
 #endif

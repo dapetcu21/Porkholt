@@ -11,7 +11,8 @@
 enum PLFixtureShapes
 {
     PLFixtureRect = 0,
-    PLFixtureCircle
+    PLFixtureCircle,
+    PLFixtureFreestyle
 };
 
 @class PLProperty;
@@ -39,10 +40,11 @@ enum PLFixtureShapes
 @property(nonatomic,assign) NSRect box;
 @property(nonatomic,assign) NSPoint position;
 @property(nonatomic,assign) double rotation;
+@property(nonatomic,assign) double radius;
+
 @property(nonatomic,assign) double friction;
 @property(nonatomic,assign) double density;
 @property(nonatomic,assign) double restitution;
-@property(nonatomic,assign) double radius;
 @property(nonatomic,assign) int groupIndex;
 @property(nonatomic,assign) int categoryBits;
 @property(nonatomic,assign) int maskBits;

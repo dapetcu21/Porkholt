@@ -104,6 +104,7 @@
     [window setContentView:rootView];
     [window setReleasedWhenClosed:YES];
     [window setAcceptsMouseMovedEvents:YES];
+    //[window setDelegate:self];
     [parentWindow setAcceptsMouseMovedEvents:YES];
     [window orderWindow:NSWindowAbove relativeTo:[parentWindow windowNumber]];
     [self reshapeToRect:bounds];
@@ -119,5 +120,19 @@
     [openGLView setOverlay:nil];
     [super dealloc];
 }
+
+/*
+-(void)undo:(id)sender
+{
+    if (!([[parentWindow undoManager] canUndo] && [[parentWindow firstResponder] tryToPerform:@selector(undo:) with:sender]))
+        NSBeep();
+}
+
+-(void)redo:(id)sender
+{
+    if (!([[parentWindow undoManager] canRedo] && [[parentWindow firstResponder] tryToPerform:@selector(redo:) with:sender]))
+        NSBeep();
+}*/
+
 
 @end

@@ -11,7 +11,10 @@
 #import "PHView.h"
 #import "PLObject.h"
 #import "PLObjectView.h"
+#import "PLWorldView.h"
 #import "ObjectController.h"
+#import "PHGameManager.h"
+#import "PHScrollerView.h"
 
 @implementation WorldController
 
@@ -19,6 +22,10 @@
 {
     self = [super init];
     if (self) {
+        worldView = new PLWorldView();
+        worldView->setFrame(PHRect(0,0,100,100));
+        worldView->setController(self);
+        worldView->setUserInput(true);
     }
     return self;
 }
@@ -27,23 +34,24 @@
     return view;
 }
 
--(void)setView:(PLPorkholtView *)v
-{
-    [v retain];
-    [view release];
-    view = v;
-    worldView = view.worldView;
-    [self reloadViews];
-}
-
 -(ObjectController*)model
 {
     return model;
 }
 
+-(void)setView:(PLPorkholtView *)v
+{
+    [v retain];
+    [view release];
+    view = v;
+    ((PHScrollerView*)view.gameManager->rootView())->setContentView(worldView);
+    [self reloadViews];
+}
+
 -(void)dealloc
 {
     [model release];
+    worldView->release();
     [super dealloc];
 }
 
@@ -57,7 +65,10 @@
     for (PLObject * obj in [model objects])
     {
         if (!obj.actor)
+        {
             obj.actor = new PLObjectView(obj);
+            obj.actor->setController(self);
+        }
         worldView->addSubview(obj.actor);
     }
     for (PLObject * obj in [model objects])
@@ -102,5 +113,44 @@
 {
     
 }
+
+-(void)startSelectionOfType:(int)t atPoint:(PHPoint)p
+{
+    type = t;
+    if (type==0)
+        [model clearSelection];
+    initialIndexSet = [[model selectionForArray:0] copy];
+}
+
+-(void)moveSelection:(PHRect)area
+{
+    if (type<0)
+        return;
+    NSMutableIndexSet * is = [NSMutableIndexSet indexSet];
+    for (PLObject * obj in [model objects])
+        if (obj.actor && obj.actor->intersectsRect(area))
+            [is addIndex:[model indexForEntity:obj inArray:0]];
+    [model beginCommitGrouping];
+    [model clearSelection];
+    if (type==1)
+        [is addIndexes:initialIndexSet];
+    else
+    if (type==2)
+    {
+        NSMutableIndexSet * iss = [[initialIndexSet mutableCopy] autorelease];
+        [iss removeIndexes:is];
+        is = iss;
+    }
+    [model insertIndexes:is inSelectionForArray:0];
+    [model endCommitGrouping];
+}
+
+-(void)endSelection:(PHRect)area
+{
+    [initialIndexSet release];
+    initialIndexSet = nil;
+    type = -1;
+}
+
 
 @end

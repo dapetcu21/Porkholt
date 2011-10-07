@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A2143E28500002A811 /* ImageViewController.mm */; };
+		C11DF2AA143F6BC30002A811 /* PLWorldView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A9143F6BC30002A811 /* PLWorldView.mm */; };
 		C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11EA9DC1425B7A300795880 /* Cocoa.framework */; };
 		C11EA9E71425B7A300795880 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C11EA9E51425B7A300795880 /* InfoPlist.strings */; };
 		C11EA9E91425B7A300795880 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C11EA9E81425B7A300795880 /* main.m */; };
@@ -92,6 +93,8 @@
 /* Begin PBXFileReference section */
 		C11DF2A1143E28500002A811 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		C11DF2A2143E28500002A811 /* ImageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageViewController.mm; sourceTree = "<group>"; };
+		C11DF2A9143F6BC30002A811 /* PLWorldView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLWorldView.mm; sourceTree = "<group>"; };
+		C11DF2AC143F6BD90002A811 /* PLWorldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLWorldView.h; sourceTree = "<group>"; };
 		C11EA9D81425B7A300795880 /* LevelDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LevelDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11EA9DC1425B7A300795880 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		C11EA9DF1425B7A300795880 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -456,6 +459,8 @@
 				C127D394143A55E8004DEB16 /* OpenGLTimer.mm */,
 				C14AAAEC143ACDE4006D71ED /* PHScrollerView.h */,
 				C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */,
+				C11DF2AC143F6BD90002A811 /* PLWorldView.h */,
+				C11DF2A9143F6BC30002A811 /* PLWorldView.mm */,
 				C14DC669143C2C4C00F0C82D /* PLObjectView.h */,
 				C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */,
 				C14DC666143C23D000F0C82D /* WorldController.h */,
@@ -695,6 +700,7 @@
 				C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */,
 				C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */,
 				C14DC687143EEABA00F0C82D /* FixtureViewController.mm in Sources */,
+				C11DF2AA143F6BC30002A811 /* PLWorldView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

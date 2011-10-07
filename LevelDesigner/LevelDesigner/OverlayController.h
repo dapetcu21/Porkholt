@@ -10,7 +10,7 @@
 
 @class PLPorkholtView;
 @class OverlayView;
-@interface OverlayController : NSObject
+@interface OverlayController : NSObject<NSWindowDelegate>
 {
     OverlayView * bottomView, * rightView;
     NSRect bounds;
