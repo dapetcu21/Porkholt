@@ -13,7 +13,7 @@
 #import "ObjectController.h"
 #import "WorldController.h"
 
-PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.13,-0.13,0.26,0.26)), model(_model), sel(false)
+PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.13,-0.13,0.26,0.26)), model(_model), sel(false), moving(false), rotating(false)
 {
     [model setActor:this];
     modelChanged();
@@ -54,7 +54,7 @@ void PLObjectView::draw()
         
     };
 	
-    GLubyte by = model.readOnly?127:255;
+    GLubyte by = model.readOnly?170:255;
     GLubyte r=sel?127:by,g=sel?127:by,b=sel?255:by,a=255;
     
     const GLubyte squareColors[] = {
@@ -65,6 +65,7 @@ void PLObjectView::draw()
         
         r,g,b,a,
         255,0,0,255,
+        
         255,0,0,255,
         255,0,0,255,
         255,0,0,255,
@@ -96,13 +97,51 @@ void PLObjectView::touchEvent(PHEvent * evt)
         }
         bool cmd = PHEventHandler::modifierMask() & PHEventHandler::commandModifier;
         bool alt = PHEventHandler::modifierMask() & PHEventHandler::optionModifier;
-        if (!cmd && ! alt)
+        if (!cmd && ! alt && !sel)
             [[worldController model] clearSelection];
         if (alt)
             [[worldController model] removeEntity:model inSelectionForArray:0];
         else
             [[worldController model] insertEntity:model inSelectionForArray:0];
-            
-    } else 
+    } 
+    else
+    if (evt->type() == PHEvent::touchMoved)
+    {
+        if (evt->userData() == (void*)1)
+        {
+            if (!moving)
+            {
+                [worldController startMoving];
+                moving = true;
+            }
+            PHPoint delta = superView->toMyCoordinates(evt->location()) - superView->toMyCoordinates(evt->lastLocation());
+            [worldController move:delta];
+        }
+        else
+        if (evt->userData() == (void*)2)
+        {
+            if (!rotating)
+            {
+                [worldController startRotating];
+                rotating = true;
+            }
+            [worldController rotate:-(evt->location().y - evt->lastLocation().y)/2];
+        }
+    }
+    else
+    if (evt->type() == PHEvent::touchUp)
+    {
+        if ((evt->userData() == (void*)1) && moving)
+        {
+            [worldController stopMoving];
+            moving = false;
+        }
+        if ((evt->userData() == (void*)2) && rotating)
+        {
+            [worldController stopRotating];
+            rotating = false;
+        }
+    }
+    else 
         eventHandled = false;
 }

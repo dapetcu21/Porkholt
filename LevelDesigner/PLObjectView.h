@@ -20,6 +20,8 @@ protected:
     void draw();
     bool sel;
     WorldController * worldController;
+    bool moving,rotating;
+    
     
     void touchEvent(PHEvent * evt);
     

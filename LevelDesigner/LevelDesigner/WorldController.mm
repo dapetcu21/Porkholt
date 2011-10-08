@@ -152,5 +152,70 @@
     type = -1;
 }
 
+inline static NSPoint NSPointFromPHPoint(const PHPoint & p)
+{
+    NSPoint pn;
+    pn.x = p.x;
+    pn.y = p.y;
+    return pn;
+}
+
+-(void)startMoving
+{
+    dragged = PHOriginPoint;
+    [[model undoManager] disableUndoRegistration];
+    [movedObjects release];
+    movedObjects = [[NSMutableArray alloc] init];
+    for (PLObject * obj in [model selectedEntitiesForArray:0])
+        if (!obj.readOnly)
+            [movedObjects addObject:obj];
+}
+
+-(void)startRotating
+{
+    rotated = 0;
+    [[model undoManager] disableUndoRegistration];
+    [rotatedObjects release];
+    rotatedObjects = [[NSMutableArray alloc] init];
+    for (PLObject * obj in [model selectedEntitiesForArray:0])
+        if (!obj.readOnly)
+            [rotatedObjects addObject:obj];
+}
+
+-(void)move:(PHPoint)ammount
+{
+    for (PLObject * obj in movedObjects)
+        [obj move:NSPointFromPHPoint(ammount)];
+    dragged+=ammount;
+}
+
+-(void)rotate:(double)ammount
+{
+    for (PLObject * obj in rotatedObjects)
+        [obj rotate:ammount];
+    rotated+=ammount;
+}
+
+-(void)stopMoving
+{
+    for (PLObject * obj in movedObjects)
+        [obj move:NSPointFromPHPoint(dragged*(-1))];
+    [[model undoManager] enableUndoRegistration];
+    for (PLObject * obj in movedObjects)
+        [obj move:NSPointFromPHPoint(dragged)];
+    [movedObjects release];
+    movedObjects = nil;
+}
+
+-(void)stopRotating
+{
+    for (PLObject * obj in rotatedObjects)
+        [obj rotate:-rotated];
+    [[model undoManager] enableUndoRegistration];
+    for (PLObject * obj in rotatedObjects)
+        [obj rotate:rotated];
+    [rotatedObjects release];
+    rotatedObjects = nil;
+}
 
 @end

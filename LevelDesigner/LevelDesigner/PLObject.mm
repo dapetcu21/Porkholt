@@ -307,4 +307,20 @@
     [self objectChanged];
 }
 
+-(void)move:(NSPoint)p
+{
+    PLProperty * prop = [rootProperty propertyWithKey:@"pos"];
+    NSPoint pnt = prop.pointValue;
+    pnt.x+=p.x;
+    pnt.y+=p.y;
+    [prop setPointValue:pnt];
+}
+
+-(void)rotate:(double)p
+{
+    PLProperty * prop = [rootProperty propertyWithKey:@"rotation"];
+    [prop setNumberValue:prop.numberValue+p];
+    
+}
+
 @end

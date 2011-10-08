@@ -35,6 +35,9 @@ class PLObjectView;
 -(void)propertyChanged:(PLProperty*)p;
 -(void)subobjectChanged:(PLEntity*)so;
 
+-(void)move:(NSPoint)p;
+-(void)rotate:(double)p;
+
 -(PLProperty*)propertyAtKeyPath:(NSString*)keyPath;
 -(void)writeToFile:(NSMutableString*)file;
 -(NSUndoManager*)undoManager;

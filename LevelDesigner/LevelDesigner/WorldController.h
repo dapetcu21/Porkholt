@@ -18,6 +18,11 @@ class PLWorldView;
     PLWorldView * worldView;
     int type;
     NSIndexSet * initialIndexSet;
+    
+    PHPoint dragged;
+    double rotated;
+    NSMutableArray * movedObjects;
+    NSMutableArray * rotatedObjects;
 }
 
 -(void)objectsChanged;
@@ -31,5 +36,12 @@ class PLWorldView;
 -(void)startSelectionOfType:(int)type atPoint:(PHPoint)p;
 -(void)moveSelection:(PHRect)area;
 -(void)endSelection:(PHRect)area;
+
+-(void)startMoving;
+-(void)startRotating;
+-(void)move:(PHPoint)ammount;
+-(void)rotate:(double)ammount;
+-(void)stopMoving;
+-(void)stopRotating;
 
 @end
