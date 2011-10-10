@@ -211,14 +211,18 @@
 
 -(void)magnifyWithEvent:(NSEvent *)event
 {
+    if (rotating) return;
+    zooming = true;
     NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
     gameManager->eventHandler()->pinchZoom(PHPoint(p.x,p.y), [event magnification], event);
 }
 
 - (void)rotateWithEvent:(NSEvent *)event
 {
+    if (zooming) return;
+    rotating = true;
     NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
-    gameManager->eventHandler()->pinchRotate(PHPoint(p.x,p.y), [event rotation], event);
+    gameManager->eventHandler()->pinchRotate(PHPoint(p.x,p.y), -[event rotation], event);
 }
 
 - (void)beginGestureWithEvent:(NSEvent *)event
@@ -229,6 +233,7 @@
 - (void)endGestureWithEvent:(NSEvent *)event
 {
     gameManager->eventHandler()->multitouchEnd(event);
+    zooming = rotating = false;
 }
 
 -(IBAction)resetToOrigin:(id)sender

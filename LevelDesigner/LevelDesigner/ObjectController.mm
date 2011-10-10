@@ -12,12 +12,15 @@
 #import "PLObject.h"
 #import "PLJoint.h"
 #import "WorldController.h"
+#import "StatusController.h"
 
 @implementation ObjectController
 
 - (id)init
 {
     self = [super initWithArrays:ObjectController_numberOfArrays andPasteboardType:PLObjectPBoardType];
+    if (self)
+        showMarkers = showFixtures = showJoints = showImages = YES;
     return self;
 }
 
@@ -64,6 +67,10 @@
         [worldController objectSelectionChanged];
     if (array==1)
         [worldController jointSelectionChanged];
+    if (![self isObjectModePossible])
+        objectMode = NO;
+    [statusController flagsChanged];
+    [worldController flagsChanged];
 }
 
 #pragma Loading and saving to file
@@ -168,6 +175,76 @@
 		if (!object.readOnly)
 			[object writeToFile:file];
 	[file appendString:@"\n"];
+}
+
+-(BOOL)showMarkers
+{
+    return showMarkers;
+}
+
+-(BOOL)showFixtures
+{
+    return showFixtures;
+}
+
+-(BOOL)showImages
+{
+    return showImages;
+}
+
+-(BOOL)showJoints
+{
+    return showJoints;
+}
+
+-(BOOL)objectMode
+{
+    return objectMode;
+}
+
+-(void)setShowMarkers:(BOOL)sm
+{
+    if (showMarkers==sm) return;
+    showMarkers = sm;
+    [statusController flagsChanged];
+    [worldController flagsChanged];
+}
+
+-(void)setShowImages:(BOOL)sm
+{
+    if (showImages==sm) return;
+    showImages = sm;
+    [statusController flagsChanged];
+    [worldController flagsChanged];
+}
+
+-(void)setShowFixtures:(BOOL)sm
+{
+    if (showFixtures==sm) return;
+    showFixtures = sm;
+    [statusController flagsChanged];
+    [worldController flagsChanged];
+}
+
+-(void)setShowJoints:(BOOL)sm
+{
+    if (showJoints==sm) return;
+    showJoints = sm;
+    [statusController flagsChanged];
+    [worldController flagsChanged];
+}
+
+-(void)setObjectMode:(BOOL)om
+{
+    if (objectMode==om) return;
+    objectMode = om;
+    [statusController flagsChanged];
+    [worldController flagsChanged];
+}
+
+-(BOOL)isObjectModePossible
+{
+    return [[self selectedEntity] isKindOfClass:[PLObject class]];
 }
 
 @end

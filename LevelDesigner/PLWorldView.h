@@ -26,6 +26,7 @@ protected:
     PHRect dragRect;
     PHPoint startPoint;
     void draw();
+    bool rotating;
 public:
     PLWorldView();
     WorldController * controller() { return worldController; }

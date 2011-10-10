@@ -25,12 +25,27 @@ PLObjectView::~PLObjectView()
     [model setActor:NULL];
 }
 
+void PLObjectView::reloadSubviews()
+{
+    list<PHView*> v(subViews());
+    list<PHView*>::iterator nx;
+    for (list<PHView*>::iterator i = v.begin(); i!=v.end(); i=nx)
+    {
+        nx++;
+        PLObjectView * 
+        (*i)->retain();
+    }
+        
+}
+
 void PLObjectView::modelChanged()
 {
     NSPoint pos = [model propertyAtKeyPath:@"pos"].pointValue;
     setPosition(PHPoint(pos.x,pos.y)-boundsCenter());
     setRotation(-toRad([model propertyAtKeyPath:@"rotation"].numberValue));
     setHorizontallyFlipped([model propertyAtKeyPath:@"flipped"].numberValue);
+    
+    reloadSubviews();
 }
 
 void PLObjectView::draw()

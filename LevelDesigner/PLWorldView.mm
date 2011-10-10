@@ -11,7 +11,7 @@
 #include "WorldController.h"
 #include "PHEventHandler.h"
 
-PLWorldView::PLWorldView() : dragRect(0,0,0,0), startPoint(0,0)
+PLWorldView::PLWorldView() : dragRect(0,0,0,0), startPoint(0,0), rotating(false)
 {
     
 }
@@ -78,6 +78,25 @@ void PLWorldView::touchEvent(PHEvent * event)
         }
         [worldController endSelection:dragRect];
         dragRect = PHRect(0,0,0,0);
+    }
+    else
+    if (event->type() == PHEvent::pinchRotate)
+    {
+        if (!rotating)
+        {
+            rotating = true;
+            [worldController startRotating];
+        }
+        [worldController rotate:event->rotation()];
+    }
+    else
+    if (event->type() == PHEvent::multitouchEnd)
+    {
+        if (rotating)
+        {
+            rotating = false;
+            [worldController stopRotating];
+        }
     }
     else
         eventHandled = false;

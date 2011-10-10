@@ -15,6 +15,7 @@
 #import "ObjectController.h"
 #import "PHGameManager.h"
 #import "PHScrollerView.h"
+#import "PHEventHandler.h"
 
 @implementation WorldController
 
@@ -41,16 +42,20 @@
 
 -(void)setView:(PLPorkholtView *)v
 {
+    if (view)
+        view.gameManager->eventHandler()->unregisterViewForMultitouchEvents(worldView);
     [v retain];
     [view release];
     view = v;
     ((PHScrollerView*)view.gameManager->rootView())->setContentView(worldView);
+    view.gameManager->eventHandler()->registerViewForMultitouchEvents(worldView);
     [self reloadViews];
 }
 
 -(void)dealloc
 {
     [model release];
+    view.gameManager->eventHandler()->unregisterViewForMultitouchEvents(worldView);
     worldView->release();
     [super dealloc];
 }
@@ -216,6 +221,11 @@ inline static NSPoint NSPointFromPHPoint(const PHPoint & p)
         [obj rotate:rotated];
     [rotatedObjects release];
     rotatedObjects = nil;
+}
+
+-(void)flagsChanged
+{
+    
 }
 
 @end

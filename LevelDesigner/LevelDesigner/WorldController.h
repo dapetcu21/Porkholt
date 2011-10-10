@@ -44,4 +44,6 @@ class PLWorldView;
 -(void)stopMoving;
 -(void)stopRotating;
 
+-(void)flagsChanged;
+
 @end

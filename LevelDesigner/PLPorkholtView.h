@@ -17,6 +17,8 @@ class PHView;
     NSTimer * timer;
     PHView * worldView;
     OverlayController * overlay;
+    BOOL rotating;
+    BOOL zooming;
 }
 
 -(PHGameManager*)gameManager;
