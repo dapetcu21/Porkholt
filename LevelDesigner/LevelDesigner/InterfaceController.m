@@ -79,4 +79,35 @@
     [super selectionForArrayChanged:array];
 }
 
+-(IBAction)toggleShowMarkers:(id)sender
+{
+    [(ObjectController*)model setShowMarkers:!((ObjectController*)model).showMarkers];
+}
+
+-(IBAction)toggleShowImages:(id)sender
+{
+    [(ObjectController*)model setShowImages:!((ObjectController*)model).showImages];
+}
+
+-(IBAction)toggleShowFixtures:(id)sender
+{
+    [(ObjectController*)model setShowFixtures:!((ObjectController*)model).showFixtures];
+}
+
+-(IBAction)toggleShowJoints:(id)sender
+{
+    [(ObjectController*)model setShowJoints:!((ObjectController*)model).showJoints];
+}
+
+-(IBAction)toggleObjectMode:(id)sender
+{
+    ObjectController * oc = (ObjectController*)model;
+    if (![oc isObjectModePossible] && !oc.objectMode)
+    {
+        NSBeep();
+        return;
+    }
+    [oc setObjectMode:!oc.objectMode];
+}
+
 @end

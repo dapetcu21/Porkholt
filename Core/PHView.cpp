@@ -118,7 +118,7 @@ void PHView::applyMatrices()
 {
 	glTranslatef(_frame.x, _frame.y, 0);
 	glScalef(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1, 1);
-//    glTranslatef(-_bounds.x, -_bounds.y, 0);
+    glTranslatef(-_bounds.x, -_bounds.y, 0);
     int eo = effOrder;
     while (eo)
     {
@@ -546,7 +546,7 @@ PHView * PHView::pointerDeepFirst(PHEvent * touch)
 	if (!view)
 	{
 		PHPoint pnt = PHUnTransformedPoint(touch->location());
-		if (pnt.x>=0 && pnt.y>=0 && pnt.x<=_bounds.width && pnt.y<=_bounds.height)
+		if (pnt.x>=_bounds.x && pnt.y>=_bounds.y && pnt.x<=_bounds.x+_bounds.width && pnt.y<=_bounds.y+_bounds.height)
         {
             eventHandled = true;
             touchEvent(touch);

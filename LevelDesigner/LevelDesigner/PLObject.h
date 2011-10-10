@@ -9,7 +9,7 @@
 #import "PLEntity.h"
 
 @class PLProperty;
-@class EntityController;
+@class SubentityController;
 @class PLPrototype;
 
 #ifndef __cplusplus
@@ -21,14 +21,14 @@ class PLObjectView;
 @interface PLObject : PLEntity
 {
     PLProperty * rootProperty;
-    EntityController * subentityModel;
+    SubentityController * subentityModel;
     PLPrototype * prototype;
     NSString * className;
     PLObjectView * actor;
 }
 
 @property(nonatomic,readonly) PLProperty * rootProperty;
-@property(nonatomic,readonly) EntityController * subentityModel;
+@property(nonatomic,readonly) SubentityController * subentityModel;
 @property(nonatomic,readonly) NSString * className;
 @property(nonatomic,readonly) PLPrototype * prototype;
 

@@ -16,6 +16,12 @@ struct PLColor
     double r,g,b,a;
 };
 
+#ifdef __cplusplus
+class PLImageView;
+#else
+#define PLImageView void
+#endif
+
 @class ImageViewController;
 @interface PLImage : PLEntity
 {
@@ -43,6 +49,8 @@ struct PLColor
 @property(nonatomic,assign) struct PLColor tint;
 @property(nonatomic,retain) NSString * fileName;
 @property(nonatomic,assign) double alpha;
+
+@property(nonatomic,assign) PLImageView * actor;
 
 -(id)initFromProperty:(PLProperty*)prop;
 -(void)writeToFile:(NSMutableString*)file;

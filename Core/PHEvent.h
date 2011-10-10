@@ -41,11 +41,12 @@ private:
     double _rotation;
 	int state;
 	void * ud;
+    PHObject * _sender;
 	friend class PHEventHandler;
 	void updateLocation(const PHPoint & pnt, double time, int nstate);
 public:
 	
-	PHEvent() : _ownerView(NULL) {};
+	PHEvent() : _ownerView(NULL), _sender(NULL) {};
 	
 	double time() { return _time; };
 	double lastTime() { return _lastTime; };
@@ -59,6 +60,8 @@ public:
     double zoom() { return _zoom; }
 	int type() { return state; };
     void * userData() { return ud; }
+    PHObject * sender() { return _sender; }
+    void setSender(PHObject * s) { _sender = s; }
 };
 
 #endif

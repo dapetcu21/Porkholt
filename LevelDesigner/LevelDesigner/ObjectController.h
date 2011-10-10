@@ -11,6 +11,7 @@
 @class InterfaceController;
 @class WorldController;
 @class StatusController;
+@class PLDocument;
 
 #define ObjectController_numberOfArrays 2
 #define PLObjectPBoardType @"PLObjectPBoardType"
@@ -23,6 +24,7 @@
     IBOutlet StatusController * statusController;
     BOOL showMarkers, showImages, showFixtures, showJoints;
     BOOL objectMode;
+    IBOutlet PLDocument * document;
 }
 
 #pragma Array Access
@@ -40,5 +42,6 @@
 @property(nonatomic,assign) BOOL objectMode;
 @property(nonatomic,readonly,getter = isObjectModePossible) BOOL objectModeEnabled;
 -(BOOL)isObjectModePossible;
+-(NSURL*)fileURL;
 
 @end

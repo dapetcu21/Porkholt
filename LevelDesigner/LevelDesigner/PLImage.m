@@ -40,6 +40,7 @@ static inline void endToken(NSMutableString * file, int * count)
 
 @implementation PLImage
 @synthesize viewController;
+@synthesize actor;
 
 -(id)initFromProperty:(PLProperty*)prop
 {

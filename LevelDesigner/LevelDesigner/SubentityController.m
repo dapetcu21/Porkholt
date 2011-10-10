@@ -45,4 +45,15 @@
             return NULL;
     }
 }
+
+-(NSArray*)images
+{
+    return [self arrayAtIndex:0];
+}
+
+-(NSArray*)fixtures
+{
+    return [self arrayAtIndex:1];
+}
+
 @end

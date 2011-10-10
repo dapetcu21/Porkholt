@@ -107,6 +107,9 @@ struct PHRect
     static PHRect fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
     
+    PHPoint origin() { return PHPoint(x,y); }
+    PHSize size() { return PHSize(width,height); }
+    
     PHRect & operator += (const PHPoint & othr)
     {
         x+=othr.x;

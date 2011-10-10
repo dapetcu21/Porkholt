@@ -1,19 +1,19 @@
 //
-//  PLImageView.h
+//  PLFixtureView.h
 //  LevelDesigner
 //
-//  Created by Marius Petcu on 10/9/11.
+//  Created by Marius Petcu on 10/10/11.
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#ifndef PLIMAGEVIEW_H
-#define PLIMAGEVIEW_H
+#ifndef PLFIXTUREVIEW
+#define PLFIXTUREVIEW
 
-#include "PHImageView.h"
-@class PLImage;
+#include "PHView.h"
+@class PLFixture;
 class PLObjectView;
 
-class PLImageView : public PHImageView
+class PLFixtureView : public PHView
 {
 protected:
     PLObjectView * objectView;
@@ -22,15 +22,12 @@ public:
     void setController(PLObjectView * ov) { objectView = ov; }
     
 protected:
-    PLImage * model;
+    PLFixture * model;
     
 public:
-    PLImageView(PLImage * _model);
-    ~PLImageView();
+    PLFixtureView(PLFixture * _model);
+    ~PLFixtureView();
     void modelChanged();
-    
-protected:
-    void draw();
 };
 
 #endif

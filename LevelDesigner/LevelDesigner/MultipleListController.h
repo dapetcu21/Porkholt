@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 @class EntityController;
 @class PLTableView;
 
@@ -40,6 +39,7 @@
 -(void)copy:(id)sender;
 -(void)paste:(id)sender;
 -(void)duplicate:(id)sender;
+-(void)selectAll:(id)sender;
 -(BOOL)validateMenuItem:(NSMenuItem*)menuItem sentFrom:(id)sender;
 
 -(void)arrayChanged:(NSUInteger)array;

@@ -13,6 +13,7 @@
 #import "PLJoint.h"
 #import "WorldController.h"
 #import "StatusController.h"
+#import "PLDocument.h"
 
 @implementation ObjectController
 
@@ -244,7 +245,13 @@
 
 -(BOOL)isObjectModePossible
 {
-    return [[self selectedEntity] isKindOfClass:[PLObject class]];
+    PLEntity * e = [self selectedEntity];
+    return [e isKindOfClass:[PLObject class]] && !e.readOnly;
+}
+
+-(NSURL*)fileURL
+{
+    return [document fileURL];
 }
 
 @end

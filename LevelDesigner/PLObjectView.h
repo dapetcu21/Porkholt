@@ -24,6 +24,7 @@ protected:
     
     
     void touchEvent(PHEvent * evt);
+    void reloadSubviews();
     
 public:
     PLObject * modelObject() { return model; }
@@ -39,6 +40,8 @@ public:
     void setController(WorldController *c) { worldController = c; }
     
     bool intersectsRect(const PHRect & rect);
+    
+    void flagsChanged();
 };
 
 #endif

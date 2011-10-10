@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "MultipleListController.h"
+#import "PLPorkholtViewDelegate.h"
 
 @class PLEntity;
 @class PropertyController;
 @class JointController;
-@interface InterfaceController : MultipleListController
+@interface InterfaceController : MultipleListController<PLPorkholtViewDelegate>
 {
     IBOutlet NSView * jointDetailView;    
     IBOutlet NSView * objectDetailView;

@@ -19,6 +19,12 @@ enum PLFixtureShapes
 @class PLObject;
 @class FixtureViewController;
 
+#ifdef __cplusplus
+class PLFixtureView;
+#else
+#define PLFixtureView void
+#endif
+
 @interface PLFixture : PLEntity
 {
     int shape;
@@ -34,6 +40,7 @@ enum PLFixtureShapes
     int maskBits;
     
     FixtureViewController * viewController;
+    PLFixtureView * actor;
 }
 
 @property(nonatomic,assign) int shape;
@@ -55,5 +62,6 @@ enum PLFixtureShapes
 
 @property(nonatomic,readonly) PLObject * object;
 @property(nonatomic,assign) FixtureViewController * viewController;
+@property(nonatomic,assign) PLFixtureView * actor;
 
 @end

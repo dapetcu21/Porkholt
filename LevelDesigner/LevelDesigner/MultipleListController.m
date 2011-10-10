@@ -73,7 +73,7 @@
     for (int i=0; i<numberOfTables; i++)
         if (sender==tables[i])
             return i;
-    return NSNotFound;
+    return [[[tabView selectedTabViewItem] identifier] intValue];
 }
 
 -(void)_switchTabs
@@ -284,5 +284,9 @@
     return YES;
 }
 
+-(void)selectAll:(id)sender
+{
+    [tables[[self indexForView:sender]] selectAll:sender];
+}
 
 @end

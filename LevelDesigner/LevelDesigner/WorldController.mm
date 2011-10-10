@@ -225,7 +225,9 @@ inline static NSPoint NSPointFromPHPoint(const PHPoint & p)
 
 -(void)flagsChanged
 {
-    
+    for (PLObject * obj in [model objects])
+        if (obj.actor)
+            (obj.actor)->flagsChanged();
 }
 
 @end

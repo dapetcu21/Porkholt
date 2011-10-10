@@ -15,6 +15,7 @@
 
 @implementation PLFixture
 @synthesize viewController;
+@synthesize actor;
 
 static inline void addToken(NSMutableString * file,NSString * token, int * count)
 {

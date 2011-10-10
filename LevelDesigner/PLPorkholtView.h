@@ -11,6 +11,9 @@
 class PHGameManager;
 class PHView;
 @class OverlayController;
+
+#import "PLPorkholtViewDelegate.h"
+
 @interface PLPorkholtView : NSOpenGLView
 {
     PHGameManager * gameManager;
@@ -19,6 +22,7 @@ class PHView;
     OverlayController * overlay;
     BOOL rotating;
     BOOL zooming;
+    id<PLPorkholtViewDelegate> delegate;
 }
 
 -(PHGameManager*)gameManager;
@@ -27,5 +31,11 @@ class PHView;
 -(void)render;
 
 @property(nonatomic,retain) IBOutlet OverlayController * overlay;
+@property(nonatomic,assign) IBOutlet id<PLPorkholtViewDelegate> delegate;
+
+-(IBAction)toggleShowMarkers:(id)sender;
+-(IBAction)toggleShowImages:(id)sender;
+-(IBAction)toggleShowFixtures:(id)sender;
+-(IBAction)toggleShowJoints:(id)sender;
 
 @end

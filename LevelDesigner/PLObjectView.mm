@@ -12,9 +12,18 @@
 #import "PHEventHandler.h"
 #import "ObjectController.h"
 #import "WorldController.h"
+#import "PLImage.h"
+#import "PLImageView.h"
+#import "SubentityController.h"
+#import "PLFixture.h"
+#import "PLFixtureView.h"
 
-PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.13,-0.13,0.26,0.26)), model(_model), sel(false), moving(false), rotating(false)
+PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.7,-0.7,0.14,0.14)), model(_model), sel(false), moving(false), rotating(false)
 {
+    setBounds(bounds()-boundsCenter());
+    setRotationalCenter(PHOriginPoint);
+    setScalingCenter(PHOriginPoint);
+    [model retain];
     [model setActor:this];
     modelChanged();
     setUserInput(true);
@@ -23,49 +32,83 @@ PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.13,-0.13,0.26,0
 PLObjectView::~PLObjectView()
 {
     [model setActor:NULL];
+    [model release];
 }
 
 void PLObjectView::reloadSubviews()
 {
-    list<PHView*> v(subViews());
-    list<PHView*>::iterator nx;
-    for (list<PHView*>::iterator i = v.begin(); i!=v.end(); i=nx)
-    {
-        nx++;
-        PLObjectView * 
-        (*i)->retain();
-    }
-        
+    for (PLImage * obj in [[model subentityModel] images])
+        if (obj.actor)
+            (obj.actor)->retain();
+    for (PLFixture * obj in [[model subentityModel] fixtures])
+        if (obj.actor)
+            (obj.actor)->retain();
+    
+    removeAllSubviews();
+    if (((ObjectController*)[model owner]).showImages)
+        for (PLImage * obj in [[model subentityModel] images])
+        {
+            if (!obj.actor)
+            {
+                obj.actor = new PLImageView(obj);
+                obj.actor->setController(this);
+            }
+            addSubview(obj.actor);
+        }
+    if (((ObjectController*)[model owner]).showFixtures)
+        for (PLFixture * obj in [[model subentityModel] fixtures])
+        {
+            if (!obj.actor)
+            {
+                obj.actor = new PLFixtureView(obj);
+                obj.actor->setController(this);
+            }
+            addSubview(obj.actor);
+        }
+
+    
+    for (PLImage * obj in [[model subentityModel] images])
+        if (obj.actor)
+            (obj.actor)->release();
+    for (PLFixture * obj in [[model subentityModel] fixtures])
+        if (obj.actor)
+            (obj.actor)->release();
 }
 
 void PLObjectView::modelChanged()
 {
     NSPoint pos = [model propertyAtKeyPath:@"pos"].pointValue;
-    setPosition(PHPoint(pos.x,pos.y)-boundsCenter());
+    setPosition(PHPoint(pos.x,pos.y)+bounds().origin());
     setRotation(-toRad([model propertyAtKeyPath:@"rotation"].numberValue));
     setHorizontallyFlipped([model propertyAtKeyPath:@"flipped"].numberValue);
     
     reloadSubviews();
 }
 
+void PLObjectView::flagsChanged()
+{
+    modelChanged();
+}
+
 void PLObjectView::draw()
 {
+    if (!((ObjectController*)[model owner]).showMarkers) return;
     GLfloat squareVertices[] = {
-        0, 0,
-        _bounds.width, 0,
-        0,  _bounds.height,
-        _bounds.width,  _bounds.height,
+        _bounds.x+0,               _bounds.y+0,
+        _bounds.x+_bounds.width,   _bounds.y+0,
+        _bounds.x+0,               _bounds.y+_bounds.height,
+        _bounds.x+_bounds.width,   _bounds.y+_bounds.height,
         
-        _bounds.width,  _bounds.height,
-        0,_bounds.height/2,
+        _bounds.x+_bounds.width,   _bounds.y+_bounds.height,
+        _bounds.x+0,               _bounds.y+_bounds.height/2,
         
-        0,_bounds.height/2,
-        _bounds.width/2, _bounds.height,
-        _bounds.width/2, _bounds.height/2,
+        _bounds.x+0,               _bounds.y+_bounds.height/2,
+        _bounds.x+_bounds.width/2, _bounds.y+_bounds.height,
+        _bounds.x+_bounds.width/2, _bounds.y+_bounds.height/2,
         
-        _bounds.width/2, _bounds.height/2,
-        _bounds.width/2, _bounds.height,
-        _bounds.width, _bounds.height/2
+        _bounds.x+_bounds.width/2, _bounds.y+_bounds.height/2,
+        _bounds.x+_bounds.width/2, _bounds.y+_bounds.height,
+        _bounds.x+_bounds.width,   _bounds.y+_bounds.height/2
         
     };
 	
@@ -98,11 +141,16 @@ void PLObjectView::draw()
 
 bool PLObjectView::intersectsRect(const PHRect &rect)
 {
-    return PHPointInRect(center(), rect);
+    return ((ObjectController*)[model owner]).showMarkers?PHPointInRect(center(), rect):false;
 }
 
 void PLObjectView::touchEvent(PHEvent * evt)
 {
+    if (((evt->sender() == this) || (evt->sender() == NULL))  && (!((ObjectController*)[model owner]).showMarkers))
+    {
+        eventHandled = false;
+        return;
+    }
     if (evt->type() == PHEvent::touchDown)
     {
         if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)

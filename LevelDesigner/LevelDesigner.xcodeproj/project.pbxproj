@@ -42,7 +42,6 @@
 		C127D35C143A1AF6004DEB16 /* PHTestView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C127D336143A1AF6004DEB16 /* PHTestView.cpp */; };
 		C127D35D143A1AF6004DEB16 /* PHTestViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C127D338143A1AF6004DEB16 /* PHTestViewController.cpp */; };
 		C127D377143A1C4E004DEB16 /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C127D366143A1C4E004DEB16 /* PHAccelInterface.cpp */; };
-		C127D378143A1C4E004DEB16 /* PHFileManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C127D367143A1C4E004DEB16 /* PHFileManager.mm */; };
 		C127D379143A1C4E004DEB16 /* PHThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C127D36A143A1C4E004DEB16 /* PHThread.cpp */; };
 		C127D37A143A1C4E004DEB16 /* PHTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C127D36C143A1C4E004DEB16 /* PHTime.cpp */; };
 		C127D381143A2921004DEB16 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C127D37F143A2921004DEB16 /* libpng15.a */; };
@@ -61,6 +60,7 @@
 		C14DC687143EEABA00F0C82D /* FixtureViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC686143EEABA00F0C82D /* FixtureViewController.mm */; };
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
 		C15331FA1425DD61005E6806 /* PLDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F71425DD61005E6806 /* PLDocument.xib */; };
+		C153A1841443642E00DCD01F /* PHFileManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C153A1831443642E00DCD01F /* PHFileManager.mm */; };
 		C16B38C31425EF6700260851 /* ResourcePathAccesory.xib in Resources */ = {isa = PBXBuildFile; fileRef = C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */; };
 		C16B38CA1425F5AF00260851 /* ObjectController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C16B38C91425F5AF00260851 /* ObjectController.mm */; };
 		C16B38D2142622D900260851 /* PLEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D1142622D900260851 /* PLEntity.m */; };
@@ -82,6 +82,8 @@
 		C1A33CC4142BCF8B0051912D /* JointController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC3142BCF8B0051912D /* JointController.m */; };
 		C1AF1A7C1434365200A6905D /* PrototypeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7B1434365200A6905D /* PrototypeController.m */; };
 		C1AF1A7F143439DB00A6905D /* PLPrototype.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7E143439DB00A6905D /* PLPrototype.m */; };
+		C1BAA0781442BC4100C38D29 /* PLImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA0771442BC4100C38D29 /* PLImageView.mm */; };
+		C1BAA07A1442BD0700C38D29 /* PLFixtureView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA0791442BD0700C38D29 /* PLFixtureView.mm */; };
 		C1C23EB6143CBDDC002CA3D9 /* OverlayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */; };
 		C1C23EB9143CD608002CA3D9 /* OverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB8143CD608002CA3D9 /* OverlayView.m */; };
 		C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EBB143CE1BF002CA3D9 /* OverlayWindow.m */; };
@@ -173,7 +175,6 @@
 		C127D339143A1AF6004DEB16 /* PHTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestViewController.h; sourceTree = "<group>"; };
 		C127D365143A1C4E004DEB16 /* PHAccelerometerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelerometerInterface.h; sourceTree = "<group>"; };
 		C127D366143A1C4E004DEB16 /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
-		C127D367143A1C4E004DEB16 /* PHFileManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHFileManager.mm; sourceTree = "<group>"; };
 		C127D368143A1C4E004DEB16 /* PHMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMutex.h; sourceTree = "<group>"; };
 		C127D369143A1C4E004DEB16 /* PHSemaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSemaphore.h; sourceTree = "<group>"; };
 		C127D36A143A1C4E004DEB16 /* PHThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHThread.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -204,6 +205,7 @@
 		C14DC686143EEABA00F0C82D /* FixtureViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FixtureViewController.mm; sourceTree = "<group>"; };
 		C15331F61425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C15331F81425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/PLDocument.xib; sourceTree = "<group>"; };
+		C153A1831443642E00DCD01F /* PHFileManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHFileManager.mm; sourceTree = SOURCE_ROOT; };
 		C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResourcePathAccesory.xib; sourceTree = "<group>"; };
 		C16B38C81425F5AF00260851 /* ObjectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ObjectController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38C91425F5AF00260851 /* ObjectController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ObjectController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -243,6 +245,10 @@
 		C1AF1A7B1434365200A6905D /* PrototypeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrototypeController.m; sourceTree = "<group>"; };
 		C1AF1A7D143439DB00A6905D /* PLPrototype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPrototype.h; sourceTree = "<group>"; };
 		C1AF1A7E143439DB00A6905D /* PLPrototype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLPrototype.m; sourceTree = "<group>"; };
+		C1BAA0751442BA3E00C38D29 /* PLFixtureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLFixtureView.h; sourceTree = "<group>"; };
+		C1BAA0771442BC4100C38D29 /* PLImageView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLImageView.mm; sourceTree = "<group>"; };
+		C1BAA0791442BD0700C38D29 /* PLFixtureView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLFixtureView.mm; sourceTree = "<group>"; };
+		C1BAA07B1442C90B00C38D29 /* PLPorkholtViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPorkholtViewDelegate.h; sourceTree = "<group>"; };
 		C1C23EB4143CBDDC002CA3D9 /* OverlayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayController.h; sourceTree = "<group>"; };
 		C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OverlayController.mm; sourceTree = "<group>"; };
 		C1C23EB7143CD608002CA3D9 /* OverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayView.h; sourceTree = "<group>"; };
@@ -441,9 +447,9 @@
 		C127D361143A1C4E004DEB16 /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				C153A1831443642E00DCD01F /* PHFileManager.mm */,
 				C127D365143A1C4E004DEB16 /* PHAccelerometerInterface.h */,
 				C127D366143A1C4E004DEB16 /* PHAccelInterface.cpp */,
-				C127D367143A1C4E004DEB16 /* PHFileManager.mm */,
 				C127D368143A1C4E004DEB16 /* PHMutex.h */,
 				C127D369143A1C4E004DEB16 /* PHSemaphore.h */,
 				C127D36A143A1C4E004DEB16 /* PHThread.cpp */,
@@ -458,6 +464,7 @@
 			isa = PBXGroup;
 			children = (
 				C127D388143A2E0E004DEB16 /* PLPorkholtView.h */,
+				C1BAA07B1442C90B00C38D29 /* PLPorkholtViewDelegate.h */,
 				C127D389143A2E0E004DEB16 /* PLPorkholtView.mm */,
 				C127D393143A55E8004DEB16 /* OpenGLTimer.h */,
 				C127D394143A55E8004DEB16 /* OpenGLTimer.mm */,
@@ -470,6 +477,9 @@
 				C14DC666143C23D000F0C82D /* WorldController.h */,
 				C14DC667143C23D000F0C82D /* WorldController.mm */,
 				C17626551441939400BC366C /* PLImageView.h */,
+				C1BAA0771442BC4100C38D29 /* PLImageView.mm */,
+				C1BAA0751442BA3E00C38D29 /* PLFixtureView.h */,
+				C1BAA0791442BD0700C38D29 /* PLFixtureView.mm */,
 			);
 			name = Canvas;
 			path = ..;
@@ -694,7 +704,6 @@
 				C127D35C143A1AF6004DEB16 /* PHTestView.cpp in Sources */,
 				C127D35D143A1AF6004DEB16 /* PHTestViewController.cpp in Sources */,
 				C127D377143A1C4E004DEB16 /* PHAccelInterface.cpp in Sources */,
-				C127D378143A1C4E004DEB16 /* PHFileManager.mm in Sources */,
 				C127D379143A1C4E004DEB16 /* PHThread.cpp in Sources */,
 				C127D37A143A1C4E004DEB16 /* PHTime.cpp in Sources */,
 				C127D38A143A2E0E004DEB16 /* PLPorkholtView.mm in Sources */,
@@ -709,6 +718,9 @@
 				C14DC687143EEABA00F0C82D /* FixtureViewController.mm in Sources */,
 				C11DF2AA143F6BC30002A811 /* PLWorldView.mm in Sources */,
 				C19759721440447700870005 /* StatusController.m in Sources */,
+				C1BAA0781442BC4100C38D29 /* PLImageView.mm in Sources */,
+				C1BAA07A1442BD0700C38D29 /* PLFixtureView.mm in Sources */,
+				C153A1841443642E00DCD01F /* PHFileManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,6 +26,7 @@
 
 @implementation PLPorkholtView
 @synthesize overlay;
+@synthesize delegate;
 
 -(void)resizeOverlay
 {
@@ -244,12 +245,22 @@
 void PHGameManager::entryPoint()
 {
     PHScrollerView * v = new PHScrollerView;
-    v->setScale(50,PHOriginPoint);
+    v->setScale(100,PHOriginPoint);
     view = v;
     [(PLPorkholtView*)(this->userData()) entryPoint];
 }
 
 -(BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
+-(BOOL)becomeFirstResponder
+{
+    return YES;
+}
+
+-(BOOL)resignFirstResponder
 {
     return YES;
 }
@@ -267,6 +278,66 @@ int PHEventHandler::modifierMask()
     if (nsmask & NSControlKeyMask)
         mask |= controlModifier;
     return mask;
+}
+
+-(void)new:(id)sender
+{
+    [delegate new:sender];
+}
+
+-(void)copy:(id)sender
+{
+    [delegate copy:sender];
+}
+
+-(void)paste:(id)sender
+{
+    [delegate paste:sender];
+}
+
+-(void)duplicate:(id)sender
+{
+    [delegate duplicate:sender];
+}
+
+-(void)delete:(id)sender
+{
+    [delegate delete:sender];
+}
+
+-(void)selectAll:(id)sender
+{
+    [delegate selectAll:sender];
+}
+
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    return [delegate validateMenuItem:menuItem sentFrom:self];
+}
+
+-(IBAction)toggleShowMarkers:(id)sender
+{
+    [delegate toggleShowMarkers:sender];
+}
+
+-(IBAction)toggleShowImages:(id)sender
+{
+    [delegate toggleShowImages:sender];
+}
+
+-(IBAction)toggleShowFixtures:(id)sender
+{
+    [delegate toggleShowFixtures:sender];
+}
+
+-(IBAction)toggleShowJoints:(id)sender
+{
+    [delegate toggleShowJoints:sender];
+}
+
+-(IBAction)toggleObjectMode:(id)sender
+{
+    [delegate toggleObjectMode:sender];
 }
 
 @end

@@ -19,8 +19,9 @@
     PLEntity * owner;
 }
 
-- (id)initWithObject:(PLEntity*)e;
-
+-(id)initWithObject:(PLEntity*)e;
 -(PLEntity*)object;
+-(NSArray*)images;
+-(NSArray*)fixtures;
 
 @end
