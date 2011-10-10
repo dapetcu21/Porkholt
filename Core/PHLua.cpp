@@ -93,6 +93,7 @@ void * PHLuaThisPointer(lua_State * L)
         lua_pop(L, 1);
         lua_pushstring(L, "this table doesn't have an \"ud\" field");
         lua_error(L);
+        return NULL;
     }
     void * p = lua_touserdata(L, -1);
     lua_pop(L,1);
@@ -104,10 +105,8 @@ bool PHLuaLoadFile(lua_State * L, string fname)
     int error = luaL_loadfile(L, fname.c_str()) || lua_pcall(L,0,0,0);
     if (error)
     {
-        if (error) {
-            PHLog("Lua: %s",lua_tostring(L,-1));
-            lua_pop(L, 1);
-        } 
+        PHLog("Lua: %s",lua_tostring(L,-1));
+        lua_pop(L, 1);
         return false;
     }
     return true;

@@ -139,8 +139,8 @@
 		C127D30F143A1AF6004DEB16 /* PHImageAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageAnimator.h; sourceTree = "<group>"; };
 		C127D310143A1AF6004DEB16 /* PHImageView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImageView.cpp; sourceTree = "<group>"; };
 		C127D311143A1AF6004DEB16 /* PHImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageView.h; sourceTree = "<group>"; };
-		C127D312143A1AF6004DEB16 /* PHLua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLua.cpp; sourceTree = "<group>"; };
-		C127D313143A1AF6004DEB16 /* PHLua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLua.h; sourceTree = "<group>"; };
+		C127D312143A1AF6004DEB16 /* PHLua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLua.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		C127D313143A1AF6004DEB16 /* PHLua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLua.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C127D314143A1AF6004DEB16 /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
 		C127D315143A1AF6004DEB16 /* PHMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMessage.cpp; sourceTree = "<group>"; };
 		C127D316143A1AF6004DEB16 /* PHMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMessage.h; sourceTree = "<group>"; };
