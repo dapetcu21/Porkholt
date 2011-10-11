@@ -29,9 +29,9 @@
     return self;
 }
 
--(PLEntity*)object
+-(PLObject*)object
 {
-    return owner;
+    return (PLObject*)owner;
 }
 
 -(Class)classForArray:(NSUInteger)array

@@ -371,4 +371,21 @@ static inline void endToken(NSMutableString * file, int * count)
     return (PLObject*)[(SubentityController*)owner object];
 }
 
+-(void)move:(NSPoint)delta
+{
+    if (!delta.x && !delta.y) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setFrame:frame];
+    frame.origin.x+=delta.x;
+    frame.origin.y+=delta.y;
+    [self imageChanged];
+}
+
+-(void)rotate:(double)ammount
+{
+    if (!ammount) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
+    rotation+=ammount;
+    [self imageChanged];
+}
+
 @end

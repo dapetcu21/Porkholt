@@ -19,10 +19,10 @@ class PHGameManager;
 class PHEventHandler : public PHObject
 {
 private:
-	list<PHEvent*> touches;
+	map<void*,PHEvent*> events;
     set<PHView*> mtviews;
 	PHEventHandler(PHGameManager * gm) : gameManager(gm) {};
-	PHEvent * touchForUserData(void * ud, list<PHEvent*>::iterator & i);
+	PHEvent * touchForUserData(void * ud, map<void*,PHEvent*>::iterator & i);
     PHGameManager * gameManager;
     
     friend class PHGameManager;

@@ -80,6 +80,7 @@
 		C1A33CBE142BCD620051912D /* SubentityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CBD142BCD620051912D /* SubentityViewController.m */; };
 		C1A33CC1142BCE500051912D /* PropertyController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC0142BCE500051912D /* PropertyController.m */; };
 		C1A33CC4142BCF8B0051912D /* JointController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC3142BCF8B0051912D /* JointController.m */; };
+		C1AB4F5014449387001F6773 /* PLObjectMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AB4F4F14449387001F6773 /* PLObjectMarker.cpp */; };
 		C1AF1A7C1434365200A6905D /* PrototypeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7B1434365200A6905D /* PrototypeController.m */; };
 		C1AF1A7F143439DB00A6905D /* PLPrototype.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7E143439DB00A6905D /* PLPrototype.m */; };
 		C1BAA0781442BC4100C38D29 /* PLImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA0771442BC4100C38D29 /* PLImageView.mm */; };
@@ -125,7 +126,7 @@
 		C127D2FF143A1AF6004DEB16 /* PHErrors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHErrors.cpp; sourceTree = "<group>"; };
 		C127D300143A1AF6004DEB16 /* PHErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHErrors.h; sourceTree = "<group>"; };
 		C127D301143A1AF6004DEB16 /* PHEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventHandler.cpp; sourceTree = "<group>"; };
-		C127D302143A1AF6004DEB16 /* PHEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventHandler.h; sourceTree = "<group>"; };
+		C127D302143A1AF6004DEB16 /* PHEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C127D303143A1AF6004DEB16 /* PHEventQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventQueue.cpp; sourceTree = "<group>"; };
 		C127D304143A1AF6004DEB16 /* PHEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventQueue.h; sourceTree = "<group>"; };
 		C127D305143A1AF6004DEB16 /* PHFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFileManager.h; sourceTree = "<group>"; };
@@ -241,6 +242,9 @@
 		C1A33CC0142BCE500051912D /* PropertyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyController.m; sourceTree = "<group>"; };
 		C1A33CC2142BCF8B0051912D /* JointController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JointController.h; sourceTree = "<group>"; };
 		C1A33CC3142BCF8B0051912D /* JointController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JointController.m; sourceTree = "<group>"; };
+		C1AB4F4C144453C0001F6773 /* PLSubEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLSubEntity.h; sourceTree = "<group>"; };
+		C1AB4F4E1444932F001F6773 /* PLObjectMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLObjectMarker.h; sourceTree = "<group>"; };
+		C1AB4F4F14449387001F6773 /* PLObjectMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PLObjectMarker.cpp; sourceTree = "<group>"; };
 		C1AF1A7A1434365200A6905D /* PrototypeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrototypeController.h; sourceTree = "<group>"; };
 		C1AF1A7B1434365200A6905D /* PrototypeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrototypeController.m; sourceTree = "<group>"; };
 		C1AF1A7D143439DB00A6905D /* PLPrototype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPrototype.h; sourceTree = "<group>"; };
@@ -480,6 +484,8 @@
 				C1BAA0771442BC4100C38D29 /* PLImageView.mm */,
 				C1BAA0751442BA3E00C38D29 /* PLFixtureView.h */,
 				C1BAA0791442BD0700C38D29 /* PLFixtureView.mm */,
+				C1AB4F4E1444932F001F6773 /* PLObjectMarker.h */,
+				C1AB4F4F14449387001F6773 /* PLObjectMarker.cpp */,
 			);
 			name = Canvas;
 			path = ..;
@@ -515,6 +521,7 @@
 				C1A33CB4142BCB870051912D /* PLImage.m */,
 				C1A33CB6142BCB9A0051912D /* PLFixture.h */,
 				C1A33CB7142BCB9A0051912D /* PLFixture.m */,
+				C1AB4F4C144453C0001F6773 /* PLSubEntity.h */,
 				C19D7D06142CBE75003E92C1 /* PLProperty.h */,
 				C19D7D07142CBE75003E92C1 /* PLProperty.m */,
 				C1AF1A7A1434365200A6905D /* PrototypeController.h */,
@@ -721,6 +728,7 @@
 				C1BAA0781442BC4100C38D29 /* PLImageView.mm in Sources */,
 				C1BAA07A1442BD0700C38D29 /* PLFixtureView.mm in Sources */,
 				C153A1841443642E00DCD01F /* PHFileManager.mm in Sources */,
+				C1AB4F5014449387001F6773 /* PLObjectMarker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

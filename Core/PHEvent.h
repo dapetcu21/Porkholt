@@ -62,6 +62,7 @@ public:
     void * userData() { return ud; }
     PHObject * sender() { return _sender; }
     void setSender(PHObject * s) { _sender = s; }
+    void setOwnerView(PHView * ownerView) { _ownerView = ownerView; }
 };
 
 #endif

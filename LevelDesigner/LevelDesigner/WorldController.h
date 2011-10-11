@@ -8,6 +8,7 @@
 
 @class ObjectController;
 @class PLPorkholtView;
+@class PLObject;
 class PLWorldView;
 #import "PHGeometry.h"
 
@@ -17,12 +18,13 @@ class PLWorldView;
     PLPorkholtView * view;
     PLWorldView * worldView;
     int type;
-    NSIndexSet * initialIndexSet;
+    NSIndexSet * initialIndexSet, * initialImages, * initialFixtures;
     
     PHPoint dragged;
     double rotated;
     NSMutableArray * movedObjects;
     NSMutableArray * rotatedObjects;
+    PLObject * selectedObject;
 }
 
 -(void)objectsChanged;
@@ -45,5 +47,7 @@ class PLWorldView;
 -(void)stopRotating;
 
 -(void)flagsChanged;
+
+-(PLObject*)selectedObject;
 
 @end

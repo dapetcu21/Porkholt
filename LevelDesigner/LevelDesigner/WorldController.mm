@@ -16,6 +16,12 @@
 #import "PHGameManager.h"
 #import "PHScrollerView.h"
 #import "PHEventHandler.h"
+#import "SubentityController.h"
+#import "PLImage.h"
+#import "PLFixture.h"
+#import "PLImageView.h"
+#import "PLFixtureView.h"
+#import "PLSubEntity.h"
 
 @implementation WorldController
 
@@ -54,6 +60,10 @@
 
 -(void)dealloc
 {
+    [selectedObject release];
+    [initialImages release];
+    [initialFixtures release];
+    [initialIndexSet release];
     [model release];
     view.gameManager->eventHandler()->unregisterViewForMultitouchEvents(worldView);
     worldView->release();
@@ -121,39 +131,85 @@
 
 -(void)startSelectionOfType:(int)t atPoint:(PHPoint)p
 {
-    type = t;
-    if (type==0)
-        [model clearSelection];
-    initialIndexSet = [[model selectionForArray:0] copy];
+    if (model.objectMode)
+    {
+        type = t;
+        if (type==0)
+            [[selectedObject subentityModel] clearSelection];
+        initialImages = [[[selectedObject subentityModel] selectionForArray:0] copy];
+        initialFixtures = [[[selectedObject subentityModel] selectionForArray:1] copy];
+    } else 
+    {
+        type = t;
+        if (type==0)
+            [model clearSelection];
+        initialIndexSet = [[model selectionForArray:0] copy];
+    }
 }
 
 -(void)moveSelection:(PHRect)area
 {
     if (type<0)
         return;
-    NSMutableIndexSet * is = [NSMutableIndexSet indexSet];
-    for (PLObject * obj in [model objects])
-        if (obj.actor && obj.actor->intersectsRect(area))
-            [is addIndex:[model indexForEntity:obj inArray:0]];
-    [model beginCommitGrouping];
-    [model clearSelection];
-    if (type==1)
-        [is addIndexes:initialIndexSet];
-    else
-    if (type==2)
+    if (model.objectMode)
     {
-        NSMutableIndexSet * iss = [[initialIndexSet mutableCopy] autorelease];
-        [iss removeIndexes:is];
-        is = iss;
+        NSMutableIndexSet * is0 = [NSMutableIndexSet indexSet];
+        NSMutableIndexSet * is1 = [NSMutableIndexSet indexSet];
+        SubentityController * sc = [selectedObject subentityModel];
+        for (PLImage * obj in [sc images])
+            if (obj.actor && obj.actor->intersectsRect(worldView,area))
+                [is0 addIndex:[sc indexForEntity:obj inArray:0]];
+        for (PLFixture * obj in [sc fixtures])
+            if (obj.actor && obj.actor->intersectsRect(worldView,area))
+                [is1 addIndex:[sc indexForEntity:obj inArray:1]];
+        [sc beginCommitGrouping];
+        [sc clearSelection];
+        if (type==1)
+        {
+            [is0 addIndexes:initialImages];
+            [is1 addIndexes:initialFixtures];
+        }
+        else
+            if (type==2)
+            {
+                NSMutableIndexSet * iss0 = [[initialImages mutableCopy] autorelease];
+                [iss0 removeIndexes:is0];
+                is0 = iss0;
+                NSMutableIndexSet * iss1 = [[initialFixtures mutableCopy] autorelease];
+                [iss1 removeIndexes:is1];
+                is1 = iss1;
+            }
+        [sc insertIndexes:is0 inSelectionForArray:0];
+        [sc insertIndexes:is1 inSelectionForArray:1];
+        [sc endCommitGrouping];
+    } else
+    {
+        NSMutableIndexSet * is = [NSMutableIndexSet indexSet];
+        for (PLObject * obj in [model objects])
+            if (obj.actor && obj.actor->intersectsRect(area))
+                [is addIndex:[model indexForEntity:obj inArray:0]];
+        [model beginCommitGrouping];
+        [model clearSelection];
+        if (type==1)
+            [is addIndexes:initialIndexSet];
+        else
+        if (type==2)
+        {
+            NSMutableIndexSet * iss = [[initialIndexSet mutableCopy] autorelease];
+            [iss removeIndexes:is];
+            is = iss;
+        }
+        [model insertIndexes:is inSelectionForArray:0];
+        [model endCommitGrouping];
     }
-    [model insertIndexes:is inSelectionForArray:0];
-    [model endCommitGrouping];
 }
 
 -(void)endSelection:(PHRect)area
 {
+    [initialImages release];
+    [initialFixtures release];
     [initialIndexSet release];
-    initialIndexSet = nil;
+    initialIndexSet = initialImages = initialFixtures = nil;
     type = -1;
 }
 
@@ -167,64 +223,136 @@ inline static NSPoint NSPointFromPHPoint(const PHPoint & p)
 
 -(void)startMoving
 {
-    dragged = PHOriginPoint;
-    [[model undoManager] disableUndoRegistration];
-    [movedObjects release];
-    movedObjects = [[NSMutableArray alloc] init];
-    for (PLObject * obj in [model selectedEntitiesForArray:0])
-        if (!obj.readOnly)
-            [movedObjects addObject:obj];
+    if (model.objectMode)
+    {
+        dragged = PHOriginPoint;
+        [[model undoManager] disableUndoRegistration];
+        [movedObjects release];
+        movedObjects = [[NSMutableArray alloc] init];
+        for (PLEntity * obj in [[selectedObject subentityModel] selectedEntities])
+            if (!obj.readOnly)
+                [movedObjects addObject:obj];
+    } else 
+    {
+        dragged = PHOriginPoint;
+        [[model undoManager] disableUndoRegistration];
+        [movedObjects release];
+        movedObjects = [[NSMutableArray alloc] init];
+        for (PLObject * obj in [model selectedEntitiesForArray:0])
+            if (!obj.readOnly)
+                [movedObjects addObject:obj];
+    }
 }
 
 -(void)startRotating
 {
-    rotated = 0;
-    [[model undoManager] disableUndoRegistration];
-    [rotatedObjects release];
-    rotatedObjects = [[NSMutableArray alloc] init];
-    for (PLObject * obj in [model selectedEntitiesForArray:0])
-        if (!obj.readOnly)
-            [rotatedObjects addObject:obj];
+    if (model.objectMode)
+    {
+        rotated = 0;
+        [[model undoManager] disableUndoRegistration];
+        [rotatedObjects release];
+        rotatedObjects = [[NSMutableArray alloc] init];
+        for (PLEntity * obj in [[selectedObject subentityModel] selectedEntities])
+            if (!obj.readOnly)
+                [rotatedObjects addObject:obj];
+    } else
+    {
+        rotated = 0;
+        [[model undoManager] disableUndoRegistration];
+        [rotatedObjects release];
+        rotatedObjects = [[NSMutableArray alloc] init];
+        for (PLObject * obj in [model selectedEntitiesForArray:0])
+            if (!obj.readOnly)
+                [rotatedObjects addObject:obj];
+    }
 }
 
 -(void)move:(PHPoint)ammount
 {
-    for (PLObject * obj in movedObjects)
-        [obj move:NSPointFromPHPoint(ammount)];
+    if (model.objectMode)
+    {
+        for (PLEntity<PLSubEntity> * obj in movedObjects)
+            [obj move:NSPointFromPHPoint(ammount)];
+    } else
+    {
+        for (PLObject * obj in movedObjects)
+            [obj move:NSPointFromPHPoint(ammount)];
+    }
     dragged+=ammount;
 }
 
 -(void)rotate:(double)ammount
 {
-    for (PLObject * obj in rotatedObjects)
-        [obj rotate:ammount];
+    if (model.objectMode)
+    {
+        for (PLEntity<PLSubEntity> * obj in rotatedObjects)
+            [obj rotate:ammount];
+    } else
+    {
+        for (PLObject * obj in rotatedObjects)
+            [obj rotate:ammount];
+    }
     rotated+=ammount;
+}
+
+-(PLObject*)selectedObject
+{
+    return selectedObject;
 }
 
 -(void)stopMoving
 {
-    for (PLObject * obj in movedObjects)
-        [obj move:NSPointFromPHPoint(dragged*(-1))];
-    [[model undoManager] enableUndoRegistration];
-    for (PLObject * obj in movedObjects)
-        [obj move:NSPointFromPHPoint(dragged)];
-    [movedObjects release];
-    movedObjects = nil;
+    if (model.objectMode)
+    {
+        for (PLEntity<PLSubEntity> * obj in movedObjects)
+            [obj move:NSPointFromPHPoint(dragged*(-1))];
+        [[model undoManager] enableUndoRegistration];
+        for (PLEntity<PLSubEntity> * obj in movedObjects)
+            [obj move:NSPointFromPHPoint(dragged)];
+        [movedObjects release];
+        movedObjects = nil;
+    } else
+    {
+        for (PLObject * obj in movedObjects)
+            [obj move:NSPointFromPHPoint(dragged*(-1))];
+        [[model undoManager] enableUndoRegistration];
+        for (PLObject * obj in movedObjects)
+            [obj move:NSPointFromPHPoint(dragged)];
+        [movedObjects release];
+        movedObjects = nil;
+    }
 }
 
 -(void)stopRotating
 {
-    for (PLObject * obj in rotatedObjects)
-        [obj rotate:-rotated];
-    [[model undoManager] enableUndoRegistration];
-    for (PLObject * obj in rotatedObjects)
-        [obj rotate:rotated];
-    [rotatedObjects release];
-    rotatedObjects = nil;
+    if (model.objectMode)
+    {
+        for (PLEntity<PLSubEntity> * obj in rotatedObjects)
+            [obj rotate:-rotated];
+        [[model undoManager] enableUndoRegistration];
+        for (PLEntity<PLSubEntity> * obj in rotatedObjects)
+            [obj rotate:rotated];
+        [rotatedObjects release];
+        rotatedObjects = nil;
+    } else
+    {
+        for (PLObject * obj in rotatedObjects)
+            [obj rotate:-rotated];
+        [[model undoManager] enableUndoRegistration];
+        for (PLObject * obj in rotatedObjects)
+            [obj rotate:rotated];
+        [rotatedObjects release];
+        rotatedObjects = nil;
+    }
 }
 
 -(void)flagsChanged
 {
+    [selectedObject release];
+    selectedObject = (PLObject*)[model selectedEntity];
+    if (![selectedObject isKindOfClass:[PLObject class]])
+        selectedObject = nil;
+    [selectedObject retain];
     for (PLObject * obj in [model objects])
         if (obj.actor)
             (obj.actor)->flagsChanged();

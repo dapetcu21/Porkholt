@@ -23,11 +23,19 @@ public:
     
 protected:
     PLImage * model;
+    bool moving,rotating;
     
 public:
     PLImageView(PLImage * _model);
     ~PLImageView();
     void modelChanged();
+    
+    bool intersectsRect(PHView * base, const PHRect & rect);
+    bool intersectsPoint(const PHPoint & pnt);
+    
+    void touchEvent(PHEvent * event);
+    
+    bool objectMode();
     
 protected:
     void draw();

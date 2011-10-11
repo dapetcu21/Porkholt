@@ -6,7 +6,7 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#import "PLEntity.h"
+#import "PLSubEntity.h"
 
 @class PLProperty;
 @class PLObject;
@@ -23,7 +23,7 @@ class PLImageView;
 #endif
 
 @class ImageViewController;
-@interface PLImage : PLEntity
+@interface PLImage : PLEntity<PLSubEntity>
 {
     NSString * imageClass;
     NSRect portion;

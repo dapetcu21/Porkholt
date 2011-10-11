@@ -12,57 +12,63 @@
 #include "PHEvent.h"
 #include "PHView.h"
 
-PHEvent * PHEventHandler::touchForUserData(void * ud, list<PHEvent*>::iterator & i)
+PHEvent * PHEventHandler::touchForUserData(void * ud, map<void*,PHEvent*>::iterator & i)
 {
-	for (i = touches.begin(); i!= touches.end(); i++)
-	{
-		if ((*i)->ud == ud)
-			return (*i);
-	}
-	return NULL;
+    i = events.find(ud);
+    if (i==events.end())
+        return NULL;
+    else
+        return i->second;
 }
 
 void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 {
-	PHEvent * touch = new PHEvent();
-	touch->updateLocation(pnt, PHTime::getTime(), PHEvent::touchDown);
-	touch->ud = ud;
-	touches.push_back(touch);
-	touch->_ownerView = gameManager->mainView()->pointerDeepFirst(touch);
+    map<void*,PHEvent*>::iterator i;
+    PHEvent * event = touchForUserData(ud, i);
+    if (!event)
+    {
+        event = new PHEvent();
+        events.insert(pair<void*,PHEvent*>(ud,event));
+    }
+	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchDown);
+	event->ud = ud;
+    PHView * v = gameManager->mainView()->pointerDeepFirst(event);
+    if (!event->_ownerView)
+        event->_ownerView = v;
 }
 
 void PHEventHandler::touchUp(PHPoint pnt, void * ud)
 {
-	list<PHEvent*>::iterator i;
-	PHEvent * touch = touchForUserData(ud,i);
-	if (!touch) return;
-	touch->updateLocation(pnt, PHTime::getTime(), PHEvent::touchUp);
-	if (touch->_ownerView)
-		touch->_ownerView->touchEvent(touch);
-	touches.erase(i);
-	touch->release();
+	map<void*,PHEvent*>::iterator i;
+	PHEvent * event = touchForUserData(ud,i);
+	if (!event) return;
+	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchUp);
+	if (event->_ownerView)
+		event->_ownerView->touchEvent(event);
+	events.erase(i);
+	event->release();
 }
 
 void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 {
-	list<PHEvent*>::iterator i;
-	PHEvent * touch = touchForUserData(ud,i);
-	if (!touch) return;
-	touch->updateLocation(pnt, PHTime::getTime(), PHEvent::touchMoved);
-	if (touch->_ownerView)
-		touch->_ownerView->touchEvent(touch);
+	map<void*,PHEvent*>::iterator i;
+	PHEvent * event = touchForUserData(ud,i);
+	if (!event) return;
+	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchMoved);
+	if (event->_ownerView)
+		event->_ownerView->touchEvent(event);
 }
 
 void PHEventHandler::touchCancelled(PHPoint pnt, void *ud)
 {
-	list<PHEvent*>::iterator i;
-	PHEvent * touch = touchForUserData(ud,i);
-	if (!touch) return;
-	touch->updateLocation(pnt, PHTime::getTime(), PHEvent::touchCancelled);
-	if (touch->_ownerView)
-		touch->_ownerView->touchEvent(touch);
-	touches.erase(i);
-	touch->release();
+	map<void*,PHEvent*>::iterator i;
+	PHEvent * event = touchForUserData(ud,i);
+	if (!event) return;
+	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchCancelled);
+	if (event->_ownerView)
+		event->_ownerView->touchEvent(event);
+	events.erase(i);
+	event->release();
 }
 
 void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
@@ -72,7 +78,9 @@ void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
     event->_delta = delta;
     event->_location = pnt;
     event->state = PHEvent::scrollWheel;
-    event->_ownerView = gameManager->mainView()->pointerDeepFirst(event);
+    PHView * v = gameManager->mainView()->pointerDeepFirst(event);
+    if (!event->_ownerView)
+        event->_ownerView = v;
     event->release();
 }
 
@@ -83,7 +91,9 @@ void PHEventHandler::pinchZoom(PHPoint pnt, double zoom, void *ud)
     event->_zoom = zoom;
     event->_location = pnt;
     event->state = PHEvent::pinchZoom;
-    event->_ownerView = gameManager->mainView()->pointerDeepFirst(event);
+    PHView * v = gameManager->mainView()->pointerDeepFirst(event);
+    if (!event->_ownerView)
+        event->_ownerView = v;
     event->release();
 }
 
@@ -94,7 +104,9 @@ void PHEventHandler::pinchRotate(PHPoint pnt, double rotation, void *ud)
     event->_rotation = rotation;
     event->_location = pnt;
     event->state = PHEvent::pinchRotate;
-    event->_ownerView = gameManager->mainView()->pointerDeepFirst(event);
+    PHView * v = gameManager->mainView()->pointerDeepFirst(event);
+    if (!event->_ownerView)
+        event->_ownerView = v;
     event->release();
 }
 
@@ -131,9 +143,10 @@ void PHEventHandler::unregisterViewForMultitouchEvents(PHView* v)
 void PHEventHandler::removeView(PHView * view)
 {
     unregisterViewForMultitouchEvents(view);
-	for (list<PHEvent*>::iterator i = touches.begin(); i!= touches.end(); i++)
+	for (map<void*,PHEvent*>::iterator i = events.begin(); i!= events.end(); i++)
 	{
-		if ((*i)->_ownerView == view)
-			(*i)->_ownerView = NULL;
+        PHEvent * e = i->second;
+		if (e->_ownerView == view)
+			e->_ownerView = NULL;
 	}
 }

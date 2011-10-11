@@ -12,6 +12,7 @@
 #import "PLEntity.h"
 #import "PLObject.h"
 #import "PLJoint.h"
+#import "SubentityController.h"
 
 @implementation InterfaceController
 

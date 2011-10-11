@@ -14,13 +14,15 @@
 #define PLSubentityPointerPBoardType @"PLSubentityPointerPBoardType"
 
 @class PLEntity;
+@class PLObject;
+
 @interface SubentityController : EntityController
 {
     PLEntity * owner;
 }
 
 -(id)initWithObject:(PLEntity*)e;
--(PLEntity*)object;
+-(PLObject*)object;
 -(NSArray*)images;
 -(NSArray*)fixtures;
 

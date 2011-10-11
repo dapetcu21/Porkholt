@@ -6,7 +6,7 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
-#import "PLEntity.h"
+#import "PLSubEntity.h"
 
 enum PLFixtureShapes
 {
@@ -25,7 +25,7 @@ class PLFixtureView;
 #define PLFixtureView void
 #endif
 
-@interface PLFixture : PLEntity
+@interface PLFixture : PLEntity<PLSubEntity>
 {
     int shape;
     NSRect box;

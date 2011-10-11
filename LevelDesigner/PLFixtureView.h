@@ -28,6 +28,11 @@ public:
     PLFixtureView(PLFixture * _model);
     ~PLFixtureView();
     void modelChanged();
+    
+    bool intersectsRect(PHView * base, const PHRect & rect);
+    bool intersectsPoint(const PHPoint & pnt);
+    
+    bool objectMode();
 };
 
 #endif

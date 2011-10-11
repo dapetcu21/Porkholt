@@ -327,12 +327,12 @@
 
 -(void)_removeIndexes:(NSIndexSet*)indexes inSelectionForArray:(NSUInteger)array
 {
-    [selection[array] removeIndexes:indexes];
     NSMutableArray * a = arrays[array];
     [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PLEntity * e = (PLEntity*)[a objectAtIndex:idx];
         e.selected = NO;
     }];
+    [selection[array] removeIndexes:indexes];
 }
 
 -(void)clearSelectionForArray:(NSUInteger)array

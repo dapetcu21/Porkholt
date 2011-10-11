@@ -569,6 +569,7 @@ void PHView::loadMatrixTree(PHView * until)
 
 PHPoint PHView::toMyCoordinates(const PHPoint & pnt, PHView * until)
 {
+    if (until==this) return pnt;
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
@@ -580,6 +581,7 @@ PHPoint PHView::toMyCoordinates(const PHPoint & pnt, PHView * until)
 
 void PHView::toMyCoordinates(PHPoint * pnt, int n, PHView * until)
 {
+    if (until==this) return;
 	GLfloat m[16],inverse[16];
 	glPushMatrix();
 	glLoadIdentity();
@@ -593,6 +595,7 @@ void PHView::toMyCoordinates(PHPoint * pnt, int n, PHView * until)
 
 PHPoint PHView::fromMyCoordinates(const PHPoint & pnt, PHView * until)
 {
+    if (until==this) return pnt;
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
@@ -606,6 +609,7 @@ PHPoint PHView::fromMyCoordinates(const PHPoint & pnt, PHView * until)
 
 void PHView::fromMyCoordinates(PHPoint * pnt, int n, PHView * until)
 {
+    if (until==this) return;
 	GLfloat m[16];
 	glPushMatrix();
 	glLoadIdentity();
