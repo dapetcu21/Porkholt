@@ -15,6 +15,7 @@ void PHDialogView::touchEvent(PHEvent * t)
     {
         delegate->dialogViewFired(this);
         touchEnabled = false;
+        t->setHandled(true);
     }
 }
 

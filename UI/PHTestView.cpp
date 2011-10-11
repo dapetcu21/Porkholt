@@ -32,13 +32,13 @@ void PHTestView::draw()
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void PHTestView::touchEvent(PHEvent * touch)
+void PHTestView::touchEvent(PHEvent * event)
 {
-	if (touch->type() == PHEvent::touchMoved)
+	if (event->type() == PHEvent::touchMoved)
 	{
 		PHPoint p[2];
-		p[0] = touch->location();
-		p[1] = touch->lastLocation();
+		p[0] = event->location();
+		p[1] = event->lastLocation();
 		if (superView)
 		{
 			superView->toMyCoordinates(p, 2);
@@ -48,5 +48,6 @@ void PHTestView::touchEvent(PHEvent * touch)
 		frame.x+=p[0].x-p[1].x;
 		frame.y+=p[0].y-p[1].y;
 		setFrame(frame);
+        event->setHandled(true);
 	}
 }

@@ -49,7 +49,6 @@ protected:
 	PHColor _backColor;
 	int effOrder;
     int _tag;
-    bool eventHandled;
     PHMutex * mtx;
     
     virtual void auxRender();
@@ -61,9 +60,8 @@ protected:
 	void apply_scaling();
 	void applyMatrices();
 	
-	virtual void touchEvent(PHEvent * touch);
-	
 public:
+    virtual void touchEvent(PHEvent * touch);
     void loadMatrixTree(PHView * until);
 	
     enum Effects
@@ -147,13 +145,6 @@ public:
     PHView * viewWithTagAfter(int tag, PHView * v);
     list<PHView*> * viewsWithTag(int tag); //this returns a new-allocated list
 	
-    void redirectEvent(PHView * view, PHEvent * event)
-    {
-        view->eventHandled = true;
-        view->touchEvent(event);
-        eventHandled = view->eventHandled;
-    }
-    
 	virtual ~PHView();
 	friend class PHGameManager;
 	friend class PHEventHandler;

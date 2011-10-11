@@ -60,5 +60,5 @@ void PLObjectMarker::draw()
 
 void PLObjectMarker::touchEvent(PHEvent * event)
 {
-    redirectEvent(superview(), event);
+    superview()->touchEvent(event);
 }

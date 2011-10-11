@@ -185,17 +185,11 @@ bool PLObjectView::intersectsRect(const PHRect & rect)
 void PLObjectView::touchEvent(PHEvent * evt)
 {
     if (((evt->sender() == this) || (evt->sender() == NULL))  && (!((ObjectController*)[model owner]).showMarkers))
-    {
-        eventHandled = false;
         return;
-    }
     if (evt->type() == PHEvent::touchDown)
     {
         if ((PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)||((ObjectController*)[model owner]).objectMode)
-        {
-            eventHandled = false;
             return;
-        }
         bool cmd = PHEventHandler::modifierMask() & PHEventHandler::commandModifier;
         bool alt = PHEventHandler::modifierMask() & PHEventHandler::optionModifier;
         if (!cmd && ! alt && !sel)
@@ -204,15 +198,13 @@ void PLObjectView::touchEvent(PHEvent * evt)
             [[worldController model] removeEntity:model inSelectionForArray:0];
         else
             [[worldController model] insertEntity:model inSelectionForArray:0];
+        evt->setHandled(true);
     } 
     else
     if (evt->type() == PHEvent::touchMoved)
     {
         if (((ObjectController*)[model owner]).objectMode)
-        {
-            eventHandled = false;
             return;
-        }
         if (evt->userData() == (void*)1)
         {
             if (!moving)
@@ -223,6 +215,7 @@ void PLObjectView::touchEvent(PHEvent * evt)
             PHLog("%f %f",(evt->location()-evt->lastLocation()).x,(evt->location()-evt->lastLocation()).y);
             PHPoint delta = superView->toMyCoordinates(evt->location()) - superView->toMyCoordinates(evt->lastLocation());
             [worldController move:delta];
+            evt->setHandled(true);
         }
         else
         if (evt->userData() == (void*)2)
@@ -233,6 +226,7 @@ void PLObjectView::touchEvent(PHEvent * evt)
                 rotating = true;
             }
             [worldController rotate:-(evt->location().y - evt->lastLocation().y)/2];
+            evt->setHandled(true);
         }
     }
     else
@@ -242,15 +236,15 @@ void PLObjectView::touchEvent(PHEvent * evt)
         {
             [worldController stopMoving];
             moving = false;
+            evt->setHandled(true);
         }
         if ((evt->userData() == (void*)2) && rotating)
         {
             [worldController stopRotating];
             rotating = false;
+            evt->setHandled(true);
         }
     }
-    else 
-        eventHandled = false;
 }
 
 void PLObjectView::startMoving()

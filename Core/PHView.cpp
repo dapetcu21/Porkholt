@@ -336,7 +336,6 @@ void PHView::draw()
 
 void PHView::touchEvent(PHEvent * touch)
 {
-    eventHandled = false;
 }
 
 //animation system
@@ -548,9 +547,8 @@ PHView * PHView::pointerDeepFirst(PHEvent * touch)
 		PHPoint pnt = PHUnTransformedPoint(touch->location());
 		if (pnt.x>=_bounds.x && pnt.y>=_bounds.y && pnt.x<=_bounds.x+_bounds.width && pnt.y<=_bounds.y+_bounds.height)
         {
-            eventHandled = true;
             touchEvent(touch);
-			view = eventHandled?this:NULL;
+			view = touch->handled()?this:NULL;
         }
 	}
 	glPopMatrix();

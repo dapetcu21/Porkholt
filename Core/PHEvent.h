@@ -42,11 +42,12 @@ private:
 	int state;
 	void * ud;
     PHObject * _sender;
+    bool _handled;
 	friend class PHEventHandler;
 	void updateLocation(const PHPoint & pnt, double time, int nstate);
 public:
 	
-	PHEvent() : _ownerView(NULL), _sender(NULL) {};
+	PHEvent() : _ownerView(NULL), _sender(NULL), _handled(false) {};
 	
 	double time() { return _time; };
 	double lastTime() { return _lastTime; };
@@ -63,6 +64,8 @@ public:
     PHObject * sender() { return _sender; }
     void setSender(PHObject * s) { _sender = s; }
     void setOwnerView(PHView * ownerView) { _ownerView = ownerView; }
+    bool handled() { return _handled; }
+    void setHandled(bool h) { _handled = h; }
 };
 
 #endif

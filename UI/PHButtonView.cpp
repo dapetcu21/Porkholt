@@ -36,25 +36,32 @@ void PHButtonView::draw()
 	}
 }
 
-void PHButtonView::touchEvent(PHEvent * touch)
+void PHButtonView::touchEvent(PHEvent * event)
 {
-	if (touch->type() == PHEvent::touchDown)
+	if (event->type() == PHEvent::touchDown)
 	{
 		_state = StateDown;
 		if (tgDown)
 			(tgDown->*cbDown)(this,udDown);
-			
+        event->setHandled(true);
 	}
-	if (touch->type() == PHEvent::touchUp)
+	if (event->type() == PHEvent::touchUp)
 	{
 		_state = StateUp;
-		if (tgUp && PHPointInRect(toMyCoordinates(touch->location()),bounds()))
+		if (tgUp && PHPointInRect(toMyCoordinates(event->location()),bounds()))
 			(tgUp->*cbUp)(this,udUp);
+        event->setHandled(true);
 	}
-    if (touch->type() == PHEvent::touchMoved)
-        _state = PHPointInRect(toMyCoordinates(touch->location()),bounds())?StateDown:StateUp;
-    if (touch->type() == PHEvent::touchCancelled)
+    if (event->type() == PHEvent::touchMoved)
+    {
+        _state = PHPointInRect(toMyCoordinates(event->location()),bounds())?StateDown:StateUp;
+        event->setHandled(true);
+    }
+    if (event->type() == PHEvent::touchCancelled)
+    {
         _state = StateUp;
+        event->setHandled(true);
+    }
 }
 
 void PHButtonView::setPressedImage(PHImage * img)

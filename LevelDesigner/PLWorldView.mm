@@ -21,10 +21,7 @@ void PLWorldView::touchEvent(PHEvent * event)
     if (event->type() == PHEvent::touchDown)
     {
         if (event->userData() != (void*)1)
-        {
-            eventHandled = false;
             return;
-        }
         int type = 0;
         if (PHEventHandler::modifierMask() & PHEventHandler::commandModifier)
             type = 1;
@@ -33,15 +30,13 @@ void PLWorldView::touchEvent(PHEvent * event)
         startPoint = toMyCoordinates(event->location());
         dragRect = PHRect(startPoint.x,startPoint.y,0,0);
         [worldController startSelectionOfType:type atPoint:startPoint];
+        event->setHandled(true);
     }
     else
     if (event->type() == PHEvent::touchMoved)
     {
         if (event->userData() != (void*)1)
-        {
-            eventHandled = false;
             return;
-        }
         PHPoint s = toMyCoordinates(event->location())-startPoint;
         dragRect = PHRect(startPoint.x,startPoint.y,s.width,s.height);
         if (dragRect.height<0)
@@ -55,15 +50,13 @@ void PLWorldView::touchEvent(PHEvent * event)
             dragRect.width*=-1;
         }
         [worldController moveSelection:dragRect];
+        event->setHandled(true);
     }
     else
     if (event->type() == PHEvent::touchUp)
     {
         if (event->userData() != (void*)1)
-        {
-            eventHandled = false;
             return;
-        }
         PHPoint s = toMyCoordinates(event->location())-startPoint;
         dragRect = PHRect(startPoint.x,startPoint.y,s.width,s.height);
         if (dragRect.height<0)
@@ -78,6 +71,7 @@ void PLWorldView::touchEvent(PHEvent * event)
         }
         [worldController endSelection:dragRect];
         dragRect = PHRect(0,0,0,0);
+        event->setHandled(true);
     }
     else
     if (event->type() == PHEvent::pinchRotate)
@@ -88,6 +82,7 @@ void PLWorldView::touchEvent(PHEvent * event)
             [worldController startRotating];
         }
         [worldController rotate:event->rotation()];
+        event->setHandled(true);
     }
     else
     if (event->type() == PHEvent::multitouchEnd)
@@ -97,9 +92,8 @@ void PLWorldView::touchEvent(PHEvent * event)
             rotating = false;
             [worldController stopRotating];
         }
+        event->setHandled(true);
     }
-    else
-        eventHandled = false;
 }
 
 void PLWorldView::draw()

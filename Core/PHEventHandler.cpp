@@ -30,6 +30,7 @@ void PHEventHandler::touchDown(PHPoint pnt,void * ud)
         event = new PHEvent();
         events.insert(pair<void*,PHEvent*>(ud,event));
     }
+    event->setHandled(false);
 	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchDown);
 	event->ud = ud;
     PHView * v = gameManager->mainView()->pointerDeepFirst(event);
@@ -42,6 +43,7 @@ void PHEventHandler::touchUp(PHPoint pnt, void * ud)
 	map<void*,PHEvent*>::iterator i;
 	PHEvent * event = touchForUserData(ud,i);
 	if (!event) return;
+    event->setHandled(false);
 	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchUp);
 	if (event->_ownerView)
 		event->_ownerView->touchEvent(event);
@@ -54,6 +56,7 @@ void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 	map<void*,PHEvent*>::iterator i;
 	PHEvent * event = touchForUserData(ud,i);
 	if (!event) return;
+    event->setHandled(false);
 	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchMoved);
 	if (event->_ownerView)
 		event->_ownerView->touchEvent(event);
@@ -64,6 +67,7 @@ void PHEventHandler::touchCancelled(PHPoint pnt, void *ud)
 	map<void*,PHEvent*>::iterator i;
 	PHEvent * event = touchForUserData(ud,i);
 	if (!event) return;
+    event->setHandled(false);
 	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchCancelled);
 	if (event->_ownerView)
 		event->_ownerView->touchEvent(event);

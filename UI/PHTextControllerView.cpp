@@ -14,8 +14,11 @@ PHTextControllerView::PHTextControllerView(PHTextController * del) : PHView(), d
     
 }
 
-void PHTextControllerView::touchEvent(PHEvent * touch)
+void PHTextControllerView::touchEvent(PHEvent * event)
 {
-    if (touch->type() == PHEvent::touchDown)
+    if (event->type() == PHEvent::touchDown)
+    {
         delegate->advance();
+        event->setHandled(true);
+    }
 }

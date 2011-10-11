@@ -78,10 +78,7 @@ void PLImageView::touchEvent(PHEvent * event)
             if (objectMode())
             {
                 if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
-                {
-                    eventHandled = false;
                     return;
-                }
                 bool cmd = PHEventHandler::modifierMask() & PHEventHandler::commandModifier;
                 bool alt = PHEventHandler::modifierMask() & PHEventHandler::optionModifier;
                 EntityController * ec = (EntityController*)[model owner];
@@ -91,20 +88,18 @@ void PLImageView::touchEvent(PHEvent * event)
                     [ec removeEntity:model inSelectionForArray:0];
                 else
                     [ec insertEntity:model inSelectionForArray:0];
+                event->setHandled(true);
             } else
             {
                 event->setSender(this);
                 event->setOwnerView(superview());
-                redirectEvent(superview(), event);
+                superview()->touchEvent(event);
             }
             return;
         }
     }
     if (!objectMode())
-    {
-        eventHandled = false;
         return;
-    }
     if (event->type() == PHEvent::touchMoved)
     {
         if (event->userData() == (void*)1)
@@ -116,6 +111,7 @@ void PLImageView::touchEvent(PHEvent * event)
             }
             PHPoint delta = superView->toMyCoordinates(event->location()) - superView->toMyCoordinates(event->lastLocation());
             objectView->moveSubviews(delta);
+            event->setHandled(true);
         }
         else
         if (event->userData() == (void*)2)
@@ -126,6 +122,7 @@ void PLImageView::touchEvent(PHEvent * event)
                 rotating = true;
             }
             objectView->rotateSubviews(-(event->location().y - event->lastLocation().y)/2);
+            event->setHandled(true);
         }
     }
     if (event->type() == PHEvent::touchUp)
@@ -134,14 +131,15 @@ void PLImageView::touchEvent(PHEvent * event)
         {
             objectView->stopMoving();
             moving = false;
+            event->setHandled(true);
         }
         if ((event->userData() == (void*)2) && rotating)
         {
             objectView->stopRotating();
             rotating = false;
+            event->setHandled(true);
         }
     }
-    eventHandled = false;
 }
 
 void PLImageView::draw()

@@ -9,14 +9,16 @@
 
 #include "PHCaptureView.h"
 
-void PHCaptureView::touchEvent(PHEvent * touch)
+void PHCaptureView::touchEvent(PHEvent * event)
 {
 	if (!l) return;
-	if (touch->type() == PHEvent::touchMoved)
+    if (event->type() == PHEvent::touchDown)
+        event->setHandled(true);
+	if (event->type() == PHEvent::touchMoved)
 	{
 		PHPoint p1,p2,p;
-		p1 = toMyCoordinates(touch->location());
-		p2 = toMyCoordinates(touch->lastLocation());
+		p1 = toMyCoordinates(event->location());
+		p2 = toMyCoordinates(event->lastLocation());
 		p.x = p1.x-p2.x;
 		p.y = p1.y-p2.y;
 		p.x/=_bounds.height;
@@ -24,6 +26,7 @@ void PHCaptureView::touchEvent(PHEvent * touch)
 		mutex->lock();
 		l->push_back(p);
 		mutex->unlock();
+        event->setHandled(true);
 	}
 }
 
