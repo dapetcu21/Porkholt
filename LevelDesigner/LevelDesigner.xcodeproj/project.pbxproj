@@ -50,7 +50,7 @@
 		C127D38A143A2E0E004DEB16 /* PLPorkholtView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C127D389143A2E0E004DEB16 /* PLPorkholtView.mm */; };
 		C127D395143A55E8004DEB16 /* OpenGLTimer.mm in Sources */ = {isa = PBXBuildFile; fileRef = C127D394143A55E8004DEB16 /* OpenGLTimer.mm */; };
 		C12F36D814270CC2008DAFE8 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12F36D714270CC2008DAFE8 /* liblua.a */; };
-		C12F36DB14271593008DAFE8 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DA14271593008DAFE8 /* InterfaceController.m */; };
+		C12F36DB14271593008DAFE8 /* InterfaceController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DA14271593008DAFE8 /* InterfaceController.mm */; };
 		C12F36DE14271861008DAFE8 /* PLTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C12F36DD14271861008DAFE8 /* PLTableView.m */; };
 		C14AAAEB143ACDB8006D71ED /* PHScrollerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */; };
 		C14AAAF0143AF8CC006D71ED /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */; };
@@ -190,7 +190,7 @@
 		C127D394143A55E8004DEB16 /* OpenGLTimer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLTimer.mm; sourceTree = "<group>"; };
 		C12F36D714270CC2008DAFE8 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
 		C12F36D914271593008DAFE8 /* InterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
-		C12F36DA14271593008DAFE8 /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
+		C12F36DA14271593008DAFE8 /* InterfaceController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InterfaceController.mm; sourceTree = "<group>"; };
 		C12F36DC14271861008DAFE8 /* PLTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLTableView.h; sourceTree = "<group>"; };
 		C12F36DD14271861008DAFE8 /* PLTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLTableView.m; sourceTree = "<group>"; };
 		C14AAAEA143ACDB8006D71ED /* PHScrollerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScrollerView.cpp; sourceTree = "<group>"; };
@@ -536,7 +536,7 @@
 			isa = PBXGroup;
 			children = (
 				C12F36D914271593008DAFE8 /* InterfaceController.h */,
-				C12F36DA14271593008DAFE8 /* InterfaceController.m */,
+				C12F36DA14271593008DAFE8 /* InterfaceController.mm */,
 				C1A33CBC142BCD620051912D /* SubentityViewController.h */,
 				C1A33CBD142BCD620051912D /* SubentityViewController.m */,
 				C11DF2A1143E28500002A811 /* ImageViewController.h */,
@@ -670,7 +670,7 @@
 				C16B38D2142622D900260851 /* PLEntity.m in Sources */,
 				C16B38D51426270700260851 /* PLObject.mm in Sources */,
 				C16B38D81426272A00260851 /* PLJoint.m in Sources */,
-				C12F36DB14271593008DAFE8 /* InterfaceController.m in Sources */,
+				C12F36DB14271593008DAFE8 /* InterfaceController.mm in Sources */,
 				C12F36DE14271861008DAFE8 /* PLTableView.m in Sources */,
 				C1A33CAE142A43550051912D /* EntityController.m in Sources */,
 				C1A33CB2142B67B50051912D /* MultipleListController.m in Sources */,

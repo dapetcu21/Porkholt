@@ -1,5 +1,5 @@
 //
-//  InterfaceController.m
+//  InterfaceController.mm
 //  LevelDesigner
 //
 //  Created by Marius Petcu on 9/19/11.
@@ -12,6 +12,8 @@
 #import "PLEntity.h"
 #import "PLObject.h"
 #import "PLJoint.h"
+#import "PLImage.h"
+#import "PLImageView.h"
 #import "SubentityController.h"
 
 @implementation InterfaceController
@@ -57,7 +59,7 @@
     currentEntity = newEntity;
     [propertyController setModel:isObject?[(PLObject*)newEntity rootProperty]:nil];
     [subentitiesController setModel:isObject?[(PLObject*)newEntity subentityModel]:nil];
-    [jointController setModel:isJoint?newEntity:nil];
+//    [jointController setModel:isJoint?newEntity:nil];
     
     [jointDetailView removeFromSuperview];
     [objectDetailView removeFromSuperview];
@@ -110,5 +112,24 @@
     }
     [oc setObjectMode:!oc.objectMode];
 }
+
+-(IBAction)resetAspectRatio:(id)sender
+{
+    ObjectController * oc = (ObjectController*)model;
+    PLObject * obj = (PLObject*)[oc selectedEntity];
+    if (!oc.objectMode || ![obj isKindOfClass:[PLObject class]]) 
+    {
+        NSBeep();
+        return;
+    }
+    PLImage * image = (PLImage*)[[obj subentityModel] selectedEntity];
+    if (![image isKindOfClass:[PLImage class]] || !image.actor)
+    {
+        NSBeep();
+        return;
+    }
+    (image.actor)->resetAspectRatio();
+}
+
 
 @end

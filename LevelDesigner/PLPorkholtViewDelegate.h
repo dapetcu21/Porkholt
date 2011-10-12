@@ -21,4 +21,5 @@
 -(IBAction)toggleShowFixtures:(id)sender;
 -(IBAction)toggleShowJoints:(id)sender;
 -(IBAction)toggleObjectMode:(id)sender;
+-(IBAction)resetAspectRatio:(id)sender;
 @end

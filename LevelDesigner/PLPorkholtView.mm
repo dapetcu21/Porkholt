@@ -340,4 +340,9 @@ int PHEventHandler::modifierMask()
     [delegate toggleObjectMode:sender];
 }
 
+-(IBAction)resetAspectRatio:(id)sender
+{
+    [delegate resetAspectRatio:sender];
+}
+
 @end

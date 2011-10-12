@@ -212,7 +212,7 @@ void PLObjectView::touchEvent(PHEvent * evt)
                 [worldController startMoving];
                 moving = true;
             }
-            PHLog("%f %f",(evt->location()-evt->lastLocation()).x,(evt->location()-evt->lastLocation()).y);
+            //PHLog("%f %f",(evt->location()-evt->lastLocation()).x,(evt->location()-evt->lastLocation()).y);
             PHPoint delta = superView->toMyCoordinates(evt->location()) - superView->toMyCoordinates(evt->lastLocation());
             [worldController move:delta];
             evt->setHandled(true);

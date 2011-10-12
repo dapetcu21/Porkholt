@@ -24,6 +24,13 @@ public:
 protected:
     PLImage * model;
     bool moving,rotating;
+    int grab;
+    NSRect initialGrabFrame;
+    
+    int grabTypeForPoint(const PHPoint & pnt);
+    NSUndoManager * undoManager();
+    void resizeWithTypeAndDelta(int type, PHPoint delta);
+    void resizeToBounds(const PHRect & newBounds);
     
 public:
     PLImageView(PLImage * _model);
@@ -36,6 +43,8 @@ public:
     void touchEvent(PHEvent * event);
     
     bool objectMode();
+    
+    void resetAspectRatio();
     
 protected:
     void draw();

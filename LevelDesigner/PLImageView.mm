@@ -17,6 +17,7 @@
 #import "PHGeometry.h"
 #import "PLObjectView.h"
 #import "PHEventHandler.h"
+#import "PHImage.h"
 
 PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false)
 {
@@ -69,11 +70,134 @@ bool PLImageView::objectMode()
     return [oc objectMode]&& ([oc selectedEntity] == [sc object]);
 }
 
+int PLImageView::grabTypeForPoint(const PHPoint &pnt)
+{
+    if ([model readOnly] || [[model object] readOnly]) return 0;
+    PHPoint p = pnt-_bounds.origin();
+    if (p.x<=0.3 && p.y<=0.3) return 1;
+    if (p.x>=_bounds.width-0.3 && p.y<=0.3) return 2;
+    if (p.x>=_bounds.width-0.3 && p.y>=_bounds.height-0.3) return 3;
+    if (p.x<=0.3 && p.y>=_bounds.height-0.3) return 4;
+    if (p.x<=0.15) return 5;
+    if (p.y<=0.15) return 6;
+    if (p.x>=_bounds.width-0.15) return 7;
+    if (p.y>=_bounds.height-0.15) return 8;
+    return 0;
+}
+
+NSUndoManager * PLImageView::undoManager()
+{
+    SubentityController * sc = (SubentityController*)[model owner];
+    ObjectController * oc = (ObjectController*)[[sc object] owner];
+    return [oc undoManager];
+}
+
+void PLImageView::resizeToBounds(const PHRect & newBounds)
+{
+    PHRect bounds = this->bounds();
+    NSRect f = [model frame];
+    PHRect frame = PHRect(f.origin.x,f.origin.y,f.size.width,f.size.height);
+    PHSize deltaCenter = fromMyCoordinates(newBounds.center(), superview())-fromMyCoordinates(bounds.center(), superview());
+    PHSize deltaSize = (newBounds.size()-bounds.size());
+    PHRect nf = frame+deltaCenter-deltaSize/2;
+    nf.width = newBounds.width;
+    nf.height = newBounds.height;
+    [model setFrame:NSMakeRect(nf.x, nf.y, nf.width, nf.height)];
+}
+
+void PLImageView::resizeWithTypeAndDelta(int type, PHPoint delta)
+{
+    PHRect bounds = this->bounds();
+    PHRect newBounds = bounds;    
+    switch (type) {
+        case 1:
+            if (delta.x>= bounds.width)
+                delta.x = bounds.width;
+            if (delta.y>= bounds.height)
+                delta.y = bounds.height;
+            newBounds.width-=delta.x;
+            newBounds.height-=delta.y;
+            newBounds.x+=delta.x;
+            newBounds.y+=delta.y;
+            break;
+        case 2:
+            if (delta.x<= -bounds.width)
+                delta.x = -bounds.width;
+            if (delta.y>= bounds.height)
+                delta.y = bounds.height;
+            newBounds.width+=delta.x;
+            newBounds.height-=delta.y;
+            newBounds.y+=delta.y;
+            break;
+        case 4:
+            if (delta.x>= bounds.width)
+                delta.x = bounds.width;
+            if (delta.y<= -bounds.height)
+                delta.y = -bounds.height;
+            newBounds.width-=delta.x;
+            newBounds.height+=delta.y;
+            newBounds.x+=delta.x;
+            break;
+        case 3:
+            if (delta.x<= -bounds.width)
+                delta.x = -bounds.width;
+            if (delta.y<= -bounds.height)
+                delta.y = -bounds.height;
+            newBounds.width+=delta.x;
+            newBounds.height+=delta.y;
+            break;
+        case 5:
+            if (delta.x>= bounds.width)
+                delta.x = bounds.width;
+            newBounds.width-=delta.x;
+            newBounds.x+=delta.x;
+            break;
+        case 6:
+            if (delta.y>= bounds.height)
+                delta.y = bounds.height;
+            newBounds.height-=delta.y;
+            newBounds.y+=delta.y;
+            break;
+        case 7:
+            if (delta.x<= -bounds.width)
+                delta.x = -bounds.width;
+            newBounds.width+=delta.x;
+            break;
+        case 8:
+            if (delta.y<= -bounds.height)
+                delta.y = -bounds.height;
+            newBounds.height+=delta.y;
+            break;
+        default:
+            break;
+    }
+    resizeToBounds(newBounds);
+}
+
+void PLImageView::resetAspectRatio()
+{
+    PHImage * img = image();
+    if (!img)
+    {
+        NSBeep();
+        return;
+    }
+    double aspectRatio = img->width()/img->height();
+    PHRect bounds = this->bounds();
+    PHRect newBounds = bounds;
+    if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
+        newBounds.width = newBounds.height * aspectRatio;
+    else
+        newBounds.height = newBounds.width / aspectRatio;
+    resizeToBounds(newBounds);
+}
+
 void PLImageView::touchEvent(PHEvent * event)
 {
     if (event->type() == PHEvent::touchDown)
     {
-        if (intersectsPoint(toMyCoordinates(event->location())))
+        PHPoint localPoint = toMyCoordinates(event->location());
+        if (intersectsPoint(localPoint))
         {
             if (objectMode())
             {
@@ -88,6 +212,12 @@ void PLImageView::touchEvent(PHEvent * event)
                     [ec removeEntity:model inSelectionForArray:0];
                 else
                     [ec insertEntity:model inSelectionForArray:0];
+                grab = grabTypeForPoint(localPoint);
+                if (grab)
+                {
+                    initialGrabFrame = [model frame];
+                    [undoManager() disableUndoRegistration];
+                }
                 event->setHandled(true);
             } else
             {
@@ -104,6 +234,13 @@ void PLImageView::touchEvent(PHEvent * event)
     {
         if (event->userData() == (void*)1)
         {
+            if (grab)
+            {
+                PHPoint delta = toMyCoordinates(event->location()) - toMyCoordinates(event->lastLocation());
+                resizeWithTypeAndDelta(grab,delta);
+                event->setHandled(true);
+                return;
+            }
             if (!moving)
             {
                 objectView->startMoving();
@@ -127,11 +264,23 @@ void PLImageView::touchEvent(PHEvent * event)
     }
     if (event->type() == PHEvent::touchUp)
     {
-        if ((event->userData() == (void*)1) && moving)
+        if (event->userData() == (void*)1)
         {
-            objectView->stopMoving();
-            moving = false;
-            event->setHandled(true);
+            if (moving)
+            {
+                objectView->stopMoving();
+                moving = false;
+                event->setHandled(true);
+            }
+            if (grab)
+            {
+                grab = 0;
+                NSRect fr = [model frame];
+                [model setFrame:initialGrabFrame];
+                [undoManager() enableUndoRegistration];
+                [model setFrame:fr];
+                event->setHandled(true);
+            }
         }
         if ((event->userData() == (void*)2) && rotating)
         {
@@ -145,7 +294,9 @@ void PLImageView::touchEvent(PHEvent * event)
 void PLImageView::draw()
 {
     PHImageView::draw();
-    if ([model selected] && objectMode())
+    SubentityController * sc = (SubentityController*)[model owner];
+    ObjectController * oc = (ObjectController*)[[sc object] owner];
+    if ([model selected] && [oc showMarkers] && [oc objectMode] && ([oc selectedEntity] == [sc object]))
     {
         GLfloat vertices[] = {
             0,0,
