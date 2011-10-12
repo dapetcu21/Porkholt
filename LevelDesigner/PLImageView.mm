@@ -19,7 +19,7 @@
 #import "PHEventHandler.h"
 #import "PHImage.h"
 
-PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false)
+PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false), grab(0)
 {
     setUserInput(true);
     [model retain];
@@ -37,11 +37,14 @@ void PLImageView::modelChanged()
 {
     NSRect frame = [model frame];
     setFrame(PHRect(frame.origin.x,frame.origin.y,frame.size.width,frame.size.height));
-    string path = string([[model fileName] UTF8String]);
+    NSString * s = [model fileName];
+    if (!s)
+        s = @"";
+    string path = string([s UTF8String]);
     if (path[0]=='/')
         path = PHFileManager::resourcePath()+"/img/"+path;
     else
-        path = string([[[[((ObjectController*)(((SubentityController*)(model.owner)).object.owner)) fileURL] URLByAppendingPathComponent:[model fileName]] path] UTF8String]);
+        path = string([[[[((ObjectController*)(((SubentityController*)(model.owner)).object.owner)) fileURL] URLByAppendingPathComponent:s] path] UTF8String]);;
     setImage(PHImage::imageFromPath(path));
     setRotation(-toRad(model.rotation));
     NSRect portion = model.portion;
@@ -74,14 +77,14 @@ int PLImageView::grabTypeForPoint(const PHPoint &pnt)
 {
     if ([model readOnly] || [[model object] readOnly]) return 0;
     PHPoint p = pnt-_bounds.origin();
-    if (p.x<=0.3 && p.y<=0.3) return 1;
-    if (p.x>=_bounds.width-0.3 && p.y<=0.3) return 2;
-    if (p.x>=_bounds.width-0.3 && p.y>=_bounds.height-0.3) return 3;
-    if (p.x<=0.3 && p.y>=_bounds.height-0.3) return 4;
-    if (p.x<=0.15) return 5;
-    if (p.y<=0.15) return 6;
-    if (p.x>=_bounds.width-0.15) return 7;
-    if (p.y>=_bounds.height-0.15) return 8;
+    if (p.x<=0.1 && p.y<=0.1) return 1;
+    if (p.x>=_bounds.width-0.1 && p.y<=0.1) return 2;
+    if (p.x>=_bounds.width-0.1 && p.y>=_bounds.height-0.1) return 3;
+    if (p.x<=0.1 && p.y>=_bounds.height-0.1) return 4;
+    if (p.x<=0.05) return 5;
+    if (p.y<=0.05) return 6;
+    if (p.x>=_bounds.width-0.05) return 7;
+    if (p.y>=_bounds.height-0.05) return 8;
     return 0;
 }
 
@@ -196,6 +199,8 @@ void PLImageView::touchEvent(PHEvent * event)
 {
     if (event->type() == PHEvent::touchDown)
     {
+        if (event->userData() != (void*)1 && event->userData() != (void*)2)
+            return;
         PHPoint localPoint = toMyCoordinates(event->location());
         if (intersectsPoint(localPoint))
         {

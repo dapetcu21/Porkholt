@@ -42,6 +42,11 @@ static inline void endToken(NSMutableString * file, int * count)
 @synthesize viewController;
 @synthesize actor;
 
+-(id)init
+{
+    return [self initFromProperty:NULL];
+}
+
 -(id)initFromProperty:(PLProperty*)prop
 {
     if (self = [super initFromLua:NULL])

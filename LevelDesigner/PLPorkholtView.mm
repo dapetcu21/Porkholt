@@ -15,6 +15,11 @@
 #import "PHScrollerView.h"
 #import "PHEventHandler.h"
 #import "OverlayController.h"
+#import "InterfaceController.h"
+#import "ObjectController.h"
+#import "SubentityController.h"
+#import "PLObject.h"
+#import "SubentityViewController.h"
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
@@ -280,39 +285,56 @@ int PHEventHandler::modifierMask()
     return mask;
 }
 
+-(id<PLPorkholtViewDelegate>)targetForForwardedMessage
+{
+    if ([delegate isKindOfClass:[InterfaceController class]])
+    {
+        ObjectController * oc = (ObjectController*)[(InterfaceController*)delegate model];
+        if (!oc.objectMode) 
+            return delegate;
+        PLObject * sel = (PLObject*)[oc selectedEntity];
+        if (![sel isKindOfClass:[PLObject class]]) 
+            return delegate;
+        MultipleListController * vc = [[sel subentityModel] controller];
+        return (id<PLPorkholtViewDelegate>)vc;
+    }
+    return delegate;
+}
+
 -(void)new:(id)sender
 {
-    [delegate new:sender];
+    
+    [[self targetForForwardedMessage] new:sender];
 }
 
 -(void)copy:(id)sender
 {
-    [delegate copy:sender];
+    [[self targetForForwardedMessage] copy:sender];
 }
 
 -(void)paste:(id)sender
 {
-    [delegate paste:sender];
+    [[self targetForForwardedMessage] paste:sender];
 }
 
 -(void)duplicate:(id)sender
 {
-    [delegate duplicate:sender];
+    [[self targetForForwardedMessage] duplicate:sender];
 }
 
 -(void)delete:(id)sender
 {
-    [delegate delete:sender];
+    [[self targetForForwardedMessage] delete:sender];
 }
 
 -(void)selectAll:(id)sender
 {
-    [delegate selectAll:sender];
+    [[self targetForForwardedMessage] selectAll:sender];
 }
 
 -(BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-    return [delegate validateMenuItem:menuItem sentFrom:self];
+    return [[self targetForForwardedMessage] validateMenuItem:menuItem sentFrom:self];
 }
 
 -(IBAction)toggleShowMarkers:(id)sender

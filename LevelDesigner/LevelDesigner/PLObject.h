@@ -34,6 +34,7 @@ class PLObjectView;
 
 -(void)propertyChanged:(PLProperty*)p;
 -(void)subobjectChanged:(PLEntity*)so;
+-(void)objectChanged;
 
 -(void)move:(NSPoint)p;
 -(void)rotate:(double)p;

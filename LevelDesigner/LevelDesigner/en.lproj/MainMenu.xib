@@ -811,7 +811,7 @@
 								</object>
 								<object class="NSMenuItem" id="1002559633">
 									<reference key="NSMenu" ref="466310130"/>
-									<string key="NSTitle">Reset to origin</string>
+									<string key="NSTitle">Reset to Origin</string>
 									<string key="NSKeyEquiv">o</string>
 									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>

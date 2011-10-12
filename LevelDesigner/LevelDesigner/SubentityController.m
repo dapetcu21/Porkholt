@@ -56,4 +56,10 @@
     return [self arrayAtIndex:1];
 }
 
+-(void)arrayChanged:(NSUInteger)array
+{
+    [super arrayChanged:array];
+    [[self object] objectChanged];
+}
+
 @end

@@ -10,6 +10,7 @@
 #include "PHEvent.h"
 #include "WorldController.h"
 #include "PHEventHandler.h"
+#include "ObjectController.h"
 
 PLWorldView::PLWorldView() : dragRect(0,0,0,0), startPoint(0,0), rotating(false)
 {
@@ -20,6 +21,11 @@ void PLWorldView::touchEvent(PHEvent * event)
 {
     if (event->type() == PHEvent::touchDown)
     {
+        if (event->userData() == (void*)3)
+        {
+            [[worldController model] setObjectMode:![[worldController model] objectMode]];
+            event->setHandled(true);
+        }
         if (event->userData() != (void*)1)
             return;
         int type = 0;

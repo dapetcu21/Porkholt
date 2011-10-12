@@ -20,9 +20,19 @@ protected:
 public:
     PLObjectView * controller() { return objectView; }
     void setController(PLObjectView * ov) { objectView = ov; }
+    void touchEvent(PHEvent * event);
     
 protected:
     PLFixture * model;
+    
+    void draw();
+    int grabTypeForPoint(const PHPoint &pnt);
+    void resizeToBounds(const PHRect & newBounds);
+    void resizeWithTypeAndDelta(int type, PHPoint delta);
+    int grab;
+    bool moving,rotating;
+    NSRect initialGrabFrame;
+    double initialGrabRadius;
     
 public:
     PLFixtureView(PLFixture * _model);
@@ -33,6 +43,7 @@ public:
     bool intersectsPoint(const PHPoint & pnt);
     
     bool objectMode();
+    NSUndoManager * undoManager();
 };
 
 #endif

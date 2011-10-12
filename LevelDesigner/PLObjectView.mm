@@ -188,7 +188,7 @@ void PLObjectView::touchEvent(PHEvent * evt)
         return;
     if (evt->type() == PHEvent::touchDown)
     {
-        if ((PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)||((ObjectController*)[model owner]).objectMode)
+        if ((evt->userData() != (void*)1) || (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)||((ObjectController*)[model owner]).objectMode)
             return;
         bool cmd = PHEventHandler::modifierMask() & PHEventHandler::commandModifier;
         bool alt = PHEventHandler::modifierMask() & PHEventHandler::optionModifier;

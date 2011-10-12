@@ -32,6 +32,11 @@ static inline void endToken(NSMutableString * file, int * count)
         [file appendFormat:@" }"];
 }
 
+-(id)init
+{
+    return [self initFromProperty:NULL];
+}
+
 -(id)initFromProperty:(PLProperty*)prop
 {
     if (self = [super initFromLua:NULL])
@@ -376,6 +381,33 @@ static inline void endToken(NSMutableString * file, int * count)
 -(PLObject*)object
 {
     return (PLObject*)[(SubentityController*)owner object];
+}
+
+-(void)move:(NSPoint)delta
+{
+    if (!delta.x && !delta.y) return;
+    if (shape == PLFixtureCircle)
+    {
+        [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setPosition:position];
+        position.x+=delta.x;
+        position.y+=delta.y;
+        [self fixtureChanged];
+    }
+    if (shape == PLFixtureRect)
+    {
+        box.origin.x+=delta.x;
+        box.origin.y+=delta.y;
+        [self fixtureChanged];
+    }
+}
+
+-(void)rotate:(double)ammount
+{
+    if (!ammount) return;
+    if (shape == PLFixtureCircle) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
+    rotation+=ammount;
+    [self fixtureChanged];
 }
 
 @end
