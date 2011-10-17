@@ -62,8 +62,7 @@ void PHNavigationController::startFadeAnimation()
 	anim->tag=-4432;
 	anim->view = fadeView;
 	anim->time = 0.5f;
-	anim->callback = (PHCallback)&PHNavigationController::middleFadeAnimation;
-	anim->target = this;
+	anim->callback = PHInvN(this,PHNavigationController::middleFadeAnimation);
 	anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
 	PHView::addAnimation(anim);
 	anim->release();
@@ -81,8 +80,7 @@ void PHNavigationController::middleFadeAnimation()
 	anim->tag=-4432;
 	anim->view = fadeView;
 	anim->time = 0.5f;
-	anim->callback = (PHCallback)&PHNavigationController::endFadeAnimation;
-	anim->target = this;
+	anim->callback = PHInvN(this,PHNavigationController::endFadeAnimation);
 	anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
 	PHView::addAnimation(anim);
 	anim->release();
@@ -142,8 +140,7 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		anim->view = lastV;
 		anim->time = 0.5f;
 		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-		anim->callback = (PHCallback)&PHNavigationController::endSlideAnimation;
-		anim->target = this;
+		anim->callback = PHInvN(this,PHNavigationController::endSlideAnimation);
 		PHView::addAnimation(anim);
 		anim->release();
 	}
@@ -159,8 +156,7 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		anim->view = currentV;
 		anim->time = 0.5f;
 		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-		anim->callback = (PHCallback)&PHNavigationController::endSlideAnimation;
-		anim->target = this;
+		anim->callback = PHInvN(this,PHNavigationController::endSlideAnimation);
 		PHView::addAnimation(anim);
 		anim->release();
 	}

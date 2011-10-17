@@ -104,7 +104,7 @@ bool PHFont::loadImage(uint8_t *d, size_t len)
     if (len<8+width*height) return false;
     imageData = d+8;
     dataRetainCount++;
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHFont::loadToTexture, NULL, false);
+    PHThread::mainThread()->executeOnThread(PHInv(this, PHFont::loadToTexture, NULL), false);
     return true;
 }
 

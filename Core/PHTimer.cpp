@@ -23,6 +23,5 @@ void PHTimer::timePassed(double timeElapsed)
 
 void PHTimer::timerFired()
 {
-    if (cb && target)
-        (target->*cb)(this,ud);
+    invocation.call(this);
 }

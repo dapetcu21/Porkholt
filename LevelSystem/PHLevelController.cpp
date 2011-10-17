@@ -86,7 +86,7 @@ void PHLevelController::pauseWithMenu()
         rb->setImage(PHImage::imageNamed("play"));
         rb->setPressedImage(PHImage::imageNamed("play_pressed"));
         rv->addSubview(rb);
-        rb->setUpCallback(this, (PHCallback)&PHLevelController::resume, NULL);
+        rb->setUpCallback(PHInv(this, PHLevelController::resume, NULL));
         rb->release();
     }
     if (!qb)
@@ -96,7 +96,7 @@ void PHLevelController::pauseWithMenu()
         qb->setImage(PHImage::imageNamed("quit"));
         qb->setPressedImage(PHImage::imageNamed("quit_pressed"));
         rv->addSubview(qb);
-        qb->setUpCallback(this, (PHCallback)&PHLevelController::returnToMenu, NULL);
+        qb->setUpCallback(PHInv(this, PHLevelController::returnToMenu, NULL));
         qb->release();
     }
     menuView->setBackgroundColor(PHInvalidColor);
@@ -175,9 +175,7 @@ void PHLevelController::dismissMenu()
         a->rotate = -M_PI/2;
         if (!cb)
         {
-            a->callback = (PHCallback)&PHLevelController::menuDismissed;
-            a->target = this;
-            a->userdata = NULL;
+            a->callback = PHInvN(this,PHLevelController::menuDismissed);
             cb = true;
         }
         PHView::addAnimation(a);
@@ -220,9 +218,7 @@ void PHLevelController::dismissMenu()
     a->tag = 3752;
     if (!cb)
     {
-        a->callback = (PHCallback)&PHLevelController::menuDismissed;
-        a->target = this;
-        a->userdata = NULL;
+        a->callback = PHInvN(this, PHLevelController::menuDismissed);
         cb = true;
     }
     PHView::addAnimation(a);
@@ -281,13 +277,13 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	view->addSubview(world->getView());
     animPool = new PHAnimatorPool;
 	thread = new PHThread;
-	thread->setFunction(this,(PHCallback)&PHLevelController::auxThread, NULL);
+	thread->setFunction(PHInv(this, PHLevelController::auxThread, NULL));
 	thread->start();
 	
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false), ec_target(NULL), ec_cb(NULL), ec_ud(NULL), _outcome(LevelRunning), menuView(NULL)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false), _outcome(LevelRunning), menuView(NULL)
 {
 }
 
@@ -300,14 +296,9 @@ void PHLevelController::viewWillAppear()
 void PHLevelController::textViewControllerFinished(PHTextController * sender, void * ud)
 {
     if ((int)ud==1)
-    {
         sender->navigationController()->pushViewController(this, PHNavigationController::FadeToColor, true);
-    }
     if ((int)ud==2)
-    {
-        if (ec_target && ec_cb)
-            (ec_target->*ec_cb)(this,ec_ud);
-    }
+        ec_invocation.call(this);
     this->release();
 }
 
@@ -328,14 +319,10 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
             delete v;
             v = NULL;
         }
-        if (!v && ec_target && ec_cb)
-            (ec_target->*ec_cb)(this,ec_ud);
+        ec_invocation.call(this);
     }
     if (_outcome == LevelQuit)
-    {
-        if (ec_target && ec_cb)
-            (ec_target->*ec_cb)(this,ec_ud);
-    }
+        ec_invocation.call(this);
     if (_outcome == LevelDied || ((_outcome==LevelWon)&&(v)))
     {
         if (!v)
@@ -348,7 +335,7 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
         vc->init(_gameManager);
         vc->setForegroundColor(PHWhiteColor);
         vc->setBackgroundColor(PHBlackColor);
-        vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, (void*)2);
+        vc->setDoneCallback(PHInv(this, PHLevelController::textViewControllerFinished, (void*)2));
         this->retain();
         navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
@@ -361,7 +348,7 @@ void PHLevelController::endLevelWithOutcome(int outcome){
     if (_outcome != LevelRunning) return;
     PHLog("endLevel");
     _outcome = outcome;
-    world->viewEventQueue()->schedule(this, (PHCallback)&PHLevelController::_endLevelWithOutcome, NULL, false);
+    world->viewEventQueue()->schedule(PHInv(this, PHLevelController::_endLevelWithOutcome, NULL), false);
 }
 
 class curtainData : public PHLObject
@@ -413,7 +400,7 @@ void PHLevelController::_curtainText(PHObject * sender, void * ud)
     vc->init(_gameManager);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
-    vc->setDoneCallback(this, (PHCallback)&PHLevelController::curtainEnded, ud);
+    vc->setDoneCallback(PHInv(this, PHLevelController::curtainEnded, ud));
     navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, false);
     vc->release();
 }
@@ -430,7 +417,7 @@ void PHLevelController::curtainText(const string & s, lua_State * L)
     curtainData * cd = new curtainData;
     cd->v = v;
     cd->setLuaCallback(L);
-    world->viewEventQueue()->schedule(this, (PHCallback)&PHLevelController::_curtainText, cd, false);
+    world->viewEventQueue()->schedule(PHInv(this,  PHLevelController::_curtainText, cd), false);
 }
 
 PHViewController * PHLevelController::mainViewController()
@@ -452,7 +439,7 @@ PHViewController * PHLevelController::mainViewController()
     vc->init(_gameManager);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
-    vc->setDoneCallback(this, (PHCallback)&PHLevelController::textViewControllerFinished, (void*)1);
+    vc->setDoneCallback(PHInv(this, PHLevelController::textViewControllerFinished, (void*)1));
     this->retain();
     return vc;
 }

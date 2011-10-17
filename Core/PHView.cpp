@@ -499,8 +499,8 @@ void PHView::updateAnimation(double time)
 				if (next)
 					next->retain();
 				*i = next;
-				if (anim -> view && anim->target && anim->callback)
-					(anim->target->*(anim->callback))(anim->target,anim->userdata);
+                if (anim->view)
+                    anim->callback.call(anim->callback.target);
 				anim->release();
 				if (!*i)
 				{

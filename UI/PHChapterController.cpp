@@ -46,7 +46,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             PHButtonView * vv = new PHButtonView(frame);
             vv->setImage(PHImage::imageFromPath(oss1.str()));
             vv->setPressedImage(PHImage::imageFromPath(oss2.str()));
-            vv->setUpCallback(this, (PHCallback)&PHChapterController::mouseUp, (void*)(j*columns+i+1));
+            vv->setUpCallback(PHInv(this, PHChapterController::mouseUp, (void*)(j*columns+i+1)));
             view->addSubview(vv);
             vv->release();
         }
@@ -65,7 +65,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     PHButtonView * back = new PHButtonView(PHRect((1.0f-BORDER_BK_RIGHT-SIZ_BK_WID)*frame.width,BORDER_BK_DOWN*frame.height,SIZ_BK_WID*frame.width,hi));
     back->setImage(img);
     back->setPressedImage(PHImage::imageNamed("back_pressed"));
-    back->setUpCallback(this,(PHCallback)&PHChapterController::backPressed,NULL);
+    back->setUpCallback(PHInv(this, PHChapterController::backPressed,NULL));
     view->addSubview(back);
     back->release();
     return view;
@@ -107,7 +107,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
     oss<<path<<"/lvl"<<nr;
     PHLevelController * lvlvc = new PHLevelController(oss.str());
     lvlvc->init(_gameManager);
-    lvlvc->setEndLevelCallback(this, (PHCallback)&PHChapterController::levelEnded, (void*)nr);
+    lvlvc->setEndLevelCallback(PHInv(this, PHChapterController::levelEnded, (void*)nr));
     PHViewController * vc = lvlvc->mainViewController();
     navController->navigationController()->pushViewController(vc,PHNavigationController::FadeToColor,replace);
     vc->release();

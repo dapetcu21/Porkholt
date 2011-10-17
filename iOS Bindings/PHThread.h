@@ -21,21 +21,19 @@ class PHThread : public PHObject
 {
 private:
 	pthread_t thread;
-	PHCallback callback;
-	PHObject * target;
 	PHMutex * initMutex;
 	PHEventQueue * eventQueue;
-    
-	void * ud;
 	bool running,autorelease;
+    PHInvocation invocation;
+    
 public:
-	void executeOnThread(PHObject * trg, PHCallback cb, void * userdata,bool waitUntilDone);
-    void scheduleOnThread(PHObject * trg, PHCallback cb, void * userdata, bool waitUntilDone);
+	void executeOnThread(PHInvocation invocation,bool waitUntilDone);
+    void scheduleOnThread(PHInvocation invocation, bool waitUntilDone);
 	void processQueue();
 public:
 	void execute(); //DON'T USE THIS
 	
-	void setFunction(PHObject * trg, PHCallback cb, void * userdata) { callback = cb; target = trg; ud = userdata; };
+	void setFunction(PHInvocation inv) { invocation = inv; };
 	void start();
 	void terminate();
 	void join();

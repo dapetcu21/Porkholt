@@ -28,9 +28,7 @@ public:
 	int tag;
 	int timeFunction;
 	
-	PHCallback callback;
-	PHObject * target;
-	void * userdata;
+    PHInvocation callback;
 	
 	enum Functions
 	{
@@ -44,7 +42,7 @@ public:
 	
 	PHAnimationDescriptor() : 
 		next(NULL), scaleX(1), scaleY(1),
-		moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor), customColor(PHInvalidColor), customValue(0), view(NULL), callback(NULL), target(NULL), userdata(NULL), time(0), totalTime(0), timeFunction(LinearFunction) {};
+		moveX(0), moveY(0), rotate(0), tag(0), bgColor(PHInvalidColor), customColor(PHInvalidColor), customValue(0), view(NULL), time(0), totalTime(0), timeFunction(LinearFunction) {};
 	
 	void setNextAnimation(PHAnimationDescriptor * nexta)
 	{

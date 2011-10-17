@@ -27,9 +27,7 @@ protected:
     bool canAdvance;
     int pos;
     
-    PHCallback cb;
-    PHObject * trg;
-    void * ud;
+    PHInvocation invocation;
     
     void viewDidAppear();
     virtual PHColor fadeToColor() { return bColor; }
@@ -47,7 +45,7 @@ public:
     void setBackgroundColor(const PHColor & c);
     void setForegroundColor(const PHColor & c);
     
-    void setDoneCallback(PHObject * target, PHCallback callback, void * userdata) { cb = callback; trg = target; ud = userdata; }
+    void setDoneCallback(PHInvocation inv) { invocation = inv; }
 };
 
 #endif

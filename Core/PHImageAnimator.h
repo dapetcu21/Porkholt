@@ -31,9 +31,7 @@ private:
     double remaining,time;
     bool fade;
     
-    PHObject * target;
-    PHCallback callback;
-    void * userdata;
+    PHInvocation invocation;
     
     double timeForFrameInSection(int fr, int sec);
     int realFrame(int fr, int sec);
@@ -46,12 +44,12 @@ private:
     
 public:
     PHAnimatedImage * image() { return _image; }
-    void animateSection(const string & name) { animateSection(name, NULL, NULL, NULL); }
-    void animateSection(int sec) { animateSection(sec, NULL, NULL, NULL); }
-    void animateSection(const string & name, PHObject * target, PHCallback callback, void * userdata);
-    void animateSection(int sec, PHObject * target, PHCallback callback, void * userdata);
-    void reset(PHObject * target, PHCallback callback, void * userdata);
-    void reset() { reset(NULL,NULL,NULL); }
+    void animateSection(const string & name) { animateSection(name, PHInvocation()); }
+    void animateSection(int sec) { animateSection(sec, PHInvocation()); }
+    void animateSection(const string & name, PHInvocation inv);
+    void animateSection(int sec, PHInvocation inv);
+    void reset(PHInvocation inv);
+    void reset() { reset(PHInvocation()); }
     
     bool isPaused() { return !running; }
     void setPaused(bool p) { running=!p; }

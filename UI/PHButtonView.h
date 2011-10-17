@@ -17,9 +17,8 @@ class PHButtonView : public PHView
 private:
 	PHImage * imgUp, * imgDown;
 	int _state;
-	PHCallback cbUp,cbDown;
-	void * udUp, *udDown;
-	PHObject * tgUp, * tgDown;
+    PHInvocation invUp,invDown;
+    
 public:
 	enum states
 	{
@@ -34,8 +33,8 @@ public:
 	PHImage * pressedImage() { return imgDown; };
 	PHImage * image() { return imgUp; };
 	int state() { return _state; }
-	void setUpCallback(PHObject * tg, PHCallback cb, void * ud ) { tgUp = tg; cbUp = cb; udUp = ud; };
-	void setDownCallback(PHObject * tg, PHCallback cb, void * ud ) { tgDown = tg; cbDown = cb; udDown = ud; };
+	void setUpCallback(PHInvocation inv) { invUp = inv; };
+	void setDownCallback(PHInvocation inv) { invDown = inv; };
 protected:
 	virtual void draw();
 	virtual void touchEvent(PHEvent * touch);

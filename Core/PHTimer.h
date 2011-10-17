@@ -17,11 +17,9 @@ private:
     double time;
     double timeleft;
     double lastupd;
-    PHCallback cb;
-    PHObject * target;
-    void * ud;
+    PHInvocation invocation;
 public:
-    PHTimer() : valid(true), repeat(false), time(0), timeleft(0), cb(NULL), target(NULL), ud(NULL) {}
+    PHTimer() : valid(true), repeat(false), time(0), timeleft(0) {}
     
     void timePassed(double timeElapsed);
     void setTimeInterval(double tm) { time = tm; timeleft = tm; }
@@ -33,7 +31,7 @@ public:
     void setLastUpdatedAt(double u) { lastupd = u; }
     double lastUpdatedAt() { return lastupd; }
     
-    void setCallback(PHObject * trg, PHCallback call, void * usd) { target = trg; cb = call; ud=usd; }
+    void setCallback(PHInvocation inv) { invocation = inv; }
     bool isValid() { return valid; } 
     void invalidate() { valid = false; }
     

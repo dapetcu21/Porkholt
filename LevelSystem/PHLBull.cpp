@@ -59,13 +59,13 @@ void PHLBull::reallyAttack(PHObject * sender, void * ud)
     
     PHTimer * timer = new PHTimer;
     timer->setTimeInterval(attackDuration+cooldownDuration);
-    timer->setCallback(this, (PHCallback)&PHLBull::cooldownEnded, NULL);
+    timer->setCallback(PHInv(this, PHLBull::cooldownEnded, NULL));
     getWorld()->scheduleTimer(timer, this);
     timer->release();
     
     timer = new PHTimer;
     timer->setTimeInterval(unrageTime);
-    timer->setCallback(this, (PHCallback)&PHLBull::attacked, NULL);
+    timer->setCallback(PHInv(this, PHLBull::attacked, NULL));
     getWorld()->scheduleTimer(timer, this);
     timer->release();
 }
@@ -77,7 +77,7 @@ void PHLBull::attack()
     PHImageAnimator * animator;
     PHImageView * iv;
     if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
-        animator->animateSection("charging",this,(PHCallback)&PHLBull::reallyAttack,NULL);
+        animator->animateSection("charging",PHInv(this,PHLBull::reallyAttack,NULL));
     else
         reallyAttack(NULL,NULL);
     attacking = true;

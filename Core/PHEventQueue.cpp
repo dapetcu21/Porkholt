@@ -18,12 +18,10 @@ PHEventQueue::~PHEventQueue()
     mutex->release();
 }
 
-void PHEventQueue::schedule(PHObject * target, PHCallback cb, void * ud, bool waitTillDone)
+void PHEventQueue::schedule(PHInvocation inv, bool waitTillDone)
 {
     event evt;
-    evt.target = target;
-    evt.cb = cb;
-    evt.ud = ud;
+    evt.invocation = inv;
     evt.sem = NULL;
     if (waitTillDone)
     {
@@ -47,7 +45,7 @@ void PHEventQueue::processQueue()
         event evt = q.front();
         q.pop_front();
         mutex->unlock();
-        ((evt.target)->*(evt.cb))(this,evt.ud);
+        evt.invocation.call(this);
         if (evt.sem)
             evt.sem->signal();
         mutex->lock();

@@ -29,13 +29,12 @@ void PHThread::execute()
 		initMutex->lock();
 		initMutex->unlock();
 	}
-	if (target && callback)
-		(target->*callback)(this,ud);
+    invocation.call(this);
     if (autorelease)
         release();
 }
 
-#define PHTHREAD_INILIST running(false), target(NULL), eventQueue(new PHEventQueue), autorelease(false)
+#define PHTHREAD_INILIST running(false), eventQueue(new PHEventQueue), autorelease(false)
 
 PHThread::PHThread() : PHTHREAD_INILIST
 {
@@ -111,19 +110,19 @@ bool PHThread::isMainThread()
 	return (pthread_self()==main->thread);
 }
 
-void PHThread::executeOnThread(PHObject * trg, PHCallback cb, void * userdata,bool waitUntilDone)
+void PHThread::executeOnThread(PHInvocation invocation,bool waitUntilDone)
 {
 	if (pthread_self()==thread)
 	{
-		(trg->*cb)(this,userdata);
+		invocation.call(this);
 		return;
 	}
-    eventQueue->schedule(trg,cb,userdata,waitUntilDone);
+    eventQueue->schedule(invocation,waitUntilDone);
 }
 
-void PHThread::scheduleOnThread(PHObject * trg, PHCallback cb, void * userdata, bool waitUntilDone)
+void PHThread::scheduleOnThread(PHInvocation invocation, bool waitUntilDone)
 {
-    eventQueue->schedule(trg,cb,userdata,waitUntilDone);
+    eventQueue->schedule(invocation,waitUntilDone);
 }
 
 void PHThread::processQueue()

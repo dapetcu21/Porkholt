@@ -12,12 +12,12 @@
 #include "PHNormalImage.h"
 #include "PHAnimatedImage.h"
 
-PHButtonView::PHButtonView() : PHView(), imgUp(NULL), imgDown(NULL), _state(StateUp), tgUp(NULL), tgDown(NULL)
+PHButtonView::PHButtonView() : PHView(), imgUp(NULL), imgDown(NULL), _state(StateUp)
 {
 	setUserInput(true);
 };
 
-PHButtonView::PHButtonView(const PHRect &frame) : PHView(frame), imgUp(NULL), imgDown(NULL), _state(StateUp), tgUp(NULL), tgDown(NULL)
+PHButtonView::PHButtonView(const PHRect &frame) : PHView(frame), imgUp(NULL), imgDown(NULL), _state(StateUp)
 {
 	setUserInput(true);
 };
@@ -41,15 +41,14 @@ void PHButtonView::touchEvent(PHEvent * event)
 	if (event->type() == PHEvent::touchDown)
 	{
 		_state = StateDown;
-		if (tgDown)
-			(tgDown->*cbDown)(this,udDown);
+        invDown.call(this);
         event->setHandled(true);
 	}
 	if (event->type() == PHEvent::touchUp)
 	{
 		_state = StateUp;
-		if (tgUp && PHPointInRect(toMyCoordinates(event->location()),bounds()))
-			(tgUp->*cbUp)(this,udUp);
+		if (invUp.valid() && PHPointInRect(toMyCoordinates(event->location()),bounds()))
+			invUp.call(this);
         event->setHandled(true);
 	}
     if (event->type() == PHEvent::touchMoved)

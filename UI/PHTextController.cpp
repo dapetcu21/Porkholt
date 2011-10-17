@@ -11,7 +11,7 @@
 #include "PHTextView.h"
 #include "PHGameManager.h"
 
-PHTextController::PHTextController(vector<string> * s) : PHViewController(), bColor(PHBlackColor), fColor(PHWhiteColor), strings(s), canAdvance(false), pos(0), textView(NULL), blackoutView(NULL), cb(NULL), trg(NULL), ud(NULL)
+PHTextController::PHTextController(vector<string> * s) : PHViewController(), bColor(PHBlackColor), fColor(PHWhiteColor), strings(s), canAdvance(false), pos(0), textView(NULL), blackoutView(NULL)
 {
     
 }
@@ -69,8 +69,7 @@ void PHTextController::beginBlackout()
 	anim->tag=-4444;
 	anim->view = blackoutView;
 	anim->time = 0.5f;
-	anim->callback = (PHCallback)&PHTextController::middleBlackout;
-	anim->target = this;
+	anim->callback = PHInvN(this, PHTextController::middleBlackout);
 	anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
 	PHView::addAnimation(anim);
 	anim->release();
@@ -86,8 +85,7 @@ void PHTextController::middleBlackout()
 	anim->tag=-4444;
 	anim->view = blackoutView;
 	anim->time = 0.5f;
-	anim->callback = (PHCallback)&PHTextController::endBlackout;
-	anim->target = this;
+	anim->callback = PHInvN(this,PHTextController::endBlackout);
 	anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
 	PHView::addAnimation(anim);
 	anim->release();
@@ -107,8 +105,7 @@ void PHTextController::advance()
     {
         delete strings;
         strings = NULL;
-        if (trg&&cb)
-            (trg->*cb)(this,ud);
+        invocation.call(this);
     } else {
         beginBlackout();
     }

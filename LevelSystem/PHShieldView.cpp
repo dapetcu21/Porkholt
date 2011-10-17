@@ -66,8 +66,7 @@ void PHShieldView::dismiss()
     anim->scaleX = 1.0f/1024;
     anim->scaleY = 1.0f/1024;
     anim->view = imv;
-    anim->callback = (PHCallback)&PHView::removeFromSuperview;
-    anim->target = this;
+    anim->callback = PHInvN(this,PHView::removeFromSuperview);
     PHView::addAnimation(anim);
     anim->release();
 }

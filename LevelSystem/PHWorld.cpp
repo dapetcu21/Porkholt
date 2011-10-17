@@ -122,7 +122,7 @@ PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * c
     PHButtonView * pauseButton = new PHButtonView(PHRect(bounds.width*(1.0f-PAUSE_SIZE-PAUSE_X),bounds.height-(PAUSE_Y+PAUSE_SIZE)*bounds.width,bounds.width*PAUSE_SIZE,bounds.width*PAUSE_SIZE));
     pauseButton->setImage(PHImage::imageNamed("pause"));
     pauseButton->setPressedImage(pauseButton->image());
-    pauseButton->setDownCallback(controller, (PHCallback)&PHLevelController::pauseWithMenu, NULL);
+    pauseButton->setDownCallback(PHInv(controller, PHLevelController::pauseWithMenu, NULL));
     
 	PHMutex * mutex = new PHMutex();
 	view->setMutex(mutex);
@@ -497,7 +497,7 @@ void PHWorld::addDialog(PHDialog* d)
 
 void PHWorld::fadedToColor(PHObject * obj, void * ud)
 {
-    viewQueue->schedule(this,(PHCallback)&PHWorld::_fadedToColor,ud,false);
+    viewQueue->schedule(PHInv(this,PHWorld::_fadedToColor,ud),false);
 }
 
 
@@ -521,9 +521,7 @@ void PHWorld::_fadeToColor(PHObject * sender, void * ud)
     anim->time = 0.5;
     anim->view = dimView;
     anim->bgColor = dimColor;
-    anim->callback = (PHCallback)&PHWorld::fadedToColor;
-    anim->target = this;
-    anim->userdata = ud;
+    anim->callback = PHInv(this,PHWorld::fadedToColor,ud);
     PHView::addAnimation(anim);
     anim->release();
 }
@@ -536,7 +534,7 @@ void PHWorld::fadeToColor(const PHColor & color, void * ud)
         return;
     }
     dimColor = color;
-    viewQueue->schedule(this,(PHCallback)&PHWorld::_fadeToColor,ud,false);
+    viewQueue->schedule(PHInv(this,PHWorld::_fadeToColor,ud),false);
 }
 
 void PHWorld::_dismissFading(PHObject * sender, void * ud)
@@ -548,9 +546,7 @@ void PHWorld::_dismissFading(PHObject * sender, void * ud)
     anim->time = 0.5;
     anim->view = dimView;
     anim->bgColor = PHClearColor;
-    anim->callback = (PHCallback)&PHWorld::_fadedToColor;
-    anim->target = this;
-    anim->userdata = ud;
+    anim->callback = PHInv(this,PHWorld::_fadedToColor,ud);
     PHView::addAnimation(anim);
     anim->release();
 
@@ -558,7 +554,7 @@ void PHWorld::_dismissFading(PHObject * sender, void * ud)
 
 void PHWorld::dismissFading(void * ud)
 {
-    viewQueue->schedule(this,(PHCallback)&PHWorld::_dismissFading,ud,false);
+    viewQueue->schedule(PHInv(this,PHWorld::_dismissFading,ud),false);
 }
 
 void PHWorld::_overlayDismissed(PHObject * obj, void * ud)
@@ -580,8 +576,7 @@ void PHWorld::dismissOverlayText()
     anim->time = 0.5;
     anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
     anim->view = overlayView;
-    anim->callback = (PHCallback)&PHWorld::_overlayDismissed;
-    anim->target = this;
+    anim->callback = PHInvN(this,PHWorld::_overlayDismissed);
     PHView::addAnimation(anim);
     anim->release();
     overlayView->mutex()->unlock();
@@ -617,7 +612,7 @@ void PHWorld::overlayText(const string & s, double duration)
     PHTimer * timer = new PHTimer;
     timer->setTimeInterval(duration-0.5);
     timer->setRepeats(false);
-    timer->setCallback(this, (PHCallback)&PHWorld::dismissOverlayText, NULL);
+    timer->setCallback(PHInv(this, PHWorld::dismissOverlayText, NULL));
     scheduleTimer(timer);
     timer->release();
     overlayView->mutex()->unlock();

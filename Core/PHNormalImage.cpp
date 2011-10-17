@@ -20,7 +20,7 @@ PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thr
     antialiasing = PHFileManager::fileExists(path+".aa");
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
     thread = new PHThread;
-    thread->setFunction(this, (PHCallback)&PHNormalImage::loadFromFile, NULL);
+    thread->setFunction(PHInv(this,PHNormalImage::loadFromFile, NULL));
     thread->start();
 #else
     loadFromFile(this, NULL);
@@ -162,7 +162,7 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
             buffer[i] = buffer[i*scale];
     }
     
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHNormalImage::loadToTexture, NULL, false);
+    PHThread::mainThread()->executeOnThread(PHInv(this, PHNormalImage::loadToTexture, NULL), false);
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->unlock();
 #endif

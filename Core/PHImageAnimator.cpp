@@ -12,7 +12,7 @@
 #include "PHLua.h"
 
 
-#define INIT _image(img), advanceManually(false), target(NULL), callback(NULL), userdata(NULL), running(true)
+#define INIT _image(img), advanceManually(false), running(true)
 
 PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : pool(PHAnimatorPool::mainAnimatorPool()), INIT
 {
@@ -50,13 +50,8 @@ double PHImageAnimator::timeForFrameInSection(int fr, int sec)
         PHAnimatedImage::frame & frame = section->frames.at(fr);
         if (fr>=section->frames.size()-1)
         {
-            if (target && callback)
-            {
-                (target->*callback)(this,userdata);
-                target = NULL;
-                callback = NULL;
-                userdata = NULL;
-            }
+            invocation.call(this);
+            invocation.clear();
             return INFINITY;
         }
         if (frame.type == 1)
@@ -95,18 +90,18 @@ int PHImageAnimator::realFrame(int fr, int sec)
     }
 }
 
-void PHImageAnimator::animateSection(const string & name, PHObject * target, PHCallback callback, void * userdata)
+void PHImageAnimator::animateSection(const string & name, PHInvocation inv)
 {
-    animateSection(_image->sectionNo(name),target,callback,userdata);
+    animateSection(_image->sectionNo(name),inv);
 }
 
 
-void PHImageAnimator::reset(PHObject * target, PHCallback callback, void * userdata)
+void PHImageAnimator::reset(PHInvocation inv)
 {
-    animateSection(_image->defaultSection,target,callback,userdata);
+    animateSection(_image->defaultSection,inv);
 }
 
-void PHImageAnimator::animateSection(int sect, PHObject * trg, PHCallback cb, void * ud)
+void PHImageAnimator::animateSection(int sect, PHInvocation inv)
 {
     if (sect<0 || sect>=_image->sections.size())
     {
@@ -116,9 +111,7 @@ void PHImageAnimator::animateSection(int sect, PHObject * trg, PHCallback cb, vo
         return;
     }
     
-    target = trg;
-    callback = cb;
-    userdata = ud;
+    invocation = inv;
     
     section = sect;
     frame = 0;

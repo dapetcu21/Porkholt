@@ -340,7 +340,7 @@ void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
 
 void PHLNPC::dialogViewFired(PHDialogView * dv)
 {
-    getWorld()->modelEventQueue()->schedule(this, (PHCallback)&PHLNPC::_dialogViewFired, dv, false);
+    getWorld()->modelEventQueue()->schedule(PHInv(this, PHLNPC::_dialogViewFired, dv), false);
 }
 
 void PHLNPC::_dialogViewFired(PHObject * sender, PHDialogView * dv)
@@ -385,9 +385,7 @@ void PHLNPC::dismissDialog()
     anim->scaleY = 1/scale;
     anim->time = 0.5f;
     anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->target = this;
-    anim->callback = (PHCallback)&PHLNPC::_dialogDismissed;
-    anim->userdata = NULL;
+    anim->callback = PHInvN(this, PHLNPC::_dialogDismissed);
     anim->view = dialogView;
     anim->tag = 5838;
     PHView::addAnimation(anim);
@@ -417,9 +415,7 @@ void PHLNPC::swapDialog(PHDialog *dialog)
     anim->customColor = PHClearColor;
     anim->time = 0.2f;
     anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    anim->target = this;
-    anim->callback = (PHCallback)&PHLNPC::_dialogSwapBegin;
-    anim->userdata = NULL;
+    anim->callback = PHInvN(this, PHLNPC::_dialogSwapBegin);
     anim->view = dialogTextView;
     anim->tag = 5838;
     PHView::addAnimation(anim);
@@ -477,9 +473,7 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     anim->tag = 5838;
     anim->timeFunction = PHAnimationDescriptor::FadeInOutFunction;
     anim->view = dialogView;
-    anim->target = this;
-    anim->callback = (PHCallback)&PHLNPC::_dialogSwapEnd;
-    anim->userdata = NULL;
+    anim->callback = PHInvN(this, PHLNPC::_dialogSwapEnd);
     PHView::addAnimation(anim);
     anim->release();
     
@@ -529,9 +523,7 @@ void PHLNPC::showQuest()
     anim->scaleY = scale;
     anim->tag = 4867;
     anim->view = questView;
-    anim->callback = (PHCallback)&PHLNPC::questShowedUp;
-    anim->target = this;
-    anim->userdata = NULL;
+    anim->callback = PHInvN(this,PHLNPC::questShowedUp);
     anim->time = 0.5;
     anim->timeFunction = PHAnimationDescriptor::BounceFunction;
     PHView::addAnimation(anim);
@@ -572,9 +564,7 @@ void PHLNPC::hideQuest()
     anim->scaleY = 1/scale;
     anim->tag = 4867;
     anim->view = questView;
-    anim->callback = (PHCallback)&PHLNPC::questHiddenItself;
-    anim->target = this;
-    anim->userdata = NULL;
+    anim->callback = PHInvN(this, PHLNPC::questHiddenItself);
     anim->time = 0.3;
     anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
     PHView::addAnimation(anim);
@@ -744,8 +734,7 @@ void PHLNPC::_animateHurtInvuln(PHObject * sender, void * ud)
     anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
     anim->view = bodyView;
     anim->customColor = hInvulnFadeColor;
-    anim->callback = (PHCallback)&PHLNPC::_animateHurtInvulnEnd;
-    anim->target = this;
+    anim->callback = PHInvN(this, PHLNPC::_animateHurtInvulnEnd);
     PHView::addAnimation(anim);
     anim->release();
 }
@@ -757,7 +746,7 @@ void PHLNPC::animateHurtInvuln()
     if (hInvulnFadeColor == PHInvalidColor) return;
     if (!bodyView) return;
     
-    getWorld()->viewEventQueue()->schedule(this,(PHCallback)&PHLNPC::_animateHurtInvuln,NULL,false);
+    getWorld()->viewEventQueue()->schedule(PHInv(this,PHLNPC::_animateHurtInvuln,NULL),false);
 }
 
 #pragma mark -

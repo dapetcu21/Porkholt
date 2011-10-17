@@ -131,13 +131,13 @@ void PHGameManager::_appResumed(PHObject * sender, void * ud)
 void PHGameManager::appSuspended()
 {
     if (!loaded) return;
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHGameManager::_appSuspended, NULL, false);
+    PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appSuspended, NULL), false);
 }
 
 void PHGameManager::appResumed()
 {
     if (!loaded) return;
-    PHThread::mainThread()->executeOnThread(this, (PHCallback)&PHGameManager::_appResumed, NULL, false);
+    PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appResumed, NULL), false);
 }
 
 

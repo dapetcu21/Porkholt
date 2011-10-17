@@ -580,7 +580,7 @@ void PHLObject::defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insOb
     dlipos = insertPos;
     dliobj = insObj;
     dlworld = wrld;
-    wrld->viewEventQueue()->schedule(this,(PHCallback)&PHLObject::_defferedLoading, NULL, false);
+    wrld->viewEventQueue()->schedule(PHInv(this, PHLObject::_defferedLoading, NULL), false);
     retain();
 }
 
@@ -746,7 +746,7 @@ void PHLObject::commitAnimations(double el)
 
 void PHLObject::destroy()
 {
-    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLObject::_destroy, NULL, false);
+    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLObject::_destroy, NULL), false);
 }
 
 void PHLObject::_destroy()
@@ -756,7 +756,7 @@ void PHLObject::_destroy()
 
 void PHLObject::poof()
 {
-    getWorld()->viewEventQueue()->schedule(this, (PHCallback)&PHLObject::_poof, NULL, false);
+    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLObject::_poof, NULL), false);
 }
 
 void PHLObject::_poof()

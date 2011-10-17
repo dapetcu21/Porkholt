@@ -47,6 +47,7 @@ using namespace std;
 
 struct lua_State; 
 
+#include "PHInvocation.h"
 #include "PHTime.h"
 #include "PHObject.h"
 #include "PHMessage.h"

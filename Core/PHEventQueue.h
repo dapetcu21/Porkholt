@@ -16,17 +16,15 @@ class PHEventQueue : public PHObject
 private:
     struct event
     {
-        PHCallback cb;
-        PHObject * target;
+        PHInvocation invocation;
         PHSemaphore * sem;
-        void * ud;
     };
     list<event> q;
     PHMutex * mutex;
 public:
     PHEventQueue();
     virtual ~PHEventQueue();
-    void schedule(PHObject * target, PHCallback cb, void * ud, bool waitTillDone); //WARNING: don't use waitTillDone unless you call processQueue on another thread
+    void schedule(PHInvocation inv, bool waitTillDone); //WARNING: don't use waitTillDone unless you call processQueue on another thread
     void processQueue();
 };
 

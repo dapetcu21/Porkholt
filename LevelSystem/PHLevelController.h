@@ -43,9 +43,7 @@ protected:
     
     PHAnimatorPool * animPool;
     
-    PHObject * ec_target;
-    PHCallback ec_cb;
-    void * ec_ud;
+    PHInvocation ec_invocation;
     int _outcome;
     
     void destroyThread(PHObject * sender, void * ud);
@@ -58,8 +56,8 @@ protected:
     void menuDismissed(PHObject * sender, void * ud);
 public:
 	
-    void setEndLevelCallback(PHObject * target, PHCallback cb, void * ud){
-        ec_target = target; ec_cb = cb; ec_ud = ud;
+    void setEndLevelCallback(PHInvocation inv){
+        ec_invocation = inv;
     }
     
 	void pause();

@@ -49,7 +49,7 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     ));
     bt->setImage(img);
     bt->setPressedImage(PHImage::imageNamed("start_game_pressed"));
-    bt->setUpCallback(this,(PHCallback)&PHTitleScreen::buttonPressed, NULL);
+    bt->setUpCallback(PHInv(this,PHTitleScreen::buttonPressed, NULL));
     bt->setUserInput(true);
     
     v->addSubview(bg);

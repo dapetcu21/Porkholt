@@ -28,9 +28,7 @@ private:
     
     PHLAnimation * next;
     
-    PHObject * cbTarget;
-    PHCallback cbFunction;
-    void * cbUd;
+    PHInvocation invocation;
     bool invalidateCallback;
     
     friend class PHLObject;
@@ -87,12 +85,7 @@ public:
     }
     PHLAnimation * nextAnimation() { return next; }
     
-    void setCallback(PHObject * target, PHCallback cb, void * ud)
-    {
-        cbTarget = target;
-        cbFunction = cb;
-        cbUd = ud;
-    }
+    void setCallback(PHInvocation inv) { invocation = inv; }
     void setCallbackOnInvalidate(bool ci) { invalidateCallback = ci; }
     void animationFinished();
     
