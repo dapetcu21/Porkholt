@@ -226,6 +226,13 @@ function point(x,y)
     };
 end
 
+function range(start,length)
+	return {
+		start = start or 0;
+		length = length or 0;
+	}
+end
+
 vector = point;
 
 function rotatedPoint(p,angle)

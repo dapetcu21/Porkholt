@@ -23,6 +23,7 @@
 #include "PHLBull.h"
 #include "PHLSign.h"
 #include "PHLPowerup.h"
+#include "PHMessage.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
@@ -52,6 +53,7 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 
 PHScripting::~PHScripting()
 {
+    PHMessage::messageWithName("luaDestroy")->broadcast(this, L);
     lua_close(L);
 }
 

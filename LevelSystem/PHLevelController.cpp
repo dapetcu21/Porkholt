@@ -26,6 +26,7 @@
 #include "PHAnimatorPool.h"
 #include "PHEventQueue.h"
 #include "PHButtonView.h"
+#include "PHMessage.h"
 
 #include <fstream>
 #include <sstream>
@@ -594,6 +595,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 		}
     }
 	
+    PHMessage::messageWithName("luaDestroy")->broadcast(this, L);
 	lua_close(L);
     
     scripingEngine = new PHScripting(world,directory);

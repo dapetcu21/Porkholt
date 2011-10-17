@@ -17,8 +17,11 @@
 #include "PHAnimatedImage.h"
 #include "PHImageAnimator.h"
 #include "PHAnimatorPool.h"
+#include "PHBezierPath.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool())
+#define GL_INVALID_INDEX 0xffffffff
+
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool()), curve(NULL), arraysVBO(GL_INVALID_INDEX), indexesVBO(GL_INVALID_INDEX), VBOneedsRebuilding(false)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -63,6 +66,10 @@ void PHImageView::setImage(PHImage * img)
 
 PHImageView::~PHImageView()
 {
+    if (curve)
+        curve->release();
+    curve = NULL;
+    rebuildCurvedVBO();
     if (_animator)
         _animator->release();
 	if (_image)
@@ -81,9 +88,164 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
     }
 }
 
+GLfloat * PHImageView::interleavedArrayFromAnchorList(const void * ud, int & n)
+{
+    const vector<PHBezierPath::anchorPoint> * anchors = (const vector<PHBezierPath::anchorPoint>*)ud;
+    int i,nx;
+    nx = i = 0;
+    int corners[4];
+    n = anchors->size();
+    
+    GLfloat * v = new GLfloat[n*4];
+    for (int i=0; i<n; i++)
+    {
+        v[(i<<2)] = anchors->at(i).point.x;
+        v[(i<<2)+1] = anchors->at(i).point.y;
+    }
+    
+    for (int i=0; i<n; i++)
+        if (anchors->at(i).tag>0 && anchors->at(i).tag<=4)
+            corners[(anchors->at(i).tag)-1] = i;
+    for (int k=0; k<4; k++)
+    {
+        double len = 0;
+        int tag;
+        for (i = nx = corners[k];((tag = anchors->at(i).tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
+        {
+            nx++;
+            if (nx>=n)
+                nx-=n;
+            len+=(anchors->at(nx).point-anchors->at(i).point).length();
+        }
+        double l = 0;
+        for (i = nx = corners[k];((tag = anchors->at(i).tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
+        {
+            nx++;
+            if (nx>=n)
+                nx-=n;
+            double d = l/len;
+            double x,y;
+            switch (k+1) {
+                case 1:
+                    y = 0;
+                    x = d;
+                    break;
+                case 2:
+                    x = 1;
+                    y = d;
+                    break;
+                case 3:
+                    x = 1-d;
+                    y = 1;
+                    break;
+                case 4:
+                    x = 0;
+                    y = 1-d;
+                    break;
+                default:
+                    x = y = 0;
+                    break;
+            }
+            if (_image && _image->isNormal())
+            {
+                PHNormalImage * img = (PHNormalImage*)_image;
+                x*=(double)img->width()/(double)img->actualWidth();
+                y*=(double)img->height()/(double)img->actualHeight();
+            }
+            v[(i<<2)+2] = x;
+            v[(i<<2)+3] = y;
+            l+=(anchors->at(nx).point-anchors->at(i).point).length();
+        }
+    }
+    return v;
+}
+
+void PHImageView::rebuildCurvedVBO()
+{
+    if (curve)
+    {
+        if (arraysVBO == GL_INVALID_INDEX)
+            glGenBuffers(1, &arraysVBO);
+        if (indexesVBO == GL_INVALID_INDEX)
+            glGenBuffers(1, &indexesVBO);
+        const vector<PHBezierPath::anchorPoint> * anchors = PHBezierPath::tesselate(curve->calculatedVertices());
+        GLfloat * arr = interleavedArrayFromAnchorList(anchors,nVertices);
+        GLushort * indexes = PHBezierPath::triangulate(*anchors,nIndexes);
+        delete anchors;
+        glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+        glBufferData(GL_ARRAY_BUFFER, nVertices*4*sizeof(GLfloat), arr, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndexes*sizeof(GLushort), indexes, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
+        delete arr;
+        delete indexes;
+        
+    } else {
+        if (arraysVBO!=GL_INVALID_INDEX)
+            glDeleteBuffers(1, &arraysVBO);
+        if (indexesVBO!=GL_INVALID_INDEX)
+            glDeleteBuffers(1, &indexesVBO);
+        arraysVBO = indexesVBO = GL_INVALID_INDEX;
+    }
+}
+
+void PHImageView::bezierCallback(PHBezierPath *sender, void *ud)
+{
+    VBOneedsRebuilding = true;
+}
+
+void PHImageView::setBezierPath(PHBezierPath *bp)
+{
+    if (curve)
+    {
+        curve->release();
+        curve->removeCallback(this);
+    }
+    curve = NULL;
+    if (bp)
+    {
+        bp->retain();
+        bp->addCallback(PHInv(this,PHImageView::bezierCallback,NULL));
+    }
+    curve = bp;
+    VBOneedsRebuilding = true;
+}
+
+void PHImageView::renderCurved()
+{
+    if (image()->isAnimated()) return;
+    image()->load();
+    loadVBO();
+    
+    glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
+    
+    PHGLSetColor(tint);
+    PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray);
+    
+    glVertexPointer(2, GL_FLOAT, 4*sizeof(GLfloat), NULL);
+    glTexCoordPointer(2, GL_FLOAT, 4*sizeof(GLfloat), (GLfloat*)NULL+2);
+    ((PHNormalImage*)image())->bindToTexture();
+    
+    glPushMatrix();
+    glTranslatef(_bounds.x, _bounds.y, 0);
+    glScalef(_bounds.width, _bounds.height, 1);
+    glDrawElements(GL_LINE_STRIP, nIndexes, GL_UNSIGNED_SHORT, NULL);
+    glPopMatrix();
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
 void PHImageView::draw()
 {
-    renderInFramePortionTint(_bounds, coords, tint);
+    if (curve)
+        renderCurved();
+    else
+        renderInFramePortionTint(_bounds, coords, tint);
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
@@ -130,6 +292,10 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
             PHLuaGetBoolField(flipVert, "verticallyFlipped");
             PHLuaGetColorField(tint, "tint");
             
+            lua_getfield(L, -1, "bezierPath");
+            PHBezierPath * bp = PHBezierPath::fromLua(L);
+            lua_pop(L,1);
+            
             lua_pushstring(L, "alpha");
             lua_gettable(L, -2);
             if (lua_isnumber(L , -1))
@@ -151,6 +317,9 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
             img->setTag(tag);
             img->setHorizontallyFlipped(flipHoriz);
             img->setVerticallyFlipped(flipVert);
+            img->setBezierPath(bp);
+            if (bp)
+                bp->release();
         }
     }
     return img;

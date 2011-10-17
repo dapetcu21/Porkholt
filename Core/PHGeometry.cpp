@@ -21,6 +21,7 @@ PHColor PHInvalidColor(-1,-1,-1,-1);
 PHRect PHInvalidRect(0,0,-1,-1);
 PHRect PHNullRect(0,0,0,0);
 PHColor PHGLCurrentColor(-1,-1,-1,-1);
+PHRange PHInvalidRange(-1,-1);
 
 PHPoint::PHPoint(const PHRect & o) : x(o.x), y(o.y){};
 
@@ -96,6 +97,33 @@ PHRect PHRect::fromLua(lua_State * L, int index)
     lua_pop(L, 1);
     
     return pnt;
+}
+
+PHRange PHRange::fromLua(lua_State * L, int index)
+{
+    if (!lua_istable(L, index)) return PHInvalidRange;
+    PHRange rng = PHInvalidRange;
+    
+    lua_getfield(L, index, "start");
+    if (lua_isnumber(L, -1))
+        rng.start = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    lua_getfield(L, index, "length");
+    if (lua_isnumber(L, -1))
+        rng.length = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    
+    return rng;
+}
+
+void PHRange::saveToLua(lua_State * L) const
+{
+    lua_newtable(L);    
+    lua_pushnumber(L, start);
+    lua_setfield(L, -2, "start");
+    lua_pushnumber(L, length);
+    lua_setfield(L, -2, "length");
 }
 
 void PHPoint::saveToLua(lua_State * L) const

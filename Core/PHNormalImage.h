@@ -43,6 +43,9 @@ public:
 	void loadToTexture(PHObject * sender, void * ud); //don't use
     
     virtual bool isNormal() { return true; }
+    
+    int actualWidth() { load(); return actWidth; }
+    int actualHeight() { load(); return actHeight; }
 };
 
 #endif

@@ -15,6 +15,7 @@
 
 class PHImage;
 #include <map>
+class PHBezierPath;
 
 class PHImage : public PHObject
 {
@@ -37,16 +38,15 @@ protected:
     
     bool loaded;
     virtual void _load() = 0;
-	
+    
 public:
     void load() { if (!loaded) _load(); }
 	int height() { load(); return _height; };
 	int width() { load(); return _width; };
 
-	virtual ~PHImage();
-    
     virtual bool isNormal() { return false; };
     virtual bool isAnimated() { return false; };
+    
 };
 
 #endif

@@ -88,6 +88,7 @@
 		C1C23EB6143CBDDC002CA3D9 /* OverlayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */; };
 		C1C23EB9143CD608002CA3D9 /* OverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB8143CD608002CA3D9 /* OverlayView.m */; };
 		C1C23EBC143CE1BF002CA3D9 /* OverlayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EBB143CE1BF002CA3D9 /* OverlayWindow.m */; };
+		C1C9B44B144AD47F004D9609 /* PHBezierPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1C9B449144AD47F004D9609 /* PHBezierPath.cpp */; };
 		C1DE6A0F1425C04600B1282C /* FileBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A081425C04600B1282C /* FileBrowserController.m */; };
 		C1DE6A101425C04600B1282C /* FileSystemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A0A1425C04600B1282C /* FileSystemNode.m */; };
 		C1DE6A111425C04600B1282C /* BrowserOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DE6A0C1425C04600B1282C /* BrowserOutlineView.m */; };
@@ -127,8 +128,8 @@
 		C127D300143A1AF6004DEB16 /* PHErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHErrors.h; sourceTree = "<group>"; };
 		C127D301143A1AF6004DEB16 /* PHEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventHandler.cpp; sourceTree = "<group>"; };
 		C127D302143A1AF6004DEB16 /* PHEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		C127D303143A1AF6004DEB16 /* PHEventQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventQueue.cpp; sourceTree = "<group>"; };
-		C127D304143A1AF6004DEB16 /* PHEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventQueue.h; sourceTree = "<group>"; };
+		C127D303143A1AF6004DEB16 /* PHEventQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEventQueue.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		C127D304143A1AF6004DEB16 /* PHEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHEventQueue.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C127D305143A1AF6004DEB16 /* PHFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFileManager.h; sourceTree = "<group>"; };
 		C127D306143A1AF6004DEB16 /* PHFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHFont.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C127D307143A1AF6004DEB16 /* PHFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFont.h; sourceTree = "<group>"; };
@@ -137,9 +138,9 @@
 		C127D30A143A1AF6004DEB16 /* PHGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGeometry.cpp; sourceTree = "<group>"; };
 		C127D30B143A1AF6004DEB16 /* PHGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGeometry.h; sourceTree = "<group>"; };
 		C127D30C143A1AF6004DEB16 /* PHImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImage.cpp; sourceTree = "<group>"; };
-		C127D30D143A1AF6004DEB16 /* PHImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImage.h; sourceTree = "<group>"; };
+		C127D30D143A1AF6004DEB16 /* PHImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImage.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C127D30E143A1AF6004DEB16 /* PHImageAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImageAnimator.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		C127D30F143A1AF6004DEB16 /* PHImageAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageAnimator.h; sourceTree = "<group>"; };
+		C127D30F143A1AF6004DEB16 /* PHImageAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageAnimator.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C127D310143A1AF6004DEB16 /* PHImageView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHImageView.cpp; sourceTree = "<group>"; };
 		C127D311143A1AF6004DEB16 /* PHImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImageView.h; sourceTree = "<group>"; };
 		C127D312143A1AF6004DEB16 /* PHLua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLua.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -151,8 +152,8 @@
 		C127D318143A1AF6004DEB16 /* PHMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMotion.h; sourceTree = "<group>"; };
 		C127D319143A1AF6004DEB16 /* PHNavigationController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNavigationController.cpp; sourceTree = "<group>"; };
 		C127D31A143A1AF6004DEB16 /* PHNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNavigationController.h; sourceTree = "<group>"; };
-		C127D31B143A1AF6004DEB16 /* PHNormalImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNormalImage.cpp; sourceTree = "<group>"; };
-		C127D31C143A1AF6004DEB16 /* PHNormalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNormalImage.h; sourceTree = "<group>"; };
+		C127D31B143A1AF6004DEB16 /* PHNormalImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHNormalImage.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		C127D31C143A1AF6004DEB16 /* PHNormalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHNormalImage.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C127D31D143A1AF6004DEB16 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
 		C127D320143A1AF6004DEB16 /* PHSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSerialization.h; sourceTree = "<group>"; };
 		C127D321143A1AF6004DEB16 /* PHTextView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTextView.cpp; sourceTree = "<group>"; };
@@ -259,6 +260,8 @@
 		C1C23EB8143CD608002CA3D9 /* OverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayView.m; sourceTree = "<group>"; };
 		C1C23EBA143CE1BF002CA3D9 /* OverlayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayWindow.h; sourceTree = "<group>"; };
 		C1C23EBB143CE1BF002CA3D9 /* OverlayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayWindow.m; sourceTree = "<group>"; };
+		C1C9B449144AD47F004D9609 /* PHBezierPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHBezierPath.cpp; sourceTree = "<group>"; };
+		C1C9B44A144AD47F004D9609 /* PHBezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHBezierPath.h; sourceTree = "<group>"; };
 		C1DE6A071425C04600B1282C /* FileBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileBrowserController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1DE6A081425C04600B1282C /* FileBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FileBrowserController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C1DE6A091425C04600B1282C /* FileSystemNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileSystemNode.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -403,6 +406,8 @@
 				C127D30F143A1AF6004DEB16 /* PHImageAnimator.h */,
 				C127D310143A1AF6004DEB16 /* PHImageView.cpp */,
 				C127D311143A1AF6004DEB16 /* PHImageView.h */,
+				C1C9B449144AD47F004D9609 /* PHBezierPath.cpp */,
+				C1C9B44A144AD47F004D9609 /* PHBezierPath.h */,
 				C127D312143A1AF6004DEB16 /* PHLua.cpp */,
 				C127D313143A1AF6004DEB16 /* PHLua.h */,
 				C127D314143A1AF6004DEB16 /* PHMain.h */,
@@ -729,6 +734,7 @@
 				C1BAA07A1442BD0700C38D29 /* PLFixtureView.mm in Sources */,
 				C153A1841443642E00DCD01F /* PHFileManager.mm in Sources */,
 				C1AB4F5014449387001F6773 /* PLObjectMarker.cpp in Sources */,
+				C1C9B44B144AD47F004D9609 /* PHBezierPath.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

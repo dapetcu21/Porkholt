@@ -26,8 +26,29 @@ protected:
     PHColor tint;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
+    void renderCurved();
     
     PHAnimatorPool * pool;
+    
+    void bezierCallback(PHBezierPath * sender, void *ud);
+	void rebuildCurvedVBO();
+    GLfloat * interleavedArrayFromAnchorList(const void * anchors, int &n);
+    
+    PHBezierPath * curve;
+    
+    GLuint arraysVBO,indexesVBO;
+    int nVertices;
+    int nIndexes;
+    bool VBOneedsRebuilding;
+    
+    void loadVBO()
+    {
+        if (VBOneedsRebuilding)
+        {
+            rebuildCurvedVBO();
+            VBOneedsRebuilding = false;
+        }
+    }
     
 public:
     PHAnimatorPool * animatorPool() { return pool; }
@@ -50,10 +71,13 @@ public:
     virtual const PHColor & animatedColor() { return tint; }
     virtual void setAnimatedColor(const PHColor & c) { setTintColor(c); }
     
+    PHBezierPath * bezierPath() { return curve; }
+    void setBezierPath(PHBezierPath * bp);
+    
     static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
     static PHImageView * imageFromLua(lua_State * L,const string & root, PHAnimatorPool * pool);
     static PHImageView * imageFromClass(const string & clss);
-    
+  
     static void registerLuaInterface(lua_State * L);
 };
 

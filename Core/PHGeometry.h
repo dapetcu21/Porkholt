@@ -206,6 +206,57 @@ struct PH24BitColor
     PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
 };
 
+struct PHRange
+{
+    unsigned int start, length;
+    PHRange() : start(0), length(0) {}
+    PHRange(int s, int l) : start(s), length(l) {}
+    PHRange(const PHRange & o) : start(o.start), length(o.length) {}
+            
+    PHRange & operator += (const int offset)
+    {
+        start+=offset;
+        return *this;
+    }
+    
+    PHRange operator + (const int offset) const
+    {
+        return PHRange(start+offset,length);
+    }
+    
+    bool operator < (const PHRange & o) const
+    {
+        if (start == o.start) return length<o.length;
+        return start<o.start;
+    }
+    
+    bool operator <= (const PHRange & o) const
+    {
+        if (start == o.start) return length<=o.length;
+        return start<=o.start;
+    }
+    
+    bool operator > (const PHRange & o) const
+    {
+        if (start == o.start) return length>o.length;
+        return start>o.start;
+    }
+    
+    bool operator >= (const PHRange & o) const
+    {
+        if (start == o.start) return length>=o.length;
+        return start>=o.start;
+    }
+    
+    bool operator == (const PHRange & o) const
+    {
+        return (o.start == start && o.length == length);
+    }
+    
+    static PHRange fromLua(lua_State * L, int index);
+    void saveToLua(lua_State * L) const;
+};
+
 extern PHColor PHClearColor;
 extern PHColor PHBlackColor;
 extern PHColor PHGrayColor;
@@ -215,6 +266,8 @@ extern PHColor PHInvalidColor;
 extern PHRect PHWholeRect;
 extern PHRect PHInvalidRect;
 extern PHRect PHNullRect;
+
+extern PHRange PHInvalidRange;
 
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse);
 PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt);

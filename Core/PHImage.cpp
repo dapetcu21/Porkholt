@@ -12,6 +12,7 @@
 #include "PHFileManager.h"
 #include "PHNormalImage.h"
 #include "PHAnimatedImage.h"
+#include "PHBezierPath.h"
 
 map<string,PHImage*> PHImage::images;
 #ifdef PHIMAGE_ORDERED_LOADING
@@ -19,8 +20,6 @@ PHMutex * PHImage::loadingMutex = new PHMutex;
 #endif
 
 PHImage::PHImage(const string & path) : loaded(false) {};
-
-PHImage::~PHImage() {};
 
 PHImage * PHImage::imageFromPath(const string & path)
 {

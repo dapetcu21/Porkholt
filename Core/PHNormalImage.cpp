@@ -230,7 +230,7 @@ void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & p
     };
 	
 	bindToTexture();
-	
+    
     int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
     PHGLSetStates(states);
 	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
