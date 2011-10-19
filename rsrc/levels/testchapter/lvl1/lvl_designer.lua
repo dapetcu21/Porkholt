@@ -36,15 +36,15 @@ obj.pos = point(17.000000,3.500000)
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,1.000000,1.00000,{ bezierPath = { 
 	points = { 
 		n = 9,
-		[0]={point = point(0.01,0), tag = 4},
+		[0]={point = point(0.1,0), tag = 4},
 		[1]={point = point(1,0), tag = 3}, 
 		[2]={point = point(1,1), tag = 2}, 
-		[3]={point = point(0.02,1), tag = 1},
-		[4]={point = point(0.03,0.7)},
+		[3]={point = point(0.2,1), tag = 1},
+		[4]={point = point(0.3,0.7)},
 		[5]={point = point(-1,0.6)},
-		[6]={point = point(0.04,0.5)},
+		[6]={point = point(0.4,0.5)},
 		[7]={point = point(-1,0.4)},
-		[8]={point = point(0.05,0.3)}
+		[8]={point = point(0.5,0.3)}
 	},
 	curves = {
 		n = 0,

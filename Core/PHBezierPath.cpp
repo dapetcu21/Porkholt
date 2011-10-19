@@ -239,7 +239,7 @@ class binarySearchTree {
     {
     public:
         static bool mode;
-        bool operator () (edge * b, edge * a) const
+        bool operator () (edge * a, edge * b) const
         {
             if (mode)
             {
@@ -247,10 +247,10 @@ class binarySearchTree {
                 PHPoint b2 = b->en->i->point;
                 PHPoint p = a->st->i->point;
                 PHLog("cmp: (%d,%d) (%d,%d), [%lf,%lf] [%lf,%lf] [%lf,%lf]",a->st->p,a->en->p,b->st->p,b->en->p,b1.x,b1.y,b2.x,b2.y,p.x,p.y);
-                if (b1.x==b2.x) return p>b1;
-                if (p.x<b1.x) return false;
-                if (b2.x<p.x) return true;
-                return p.y>b1.y+(b2.y-b1.y)*(p.x-b1.x)/(b2.x-b1.x);
+                if (b1.x==b2.x) return p<b1;
+                if (p.x<b1.x) return true;
+                if (b2.x<p.x) return false;
+                return p.y<b1.y+(b2.y-b1.y)*(p.x-b1.x)/(b2.x-b1.x);
             }
             else
                 return a->st->i->point.x<b->st->i->point.x;
@@ -275,14 +275,20 @@ public:
         edge e;
         e.st = e.en = p;
         cmp::mode = true;
-        set<edge*,binarySearchTree::cmp>::iterator it = edges.lower_bound(&e);
+        set<edge*,binarySearchTree::cmp>::iterator it = edges.upper_bound(&e);
        // set<edge*,binarySearchTree::cmp>::iterator it = edges.begin();
        // binarySearchTree::cmp c;
        // while (it!=edges.end() && !(c(&e,*it)))
        //     it++;
         cmp::mode = false;
+        if (it==edges.begin()) return NULL;
+        if (it==edges.end())
+            PHLog("it before:end");
+        else
+            PHLog("it before:(%d %d)",(*it)->st->p,(*it)->en->p);
+        it--;
         if (it==edges.begin() || it==edges.end()) return NULL;
-        PHLog("it before:(%d %d)",(*it)->st->p,(*it)->en->p);
+        PHLog("it after:(%d %d)",(*it)->st->p,(*it)->en->p);
         return *it;
     }
 };
