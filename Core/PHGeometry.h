@@ -89,6 +89,21 @@ struct PHPoint
         p.y = sinv*x+cosv*y;
         return p;
     }
+    
+    bool operator < (const PHPoint & o) const
+    {
+        if (x==o.x) 
+            return y<o.y;
+        return x<o.x;
+    }
+    
+    bool operator > (const PHPoint & o) const
+    {
+        if (x==o.x) 
+            return y>o.y;
+        return x>o.x;
+    }
+    
     void saveToLua(lua_State * L) const;
 };
 

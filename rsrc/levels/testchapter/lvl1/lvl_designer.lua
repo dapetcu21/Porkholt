@@ -33,18 +33,21 @@ obj = objectWithClass("PHLPlatform")
 obj.levelDes = true
 obj.rotation = 0.000000
 obj.pos = point(17.000000,3.500000)
-objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000,{ bezierPath = { 
+objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,1.000000,1.00000,{ bezierPath = { 
 	points = { 
-		n = 6,
-		[0]={point = point(0,0), tag = 4},
-		[1]={point = point(0,-1)},
-		[2]={point = point(0.5,1)},
-		[3]={point = point(1,0), tag = 3}, 
-		[4]={point = point(1,1), tag = 2}, 
-		[5]={point = point(0,1), tag = 1} 
+		n = 9,
+		[0]={point = point(0.01,0), tag = 4},
+		[1]={point = point(1,0), tag = 3}, 
+		[2]={point = point(1,1), tag = 2}, 
+		[3]={point = point(0.02,1), tag = 1},
+		[4]={point = point(0.03,0.7)},
+		[5]={point = point(-1,0.6)},
+		[6]={point = point(0.04,0.5)},
+		[7]={point = point(-1,0.4)},
+		[8]={point = point(0.05,0.3)}
 	},
 	curves = {
-		n = 1,
+		n = 0,
 		[0]=range(0,4)
 	}}})
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000)

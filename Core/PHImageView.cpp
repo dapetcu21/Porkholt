@@ -233,7 +233,7 @@ void PHImageView::renderCurved()
     glPushMatrix();
     glTranslatef(_bounds.x, _bounds.y, 0);
     glScalef(_bounds.width, _bounds.height, 1);
-    glDrawElements(GL_LINE_STRIP, nIndexes, GL_UNSIGNED_SHORT, NULL);
+    glDrawElements(GL_LINES, nIndexes, GL_UNSIGNED_SHORT, NULL);
     glPopMatrix();
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
