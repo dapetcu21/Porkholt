@@ -210,7 +210,7 @@ const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<a
 struct pnt {
     vector<PHBezierPath::anchorPoint>::const_iterator i;
     int p;
-    list<pnt*> diagonals;
+    set<pnt*> diagonals;
     pnt * next;
     pnt * prev;
     int type;
@@ -241,19 +241,28 @@ class binarySearchTree {
         static bool mode;
         bool operator () (edge * a, edge * b) const
         {
-            if (mode)
+            if (mode && a->st == a->en)
             {
                 PHPoint b1 = b->st->i->point;
                 PHPoint b2 = b->en->i->point;
                 PHPoint p = a->st->i->point;
                 PHLog("cmp: (%d,%d) (%d,%d), [%lf,%lf] [%lf,%lf] [%lf,%lf]",a->st->p,a->en->p,b->st->p,b->en->p,b1.x,b1.y,b2.x,b2.y,p.x,p.y);
-                if (b1.x==b2.x) return p<b1;
-                if (p.x<b1.x) return true;
-                if (b2.x<p.x) return false;
-                return p.y<b1.y+(b2.y-b1.y)*(p.x-b1.x)/(b2.x-b1.x);
+                if (b1.x==b2.x) 
+                {
+                    if (b1.x==p.x)
+                        return p.y>b1.y;
+                    return false;
+                }
+                if (p.x<b1.x) return false;
+                if (b2.x<p.x) return true;
+                return p.y>b1.y+(b2.y-b1.y)*(p.x-b1.x)/(b2.x-b1.x);
             }
             else
-                return a->st->i->point.x<b->st->i->point.x;
+            {
+                if (a->st->i->point.y == b->st->i->point.y)
+                    return a->en->i->point.y > b->en->i->point.y;
+                return a->st->i->point.y > b->st->i->point.y;
+            }
         }
     };
     set<edge*,binarySearchTree::cmp> edges;
@@ -262,7 +271,7 @@ public:
     {
         PHLog("add edge:(%d %d)",e->st->p,e->en->p);
         return edges.insert(e).second;
-    }
+    } 
     
     bool removeEdge(edge * e)
     {
@@ -276,19 +285,9 @@ public:
         e.st = e.en = p;
         cmp::mode = true;
         set<edge*,binarySearchTree::cmp>::iterator it = edges.upper_bound(&e);
-       // set<edge*,binarySearchTree::cmp>::iterator it = edges.begin();
-       // binarySearchTree::cmp c;
-       // while (it!=edges.end() && !(c(&e,*it)))
-       //     it++;
         cmp::mode = false;
-        if (it==edges.begin()) return NULL;
-        if (it==edges.end())
-            PHLog("it before:end");
-        else
-            PHLog("it before:(%d %d)",(*it)->st->p,(*it)->en->p);
-        it--;
-        if (it==edges.begin() || it==edges.end()) return NULL;
-        PHLog("it after:(%d %d)",(*it)->st->p,(*it)->en->p);
+        if (it==edges.end()) return NULL; 
+        //PHLog("it after:(%d %d)",(*it)->st->p,(*it)->en->p);
         return *it;
     }
 };
@@ -298,6 +297,17 @@ bool binarySearchTree::cmp::mode = false;
 static bool cmp(pnt * a, pnt * b)
 {
     return (a->i->point) < (b->i->point);
+}
+
+static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
+{
+    GLushort * oout = out;
+    for (int i=0; i<n; i++)
+    {
+        (*out++)=v[i]->p;
+        (*out++)=(i==n-1)?v[0]->p:v[i+1]->p;
+    }
+    return out-oout;
 }
 
 GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n)
@@ -366,8 +376,9 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
         { \
             pnt * aa = (x); \
             pnt * bb = (y); \
-            if (aa!=bb) {\
-                aa->diagonals.push_back(bb); \
+            if (aa!=bb && aa->next!=bb && aa->prev!=bb) {\
+                aa->diagonals.insert(bb); \
+                bb->diagonals.insert(aa); \
                 ndiag++; \
             } \
         }
@@ -427,20 +438,39 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
         
     }
     
-    n = ndiag*2+m*2;
+    int ntriangles = (m-2);
+    n = ntriangles*6;
     GLushort * v = new GLushort[n];
-    for (int i=0; i<m; i++)
+    GLushort * cp = v;
+    
+    aa[0] = &a[0];
+    aa[1] = &a[1];
+    int sn = 2;
+    a[m-1].diagonals.insert(&a[0]);
+    for (int i=2; i<m; i++)
     {
-        v[i<<1] = i;
-        v[(i<<1)+1] = (i==m-1)?0:i+1;
-    }
-    GLushort * p = v+m*2;
-    for (int i=0; i<m; i++)
-        for (list<pnt*>::iterator j = a[i].diagonals.begin(); j!=a[i].diagonals.end(); j++)
+        pnt * crr = &a[i];
+        aa[sn++] = crr;
+        set<pnt*>::iterator it = crr->diagonals.begin();
+        while (it!=crr->diagonals.end() && (*it)->p<crr->p)
         {
-            *(p++) = i;
-            *(p++) = (*j)->p;
+            int j = sn-1;
+            while (j>=0 && aa[j]->p!=(*it)->p)
+                j--;
+            if (i>=0)
+            {
+                pnt * first = aa[j];
+                cp+=PHBezierPath_triangulateMonotone(aa+j, sn-j, cp);
+                aa[j] = first;
+                aa[j+1] = crr;
+                sn = j+2;
+            }
+            crr->diagonals.erase(it);
+            it = crr->diagonals.begin();
         }
+    }
+    
+    n = cp-v;
     
     delete[] a;
     delete[] b;
