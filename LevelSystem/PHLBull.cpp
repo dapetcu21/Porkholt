@@ -101,7 +101,7 @@ void PHLBull::updatePosition()
 
 bool PHLBull::vulnerableFixture(b2Fixture * f)
 {
-    if (f==fixtures[0]) return false;
+    if (f==*(fixtures.begin())) return false;
     return true;
 }
 

@@ -21,7 +21,7 @@
 
 #define GL_INVALID_INDEX 0xffffffff
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool()), curve(NULL), arraysVBO(GL_INVALID_INDEX), indexesVBO(GL_INVALID_INDEX), VBOneedsRebuilding(false)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool()), curve(NULL), arraysVBO(GL_INVALID_INDEX), indexesVBO(GL_INVALID_INDEX), VBOneedsRebuilding(false), constrain(true)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -91,17 +91,26 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
 GLfloat * PHImageView::interleavedArrayFromAnchorList(const void * ud, int & n)
 {
     const vector<PHBezierPath::anchorPoint> * anchors = (const vector<PHBezierPath::anchorPoint>*)ud;
-    int i,nx;
-    nx = i = 0;
-    int corners[4];
     n = anchors->size();
-    
     GLfloat * v = new GLfloat[n*4];
     for (int i=0; i<n; i++)
     {
         v[(i<<2)] = anchors->at(i).point.x;
         v[(i<<2)+1] = anchors->at(i).point.y;
     }
+    textureCoordinatesFromAnchorList(v+2,sizeof(GLfloat)*4,ud);
+    return v;
+}
+
+void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, const void * ud)
+{
+    const vector<PHBezierPath::anchorPoint> * anchors = (const vector<PHBezierPath::anchorPoint>*)ud;
+    int i,nx;
+    nx = i = 0;
+    int corners[4] = {0,0,0,0};
+    int n = anchors->size();
+    if (!stride)
+        stride = 2*sizeof(GLfloat);
     
     for (int i=0; i<n; i++)
         if (anchors->at(i).tag>0 && anchors->at(i).tag<=4)
@@ -127,23 +136,24 @@ GLfloat * PHImageView::interleavedArrayFromAnchorList(const void * ud, int & n)
             double x,y;
             switch (k+1) {
                 case 1:
-                    y = 0;
+                    y = 1;
                     x = d;
                     break;
                 case 2:
                     x = 1;
-                    y = d;
+                    y = 1-d;
                     break;
                 case 3:
                     x = 1-d;
-                    y = 1;
+                    y = 0;
                     break;
                 case 4:
                     x = 0;
-                    y = 1-d;
+                    y = d;
                     break;
                 default:
-                    x = y = 0;
+                    x = 0;
+                    y = 1;
                     break;
             }
             if (_image && _image->isNormal())
@@ -152,12 +162,13 @@ GLfloat * PHImageView::interleavedArrayFromAnchorList(const void * ud, int & n)
                 x*=(double)img->width()/(double)img->actualWidth();
                 y*=(double)img->height()/(double)img->actualHeight();
             }
-            v[(i<<2)+2] = x;
-            v[(i<<2)+3] = y;
+            PHLog("point: (%lf,%lf) txtcoord: (%lf,%lf)",anchors->at(i).point.x,anchors->at(i).point.y,x,y);
+            buffer[0] = x;
+            buffer[1] = y;
+            buffer = (GLfloat*)(((char*)buffer)+stride);
             l+=(anchors->at(nx).point-anchors->at(i).point).length();
         }
     }
-    return v;
 }
 
 void PHImageView::rebuildCurvedVBO()
@@ -224,17 +235,21 @@ void PHImageView::renderCurved()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
     
     PHGLSetColor(tint);
-    PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray);
+    PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
     
     glVertexPointer(2, GL_FLOAT, 4*sizeof(GLfloat), NULL);
     glTexCoordPointer(2, GL_FLOAT, 4*sizeof(GLfloat), (GLfloat*)NULL+2);
     ((PHNormalImage*)image())->bindToTexture();
     
-    glPushMatrix();
-    glTranslatef(_bounds.x, _bounds.y, 0);
-    glScalef(_bounds.width, _bounds.height, 1);
-    glDrawElements(GL_LINES, nIndexes, GL_UNSIGNED_SHORT, NULL);
-    glPopMatrix();
+    if (constrain)
+    {
+        glPushMatrix();
+        glTranslatef(_bounds.x, _bounds.y, 0);
+        glScalef(_bounds.width, _bounds.height, 1);
+    }
+    glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
+    if (constrain)
+        glPopMatrix();
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -282,6 +297,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
             double rot = 0;
             bool flipHoriz = false;
             bool flipVert = false;
+            bool constrain = true;
             PHColor tint = PHInvalidColor;
             PHLuaGetStringField(clss, "class");
             PHLuaGetRectField(frame, "pos");
@@ -291,6 +307,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
             PHLuaGetBoolField(flipHoriz, "horizontallyFlipped");
             PHLuaGetBoolField(flipVert, "verticallyFlipped");
             PHLuaGetColorField(tint, "tint");
+            PHLuaGetBoolField(constrain, "constrainCurveToFrame");
             
             lua_getfield(L, -1, "bezierPath");
             PHBezierPath * bp = PHBezierPath::fromLua(L);
@@ -318,6 +335,7 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
             img->setHorizontallyFlipped(flipHoriz);
             img->setVerticallyFlipped(flipVert);
             img->setBezierPath(bp);
+            img->setConstrainCurveToFrame(constrain);
             if (bp)
                 bp->release();
         }
@@ -357,6 +375,8 @@ static int PHImageView_height(lua_State * L)
 
 PHLuaRectGetter(PHImageView, textureCoordinates);
 PHLuaRectSetter(PHImageView, setTextureCoordinates);
+PHLuaBoolGetter(PHImageView, constrainCurveToFrame);
+PHLuaBoolSetter(PHImageView, setConstrainCurveToFrame);
 
 static int PHImageView_tint(lua_State * L)
 {
@@ -399,6 +419,8 @@ void PHImageView::registerLuaInterface(lua_State * L)
     PHLuaAddMethod(PHImageView, setTint);
     PHLuaAddMethod(PHImageView, textureCoordinates);
     PHLuaAddMethod(PHImageView, setTextureCoordinates);
+    PHLuaAddMethod(PHImageView, constrainCurveToFrame);
+    PHLuaAddMethod(PHImageView, setConstrainCurveToFrame);
 
     lua_pop(L,1);
 }

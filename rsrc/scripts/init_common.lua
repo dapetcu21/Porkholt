@@ -54,6 +54,16 @@ function objectAddCircle(obj,r,proto)
     fix.n = fix.n + 1;	
 end
 
+function objectAddFreeform(obj,curve,proto)
+	local fix = obj.physics.fixtures;
+    local tmp = proto or {};
+    fix[fix.n] = tmp;
+    tmp.shape = "freeform";
+    tmp.curve = curve;
+	setmetatable(tmp,obj._fixturemeta);
+    fix.n = fix.n + 1;
+end
+
 cWORLD = 1;
 cPLAYER = 2;
 cNPC = 4;

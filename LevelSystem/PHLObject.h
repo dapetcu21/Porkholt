@@ -65,11 +65,18 @@ protected:
     
     lua_State * L;
     
-    vector<b2FixtureDef*>fixturesDefinitions;
-    vector<b2Fixture*>fixtures;
+    list<b2FixtureDef*>bezierPaths;
+    list<b2FixtureDef*>fixturesDefinitions;
+    list<b2Fixture*>fixtures;
     void rebuildFixtures();
+    void bezierCallback(PHObject * sender, void * ud);
+    void rebuildBezier(b2FixtureDef * def);
+    void _buildBezier(b2FixtureDef * def);
     
     PHGameManager * _gameManager;
+    
+    bool flipped;
+    bool shouldFlipUponLoad;
     
 public:
 	PHLObject();
@@ -92,6 +99,10 @@ public:
     bool isDynamic();
     void setDynamic(bool d);
     void rotateAround(double r, PHPoint around);
+    
+    virtual void flip();
+    bool isFlipped() {  return flipped; }
+    void setFlipped(bool sf) { if (flipped!=sf) flip(); }
     
     void applyForce(PHPoint force, PHPoint appPoint);
     void applyImpulse(PHPoint impulse, PHPoint appPoint);

@@ -111,6 +111,9 @@ end
 -- function PHLObject:centerOfMass(); --in object coordinates
 -- function PHLObject:viewWithTag(tag);
 -- function PHLObject:poof();
+-- function PHLObject::isFlipped();
+-- function PHLObject::setFlipped(f);
+-- function PHLObject::flip();
 
 PHObject = {};
 function PHObject:new(o, ...)
@@ -211,13 +214,12 @@ PHImageView = PHView:new();
 --function PHImageView:setTint(color);
 --function PHImageView:textureCoordinates();
 --function PHImageView:setTextureCoordinates(tc);
+--function PHImageView:constrainCurveToFrame();
+--function PHImageView:setConstrainCurveToFrame();
 
 
 
 PHLNPC = PHLObject:new();
---function PHLNPC:isFlipped();
---function PHLNPC:setFlipped(f);
---function PHLNPC:flip();
 --function PHLNPC:hasTrail();
 --function PHLNPC:setTrail(f);
 --function PHLNPC:usesTrail();

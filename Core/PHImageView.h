@@ -24,6 +24,7 @@ protected:
     PHImageAnimator * _animator;
 	PHRect coords;
     PHColor tint;
+    bool constrain;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
     void renderCurved();
@@ -33,6 +34,7 @@ protected:
     void bezierCallback(PHBezierPath * sender, void *ud);
 	void rebuildCurvedVBO();
     GLfloat * interleavedArrayFromAnchorList(const void * anchors, int &n);
+    void textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, const void * anchors);
     
     PHBezierPath * curve;
     
@@ -70,6 +72,9 @@ public:
     
     virtual const PHColor & animatedColor() { return tint; }
     virtual void setAnimatedColor(const PHColor & c) { setTintColor(c); }
+    
+    bool constrainCurveToFrame() { return constrain; }
+    void setConstrainCurveToFrame(bool c) { constrain = c; }
     
     PHBezierPath * bezierPath() { return curve; }
     void setBezierPath(PHBezierPath * bp);

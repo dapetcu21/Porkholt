@@ -30,7 +30,7 @@
 
 #include <typeinfo>
 
-PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), utrail(false), bflip(false), aflip(false), flipped(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), shouldFlipUponLoad(false), brakeAnimation(NULL), quest3(true), showDialogDelayed(false), hp(1.0f),maxHP(1.0f), invuln(false), hinvuln(false), hInvulnTime(1.0f), hInvulnRemTime(0), hInvulnFadeColor(PHBlackColor), hover(false), hoverAmmount(0), _idle(false), canBlink(false)
+PHLNPC::PHLNPC() : staticFace(false), trail(false), traillen(10), bodyView(NULL), faceView(NULL), worldView(NULL), fflip(false), utrail(false), aflip(false), currentDialog(NULL), dialogView(NULL), dialogTextView(NULL), overHeadPoint(0,1), quest1(false), quest2(true), reallyquest(false), questView(NULL), animatingquest(false), qquest(false), queuedquest(false), questHeight(0.25), questPoint(0,1), brakeAnimation(NULL), quest3(true), showDialogDelayed(false), hp(1.0f),maxHP(1.0f), invuln(false), hinvuln(false), hInvulnTime(1.0f), hInvulnRemTime(0), hInvulnFadeColor(PHBlackColor), hover(false), hoverAmmount(0), _idle(false), canBlink(false)
 {
     _class = "PHLNPC";
 }
@@ -65,9 +65,6 @@ void PHLNPC::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvl
     PHLuaGetNumberField(traillen, "trailLength");
     PHLuaGetBoolField(staticFace,"staticFace");
     PHLuaGetBoolField(fflip,"faceFlipping");
-    PHLuaGetBoolField(bflip,"bodyFlipping");
-    shouldFlipUponLoad = false;
-    PHLuaGetBoolField(shouldFlipUponLoad,"flipped");
     PHLuaGetBoolField(aflip,"automaticFlipping");
     PHLuaGetPointField(overHeadPoint,"overHead");
     PHLuaGetPointField(questPoint,"questPoint");
@@ -159,14 +156,9 @@ void PHLNPC::updatePosition()
         ((PHTrailImageView*)bodyView)->setStopView(worldView = (bodyView->superview()->superview()));
         ((PHTrailImageView*)bodyView)->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
     }
-	if (shouldFlipUponLoad)
-    {
-        setFlipped(shouldFlipUponLoad);
-        shouldFlipUponLoad = false;
-    }
     b2Vec2 speed = body->GetLinearVelocity();
     double elapsed = 1.0f/_gameManager->framesPerSecond();
-    if (aflip && (fflip || bflip) && abs(speed.x)>=0.1)
+    if (aflip && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
     setIdle(abs(speed.x)<0.1);
     if (hInvulnRemTime)
@@ -203,41 +195,12 @@ void PHLNPC::setIdle(bool i)
 
 void PHLNPC::flip()
 {
-    if (!fflip && !bflip) return;
-    flipped = !flipped;
-    if (bflip && body)
-    {
-        for (int i=0; i<fixturesDefinitions.size(); i++)
-        {
-            b2FixtureDef * d = fixturesDefinitions[i];
-            b2Shape * s = const_cast<b2Shape*>(d->shape);
-            if (!s) continue;
-            if (s->m_type == b2Shape::e_circle)
-            {
-                b2CircleShape * ss = (b2CircleShape*)s;
-                ss->m_p.Set(-ss->m_p.x,ss->m_p.y);
-            }
-            if (s->m_type == b2Shape::e_polygon)
-            {
-                b2PolygonShape * ss = (b2PolygonShape*)s;
-                int n = ss->GetVertexCount();
-                b2Vec2 * v = new b2Vec2[n];
-                for (int i=0; i<n; i++)
-                {
-                    v[i]=ss->GetVertex(n-i-1);
-                    v[i].x = -v[i].x;
-                }
-                ss->Set(v,n);
-                delete v;
-            }
-        }
-        rebuildFixtures();
-        view->setHorizontallyFlipped(flipped);
-    } else 
     if (fflip)
     {
+        flipped = !flipped;
         faceView->setHorizontallyFlipped(flipped);
-    }
+    } else
+        PHLObject::flip();
 }
 
 void PHLNPC::setDialog(PHDialog * dialog)
@@ -752,9 +715,6 @@ void PHLNPC::animateHurtInvuln()
 #pragma mark -
 #pragma mark scripting
 
-PHLuaBoolGetter(PHLNPC, isFlipped);
-PHLuaBoolSetter(PHLNPC, setFlipped);
-PHLuaDefineCall(PHLNPC, flip);
 PHLuaBoolGetter(PHLNPC, hasTrail);
 PHLuaBoolSetter(PHLNPC, setTrail);
 PHLuaBoolGetter(PHLNPC, usesTrail);
@@ -856,9 +816,6 @@ void PHLNPC::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLNPC");
     
-    PHLuaAddMethod(PHLNPC, isFlipped);
-    PHLuaAddMethod(PHLNPC, setFlipped);
-    PHLuaAddMethod(PHLNPC, flip);
     PHLuaAddMethod(PHLNPC, hasTrail);
     PHLuaAddMethod(PHLNPC, setTrail);
     PHLuaAddMethod(PHLNPC, usesTrail);

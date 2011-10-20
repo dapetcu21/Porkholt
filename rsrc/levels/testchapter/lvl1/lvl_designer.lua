@@ -29,29 +29,26 @@ objectAddImage(obj,[[/wrecking_ball.png]],-0.700000,-0.576953,1.400000,2.800000)
 objectAddCircle(obj,0.576953)
 addObject(obj)
 
-obj = objectWithClass("PHLPlatform")
+obj = objectWithClass("PHLObject")
 obj.levelDes = true
 obj.rotation = 0.000000
 obj.pos = point(17.000000,3.500000)
-objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,1.000000,1.00000,{ bezierPath = { 
+local bp = { 
 	points = { 
-		n = 10,
-		[0]={point = point(0,0), tag = 4},
-		[1]={point = point(1,0), tag = 3},
-		[2]={point = point(0.5,0.5)},
-		[3]={point = point(1,1), tag = 2}, 
-		[4]={point = point(0,1), tag = 1},
-		[5]={point = point(0,0.7)},
-		[6]={point = point(-1,0.6)},
-		[7]={point = point(0,0.5)},
-		[8]={point = point(-1,0.4)},
-		[9]={point = point(0,0.3)}
+		n = 6,
+		[0]={point = point(0,0), tag = 1},
+		[1]={point = point(0,-1)},
+		[2]={point = point(0.5,1)},
+		[3]={point = point(1,0), tag = 2}, 
+		[4]={point = point(1,1), tag = 3}, 
+		[5]={point = point(0,1), tag = 4} 
 	},
 	curves = {
-		n = 0,
+		n = 1,
 		[0]=range(0,4)
-	}}})
-objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000)
+	}}
+objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000,{ bezierPath = bp, constrainCurveToFrame = true, rotation = 180})
+objectAddFreeform(obj,bp,{ frame = rect(-1.000000,-0.150000,2.000000,0.300000), rotation = 180});
 addObject(obj)
 
 obj = objectWithClass("PHLCamera")

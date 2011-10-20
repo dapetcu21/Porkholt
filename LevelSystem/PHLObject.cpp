@@ -32,6 +32,7 @@
 #include "PHLShieldPowerup.h"
 #include "PHLHPPowerup.h"
 #include "PHLPowerPowerup.h"
+#include "PHBezierPath.h"
 
 #include "PHImage.h"
 #include "PHPoofView.h"
@@ -79,9 +80,16 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false)
 {
 }
+
+
+struct PHBezierFixtureProps
+{
+    PHRect frame;
+    double rotation;
+};
 
 PHLObject::~PHLObject()
 {
@@ -103,10 +111,22 @@ PHLObject::~PHLObject()
     }
 	if (body)
 		world->DestroyBody(body);
-    for (int i=0; i<fixturesDefinitions.size(); i++)
+    for (list<b2FixtureDef*>::iterator i = bezierPaths.begin(); i!=bezierPaths.end(); i++)
     {
-        delete fixturesDefinitions[i]->shape;
-        delete fixturesDefinitions[i];
+        b2FixtureDef * def = *i;
+        PHBezierPath * bp = const_cast<PHBezierPath*>((const PHBezierPath*)(def->shape));
+        if (bp)
+        {
+            bp->removeCallback(this);
+            bp->release();
+        }
+        delete (PHBezierFixtureProps*)(def->userData);
+        delete def;
+    }
+    for (list<b2FixtureDef*>::iterator i = fixturesDefinitions.begin(); i!=fixturesDefinitions.end(); i++)
+    {
+        delete (*i)->shape;
+        delete (*i);
     }
 	if (view)
 		view->release();
@@ -204,15 +224,38 @@ void PHLObject::loadBody(void *l)
                             shape->m_p.Set(pos.x,pos.y);
                             fdef->shape = shape;					
                         }
+                        if (strcmp(typ, "freeform")==0)
+                        {
+                            lua_getfield(L, -1, "curve");
+                            PHBezierPath * bp = PHBezierPath::fromLua(L);
+                            lua_pop(L,1);
+                            if (bp)
+                            {
+                                bp->addCallback(PHInv(this,PHLObject::bezierCallback,fdef));
+                                PHBezierFixtureProps * props = new PHBezierFixtureProps;
+                                props->frame = PHWholeRect;
+                                PHLuaGetRectField(props->frame, "frame");
+                                props->rotation = rot;
+                                fdef->userData = props;
+                            }
+                            fdef->shape = (b2Shape*)bp;
+                        }
                         if (customizeFixture(L,*fdef) && fdef->shape)
                         {
-                            fixturesDefinitions.push_back(fdef);
-                            fixtures.push_back(NULL);
-                        }
+                            if (dynamic_cast<const PHBezierPath*>((const PHObject*)(fdef->shape))!=NULL)
+                            {
+                                bezierPaths.push_back(fdef);
+                            } else {
+                                fixturesDefinitions.push_back(fdef);
+                                fixtures.push_back(NULL);
+                            }
+                        } else
+                            delete fdef;
                     }
                     lua_pop(L, 1);
                 }
                 rebuildFixtures();
+                rebuildBezier(NULL);
             }
         }
         lua_pop(L, 1);
@@ -223,13 +266,122 @@ void PHLObject::loadBody(void *l)
 void PHLObject::rebuildFixtures()
 {
     if (!body) return;
-    int n = min(fixturesDefinitions.size(),fixtures.size());
-    for (int i=0; i<n; i++)
+    list<b2FixtureDef*>::iterator i;
+    list<b2Fixture*>::iterator j;
+    for (i=fixturesDefinitions.begin(),j=fixtures.begin(); (i!=fixturesDefinitions.end()) && (j!=fixtures.end()); i++,j++)
     {
-        if (fixtures[i])
-            body->DestroyFixture(fixtures[i]);
-        fixtures[i] = body->CreateFixture(fixturesDefinitions[i]);
+        if (*j)
+            body->DestroyFixture(*j);
+        (*j) = body->CreateFixture(*i);
     }
+}
+
+void PHLObject::bezierCallback(PHObject * sender, void * ud)
+{
+    b2FixtureDef * def = (b2FixtureDef*)ud;
+    rebuildBezier(def);
+}
+
+void PHLObject::rebuildBezier(b2FixtureDef * def)
+{
+    list<b2FixtureDef*>::iterator i,nxi;
+    list<b2Fixture*>::iterator j,nxj;
+    for (i=nxi=fixturesDefinitions.begin(),j=nxj=fixtures.begin(); (i!=fixturesDefinitions.end()) && (j!=fixtures.end()); i=nxi,j=nxj)
+    {
+        nxi++;
+        nxj++;
+        if (def?((def->shape) == (*i)->userData):(dynamic_cast<PHBezierPath*>((PHObject*)((*i)->userData))!=NULL))
+        {
+            if (*j)
+                body->DestroyFixture(*j);
+            delete (*i)->shape;
+            delete (*i);
+            fixturesDefinitions.erase(i);
+            fixtures.erase(j);
+        }
+    }
+    if (!def)
+        for (list<b2FixtureDef*>::iterator i = bezierPaths.begin(); i!=bezierPaths.end(); i++)
+            _buildBezier(*i);
+    else
+        _buildBezier(def);
+}
+
+void PHLObject::_buildBezier(b2FixtureDef * def)
+{
+    PHBezierPath * bp = const_cast<PHBezierPath*>((const PHBezierPath*)def->shape);
+    PHBezierFixtureProps * props = (PHBezierFixtureProps*)def->userData;
+    PHRect frm = props->frame;
+    PHPoint sz = frm.size();
+    PHPoint org = frm.origin();
+    PHPoint center = frm.center();
+    static const PHPoint half(0.5,0.5);
+    const vector<PHBezierPath::anchorPoint> & anchors = bp->calculatedVertices();
+    int n = 0;
+    GLushort * v = PHBezierPath::triangulate(anchors, n);
+    for (int i=0; i<n; i+=3)
+    {
+        PHPoint p1 =  ((anchors[v[i]].point-half).rotated(props->rotation)+half)*sz+org;
+        PHPoint p2 =  ((anchors[v[i+1]].point-half).rotated(props->rotation)+half)*sz+org;
+        PHPoint p3 =  ((anchors[v[i+2]].point-half).rotated(props->rotation)+half)*sz+org;
+        if (isFlipped())
+        {
+            PHPoint aux = p1;
+            p1 = PHPoint(-p3.x,p3.y);
+            p3 = PHPoint(-p1.x,p1.y);
+            p2.x = -p2.x;
+        }
+        const b2Vec2 vertices[3] = { b2Vec2(p1.x,p1.y), b2Vec2(p2.x,p2.y), b2Vec2(p3.x,p3.y) };
+        b2PolygonShape * ps = new b2PolygonShape;
+        ps->Set(vertices, 3);
+        b2FixtureDef * fd = new b2FixtureDef;
+        fd->shape = ps;
+		fd->userData = bp;
+		fd->friction = def->friction;
+        fd->restitution = def->restitution;
+        fd->density = def->density;
+        fd->filter.categoryBits = def->filter.categoryBits;
+        fd->filter.maskBits = def->filter.maskBits;
+		fd->filter.groupIndex = def->filter.groupIndex;
+		fd->isSensor = def->isSensor;
+        fixturesDefinitions.push_back(fd);
+        fixtures.push_back(body->CreateFixture(fd));
+    }
+    delete v;    
+}
+
+void PHLObject::flip()
+{
+    flipped = !flipped;
+    if (body)
+    {
+        for (list<b2FixtureDef*>::iterator i = fixturesDefinitions.begin(); i!=fixturesDefinitions.end(); i++)
+        {
+            b2FixtureDef * d = *i;
+            b2Shape * s = const_cast<b2Shape*>(d->shape);
+            if (!s) continue;
+            if (s->m_type == b2Shape::e_circle)
+            {
+                b2CircleShape * ss = (b2CircleShape*)s;
+                ss->m_p.Set(-ss->m_p.x,ss->m_p.y);
+            }
+            if (s->m_type == b2Shape::e_polygon)
+            {
+                b2PolygonShape * ss = (b2PolygonShape*)s;
+                int n = ss->GetVertexCount();
+                b2Vec2 * v = new b2Vec2[n];
+                for (int i=0; i<n; i++)
+                {
+                    v[i]=ss->GetVertex(n-i-1);
+                    v[i].x = -v[i].x;
+                }
+                ss->Set(v,n);
+                delete v;
+            }
+        }
+        rebuildFixtures();
+    } 
+    view->setHorizontallyFlipped(flipped);
 }
 
 bool PHLObject::customizeFixture(lua_State * L, b2FixtureDef & fixtureDef)
@@ -260,6 +412,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
     PHLuaGetNumberField(maxSpeedX,"maxVelocityX");
     PHLuaGetNumberField(maxSpeedY,"maxVelocityY");
     PHLuaGetRectField(poofRect, "poofRect");
+    PHLuaGetBoolField(shouldFlipUponLoad,"flipped");
 	
 	PHRect min;
 	min.x = 0x3f3f3f3f;
@@ -329,13 +482,16 @@ void PHLObject::loadImages()
 void PHLObject::loadView()
 {
 	view = new PHView(PHRect(viewSize.x+pos.x, viewSize.y+pos.y, viewSize.width, viewSize.height));
-    view->setRotationalCenter(PHPoint(-viewSize.x, -viewSize.y));
+    PHPoint center = PHPoint(-viewSize.x, -viewSize.y);
+    view->setRotationalCenter(center);
+    view->setFlipCenter(center);
 	loadImages();
 	view->setRotation(rot);
 }
 
 #pragma mark -
 #pragma mark Geometry
+
 
 void PHLObject::setPosition(PHPoint p) 
 {
@@ -479,6 +635,11 @@ void PHLObject::updatePosition()
 	b2Vec2 p = body->GetPosition();
     pos = PHPoint(p.x, p.y);
     rot = body->GetAngle();
+    if (shouldFlipUponLoad)
+    {
+        setFlipped(true);
+        shouldFlipUponLoad = false;
+    }
 }
 
 void PHLObject::updateView()
@@ -779,8 +940,7 @@ void PHLObject::_poof()
         poofRect.x -= (poofRect.height*dar-poofRect.width)/2;
         poofRect.width = poofRect.height*dar;
     }
-    PHLNPC * npc = dynamic_cast<PHLNPC*>(this);
-    if (npc && npc->isFlipped())
+    if (isFlipped())
     {
         poofRect.x = -poofRect.x-poofRect.width;
     }
@@ -986,6 +1146,10 @@ static int PHLObject_viewWithTag(lua_State * L)
     return 1;
 }
 
+PHLuaBoolGetter(PHLObject, isFlipped);
+PHLuaBoolSetter(PHLObject, setFlipped);
+PHLuaDefineCall(PHLObject, flip);
+
 void PHLObject::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLObject");
@@ -1023,6 +1187,10 @@ void PHLObject::registerLuaInterface(lua_State * L)
     PHLuaAddMethod(PHLObject, invalidateAllAnimations);
     PHLuaAddMethod(PHLObject, skipAllAnimations);
     PHLuaAddMethod(PHLObject, addAnimation);
+    
+    PHLuaAddMethod(PHLObject, isFlipped);
+    PHLuaAddMethod(PHLObject, setFlipped);
+    PHLuaAddMethod(PHLObject, flip);
     
     lua_pop(L, 1);
 }

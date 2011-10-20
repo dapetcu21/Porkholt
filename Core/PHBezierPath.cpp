@@ -295,6 +295,16 @@ static bool cmp(pnt * a, pnt * b)
     return (a->i->point) < (b->i->point);
 }
 
+static inline int angleof(const PHPoint & a, const PHPoint & b, const PHPoint & c)
+{
+    double determinant = a.x*b.y-a.y*b.x + b.x*c.y-b.y*c.x + c.x*a.y-c.y*a.x;
+    if (determinant==0)
+        return 0;
+    if (determinant>0)
+        return 1;
+    return -1;
+}
+
 static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
 {
     GLushort * oout = out;
@@ -307,6 +317,8 @@ static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
 #define prev(i) ((i)?(i)-1:n-1)
     int up = prev(min);
     int down = next(min);
+    int order = angleof(v[up]->i->point,v[min]->i->point,v[down]->i->point);
+    
     bool isup = v[up]->i->point<v[down]->i->point;
     int stn = 2;
     a[0] = min;
@@ -322,7 +334,7 @@ static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
             down = -1;
     }
     
-    for (int i=3; i<n; i++)
+    for (int i=2; i<n; i++)
     {
         int cp = -1;
         if (up==-1)
@@ -354,15 +366,33 @@ static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
                 up = d;
         }
         
-#define triangle
-        {
-            
+#define triangle(a,b,c) \
+        { \
+            int aa = (a); \
+            int bb = (b); \
+            int cc = (c); \
+            if (angleof(v[aa]->i->point,v[bb]->i->point,v[cc]->i->point)<0) \
+            { \
+                cc = aa^cc; \
+                aa = aa^cc; \
+                cc = aa^cc; \
+            } \
+            (*(out++))=v[aa]->p; \
+            (*(out++))=v[bb]->p; \
+            (*(out++))=v[cc]->p; \
         }
         
         int stop = a[stn-1];
-        if (next(stop)==cp || prev(stop)==cp)
+        bool nxcp = next(stop)==cp;
+        bool pvcp = prev(stop)==cp;
+        if (nxcp || pvcp)
         {
-            while (stn>=2 && goodangle(v[cp]->i->point,v[a[stn-1]]->i->point,v[a[stn-2]]->i->point))
+            int desiredorder;
+            if (nxcp)
+                desiredorder = order;
+            else
+                desiredorder = -order;
+            while (stn>=2 && (angleof(v[a[stn-2]]->i->point,v[a[stn-1]]->i->point,v[cp]->i->point)!=-desiredorder))
             {
                 triangle(cp,a[stn-1],a[stn-2]);
                 stn--;
@@ -524,7 +554,7 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
             int j = sn-1;
             while (j>=0 && aa[j]->p!=(*it)->p)
                 j--;
-            if (i>=0)
+            if (j>=0)
             {
                 pnt * first = aa[j];
                 cp+=PHBezierPath_triangulateMonotone(aa+j, sn-j, cp);

@@ -61,6 +61,13 @@ struct PHPoint
         PHPoint res(x*d,y*d);
         return res;
     }
+    
+    PHPoint operator * (PHPoint p) const
+    {
+        PHPoint res(x*p.x,y*p.y);
+        return res;
+    }
+    
     const PHPoint & operator /= (double d)
     {
         x/=d;

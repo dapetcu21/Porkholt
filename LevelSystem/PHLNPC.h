@@ -28,13 +28,12 @@ private:
     int traillen;
     bool staticFace;
     PHView * worldView;
-    bool fflip,bflip,aflip,flipped;
+    bool fflip,aflip;
     bool trailPossible;
     bool canBlink;
     
     
     PHPoint overHeadPoint;
-    bool shouldFlipUponLoad;
     bool hover;
     bool _idle;
     
@@ -52,15 +51,10 @@ public:
     bool usesTrail() { return utrail; }
     void setFaceFlipping(bool tr) { fflip = tr; }
     bool faceFlipping() { return fflip; }
-    void setBodyFlipping(bool tr) { bflip = tr; }
-    bool bodyFlipping() { return bflip; }
     void setAutomaticFlipping(bool tr) { aflip = tr; }
     bool automaticFlipping() { return aflip; }
     void setTrailLength(int len) { traillen = len; }
     int trailLength() { return traillen; }
-    void flip();
-    bool isFlipped() {  return flipped; }
-    void setFlipped(bool sf) { if (flipped!=sf) flip(); }
     
     virtual void updatePosition();
     virtual void updateView();
@@ -128,6 +122,7 @@ public:
     
     bool braked() { return brakeAnimation!=NULL; }
     void setBraked(bool br); 
+    virtual void flip();
     
 protected:
     double hp;
