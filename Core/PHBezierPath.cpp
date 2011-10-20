@@ -204,7 +204,7 @@ const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<a
 }
 
 
-#pragma mark Tesselation
+#pragma mark Triangulation
 //----------------------
 
 struct pnt {
@@ -246,7 +246,6 @@ class binarySearchTree {
                 PHPoint b1 = b->st->i->point;
                 PHPoint b2 = b->en->i->point;
                 PHPoint p = a->st->i->point;
-                PHLog("cmp: (%d,%d) (%d,%d), [%lf,%lf] [%lf,%lf] [%lf,%lf]",a->st->p,a->en->p,b->st->p,b->en->p,b1.x,b1.y,b2.x,b2.y,p.x,p.y);
                 if (b1.x==b2.x) 
                 {
                     if (b1.x==p.x)
@@ -269,13 +268,11 @@ class binarySearchTree {
 public:
     bool addEdge(edge * e)
     {
-        PHLog("add edge:(%d %d)",e->st->p,e->en->p);
         return edges.insert(e).second;
     } 
     
     bool removeEdge(edge * e)
     {
-        PHLog("add edge:(%d %d)",e->st->p,e->en->p);
         return edges.erase(e)!=0;
     }
     
@@ -287,7 +284,6 @@ public:
         set<edge*,binarySearchTree::cmp>::iterator it = edges.upper_bound(&e);
         cmp::mode = false;
         if (it==edges.end()) return NULL; 
-        //PHLog("it after:(%d %d)",(*it)->st->p,(*it)->en->p);
         return *it;
     }
 };
@@ -302,11 +298,87 @@ static bool cmp(pnt * a, pnt * b)
 static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
 {
     GLushort * oout = out;
-    for (int i=0; i<n; i++)
+    int * a = new int[n];
+    int min = 0;
+    for (int i=1; i<n; i++)
+        if (v[i]->i->point<v[min]->i->point)
+            min = i;
+#define next(i) (((i)==n-1)?0:(i)+1)
+#define prev(i) ((i)?(i)-1:n-1)
+    int up = prev(min);
+    int down = next(min);
+    bool isup = v[up]->i->point<v[down]->i->point;
+    int stn = 2;
+    a[0] = min;
+    a[1] = isup?up:down;
+    if (isup)
     {
-        (*out++)=v[i]->p;
-        (*out++)=(i==n-1)?v[0]->p:v[i+1]->p;
+        up=prev(up);
+        if (up==down) 
+            up = -1;
+    } else {
+        down=next(down);
+        if (up==down)
+            down = -1;
     }
+    
+    for (int i=3; i<n; i++)
+    {
+        int cp = -1;
+        if (up==-1)
+            cp = down;
+        else
+        if (down==-1)
+            cp = up;
+        else
+        if (v[down]->i->point.x<v[up]->i->point.x)
+            cp = down;
+        else
+            cp = up;
+        
+        if (cp==down)
+        {
+            int d = next(down);
+            if (v[d]->i->point.x<v[down]->i->point.x)
+                down = -1;
+            else
+                down = d;
+        }
+        else
+        if (cp==up)
+        {
+            int d = prev(up);
+            if (v[d]->i->point.x<v[up]->i->point.x)
+                up = -1;
+            else
+                up = d;
+        }
+        
+#define triangle
+        {
+            
+        }
+        
+        int stop = a[stn-1];
+        if (next(stop)==cp || prev(stop)==cp)
+        {
+            while (stn>=2 && goodangle(v[cp]->i->point,v[a[stn-1]]->i->point,v[a[stn-2]]->i->point))
+            {
+                triangle(cp,a[stn-1],a[stn-2]);
+                stn--;
+            }
+        } else {
+            while (stn>=2)
+            {
+                triangle(cp,a[stn-1],a[stn-2]);
+                stn--;
+            }
+            a[0]=stop;
+        }
+        a[stn++] = cp;
+    }
+#undef prev
+#undef next
     return out-oout;
 }
 
@@ -349,7 +421,6 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
     for (int i=0; i<m; i++)
     {
         pnt * crr = aa[i];
-        PHLog("crr: %d",crr->p);
         pnt * pv = crr->prev;
         pnt * nx = crr->next;
         double cx = crr->i->point.x;
@@ -390,10 +461,6 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
             remedge(pve);
         
         edge * left = bst.firstEdgeYLessThanPoint(crr);
-        if (!left)
-            PHLog("left edge: NULL");
-        else
-            PHLog("left edge:(%d %d)",left->st->p,left->en->p);
         bool outside = (!left || left->type == edge::exit);
         
         if (nxx<=cx && pvx<=cx)
