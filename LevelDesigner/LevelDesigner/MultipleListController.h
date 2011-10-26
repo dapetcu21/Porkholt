@@ -41,6 +41,7 @@
 -(void)duplicate:(id)sender;
 -(void)selectAll:(id)sender;
 -(BOOL)validateMenuItem:(NSMenuItem*)menuItem sentFrom:(id)sender;
+-(BOOL) clearSelectionWhenSelecting:(NSUInteger)i;
 
 -(void)arrayChanged:(NSUInteger)array;
 -(void)selectionForArrayChanged:(NSUInteger)array;

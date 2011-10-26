@@ -231,6 +231,11 @@
 
 #pragma mark NSTableViewDelegate
 
+-(BOOL) clearSelectionWhenSelecting:(NSUInteger)i
+{
+    return YES;
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     if (selectionChangeFromWithin) return;
@@ -239,7 +244,7 @@
     if (array==NSNotFound) return;
     selectionChangeFromWithin = YES;
     [model setSelectedIndexes:[tv selectedRowIndexes] forArray:array];
-    if (([NSEvent modifierFlags] & (NSShiftKeyMask | NSCommandKeyMask))==0)
+    if ((([NSEvent modifierFlags] & (NSShiftKeyMask | NSCommandKeyMask))==0) && [self clearSelectionWhenSelecting:array])
     {
         int i;
         for (i=0; i<numberOfTables; i++)

@@ -35,17 +35,18 @@ obj.rotation = 0.000000
 obj.pos = point(17.000000,3.500000)
 local bp = { 
 	points = { 
-		n = 6,
+		n = 7,
 		[0]={point = point(0,0), tag = 1},
 		[1]={point = point(0,-1)},
 		[2]={point = point(0.5,1)},
-		[3]={point = point(1,0), tag = 2}, 
-		[4]={point = point(1,1), tag = 3}, 
-		[5]={point = point(0,1), tag = 4} 
+		[3]={point = point(1,1)},
+		[4]={point = point(1,0), tag = 2}, 
+		[5]={point = point(1,1), tag = 3}, 
+		[6]={point = point(0,1), tag = 4} 
 	},
 	curves = {
 		n = 1,
-		[0]=range(0,4)
+		[0]=range(0,5)
 	}}
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000,{ bezierPath = bp, constrainCurveToFrame = true, rotation = 180})
 objectAddFreeform(obj,bp,{ frame = rect(-1.000000,-0.150000,2.000000,0.300000), rotation = 180});

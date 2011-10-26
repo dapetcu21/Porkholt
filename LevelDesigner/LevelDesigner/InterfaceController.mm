@@ -51,6 +51,18 @@
     tables[1] = jointView;
 }
 
+-(PLTableView*)curveView
+{
+    return tables[2];
+}
+
+-(void)setCurveView:(PLTableView *)objectView
+{
+    [objectView retain];
+    [tables[2] release];
+    tables[2] = objectView;
+}
+
 -(void)prepareDetailsView
 {
     PLEntity * newEntity = [model selectedEntity];
@@ -74,6 +86,12 @@
         [detailView addSubview:view];
         [view setFrame:[detailView bounds]];
     }
+}
+
+-(BOOL)clearSelectionWhenSelecting:(NSUInteger)i
+{
+    //return (i!=2);
+    return YES;
 }
 
 -(void)selectionForArrayChanged:(NSUInteger)array

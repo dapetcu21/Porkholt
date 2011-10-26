@@ -14,6 +14,7 @@
 #import "WorldController.h"
 #import "StatusController.h"
 #import "PLDocument.h"
+#import "PLBezier.h"
 
 @implementation ObjectController
 
@@ -42,6 +43,8 @@
             return [PLObject class];
         case 1:
             return [PLJoint class];
+        case 2:
+            return [PLBezier class];
         default:
             return NULL;
     }

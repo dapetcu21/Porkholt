@@ -15,6 +15,7 @@
 #import "PrototypeController.h"
 #import "EntityController.h"
 #import "PLObjectView.h"
+#import "PHBezierPath.h"
 
 @implementation PLObject
 @synthesize rootProperty;
@@ -134,6 +135,7 @@
     self = [super initFromLua:L];
     if (self) {
         BOOL isRO = NO;
+        vector<PHBezierPath*> beziers;
         if (L)
         {
             if (lua_istable(L, -1))
@@ -148,6 +150,28 @@
                 if (lua_isboolean(L, -1) && lua_toboolean(L, -1))
                     isRO = YES;
                 lua_pop(L,1);
+                
+                
+                lua_getfield(L, -1, "bezierPaths");
+                if (lua_istable(L, -1))
+                {
+                    int n = 0;
+                    lua_getfield(L, -1, "n");
+                    if (lua_isnumber(L, -1))
+                        n = lua_tonumber(L, -1);
+                    lua_pop(L,1);
+                    
+                    for (int i=0; i<n; i++)
+                    {
+                        lua_pushnumber(L, i);
+                        lua_gettable(L, -2);
+                        
+                        PHBezierPath * bp = PHBezierPath::fromLua(L);
+                        beziers.push_back(bp);
+                        
+                        lua_pop(L,1);
+                    }
+                }
             }
         }
         else

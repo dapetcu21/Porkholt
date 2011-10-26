@@ -12,6 +12,7 @@
 
 PHBezierPath * PHBezierPath::fromLua(lua_State * L)
 {
+    if (!L) return NULL;
     if (lua_istable(L, -1))
     {
         lua_getfield(L, -1, "ud");

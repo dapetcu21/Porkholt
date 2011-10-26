@@ -26,5 +26,6 @@
 
 @property(nonatomic,retain) IBOutlet PLTableView * objectView;
 @property(nonatomic,retain) IBOutlet PLTableView * jointView;
+@property(nonatomic,retain) IBOutlet PLTableView * curveView;
 
 @end

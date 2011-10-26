@@ -13,7 +13,7 @@
 @class StatusController;
 @class PLDocument;
 
-#define ObjectController_numberOfArrays 2
+#define ObjectController_numberOfArrays 3
 #define PLObjectPBoardType @"PLObjectPBoardType"
 #define PLObjectLocationPBoardType @"PLObjectLocationPBoardType"
 #define PLObjectPointerPBoardType @"PLObjectPointerPBoardType"

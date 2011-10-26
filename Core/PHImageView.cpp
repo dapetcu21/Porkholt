@@ -19,7 +19,9 @@
 #include "PHAnimatorPool.h"
 #include "PHBezierPath.h"
 
+#ifndef GL_INVALID_INDEX
 #define GL_INVALID_INDEX 0xffffffff
+#endif
 
 #define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool()), curve(NULL), arraysVBO(GL_INVALID_INDEX), indexesVBO(GL_INVALID_INDEX), VBOneedsRebuilding(false), constrain(true)
 

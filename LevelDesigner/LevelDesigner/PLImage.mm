@@ -12,6 +12,7 @@
 #import "SubentityController.h"
 #import "ImageViewController.h"
 #import "PLObject.h"
+#import "PLBezier.h"
 
 static inline struct PLColor PLMakeColor(double r, double g, double b, double a)
 {
@@ -71,6 +72,9 @@ static inline void endToken(NSMutableString * file, int * count)
         p = [prop propertyWithKey:@"horizontallyFlipped"];
         horizontallyFlipped = p?p.booleanValue:NO;
         
+        p = [prop propertyWithKey:@"constrainCurveToFrame"];
+        constrainToFrame = p?p.booleanValue:NO;
+        
         p = [prop propertyWithKey:@"verticallyFlipped"];
         verticallyFlipped = p?p.booleanValue:NO;
         
@@ -114,6 +118,15 @@ static inline void endToken(NSMutableString * file, int * count)
         addToken(file,@"horizontallyFlipped = true",&count);
     if (verticallyFlipped)
         addToken(file,@"verticallyFlipped = true",&count);
+    if (!constrainToFrame)
+        addToken(file,@"constrainCurveToFrame = false", &count);
+    if (bezierCurve)
+    {   
+        EntityController * ec = (EntityController*)[bezierCurve owner];
+        NSUInteger idx = [ec indexForEntity:bezierCurve inArray:2];
+        if (idx!=NSNotFound)
+            addToken(file,[NSString stringWithFormat:@"bezierPath = lvldes_beziers[%u]",(unsigned int)idx], &count);
+    }
     if (tint.a>=0 && !(tint.r==1 && tint.g==1 && tint.b==1 && tint.a==1))
         addToken(file,[NSString stringWithFormat:@"tint = rgba(%lf,%lf,%lf,%lf)",tint.r,tint.g,tint.b,tint.a],&count);
     endToken(file, &count);

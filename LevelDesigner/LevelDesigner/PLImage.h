@@ -21,6 +21,7 @@ class PLImageView;
 #else
 #define PLImageView void
 #endif
+@class PLBezier;
 
 @class ImageViewController;
 @interface PLImage : PLEntity<PLSubEntity>
@@ -32,9 +33,11 @@ class PLImageView;
     double rotation;
     BOOL horizontallyFlipped;
     BOOL verticallyFlipped;
+    BOOL constrainToFrame;
     struct PLColor tint;
     double alpha;
     NSString * fileName;
+    PLBezier * bezierCurve;
     
     ImageViewController * viewController;
 }
@@ -46,9 +49,11 @@ class PLImageView;
 @property(nonatomic,assign) double rotation;
 @property(nonatomic,assign) BOOL horizontallyFlipped;
 @property(nonatomic,assign) BOOL verticallyFlipped;
+@property(nonatomic,assign) BOOL constrainToFrame;
 @property(nonatomic,assign) struct PLColor tint;
 @property(nonatomic,retain) NSString * fileName;
 @property(nonatomic,assign) double alpha;
+@property(nonatomic,assign) PLBezier * bezierCurve;
 
 @property(nonatomic,assign) PLImageView * actor;
 
