@@ -25,5 +25,7 @@ class PLBezierView;
 
 @property(nonatomic,readonly) PHBezierPath * bezierPath;
 -(void)modelChanged;
+-(BOOL)isEqual:(PLBezier*)object;
+-(void)writeToFile:(NSMutableString*)file;
 
 @end

@@ -38,6 +38,7 @@ class PLImageView;
     double alpha;
     NSString * fileName;
     PLBezier * bezierCurve;
+    NSUInteger bezierCurveIndex;
     
     ImageViewController * viewController;
 }
@@ -56,6 +57,7 @@ class PLImageView;
 @property(nonatomic,assign) PLBezier * bezierCurve;
 
 @property(nonatomic,assign) PLImageView * actor;
+@property(nonatomic,assign) NSUInteger bezierCurveIndex;
 
 -(id)initFromProperty:(PLProperty*)prop;
 -(void)writeToFile:(NSMutableString*)file;

@@ -50,6 +50,11 @@ static inline void endToken(NSMutableString * file, int * count)
         shape = PLFixtureRect;
         if ([p.stringValue isEqual:@"circle"])
             shape = PLFixtureCircle;
+        if ([p.stringValue isEqual:@"freeform"])
+            shape = PLFixtureFreestyle;
+        
+        p = [prop propertyWithKey:(shape==PLFixtureFreestyle)?@"frame":@"box"];
+        box = p?p.rectValue:(shape==PLFixtureFreestyle)?NSMakeRect(0, -0, 1, 1):NSMakeRect(-0.5f, -0.5f, 1, 1);
         
         p = [prop propertyWithKey:@"rotation"];
         rotation = p?p.numberValue:0;
@@ -77,6 +82,11 @@ static inline void endToken(NSMutableString * file, int * count)
         
         p = [prop propertyWithKey:@"maskBits"];
         maskBits = p?p.numberValue:0xFFFF;
+        
+        p = [prop propertyWithKey:@"bezierPath"];
+        PLObject * obj = prop.owner;
+        bezierCurve = (p&&([p type]==PLPropertyNumber)&&[obj isKindOfClass:[PLObject class]])?[obj bezierPathAtIndex:(int)[p numberValue]]:nil;
+        [bezierCurve retain];
     }
     return self;
 }
@@ -90,12 +100,18 @@ static inline void endToken(NSMutableString * file, int * count)
         case PLFixtureCircle:
             [file appendFormat:@"objectAddCircle(obj,%lf",radius];
             break;
+        case PLFixtureFreestyle:
+            [file appendFormat:@"objectAddFreeform(obj,bezierCurve%u",(unsigned int)bezierCurveIndex];
+            break;
         default:
             return;
     }
     
     int count = 0;
-    if (rotation)
+    if ((shape == PLFixtureFreestyle)&&(box.origin.x!=0 || box.origin.y!=0 || box.size.width!=1 || box.size.height!=1))
+        addToken(file,[NSString stringWithFormat:@"frame = rect(%lf,%lf,%lf,%lf)",box.origin.x,box.origin.y,box.size.width,box.size.height], &count);
+    
+    if ((shape!=PLFixtureCircle)&&rotation)
         addToken(file,[NSString stringWithFormat:@"rotation = %lf",rotation], &count);
     
     if (friction!=0.3f)
@@ -137,6 +153,9 @@ static inline void endToken(NSMutableString * file, int * count)
         case PLFixtureCircle:
             p.stringValue = @"circle";
             break;
+        case PLFixtureFreestyle:
+            p.stringValue = @"freeform";
+            break;
         default:
             p = nil;
             break;
@@ -144,7 +163,7 @@ static inline void endToken(NSMutableString * file, int * count)
     [prop insertProperty:p atIndex:[prop childrenCount]];
     
     p = [[[PLProperty alloc] init] autorelease];
-    p.name = @"box";
+    p.name = (shape==PLFixtureFreestyle)?@"frame":@"box";
     p.rectValue = box;
     [prop insertProperty:p atIndex:[prop childrenCount]];
     
@@ -194,11 +213,15 @@ static inline void endToken(NSMutableString * file, int * count)
     [prop insertProperty:p atIndex:[prop childrenCount]];
     
     [aCoder encodeObject:prop forKey:@"property"];
+    [aCoder encodeObject:bezierCurve forKey:@"bezierCurve"];
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
-    return [self initFromProperty:[aDecoder decodeObjectForKey:@"property"]];
+    self = [self initFromProperty:[aDecoder decodeObjectForKey:@"property"]];
+    if (self)
+        bezierCurve = (PLBezier*)[[aDecoder decodeObjectForKey:@"bezierCurve"] retain];
+    return self;
 }
 
 -(NSString*)description
@@ -272,6 +295,11 @@ static inline void endToken(NSMutableString * file, int * count)
 -(int)maskBits
 {
     return maskBits;
+}
+
+-(PLBezier*)bezierCurve
+{
+    return bezierCurve;
 }
 
 -(NSUndoManager*)undoManager
@@ -368,6 +396,16 @@ static inline void endToken(NSMutableString * file, int * count)
     [self fixtureChanged];
 }
 
+-(void)setBezierCurve:(PLBezier *)b
+{
+    if (bezierCurve==b) return;
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setBezierCurve:bezierCurve];
+    [b retain];
+    [bezierCurve release];
+    bezierCurve = b;
+    [self fixtureChanged];
+}
+
 +(NSArray*)fixturesFromProperty:(PLProperty*)prop
 {
     if (prop.type!=PLPropertyArray)
@@ -393,8 +431,9 @@ static inline void endToken(NSMutableString * file, int * count)
         position.y+=delta.y;
         [self fixtureChanged];
     }
-    if (shape == PLFixtureRect)
+    if (shape == PLFixtureRect || shape == PLFixtureFreestyle)
     {
+        [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setBox:box];
         box.origin.x+=delta.x;
         box.origin.y+=delta.y;
         [self fixtureChanged];

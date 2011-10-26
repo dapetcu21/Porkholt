@@ -18,6 +18,7 @@
 #import "PLObjectView.h"
 #import "PHEventHandler.h"
 #import "PHImage.h"
+#import "PLBezier.h"
 
 PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false), grab(0)
 {
@@ -54,6 +55,8 @@ void PLImageView::modelChanged()
     PLColor c = model.tint;
     setTintColor(PHColor(c.r,c.g,c.b,c.a));
     setAlpha(model.alpha);
+    setConstrainCurveToFrame(model.constrainToFrame);
+    setBezierPath(model.bezierCurve.bezierPath);
 }
 
 bool PLImageView::intersectsRect(PHView * base, const PHRect & rect)

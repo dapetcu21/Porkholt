@@ -70,6 +70,7 @@
 		C19759721440447700870005 /* StatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = C19759711440447700870005 /* StatusController.m */; };
 		C19D7D08142CBE75003E92C1 /* PLProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D07142CBE75003E92C1 /* PLProperty.m */; };
 		C19D7D0B142DFD6F003E92C1 /* PLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */; };
+		C1A114F814584B63003E2DD1 /* PLBezierView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1A114F714584B63003E2DD1 /* PLBezierView.mm */; };
 		C1A15B5A1425C283004B2706 /* init_common.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1A15B591425C283004B2706 /* init_common.lua */; };
 		C1A15B5D1425C296004B2706 /* level_des.lua in Resources */ = {isa = PBXBuildFile; fileRef = C1A15B5C1425C296004B2706 /* level_des.lua */; };
 		C1A15B5F1425C2A8004B2706 /* prototype.phlevel in Resources */ = {isa = PBXBuildFile; fileRef = C1A15B5E1425C2A8004B2706 /* prototype.phlevel */; };
@@ -229,6 +230,7 @@
 		C19D7D09142DFD6F003E92C1 /* PLOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLOutlineView.h; sourceTree = "<group>"; };
 		C19D7D0A142DFD6F003E92C1 /* PLOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLOutlineView.m; sourceTree = "<group>"; };
 		C1A114F5145570E3003E2DD1 /* PLBezierView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLBezierView.h; sourceTree = "<group>"; };
+		C1A114F714584B63003E2DD1 /* PLBezierView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLBezierView.mm; sourceTree = "<group>"; };
 		C1A15B591425C283004B2706 /* init_common.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; name = init_common.lua; path = ../../rsrc/scripts/init_common.lua; sourceTree = "<group>"; };
 		C1A15B5C1425C296004B2706 /* level_des.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = level_des.lua; sourceTree = "<group>"; };
 		C1A15B5E1425C2A8004B2706 /* prototype.phlevel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = prototype.phlevel; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 				C1AB4F4E1444932F001F6773 /* PLObjectMarker.h */,
 				C1AB4F4F14449387001F6773 /* PLObjectMarker.cpp */,
 				C1A114F5145570E3003E2DD1 /* PLBezierView.h */,
+				C1A114F714584B63003E2DD1 /* PLBezierView.mm */,
 			);
 			name = Canvas;
 			path = ..;
@@ -745,6 +748,7 @@
 				C1AB4F5014449387001F6773 /* PLObjectMarker.cpp in Sources */,
 				C1C9B44B144AD47F004D9609 /* PHBezierPath.cpp in Sources */,
 				C125FAC814552C5E003C80D6 /* PLBezier.mm in Sources */,
+				C1A114F814584B63003E2DD1 /* PLBezierView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

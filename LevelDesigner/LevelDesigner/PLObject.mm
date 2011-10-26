@@ -16,6 +16,7 @@
 #import "EntityController.h"
 #import "PLObjectView.h"
 #import "PHBezierPath.h"
+#import "PLBezier.h"
 
 @implementation PLObject
 @synthesize rootProperty;
@@ -130,12 +131,17 @@
     return p;
 }
 
+-(PLBezier*)bezierPathAtIndex:(int)idx
+{
+    return [beziers objectAtIndex:idx];
+}
+
 -(id)initFromLua:(lua_State*)L;
 {
     self = [super initFromLua:L];
     if (self) {
         BOOL isRO = NO;
-        vector<PHBezierPath*> beziers;
+        beziers = [[NSMutableArray alloc] init];
         if (L)
         {
             if (lua_istable(L, -1))
@@ -166,12 +172,13 @@
                         lua_pushnumber(L, i);
                         lua_gettable(L, -2);
                         
-                        PHBezierPath * bp = PHBezierPath::fromLua(L);
-                        beziers.push_back(bp);
+                        if (lua_istable(L, -1))
+                            [beziers addObject:[[[PLBezier alloc] initFromLua:L] autorelease]];
                         
                         lua_pop(L,1);
                     }
                 }
+                lua_pop(L,1);
             }
         }
         else
@@ -182,6 +189,7 @@
         }
         
         [self markMandatory];
+        rootProperty.owner = self;
                 
         PLProperty * phy = [rootProperty propertyWithKey:@"physics"];
         PLProperty * fixtures = [[phy propertyWithKey:@"fixtures"] retain];
@@ -191,7 +199,8 @@
         
         PLProperty * images = [[rootProperty propertyWithKey:@"images"] retain];
         [rootProperty removeProperty:images];
-        rootProperty.owner = self;
+        fixtures.owner = self;
+        images.owner = self;
         
         className = [[rootProperty propertyWithKey:@"class"].stringValue retain];
         prototype = [[[PrototypeController singleton] prototypeForClass:self.className] retain];
@@ -215,6 +224,9 @@
         
         if (isRO)
             self.readOnly = YES;
+        
+        [beziers release];
+        beziers = nil;
     }
     
     return self;

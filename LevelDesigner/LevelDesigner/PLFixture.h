@@ -18,6 +18,7 @@ enum PLFixtureShapes
 @class PLProperty;
 @class PLObject;
 @class FixtureViewController;
+@class PLBezier;
 
 #ifdef __cplusplus
 class PLFixtureView;
@@ -41,8 +42,12 @@ class PLFixtureView;
     
     FixtureViewController * viewController;
     PLFixtureView * actor;
+    PLBezier * bezierCurve;
+    NSUInteger bezierCurveIndex;
 }
 
+@property(nonatomic,retain) PLBezier * bezierCurve;
+@property(nonatomic,assign) NSUInteger bezierCurveIndex;
 @property(nonatomic,assign) int shape;
 @property(nonatomic,assign) NSRect box;
 @property(nonatomic,assign) NSPoint position;

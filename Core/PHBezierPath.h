@@ -21,6 +21,7 @@ public:
         anchorPoint() : point(PHOriginPoint), tag(0) {}
         anchorPoint(const PHPoint & p, int t) : point(p), tag(t) {}
         anchorPoint(const anchorPoint & o) : point(o.point), tag(o.tag) {}
+        bool operator == (const anchorPoint & o) const { return (tag==o.tag && point==o.point); }
     };
     
 protected:
@@ -58,8 +59,11 @@ public:
     
     PHBezierPath() : L(NULL), cache(NULL), commitDisableCount(0) {}
     ~PHBezierPath();
-    static PHBezierPath * fromLua(lua_State * L);
+    static PHBezierPath * nonUniqueFromLua(lua_State * L) { return fromLua(L,false); }
+    static PHBezierPath * fromLua(lua_State * L) { return fromLua(L,true); }
+    static PHBezierPath * fromLua(lua_State * L, bool unique);
     void luaDestroy(PHObject * sender, void * ud);
+    bool operator == (const PHBezierPath & othr);
     
 protected:
     void modelChanged();

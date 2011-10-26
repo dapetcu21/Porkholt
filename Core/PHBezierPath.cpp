@@ -10,20 +10,23 @@
 #include "PHLua.h"
 #include "PHMessage.h"
 
-PHBezierPath * PHBezierPath::fromLua(lua_State * L)
+PHBezierPath * PHBezierPath::fromLua(lua_State * L, bool unique)
 {
     if (!L) return NULL;
     if (lua_istable(L, -1))
     {
-        lua_getfield(L, -1, "ud");
-        if (lua_islightuserdata(L, -1))
+        if (unique)
         {
-            PHBezierPath * p = (PHBezierPath*)lua_touserdata(L, -1);
-            p->retain();
+            lua_getfield(L, -1, "ud");
+            if (lua_islightuserdata(L, -1))
+            {
+                PHBezierPath * p = (PHBezierPath*)lua_touserdata(L, -1);
+                p->retain();
+                lua_pop(L,1);
+                return p;
+            }
             lua_pop(L,1);
-            return p;
         }
-        lua_pop(L,1);
         
         PHBezierPath * p = new PHBezierPath;
         lua_pushvalue(L, -1);
@@ -197,13 +200,20 @@ void PHBezierPath::modelChanged()
         i->second.call();
 }
 
+bool PHBezierPath::operator == (const PHBezierPath & othr)
+{
+    if (othr.points.size() != points.size()) return false;
+    if (othr.curves.size() != curves.size()) return false;
+    return  equal(points.begin(),points.end(),othr.points.begin())&&
+            equal(curves.begin(),curves.end(),othr.curves.begin());
+}
+
 const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<anchorPoint> & points)
 {
     //dummy implementation
     vector<PHBezierPath::anchorPoint> * l = new vector<PHBezierPath::anchorPoint>(points);
     return l;
 }
-
 
 #pragma mark Triangulation
 //----------------------

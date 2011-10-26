@@ -15,6 +15,10 @@
 #import "StatusController.h"
 #import "PLDocument.h"
 #import "PLBezier.h"
+#import "SubentityController.h"
+#import "PLImage.h"
+#import "PLFixture.h"
+#import "PLBezier.h"
 
 @implementation ObjectController
 
@@ -157,6 +161,7 @@
 	}
 	lua_pop(L,1);
 	
+    PHMessage::messageWithName("luaDestroy")->broadcast(nil, L);
 	lua_close(L);
     
 	NSUInteger n = [robjs count];
@@ -175,9 +180,47 @@
 	[file appendString:@"--Do not modify this file. If you do, please note that this\n"];
 	[file appendString:@"--file is reset every time you use the Level Designer\n"];
     [file appendString:@"\nlocal obj\n\n"];
+    
+    NSMutableArray * beziers = [[[NSMutableArray alloc] init] autorelease];
+
+#define indexForBezier(x) \
+    PLBezier * b = (x); \
+    NSUInteger index; \
+    NSUInteger n = [beziers count]; \
+    for (index = 0; index<n; index++) \
+        if ([b isEqual:[beziers objectAtIndex:index]]) \
+            break; \
+    if (index==n) \
+    { \
+        [file appendFormat:@"local bezierCurve%u = ",(unsigned int)index]; \
+        [b writeToFile:file]; \
+        [beziers addObject:b]; \
+        [file appendString:@"\n"]; \
+    }
+    
 	for (PLObject * object in arrays[0])
 		if (!object.readOnly)
+        {   
+            NSArray * fixtures = [[object subentityModel] fixtures];
+            for (PLFixture * fx in fixtures)
+            {
+                if (fx.bezierCurve)
+                {
+                    indexForBezier(fx.bezierCurve);
+                    fx.bezierCurveIndex = index;
+                }
+            }
+            NSArray * images = [[object subentityModel] images];
+            for (PLImage * img in images)
+            {
+                if (img.bezierCurve)
+                {
+                    indexForBezier(img.bezierCurve);
+                    img.bezierCurveIndex = index;
+                }
+            }
 			[object writeToFile:file];
+        }
 	[file appendString:@"\n"];
 }
 

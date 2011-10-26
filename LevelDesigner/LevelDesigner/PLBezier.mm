@@ -102,7 +102,7 @@ public:
     if (self) {
         delegate = new PLBezierDelegate(self);
         if (L)
-            curve = PHBezierPath::fromLua(L);
+            curve = PHBezierPath::nonUniqueFromLua(L);
         else {
             curve = new PHBezierPath;
             PHBezierPath::anchorPoint v[3] = { PHBezierPath::anchorPoint(PHPoint(0,0),1), PHBezierPath::anchorPoint(PHPoint(1,0),2), PHBezierPath::anchorPoint(PHPoint(0,1),3) };
@@ -150,6 +150,32 @@ public:
     return self;
 }
 
+-(BOOL)isEqual:(PLBezier*)object
+{
+    if (![object isKindOfClass:[PLBezier class]]) return NO;
+    return (*[object bezierPath])==(*curve);
+}
+
+-(void)writeToFile:(NSMutableString*)file
+{
+    const vector<PHBezierPath::anchorPoint> & v = curve->anchorPoints();
+    [file appendFormat:@"{\n\tpoints = { n=%u",(unsigned int)v.size()];
+    int idx = 0;
+    for (vector<PHBezierPath::anchorPoint>::const_iterator i = v.begin(); i!=v.end(); i++, idx++)
+    {
+        [file appendFormat:@",\n\t\t[%d] = { point = point(%lf,%lf)",idx,i->point.x,i->point.y];
+        if (i->tag)
+            [file appendFormat:@", tag = %d",i->tag];
+        [file appendString:@" }"];
+    }
+    [file appendFormat:@"},\n\tcurves = { n=%u",(unsigned int)curve->bezierCurves().size()];
+    const set<PHRange> & c = curve->bezierCurves();
+    idx = 0;
+    for (set<PHRange>::const_iterator i = c.begin(); i!=c.end(); i++, idx++)
+        [file appendFormat:@",\n\t\t[%d] = range(%d,%d)",idx,i->start,i->length];
+    [file appendString:@"}\n\t}"];
+}
+
 -(PHBezierPath*)bezierPath
 {
     return curve;
@@ -180,8 +206,10 @@ public:
     for (set<PLBezierView*>::iterator i = actors.begin(); i!= actors.end(); i++)
         (*i)->setModel(NULL);
     fromWithin = NO;
-    curve->release();
-    delegate->release();
+    if (curve)
+        curve->release();
+    if (delegate)
+        delegate->release();
     [super dealloc];
 }
 

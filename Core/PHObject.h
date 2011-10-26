@@ -21,7 +21,7 @@
 class PHObject
 {
 private:
-	volatile int _refcount;
+    int _refcount;
 public:
 	PHObject(): _refcount(1) {};
 	PHOBJECT_PREFIX PHObject * retain() { _refcount++; return this;};

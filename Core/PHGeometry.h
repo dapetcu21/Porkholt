@@ -111,6 +111,11 @@ struct PHPoint
         return x>o.x;
     }
     
+    bool operator == (const PHPoint & o) const
+    {
+        return (x==o.x && y==o.y);
+    }
+    
     void saveToLua(lua_State * L) const;
 };
 

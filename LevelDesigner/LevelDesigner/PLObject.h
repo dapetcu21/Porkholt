@@ -11,11 +11,18 @@
 @class PLProperty;
 @class SubentityController;
 @class PLPrototype;
+@class PLBezier;
+
+#ifndef __cplusplus
+#else
+#endif
 
 #ifndef __cplusplus
 #define PLObjectView void
+#define PHBezierPath void
 #else
 class PLObjectView;
+class PHBezierPath;
 #endif
 
 @interface PLObject : PLEntity
@@ -25,12 +32,15 @@ class PLObjectView;
     PLPrototype * prototype;
     NSString * className;
     PLObjectView * actor;
+    NSMutableArray * beziers;
 }
 
 @property(nonatomic,readonly) PLProperty * rootProperty;
 @property(nonatomic,readonly) SubentityController * subentityModel;
 @property(nonatomic,readonly) NSString * className;
 @property(nonatomic,readonly) PLPrototype * prototype;
+
+-(PLBezier*)bezierPathAtIndex:(int)index;
 
 -(void)propertyChanged:(PLProperty*)p;
 -(void)subobjectChanged:(PLEntity*)so;

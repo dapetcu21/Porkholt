@@ -42,6 +42,7 @@ static inline void endToken(NSMutableString * file, int * count)
 @implementation PLImage
 @synthesize viewController;
 @synthesize actor;
+@synthesize bezierCurveIndex;
 
 -(id)init
 {
@@ -73,10 +74,15 @@ static inline void endToken(NSMutableString * file, int * count)
         horizontallyFlipped = p?p.booleanValue:NO;
         
         p = [prop propertyWithKey:@"constrainCurveToFrame"];
-        constrainToFrame = p?p.booleanValue:NO;
+        constrainToFrame = p?p.booleanValue:YES;
         
         p = [prop propertyWithKey:@"verticallyFlipped"];
         verticallyFlipped = p?p.booleanValue:NO;
+        
+        p = [prop propertyWithKey:@"bezierPath"];
+        PLObject * obj = prop.owner;
+        bezierCurve = (p&&([p type]==PLPropertyNumber)&&[obj isKindOfClass:[PLObject class]])?[obj bezierPathAtIndex:(int)[p numberValue]]:nil;
+        [bezierCurve retain];
         
         p = [prop propertyWithKey:@"tint"];
         if (p && p.type==PLPropertyDictionary)
@@ -122,10 +128,9 @@ static inline void endToken(NSMutableString * file, int * count)
         addToken(file,@"constrainCurveToFrame = false", &count);
     if (bezierCurve)
     {   
-        EntityController * ec = (EntityController*)[bezierCurve owner];
-        NSUInteger idx = [ec indexForEntity:bezierCurve inArray:2];
+        NSUInteger idx = bezierCurveIndex;
         if (idx!=NSNotFound)
-            addToken(file,[NSString stringWithFormat:@"bezierPath = lvldes_beziers[%u]",(unsigned int)idx], &count);
+            addToken(file,[NSString stringWithFormat:@"bezierPath = bezierCurve%u",(unsigned int)idx], &count);
     }
     if (tint.a>=0 && !(tint.r==1 && tint.g==1 && tint.b==1 && tint.a==1))
         addToken(file,[NSString stringWithFormat:@"tint = rgba(%lf,%lf,%lf,%lf)",tint.r,tint.g,tint.b,tint.a],&count);
@@ -207,18 +212,22 @@ static inline void endToken(NSMutableString * file, int * count)
     [prop insertProperty:p atIndex:[prop childrenCount]];
 
     [aCoder encodeObject:prop forKey:@"property"];
+    [aCoder encodeObject:bezierCurve forKey:@"bezierCurve"];
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
-    PLProperty * p = (PLProperty*)[aDecoder decodeObjectForKey:@"property"];
-    return [self initFromProperty:p];
+    self = [self initFromProperty:(PLProperty*)[aDecoder decodeObjectForKey:@"property"]];
+    if (self)
+        bezierCurve = (PLBezier*)[[aDecoder decodeObjectForKey:@"bezierCurve"] retain];
+    return self;
 }
 
 -(void)dealloc
 {
     [fileName release];
     [imageClass release];
+    [bezierCurve release];
     [super dealloc];
 }
 
@@ -268,6 +277,11 @@ static inline void endToken(NSMutableString * file, int * count)
     return verticallyFlipped;
 }
 
+-(BOOL)constrainToFrame
+{
+    return constrainToFrame;
+}
+
 -(struct PLColor)tint
 {
     return tint;
@@ -281,6 +295,11 @@ static inline void endToken(NSMutableString * file, int * count)
 -(NSUndoManager*)undoManager
 {
     return [(EntityController*)owner undoManager];
+}
+
+-(PLBezier*)bezierCurve
+{
+    return bezierCurve;
 }
 
 -(void)setImageClass:(NSString *)cls
@@ -353,6 +372,14 @@ static inline void endToken(NSMutableString * file, int * count)
     [self imageChanged];
 }
 
+-(void)setConstrainToFrame:(BOOL)v
+{
+    if (constrainToFrame==v) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setConstrainToFrame:constrainToFrame];
+    constrainToFrame = v;
+    [self imageChanged];
+}
+
 -(void)setTint:(struct PLColor)t
 {
     if (t.r == tint.r && t.g == tint.g && t.b == tint.b && t.a == tint.a) return;
@@ -366,6 +393,16 @@ static inline void endToken(NSMutableString * file, int * count)
     if (a==alpha) return;
     [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setAlpha:alpha];
     alpha = a;
+    [self imageChanged];
+}
+
+-(void)setBezierCurve:(PLBezier *)v
+{
+    if (v==bezierCurve) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setBezierCurve:bezierCurve];
+    [v retain];
+    [bezierCurve release];
+    bezierCurve = v;
     [self imageChanged];
 }
 

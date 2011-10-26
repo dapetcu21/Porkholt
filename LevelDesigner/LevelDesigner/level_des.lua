@@ -14,7 +14,10 @@ function describeObject(obj)
 		des.readOnly = false;
 	end
 	obj.levelDes = nil;
+	beziers = { n=0 };
 	des.rootProperty = { key = "__root__"; value = describeTable(obj); }
+	des.bezierPaths = beziers;
+	beziers = nil;
 	return des
 end
 
@@ -22,6 +25,12 @@ function describeTable(obj)
     local des = {};
     local j = 0;
     local n = obj.n;
+    if (type(obj.points)=="table" and type(obj.curves)=="table") then
+        local i = beziers.n;
+        beziers[i] = obj;
+        beziers.n = i+1;
+        return i
+    end
     if (n) then
         des.array = true;
         des.n = n;
