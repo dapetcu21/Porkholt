@@ -12,6 +12,8 @@
 #include "PHView.h"
 @class PLFixture;
 class PLObjectView;
+class PLBezierView;
+@class PLBezier;
 
 class PLFixtureView : public PHView
 {
@@ -24,6 +26,13 @@ public:
     
 protected:
     PLFixture * model;
+    PLBezier * curve;
+    PLBezierView * bezierView;
+    
+    GLuint arraysVBO,indexesVBO;
+    int nVertices;
+    int nIndexes;
+    int nLines;
     
     void draw();
     int grabTypeForPoint(const PHPoint &pnt);
@@ -33,6 +42,9 @@ protected:
     bool moving,rotating;
     NSRect initialGrabFrame;
     double initialGrabRadius;
+    
+    void bezierChanged(PHObject * sender, void * ud);
+    void changeBezier(PLBezier * cv, bool showView);
     
 public:
     PLFixtureView(PLFixture * _model);

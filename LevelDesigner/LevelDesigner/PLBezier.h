@@ -27,5 +27,7 @@ class PLBezierView;
 -(void)modelChanged;
 -(BOOL)isEqual:(PLBezier*)object;
 -(void)writeToFile:(NSMutableString*)file;
+-(void)addActor:(PLBezierView*)a;
+-(void)removeActor:(PLBezierView*)a;
 
 @end

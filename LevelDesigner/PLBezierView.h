@@ -14,9 +14,10 @@
 
 class PLBezierView : public PHView {
     PLBezier * _model;
+    
 public:
     PLBezierView() : _model(NULL) {}
-    ~PLBezierView() { [_model release]; }
+    ~PLBezierView();
     void setModel(PLBezier * bezier);
     PLBezier * model() { return _model; }
     

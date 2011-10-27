@@ -83,7 +83,7 @@ static inline void endToken(NSMutableString * file, int * count)
         p = [prop propertyWithKey:@"maskBits"];
         maskBits = p?p.numberValue:0xFFFF;
         
-        p = [prop propertyWithKey:@"bezierPath"];
+        p = [prop propertyWithKey:@"curve"];
         PLObject * obj = prop.owner;
         bezierCurve = (p&&([p type]==PLPropertyNumber)&&[obj isKindOfClass:[PLObject class]])?[obj bezierPathAtIndex:(int)[p numberValue]]:nil;
         [bezierCurve retain];
