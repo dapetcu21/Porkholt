@@ -62,8 +62,6 @@ void PLFixtureView::bezierChanged(PHObject * sender, void * ud)
         glUnmapBuffer(GL_ARRAY_BUFFER);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        delete anchors;
-        
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (nIndexes+nVertices+1)*sizeof(GLushort), NULL, GL_DYNAMIC_DRAW);
         GLushort * idx = (GLushort*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
@@ -103,6 +101,8 @@ void PLFixtureView::changeBezier(PLBezier * cv, bool showView)
         }
         bezierChanged(this, NULL);
     }
+    if (!cv)
+        showView = false;
     if (curve!=cv || showView!=(bezierView!=NULL))
     {
         if (bezierView)
@@ -112,6 +112,7 @@ void PLFixtureView::changeBezier(PLBezier * cv, bool showView)
         }
         if (showView)
         {
+            [curve setUndoManager:undoManager()];
             bezierView = new PLBezierView;
             bezierView->setModel(curve);
             addSubview(bezierView);
@@ -136,12 +137,17 @@ void PLFixtureView::modelChanged()
     }
     setFrame(fr);
     setRotation(-toRad(model.rotation));
+    selectedChanged();
+}
+
+void PLFixtureView::selectedChanged()
+{
     SubentityController * sc = (SubentityController*)[model owner];
     ObjectController * oc = (ObjectController*)[[sc object] owner];
     bool selected = ([model selected] && [oc objectMode] && ([oc selectedEntity] == [sc object]));
     changeBezier((model.shape == PLFixtureFreestyle)?[model bezierCurve]:nil,selected);
     if (bezierView)
-        bezierView->setFrame(fr-fr.origin());
+        bezierView->setFrame(_bounds);
 }
 
 bool PLFixtureView::intersectsRect(PHView * base, const PHRect & rect)
@@ -449,40 +455,11 @@ void PLFixtureView::draw()
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
-        GLfloat borderVertices[] = {
-            _bounds.x, _bounds.y,
-            _bounds.x+borderSize, _bounds.y,
-            _bounds.x, _bounds.y+_bounds.height,
-            _bounds.x+borderSize, _bounds.y+_bounds.height,
-            
-            _bounds.x+borderSize, _bounds.y+_bounds.height,
-            _bounds.x, _bounds.y,
-
-            _bounds.x, _bounds.y,
-            _bounds.x+_bounds.width, _bounds.y,
-            _bounds.x, _bounds.y+borderSize,
-            _bounds.x+_bounds.width, _bounds.y+borderSize,
-
-            _bounds.x+_bounds.width, _bounds.y+borderSize,
-            _bounds.x+_bounds.width, _bounds.y+_bounds.height,
-            
-            _bounds.x+_bounds.width, _bounds.y+_bounds.height,
-            _bounds.x+_bounds.width-borderSize, _bounds.y+_bounds.height,
-            _bounds.x+_bounds.width, _bounds.y,
-            _bounds.x+_bounds.width-borderSize, _bounds.y,
-            
-            _bounds.x+_bounds.width-borderSize, _bounds.y,
-            _bounds.x+_bounds.width, _bounds.y+_bounds.height,
-            
-            _bounds.x+_bounds.width, _bounds.y+_bounds.height,
-            _bounds.x, _bounds.y+_bounds.height,
-            _bounds.x+_bounds.width, _bounds.y+_bounds.height-borderSize,
-            _bounds.x, _bounds.y+_bounds.height-borderSize
-        };
-        
-        glVertexPointer(2, GL_FLOAT, 0, borderVertices);
+        const GLubyte idx[] = {0,1,3,2,0};
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
         PHGLSetColor(PHColor(0.7,0.7,1));
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 22);
+        glLineWidth(1.0f);
+        glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_BYTE, idx);
     }
     if (model.shape == PLFixtureFreestyle && arraysVBO!=GL_INVALID_INDEX && indexesVBO!=GL_INVALID_INDEX)
     {
@@ -497,25 +474,26 @@ void PLFixtureView::draw()
         glScalef(_bounds.width, _bounds.height, 1);
         glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
         PHGLSetColor(PHColor(0.7,0.7,1));
+        glLineWidth(1.0f);
         glDrawElements(GL_LINE_STRIP, nVertices+1, GL_UNSIGNED_SHORT, ((GLushort*)NULL)+nIndexes);
         glPopMatrix();
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
-    if (selected && (model.shape == PLFixtureRect || model.shape == PLFixtureFreestyle))
+    if (selected && [oc showMarkers] && (model.shape == PLFixtureRect || model.shape == PLFixtureFreestyle))
     {
         GLfloat markersVertices[] = {
             0,0,
-            0.5,0,
+            0.3,0,
             0,1,
-            0.5,1,
-            0.5,1,
+            0.3,1,
+            0.3,1,
             0,0,
             0,0,
             1,0,
-            0,0.5,
-            1,0.5
+            0,0.3,
+            1,0.3
         };
         glVertexPointer(2, GL_FLOAT, 0, markersVertices);
         PHGLSetStates(PHGLVertexArray);
@@ -550,22 +528,18 @@ void PLFixtureView::draw()
         glVertexPointer(2, GL_FLOAT, 0, circleVertices);
         glDrawArrays(GL_TRIANGLE_FAN, 0, circleChunks+2);
         
-        GLfloat circleBorder [(circleChunks+1)*4];
-        double rad1 = rad-(selected?0.025:borderSize);
-        if (rad1<0)
-            rad1 = 0;
+        GLfloat circleBorder[(circleChunks+1)*2];
         for (int i=0; i<=circleChunks; i++)
         {
             double angle = M_PI*2*((double)i/circleChunks);
-            circleBorder[i*4+0] = sin(angle)*rad1+center.x;
-            circleBorder[i*4+1] = cos(angle)*rad1+center.y;
-            circleBorder[i*4+2] = sin(angle)*rad+center.x;
-            circleBorder[i*4+3] = cos(angle)*rad+center.y;
+            circleBorder[i*2] = sin(angle)*rad+center.x;
+            circleBorder[i*2+1] = cos(angle)*rad+center.y;
         }
         
         PHGLSetColor(selected?PHColor(0.5,0.5,1):PHColor(0.7,0.7,1));
+        glLineWidth(selected?3.0f:1.0f);
         glVertexPointer(2, GL_FLOAT, 0, circleBorder);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, circleChunks*2+2);
+        glDrawArrays(GL_LINE_STRIP, 0, circleChunks+1);
     }
 }
 

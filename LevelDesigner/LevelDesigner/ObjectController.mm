@@ -204,7 +204,7 @@
             NSArray * fixtures = [[object subentityModel] fixtures];
             for (PLFixture * fx in fixtures)
             {
-                if (fx.bezierCurve)
+                if (fx.shape == PLFixtureFreestyle && fx.bezierCurve)
                 {
                     indexForBezier(fx.bezierCurve);
                     fx.bezierCurveIndex = index;

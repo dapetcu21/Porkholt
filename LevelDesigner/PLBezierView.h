@@ -10,9 +10,9 @@
 #define PLBEZIERVIEW_H
 
 #import "PLBezier.h"
-#include "PHView.h"
+#include "PHTestView.h"
 
-class PLBezierView : public PHView {
+class PLBezierView : public PHTestView {
     PLBezier * _model;
     
 public:

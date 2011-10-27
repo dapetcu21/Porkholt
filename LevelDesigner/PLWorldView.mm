@@ -23,7 +23,10 @@ void PLWorldView::touchEvent(PHEvent * event)
     {
         if (event->userData() == (void*)3)
         {
-            [[worldController model] setObjectMode:![[worldController model] objectMode]];
+            ObjectController * oc = [worldController model];
+            BOOL desired = ![oc objectMode];
+            if (!desired || [oc isObjectModePossible])
+                [oc setObjectMode:desired];
             event->setHandled(true);
         }
         if (event->userData() != (void*)1)

@@ -21,9 +21,11 @@ class PLBezierView;
     PLBezierDelegate * delegate;
     set<PLBezierView*> actors;
     BOOL fromWithin;
+    NSUndoManager * undoManager;
 }
 
 @property(nonatomic,readonly) PHBezierPath * bezierPath;
+@property(nonatomic,retain) NSUndoManager * undoManager;
 -(void)modelChanged;
 -(BOOL)isEqual:(PLBezier*)object;
 -(void)writeToFile:(NSMutableString*)file;

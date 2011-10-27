@@ -77,7 +77,7 @@
 		C1A33CAE142A43550051912D /* EntityController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CAD142A43550051912D /* EntityController.m */; };
 		C1A33CB2142B67B50051912D /* MultipleListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CB1142B67B40051912D /* MultipleListController.m */; };
 		C1A33CB5142BCB880051912D /* PLImage.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CB4142BCB870051912D /* PLImage.mm */; };
-		C1A33CB8142BCB9A0051912D /* PLFixture.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CB7142BCB9A0051912D /* PLFixture.m */; };
+		C1A33CB8142BCB9A0051912D /* PLFixture.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CB7142BCB9A0051912D /* PLFixture.mm */; };
 		C1A33CBB142BCBB70051912D /* SubentityController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CBA142BCBB70051912D /* SubentityController.m */; };
 		C1A33CBE142BCD620051912D /* SubentityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CBD142BCD620051912D /* SubentityViewController.m */; };
 		C1A33CC1142BCE500051912D /* PropertyController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A33CC0142BCE500051912D /* PropertyController.m */; };
@@ -241,7 +241,7 @@
 		C1A33CB3142BCB870051912D /* PLImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLImage.h; sourceTree = "<group>"; };
 		C1A33CB4142BCB870051912D /* PLImage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLImage.mm; sourceTree = "<group>"; };
 		C1A33CB6142BCB9A0051912D /* PLFixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLFixture.h; sourceTree = "<group>"; };
-		C1A33CB7142BCB9A0051912D /* PLFixture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLFixture.m; sourceTree = "<group>"; };
+		C1A33CB7142BCB9A0051912D /* PLFixture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLFixture.mm; sourceTree = "<group>"; };
 		C1A33CB9142BCBB70051912D /* SubentityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubentityController.h; sourceTree = "<group>"; };
 		C1A33CBA142BCBB70051912D /* SubentityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubentityController.m; sourceTree = "<group>"; };
 		C1A33CBC142BCD620051912D /* SubentityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubentityViewController.h; sourceTree = "<group>"; };
@@ -537,7 +537,7 @@
 				C1A33CB3142BCB870051912D /* PLImage.h */,
 				C1A33CB4142BCB870051912D /* PLImage.mm */,
 				C1A33CB6142BCB9A0051912D /* PLFixture.h */,
-				C1A33CB7142BCB9A0051912D /* PLFixture.m */,
+				C1A33CB7142BCB9A0051912D /* PLFixture.mm */,
 				C1AB4F4C144453C0001F6773 /* PLSubEntity.h */,
 				C19D7D06142CBE75003E92C1 /* PLProperty.h */,
 				C19D7D07142CBE75003E92C1 /* PLProperty.m */,
@@ -692,7 +692,7 @@
 				C1A33CAE142A43550051912D /* EntityController.m in Sources */,
 				C1A33CB2142B67B50051912D /* MultipleListController.m in Sources */,
 				C1A33CB5142BCB880051912D /* PLImage.mm in Sources */,
-				C1A33CB8142BCB9A0051912D /* PLFixture.m in Sources */,
+				C1A33CB8142BCB9A0051912D /* PLFixture.mm in Sources */,
 				C1A33CBB142BCBB70051912D /* SubentityController.m in Sources */,
 				C1A33CBE142BCD620051912D /* SubentityViewController.m in Sources */,
 				C1A33CC1142BCE500051912D /* PropertyController.m in Sources */,

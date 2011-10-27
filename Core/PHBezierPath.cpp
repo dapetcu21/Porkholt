@@ -420,12 +420,12 @@ static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
     }
 #undef prev
 #undef next
-    return out-oout;
+    return (int)(out-oout);
 }
 
 GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n)
 {
-    int m = points.size();
+    int m = (int)points.size();
     
     pnt * a = new pnt[m];
     edge * b = new edge[m];
@@ -578,7 +578,7 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
         }
     }
     
-    n = cp-v;
+    n = (int)(cp-v);
     
     delete[] a;
     delete[] b;

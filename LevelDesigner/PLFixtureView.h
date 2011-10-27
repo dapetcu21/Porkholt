@@ -55,6 +55,7 @@ public:
     bool intersectsPoint(const PHPoint & pnt);
     
     bool objectMode();
+    void selectedChanged();
     NSUndoManager * undoManager();
 };
 

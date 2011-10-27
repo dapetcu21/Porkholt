@@ -13,6 +13,7 @@
 #import "ImageViewController.h"
 #import "PLObject.h"
 #import "PLBezier.h"
+#import "PLImageView.h"
 
 static inline struct PLColor PLMakeColor(double r, double g, double b, double a)
 {
@@ -235,6 +236,13 @@ static inline void endToken(NSMutableString * file, int * count)
 {
     [[self object] subobjectChanged:self];
     [viewController imageChanged];
+}
+
+-(void)setSelected:(BOOL)sel
+{
+    [super setSelected:sel];
+    if (actor)
+        actor->selectedChanged();
 }
 
 -(NSString*)imageClass

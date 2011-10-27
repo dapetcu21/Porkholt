@@ -10,6 +10,7 @@
 #import "PLImage.h"
 #import "PLObject.h"
 #import "PHGeometry.h"
+#import "PLBezier.h"
 
 
 @implementation ImageViewController
@@ -46,6 +47,8 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     [tag setEnabled:enabled];
     [tint setEnabled:enabled];
     [alphaSlider setEnabled:enabled];
+    [curve setEnabled:enabled];
+    [constrain setEnabled:enabled];
     
     if (!model) return;
     
@@ -65,6 +68,8 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     [alphaSlider setFloatValue:model.alpha];
     [hFlipped setState:model.horizontallyFlipped?NSOnState:NSOffState];
     [vFlipped setState:model.verticallyFlipped?NSOnState:NSOffState];
+    [constrain setState:model.constrainToFrame?NSOnState:NSOffState];
+    [curve setState:model.bezierCurve?NSOnState:NSOffState];
     PHColor color = PHColorFromPLColor(model.tint);
     NSColor * clr = [NSColor colorWithCalibratedRed:1 green:1 blue:1 alpha:1];
     if (color.isValid())
@@ -91,6 +96,8 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
         model.horizontallyFlipped = ([hFlipped state] == NSOnState);
     if (sender == vFlipped)
         model.verticallyFlipped = ([vFlipped state] == NSOnState);
+    if (sender == constrain)
+        model.constrainToFrame = ([constrain state] == NSOnState);
     if (sender == rotation)
         model.rotation = [rotation floatValue];
     if (sender == frame_x || sender == frame_y || sender == frame_w || sender == frame_h)
@@ -108,6 +115,15 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
         if (c.a == 1 && c.r == 1 && c.g == 1 && c.b == 1)
             c.a=c.r=c.g=c.b=-1;
         model.tint = c;
+    }
+    if (sender == curve)
+    {
+        BOOL old = (model.bezierCurve!=nil);
+        BOOL nw = [sender state]==NSOnState;
+        if (old&&!nw)
+            [model setBezierCurve:nil];
+        if (!old&&nw)
+            [model setBezierCurve:[[[PLBezier alloc] init] autorelease]];
     }
     modifyFromInside = NO;
 }

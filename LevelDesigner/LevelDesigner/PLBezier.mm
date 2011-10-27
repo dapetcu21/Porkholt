@@ -95,6 +95,7 @@ public:
 };
 
 @implementation PLBezier
+@synthesize undoManager;
 
 - (id)initFromLua:(lua_State *)L
 {
@@ -210,6 +211,7 @@ public:
         curve->release();
     if (delegate)
         delegate->release();
+    [undoManager release];
     [super dealloc];
 }
 

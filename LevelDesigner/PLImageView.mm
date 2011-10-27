@@ -19,8 +19,9 @@
 #import "PHEventHandler.h"
 #import "PHImage.h"
 #import "PLBezier.h"
+#import "PLBezierView.h"
 
-PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false), grab(0)
+PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false), grab(0), bezierView(NULL)
 {
     setUserInput(true);
     [model retain];
@@ -30,6 +31,11 @@ PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotat
 
 PLImageView::~PLImageView()
 {
+    if (bezierView)
+    {
+        bezierView->removeFromSuperview();
+        bezierView->release();
+    }
     [model setActor:NULL];
     [model release];
 }
@@ -57,6 +63,33 @@ void PLImageView::modelChanged()
     setAlpha(model.alpha);
     setConstrainCurveToFrame(model.constrainToFrame);
     setBezierPath(model.bezierCurve.bezierPath);
+    selectedChanged();
+}
+
+void PLImageView::selectedChanged()
+{
+    SubentityController * sc = (SubentityController*)[model owner];
+    ObjectController * oc = (ObjectController*)[[sc object] owner];
+    bool selected = ([model selected] && [oc objectMode] && ([oc selectedEntity] == [sc object]));
+    PLBezier * b = selected?[model bezierCurve]:nil;
+    if (((bezierView!=NULL)!=(b!=NULL)) || (bezierView && bezierView->model()!=b))
+    {
+        if (bezierView)
+        {
+            bezierView->removeFromSuperview();
+            bezierView->release();
+        }
+        if (b)
+        {
+            [b setUndoManager:undoManager()];
+            bezierView = new PLBezierView;
+            bezierView->setModel(b);
+            addSubview(bezierView);
+        } else
+            bezierView = NULL; 
+    }
+    if (bezierView)
+        bezierView->setFrame(_bounds);
 }
 
 bool PLImageView::intersectsRect(PHView * base, const PHRect & rect)
@@ -308,15 +341,15 @@ void PLImageView::draw()
     {
         GLfloat vertices[] = {
             0,0,
-            0.5,0,
+            0.3,0,
             0,1,
-            0.5,1,
-            0.5,1,
+            0.3,1,
+            0.3,1,
             0,0,
             0,0,
             1,0,
-            0,0.5,
-            1,0.5
+            0,0.3,
+            1,0.3
         };
         PHGLSetStates(PHGLVertexArray);
         glVertexPointer(2, GL_FLOAT, 0, vertices);

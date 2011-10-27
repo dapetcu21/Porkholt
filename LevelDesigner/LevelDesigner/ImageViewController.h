@@ -27,6 +27,8 @@
     IBOutlet NSTextField * fileName;
     IBOutlet NSButton * hFlipped;
     IBOutlet NSButton * vFlipped;
+    IBOutlet NSButton * curve;
+    IBOutlet NSButton * constrain;
     IBOutlet NSTextField * tag;
     IBOutlet NSColorWell * tint;
     IBOutlet NSSlider * alphaSlider;

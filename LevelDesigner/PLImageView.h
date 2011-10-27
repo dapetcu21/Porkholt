@@ -12,6 +12,7 @@
 #include "PHImageView.h"
 @class PLImage;
 class PLObjectView;
+class PLBezierView;
 
 class PLImageView : public PHImageView
 {
@@ -26,6 +27,7 @@ protected:
     bool moving,rotating;
     int grab;
     NSRect initialGrabFrame;
+    PLBezierView * bezierView;
     
     int grabTypeForPoint(const PHPoint & pnt);
     NSUndoManager * undoManager();
@@ -39,6 +41,7 @@ public:
     
     bool intersectsRect(PHView * base, const PHRect & rect);
     bool intersectsPoint(const PHPoint & pnt);
+    void selectedChanged();
     
     void touchEvent(PHEvent * event);
     

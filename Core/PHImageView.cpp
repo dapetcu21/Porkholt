@@ -93,7 +93,7 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
 GLfloat * PHImageView::interleavedArrayFromAnchorList(const void * ud, int & n)
 {
     const vector<PHBezierPath::anchorPoint> * anchors = (const vector<PHBezierPath::anchorPoint>*)ud;
-    n = anchors->size();
+    n = (int)anchors->size();
     GLfloat * v = new GLfloat[n*4];
     for (int i=0; i<n; i++)
     {
@@ -110,7 +110,7 @@ void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stri
     int i,nx;
     nx = i = 0;
     int corners[4] = {0,0,0,0};
-    int n = anchors->size();
+    int n = (int)anchors->size();
     if (!stride)
         stride = 2*sizeof(GLfloat);
     

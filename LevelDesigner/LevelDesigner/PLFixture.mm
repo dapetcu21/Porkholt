@@ -12,10 +12,13 @@
 #import "SubentityController.h"
 #import "FixtureViewController.h"
 #import "PLObject.h"
+#import "PLFixtureView.h"
+#import "PLBezier.h"
 
 @implementation PLFixture
 @synthesize viewController;
 @synthesize actor;
+@synthesize bezierCurveIndex;
 
 static inline void addToken(NSMutableString * file,NSString * token, int * count)
 {
@@ -242,6 +245,13 @@ static inline void endToken(NSMutableString * file, int * count)
     [viewController fixtureChanged];
 }
 
+-(void)setSelected:(BOOL)sel
+{
+    [super setSelected:sel];
+    if (actor)
+        actor->selectedChanged();
+}
+
 -(int)shape
 {
     return shape;
@@ -307,13 +317,20 @@ static inline void endToken(NSMutableString * file, int * count)
     return [(EntityController*)owner undoManager];
 }
 
--(void)setShape:(int)s
+-(void)_setShape:(int)s
 {
     if (shape==s) return;
-    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setShape:shape];
+    [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] _setShape:shape];
     shape = s;
     [self fixtureChanged];
     [(EntityController*)owner entityDescriptionChanged:self];
+}
+
+-(void)setShape:(int)s
+{
+    if (shape==s) return;
+    [self _setShape:s];
+    [self setBezierCurve:(shape == PLFixtureFreestyle)?[[[PLBezier alloc] init] autorelease]:nil];
 }
 
 -(void)setBox:(NSRect)b
