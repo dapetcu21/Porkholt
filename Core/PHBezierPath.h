@@ -36,6 +36,8 @@ protected:
 public:
     const vector<anchorPoint> & anchorPoints() { return points; }
     const set<PHRange> & bezierCurves() { return curves; }
+    void setBezierCurves(const set<PHRange> & c);
+    void setAnchorPoints(const vector<anchorPoint> & c);
     void addCurve(const PHRange & rng);
     void removeCurve(const PHRange & rng);
     const anchorPoint & anchorPointAtIndex(int index) { return points[index]; }

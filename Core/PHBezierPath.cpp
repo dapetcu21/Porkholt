@@ -652,3 +652,15 @@ vector<PHBezierPath::anchorPoint> * PHBezierPath::bezierPath(vector<anchorPoint>
     }
     return r;
 }
+
+void PHBezierPath::setBezierCurves(const set<PHRange> & c)
+{
+    curves = c;
+    modelChanged();
+}
+
+void PHBezierPath::setAnchorPoints(const vector<anchorPoint> & c)
+{
+    points = c;
+    modelChanged();
+}

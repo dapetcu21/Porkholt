@@ -16,8 +16,9 @@ class PLDotView;
 class PLBezierView : public PHView {
     PLBezier * _model;
     vector<PLDotView*> dots;
+    bool fromWithin;
 public:
-    PLBezierView() : _model(NULL) { setUserInput(true); }
+    PLBezierView() : _model(NULL), fromWithin(false) { setUserInput(true); }
     ~PLBezierView();
     void setModel(PLBezier * bezier);
     PLBezier * model() { return _model; }
@@ -32,6 +33,8 @@ private:
     void changeTag(PLDotView * sender);
     void moveDot(PLDotView * sender, PHPoint delta);
     void markAsCurve(PLDotView * sender);
+    void moveDotStarted(PLDotView * sender);
+    void moveDotEnded(PLDotView * sender);
 };
 
 #endif

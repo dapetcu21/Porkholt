@@ -9,6 +9,7 @@
 #import "PLBezierView.h"
 #import "PLBezier.h"
 #import "PHBezierPath.h"
+#import "PHEventHandler.h"
 
 class PLDotView : public PHView
 {
@@ -17,7 +18,8 @@ public:
     static const double radius;
     static const int circleChunks;
     PLBezierView * delegate;
-    PLDotView(PLBezierView * del) : color(PHWhiteColor), delegate(del), PHView(PHRect(-radius,-radius,2*radius,2*radius)) { setUserInput(true); }
+    bool moved;
+    PLDotView(PLBezierView * del) : color(PHWhiteColor), delegate(del), moved(false), PHView(PHRect(-radius,-radius,2*radius,2*radius)) { setUserInput(true); }
     void setPosition(const PHPoint & p)
     {
         setFrame(_frame-center()+p);
@@ -31,6 +33,35 @@ public:
                 evt->setHandled(true);
                 bringToFront();
             }
+        }
+        if (evt->type() == PHEvent::touchMoved)
+            if (evt->userData() == (void*)1)
+            {
+                if (!moved)
+                {
+                    delegate->moveDotStarted(this);
+                    moved = true;
+                }
+                delegate->moveDot(this,superView->toMyCoordinates(evt->location())-superView->toMyCoordinates(evt->lastLocation()));
+            }
+        if (evt->type() == PHEvent::touchUp)
+        {
+            if (evt->userData() == (void*)1)
+            {
+                if (moved)
+                    delegate->moveDotEnded(this);
+                if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
+                    delegate->changeTag(this);
+            } else
+            if (evt->userData() == (void*)2)
+            {
+                if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
+                    delegate->removeDot(this);
+                else
+                    delegate->newDot(this);
+            } else
+            if (evt->userData() == (void*)3)
+                delegate->markAsCurve(this);
         }
     }
     void draw()
@@ -55,6 +86,52 @@ public:
 };
 const double PLDotView::radius = 0.03f;
 const int PLDotView::circleChunks = 50;
+
+void PLBezierView::newDot(PLDotView * sender)
+{
+    
+}
+
+void PLBezierView::removeDot(PLDotView * sender)
+{
+    
+}
+
+void PLBezierView::changeTag(PLDotView * sender)
+{
+    
+}
+
+void PLBezierView::markAsCurve(PLDotView * sender)
+{
+    
+}
+
+void PLBezierView::moveDotStarted(PLDotView * sender)
+{
+    [_model saveUndoState];
+}
+
+void PLBezierView::moveDot(PLDotView * sender, PHPoint delta)
+{
+    const vector<PHBezierPath::anchorPoint> * ap = NULL;
+    if (_model)
+        ap = & _model.bezierPath->anchorPoints();
+    if (ap)
+    {
+        PHBezierPath::anchorPoint a = ap->at(sender->tag());
+        a.point += delta/_bounds.size();
+        sender->setPosition(sender->center()+delta);
+        fromWithin = true;
+        _model.bezierPath->replaceAnchorPoint(a, sender->tag());
+        fromWithin = false;
+    }
+}
+
+void PLBezierView::moveDotEnded(PLDotView * sender)
+{
+    
+}
 
 void PLBezierView::setModel(PLBezier * bezier)
 {
@@ -83,6 +160,7 @@ PLBezierView::~PLBezierView() {
 
 void PLBezierView::modelChanged()
 {
+    if (fromWithin) return;
     size_t n = dots.size();
     const vector<PHBezierPath::anchorPoint> * ap = NULL;
     if (_model)

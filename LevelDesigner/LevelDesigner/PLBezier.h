@@ -31,5 +31,6 @@ class PLBezierView;
 -(void)writeToFile:(NSMutableString*)file;
 -(void)addActor:(PLBezierView*)a;
 -(void)removeActor:(PLBezierView*)a;
+-(void)saveUndoState;
 
 @end

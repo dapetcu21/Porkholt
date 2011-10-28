@@ -11,6 +11,17 @@
 #import "EntityController.h"
 #include "PLBezierView.h"
 
+
+@interface PLCopyBezier : NSObject
+{
+@public
+    set<PHRange> curves;
+    vector<PHBezierPath::anchorPoint> anchors;
+}
+@end
+@implementation PLCopyBezier
+@end
+
 @interface PHPointC : NSObject<NSCoding>
 {
     PHBezierPath::anchorPoint anchor;
@@ -199,6 +210,23 @@ public:
 {
     if (!fromWithin)
         actors.erase(a);
+}
+
+-(void)applyUndoState:(PLCopyBezier*)cb
+{
+    [self saveUndoState];
+    curve->beginCommitGrouping();
+    curve->setBezierCurves(cb->curves);
+    curve->setAnchorPoints(cb->anchors);
+    curve->endCommitGrouping();
+}
+
+-(void)saveUndoState
+{
+    PLCopyBezier * cb = [[[PLCopyBezier alloc] init] autorelease];
+    cb->curves = curve->bezierCurves();
+    cb->anchors = curve->anchorPoints();
+    [(PLBezier*)[undoManager prepareWithInvocationTarget:self] applyUndoState:cb];
 }
 
 -(void)dealloc
