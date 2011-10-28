@@ -632,7 +632,7 @@
 		C11EA9CF1425B7A200795880 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "Porkholt Labs!";
 			};
 			buildConfigurationList = C11EA9D21425B7A200795880 /* Build configuration list for PBXProject "LevelDesigner" */;

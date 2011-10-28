@@ -12,16 +12,26 @@
 #import "PLBezier.h"
 #include "PHTestView.h"
 
-class PLBezierView : public PHTestView {
+class PLDotView;
+class PLBezierView : public PHView {
     PLBezier * _model;
-    
+    vector<PLDotView*> dots;
 public:
-    PLBezierView() : _model(NULL) {}
+    PLBezierView() : _model(NULL) { setUserInput(true); }
     ~PLBezierView();
     void setModel(PLBezier * bezier);
     PLBezier * model() { return _model; }
     
     void modelChanged();
+    void setBounds(const PHRect & bounds);
+    
+private:
+    friend class PLDotView;
+    void newDot(PLDotView * sender);
+    void removeDot(PLDotView * sender);
+    void changeTag(PLDotView * sender);
+    void moveDot(PLDotView * sender, PHPoint delta);
+    void markAsCurve(PLDotView * sender);
 };
 
 #endif

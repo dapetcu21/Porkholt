@@ -56,12 +56,7 @@ void PHView::setFrame(const PHRect &frame)
 {
 
 	if (_bounds.width != frame.width || _bounds.height != frame.height)
-	{
-		_bounds.x = _bounds.y = 0;
-		_bounds.width = frame.width;
-		_bounds.height = frame.height;
-		_scalingCenter = _rotationalCenter = _flipCenter = boundsCenter();
-	}
+        setBounds(PHRect(0,0,frame.width,frame.height));
 	_frame = frame;
 }
 

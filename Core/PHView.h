@@ -91,7 +91,7 @@ public:
     PHPoint position() { return PHPoint(_frame.x,_frame.y); }
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
-	void setBounds(const PHRect &bnd);
+	virtual void setBounds(const PHRect &bnd);
 	PHPoint center() const;
 	void setCenter(const PHPoint &center);
 	PHPoint boundsCenter() const;

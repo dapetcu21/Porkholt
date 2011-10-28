@@ -144,7 +144,7 @@ void PLFixtureView::selectedChanged()
 {
     SubentityController * sc = (SubentityController*)[model owner];
     ObjectController * oc = (ObjectController*)[[sc object] owner];
-    bool selected = ([model selected] && [oc objectMode] && ([oc selectedEntity] == [sc object]));
+    bool selected = ([model selected] && [oc objectMode] && ([oc selectedEntity] == [sc object]) && !model.readOnly && ![sc object].readOnly);
     changeBezier((model.shape == PLFixtureFreestyle)?[model bezierCurve]:nil,selected);
     if (bezierView)
         bezierView->setFrame(_bounds);

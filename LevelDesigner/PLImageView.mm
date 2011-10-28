@@ -70,7 +70,7 @@ void PLImageView::selectedChanged()
 {
     SubentityController * sc = (SubentityController*)[model owner];
     ObjectController * oc = (ObjectController*)[[sc object] owner];
-    bool selected = ([model selected] && [oc objectMode] && ([oc selectedEntity] == [sc object]));
+    bool selected = ([model selected] && [oc objectMode] && ([oc selectedEntity] == [sc object]) && !model.readOnly && ![sc object].readOnly);
     PLBezier * b = selected?[model bezierCurve]:nil;
     if (((bezierView!=NULL)!=(b!=NULL)) || (bezierView && bezierView->model()!=b))
     {
