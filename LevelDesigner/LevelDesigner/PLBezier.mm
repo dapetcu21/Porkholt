@@ -125,6 +125,17 @@ public:
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    PLBezier * c = [[PLBezier allocWithZone:zone] initFromLua:NULL];
+    if (c)
+    {
+        c->curve->setAnchorPoints(curve->anchorPoints());
+        c->curve->setBezierCurves(curve->bezierCurves());
+    }
+    return c;
+}
+
 -(void)encodeWithCoder:(NSCoder *)aCoder
 {
     const vector<PHBezierPath::anchorPoint> & ap = curve->anchorPoints();

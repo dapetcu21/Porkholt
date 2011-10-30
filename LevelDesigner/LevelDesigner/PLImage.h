@@ -7,6 +7,7 @@
 //
 
 #import "PLSubEntity.h"
+#import "PLMatching.h"
 
 @class PLProperty;
 @class PLObject;
@@ -24,7 +25,7 @@ class PLImageView;
 @class PLBezier;
 
 @class ImageViewController;
-@interface PLImage : PLEntity<PLSubEntity>
+@interface PLImage : PLEntity<PLSubEntity,PLMatching>
 {
     NSString * imageClass;
     NSRect portion;

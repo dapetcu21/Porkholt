@@ -33,12 +33,14 @@ class PHBezierPath;
     NSString * className;
     PLObjectView * actor;
     NSMutableArray * beziers;
+    NSString * objectName;
 }
 
 @property(nonatomic,readonly) PLProperty * rootProperty;
 @property(nonatomic,readonly) SubentityController * subentityModel;
 @property(nonatomic,readonly) NSString * className;
 @property(nonatomic,readonly) PLPrototype * prototype;
+@property(nonatomic,retain) NSString * objectName;
 
 -(PLBezier*)bezierPathAtIndex:(int)index;
 

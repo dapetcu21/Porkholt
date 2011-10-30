@@ -24,6 +24,7 @@
 @synthesize className;
 @synthesize prototype;
 @synthesize actor;
+@synthesize objectName;
 
 -(NSUndoManager*)undoManager
 {
@@ -304,6 +305,7 @@
 
 -(void)dealloc
 {
+    [objectName release];
     [rootProperty release];
     [subentityModel release];
     [super dealloc];

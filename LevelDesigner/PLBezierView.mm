@@ -89,22 +89,107 @@ const int PLDotView::circleChunks = 50;
 
 void PLBezierView::newDot(PLDotView * sender)
 {
-    
+    int cidx = sender->tag();
+    if (cidx<=markedAnchor)
+        markedAnchor++;
+    const vector<PHBezierPath::anchorPoint> * ap = NULL;
+    if (_model)
+        ap = & _model.bezierPath->anchorPoints();
+    if (ap)
+    {
+        PHBezierPath::anchorPoint nx;
+        if (cidx+1<ap->size())
+            nx = ap->at(cidx+1);
+        else
+            nx = ap->at(0);
+        _model.bezierPath->insertAnchorPoint(PHBezierPath::anchorPoint((ap->at(cidx).point+nx.point)/2,0), cidx+1);
+    }
 }
 
 void PLBezierView::removeDot(PLDotView * sender)
 {
-    
+    int cidx = sender->tag();
+    if (cidx == markedAnchor) 
+        markedAnchor = -1;
+    if (cidx<markedAnchor)
+        markedAnchor--;
+    if (_model)
+    {
+        [_model saveUndoState];
+        _model.bezierPath->removeAnchorPoint(cidx);
+    }
 }
 
 void PLBezierView::changeTag(PLDotView * sender)
 {
-    
+    int cidx = sender->tag();
+    const vector<PHBezierPath::anchorPoint> * ap = NULL;
+    if (_model)
+        ap = & _model.bezierPath->anchorPoints();
+    if (ap)
+    {
+        PHBezierPath::anchorPoint a = ap->at(cidx);
+        if (a.tag<0 || a.tag>4)
+            a.tag = 0;
+        else
+            a.tag=(a.tag==4)?0:a.tag+1;
+        [_model saveUndoState];
+        _model.bezierPath->replaceAnchorPoint(a, cidx);
+    }
 }
 
 void PLBezierView::markAsCurve(PLDotView * sender)
 {
-    
+    int cidx = sender->tag();
+    const vector<PHBezierPath::anchorPoint> * ap = NULL;
+    if (_model)
+        ap = & _model.bezierPath->anchorPoints();
+    if (ap)
+    {
+        int n = (int)ap->size();
+        PHBezierPath::anchorPoint a = ap->at(cidx);
+        set<PHRange> r;
+        const set<PHRange> & rn = _model.bezierPath->bezierCurves();
+        for (set<PHRange>::const_iterator i = rn.begin(); i!=rn.end(); i++)
+            if ((*i).intersectsCircularily(cidx,n))
+                r.insert(*i);
+        if (!r.empty())
+        {
+            [_model saveUndoState];
+            _model.bezierPath->beginCommitGrouping();
+            for (set<PHRange>::const_iterator i = r.begin(); i!=r.end(); i++)
+                _model.bezierPath->removeCurve(*i);
+            _model.bezierPath->endCommitGrouping();
+            markedAnchor = -1;
+        } else
+        {
+            if (markedAnchor==-1)
+                markedAnchor = cidx;
+            else
+            {
+                PHRange r;
+                r.start = markedAnchor;
+                if (cidx>markedAnchor)
+                    r.length = cidx - markedAnchor;
+                else
+                    r.length = cidx - markedAnchor + n;
+                markedAnchor = -1;
+                if (r.length==n)
+                {
+                    NSBeep();
+                    return;
+                }
+                for (set<PHRange>::const_iterator i = rn.begin(); i!=rn.end(); i++)
+                    if ((*i).intersectsCircularily(r, n))
+                    {
+                        NSBeep();
+                        return;
+                    }
+                [_model saveUndoState];
+                _model.bezierPath->addCurve(PHRange(r.start,r.length+1));
+            }
+        }
+    }
 }
 
 void PLBezierView::moveDotStarted(PLDotView * sender)
@@ -130,7 +215,7 @@ void PLBezierView::moveDot(PLDotView * sender, PHPoint delta)
 
 void PLBezierView::moveDotEnded(PLDotView * sender)
 {
-    
+    //nothing here... move along
 }
 
 void PLBezierView::setModel(PLBezier * bezier)
@@ -185,12 +270,50 @@ void PLBezierView::modelChanged()
             dots.push_back(dv);
         }
     }
+    const set<PHRange> * cv;
+    if (_model)
+        cv = & _model.bezierPath->bezierCurves();
     for (int i=0; i<m; i++)
     {
         const PHBezierPath::anchorPoint & p = ap->at(i);
         PLDotView * dv = dots[i];
         dv->setPosition(p.point*_bounds.size());
         dv->setTag(i);
+        bool inside = false;
+        bool edge = false;
+        if (cv)
+            for (set<PHRange>::const_iterator j = cv->begin(); j!=cv->end(); j++)
+            {
+                const PHRange & r = (*j);
+                if (r.intersectsCircularily(i, (int)m))
+                    inside = true;
+                if (r.start==i || PHRange::wrap(r.end()-1,(int)m)==i)
+                    edge = true;
+            }
+        PHColor c;
+        switch (p.tag)
+        {
+            case 1:
+                c=PHColor(1,0,0);
+                break;
+            case 2:
+                c=PHColor(0,1,0);
+                break;
+            case 3:
+                c=PHColor(0,0,1);
+                break;
+            case 4:
+                c=PHColor(1,1,0);
+                break;
+            default:
+                c=PHColor(1,1,1);
+                break;
+        }
+        if (inside)
+            c*=0.5;
+        if (edge)
+            c=PHColor(c.r*0.5,c.g*0.5,c.b*0.5,c.a);
+        dv->color = c;
     }
 }
 

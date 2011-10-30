@@ -15,7 +15,7 @@ class PLBezierDelegate;
 class PLBezierView;
 
 
-@interface PLBezier : PLEntity
+@interface PLBezier : PLEntity<NSCopying>
 {
     PHBezierPath * curve;
     PLBezierDelegate * delegate;

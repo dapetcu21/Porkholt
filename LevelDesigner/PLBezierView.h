@@ -17,8 +17,9 @@ class PLBezierView : public PHView {
     PLBezier * _model;
     vector<PLDotView*> dots;
     bool fromWithin;
+    int markedAnchor;
 public:
-    PLBezierView() : _model(NULL), fromWithin(false) { setUserInput(true); }
+    PLBezierView() : markedAnchor(-1), _model(NULL), fromWithin(false) { setUserInput(true); }
     ~PLBezierView();
     void setModel(PLBezier * bezier);
     PLBezier * model() { return _model; }

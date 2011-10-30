@@ -14,6 +14,7 @@
 #import "PLObject.h"
 #import "PLFixtureView.h"
 #import "PLBezier.h"
+#import "PLImage.h"
 
 @implementation PLFixture
 @synthesize viewController;
@@ -464,6 +465,32 @@ static inline void endToken(NSMutableString * file, int * count)
     [(PLFixture*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
     rotation+=ammount;
     [self fixtureChanged];
+}
+
+-(BOOL)matchWithEntity:(PLEntity<PLMatching> *)entity
+{
+    if ([entity isKindOfClass:[PLFixture class]])
+    {
+        PLFixture * fx = (PLFixture*)entity;
+        [self setBezierCurve:[[fx.bezierCurve copy] autorelease]];
+        [self setShape:fx.shape];
+        [self setBox:fx.box];
+        [self setRadius:fx.radius];
+        [self setPosition:fx.position];
+        [self setRotation:fx.rotation];
+        return YES;
+    }
+    if ([entity isKindOfClass:[PLImage class]])
+    {
+        PLImage * ig = (PLImage*)entity;
+        PLBezier * b = [[ig.bezierCurve copy] autorelease];
+        [self setBezierCurve:b];
+        [self setShape:b?PLFixtureFreestyle:PLFixtureRect];
+        [self setBox:ig.frame];
+        [self setRotation:ig.rotation];
+        return YES;
+    }
+    return NO;
 }
 
 @end

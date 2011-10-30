@@ -37,5 +37,6 @@ class PHView;
 -(IBAction)toggleShowImages:(id)sender;
 -(IBAction)toggleShowFixtures:(id)sender;
 -(IBAction)toggleShowJoints:(id)sender;
+-(IBAction)match:(id)sender;
 
 @end

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MultipleListController.h"
 #import "PLPorkholtViewDelegate.h"
+#import "PLMatching.h"
 
 @class PLEntity;
 @class PropertyController;
@@ -22,6 +23,8 @@
     IBOutlet PropertyController * propertyController;
     IBOutlet MultipleListController * subentitiesController;
     IBOutlet JointController * jointController;
+    
+    PLEntity<PLMatching> * matchObject;
 }
 
 @property(nonatomic,retain) IBOutlet PLTableView * objectView;

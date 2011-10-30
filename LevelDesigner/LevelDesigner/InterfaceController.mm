@@ -149,5 +149,37 @@
     (image.actor)->resetAspectRatio();
 }
 
+-(void)match:(id)sender
+{
+    ObjectController * oc = (ObjectController*)model;
+    PLObject * selectedObject = (PLObject*)[model selectedEntity];
+    if (![selectedObject isKindOfClass:[PLObject class]])
+        selectedObject = nil;
+    SubentityController * sc = [selectedObject subentityModel];
+    if (oc.objectMode && selectedObject)
+    {
+        if (matchObject)
+        {
+            if (!selectedObject.readOnly)
+            {
+                NSArray * a = [sc selectedEntities];
+                BOOL matched = NO;
+                for (PLEntity<PLMatching> * e in a)
+                    if (e && !e.readOnly && e!=matchObject && [e conformsToProtocol:@protocol(PLMatching)] && [e matchWithEntity:matchObject])
+                        matched = YES;
+                matchObject = nil;
+                if (matched)
+                    return;
+            }
+        } else {
+            matchObject = (PLEntity<PLMatching>*)[sc selectedEntity];
+            if ([matchObject conformsToProtocol:@protocol(PLMatching)])
+                return;
+            matchObject = nil;
+        }
+    }
+    NSBeep();
+}
+
 
 @end

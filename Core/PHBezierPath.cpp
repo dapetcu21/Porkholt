@@ -153,6 +153,7 @@ void PHBezierPath::removeOffsets(const PHRange & rng)
         else
         if (r.start+r.length>rng.start)
             r.length-=min<int>(r.start+r.length-rng.start,rng.length);
+        if (r.length<3) continue;
         l.insert(r);
     }
     curves = l;
@@ -176,6 +177,7 @@ void PHBezierPath::removeAnchorPoints(const PHRange & range)
 {
     points.erase(points.begin()+range.start, points.begin()+range.start+range.length);
     removeOffsets(range);
+    modelChanged();
 }
 
 void PHBezierPath::beginCommitGrouping()
@@ -598,7 +600,7 @@ const vector<PHBezierPath::anchorPoint> & PHBezierPath::calculatedVertices()
         int n = (int)points.size();
         set<PHRange>::iterator e = curves.end();
         if (!curves.empty() && ((rng = *(--e)),rng.start+rng.length>n))
-            i+=rng.start+rng.length-n;
+            i+=rng.start+rng.length-n-1;
         while (i<n)
         {
             while ((i<n)&&(j==curves.end() || i<j->start))
@@ -609,7 +611,7 @@ const vector<PHBezierPath::anchorPoint> & PHBezierPath::calculatedVertices()
                 if (j->start+j->length>n)
                 {
                     pnt.insert(pnt.end(), points.begin()+i,points.end());
-                    pnt.insert(pnt.end(), points.begin(),points.begin()+n-(j->start+j->length));
+                    pnt.insert(pnt.end(), points.begin(),points.begin()+(j->start+j->length)-n);
                 } else
                     pnt.insert(pnt.end(), points.begin()+i,points.begin()+(j->start+j->length));
                 vector<anchorPoint> * bp = bezierPath(pnt);

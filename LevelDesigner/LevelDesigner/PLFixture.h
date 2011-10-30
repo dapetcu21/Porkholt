@@ -7,6 +7,7 @@
 //
 
 #import "PLSubEntity.h"
+#import "PLMatching.h"
 
 enum PLFixtureShapes
 {
@@ -26,7 +27,7 @@ class PLFixtureView;
 #define PLFixtureView void
 #endif
 
-@interface PLFixture : PLEntity<PLSubEntity>
+@interface PLFixture : PLEntity<PLSubEntity,PLMatching>
 {
     int shape;
     NSRect box;

@@ -22,4 +22,5 @@
 -(IBAction)toggleShowJoints:(id)sender;
 -(IBAction)toggleObjectMode:(id)sender;
 -(IBAction)resetAspectRatio:(id)sender;
+-(IBAction)match:(id)sender;
 @end

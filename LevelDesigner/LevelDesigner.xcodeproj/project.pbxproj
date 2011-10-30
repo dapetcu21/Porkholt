@@ -98,6 +98,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C112BEC3145D78CF00FAE1A6 /* PLMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLMatching.h; sourceTree = "<group>"; };
 		C11DF2A1143E28500002A811 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		C11DF2A2143E28500002A811 /* ImageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageViewController.mm; sourceTree = "<group>"; };
 		C11DF2A9143F6BC30002A811 /* PLWorldView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLWorldView.mm; sourceTree = "<group>"; };
@@ -493,6 +494,7 @@
 				C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */,
 				C14DC666143C23D000F0C82D /* WorldController.h */,
 				C14DC667143C23D000F0C82D /* WorldController.mm */,
+				C112BEC3145D78CF00FAE1A6 /* PLMatching.h */,
 				C17626551441939400BC366C /* PLImageView.h */,
 				C1BAA0771442BC4100C38D29 /* PLImageView.mm */,
 				C1BAA0751442BA3E00C38D29 /* PLFixtureView.h */,

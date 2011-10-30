@@ -14,6 +14,7 @@
 #import "PLObject.h"
 #import "PLBezier.h"
 #import "PLImageView.h"
+#import "PLFixture.h"
 
 static inline struct PLColor PLMakeColor(double r, double g, double b, double a)
 {
@@ -449,6 +450,30 @@ static inline void endToken(NSMutableString * file, int * count)
     [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
     rotation+=ammount;
     [self imageChanged];
+}
+
+-(BOOL)matchWithEntity:(PLEntity<PLMatching> *)entity
+{
+    if ([entity isKindOfClass:[PLImage class]])
+    {
+        PLImage * ig = (PLImage*)entity;
+        [self setFrame:ig.frame];
+        [self setRotation:ig.rotation];
+        [self setPortion:ig.portion];
+        [self setBezierCurve:[[ig.bezierCurve copy] autorelease]];
+        return YES;
+    }
+    if ([entity isKindOfClass:[PLFixture class]])
+    {
+        PLFixture * fx = (PLFixture*)entity;
+        if (fx.shape != PLFixtureRect && fx.shape !=PLFixtureFreestyle)
+            return NO;
+        [self setFrame:fx.box];
+        [self setRotation:fx.rotation];
+        [self setBezierCurve:[[(fx.shape==PLFixtureFreestyle)?fx.bezierCurve:nil copy] autorelease]];
+        return YES;
+    }
+    return NO;
 }
 
 @end

@@ -337,6 +337,11 @@ int PHEventHandler::modifierMask()
     return [[self targetForForwardedMessage] validateMenuItem:menuItem sentFrom:self];
 }
 
+-(IBAction)match:(id)sender
+{
+    [delegate match:sender];
+}
+
 -(IBAction)toggleShowMarkers:(id)sender
 {
     [delegate toggleShowMarkers:sender];
