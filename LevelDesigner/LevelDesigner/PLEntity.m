@@ -15,6 +15,10 @@
 @synthesize array;
 @synthesize readOnly;
 
+-(void)postPaste
+{
+    
+}
 
 -(id)initFromLua:(lua_State*)L
 {

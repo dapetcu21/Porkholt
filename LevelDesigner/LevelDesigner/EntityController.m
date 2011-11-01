@@ -83,6 +83,13 @@
 
 #pragma mark Array access
 
+-(BOOL)containsEntity:(PLEntity*)entity inArray:(NSUInteger)array
+{
+    for (PLEntity * e in arrays[array])
+        if (e==entity) return YES;
+    return NO;
+}
+
 -(NSArray*)arrayAtIndex:(NSUInteger)array
 {
     return arrays[array];
@@ -563,6 +570,7 @@
                 if ([e isKindOfClass:[self classForArray:i]])
                 {
                     e.owner = self;
+                    [e postPaste];
                     [objects[i] addObject:e];
                     break;
                 }

@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class PLJoint;
 @interface JointController : NSObject
+{
+    PLJoint * model;
+    IBOutlet NSView * view;
+}
 
+-(void)jointChanged;
+-(IBAction)controlsChanged:(id)sender;
+
+@property(nonatomic,retain) PLJoint * model;
 @end

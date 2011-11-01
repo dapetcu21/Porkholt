@@ -2,12 +2,14 @@ require("init_common");
 
 function describeObject(obj)
 	obj.class = obj.class or "PHLObject";
-    obj.realClass = nil;
 	obj.pos = obj.pos or {};
     obj.pos.x = obj.pos.x or 0;
     obj.pos.y = obj.pos.y or 0;
 	obj.rotation = obj.rotation or 0;
+    local oldIndex = obj.index;
+    local oldRealClass = obj.realClass;
     obj.index = nil;
+    obj.realClass = nil;
 	
     local des = { readOnly = true };
 	if (obj.levelDes) then
@@ -18,6 +20,8 @@ function describeObject(obj)
 	des.rootProperty = { key = "__root__"; value = describeTable(obj); }
 	des.bezierPaths = beziers;
 	beziers = nil;
+    obj.index = oldIndex;
+    obj.realClass = oldRealClass;
 	return des
 end
 

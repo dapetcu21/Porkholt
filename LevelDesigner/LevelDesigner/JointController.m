@@ -7,6 +7,7 @@
 //
 
 #import "JointController.h"
+#import "PLJoint.h"
 
 @implementation JointController
 
@@ -18,6 +19,25 @@
     }
     
     return self;
+}
+
+-(PLJoint*)model
+{
+    return model;
+}
+
+-(void)jointChanged
+{
+    
+}
+
+-(void)setModel:(PLJoint *)m
+{
+    model.controller = nil;
+    m.controller = self;
+    [m retain];
+    [model release];
+    model = m;
 }
 
 @end

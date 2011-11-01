@@ -19,6 +19,7 @@
 #import "PLImage.h"
 #import "PLFixture.h"
 #import "PLBezier.h"
+#import "PLProperty.h"
 
 @implementation ObjectController
 
@@ -124,8 +125,7 @@
 	if (lua_istable(L, -1))
 	{
 		int n = 0;
-		lua_pushstring(L, "n");
-		lua_gettable(L, -2);
+        lua_getfield(L, -1, "n");
 		if (lua_isnumber(L, -1))
 			n = lua_tonumber(L, -1);
 		lua_pop(L,1);
@@ -160,16 +160,52 @@
 		}
 	}
 	lua_pop(L,1);
-	
+    
+    NSArray * totalobjs = [robjs arrayByAddingObjectsFromArray:objs];
+    
+    NSMutableArray * rjoints = [NSMutableArray array];
+    NSMutableArray * joints = [NSMutableArray array];
+    
+    lua_getglobal(L, "joints");
+    if (lua_istable(L, -1))
+    {
+        int n = 0;
+        lua_getfield(L, -1, "n");
+		if (lua_isnumber(L, -1))
+			n = lua_tonumber(L, -1);
+		lua_pop(L,1);
+        
+        for (int i=0; i<n; i++)
+        {
+            lua_pushnumber(L, i);
+            lua_gettable(L, -2);
+            if (lua_istable(L, -1))
+            {
+                PLJoint * joint = [[[PLJoint alloc] initFromLua:L] autorelease];
+                if (joint.body1index != -1)
+                    joint.body1 = [totalobjs objectAtIndex:joint.body1index];
+                if (joint.body2index != -1)
+                    joint.body2 = [totalobjs objectAtIndex:joint.body2index];
+                joint.owner = self;
+                if (joint.readOnly)
+                    [rjoints addObject:joint];
+                else
+                    [joints addObject:joint];
+            }
+            lua_pop(L,1);
+        }
+    }
+    lua_pop(L,1);
+    NSArray * totaljoints = [rjoints arrayByAddingObjectsFromArray:joints];
+    
     PHMessage::messageWithName("luaDestroy")->broadcast(nil, L);
 	lua_close(L);
     
-	NSUInteger n = [robjs count];
-    NSUInteger m = [objs count];
-    
     [self beginCommitGrouping];
     [self removeEntitiesAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [arrays[0] count])] fromArray:0];
-	[self insertEntities:[robjs arrayByAddingObjectsFromArray:objs] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, n+m)] inArray:0];
+	[self insertEntities:totalobjs atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [totalobjs count])] inArray:0];
+    [self removeEntitiesAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [arrays[1] count])] fromArray:1];
+	[self insertEntities:totaljoints atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [totaljoints count])] inArray:1];
     [self endCommitGrouping];
     [undoManager removeAllActions];
 }
@@ -178,8 +214,7 @@
 {
 	[file appendString:@"--This file was generated with the Porkholt Level Designer\n"];
 	[file appendString:@"--Do not modify this file. If you do, please note that this\n"];
-	[file appendString:@"--file is reset every time you use the Level Designer\n"];
-    [file appendString:@"\nlocal obj\n\n"];
+	[file appendString:@"--file is reset every time you use the Level Designer\n\n"];
     
     NSMutableArray * beziers = [[[NSMutableArray alloc] init] autorelease];
 
@@ -197,6 +232,8 @@
         [beziers addObject:b]; \
         [file appendString:@"\n"]; \
     }
+    
+    int onr = 0;
     
 	for (PLObject * object in arrays[0])
 		if (!object.readOnly)
@@ -219,9 +256,26 @@
                     img.bezierCurveIndex = index;
                 }
             }
+            PLProperty * p = [object.rootProperty propertyWithKey:@"scripting"];
+            if (!p || !p.type==PLPropertyString)
+            {
+                [object setObjectName:[NSString stringWithFormat:@"obj%d",onr]];
+                onr++;
+            } else 
+                [object setObjectName:[p stringValue]];
 			[object writeToFile:file];
         }
-	[file appendString:@"\n"];
+    BOOL declared = NO;
+    for (PLJoint * joint in arrays[1])
+        if (!joint.readOnly)
+        {
+            if (!declared)
+            {
+                declared = YES;
+                [file appendString:@"local joint\n"];
+            }
+            [joint writeToFile:file];
+        }
 }
 
 -(BOOL)showMarkers

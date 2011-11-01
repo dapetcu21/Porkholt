@@ -2,32 +2,30 @@
 --Do not modify this file. If you do, please note that this
 --file is reset every time you use the Level Designer
 
-local obj
-
-obj = objectWithClass("PHLPlatform")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(14.000000,3.000000)
+local obj0 = objectWithClass("PHLPlatform")
+obj0.levelDes = true
+obj0.rotation = 0.000000
+obj0.pos = point(14.000000,3.000000)
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000)
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000)
-addObject(obj)
+addObject(obj0)
 
-obj = objectWithClass("PHLAuxLayer")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.name = 20.000000
-obj.pos = point(0.000000,0.000000)
-addObject(obj)
+local obj1 = objectWithClass("PHLAuxLayer")
+obj1.levelDes = true
+obj1.rotation = 0.000000
+obj1.name = 20.000000
+obj1.pos = point(0.000000,0.000000)
+addObject(obj1)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.physics.dynamic = true
-obj.rotation = 0.000000
-obj.scripting = [[wrecker]]
-obj.pos = point(17.000000,1.276953)
+local wrecker = objectWithClass("PHLObject")
+wrecker.levelDes = true
+wrecker.physics.dynamic = true
+wrecker.rotation = 0.000000
+wrecker.scripting = [[wrecker]]
+wrecker.pos = point(17.000000,1.276953)
 objectAddImage(obj,[[/wrecking_ball.png]],-0.700000,-0.576953,1.400000,2.800000)
 objectAddCircle(obj,0.576953)
-addObject(obj)
+addObject(wrecker)
 
 local bezierCurve0 = {
 	points = { n=7,
@@ -41,55 +39,55 @@ local bezierCurve0 = {
 	curves = { n=1,
 		[0] = range(0,5)}
 	}
-obj = objectWithClass("PHLPlatform")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(17.000000,3.500000)
+local obj2 = objectWithClass("PHLPlatform")
+obj2.levelDes = true
+obj2.rotation = 0.000000
+obj2.pos = point(17.000000,3.500000)
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000,{ rotation = 180.000000, bezierPath = bezierCurve0 })
 objectAddFreeform(obj,bezierCurve0,{ frame = rect(-1.000000,-0.150000,2.000000,0.300000), rotation = 180.000000 })
-addObject(obj)
+addObject(obj2)
 
-obj = objectWithClass("PHLPlatform")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(14.479570,4.295625)
+local obj3 = objectWithClass("PHLPlatform")
+obj3.levelDes = true
+obj3.rotation = 0.000000
+obj3.pos = point(14.479570,4.295625)
 objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000,{ rotation = 180.000000, bezierPath = bezierCurve0 })
 objectAddFreeform(obj,bezierCurve0,{ frame = rect(-1.000000,-0.150000,2.000000,0.300000), rotation = 180.000000 })
-addObject(obj)
+addObject(obj3)
 
-obj = objectWithClass("PHLCamera")
-obj.levelDes = true
-obj.camH = 4.500000
-obj.rotation = 0.000000
-obj.scripting = [[camera]]
-obj.pos = point(3.000000,1.750000)
-addObject(obj)
+local camera = objectWithClass("PHLCamera")
+camera.levelDes = true
+camera.camH = 4.500000
+camera.rotation = 0.000000
+camera.scripting = [[camera]]
+camera.pos = point(3.000000,1.750000)
+addObject(camera)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(0.000000,0.000000)
+local obj4 = objectWithClass("PHLObject")
+obj4.levelDes = true
+obj4.rotation = 0.000000
+obj4.pos = point(0.000000,0.000000)
 objectAddBox(obj,-0.100000,0.000000,0.100000,10.000000)
-addObject(obj)
+addObject(obj4)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(20.000000,0.000000)
+local obj5 = objectWithClass("PHLObject")
+obj5.levelDes = true
+obj5.rotation = 0.000000
+obj5.pos = point(20.000000,0.000000)
 objectAddBox(obj,0.000000,0.000000,0.100000,10.000000)
-addObject(obj)
+addObject(obj5)
 
-obj = objectWithClass("PHLPlayer")
-obj.levelDes = true
-obj.scripting = [[player]]
-obj.rotation = 0.000000
-obj.pos = point(1.500000,2.750000)
-addObject(obj)
+local player = objectWithClass("PHLPlayer")
+player.levelDes = true
+player.scripting = [[player]]
+player.rotation = 0.000000
+player.pos = point(1.500000,2.750000)
+addObject(player)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(0.000000,0.250000)
+local obj6 = objectWithClass("PHLObject")
+obj6.levelDes = true
+obj6.rotation = 0.000000
+obj6.pos = point(0.000000,0.250000)
 objectAddImage(obj,[[/ground.png]],-8.000000,-0.750000,2.200000,1.000000)
 objectAddImage(obj,[[/ground.png]],-6.000000,-0.750000,2.200000,1.000000)
 objectAddImage(obj,[[/grass.png]],-8.000000,-0.150000,4.400000,0.400000)
@@ -118,35 +116,41 @@ objectAddImage(obj,[[/ground.png]],24.000000,-0.750000,2.200000,1.000000)
 objectAddImage(obj,[[/ground.png]],26.000000,-0.750000,2.200000,1.000000)
 objectAddImage(obj,[[/grass.png]],24.000000,-0.150000,4.400000,0.400000)
 objectAddBox(obj,0.000000,-0.250000,20.000000,0.500000)
-addObject(obj)
+addObject(obj6)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(0.000000,0.000000)
-addObject(obj)
+local obj7 = objectWithClass("PHLObject")
+obj7.levelDes = true
+obj7.rotation = 0.000000
+obj7.pos = point(0.000000,0.000000)
+addObject(obj7)
 
-obj = objectWithClass("PHLSensor")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.scripting = [[sensor]]
-obj.pos = point(13.640000,0.930000)
+local sensor = objectWithClass("PHLSensor")
+sensor.levelDes = true
+sensor.rotation = 0.000000
+sensor.scripting = [[sensor]]
+sensor.pos = point(13.640000,0.930000)
 objectAddBox(obj,-0.250000,-0.250000,0.500000,0.500000)
-addObject(obj)
+addObject(sensor)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(3.244219,1.082617)
+local obj8 = objectWithClass("PHLObject")
+obj8.levelDes = true
+obj8.rotation = 0.000000
+obj8.pos = point(3.244219,1.082617)
 objectAddImage(obj,[[/master_body.png]],6.957336,-0.372015,1.400000,1.058473)
 objectAddImage(obj,[[/master_face.png]],6.957336,-0.372015,1.400000,1.058473)
-addObject(obj)
+addObject(obj8)
 
-obj = objectWithClass("PHLObject")
-obj.levelDes = true
-obj.rotation = 0.000000
-obj.pos = point(3.244219,1.082617)
+local obj9 = objectWithClass("PHLObject")
+obj9.levelDes = true
+obj9.rotation = 0.000000
+obj9.pos = point(3.244219,1.082617)
 objectAddImage(obj,[[bird_nostroke.png]],5.779306,2.348841,0.750000,0.726471)
-addObject(obj)
+addObject(obj9)
 
+local joint
 
+joint = jointWithClass("PHRevoluteJoint")
+joint.levelDes = true
+joint.body1 = obj2
+joint.body2 = wrecker
+addJoint(joint)

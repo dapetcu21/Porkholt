@@ -235,15 +235,15 @@
 
 -(void)writeToFile:(NSMutableString*)file;
 {
-    [file appendFormat:@"obj = objectWithClass(\"%@\")\nobj.levelDes = true\n",className];
+    [file appendFormat:@"local %@ = objectWithClass(\"%@\")\n%@.levelDes = true\n",objectName,className,objectName];
     NSUInteger i,n=[rootProperty childrenCount];
     for (i=0; i<n; i++)
     {
         PLProperty * p = [rootProperty propertyAtIndex:i];
         if ([p.name isEqual:@"class"]) continue;
         if ([p isCollection] && ![p.name isEqual:@"physics"])
-            [file appendFormat:@"obj.%@ = {}\n",p.name];
-        [p writeToFile:file withIndexPath:[NSString stringWithFormat:@"obj.%@",p.name]];
+            [file appendFormat:@"%@.%@ = {}\n",objectName,p.name];
+        [p writeToFile:file withIndexPath:[NSString stringWithFormat:@"%@.%@",objectName,p.name]];
     }
     for (PLImage * img in [subentityModel arrayAtIndex:0])
         if (!img.readOnly)
@@ -251,7 +251,7 @@
     for (PLFixture * fxt in [subentityModel arrayAtIndex:1])
         if (!fxt.readOnly)
             [fxt writeToFile:file];
-    [file appendString:@"addObject(obj)\n\n"];
+    [file appendFormat:@"addObject(%@)\n\n",objectName];
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder

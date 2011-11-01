@@ -57,6 +57,7 @@
 -(void)removeEntitiesAtIndexes:(NSIndexSet*)indexes fromArray:(NSUInteger)array;
 -(void)removeEntity:(PLEntity*)entity fromArray:(NSUInteger)array;
 -(void)removeEntities:(NSArray*)entities fromArray:(NSUInteger)array;
+-(BOOL)containsEntity:(PLEntity*)entity inArray:(NSUInteger)array;
 
 #pragma mark Array selection
 
