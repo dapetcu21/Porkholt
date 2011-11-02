@@ -15,6 +15,7 @@
 #import "PLImage.h"
 #import "PLImageView.h"
 #import "SubentityController.h"
+#import "JointController.h"
 
 @implementation InterfaceController
 
@@ -71,7 +72,7 @@
     currentEntity = newEntity;
     [propertyController setModel:isObject?[(PLObject*)newEntity rootProperty]:nil];
     [subentitiesController setModel:isObject?[(PLObject*)newEntity subentityModel]:nil];
-    [jointController setModel:isJoint?newEntity:nil];
+    [jointController setModel:isJoint?(PLJoint*)newEntity:nil];
     
     [jointDetailView removeFromSuperview];
     [objectDetailView removeFromSuperview];

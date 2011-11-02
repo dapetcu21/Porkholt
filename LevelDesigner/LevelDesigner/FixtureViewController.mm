@@ -35,12 +35,12 @@
     [box_h setEnabled:enabled];
     [rotation setEnabled:enabled];
     [radius setEnabled:enabled];
-    [friction setEditable:enabled];
-    [density setEditable:enabled];
-    [restitution setEditable:enabled];
-    [groupIndex setEditable:enabled];
-    [categoryBits setEditable:enabled];
-    [maskBits setEditable:enabled];
+    [friction setEnabled:enabled];
+    [density setEnabled:enabled];
+    [restitution setEnabled:enabled];
+    [groupIndex setEnabled:enabled];
+    [categoryBits setEnabled:enabled];
+    [maskBits setEnabled:enabled];
     
     if (!model) return;
     
