@@ -68,6 +68,19 @@
     p.mandatory = YES;
 }
 
+-(NSMutableArray*)copiedReadOnlyArray:(NSArray*)a
+{
+    NSMutableArray * v = [[NSMutableArray alloc] initWithCapacity:[a count]];
+    for (PLEntity * e in a)
+    {
+        PLEntity * ce = [e copy];
+        ce.readOnly = YES;
+        [v addObject:ce];
+        [ce release];
+    }
+    return v;
+}
+
 -(void)changePrototype
 {
     PLPrototype * oldPrototype = prototype;
@@ -76,8 +89,8 @@
     [subentityModel disableUndo];
     [subentityModel removeEntitiesAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [subentityModel numberOfReadOnlyEntitiesInArray:0])] fromArray:0];
     [subentityModel removeEntitiesAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [subentityModel numberOfReadOnlyEntitiesInArray:1])] fromArray:1];
-    [subentityModel insertEntities:newPrototype.images atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newPrototype.images count])] inArray:0];
-    [subentityModel insertEntities:newPrototype.fixtures atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newPrototype.fixtures count])] inArray:1];
+    [subentityModel insertEntities:[self copiedReadOnlyArray:newPrototype.images] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newPrototype.images count])] inArray:0];
+    [subentityModel insertEntities:[self copiedReadOnlyArray:newPrototype.fixtures] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [newPrototype.fixtures count])] inArray:1];
     [subentityModel enableUndo];
     
     prototype = newPrototype;

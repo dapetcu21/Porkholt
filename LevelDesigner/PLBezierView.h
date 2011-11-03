@@ -12,10 +12,10 @@
 #import "PLBezier.h"
 #include "PHTestView.h"
 
-class PLDotView;
+class PLBezierDot;
 class PLBezierView : public PHView {
     PLBezier * _model;
-    vector<PLDotView*> dots;
+    vector<PLBezierDot*> dots;
     bool fromWithin;
     int markedAnchor;
 public:
@@ -28,14 +28,14 @@ public:
     void setBounds(const PHRect & bounds);
     
 private:
-    friend class PLDotView;
-    void newDot(PLDotView * sender);
-    void removeDot(PLDotView * sender);
-    void changeTag(PLDotView * sender);
-    void moveDot(PLDotView * sender, PHPoint delta);
-    void markAsCurve(PLDotView * sender);
-    void moveDotStarted(PLDotView * sender);
-    void moveDotEnded(PLDotView * sender);
+    friend class PLBezierDot;
+    void newDot(PLBezierDot * sender);
+    void removeDot(PLBezierDot * sender);
+    void changeTag(PLBezierDot * sender);
+    void moveDot(PLBezierDot * sender, PHPoint delta);
+    void markAsCurve(PLBezierDot * sender);
+    void moveDotStarted(PLBezierDot * sender);
+    void moveDotEnded(PLBezierDot * sender);
 };
 
 #endif

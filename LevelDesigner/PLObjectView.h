@@ -19,6 +19,7 @@
 
 #include "PHView.h"
 class PLObjectMarker;
+class PLJointDot;
 
 class PLObjectView : public PHView
 {
@@ -31,6 +32,8 @@ protected:
     void touchEvent(PHEvent * evt);
     void reloadSubviews();
     
+    vector<PLJointDot*> joints;
+
     PLObjectMarker * marker;
     
 public:
@@ -59,6 +62,9 @@ public:
     void stopRotating();
     void moveSubviews(PHPoint delta);
     void rotateSubviews(double ammount);
+    
+    void addJoint(PLJointDot * jointView);
+    void removeAllJoints();
 };
 
 #endif

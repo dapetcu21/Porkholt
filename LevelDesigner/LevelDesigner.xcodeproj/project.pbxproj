@@ -86,6 +86,8 @@
 		C1AB4F5014449387001F6773 /* PLObjectMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AB4F4F14449387001F6773 /* PLObjectMarker.cpp */; };
 		C1AF1A7C1434365200A6905D /* PrototypeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7B1434365200A6905D /* PrototypeController.m */; };
 		C1AF1A7F143439DB00A6905D /* PLPrototype.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AF1A7E143439DB00A6905D /* PLPrototype.m */; };
+		C1B3C7F414628336000FD6DF /* PLDotView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C7F314628336000FD6DF /* PLDotView.cpp */; };
+		C1B3C7F7146287CC000FD6DF /* PLJointDot.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C7F6146287CC000FD6DF /* PLJointDot.mm */; };
 		C1BAA0781442BC4100C38D29 /* PLImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA0771442BC4100C38D29 /* PLImageView.mm */; };
 		C1BAA07A1442BD0700C38D29 /* PLFixtureView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA0791442BD0700C38D29 /* PLFixtureView.mm */; };
 		C1C23EB6143CBDDC002CA3D9 /* OverlayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1C23EB5143CBDDC002CA3D9 /* OverlayController.mm */; };
@@ -261,6 +263,10 @@
 		C1AF1A7B1434365200A6905D /* PrototypeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrototypeController.m; sourceTree = "<group>"; };
 		C1AF1A7D143439DB00A6905D /* PLPrototype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPrototype.h; sourceTree = "<group>"; };
 		C1AF1A7E143439DB00A6905D /* PLPrototype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLPrototype.m; sourceTree = "<group>"; };
+		C1B3C7F11462832A000FD6DF /* PLDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLDotView.h; sourceTree = "<group>"; };
+		C1B3C7F314628336000FD6DF /* PLDotView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PLDotView.cpp; sourceTree = "<group>"; };
+		C1B3C7F5146287BB000FD6DF /* PLJointDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLJointDot.h; sourceTree = "<group>"; };
+		C1B3C7F6146287CC000FD6DF /* PLJointDot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLJointDot.mm; sourceTree = "<group>"; };
 		C1BAA0751442BA3E00C38D29 /* PLFixtureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLFixtureView.h; sourceTree = "<group>"; };
 		C1BAA0771442BC4100C38D29 /* PLImageView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLImageView.mm; sourceTree = "<group>"; };
 		C1BAA0791442BD0700C38D29 /* PLFixtureView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLFixtureView.mm; sourceTree = "<group>"; };
@@ -506,6 +512,10 @@
 				C1AB4F4F14449387001F6773 /* PLObjectMarker.cpp */,
 				C1A114F5145570E3003E2DD1 /* PLBezierView.h */,
 				C1A114F714584B63003E2DD1 /* PLBezierView.mm */,
+				C1B3C7F11462832A000FD6DF /* PLDotView.h */,
+				C1B3C7F314628336000FD6DF /* PLDotView.cpp */,
+				C1B3C7F5146287BB000FD6DF /* PLJointDot.h */,
+				C1B3C7F6146287CC000FD6DF /* PLJointDot.mm */,
 			);
 			name = Canvas;
 			path = ..;
@@ -757,6 +767,8 @@
 				C125FAC814552C5E003C80D6 /* PLBezier.mm in Sources */,
 				C1A114F814584B63003E2DD1 /* PLBezierView.mm in Sources */,
 				C16D477E146126790026D475 /* PLObjectSelector.m in Sources */,
+				C1B3C7F414628336000FD6DF /* PLDotView.cpp in Sources */,
+				C1B3C7F7146287CC000FD6DF /* PLJointDot.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

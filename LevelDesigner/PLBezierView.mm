@@ -10,20 +10,16 @@
 #import "PLBezier.h"
 #import "PHBezierPath.h"
 #import "PHEventHandler.h"
+#import "PLDotView.h"
 
-class PLDotView : public PHView
+class PLBezierDot : public PLDotView
 {
-public:
-    PHColor color;
-    static const double radius;
-    static const int circleChunks;
+private:
     PLBezierView * delegate;
     bool moved;
-    PLDotView(PLBezierView * del) : color(PHWhiteColor), delegate(del), moved(false), PHView(PHRect(-radius,-radius,2*radius,2*radius)) { setUserInput(true); }
-    void setPosition(const PHPoint & p)
-    {
-        setFrame(_frame-center()+p);
-    }
+public:
+    PLBezierDot(PLBezierView * del) : PLDotView(), delegate(del), moved(false) {}
+    void setDelegate(PLBezierView * d) { delegate = d; }
     void touchEvent(PHEvent * evt)
     {
         if (evt->type() == PHEvent::touchDown)
@@ -53,41 +49,20 @@ public:
                 if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
                     delegate->changeTag(this);
             } else
-            if (evt->userData() == (void*)2)
-            {
-                if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
-                    delegate->removeDot(this);
-                else
-                    delegate->newDot(this);
-            } else
-            if (evt->userData() == (void*)3)
-                delegate->markAsCurve(this);
+                if (evt->userData() == (void*)2)
+                {
+                    if (PHEventHandler::modifierMask() & PHEventHandler::shiftModifier)
+                        delegate->removeDot(this);
+                    else
+                        delegate->newDot(this);
+                } else
+                    if (evt->userData() == (void*)3)
+                        delegate->markAsCurve(this);
         }
-    }
-    void draw()
-    {
-        GLfloat circleVertices [(circleChunks+2)*2];
-        double rad = radius;
-        PHPoint center = _bounds.center();
-        circleVertices[0] = center.x;
-        circleVertices[1] = center.y;
-        for (int i=0; i<=circleChunks; i++)
-        {
-            double angle = M_PI*2*((double)i/circleChunks);
-            circleVertices[i*2+2] = sin(angle)*rad+center.x;
-            circleVertices[i*2+3] = cos(angle)*rad+center.y;
-        }
-        
-        PHGLSetStates(PHGLVertexArray);
-        PHGLSetColor(color);
-        glVertexPointer(2, GL_FLOAT, 0, circleVertices);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, circleChunks+2);
     }
 };
-const double PLDotView::radius = 0.03f;
-const int PLDotView::circleChunks = 50;
 
-void PLBezierView::newDot(PLDotView * sender)
+void PLBezierView::newDot(PLBezierDot * sender)
 {
     int cidx = sender->tag();
     if (cidx<=markedAnchor)
@@ -106,7 +81,7 @@ void PLBezierView::newDot(PLDotView * sender)
     }
 }
 
-void PLBezierView::removeDot(PLDotView * sender)
+void PLBezierView::removeDot(PLBezierDot * sender)
 {
     int cidx = sender->tag();
     if (cidx == markedAnchor) 
@@ -120,7 +95,7 @@ void PLBezierView::removeDot(PLDotView * sender)
     }
 }
 
-void PLBezierView::changeTag(PLDotView * sender)
+void PLBezierView::changeTag(PLBezierDot * sender)
 {
     int cidx = sender->tag();
     const vector<PHBezierPath::anchorPoint> * ap = NULL;
@@ -138,7 +113,7 @@ void PLBezierView::changeTag(PLDotView * sender)
     }
 }
 
-void PLBezierView::markAsCurve(PLDotView * sender)
+void PLBezierView::markAsCurve(PLBezierDot * sender)
 {
     int cidx = sender->tag();
     const vector<PHBezierPath::anchorPoint> * ap = NULL;
@@ -192,12 +167,12 @@ void PLBezierView::markAsCurve(PLDotView * sender)
     }
 }
 
-void PLBezierView::moveDotStarted(PLDotView * sender)
+void PLBezierView::moveDotStarted(PLBezierDot * sender)
 {
     [_model saveUndoState];
 }
 
-void PLBezierView::moveDot(PLDotView * sender, PHPoint delta)
+void PLBezierView::moveDot(PLBezierDot * sender, PHPoint delta)
 {
     const vector<PHBezierPath::anchorPoint> * ap = NULL;
     if (_model)
@@ -213,7 +188,7 @@ void PLBezierView::moveDot(PLDotView * sender, PHPoint delta)
     }
 }
 
-void PLBezierView::moveDotEnded(PLDotView * sender)
+void PLBezierView::moveDotEnded(PLBezierDot * sender)
 {
     //nothing here... move along
 }
@@ -255,7 +230,7 @@ void PLBezierView::modelChanged()
     {
         for (size_t i=m; i<n; i++)
         {
-            dots[i]->delegate = nil;
+            dots[i]->setDelegate(nil);
             dots[i]->removeFromSuperview();
             dots[i]->release();
         }
@@ -265,7 +240,7 @@ void PLBezierView::modelChanged()
     {
         for (size_t i=n; i<m; i++)
         {
-            PLDotView * dv = new PLDotView(this);
+            PLBezierDot * dv = new PLBezierDot(this);
             addSubview(dv);
             dots.push_back(dv);
         }
@@ -276,7 +251,7 @@ void PLBezierView::modelChanged()
     for (int i=0; i<m; i++)
     {
         const PHBezierPath::anchorPoint & p = ap->at(i);
-        PLDotView * dv = dots[i];
+        PLBezierDot * dv = dots[i];
         dv->setPosition(p.point*_bounds.size());
         dv->setTag(i);
         bool inside = false;
@@ -313,7 +288,7 @@ void PLBezierView::modelChanged()
             c*=0.5;
         if (edge)
             c=PHColor(c.r*0.5,c.g*0.5,c.b*0.5,c.a);
-        dv->color = c;
+        dv->setDotColor(c);
     }
 }
 

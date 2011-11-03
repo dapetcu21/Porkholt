@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 //@class EntityController;
-@interface PLEntity : NSObject<NSCoding>
+@interface PLEntity : NSObject<NSCoding,NSCopying>
 {
     BOOL selected,readOnly;
     id owner;

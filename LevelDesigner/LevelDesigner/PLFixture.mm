@@ -115,6 +115,9 @@ static inline void endToken(NSMutableString * file, int * count)
     if ((shape == PLFixtureFreestyle)&&(box.origin.x!=0 || box.origin.y!=0 || box.size.width!=1 || box.size.height!=1))
         addToken(file,[NSString stringWithFormat:@"frame = rect(%lf,%lf,%lf,%lf)",box.origin.x,box.origin.y,box.size.width,box.size.height], &count);
     
+    if ((shape==PLFixtureCircle)&&(position.x || position.y))
+        addToken(file,[NSString stringWithFormat:@"pos = point(%lf,%lf)",position.x,position.y], &count);
+    
     if ((shape!=PLFixtureCircle)&&rotation)
         addToken(file,[NSString stringWithFormat:@"rotation = %lf",rotation], &count);
     

@@ -1,13 +1,14 @@
 require("init_common");
 
 function describeObject(obj)
-	obj.class = obj.class or "PHLObject";
+	local oldClass = obj.class;
+	local oldIndex = obj.index;
+    local oldRealClass = obj.realClass;
+	obj.class = obj.realClass or "PHLObject";
 	obj.pos = obj.pos or {};
     obj.pos.x = obj.pos.x or 0;
     obj.pos.y = obj.pos.y or 0;
 	obj.rotation = obj.rotation or 0;
-    local oldIndex = obj.index;
-    local oldRealClass = obj.realClass;
     obj.index = nil;
     obj.realClass = nil;
 	
@@ -22,6 +23,7 @@ function describeObject(obj)
 	beziers = nil;
     obj.index = oldIndex;
     obj.realClass = oldRealClass;
+	obj.class = class;
 	return des
 end
 

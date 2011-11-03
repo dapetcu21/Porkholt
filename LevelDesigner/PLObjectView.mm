@@ -18,6 +18,7 @@
 #import "PLFixture.h"
 #import "PLFixtureView.h"
 #import "PLObjectMarker.h"
+#import "PLJointDot.h"
 
 PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.7,-0.7,0.14,0.14)), model(_model), sel(false), moving(false), rotating(false)
 {
@@ -33,6 +34,7 @@ PLObjectView::PLObjectView(PLObject * _model) : PHView(PHRect(-0.7,-0.7,0.14,0.1
 
 PLObjectView::~PLObjectView()
 {
+    removeAllJoints();
     [model setActor:NULL];
     [model release];
     marker->release();
@@ -105,6 +107,25 @@ bool PLObjectView::rectsIntersect(PHView * base, const PHRect & r1, PHView * v1,
     return false;
 }
 
+void PLObjectView::addJoint(PLJointDot * jointView)
+{
+    if (!jointView) return;
+    joints.push_back(jointView);
+    jointView->retain();
+    jointView->removeFromSuperview();
+    if (((ObjectController*)[model owner]).showJoints)
+        addSubview(jointView);
+}
+
+void PLObjectView::removeAllJoints()
+{
+    for (vector<PLJointDot*>::iterator i = joints.begin(); i!=joints.end(); i++)
+    {
+        (*i)->removeFromSuperview();
+        (*i)->release();
+    }
+    joints.clear();
+}
 
 void PLObjectView::reloadSubviews()
 {
@@ -141,6 +162,9 @@ void PLObjectView::reloadSubviews()
 
     if (((ObjectController*)[model owner]).showMarkers)
         addSubview(marker);
+    if (((ObjectController*)[model owner]).showJoints)
+        for (vector<PLJointDot*>::iterator i = joints.begin(); i!=joints.end(); i++)
+            addSubview(*i);
     
     for (PLImage * obj in [[model subentityModel] images])
         if (obj.actor)

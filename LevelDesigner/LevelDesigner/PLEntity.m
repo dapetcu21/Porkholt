@@ -59,4 +59,9 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]] retain];
+}
+
 @end

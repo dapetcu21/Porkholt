@@ -11,11 +11,14 @@
 #import "PHLua.h"
 #import "PLObject.h"
 #import "JointController.h"
+#import "PLJointDot.h"
 
 @implementation PLJoint
 @synthesize body1index;
 @synthesize body2index;
 @synthesize controller;
+@synthesize actor1;
+@synthesize actor2;
 
 - (id)initFromLua:(lua_State *)L
 {
@@ -139,6 +142,10 @@
 
 -(void)dealloc
 {
+    if (actor1)
+        actor1->setJoint(NULL);
+    if (actor2)
+        actor2->setJoint(NULL);
     [body1 release];
     [body2 release];
     [super dealloc];
@@ -165,46 +172,47 @@
     if (body2)
         [file appendFormat:@"joint.body2 = %@\n",[body2 objectName]];
     if (worldCoord)
-        [file appendString:@"worldCoordinates = true\n"];
+        [file appendString:@"joint.worldCoordinates = true\n"];
     if (!collideConnected)
-        [file appendString:@"collideConnected = false\n"];
+        [file appendString:@"joint.collideConnected = false\n"];
     if (type == PLDistanceJoint)
     {
         if (anchor1.x || anchor1.y)
-            [file appendFormat:@"anchor1 = point(%lf,%lf)\n",anchor1.x,anchor1.y];
+            [file appendFormat:@"joint.anchor1 = point(%lf,%lf)\n",anchor1.x,anchor1.y];
         if (anchor2.x || anchor2.y)
-            [file appendFormat:@"anchor2 = point(%lf,%lf)\n",anchor2.x,anchor2.y];
+            [file appendFormat:@"joint.anchor2 = point(%lf,%lf)\n",anchor2.x,anchor2.y];
         if (frequency)
-            [file appendFormat:@"frequency = %lf\n",frequency];
+            [file appendFormat:@"joint.frequency = %lf\n",frequency];
         if (dampening)
-            [file appendFormat:@"dampening = %lf\n",dampening];
+            [file appendFormat:@"joint.dampening = %lf\n",dampening];
     }
     if (type == PLRevoluteJoint || type == PLPrismaticJoint)
     {
         if (anchor1.x || anchor1.y)
-            [file appendFormat:@"anchor = point(%lf,%lf)\n",anchor1.x,anchor1.y];
+            [file appendFormat:@"joint.anchor = point(%lf,%lf)\n",anchor1.x,anchor1.y];
         if (limitEnabled)
-            [file appendString:@"limitEnabled = true\n"];
+            [file appendString:@"joint.limitEnabled = true\n"];
         if (motorEnabled)
-            [file appendString:@"motorEnabled = true\n"];
+            [file appendString:@"joint.motorEnabled = true\n"];
         if (motorMaxPower != 1.0f)
-            [file appendFormat:@"motorMaxPower = %lf",motorMaxPower];
+            [file appendFormat:@"joint.motorMaxPower = %lf\n",motorMaxPower];
         if (motorSpeed != 1.0f)
-            [file appendFormat:@"motorSpeed = %lf",motorSpeed];
+            [file appendFormat:@"joint.motorSpeed = %lf\n",motorSpeed];
     }
     if (type == PLRevoluteJoint)
     {
         if (lowerValue)
-            [file appendFormat:@"lowerAngle = %lf",lowerValue];
+            [file appendFormat:@"joint.lowerAngle = %lf\n",lowerValue];
         if (upperValue)
-            [file appendFormat:@"upperAngle = %lf",upperValue];
+            [file appendFormat:@"joint.upperAngle = %lf\n",upperValue];
     }
     if (type == PLPrismaticJoint)
     {
         if (lowerValue)
-            [file appendFormat:@"lowerTranslation = %lf",lowerValue];
+            [file appendFormat:@"joint.lowerTranslation = %lf\n",lowerValue];
         if (upperValue)
-            [file appendFormat:@"upperTranslation = %lf",upperValue];
+            [file appendFormat:@"joint.upperTranslation = %lf\n",upperValue];
+        [file appendFormat:@"joint.axis = vector(%lf,%lf)\n",axis.x,axis.y];
     }
     [file appendFormat:@"addJoint(joint)\n"];
 }
@@ -318,6 +326,7 @@ getter(double,dampening)
     [b retain];
     [body1 release];
     body1 = b;
+    [self jointChanged];
 }
 
 -(void)setBody2:(PLObject *)b
@@ -327,6 +336,7 @@ getter(double,dampening)
     [b retain];
     [body2 release];
     body2 = b;
+    [self jointChanged];
 }
 
 #define setter(type,method,field) \

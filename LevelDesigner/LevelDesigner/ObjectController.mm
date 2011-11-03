@@ -58,6 +58,8 @@
 -(void)entityChanged:(PLEntity *)e
 {
     [super entityChanged:e];
+    if ([e isKindOfClass:[PLJoint class]])
+        [worldController jointsChanged];
 }
 
 -(void)arrayChanged:(NSUInteger)array

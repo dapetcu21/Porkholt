@@ -18,6 +18,12 @@ enum PLJointTypes
     PLPrismaticJoint
 };
 
+#ifdef __cplusplus
+class PLJointDot;
+#else
+#define PLJointDot void
+#endif
+
 @interface PLJoint : PLEntity
 {
     PLObject * body1, * body2;
@@ -35,6 +41,7 @@ enum PLJointTypes
     double frequency,dampening;
     ObjectController * bodyOwner;
     JointController * controller;
+    PLJointDot * actor1, * actor2;
 }
 
 @property(nonatomic,assign) JointController * controller;
@@ -58,5 +65,9 @@ enum PLJointTypes
 @property(nonatomic,assign) double dampening;
 
 -(void)writeToFile:(NSMutableString*)file;
+-(NSUndoManager*)undoManager;
+
+@property(nonatomic,assign) PLJointDot * actor1;
+@property(nonatomic,assign) PLJointDot * actor2;
 
 @end

@@ -26,7 +26,7 @@
     IBOutlet NSTextField * upperLimit, * lowerLimit;
     IBOutlet NSButton * enableMotor;
     IBOutlet NSTextField * maxPower, * motorSpeed;
-    IBOutlet NSTextField * axisLabel, * axisMeter;
+    IBOutlet NSTextField * axisLabel, * axisMeter, * axisDegrees;
     IBOutlet NSSlider * axisSlider;
 }
 

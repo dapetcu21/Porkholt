@@ -92,6 +92,7 @@
         [axisLabel setHidden:hd];
         [axisMeter setHidden:hd];
         [axisSlider setHidden:hd];
+        [axisDegrees setHidden:hd];
         NSPoint p = model.axis;
         double l = sqrt(p.x*p.x+p.y*p.y);
         if (!l)
@@ -119,7 +120,7 @@
         if (sl<0)
             sl+=360;
         [axisSlider setDoubleValue:sl];
-        [axisMeter setStringValue:[NSString stringWithFormat:@"%lf %s",a,(a==1)?"degree":"degrees"]];
+        setNumberField(axisMeter, a);
     }
     else {
         setNumberField(anchor1x, model.anchor1.x);
@@ -141,40 +142,62 @@
     if (sender == typeB)
     {
         [model setType:(int)[typeB selectedTag]];
-    }
+    } else
     if (sender == anchor1x || sender == anchor1y)
         [model setAnchor1:NSMakePoint([anchor1x doubleValue], [anchor1y doubleValue])];
+    else
     if (sender == anchor2x || sender == anchor2y)
         [model setAnchor2:NSMakePoint([anchor2x doubleValue], [anchor2y doubleValue])];
+    else
     if (sender == anchorx || sender == anchory)
         [model setAnchor1:NSMakePoint([anchorx doubleValue], [anchory doubleValue])];
+    else
     if (sender == worldCoord)
         [model setWorldCoord:[worldCoord state]==NSOnState];
+    else
     if (sender == collideConn)
         [model setCollideConnected:[collideConn state]==NSOnState];
+    else
     if (sender == freq)
         [model setFrequency:[freq doubleValue]];
+    else
     if (sender == damp)
         [model setDampening:[damp doubleValue]];
+    else
     if (sender == enableLimit)
         [model setLimitEnabled:[enableLimit state]==NSOnState];
+    else
     if (sender == upperLimit)
         [model setUpperValue:[upperLimit doubleValue]];
+    else
     if (sender == lowerLimit)
         [model setLowerValue:[lowerLimit doubleValue]];
+    else
     if (sender == enableMotor)
         [model setMotorEnabled:[enableMotor state]==NSOnState];
+    else
     if (sender == maxPower)
         [model setMotorMaxPower:[maxPower doubleValue]];
+    else
     if (sender == motorSpeed)
         [model setMotorSpeed:[motorSpeed doubleValue]];
+    else
     if (sender == body1)
         [model setBody1:[body1 selectedObject]];
+    else
     if (sender == body2)
-        [model setBody1:[body2 selectedObject]];
+        [model setBody2:[body2 selectedObject]];
+    else
     if (sender == axisSlider)
     {
         double a = -([axisSlider doubleValue]-90);
+        a=a/180*M_PI;
+        [model setAxis:NSMakePoint(cos(a), sin(a))];
+    }
+    else
+    if (sender == axisMeter)
+    {
+        double a = [axisMeter doubleValue];
         a=a/180*M_PI;
         [model setAxis:NSMakePoint(cos(a), sin(a))];
     }

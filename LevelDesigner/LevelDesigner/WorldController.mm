@@ -22,6 +22,8 @@
 #import "PLImageView.h"
 #import "PLFixtureView.h"
 #import "PLSubEntity.h"
+#import "PLJointDot.h"
+#import "PLJoint.h"
 
 @implementation WorldController
 
@@ -76,6 +78,13 @@
     for (PLObject * obj in [model objects])
         if (obj.actor)
             (obj.actor)->retain();
+    for (PLJoint * jnt in [model joints])
+    {
+        if (jnt.actor1)
+            (jnt.actor1)->retain();
+        if (jnt.actor2)
+            (jnt.actor2)->retain();
+    }
     worldView->removeAllSubviews();
     for (PLObject * obj in [model objects])
     {
@@ -84,12 +93,53 @@
             obj.actor = new PLObjectView(obj);
             obj.actor->setController(self);
         }
+        (obj.actor)->removeAllJoints();
         worldView->addSubview(obj.actor);
+    }
+    for (PLJoint * jnt in [model joints])
+    {
+        if (!jnt.actor1)
+        {
+            PLJointDot * d = new PLJointDot();
+            d->setFirst(true);
+            d->setJoint(jnt);
+        }
+        jnt.actor1->jointChanged();
+        if (jnt.worldCoord)
+        {
+            if (((ObjectController*)jnt.owner).showJoints)
+                worldView->addSubview(jnt.actor1);
+        } else
+            if (jnt.body1.actor)
+                (jnt.body1.actor)->addJoint(jnt.actor1);
+        if ((jnt.type) == PLDistanceJoint)
+        {
+            if (!jnt.actor2)
+            {
+                PLJointDot * d = new PLJointDot();
+                d->setFirst(false);
+                d->setJoint(jnt);
+            }
+            jnt.actor2->jointChanged();
+            if (jnt.worldCoord)
+            {
+                if (((ObjectController*)jnt.owner).showJoints)
+                    worldView->addSubview(jnt.actor2);
+            } else
+                if (jnt.body2.actor)
+                    (jnt.body2.actor)->addJoint(jnt.actor2);
+        }
     }
     for (PLObject * obj in [model objects])
         if (obj.actor)
             (obj.actor)->release();
-    
+    for (PLJoint * jnt in [model joints])
+    {
+        if (jnt.actor1)
+            (jnt.actor1)->release();
+        if (jnt.actor2)
+            (jnt.actor2)->release();
+    }
 }
 
 -(void)setModel:(ObjectController *)m
@@ -356,6 +406,7 @@ inline static NSPoint NSPointFromPHPoint(const PHPoint & p)
     for (PLObject * obj in [model objects])
         if (obj.actor)
             (obj.actor)->flagsChanged();
+    [self reloadViews];
 }
 
 @end

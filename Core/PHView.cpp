@@ -540,7 +540,7 @@ PHView * PHView::pointerDeepFirst(PHEvent * touch)
 	if (!view)
 	{
 		PHPoint pnt = PHUnTransformedPoint(touch->location());
-		if (pnt.x>=_bounds.x && pnt.y>=_bounds.y && pnt.x<=_bounds.x+_bounds.width && pnt.y<=_bounds.y+_bounds.height)
+		if (PHPointInRect(pnt,_bounds))
         {
             touchEvent(touch);
 			view = touch->handled()?this:NULL;
