@@ -257,12 +257,18 @@ void PHImageView::renderCurved()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void PHImageView::renderStraight()
+{
+    //TODO: use VBOs
+    renderInFramePortionTint(_bounds, coords, tint);
+}
+
 void PHImageView::draw()
 {
     if (curve)
         renderCurved();
     else
-        renderInFramePortionTint(_bounds, coords, tint);
+        renderStraight();
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)

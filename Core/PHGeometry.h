@@ -128,8 +128,6 @@ struct PHPoint
 typedef PHPoint PHSize;
 #define PHNullSize PHOriginPoint
 
-extern PHPoint PHOriginPoint;
-
 struct PHRect
 {
 	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
@@ -322,17 +320,20 @@ struct PHRange
     void saveToLua(lua_State * L) const;
 };
 
-extern PHColor PHClearColor;
-extern PHColor PHBlackColor;
-extern PHColor PHGrayColor;
-extern PHColor PHWhiteColor;
-extern PHColor PHInvalidColor;
+extern const PHColor PHClearColor;
+extern const PHColor PHBlackColor;
+extern const PHColor PHGrayColor;
+extern const PHColor PHWhiteColor;
+extern const PHColor PHInvalidColor;
 
-extern PHRect PHWholeRect;
-extern PHRect PHInvalidRect;
-extern PHRect PHNullRect;
+extern const PHRect PHWholeRect;
+extern const PHRect PHInvalidRect;
+extern const PHRect PHNullRect;
 
-extern PHRange PHInvalidRange;
+extern const PHRange PHInvalidRange;
+
+extern const PHSize PHUnitSize;
+extern const PHPoint PHOriginPoint;
 
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse);
 PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt);

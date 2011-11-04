@@ -11,17 +11,19 @@
 #include "PHGeometry.h"
 #include "PHLua.h"
 
-PHPoint PHOriginPoint(0,0);
-PHRect PHWholeRect(0,0,1,1);
-PHColor PHClearColor(0,0,0,0);
-PHColor PHBlackColor(0,0,0,1);
-PHColor PHWhiteColor(1,1,1,1);
-PHColor PHGrayColor(0.5,0.5,0.5,1);
-PHColor PHInvalidColor(-1,-1,-1,-1);
-PHRect PHInvalidRect(0,0,-1,-1);
-PHRect PHNullRect(0,0,0,0);
+const PHPoint PHOriginPoint(0,0);
+const PHRect PHWholeRect(0,0,1,1);
+const PHColor PHClearColor(0,0,0,0);
+const PHColor PHBlackColor(0,0,0,1);
+const PHColor PHWhiteColor(1,1,1,1);
+const PHColor PHGrayColor(0.5,0.5,0.5,1);
+const PHColor PHInvalidColor(-1,-1,-1,-1);
+const PHRect PHInvalidRect(0,0,-1,-1);
+const PHRect PHNullRect(0,0,0,0);
+const PHRange PHInvalidRange(-1,-1);
+const PHSize PHUnitSize(1,1);
+
 PHColor PHGLCurrentColor(-1,-1,-1,-1);
-PHRange PHInvalidRange(-1,-1);
 
 PHPoint::PHPoint(const PHRect & o) : x(o.x), y(o.y){};
 

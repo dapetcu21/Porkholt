@@ -25,9 +25,11 @@ protected:
 	PHRect coords;
     PHColor tint;
     bool constrain;
+    double repeatX,repeatY;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
     void renderCurved();
+    void renderStraight();
     
     PHAnimatorPool * pool;
     
