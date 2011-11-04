@@ -11,6 +11,7 @@
 
 #include "PHImage.h"
 
+class PHImageView;
 class PHNormalImage : public PHImage
 {
 private:
@@ -35,9 +36,13 @@ public:
     
     void bindToTexture();
     
+    //immediate mode
     void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHInvalidColor); }
 	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(frm, cnstr,PHInvalidColor); }
     void renderInFramePortionTint(const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
+    
+    //VBOs
+    void rebuildVBO(PHImageView * imageView, GLuint & vbo, VBOParams & params);
 	
     void loadFromFile(PHObject * sender, void * ud);
 	void loadToTexture(PHObject * sender, void * ud); //don't use

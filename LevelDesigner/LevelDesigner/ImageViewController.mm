@@ -40,6 +40,8 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     [portion_y setEnabled:enabled];
     [portion_w setEnabled:enabled];
     [portion_h setEnabled:enabled];
+    [repeat_x setEnabled:enabled];
+    [repeat_y setEnabled:enabled];
     [rotation setEnabled:enabled];
     [fileName setEnabled:enabled];
     [hFlipped setEnabled:enabled];
@@ -63,6 +65,8 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     setNumberField(portion_y, portion.origin.y);
     setNumberField(portion_w, portion.size.width);
     setNumberField(portion_h, portion.size.height);
+    setNumberField(repeat_x, model.repeatX);
+    setNumberField(repeat_y, model.repeatY);
     setNumberField(rotation, model.rotation);
     [tag setStringValue:[NSString stringWithFormat:@"%d",(int)model.tag]];
     [alphaSlider setFloatValue:model.alpha];
@@ -91,7 +95,11 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     if (sender == tag)
         model.tag = [tag intValue];
     if (sender == alphaSlider)
-        model.alpha = [alphaSlider floatValue];
+        model.alpha = [alphaSlider doubleValue];
+    if (sender == repeat_x)
+        model.repeatX = [repeat_x doubleValue];
+    if (sender == repeat_y)
+        model.repeatY = [repeat_y doubleValue];
     if (sender == hFlipped) 
         model.horizontallyFlipped = ([hFlipped state] == NSOnState);
     if (sender == vFlipped)
@@ -99,11 +107,11 @@ static PHColor PHColorFromPLColor(const struct PLColor & c)
     if (sender == constrain)
         model.constrainToFrame = ([constrain state] == NSOnState);
     if (sender == rotation)
-        model.rotation = [rotation floatValue];
+        model.rotation = [rotation doubleValue];
     if (sender == frame_x || sender == frame_y || sender == frame_w || sender == frame_h)
-        model.frame = NSMakeRect([frame_x floatValue], [frame_y floatValue], [frame_w floatValue], [frame_h floatValue]);
+        model.frame = NSMakeRect([frame_x doubleValue], [frame_y doubleValue], [frame_w doubleValue], [frame_h doubleValue]);
     if (sender == portion_x || sender == portion_y || sender == portion_w || sender == portion_h)
-        model.portion = NSMakeRect([portion_x floatValue], [portion_y floatValue], [portion_w floatValue], [portion_h floatValue]);
+        model.portion = NSMakeRect([portion_x doubleValue], [portion_y doubleValue], [portion_w doubleValue], [portion_h doubleValue]);
     if (sender == tint)
     {
         PLColor c;

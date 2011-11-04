@@ -21,6 +21,8 @@
     IBOutlet NSTextField * frame_h;
     IBOutlet NSTextField * portion_x;
     IBOutlet NSTextField * portion_y;
+    IBOutlet NSTextField * repeat_x;
+    IBOutlet NSTextField * repeat_y;
     IBOutlet NSTextField * portion_w;
     IBOutlet NSTextField * portion_h;
     IBOutlet NSTextField * rotation;

@@ -39,6 +39,19 @@ protected:
     bool loaded;
     virtual void _load() = 0;
     
+    struct VBOParams
+    {
+        int nElements;
+        size_t vertexOffset,texCoordOffset;
+        GLint vertexSize,texCoordSize;
+        GLenum vertexType, texCoordType, renderMode;
+        GLsizei vertexStride,texCoordStride;
+    };
+    friend class PHImageView;
+    friend class PHImageAnimator;
+    
+    static void buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adjustment);
+    
 public:
     void load() { if (!loaded) _load(); }
 	int height() { load(); return _height; };

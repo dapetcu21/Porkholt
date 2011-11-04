@@ -174,6 +174,16 @@ struct PHRect
     {
         return PHRect(x,y,width*d,height*d);
     }
+    const PHRect & operator *= (const PHSize & d)
+    {
+        width*=d.x;
+        height*=d.y;
+        return * this;
+    }
+    PHRect operator * (const PHSize & d) const
+    {
+        return PHRect(x,y,width*d.x,height*d.y);
+    }
     const PHRect & operator /= (double d)
     {
         width/=d;

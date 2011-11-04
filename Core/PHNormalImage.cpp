@@ -11,6 +11,7 @@
 #include <png.h>
 #include <sstream>
 #include "PHFileManager.h"
+#include "PHImageView.h"
 
 PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thread(NULL)
 {
@@ -187,8 +188,8 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	if (antialiasing) 
 		glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, format, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);	
@@ -205,6 +206,8 @@ void PHNormalImage::bindToTexture()
 {
 	glBindTexture(GL_TEXTURE_2D,texid);
 }
+
+
 
 void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
@@ -237,4 +240,17 @@ void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & p
 	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     PHGLSetColor(tint);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void PHNormalImage::rebuildVBO(PHImageView * imageView, GLuint & vbo, VBOParams & params)
+{
+    if (!vbo)
+        glGenBuffers(1, &vbo);
+    PHImage::buildImageVBO(vbo,
+                           params,
+                           PHPoint(imageView->repeatX(),imageView->repeatY()),
+                           imageView->textureCoordinates(),
+                           PHRect(0,0,(double)_width/actWidth,(double)_height/actHeight),
+                           PHPoint(0.5f/actWidth,0.5f/actHeight)
+                           );
 }

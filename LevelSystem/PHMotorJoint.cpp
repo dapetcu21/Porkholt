@@ -37,6 +37,9 @@ void PHMotorJoint::setMotorEnabled(bool val)
                 break;
             case e_prismaticJoint:
                 ((b2PrismaticJoint*)joint)->EnableMotor(val);
+                break;
+            default:
+                break;
         }
     }
 }
@@ -52,6 +55,9 @@ void PHMotorJoint::setMotorPower(double val)
                 break;
             case e_prismaticJoint:
                 ((b2PrismaticJoint*)joint)->SetMaxMotorForce(val);
+                break;
+            default:
+                break;
         }
     }
 }
@@ -68,6 +74,9 @@ void PHMotorJoint::setMotorSpeed(double val)
                 break;
             case e_prismaticJoint:
                 ((b2PrismaticJoint*)joint)->SetMotorSpeed(val);
+                break;
+            default:
+                break;
         }
     }
 }
