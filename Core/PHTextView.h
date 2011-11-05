@@ -23,18 +23,17 @@ protected:
     PHColor color;
     
     bool needsReload;
-    bool colorArrayNeedsReload;
     
-    GLubyte * colors;
-    GLfloat * vertices;
-    GLfloat * textureCoordinates;
+    GLfloat * vbuffer;
     GLushort * indices;
+    
+    GLuint indicesVBO, arraysVBO;
     
     unsigned int nGlyphs;
     
     
     void recalculatePositions();
-    void rebuildColorArray();
+    void loadVBOs();
     double lengthForInterval(int st, int en);
     
     PHSize sz;
@@ -62,7 +61,7 @@ public:
     void setLineSpacing(double s) {  needsReload = true; lineSpace = s; }
     int alignment() { return _alignment; }
     void setAlignment(int a) { needsReload = true; _alignment = a; }
-    void setFontColor(const PHColor & c) { colorArrayNeedsReload = true; color = c; }
+    void setFontColor(const PHColor & c) { color = c; }
     PHColor fontColor() { return color; }
     PHSize textSize() { if (needsReload) recalculatePositions(); return sz; }
     
