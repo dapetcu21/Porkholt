@@ -391,4 +391,14 @@ inline void PHGLSetColor(PHColor clr)
     }
 }
 
+enum PHGLCapabilities
+{
+    PHGLCapabilityNPOT = 0,
+    PHGLCapabilityAppleLimitedNPOT,
+    PHGLCapabilityOpenGLES,
+    PHGLNumberCapabilities
+};
+
+bool PHGLHasCapability(int cap);
+
 #endif

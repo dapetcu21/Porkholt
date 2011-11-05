@@ -296,12 +296,20 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
             }
             c*=_width;
             r*=_height;
-            int aw = 1;
-            while (aw<c)
-                aw<<=1;
-            int ah = 1;
-            while (ah<r)
-                ah<<=1;
+            int aw,ah;
+            if (PHGLHasCapability(PHGLCapabilityNPOT) || PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+            {
+                aw = c;
+                ah = r;
+            } else
+            {
+                aw = 1;
+                ah = 1;
+                while (aw<c)
+                    aw<<=1;
+                while (ah<r)
+                    ah<<=1;
+            }
             textures[nt].awidth = aw;
             textures[nt].aheight = ah;
             textures[nt].rowsize = aw*png_get_rowbytes(png_ptr,info_ptr)/_width;
@@ -369,17 +377,40 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
         for (int i=0; i<textures.size(); i++)
             if (textures[i].buffer)
             {
+                bool aa = antialiasing;
+                bool repeat = true;
+                if (PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+                {
+                    bool pots = true;
+                    int s = textures[i].awidth;
+                    while (s && !(s&1))
+                        s>>=1;
+                    if (s!=1)
+                        pots = false;
+                    if (pots)
+                    {
+                        s = textures[i].aheight;
+                        while (s && !(s&1))
+                            s>>=1;
+                        if (s!=1)
+                            pots = false;
+                    }
+                    if (!pots)
+                    {
+                        aa = false;
+                        repeat = false;
+                    }
+                }
+                
                 glGenTextures(1,&textures[i].texid);
                 glBindTexture(GL_TEXTURE_2D, textures[i].texid);
                 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-                glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, antialiasing?GL_LINEAR_MIPMAP_NEAREST:GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP_TO_EDGE);
+                glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, aa?GL_LINEAR_MIPMAP_NEAREST:GL_LINEAR);
                 glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                if (antialiasing) 
+                if (aa) 
                     glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-                glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-                glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                 glTexImage2D(GL_TEXTURE_2D, 0, format, textures[i].awidth, textures[i].aheight, 0, 
                              format, GL_UNSIGNED_BYTE, textures[i].buffer);	

@@ -97,12 +97,19 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 	number_of_passes = png_set_interlace_handling(png_ptr);
-	actWidth = 1;
-	actHeight = 1;
-	while (actWidth<_width)
-		actWidth<<=1;
-	while (actHeight<_height)
-		actHeight<<=1;
+    if (PHGLHasCapability(PHGLCapabilityNPOT) || PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+    {
+        actWidth = _width;
+        actHeight = _height;
+    } else
+    {
+        actWidth = 1;
+        actHeight = 1;
+        while (actWidth<_width)
+            actWidth<<=1;
+        while (actHeight<_height)
+            actHeight<<=1;
+    }
 	
 	png_read_update_info(png_ptr, info_ptr);
 	
@@ -181,15 +188,39 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
     
 	glGenTextures(1,&texid);
 	bindToTexture();
+    
+    bool repeat = true;
+    if (PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+    {
+        bool pots = true;
+        int s = _width;
+        while (s && !(s&1))
+            s>>=1;
+        if (s!=1)
+            pots = false;
+        if (pots)
+        {
+            s = _height;
+            while (s && !(s&1))
+                s>>=1;
+            if (s!=1)
+                pots = false;
+        }
+        if (!pots)
+        {
+            antialiasing = false;
+            repeat = false;
+        }
+    }
+    
+    
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, antialiasing?GL_LINEAR_MIPMAP_NEAREST:GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	if (antialiasing) 
 		glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, format, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);	

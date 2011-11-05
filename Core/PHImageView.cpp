@@ -183,7 +183,7 @@ void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stri
                 x = p.x+p.width*x;
                 y = p.y+p.height*y;
             }
-            PHLog("point: (%lf,%lf) txtcoord: (%lf,%lf)",anchors->at(i).point.x,anchors->at(i).point.y,x,y);
+            //PHLog("point: (%lf,%lf) txtcoord: (%lf,%lf)",anchors->at(i).point.x,anchors->at(i).point.y,x,y);
             buffer[0] = x;
             buffer[1] = y;
             buffer = (GLfloat*)(((char*)buffer)+stride);
