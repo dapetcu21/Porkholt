@@ -10,14 +10,21 @@
 #include <Box2D/Box2D.h>
 #include "PHLua.h"
 
-PHLSensor::PHLSensor()
+PHLSensor::PHLSensor() : markAsSensor(true)
 {
     _class = "PHLSensor";
 }
 
+void PHLSensor::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)
+{
+    PHLuaGetBoolField(markAsSensor, "markAsSensor");
+    PHLObject::loadFromLua(L, world, lvlc);
+}
+
 bool PHLSensor::customizeFixture(lua_State * L, b2FixtureDef & fixtureDef)
 {
-    fixtureDef.isSensor = true;
+    if (markAsSensor)
+        fixtureDef.isSensor = true;
     return true;
 }
 

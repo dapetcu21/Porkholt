@@ -24,6 +24,8 @@
 #include "PHLSign.h"
 #include "PHLPowerup.h"
 #include "PHMessage.h"
+#include "PHLBomberBird.h"
+#include "PHLEggBomb.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
@@ -160,6 +162,24 @@ static int PHWorld_curtainText(lua_State * L)
     return 0;
 }
 
+static int PHWorld_boom(lua_State * L)
+{
+    PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    PHPoint loc = PHPoint::fromLua(L, 2);
+    double magnitude = 1;
+    double damage = 1;
+    double radius = 1;
+    if (lua_isnumber(L, 3))
+        magnitude = lua_tonumber(L, 3);
+    if (lua_isnumber(L, 4))
+        damage = lua_tonumber(L, 4);
+    if (lua_isnumber(L, 5))
+        radius = lua_tonumber(L, 5);
+    world->boom(loc,magnitude,damage,radius);
+    return 0;
+}
+
 void PHScripting::loadWorld()
 {
     lua_getglobal(L,"PHWorld");
@@ -175,6 +195,7 @@ void PHScripting::loadWorld()
     PHLuaAddMethod(PHWorld, resourcePath);
     PHLuaAddMethod(PHWorld, win);
     PHLuaAddMethod(PHWorld, die);
+    PHLuaAddMethod(PHWorld, boom);
 
     lua_pop(L, 1);
     
@@ -190,6 +211,8 @@ void PHScripting::loadWorld()
     PHLBull::registerLuaInterface(L);
     PHLSign::registerLuaInterface(L);
     PHLPowerup::registerLuaInterface(L);
+    PHLBomberBird::registerLuaInterface(L);
+    PHLEggBomb::registerLuaInterface(L);
 }
 
 void PHScripting::scriptingStep(double timeElapsed)

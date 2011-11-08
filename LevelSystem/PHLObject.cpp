@@ -33,6 +33,8 @@
 #include "PHLHPPowerup.h"
 #include "PHLPowerPowerup.h"
 #include "PHBezierPath.h"
+#include "PHLBomberBird.h"
+#include "PHLEggBomb.h"
 
 #include "PHImage.h"
 #include "PHPoofView.h"
@@ -70,6 +72,8 @@ PHLObject * PHLObject::objectWithClass(const string & str)
         addClass(PHLPowerup);
         addClass(PHLLevelEnd);
         addClass(PHLPit);
+        addClass(PHLBomberBird);
+        addClass(PHLEggBomb);
         
         initialized = true;
     }
@@ -736,11 +740,12 @@ void PHLObject::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
     
 }
 
-void PHLObject::defferedLoading(PHWorld * wrld, int insertPos, PHLObject * insObj)
+void PHLObject::defferedLoading(PHWorld * _wrld, int insertPos, PHLObject * insObj)
 {
     dlipos = insertPos;
     dliobj = insObj;
-    dlworld = wrld;
+    dlworld = _wrld;
+    wrld = _wrld;
     wrld->viewEventQueue()->schedule(PHInv(this, PHLObject::_defferedLoading, NULL), false);
     retain();
 }

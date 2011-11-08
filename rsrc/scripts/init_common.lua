@@ -177,7 +177,21 @@ function Initializers.PHLBigBull(obj)
 	obj.class = "PHLBull";
 	print("big boss bull loaded");
 end
-
+function Initializers.PHLBomberBird(obj)
+	Initializers.PHLMob(obj);
+	local b = rect(-0.3,-0.3,0.6,0.6)
+	obj.bounds = b;
+	objectAddImage(obj,"/bird_body.png", b.x,b.y,b.width,b.height)
+end
+function Initializers.PHLEggBomb(obj)
+	Initializers.PHLSensor(obj)
+	obj.markAsSensor = false
+	obj.physics.dynamic = true
+	obj._fixtureindex.categoryBits = cMOB
+	obj._fixtureindex.maskBits = cWORLD + cPLAYER + cNPC + cMOB
+	objectAddImage(obj,"/eggbomb.png", -0.15,-0.3,0.3,0.6)
+	objectAddBox(obj, -0.15,-0.3,0.3,0.6);
+end
 
 function objectWithClass(class,...)
 	obj = {};

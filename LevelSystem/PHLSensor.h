@@ -15,7 +15,11 @@ class PHLSensor : public PHLObject
 {
 public:
     PHLSensor();
+    virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
+    
 private:
+    bool markAsSensor;
+    
     bool customizeFixture(lua_State * L, b2FixtureDef & fixtureDef);
     
     void contactBegin(bool b,b2Contact* contact);
@@ -26,6 +30,7 @@ private:
     
     virtual void objectEntered(PHLObject * obj);
     virtual void objectExited(PHLObject * obj);
+    
 };
 
 #endif

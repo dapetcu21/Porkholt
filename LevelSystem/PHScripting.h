@@ -26,6 +26,8 @@ public:
     void loadWorld();
         
     void worldHasFadedAway(void * ud);
+    
+    lua_State * luaState() { return L; }
 };
 
 #endif

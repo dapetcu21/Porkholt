@@ -141,6 +141,9 @@ struct PHRect
     PHPoint origin() const { return PHPoint(x,y); }
     PHSize size() const { return PHSize(width,height); }
     PHPoint center() const { return PHPoint(x+width/2,y+height/2); }
+    void setOrigin(const PHPoint & o) { x = o.x; y = o.y; }
+    void setSize(const PHSize & o) { width = o.width; y = o.height; }
+    void setCenter(const PHPoint & o) { x = o.x-width/2; y = o.y-height/2; }
     
     PHPoint corner(int index) const { return PHPoint(x+((index&1)?width:0),y+((index&2)?height:0)); }
     
@@ -341,6 +344,7 @@ PHPoint PHUnTransformPointMatrix(const GLfloat * m, const PHPoint & pnt);
 PHPoint PHTransformedPoint(const PHPoint & pnt);
 PHPoint PHUnTransformedPoint(const PHPoint & pnt);
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
+bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2);
 bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, double radius);
 
 void PHLowPassFilter(double & var, double newval, double period, double cutoff);

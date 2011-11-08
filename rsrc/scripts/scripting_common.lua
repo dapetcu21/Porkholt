@@ -72,6 +72,7 @@ end
 --function PHWorld:resourcePath();
 --function PHWorld:win();
 --function PHWorld:die();
+--function PHWorld:boom(location,magnitude,damage,radius);
 
 PHLObject = {}
 function PHLObject:new(o,ud, ...)
@@ -287,13 +288,37 @@ function PHLPlayer:setFreezed(b)
 	self:setUserInput(not b);
 end
 
+PHLSensor = PHLObject:new()
+function PHLSensor:objectEntered(obj) --override these. obj is either a table representing an object or a string with the object's class if the object isn't scriptable
+end
+function PHLSensor:objectExited(obj)
+end
+
 PHLMob = PHLNPC:new();
 
 PHLBull = PHLMob:new();
+PHLBomberBird = PHLMob:new();
+PHLEggBomb = PHLSensor:new();
+
+function PHLBomberBird.createAndLaunchBird()
+	local bird = objectWithClass("PHLBomberBird");
+	local b = camera:bounds();
+	bird.startingPoint = point(
+		-bird.bounds.width-bird.bounds.x,
+		b.height-bird.bounds.height-bird.bounds.y);
+	local p = player:position();
+	bird.rotationAxis = point(p.x - b.x+(math.random()*2-1),bird.bounds.height+10+(math.random()*2-1));
+	
+	PHWorld:insertAtTheEnd();
+	bird = PHWorld:insertObject(bird);
+	bird:attack();
+	return bird;
+end
 
 PHLCamera = PHLObject:new()
---function PHLPlayer:followsPlayer();
---function PHLPlayer:setFollowsPlayer(b);
+--function PHLCamera:bounds();
+--function PHLCamera:followsPlayer();
+--function PHLCamera:setFollowsPlayer(b);
 
 PHLSign = PHLNPC:new()
 function PHLSign:display(cb,...)
@@ -305,12 +330,6 @@ function PHLSign:display(cb,...)
 end
 function PHLSign:questTapped()
 	self:display();
-end
-
-PHLSensor = PHLObject:new()
-function PHLSensor:objectEntered(obj) --override these. obj is either a table representing an object or a string with the object's class if the object isn't scriptable
-end
-function PHLSensor:objectExited(obj)
 end
 
 PHLPowerup = PHLSensor:new()

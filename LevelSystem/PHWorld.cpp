@@ -20,6 +20,7 @@
 
 #include "PHLPlayer.h"
 #include "PHLNPC.h"
+#include "PHLMob.h"
 #include "PHLCamera.h"
 #include "PHGameManager.h"
 
@@ -616,6 +617,34 @@ void PHWorld::overlayText(const string & s, double duration)
     scheduleTimer(timer);
     timer->release();
     overlayView->mutex()->unlock();
+}
+
+void PHWorld::boom(const PHPoint &location, double magnitude, double damage, double radius)
+{
+    for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+    {
+        PHLObject * o = (*i);
+        if ((o==player || dynamic_cast<PHLMob*>(o)!=NULL) && (o->position()-location).length()<=radius)
+            ((PHLNPC*)o)->decreaseHP(damage);
+        b2Body * b = o->getBody();
+        if (b && (b->GetType() == b2_dynamicBody))
+        {
+            PHPoint p = o->position()-location;
+            double d = p.length();
+            if (d==0)
+            {
+                d = 0.1;
+                p = PHPoint(0,0.1);
+            }
+            p.normalize();
+            double amm = (magnitude/(d*d));
+            if (amm > magnitude*2)
+                amm = magnitude*2;
+            PHLog("%lf %s %lf",amm,o->getClass().c_str(),b->GetMass());
+            b2Vec2 im(p.x*amm,p.y*amm);
+            b->ApplyLinearImpulse(im,b->GetWorldCenter());
+        }
+    }
 }
 
 const string & PHWorld::resourcePath()

@@ -34,40 +34,42 @@ void PHLCamera::loadView()
 
 void PHLCamera::updateCamera(PHPoint pnt)
 {
-	if (!follow) return;
-    
-	int fps = _gameManager->framesPerSecond();
-	
-    if (sstrict>0)
+	if (follow)
     {
-        sstrict-=1.0f/fps;
-        if (sstrict<=0)
-            strict = false;
-    }
-    
-	pnt.x-=sz.width*(1.0f/3-0.5f);
-    if (strict)
-        pnt.y-=sz.height*(1.0f/4-0.5f);
-    else
-    {
-        PHPoint pos = position();
-        if (pnt.y<pos.y-sz.height*0.25f)
-            pnt.y+=sz.height*0.25f;
+        
+        int fps = _gameManager->framesPerSecond();
+        
+        if (sstrict>0)
+        {
+            sstrict-=1.0f/fps;
+            if (sstrict<=0)
+                strict = false;
+        }
+        
+        pnt.x-=sz.width*(1.0f/3-0.5f);
+        if (strict)
+            pnt.y-=sz.height*(1.0f/4-0.5f);
         else
-        if (pnt.y>pos.y+sz.height*0.25f)
-            pnt.y-=sz.height*0.25f;
-        else
-            pnt.y=pos.y;
+        {
+            PHPoint pos = position();
+            if (pnt.y<pos.y-sz.height*0.25f)
+                pnt.y+=sz.height*0.25f;
+            else
+            if (pnt.y>pos.y+sz.height*0.25f)
+                pnt.y-=sz.height*0.25f;
+            else
+                pnt.y=pos.y;
+        }
+        PHLowPassFilter(pos.x, pnt.x, 1.0f/fps, 5.0f);
+        PHLowPassFilter(pos.y, pnt.y, 1.0f/fps, 5.0f);
+        setPosition(pos);
     }
-	PHLowPassFilter(pos.x, pnt.x, 1.0f/fps, 5.0f);
-	PHLowPassFilter(pos.y, pnt.y, 1.0f/fps, 5.0f);
-    sz.x = pos.x;
-    sz.y = pos.y;
-	setPosition(pos);
+    sz.setCenter(position());
 }
 
 PHLuaBoolGetter(PHLCamera, followsPlayer);
 PHLuaBoolSetter(PHLCamera, setFollowsPlayer);
+PHLuaRectGetter(PHLCamera, bounds);
 
 void PHLCamera::registerLuaInterface(lua_State * L)
 {
@@ -75,6 +77,7 @@ void PHLCamera::registerLuaInterface(lua_State * L)
     
     PHLuaAddMethod(PHLCamera, followsPlayer);
     PHLuaAddMethod(PHLCamera, setFollowsPlayer);
+    PHLuaAddMethod(PHLCamera, bounds);
     
     lua_pop(L,1);
 }

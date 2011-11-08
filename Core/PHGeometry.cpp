@@ -277,6 +277,18 @@ bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, double radius)
     return (pnt-origin).length()<=radius;
 }
 
+bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2)
+{
+    return (PHPointInRect(r1.corner(0), r2)||
+            PHPointInRect(r1.corner(1), r2)||
+            PHPointInRect(r1.corner(2), r2)||
+            PHPointInRect(r1.corner(3), r2)||
+            PHPointInRect(r2.corner(0), r1)||
+            PHPointInRect(r2.corner(1), r1)||
+            PHPointInRect(r2.corner(2), r1)||
+            PHPointInRect(r2.corner(3), r1));
+}
+
 void PHGLRotate(double angle)
 {
     double sinv = sin(angle), cosv = cos(angle);

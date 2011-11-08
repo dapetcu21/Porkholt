@@ -82,6 +82,7 @@ public:
 	void addToLayer(layer * lyr, PHImageView * img);
 	
     void setScripting(PHScripting * s) { scripting = s; } 
+    PHScripting * getScripting() { return scripting; }
     
 	PHWorld(PHGameManager * mgr, const PHRect & size,PHLevelController * cnt);
 	PHView * getView() { return (PHView *)view; }
@@ -129,6 +130,8 @@ public:
     void advanceDialog();
     void updateDialogs();
     void addDialog(PHDialog* d);
+    
+    void boom(const PHPoint & location, double magnitude, double damage, double radius);
     
     const string & resourcePath();
     
