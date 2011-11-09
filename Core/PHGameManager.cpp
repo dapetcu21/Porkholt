@@ -43,6 +43,7 @@ void PHGameManager::init(double screenX, double screenY, int FPS)
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    PHGLHasCapability(PHGLCapabilityOpenGLES);
     
     entryPoint();
 }

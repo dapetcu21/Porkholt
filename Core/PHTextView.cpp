@@ -8,7 +8,7 @@
 
 #include "PHTextView.h"
 
-#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), colorArrayNeedsReload(true), nGlyphs(0), colors(NULL), vertices(NULL), textureCoordinates(NULL), indices(NULL), lineSpace(0.5)
+#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(0), arraysVBO(0), lineSpace(0.5)
 
 PHTextView::PHTextView() : PHView(), PHTEXTVIEW_INIT
 {
@@ -20,16 +20,36 @@ PHTextView::PHTextView(const PHRect &frame) : PHView(frame), PHTEXTVIEW_INIT
 
 PHTextView::~PHTextView()
 {
+    if (indicesVBO)
+        glDeleteBuffers(1, &indicesVBO);
+    if (arraysVBO)
+        glDeleteBuffers(1, &arraysVBO);
+    if (vbuffer)
+        delete [] vbuffer;
     if (indices)
-        delete[] indices;
-    if (colors)
-        delete[] colors;
-    if (vertices)
-        delete[] vertices;
-    if (textureCoordinates)
-        delete[] textureCoordinates;
+        delete [] indices;
     if (_font)
         _font->release();
+}
+
+void PHTextView::loadVBOs()
+{
+    if (!indices || !vbuffer) return;
+    if (!arraysVBO)
+        glGenBuffers(1, &arraysVBO);
+    if (!indicesVBO)
+        glGenBuffers(1, &indicesVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*nGlyphs*4*4, vbuffer, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*nGlyphs*6, indices, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
+    delete [] vbuffer;
+    delete [] indices;
+    vbuffer = NULL;
+    indices = NULL;
 }
 
 void PHTextView::draw()
@@ -37,17 +57,21 @@ void PHTextView::draw()
     if (!_font) return;
     if (needsReload)
         recalculatePositions();
-    if (colorArrayNeedsReload)
-        rebuildColorArray();
+    loadVBOs();
     
+    glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVBO);
     
-    PHGLSetStates(PHGLVertexArray | PHGLColorArray | PHGLTextureCoordArray | PHGLTexture);
+    PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
     glBindTexture(GL_TEXTURE_2D, _font->textureID());
-	glVertexPointer(2, GL_FLOAT, 0, vertices);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-    glTexCoordPointer(2, GL_FLOAT, 0, textureCoordinates);
+	glVertexPointer(  2, GL_FLOAT, sizeof(GLfloat)*4, (GLfloat*)NULL);
+    glTexCoordPointer(2, GL_FLOAT, sizeof(GLfloat)*4, ((GLfloat*)NULL)+2);
+    PHGLSetColor(color);
     
-    glDrawElements(GL_TRIANGLES, 6*nGlyphs, GL_UNSIGNED_SHORT, indices);
+    glDrawElements(GL_TRIANGLES, 6*nGlyphs, GL_UNSIGNED_SHORT, NULL);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 inline bool PHIsBreakCharacter(char c)
@@ -171,24 +195,17 @@ void PHTextView::recalculatePositions()
     else
         startY = bounds().height/2+blockHeight/2-size;
     
-    if (textureCoordinates)
-        delete[] textureCoordinates;
-    if (vertices)
-        delete[] vertices;
-    if (colors)
-        delete[] colors;
+    if (vbuffer)
+        delete [] vbuffer;
     if (indices)
-        delete[] indices;
-    colors = NULL;
-    colorArrayNeedsReload = true;
+        delete [] indices;
     
     nGlyphs = totalGlyphs;
-    textureCoordinates = new GLfloat[nGlyphs*2*4];
-    vertices = new GLfloat[nGlyphs*2*4];
+    vbuffer = new GLfloat[nGlyphs*4*4];
     indices = new GLushort[nGlyphs*6];
     
-    GLfloat *txc = textureCoordinates;
-    GLfloat *v = vertices;
+    GLfloat *txc = vbuffer+2;
+    GLfloat *v = vbuffer;
     GLushort *idx = indices;
     
     GLushort index = 0;
@@ -209,14 +226,14 @@ void PHTextView::recalculatePositions()
         for (int j=st; j<=en; j++)
         {
             const PHFont::glyph & glyph = _font->glyphForCharacter(_text[j]);
-            txc[0] = glyph.minX; txc[1] = glyph.minY; txc+=2;
-            txc[0] = glyph.maxX; txc[1] = glyph.minY; txc+=2;
-            txc[0] = glyph.minX; txc[1] = glyph.maxY; txc+=2;
-            txc[0] = glyph.maxX; txc[1] = glyph.maxY; txc+=2;
-            v[0] = startX; v[1] = startY; v+=2;
-            v[0] = startX+size*glyph.aspectRatio; v[1] = startY; v+=2;
-            v[0] = startX; v[1] = startY+size; v+=2;
-            v[0] = startX+size*glyph.aspectRatio; v[1] = startY+size; v+=2;
+            txc[0] = glyph.minX; txc[1] = glyph.minY; txc+=4;
+            txc[0] = glyph.maxX; txc[1] = glyph.minY; txc+=4;
+            txc[0] = glyph.minX; txc[1] = glyph.maxY; txc+=4;
+            txc[0] = glyph.maxX; txc[1] = glyph.maxY; txc+=4;
+            v[0] = startX; v[1] = startY; v+=4;
+            v[0] = startX+size*glyph.aspectRatio; v[1] = startY; v+=4;
+            v[0] = startX; v[1] = startY+size; v+=4;
+            v[0] = startX+size*glyph.aspectRatio; v[1] = startY+size; v+=4;
             startX+=size*glyph.aspectRatio;
             idx[0] = index+0;
             idx[1] = index+1;
@@ -232,18 +249,7 @@ void PHTextView::recalculatePositions()
     
     sz.x = maxLen;
     sz.y = blockHeight;
-}
-
-void PHTextView::rebuildColorArray()
-{
-    if (colors)
-        delete[] colors;
-    colors = new GLubyte[nGlyphs*4*4];
-    PH24BitColor clr(color);
-    const GLubyte v[4] = { clr.r, clr.g, clr.b, clr.a };
-    for (int i=0; i<nGlyphs*4; i++)
-        memcpy(colors+4*i, v, sizeof(GLubyte)*4);
-    colorArrayNeedsReload = false;
+    
 }
 
 void PHTextView::adjustFontSizeToFit(int precision)

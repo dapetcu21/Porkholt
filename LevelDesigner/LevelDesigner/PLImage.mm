@@ -78,6 +78,12 @@ static inline void endToken(NSMutableString * file, int * count)
         p = [prop propertyWithKey:@"constrainCurveToFrame"];
         constrainToFrame = p?p.booleanValue:YES;
         
+        p = [prop propertyWithKey:@"repeatX"];
+        repeatX = p?p.numberValue:1.0f;
+        
+        p = [prop propertyWithKey:@"repeatY"];
+        repeatY = p?p.numberValue:1.0f;
+        
         p = [prop propertyWithKey:@"verticallyFlipped"];
         verticallyFlipped = p?p.booleanValue:NO;
         
@@ -128,6 +134,10 @@ static inline void endToken(NSMutableString * file, int * count)
         addToken(file,@"verticallyFlipped = true",&count);
     if (!constrainToFrame)
         addToken(file,@"constrainCurveToFrame = false", &count);
+    if (repeatX!=1)
+        addToken(file,[NSString stringWithFormat:@"repeatX = %lf",repeatX],&count);
+    if (repeatY!=1)
+        addToken(file,[NSString stringWithFormat:@"repeatY = %lf",repeatY],&count);
     if (bezierCurve)
     {   
         NSUInteger idx = bezierCurveIndex;
@@ -181,6 +191,16 @@ static inline void endToken(NSMutableString * file, int * count)
     p = [[[PLProperty alloc] init] autorelease];
     p.name = @"alpha";
     p.numberValue = alpha;
+    [prop insertProperty:p atIndex:[prop childrenCount]];
+    
+    p = [[[PLProperty alloc] init] autorelease];
+    p.name = @"repeatX";
+    p.numberValue = repeatX;
+    [prop insertProperty:p atIndex:[prop childrenCount]];
+    
+    p = [[[PLProperty alloc] init] autorelease];
+    p.name = @"repeatY";
+    p.numberValue = repeatY;
     [prop insertProperty:p atIndex:[prop childrenCount]];
     
     p = [[[PLProperty alloc] init] autorelease];
@@ -301,6 +321,16 @@ static inline void endToken(NSMutableString * file, int * count)
     return alpha;
 }
 
+-(double)repeatX
+{
+    return repeatX;
+}
+
+-(double)repeatY
+{
+    return repeatY;
+}
+
 -(NSUndoManager*)undoManager
 {
     return [(EntityController*)owner undoManager];
@@ -362,6 +392,22 @@ static inline void endToken(NSMutableString * file, int * count)
     if (rotation == rot) return;
     [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setRotation:rotation];
     rotation = rot;
+    [self imageChanged];
+}
+
+-(void)setRepeatX:(double)r
+{
+    if (repeatX == r) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setRepeatX:repeatX];
+    repeatX = r;
+    [self imageChanged];
+}
+
+-(void)setRepeatY:(double)r
+{
+    if (repeatY== r) return;
+    [(PLImage*)[[self undoManager] prepareWithInvocationTarget:self] setRepeatY:repeatY];
+    repeatY = r;
     [self imageChanged];
 }
 
@@ -460,6 +506,8 @@ static inline void endToken(NSMutableString * file, int * count)
         [self setFrame:ig.frame];
         [self setRotation:ig.rotation];
         [self setPortion:ig.portion];
+        [self setRepeatX:ig.repeatX];
+        [self setRepeatY:ig.repeatY];
         [self setBezierCurve:[[ig.bezierCurve copy] autorelease]];
         return YES;
     }

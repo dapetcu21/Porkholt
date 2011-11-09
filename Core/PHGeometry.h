@@ -177,6 +177,16 @@ struct PHRect
     {
         return PHRect(x,y,width*d,height*d);
     }
+    const PHRect & operator *= (const PHSize & d)
+    {
+        width*=d.x;
+        height*=d.y;
+        return * this;
+    }
+    PHRect operator * (const PHSize & d) const
+    {
+        return PHRect(x,y,width*d.x,height*d.y);
+    }
     const PHRect & operator /= (double d)
     {
         width/=d;
@@ -384,5 +394,15 @@ inline void PHGLSetColor(PHColor clr)
         glColor4ub(t.r,t.g,t.b,t.a);
     }
 }
+
+enum PHGLCapabilities
+{
+    PHGLCapabilityNPOT = 0,
+    PHGLCapabilityAppleLimitedNPOT,
+    PHGLCapabilityOpenGLES,
+    PHGLNumberCapabilities
+};
+
+bool PHGLHasCapability(int cap);
 
 #endif

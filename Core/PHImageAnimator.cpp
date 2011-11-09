@@ -10,6 +10,8 @@
 #include "PHAnimatedImage.h"
 #include "PHAnimatorPool.h"
 #include "PHLua.h"
+#include "PHImageView.h"
+#include "PHImage.h"
 
 
 #define INIT _image(img), advanceManually(false), running(true)
@@ -246,4 +248,71 @@ void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect &
     }
     PHGLSetColor(tt);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void PHImageAnimator::bindCurrentFrameToTexture()
+{
+    int nt = realframe/_image->ipt;
+    glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+}
+void PHImageAnimator::bindLastFrameToTexture()
+{
+    int nt = lastframe/_image->ipt;
+    glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+}
+
+void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImage::VBOParams & params1, GLuint & vbo2, PHImage::VBOParams & params2)
+{
+    if (!vbo1)
+        glGenBuffers(1, &vbo1);
+    if (fade&&!vbo2)
+        glGenBuffers(1, &vbo2);
+    if (!fade&&vbo2)
+    {
+        glDeleteBuffers(1, &vbo2);
+        vbo2 = 0;
+    }
+    PHPoint repeat = PHPoint(imageView->repeatX(),imageView->repeatY());
+    PHRect port = imageView->textureCoordinates();
+    
+    int actWidth,actHeight, _width, _height;
+    double xc,yc,xC,yC;
+    
+    int nt,p,r,c;
+    
+    nt = realframe/_image->ipt;
+    p = realframe-nt*_image->ipt;
+    r = p/_image->cols;
+    c = p%_image->cols;
+    
+    actWidth = _image->textures[nt].awidth;
+    actHeight = _image->textures[nt].aheight;
+    _width = _image->_width;
+    _height = _image->_height;
+    xc = 0.5f/actWidth;
+    yc = 0.5f/actHeight;
+    xC = (double)_width/actWidth;
+    yC = (double)_height/actHeight;
+
+    
+    PHImage::buildImageVBO(vbo1, params1, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
+    
+    if (fade)
+    {
+        nt = lastframe/_image->ipt;
+        p = lastframe-nt*_image->ipt;
+        r = p/_image->cols;
+        c = p%_image->cols;
+        
+        actWidth = _image->textures[nt].awidth;
+        actHeight = _image->textures[nt].aheight;
+        _width = _image->_width;
+        _height = _image->_height;
+        xc = 0.5f/actWidth;
+        yc = 0.5f/actHeight;
+        xC = (double)_width/actWidth;
+        yC = (double)_height/actHeight;
+
+        PHImage::buildImageVBO(vbo2, params2, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
+    }
 }

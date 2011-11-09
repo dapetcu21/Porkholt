@@ -63,6 +63,8 @@ void PLImageView::modelChanged()
     setAlpha(model.alpha);
     setConstrainCurveToFrame(model.constrainToFrame);
     setBezierPath(model.bezierCurve.bezierPath);
+    setRepeatX(model.repeatX);
+    setRepeatY(model.repeatY);
     selectedChanged();
 }
 

@@ -10,9 +10,11 @@
 #define PHIMAGEANIMATOR_H
 
 #include "PHMain.h"
+#include "PHImage.h"
 
 class PHAnimatedImage;
 class PHAnimatorPool;
+class PHImageView;
 
 class PHImageAnimator : public PHObject
 {
@@ -62,10 +64,22 @@ public:
     void setAnimatorPool(PHAnimatorPool * p);
     PHAnimatorPool * animatorPool() { return pool; }
     
+    double currentFrameTime() { return time; }
+    double remainingFrameTime() { return remaining; }
+    int currentSection() { return section; }
+    int currentFrame() { return frame; }
+    int currentRealFrame() { return realframe; }
+    int lastRealFrame() { return lastframe; }
+    
+    //immediate mode
     void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHInvalidColor); }
 	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(frm, cnstr,PHInvalidColor); }
     void renderInFramePortionTint(const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
     
+    //VBOs
+    void rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImage::VBOParams & params1, GLuint & vbo2, PHImage::VBOParams & params2);
+    void bindCurrentFrameToTexture();
+    void bindLastFrameToTexture();
     
 };
 

@@ -25,7 +25,7 @@ protected:
 	PHRect coords;
     PHColor tint;
     bool constrain;
-    double repeatX,repeatY;
+    double _repeatX, _repeatY;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
     void renderCurved();
@@ -35,6 +35,16 @@ protected:
     
     void bezierCallback(PHBezierPath * sender, void *ud);
 	void rebuildCurvedVBO();
+    void rebuildStraightVBO();
+    void rebuildVBO()
+    {
+        if (curve)
+            rebuildCurvedVBO();
+        else
+            rebuildStraightVBO();
+    }
+    bool animatorNeedsVBORebuild();
+    
     GLfloat * interleavedArrayFromAnchorList(const void * anchors, int &n);
     void textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, const void * anchors);
     
@@ -44,12 +54,15 @@ protected:
     int nVertices;
     int nIndexes;
     bool VBOneedsRebuilding;
+    PHImage::VBOParams params1,params2;
+    
+    int lastAnimFrame,animFrame;
     
     void loadVBO()
     {
         if (VBOneedsRebuilding)
         {
-            rebuildCurvedVBO();
+            rebuildVBO();
             VBOneedsRebuilding = false;
         }
     }
@@ -63,20 +76,27 @@ public:
 	PHImageView();
 	PHImageView(const PHRect &frame);
 	PHImageView(PHImage * image);
-	const PHRect & textureCoordinates() { return coords; };
-	void setTextureCoordinates(const PHRect & r) { coords = r; };
 	virtual ~PHImageView();
 	virtual void draw();
     virtual void render() { PHView::render();};
     
+    const PHRect & textureCoordinates() { return coords; };
+	void setTextureCoordinates(const PHRect & r) { coords = r; VBOneedsRebuilding = true; };
+    
     PHColor & tintColor() { return tint; };
-    void setTintColor(const PHColor & clr) { tint = clr; };
+    void setTintColor(const PHColor & clr) { tint = clr; VBOneedsRebuilding = true; };
     
     virtual const PHColor & animatedColor() { return tint; }
     virtual void setAnimatedColor(const PHColor & c) { setTintColor(c); }
     
     bool constrainCurveToFrame() { return constrain; }
     void setConstrainCurveToFrame(bool c) { constrain = c; }
+    
+    double repeatX() { return _repeatX; }
+    void setRepeatX(double rx) { _repeatX = rx; VBOneedsRebuilding = true; }
+    
+    double repeatY() { return _repeatY; }
+    void setRepeatY(double ry) { _repeatY = ry; VBOneedsRebuilding = true; }
     
     PHBezierPath * bezierPath() { return curve; }
     void setBezierPath(PHBezierPath * bp);

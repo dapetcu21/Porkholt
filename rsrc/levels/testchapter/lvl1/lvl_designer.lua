@@ -6,7 +6,7 @@ local obj0 = objectWithClass("PHLPlatform")
 obj0.levelDes = true
 obj0.rotation = 0.000000
 obj0.pos = point(14.000000,3.000000)
-objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000)
+objectAddImage(obj,[[/platform.png]],-1.000000,-0.150000,2.000000,0.300000,{ repeatX = 2.000000 })
 objectAddBox(obj,-0.926768,-0.150000,1.896465,0.300000)
 addObject(obj0)
 
