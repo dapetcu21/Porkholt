@@ -8,7 +8,7 @@
 
 #include "PHTextView.h"
 
-#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(0), arraysVBO(0), lineSpace(0.5)
+#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(0), arraysVBO(0), lineSpace(0.5), vbuffer(NULL), indices(NULL)
 
 PHTextView::PHTextView() : PHView(), PHTEXTVIEW_INIT
 {

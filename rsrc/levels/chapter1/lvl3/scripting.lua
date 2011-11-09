@@ -1,10 +1,10 @@
 function sensor:objectEntered()
 	if (sensor.beenhere) then
-		return;
+		return
 	end
-	sensor.beenhere = true;
-	player:setFreezed(true);
+	sensor.beenhere = true
+	player:setFreezed(true)
 	sign:display(function()
-	player:setFreezed(false);
-	end);
+	player:setFreezed(false)
+	end)
 end

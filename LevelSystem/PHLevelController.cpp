@@ -320,7 +320,8 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
             delete v;
             v = NULL;
         }
-        ec_invocation.call(this);
+        if (!v)
+            ec_invocation.call(this);
     }
     if (_outcome == LevelQuit)
         ec_invocation.call(this);
