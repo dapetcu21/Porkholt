@@ -949,7 +949,8 @@ void PHLObject::_poof()
     {
         poofRect.x = -poofRect.x-poofRect.width;
     }
-    PHPoofView * v = new PHPoofView(poofRect+position());
+    PHPoofView * v = new PHPoofView(poofRect+position(),PHPoofView::poof);
+    v->setAnimatorPool(wrld->levelController()->animatorPool());
     getWorld()->getWorldView()->addSubview(v);
     v->release();
     destroy();

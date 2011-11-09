@@ -9,31 +9,56 @@
 #include "PHPoofView.h"
 #include "PHImageAnimator.h"
 
-PHImage * PHPoofView::img = NULL;
+
+PHImage * PHPoofView::poofImg = NULL;
+PHImage * PHPoofView::boomImg = NULL;
 
 PHImage * PHPoofView::poofImage()
 {
-    if (!img)
+    if (!poofImg)
     {
-        img = PHImage::imageNamed("poof");
+        poofImg = PHImage::imageNamed("poof");
+        poofImg->retain();
     }
-    return img;
+    return poofImg;
 }
 
-PHPoofView::PHPoofView(const PHRect & frame) : PHImageView(frame)
+PHImage * PHPoofView::boomImage()
 {
-    init();
+    if (!boomImg)
+    {
+        boomImg = PHImage::imageNamed("boom");
+        boomImg->retain();
+    }
+    return boomImg;
 }
 
-PHPoofView::PHPoofView() : PHImageView()
+PHPoofView::PHPoofView(const PHRect & frame, int image) : PHImageView(frame)
 {
-    init();
+    init(image);
 }
 
-void PHPoofView::init()
+PHPoofView::PHPoofView(int image) : PHImageView()
+{
+    init(image);
+}
+
+void PHPoofView::init(int image)
 {
     mutex();
-    setImage(poofImage());
+    PHImage * img = NULL;
+    switch (image) {
+        case poof:
+            img = poofImage();
+            break;
+        case boom:
+            img = boomImage();
+            break;
+        default:
+            img = NULL;
+            break;
+    }
+    setImage(img);
     PHImageAnimator * a = animator();
     if (!a)
         destroy(NULL, NULL);
@@ -51,5 +76,12 @@ void PHPoofView::destroy(PHObject * sender, void * ud)
 
 void PHPoofView::poofImageRelease()
 {
-    img = (PHImage*)poofImage()->release();
+    poofImage()->release();
+    poofImg = NULL;
+}
+
+void PHPoofView::boomImageRelease()
+{
+    boomImage()->release();
+    boomImg = NULL;
 }

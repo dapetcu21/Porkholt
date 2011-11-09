@@ -477,6 +477,7 @@ PHLevelController::~PHLevelController()
     releaseImage(dialogImage);
     releaseImage(questImage);
     PHPoofView::poofImageRelease();
+    PHPoofView::boomImageRelease();
     PHShieldView::shieldImageRelease();
 }
 

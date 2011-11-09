@@ -30,6 +30,7 @@
 #include "PHTextView.h"
 #include "PHEventQueue.h"
 #include "PHButtonView.h"
+#include "PHPoofView.h"
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
@@ -640,11 +641,14 @@ void PHWorld::boom(const PHPoint &location, double magnitude, double damage, dou
             double amm = (magnitude/(d*d));
             if (amm > magnitude*2)
                 amm = magnitude*2;
-            PHLog("%lf %s %lf",amm,o->getClass().c_str(),b->GetMass());
             b2Vec2 im(p.x*amm,p.y*amm);
             b->ApplyLinearImpulse(im,b->GetWorldCenter());
         }
     }
+    PHPoofView * bm = new PHPoofView(PHRect(location.x-radius,location.y-radius,radius*2,radius*2),PHPoofView::boom);
+    bm->setAnimatorPool(levelController()->animatorPool());
+    getWorldView()->addSubview(bm);
+    bm->release();
 }
 
 const string & PHWorld::resourcePath()
