@@ -33,7 +33,7 @@ void PHLBomberBird::loadFromLua(lua_State * L, b2World * world, PHLevelControlle
     PHLuaGetPointField(rotationAxis, "rotationAxis");
     PHLuaGetRectField(bounds, "bounds");
     PHLuaGetNumberField(accuracy, "accuracy");
-    PHLuaGetNumberField(dropVelocity, "dropVelocity")
+    PHLuaGetNumberField(dropVelocity, "dropVelocity");
 }
 
 PHLuaDefineCall(PHLBomberBird, attack);
