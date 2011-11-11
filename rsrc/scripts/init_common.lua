@@ -180,8 +180,12 @@ end
 function Initializers.PHLBomberBird(obj)
 	Initializers.PHLMob(obj)
 	local b = rect(-0.3,-0.3,0.6,0.6)
-	obj.bounds = b
-	objectAddImage(obj,"/bird_body.png", b.x,b.y,b.width,b.height)
+	local bds = vector(376,327)
+	local bws = rect(20,0,186,193)
+	local scale = 1/bds.x
+	obj.bounds = rect(-bds.x/2*scale,-bds.y/2*scale,bds.x*scale,bds.y*scale)
+	objectAddImage(obj,"/bird_body.png", -bds.x/2*scale,-bds.y/2*scale,bds.x*scale,bds.y*scale)
+	objectAddImage(obj,"/bird_wing.png", (bws.x-bds.x/2)*scale,(bws.y-bds.y)/2*scale,bws.width*scale,bws.height*scale)
 end
 function Initializers.PHLEggBomb(obj)
 	Initializers.PHLSensor(obj)
@@ -189,8 +193,11 @@ function Initializers.PHLEggBomb(obj)
 	obj.physics.dynamic = true
 	obj._fixtureindex.categoryBits = cMOB
 	obj._fixtureindex.maskBits = cWORLD + cPLAYER + cNPC + cMOB
-	objectAddImage(obj,"/eggbomb.png", -0.15,-0.3,0.3,0.6)
-	objectAddBox(obj, -0.15,-0.3,0.3,0.6)
+	local ar = 167/211
+	local h = 0.6
+	local box = rect(-h*ar/2,-0.4,h*ar,h)
+	objectAddImage(obj,"/egg_bomb.png", box.x,box.y,box.width,box.height)
+	objectAddBox(obj, box.x,box.y,box.width,box.height)
 end
 
 function objectWithClass(class,...)

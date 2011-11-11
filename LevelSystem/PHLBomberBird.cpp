@@ -53,7 +53,7 @@ void PHLBomberBird::attack()
 void PHLBomberBird::updatePosition()
 {
     PHLMob::updatePosition();
-    PHPoint pos = (position()-lastCameraRect.origin()-rotationAxis).rotated(M_PI*0.5/_gameManager->framesPerSecond())+rotationAxis;
+    PHPoint pos = (position()-lastCameraRect.origin()-rotationAxis).rotated(M_PI*0.3/_gameManager->framesPerSecond())+rotationAxis;
     lastCameraRect = wrld->getCamera()->bounds();
     pos+=lastCameraRect.origin();
     if (PHRectIntersectsRect(bounds+pos,lastCameraRect))
