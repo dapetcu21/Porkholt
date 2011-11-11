@@ -16,7 +16,7 @@
 
 #include <Box2D/Box2D.h>
 
-PHLBomberBird::PHLBomberBird() : startingPoint(PHPoint(0,3)), rotationAxis(PHPoint(1,10)), attacking(false), inCamera(false), droppedCargo(false), accuracy(0.7)
+PHLBomberBird::PHLBomberBird() : startingPoint(PHPoint(0,3)), rotationAxis(PHPoint(1,10)), attacking(false), inCamera(false), droppedCargo(false), accuracy(0.7), dropVelocity(0)
 {
     _class = "PHLBomberBird";
 }
@@ -33,6 +33,7 @@ void PHLBomberBird::loadFromLua(lua_State * L, b2World * world, PHLevelControlle
     PHLuaGetPointField(rotationAxis, "rotationAxis");
     PHLuaGetRectField(bounds, "bounds");
     PHLuaGetNumberField(accuracy, "accuracy");
+    PHLuaGetNumberField(dropVelocity, "dropVelocity")
 }
 
 PHLuaDefineCall(PHLBomberBird, attack);
@@ -91,7 +92,7 @@ void PHLBomberBird::updatePosition()
             double vel = wrld->getPlayer()->getBody()->GetLinearVelocity().x;
             if (vel<0)
                 vel = 0;
-            obj->getBody()->SetLinearVelocity(b2Vec2(vel*accuracy,0));
+            obj->getBody()->SetLinearVelocity(b2Vec2(vel*accuracy,dropVelocity));
             obj->release();
         }
         lua_pop(L,1);
