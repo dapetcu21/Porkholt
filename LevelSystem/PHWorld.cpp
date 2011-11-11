@@ -279,12 +279,21 @@ void PHWorld::addObject(PHLObject * obj)
 
 void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * insObj)
 {
+	obj->wrld = this;
+    obj->setGameManager(_gameManager);
     if (!obj) return;
     if (insPos==0)
+    {
         objects.push_back(obj);
+        worldView->addSubview(obj->getView());
+    }
     else
     if (insPos==1)
+    {
         objects.insert(objects.begin(),obj);
+        worldView->addSubview(obj->getView());
+        obj->getView()->sendToBack();
+    }
     else
     {
         vector<PHLObject*>::iterator i,nx;
@@ -299,16 +308,18 @@ void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * in
                 break;
             }
         }
+        vector<PHLObject*>::iterator j = i;
+        while (j!=objects.end() && ((*j)->getView() == NULL))
+            j++;
+        PHView * v = (j==objects.end())?NULL:(*j)->getView();
         objects.insert(i,obj);
+        worldView->addSubviewBefore(obj->getView(), v);
     }
 	obj->retain();
 	if (obj->getClass()=="PHLCamera")
 		camera = (PHLCamera*)obj;
 	if (obj->getClass()=="PHLPlayer")
 		player = (PHLPlayer*)obj;
-	obj->wrld = this;
-    obj->setGameManager(_gameManager);
-	worldView->addSubview(obj->getView());
 }
 
 void PHWorld::removeObject(PHLObject * obj)

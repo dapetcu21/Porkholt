@@ -21,17 +21,9 @@ void PHPlayerView::setRotation( double rot)
         dif-=360;
     int fps = _gameManager->framesPerSecond();
     PHLowPassFilter(lastDif, dif, 1.0f/fps, 50.0f);
-#ifdef PHVIEW_STD_LIST
     for (list<PHView*>::iterator i = views.begin(); i!= views.end(); i++)
     {
         if ((*i)->tag() != _designatedTag) continue;
         (*i)->setRotation((*i)->rotation()-lastDif);
     }
-#else
-    for (ViewEl * ve = viewsSt; ve; ve=ve->next)
-    {
-        if (ve->el->tag() != _designatedTag) continue;
-        ve->el->setRotation(ve->el->rotation()-lastDif);
-    }
-#endif
 }

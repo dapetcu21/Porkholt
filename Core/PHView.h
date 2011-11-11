@@ -14,27 +14,14 @@
 #include "PHAnimationDescriptor.h"
 #include "PHEvent.h"
 
-#define PHVIEW_STD_LIST
-
 class PHMutex;
 class PHAuxLayerView;
 class PHGameManager;
 class PHView : public PHObject
 {
 protected:
-#ifdef PHVIEW_STD_LIST
     list<PHView*> views;
     list<PHView*>::iterator currPos;
-#else
-	struct ViewEl
-    {
-        PHView * el;
-        ViewEl * next, * prev;
-    };
-	ViewEl * viewsSt;
-	ViewEl * viewsEn;
-	ViewEl * currPos;
-#endif
     
     PHGameManager * _gameManager;
     
@@ -124,10 +111,13 @@ public:
 	bool optimizations() { return _optimize; };
 	PHView * superview() { return superView; };
 	
-	void addSubview(PHView * view);
+	void addSubview(PHView * view) { addSubviewBefore(view, NULL); }
+    void addSubviewBefore(PHView * view, PHView * before);
 	void removeFromSuperview();
     void removeAllSubviews();
 	void bringToFront();
+    void sendToBack();
+    
 
 	PHPoint toMyCoordinates(const PHPoint & pnt, PHView * until);
 	void toMyCoordinates(PHPoint * pnt, int n, PHView * until);
