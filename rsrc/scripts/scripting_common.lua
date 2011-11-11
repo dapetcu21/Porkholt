@@ -303,7 +303,7 @@ PHLBull = PHLMob:new()
 PHLBomberBird = PHLMob:new()
 PHLEggBomb = PHLSensor:new()
 
-function PHLBomberBird.createAndLaunchBird()
+function PHLBomberBird.createAndLaunchBird(accuracy)
 	local bird = objectWithClass("PHLBomberBird")
 	local b = camera:bounds()
 	bird.startingPoint = point(
@@ -311,7 +311,7 @@ function PHLBomberBird.createAndLaunchBird()
 		b.height-bird.bounds.height-bird.bounds.y)
 	local p = player:position()
 	bird.rotationAxis = point(p.x - b.x+(math.random()*2-1),bird.bounds.height+15+2.5*(math.random()*2-1))
-	
+	bird.accuracy = accuracy
 	PHWorld:insertAtTheEnd()
 	bird = PHWorld:insertObject(bird)
 	bird:attack()

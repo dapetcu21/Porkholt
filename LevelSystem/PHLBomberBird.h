@@ -19,6 +19,7 @@ private:
     bool attacking;
     bool inCamera;
     bool droppedCargo;
+    double accuracy;
     PHRect bounds;
     
     virtual void updatePosition();
