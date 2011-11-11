@@ -128,7 +128,7 @@ local sensor = objectWithClass("PHLSensor")
 sensor.levelDes = true
 sensor.rotation = 0.000000
 sensor.scripting = [[sensor]]
-sensor.pos = point(4.201172,0.768594)
+sensor.pos = point(2.201172,0.768594)
 objectAddBox(obj,-0.250000,-0.250000,0.500000,0.500000)
 addObject(sensor)
 
