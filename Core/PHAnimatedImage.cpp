@@ -156,7 +156,7 @@ void PHAnimatedImage::loadFromLua()
                 delete s;
             }
         }
-        frame f = sec->frames.back();;
+        frame f = sec->frames.back();
         f.duration = 0;
         f.fade = false;
         f.type = 0;
