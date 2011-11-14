@@ -31,10 +31,8 @@
 
 - (id) initWithBuffer: (FIBuffer*) bff error: (NSError**) error
 {
-    if (!buffer)
+    if (!bff)
         return nil;
-
-    self = [super init];
     
     ALCcontext *const currentContext = alcGetCurrentContext();
     if (currentContext == NULL)
@@ -50,10 +48,12 @@
     if (![self checkSuccessOrLog:@"Failed to create OpenAL source"])
         return nil;
 
-    buffer = [bff retain];
+    self = [super init];
     
+    buffer = [bff retain];
     gain = 1;
     duration = bff.duration;
+    
     return self;
 }
 

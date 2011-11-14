@@ -49,6 +49,7 @@ PHSound * PHSoundManager::soundNamed(const string & name)
     {
         NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
         FISound * sound = [soundFactory loadSoundNamed:[NSString stringWithUTF8String:(name+".wav").c_str()]];
+        [sound retain];
         [pool drain];
         if (!sound) 
         {
@@ -57,6 +58,7 @@ PHSound * PHSoundManager::soundNamed(const string & name)
             return soundNamed("placeholder");
         }
         PHSound * snd = new PHSound(sound);
+        [sound release];
         sounds.insert(make_pair<string,PHSound*>(name,snd));
         return snd;
     }
