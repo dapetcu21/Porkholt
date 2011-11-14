@@ -391,7 +391,6 @@ const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<a
             pt->next = (e->st->next==e->en)?e->en:((e->en->next==e->st)?e->st:NULL);
             if (pt->prev) pt->prev->next = pt;
             if (pt->next) pt->next->prev = pt;
-            PHLog("p: %lf %lf   %x %x %x",p.x,p.y,pt->prev,pt,pt->next);
             additions.push_back(pt);
             
             if (p1.x<=cx)
@@ -401,9 +400,8 @@ const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<a
         }
         
         for (set<edge*>::iterator i = rm.begin(); i!=rm.end(); i++)
-        {
             bst.removeEdge(*i);
-        }
+        rm.clear();
         
         if (nxx>cx)
             bst.addEdge(nxe);
@@ -418,9 +416,7 @@ const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<a
     pp = a;
     do {
         if (!pp) break;
-        anchorPoint ap = *(pp->it());
-        PHLog("f: %x %lf %lf",pp,ap.point.x,ap.point.y);
-        l->push_back(ap);
+        l->push_back(*(pp->it()));
         pp = pp->next;
     } while (a!=pp);
     
