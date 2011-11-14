@@ -210,18 +210,13 @@ bool PHBezierPath::operator == (const PHBezierPath & othr)
             equal(curves.begin(),curves.end(),othr.curves.begin());
 }
 
-const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<anchorPoint> & points)
-{
-    //dummy implementation
-    vector<PHBezierPath::anchorPoint> * l = new vector<PHBezierPath::anchorPoint>(points);
-    return l;
-}
-
 #pragma mark Triangulation
 //----------------------
 
 struct pnt {
     vector<PHBezierPath::anchorPoint>::const_iterator i;
+    list<PHBezierPath::anchorPoint>::const_iterator il;
+    const PHBezierPath::anchorPoint * it () { if (p>=0) return &*i; return &*il; }
     int p;
     set<pnt*> diagonals;
     pnt * next;
@@ -248,6 +243,7 @@ struct edge {
 
 class binarySearchTree {
 //lăbăreală implementation
+public:
     class cmp: public binary_function<edge *, edge *, bool>
     {
     public:
@@ -271,14 +267,13 @@ class binarySearchTree {
             }
             else
             {
-                if (a->st->i->point.y == b->st->i->point.y)
-                    return a->en->i->point.y > b->en->i->point.y;
-                return a->st->i->point.y > b->st->i->point.y;
+                if (a->st->it()->point.y == b->st->it()->point.y)
+                    return a->en->it()->point.y > b->en->it()->point.y;
+                return a->st->it()->point.y > b->st->it()->point.y;
             }
         }
     };
     set<edge*,binarySearchTree::cmp> edges;
-public:
     bool addEdge(edge * e)
     {
         return edges.insert(e).second;
@@ -316,6 +311,127 @@ static inline int angleof(const PHPoint & a, const PHPoint & b, const PHPoint & 
     if (determinant>0)
         return 1;
     return -1;
+}
+
+const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<anchorPoint> & points)
+{
+    
+    int m = (int)points.size();
+    
+    pnt * a = new pnt[m];
+    edge * b = new edge[m];
+    pnt ** aa = new pnt * [m];
+    vector<PHBezierPath::anchorPoint>::const_iterator it = points.begin();
+    
+    list<pnt*> additions;
+    list<PHBezierPath::anchorPoint> addp;
+    
+    binarySearchTree bst;
+    for (int i=0; i<m; i++)
+    {
+        a[i].p = i;
+        a[i].i = it++;
+        a[i].prev = i?(&a[i-1]):(&a[m-1]);
+        a[i].next = i<m-1?&a[i+1]:&a[0];
+        b[i].st = &a[i];
+        b[i].en = a[i].next;
+        aa[i] = &a[i];
+    }     
+    for (int i=0; i<m; i++)
+    {
+        edge * edg = &b[i];
+        PHPoint sp = edg->st->i->point;
+        PHPoint ep = edg->en->i->point; 
+        if (sp>ep) {
+            pnt * tmp = edg->st;
+            edg->st = edg->en;
+            edg->en = tmp;
+        }
+        edg->helper = edg->st;
+    }
+    sort(aa,aa+m,cmp);
+    
+    for (int i=0; i<m; i++)
+    {
+        pnt * crr = aa[i];
+        pnt * pv = crr->prev;
+        pnt * nx = crr->next;
+        double cx = crr->it()->point.x;
+        double pvx = pv->it()->point.x;
+        double nxx = nx->it()->point.x;
+        
+        int j = crr->p;
+        edge * nxe = &b[j];
+        edge * pve = &b[j?(j-1):(m-1)];
+
+        if (nxx<=cx)
+            bst.removeEdge(nxe);
+        if (pvx<=cx)
+            bst.removeEdge(pve);
+        
+        set<edge*> rm;
+        for (set<edge*,binarySearchTree::cmp>::iterator i = bst.edges.begin(); i!=bst.edges.end(); i++)
+        {
+            edge * e = *i;
+            PHPoint p1 = e->st->it()->point;
+            PHPoint p2 = e->en->it()->point;
+            if (p1.x<=cx && p2.x<=cx)
+            {
+                rm.insert(e);
+                continue;
+            }
+            if (p1.x==p2.x || p1.x==cx || p2.x==cx)
+                continue;
+            PHPoint p = PHPoint(cx,p1.y+(cx-p1.x)/(p2.x-p1.x)*(p2.y-p1.y));
+            
+            pnt * pt = new pnt;
+            pt->p = -1;
+            pt->il = addp.insert(addp.end(), anchorPoint(p, -1));
+            pt->prev = (e->st->next==e->en)?e->st:((e->en->next==e->st)?e->en:NULL);
+            pt->next = (e->st->next==e->en)?e->en:((e->en->next==e->st)?e->st:NULL);
+            if (pt->prev) pt->prev->next = pt;
+            if (pt->next) pt->next->prev = pt;
+            PHLog("p: %lf %lf   %x %x %x",p.x,p.y,pt->prev,pt,pt->next);
+            additions.push_back(pt);
+            
+            if (p1.x<=cx)
+                e->st = pt;
+            else
+                e->en = pt;
+        }
+        
+        for (set<edge*>::iterator i = rm.begin(); i!=rm.end(); i++)
+        {
+            bst.removeEdge(*i);
+        }
+        
+        if (nxx>cx)
+            bst.addEdge(nxe);
+        if (pvx>cx)
+            bst.addEdge(pve);
+        
+    }
+    
+    vector<PHBezierPath::anchorPoint> * l = new vector<PHBezierPath::anchorPoint>;
+    
+    pnt * pp;
+    pp = a;
+    do {
+        if (!pp) break;
+        anchorPoint ap = *(pp->it());
+        PHLog("f: %x %lf %lf",pp,ap.point.x,ap.point.y);
+        l->push_back(ap);
+        pp = pp->next;
+    } while (a!=pp);
+    
+    delete[] a;
+    delete[] b;
+    delete[] aa;
+    
+    for (list<pnt*>::iterator i = additions.begin(); i!=additions.end(); i++)
+        delete *i;
+    
+    return l;
 }
 
 static int PHBezierPath_triangulateMonotone(pnt ** v, int n, GLushort * out)
