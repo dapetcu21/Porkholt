@@ -32,6 +32,8 @@
 #include "PHButtonView.h"
 #include "PHPoofView.h"
 
+#include "PHSoundManager.h"
+
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
 #define GAUGE_HEIGHT (16/480.0f)
@@ -660,6 +662,7 @@ void PHWorld::boom(const PHPoint &location, double magnitude, double damage, dou
     bm->setAnimatorPool(levelController()->animatorPool());
     getWorldView()->addSubview(bm);
     bm->release();
+    PHSoundManager::singleton()->soundNamed("boom")->play();
 }
 
 const string & PHWorld::resourcePath()

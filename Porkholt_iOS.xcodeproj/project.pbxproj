@@ -141,6 +141,12 @@
 		C1B2419513D2CC5F005B60BF /* PHTextControllerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B2419313D2CC5D005B60BF /* PHTextControllerView.cpp */; };
 		C1B3C80314697CAE000FD6DF /* PHLBomberBird.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C80214697CAD000FD6DF /* PHLBomberBird.cpp */; };
 		C1B3C8061469B1FB000FD6DF /* PHLEggBomb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C8051469B1FB000FD6DF /* PHLEggBomb.cpp */; };
+		C1B3C84B1470FBDE000FD6DF /* libFinch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C8441470FBBB000FD6DF /* libFinch.a */; };
+		C1B3C84D1470FD50000FD6DF /* PHSound.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C84C1470FD50000FD6DF /* PHSound.mm */; };
+		C1B3C84F1470FDF0000FD6DF /* PHSoundManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C84E1470FDF0000FD6DF /* PHSoundManager.mm */; };
+		C1B3C85114713818000FD6DF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85014713816000FD6DF /* AVFoundation.framework */; };
+		C1B3C85314713824000FD6DF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85214713823000FD6DF /* AudioToolbox.framework */; };
+		C1B3C8551471382E000FD6DF /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C8541471382D000FD6DF /* OpenAL.framework */; };
 		C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */; };
 		C1B4AED9137DA430006E65FE /* PHMotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AED7137DA430006E65FE /* PHMotorJoint.cpp */; };
 		C1B4AEDC137DADFC006E65FE /* PHRevoluteJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEDA137DADFB006E65FE /* PHRevoluteJoint.cpp */; };
@@ -178,6 +184,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = C1A034E8132DF62700F0200C;
 			remoteInfo = Box2D;
+		};
+		C1B3C8431470FBBB000FD6DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D2AA93E14174FA000F4071B;
+			remoteInfo = Finch;
+		};
+		C1B3C8451470FBBB000FD6DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D1BA656141A45B6004A5A9F;
+			remoteInfo = Tests;
+		};
+		C1B3C8471470FBBB000FD6DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D2AA971141750F700F4071B;
+			remoteInfo = "Finch Demo";
+		};
+		C1B3C8491470FBD8000FD6DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D2AA93D14174FA000F4071B;
+			remoteInfo = Finch;
 		};
 		C1FF4DD413DC1DE7003B7673 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -384,10 +418,18 @@
 		C1B2419113D21584005B60BF /* PHTextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTextController.h; sourceTree = "<group>"; };
 		C1B2419313D2CC5D005B60BF /* PHTextControllerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTextControllerView.cpp; sourceTree = "<group>"; };
 		C1B2419413D2CC5E005B60BF /* PHTextControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTextControllerView.h; sourceTree = "<group>"; };
-		C1B3C80014697B49000FD6DF /* PHLBomberBird.h */ = {isa = PBXFileReference; fileEncoding = 4; path = PHLBomberBird.h; sourceTree = "<group>"; };
+		C1B3C80014697B49000FD6DF /* PHLBomberBird.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLBomberBird.h; sourceTree = "<group>"; };
 		C1B3C80214697CAD000FD6DF /* PHLBomberBird.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLBomberBird.cpp; sourceTree = "<group>"; };
-		C1B3C8041469B1ED000FD6DF /* PHLEggBomb.h */ = {isa = PBXFileReference; fileEncoding = 4; path = PHLEggBomb.h; sourceTree = "<group>"; };
+		C1B3C8041469B1ED000FD6DF /* PHLEggBomb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLEggBomb.h; sourceTree = "<group>"; };
 		C1B3C8051469B1FB000FD6DF /* PHLEggBomb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLEggBomb.cpp; sourceTree = "<group>"; };
+		C1B3C8371470F95D000FD6DF /* PHSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSoundManager.h; sourceTree = "<group>"; };
+		C1B3C8381470F9C6000FD6DF /* PHSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSound.h; sourceTree = "<group>"; };
+		C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Finch.xcodeproj; path = Externals/finch/Finch.xcodeproj; sourceTree = "<group>"; };
+		C1B3C84C1470FD50000FD6DF /* PHSound.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHSound.mm; sourceTree = "<group>"; };
+		C1B3C84E1470FDF0000FD6DF /* PHSoundManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHSoundManager.mm; sourceTree = "<group>"; };
+		C1B3C85014713816000FD6DF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C1B3C85214713823000FD6DF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		C1B3C8541471382D000FD6DF /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHDistanceJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1B4AEC5137D46F9006E65FE /* PHDistanceJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDistanceJoint.h; sourceTree = "<group>"; };
 		C1B4AED7137DA430006E65FE /* PHMotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHMotorJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -451,6 +493,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1B3C8551471382E000FD6DF /* OpenAL.framework in Frameworks */,
+				C1B3C85314713824000FD6DF /* AudioToolbox.framework in Frameworks */,
+				C1B3C85114713818000FD6DF /* AVFoundation.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
@@ -458,6 +503,7 @@
 				C1F2326A130550AA00DE3624 /* libpng15.a in Frameworks */,
 				C17B48C6130800C600C2EC8D /* libz.a in Frameworks */,
 				C1C358251323B6E700D3A95A /* liblua.a in Frameworks */,
+				C1B3C84B1470FBDE000FD6DF /* libFinch.a in Frameworks */,
 				C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,6 +539,8 @@
 				C17D0F661323811F00BDB8EF /* PHThread.cpp */,
 				C17D0F681323845300BDB8EF /* PHMutex.h */,
 				C11E57BB13446F83008881B9 /* PHSemaphore.h */,
+				C1B3C84C1470FD50000FD6DF /* PHSound.mm */,
+				C1B3C84E1470FDF0000FD6DF /* PHSoundManager.mm */,
 			);
 			path = "iOS Bindings";
 			sourceTree = "<group>";
@@ -509,6 +557,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */,
 				C17D0F501322A18300BDB8EF /* LevelSystem */,
 				C1AF4FBB13A657BD00ED2ED7 /* UI */,
 				C152809312B9713E009067A7 /* Core */,
@@ -534,6 +583,9 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C1B3C8541471382D000FD6DF /* OpenAL.framework */,
+				C1B3C85214713823000FD6DF /* AudioToolbox.framework */,
+				C1B3C85014713816000FD6DF /* AVFoundation.framework */,
 				28FD15070DC6FC5B0079059D /* QuartzCore.framework */,
 				28FD14FF0DC6FC520079059D /* OpenGLES.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
@@ -621,6 +673,8 @@
 				C177803D13BBA4F50003640D /* PHTimer.cpp */,
 				C1EEB25313C07B9A004F5D5E /* PHEventQueue.cpp */,
 				C1EEB25413C07B9A004F5D5E /* PHEventQueue.h */,
+				C1B3C8371470F95D000FD6DF /* PHSoundManager.h */,
+				C1B3C8381470F9C6000FD6DF /* PHSound.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -856,6 +910,16 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		C1B3C83A1470FBB9000FD6DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1B3C8441470FBBB000FD6DF /* libFinch.a */,
+				C1B3C8461470FBBB000FD6DF /* Tests.octest */,
+				C1B3C8481470FBBB000FD6DF /* Finch Demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -934,6 +998,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C1B3C84A1470FBD8000FD6DF /* PBXTargetDependency */,
 				C1A03618132E070E00F0200C /* PBXTargetDependency */,
 				C1FF4DD513DC1DE7003B7673 /* PBXTargetDependency */,
 			);
@@ -980,6 +1045,12 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C1B3C83A1470FBB9000FD6DF /* Products */;
+					ProjectRef = C1B3C8391470FBB9000FD6DF /* Finch.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Porkholt */,
@@ -988,6 +1059,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C1B3C8441470FBBB000FD6DF /* libFinch.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFinch.a;
+			remoteRef = C1B3C8431470FBBB000FD6DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C1B3C8461470FBBB000FD6DF /* Tests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Tests.octest;
+			remoteRef = C1B3C8451470FBBB000FD6DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C1B3C8481470FBBB000FD6DF /* Finch Demo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Finch Demo.app";
+			remoteRef = C1B3C8471470FBBB000FD6DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C1FF4DB913DC10CD003B7673 /* Resources */ = {
@@ -1104,6 +1199,8 @@
 				C1EFA2FC1446A94E00211934 /* PHBezierPath.cpp in Sources */,
 				C1B3C80314697CAE000FD6DF /* PHLBomberBird.cpp in Sources */,
 				C1B3C8061469B1FB000FD6DF /* PHLEggBomb.cpp in Sources */,
+				C1B3C84D1470FD50000FD6DF /* PHSound.mm in Sources */,
+				C1B3C84F1470FDF0000FD6DF /* PHSoundManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1156,6 +1253,11 @@
 			isa = PBXTargetDependency;
 			target = C1A034E8132DF62700F0200C /* Box2D */;
 			targetProxy = C1A03617132E070E00F0200C /* PBXContainerItemProxy */;
+		};
+		C1B3C84A1470FBD8000FD6DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Finch;
+			targetProxy = C1B3C8491470FBD8000FD6DF /* PBXContainerItemProxy */;
 		};
 		C1FF4DD513DC1DE7003B7673 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1220,6 +1322,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					Externals/finch/Finch,
 					Externals/box2d/Box2D,
 					Externals/lua/include,
 					Externals/libpng,
@@ -1241,6 +1344,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					Externals/finch/Finch,
 					Externals/box2d/Box2D,
 					Externals/lua/include,
 					Externals/libpng,
