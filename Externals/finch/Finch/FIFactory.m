@@ -46,11 +46,16 @@
 - (FISound*) loadSoundNamed: (NSString*) soundName maxPolyphony: (NSUInteger) voices
 {
     NSMutableArray *sounds = [NSMutableArray array];
+    FISound * model = nil;
     for (NSUInteger i=0; i<voices; i++) {
-        FISound *voice = [self loadSoundNamed:soundName];
-        if (voice == nil)
-            return nil;
-        [sounds addObject:voice];
+        if (!model)
+        {
+            model = [self loadSoundNamed:soundName];
+            if (model == nil)
+                return nil;
+            [sounds addObject:model];
+        } else
+            [sounds addObject:[model duplicate]];
     }
     return (id) [[[FIRevolverSound alloc] initWithVoices:sounds] autorelease];
 }

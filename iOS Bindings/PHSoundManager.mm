@@ -20,6 +20,8 @@ PHSoundManager * PHSoundManager::sgl = NULL;
 
 PHSoundManager::PHSoundManager()
 {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    
     soundFactory = [[FIFactory alloc] init];
     [soundFactory setLogger:FILoggerNSLog];
     [soundFactory setSoundBundle:[NSBundle bundleWithPath:[NSString stringWithUTF8String:(PHFileManager::resourcePath()+"/snd/fx/").c_str()]]];
@@ -28,12 +30,16 @@ PHSoundManager::PHSoundManager()
     [soundEngine activateAudioSessionWithCategory:AVAudioSessionCategoryPlayback];
     [soundEngine openAudioDevice];
     [soundEngine retain];
+    
+    [pool drain];
 }
 
 PHSoundManager::~PHSoundManager()
 {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [soundFactory release];
     [soundEngine release];
+    [pool drain];
 }
 
 PHSound * PHSoundManager::soundNamed(const string & name)
@@ -41,7 +47,9 @@ PHSound * PHSoundManager::soundNamed(const string & name)
     map<string,PHSound*>::iterator i = sounds.find(name);
 	if (i==sounds.end())
     {
+        NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
         FISound * sound = [soundFactory loadSoundNamed:[NSString stringWithUTF8String:(name+".wav").c_str()]];
+        [pool drain];
         if (!sound) 
         {
             if (name=="placeholder")

@@ -21,10 +21,14 @@ PHSound::PHSound(FISound * im) : impl(im)
 
 void PHSound::play()
 {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [impl play];
+    [pool drain];
 }
 
 PHSound::~PHSound()
 {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [impl release];
+    [pool drain];
 }

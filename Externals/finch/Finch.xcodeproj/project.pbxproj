@@ -61,16 +61,12 @@
 		0DF32BA0141A03AC0059033C /* FILogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF32B9E141A03AC0059033C /* FILogger.m */; };
 		0DF32BA2141A0AA10059033C /* FISoundDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DF32BA1141A0AA10059033C /* FISoundDecoder.h */; };
 		0DF32BA4141A37250059033C /* FIError.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DF32BA3141A37250059033C /* FIError.h */; };
+		C1E2A17014716A6600E2697D /* FIBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E2A16E14716A6600E2697D /* FIBuffer.h */; };
+		C1E2A17114716A6600E2697D /* FIBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E2A16F14716A6600E2697D /* FIBuffer.m */; };
+		C1E2A1731471709900E2697D /* FIBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1E2A16F14716A6600E2697D /* FIBuffer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0D1BA668141A45D3004A5A9F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0D2AA93514174FA000F4071B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0D1BA655141A45B6004A5A9F;
-			remoteInfo = Tests;
-		};
 		0D2AA9AD1417582F00F4071B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0D2AA93514174FA000F4071B /* Project object */;
@@ -125,6 +121,8 @@
 		0DF32B9E141A03AC0059033C /* FILogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FILogger.m; sourceTree = "<group>"; };
 		0DF32BA1141A0AA10059033C /* FISoundDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FISoundDecoder.h; path = Decoder/FISoundDecoder.h; sourceTree = "<group>"; };
 		0DF32BA3141A37250059033C /* FIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIError.h; sourceTree = "<group>"; };
+		C1E2A16E14716A6600E2697D /* FIBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIBuffer.h; sourceTree = "<group>"; };
+		C1E2A16F14716A6600E2697D /* FIBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIBuffer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +221,8 @@
 				0D2AA94F1417501200F4071B /* FISoundEngine.m */,
 				0D2AA9501417501200F4071B /* FIErrorReporter.h */,
 				0D2AA9511417501200F4071B /* FIErrorReporter.m */,
+				C1E2A16E14716A6600E2697D /* FIBuffer.h */,
+				C1E2A16F14716A6600E2697D /* FIBuffer.m */,
 				0D2AA9541417501200F4071B /* FISound.h */,
 				0D2AA9551417501200F4071B /* FISound.m */,
 				0D2AA9521417501200F4071B /* FIRevolverSound.h */,
@@ -295,6 +295,7 @@
 				0DF32B9F141A03AC0059033C /* FILogger.h in Headers */,
 				0DF32BA2141A0AA10059033C /* FISoundDecoder.h in Headers */,
 				0DF32BA4141A37250059033C /* FIError.h in Headers */,
+				C1E2A17014716A6600E2697D /* FIBuffer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,7 +331,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				0D1BA669141A45D3004A5A9F /* PBXTargetDependency */,
 			);
 			name = Finch;
 			productName = Finch;
@@ -433,6 +433,7 @@
 				0D1BA66F141A46D3004A5A9F /* FISoundEngine.m in Sources */,
 				0D1BA670141A46D3004A5A9F /* FIErrorReporter.m in Sources */,
 				0D1BA671141A46D3004A5A9F /* FISound.m in Sources */,
+				C1E2A1731471709900E2697D /* FIBuffer.m in Sources */,
 				0D1BA672141A46D3004A5A9F /* FIRevolverSound.m in Sources */,
 				0D1BA673141A46D7004A5A9F /* FISoundSample.m in Sources */,
 				0D1BA674141A46D7004A5A9F /* FIPCMDecoder.m in Sources */,
@@ -451,6 +452,7 @@
 				0D2AA96C141750AE00F4071B /* FISoundSample.m in Sources */,
 				0DF32B9C141A03150059033C /* FIFactory.m in Sources */,
 				0DF32BA0141A03AC0059033C /* FILogger.m in Sources */,
+				C1E2A17114716A6600E2697D /* FIBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,11 +469,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0D1BA669141A45D3004A5A9F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0D1BA655141A45B6004A5A9F /* Tests */;
-			targetProxy = 0D1BA668141A45D3004A5A9F /* PBXContainerItemProxy */;
-		};
 		0D2AA9AE1417582F00F4071B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0D2AA93D14174FA000F4071B /* Finch */;

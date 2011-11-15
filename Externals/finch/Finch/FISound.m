@@ -2,12 +2,13 @@
 #import "FISoundSample.h"
 #import "FIErrorReporter.h"
 #import "FIError.h"
+#import "FIBuffer.h"
 
 #define CLEAR_ERROR_FLAG alGetError()
 #define DETACH_SOURCE 0
 
 @interface FISound ()
-@property(assign) ALuint source, buffer;
+@property(assign) ALuint source;
 @end
 
 @implementation FISound
@@ -27,10 +28,12 @@
 
 #pragma mark Designated Initializer
 
-- (id) initWithData: (const ALvoid*) data size: (ALsizei) size
-    format: (ALenum) format sampleRate: (ALsizei) frequency
-    duration: (float) seconds
+
+- (id) initWithBuffer: (FIBuffer*) bff error: (NSError**) error
 {
+    if (!buffer)
+        return nil;
+
     self = [super init];
     
     ALCcontext *const currentContext = alcGetCurrentContext();
@@ -39,28 +42,18 @@
         NSLog(@"OpenAL context not set, did you initialize Finch?");
         return nil;
     }
-    
-    // Allocate buffer.
-    CLEAR_ERROR_FLAG;
-    alGenBuffers(1, &buffer);
-    if (![self checkSuccessOrLog:@"Failed to allocate OpenAL buffer"])
-        return nil;
-
-    // Pass sound data to OpenAL.
-    CLEAR_ERROR_FLAG;
-    alBufferData(buffer, format, data, size, frequency);
-    if (![self checkSuccessOrLog:@"Failed to fill OpenAL buffers"])
-        return nil;
-    
+        
     // Initialize the source.
     CLEAR_ERROR_FLAG;
     alGenSources(1, &source);
-    alSourcei(source, AL_BUFFER, buffer);
+    alSourcei(source, AL_BUFFER, bff.buffer);
     if (![self checkSuccessOrLog:@"Failed to create OpenAL source"])
         return nil;
 
+    buffer = [bff retain];
+    
     gain = 1;
-    duration = seconds;
+    duration = bff.duration;
     return self;
 }
 
@@ -69,43 +62,22 @@
     [self stop];
     CLEAR_ERROR_FLAG;
     alSourcei(source, AL_BUFFER, DETACH_SOURCE);
-    alDeleteBuffers(1, &buffer), buffer = 0;
+    [buffer release];
     alDeleteSources(1, &source), source = 0;
     [self checkSuccessOrLog:@"Failed to clean up after sound"];
     [super dealloc];
 }
 
-- (id) initWithSample: (FISoundSample*) sample error: (NSError**) error
+- (FISound*) duplicate
 {
-    if (!sample)
-        return nil;
-    
-    FIErrorReporter *reporter = [FIErrorReporter forDomain:@"Sound Initialization" error:error];
-    
-    // Check the number of channels
-    if (sample.channels != 1 && sample.channels != 2) {
-        *error = [reporter errorWithCode:FIErrorInvalidNumberOfChannels];
-        return nil;
-    }
-    
-    // Check sample resolution
-    if (sample.bitsPerChannel != 8 && sample.bitsPerChannel != 16) {
-        *error = [reporter errorWithCode:FIErrorInvalidSampleResolution];
-        return nil;
-    }
-    
-    // Check data endianity
-    if (sample.endianity != kLittleEndian) {
-        *error = [reporter errorWithCode:FIErrorInvalidEndianity];
-        return nil;
-    }
-    
-    const ALenum format = sample.channels == 1 ?
-        (sample.bitsPerChannel == 16 ? AL_FORMAT_MONO16 : AL_FORMAT_MONO8) :
-        (sample.bitsPerChannel == 16 ? AL_FORMAT_STEREO16 : AL_FORMAT_STEREO8);
-    return [self initWithData:sample.data.bytes size:sample.data.length
-        format:format sampleRate:sample.sampleRate duration:sample.duration];
+    return [[[FISound alloc] initWithBuffer:buffer error:NULL] autorelease];
 }
+
+- (id) initWithSample:(FISoundSample *)sample error:(NSError **)error
+{
+    return [self initWithBuffer:[[FIBuffer alloc] initWithSample:sample error:error] error:error];
+}
+
 
 #pragma mark Playback Controls
 
