@@ -14,6 +14,7 @@
 #include "PHLPlayer.h"
 #include "PHImageView.h"
 #include "PHImageAnimator.h"
+#include "PHEventQueue.h"
 
 PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDuration(0.5f), unrageTime(1.0f), attacking(false), cooldownDuration(2.0f)
 {
@@ -22,7 +23,7 @@ PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDu
 
 PHLBull::~PHLBull()
 {
-    getWorld()->invalidateTimersWithUserdata(this);
+    getWorld()->modelEventQueue()->invalidateTimersWithUserdata(this);
     PHImageAnimator * animator;
     PHImageView * iv;
     if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
@@ -60,13 +61,13 @@ void PHLBull::reallyAttack(PHObject * sender, void * ud)
     PHTimer * timer = new PHTimer;
     timer->setTimeInterval(attackDuration+cooldownDuration);
     timer->setCallback(PHInv(this, PHLBull::cooldownEnded, NULL));
-    getWorld()->scheduleTimer(timer, this);
+    getWorld()->modelEventQueue()->scheduleTimer(timer, this);
     timer->release();
     
     timer = new PHTimer;
     timer->setTimeInterval(unrageTime);
     timer->setCallback(PHInv(this, PHLBull::attacked, NULL));
-    getWorld()->scheduleTimer(timer, this);
+    getWorld()->modelEventQueue()->scheduleTimer(timer, this);
     timer->release();
 }
 

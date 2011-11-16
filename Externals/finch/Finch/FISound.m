@@ -52,6 +52,7 @@
     
     buffer = [bff retain];
     gain = 1;
+    pitch = 1;
     duration = bff.duration;
     
     return self;
@@ -100,6 +101,25 @@
     return (state == AL_PLAYING);
 }
 
+- (BOOL) paused
+{
+    ALint state;
+    alGetSourcei(source, AL_SOURCE_STATE, &state);
+    return (state == AL_PAUSED);
+}
+
+- (float) time
+{
+    ALfloat tm;
+    alGetSourcef(source, AL_SEC_OFFSET, &tm);
+    return tm;
+}
+
+- (void) setTime: (float) tm
+{
+    alSourcef(source, AL_SEC_OFFSET, tm);
+}
+
 - (void) setLoop: (BOOL) yn
 {
     loop = yn;
@@ -113,6 +133,24 @@
     CLEAR_ERROR_FLAG;
     alSourcePlay(source);
     [self checkSuccessOrLog:@"Failed to start sound"];
+}
+
+- (void) pause
+{
+    if (!self.playing)
+        return;
+    CLEAR_ERROR_FLAG;
+    alSourcePause(source);
+    [self checkSuccessOrLog:@"Failed to pause sound"];
+}
+
+- (void) resume
+{
+    if (!self.paused)
+        return;
+    CLEAR_ERROR_FLAG;
+    alSourcePlay(source);
+    [self checkSuccessOrLog:@"Failed to resume sound"];
 }
 
 - (void) stop

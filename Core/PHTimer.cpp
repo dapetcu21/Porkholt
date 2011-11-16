@@ -15,7 +15,7 @@ void PHTimer::timePassed(double timeElapsed)
     {
         timerFired();
         if (!repeat)
-            invalidate();
+            valid = false;
         else
             timeleft+=(((int)((-timeleft)/time))+1)*time;
     }

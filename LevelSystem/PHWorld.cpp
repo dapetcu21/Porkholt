@@ -33,6 +33,8 @@
 #include "PHPoofView.h"
 
 #include "PHSoundManager.h"
+#include "PHShieldView.h"
+#include "PHSoundPool.h"
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
@@ -110,7 +112,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), _gameManager(mgr)
+PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), realQueue(new PHEventQueue), sndPool(new PHSoundPool),  currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), _gameManager(mgr)
 {
 	PHRect bounds = _gameManager->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -153,7 +155,6 @@ PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * c
 
 PHWorld::~PHWorld()
 {
-    invalidateAllTimers();
 	removeAllObjects();
     removeAllJoints();
 	if (worldView)
@@ -194,8 +195,11 @@ PHWorld::~PHWorld()
 	delete physicsWorld;
     delete contactListener;
     delete contactFilter;
+    unloadAssets();
     viewQueue->release();
     modelQueue->release();
+    realQueue->release();
+    sndPool->release();
 }
 
 void PHWorld::updatePositions()
@@ -272,6 +276,11 @@ void PHWorld::updateScene()
     int hn = round(player->maximumHP());
     heartView->setHeartNumber(hn);
     heartView->setActiveHearts(round(player->healthPoints()/player->maximumHP()*hn));
+}
+
+void PHWorld::updateTimers(double frameInterval)
+{
+    modelQueue->updateTimers(frameInterval);
 }
 
 void PHWorld::addObject(PHLObject * obj)
@@ -400,53 +409,6 @@ PHWorld::layer * PHWorld::addLayer(double scale)
 void PHWorld::addToLayer(layer * lyr, PHImageView * img)
 {
 	lyr->container->addSubview(img);
-}
-
-void PHWorld::scheduleTimer(PHTimer * timer, void * ud)
-{
-    if (!timer || !timer->isValid())
-        return;
-    timer->setLastUpdatedAt(PHTime::getTime());
-    timers.insert(make_pair<void *,PHTimer*>(ud,timer));
-    timer->retain();
-}
-
-void PHWorld::invalidateAllTimers()
-{
-    for(multimap<void *,PHTimer*>::iterator i=timers.begin(); i!=timers.end(); i++)
-        i->second->release();
-    timers.clear();
-}
-
-void PHWorld::invalidateTimersWithUserdata(void * ud)
-{
-    pair<multimap<void *,PHTimer*>::iterator,multimap<void *,PHTimer*>::iterator> range = timers.equal_range(ud);
-    for(multimap<void *,PHTimer*>::iterator i = range.first; i!=range.second; i++)
-        i->second->release();
-    timers.erase(range.first,range.second);
-}
-
-void PHWorld::updateTimers(double timeElapsed)
-{
-    double time = PHTime::getTime();
-    
-    multimap<void *,PHTimer*>::iterator i,nx;
-    for (i=timers.begin(); i!=timers.end(); i=nx)
-    {
-        nx = i;
-        nx++;
-        PHTimer * timer = i->second;
-        double real = time-timer->lastUpdatedAt();
-        if (real>timeElapsed)
-            real=timeElapsed;
-        timer->setLastUpdatedAt(time);
-        timer->timePassed(real);
-        if (!(timer->isValid()))
-        {
-            timers.erase(i);
-            timer->release();
-        }
-    }
 }
 
 #pragma mark -
@@ -628,7 +590,7 @@ void PHWorld::overlayText(const string & s, double duration)
     timer->setTimeInterval(duration-0.5);
     timer->setRepeats(false);
     timer->setCallback(PHInv(this, PHWorld::dismissOverlayText, NULL));
-    scheduleTimer(timer);
+    modelQueue->scheduleTimer(timer);
     timer->release();
     overlayView->mutex()->unlock();
 }
@@ -662,12 +624,42 @@ void PHWorld::boom(const PHPoint &location, double magnitude, double damage, dou
     bm->setAnimatorPool(levelController()->animatorPool());
     getWorldView()->addSubview(bm);
     bm->release();
-    PHSoundManager::singleton()->soundNamed("boom")->play();
+    PHSound * s = PHSoundManager::singleton()->soundNamed("boom")->duplicate();
+    sndPool->addSound(s);
+    s->playAndRelease(realQueue);
 }
 
 const string & PHWorld::resourcePath()
 {
     return levelController()->bundlePath();
+}
+
+#define retainImage(fname) { PHImage * i = PHImage::imageNamed(fname); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }
+
+#define retainImg(image) { PHImage * i = (image); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }
+
+#define retainSound(fname) { PHSound * s = PHSoundManager::singleton()->soundNamed(fname); if (s) { if(preloadedSounds.insert(s).second) s->retain(); } }
+
+#define retainSnd(snd) { PHSound * s = (snd); if (s) { if(preloadedSounds.insert(s).second) s->retain(); } }
+
+void PHWorld::preloadAssets()
+{
+    retainImage("dialogbubble");
+    retainImage("quest");
+    retainImg(PHPoofView::poofImage());
+    retainImg(PHPoofView::boomImage());
+    retainImg(PHShieldView::shieldImage());
+    retainSound("boom");
+}
+
+void PHWorld::unloadAssets()
+{
+    for (set<PHImage*>::iterator i = preloadedImages.begin(); i!=preloadedImages.end(); i++)
+        (*i)->release();
+    preloadedImages.clear();
+    for (set<PHSound*>::iterator i = preloadedSounds.begin(); i!=preloadedSounds.end(); i++)
+        (*i)->release();
+    preloadedSounds.clear();
 }
 
 /*void PHWorld::printObjects()

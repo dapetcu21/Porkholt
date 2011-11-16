@@ -21,16 +21,46 @@
 
 
 class PHSoundManager;
+class PHEventQueue;
+class PHSoundPool;
 class PHSound : public PHObject 
 {
 private:
     PHSoundImpl * impl;
     PHSoundManager * manager;
     PHSound(PHSoundImpl * im);
+    PHInvocation inv;
     
     friend class PHSoundManager;
+    
+    void fireCallback(PHObject * sender, PHEventQueue * timerQueue);
+    
+    set<PHSoundPool*> soundPool;
+    
 public:
     void play();
+    void stop();
+    void pause();
+    void resume();
+    void playAndCallBack(PHInvocation inv, PHEventQueue * timerQueue);
+    void playAndRelease(PHEventQueue * timerQueue) { playAndCallBack(PHInv(this,PHObject::release,NULL),timerQueue); }
+    bool isPlaying();
+    float duration();
+    
+    bool isLooping();
+    void setLooping(bool l);
+    
+    float gain();
+    void setGain(float g);
+    
+    float pitch();
+    void setPitch(float p);
+    
+    PHSound * duplicate();
+    
+    void addSoundPool(PHSoundPool * sp);
+    void removeSoundPool(PHSoundPool * sp);
+    
     ~PHSound();
 };
 

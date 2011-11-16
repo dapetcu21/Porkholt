@@ -10,27 +10,14 @@
 #include "PHImageAnimator.h"
 
 
-PHImage * PHPoofView::poofImg = NULL;
-PHImage * PHPoofView::boomImg = NULL;
-
 PHImage * PHPoofView::poofImage()
 {
-    if (!poofImg)
-    {
-        poofImg = PHImage::imageNamed("poof");
-        poofImg->retain();
-    }
-    return poofImg;
+    return PHImage::imageNamed("poof");
 }
 
 PHImage * PHPoofView::boomImage()
 {
-    if (!boomImg)
-    {
-        boomImg = PHImage::imageNamed("boom");
-        boomImg->retain();
-    }
-    return boomImg;
+    return PHImage::imageNamed("boom");
 }
 
 PHPoofView::PHPoofView(const PHRect & frame, int image) : PHImageView(frame)
@@ -72,16 +59,4 @@ void PHPoofView::destroy(PHObject * sender, void * ud)
         removeFromSuperview();
     else
         PHThread::mainThread()->scheduleOnThread(PHInv(this, PHPoofView::destroy, (void*)1), false);
-}
-
-void PHPoofView::poofImageRelease()
-{
-    poofImage()->release();
-    poofImg = NULL;
-}
-
-void PHPoofView::boomImageRelease()
-{
-    boomImage()->release();
-    boomImg = NULL;
 }

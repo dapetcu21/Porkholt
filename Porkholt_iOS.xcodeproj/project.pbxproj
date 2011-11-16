@@ -147,6 +147,7 @@
 		C1B3C85114713818000FD6DF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85014713816000FD6DF /* AVFoundation.framework */; };
 		C1B3C85314713824000FD6DF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85214713823000FD6DF /* AudioToolbox.framework */; };
 		C1B3C8551471382E000FD6DF /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C8541471382D000FD6DF /* OpenAL.framework */; };
+		C1B3C85C14738C48000FD6DF /* PHSoundPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C85B14738C46000FD6DF /* PHSoundPool.cpp */; };
 		C1B4AEC6137D46F9006E65FE /* PHDistanceJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */; };
 		C1B4AED9137DA430006E65FE /* PHMotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AED7137DA430006E65FE /* PHMotorJoint.cpp */; };
 		C1B4AEDC137DADFC006E65FE /* PHRevoluteJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B4AEDA137DADFB006E65FE /* PHRevoluteJoint.cpp */; };
@@ -430,6 +431,8 @@
 		C1B3C85014713816000FD6DF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C1B3C85214713823000FD6DF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C1B3C8541471382D000FD6DF /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		C1B3C85A14738C38000FD6DF /* PHSoundPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSoundPool.h; sourceTree = "<group>"; };
+		C1B3C85B14738C46000FD6DF /* PHSoundPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHSoundPool.cpp; sourceTree = "<group>"; };
 		C1B4AEC4137D46F9006E65FE /* PHDistanceJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHDistanceJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1B4AEC5137D46F9006E65FE /* PHDistanceJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDistanceJoint.h; sourceTree = "<group>"; };
 		C1B4AED7137DA430006E65FE /* PHMotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHMotorJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -675,6 +678,8 @@
 				C1EEB25413C07B9A004F5D5E /* PHEventQueue.h */,
 				C1B3C8371470F95D000FD6DF /* PHSoundManager.h */,
 				C1B3C8381470F9C6000FD6DF /* PHSound.h */,
+				C1B3C85A14738C38000FD6DF /* PHSoundPool.h */,
+				C1B3C85B14738C46000FD6DF /* PHSoundPool.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1201,6 +1206,7 @@
 				C1B3C8061469B1FB000FD6DF /* PHLEggBomb.cpp in Sources */,
 				C1B3C84D1470FD50000FD6DF /* PHSound.mm in Sources */,
 				C1B3C84F1470FDF0000FD6DF /* PHSoundManager.mm in Sources */,
+				C1B3C85C14738C48000FD6DF /* PHSoundPool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

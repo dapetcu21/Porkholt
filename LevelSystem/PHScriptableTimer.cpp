@@ -9,6 +9,7 @@
 #include "PHScriptableTimer.h"
 #include "PHLua.h"
 #include "PHWorld.h"
+#include "PHEventQueue.h"
 
 PHScriptableTimer::PHScriptableTimer()
 {
@@ -68,7 +69,7 @@ static int PHTimer_schedule(lua_State *L)
     lua_getglobal(L, "PHWorld");
     lua_pushstring(L, "ud");
     lua_gettable(L,-2);
-    ((PHWorld*)lua_touserdata(L, -1))->scheduleTimer(timer);
+    ((PHWorld*)lua_touserdata(L, -1))->modelEventQueue()->scheduleTimer(timer);
     lua_pop(L, 2);
     
     timer->release();

@@ -241,7 +241,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
     {
         dialogView = new PHDialogView(this);
         dialogView->mutex();
-        dialogView->setImage(PHLevelController::dialogImage);
+        dialogView->setImage(PHImage::imageNamed("dialogbubble"));
         dialogView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogView->setUserInput(true);
         dialogView->setStretchBubble(true);
@@ -459,11 +459,12 @@ void PHLNPC::_dialogSwapEnd(PHLObject * sender, void * ud)
 
 void PHLNPC::showQuest()
 {
+    PHImage * qi = PHImage::imageNamed("quest");
     if (!questView)
     {
         questView = new PHDialogView(this);
         questView->mutex();
-        questView->setImage(PHLevelController::questImage);
+        questView->setImage(qi);
         questView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         getWorld()->getWorldView()->addSubview(questView);
     }
@@ -471,7 +472,7 @@ void PHLNPC::showQuest()
     questView->cancelAnimationsWithTag(4867);
     questView->setUserInput(true);
     
-    double aspectRatio = PHLevelController::questImage?((double)(PHLevelController::questImage->width())/PHLevelController::questImage->height()):1.0f;
+    double aspectRatio = qi?((double)(qi->width())/qi->height()):1.0f;
     
     questView->setFrame(PHRect(pos.x+(flipped?(-questPoint.x-questHeight*aspectRatio):(questPoint.x)), pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
     questView->setHorizontallyFlipped(flipped);

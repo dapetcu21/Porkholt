@@ -11,6 +11,7 @@
 
 #include "PHMain.h"
 
+class PHTimer;
 class PHEventQueue : public PHObject
 {
 private:
@@ -21,11 +22,21 @@ private:
     };
     list<event> q;
     PHMutex * mutex;
+    multimap<void *,PHTimer*>timers;
 public:
     PHEventQueue();
     virtual ~PHEventQueue();
     void schedule(PHInvocation inv, bool waitTillDone); //WARNING: don't use waitTillDone unless you call processQueue on another thread
     void processQueue();
+    void updateTimers(double maxTime);
+    void updateTimers() { updateTimers(INFINITY); }
+    void update() { processQueue(); updateTimers(); }
+    
+    void scheduleTimer(PHTimer * timer) { scheduleTimer(timer, NULL); }
+    void scheduleTimer(PHTimer * timer, void * ud);
+    void invalidateTimersWithUserdata(void * ud);
+    void invalidateAllTimers();
+
 };
 
 #endif

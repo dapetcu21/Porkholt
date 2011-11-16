@@ -17,9 +17,11 @@ private:
     double time;
     double timeleft;
     double lastupd;
+    bool cboninvalidate;
     PHInvocation invocation;
 public:
-    PHTimer() : valid(true), repeat(false), time(0), timeleft(0) {}
+    PHTimer() : valid(true), repeat(false), time(0), timeleft(0), cboninvalidate(false) {}
+    ~PHTimer() { invalidate(); }
     
     void timePassed(double timeElapsed);
     void setTimeInterval(double tm) { time = tm; timeleft = tm; }
@@ -30,10 +32,12 @@ public:
     void setRepeats(bool rpt) { repeat = rpt; }
     void setLastUpdatedAt(double u) { lastupd = u; }
     double lastUpdatedAt() { return lastupd; }
+    bool callsBackOnInvalidate() { return cboninvalidate; }
+    void setCallsBackOnInvalidate(bool b) { cboninvalidate = b; }
     
     void setCallback(PHInvocation inv) { invocation = inv; }
     bool isValid() { return valid; } 
-    void invalidate() { valid = false; }
+    void invalidate() { if (cboninvalidate&&valid) timerFired(); valid = false; }
     
     virtual void timerFired();
 };

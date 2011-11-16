@@ -27,12 +27,10 @@
 #include "PHEventQueue.h"
 #include "PHButtonView.h"
 #include "PHMessage.h"
+#include "PHSoundPool.h"
 
 #include <fstream>
 #include <sstream>
-
-#define releaseImage(img) if (img) img = (PHImage*)img->release()
-#define retainImage(img,fname) if (!img) img = PHImage::imageNamed((fname)); if (img) img->retain()
 
 void PHLevelController::appSuspended()
 {
@@ -246,7 +244,7 @@ void PHLevelController::pause()
 {
 	if (paused) return;
 	paused = true;
-	//PHGameManager::sharedInstance()->setIndependentTiming(false);
+    world->soundPool()->pause();
 }
 
 void PHLevelController::resume()
@@ -255,7 +253,7 @@ void PHLevelController::resume()
 	if (!paused) return;
     if (!ready1 || !ready2) return;
 	paused = false;
-	//PHGameManager::sharedInstance()->setIndependentTiming(true);
+    world->soundPool()->resume();
     dismissMenu();
 }
 
@@ -474,12 +472,6 @@ PHLevelController::~PHLevelController()
     animPool->release();
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
-	//PHGameManager::sharedInstance()->setIndependentTiming(false);
-    releaseImage(dialogImage);
-    releaseImage(questImage);
-    PHPoofView::poofImageRelease();
-    PHPoofView::boomImageRelease();
-    PHShieldView::shieldImageRelease();
 }
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
@@ -604,30 +596,21 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
 	mutex->lock();
     
-    retainImage(dialogImage, "dialogbubble");
-    retainImage(questImage, "quest");
-    PHPoofView::poofImage()->retain();
-    PHShieldView::shieldImage()->retain();
+    world->preloadAssets();
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
     PHImage::collectGarbage();
     PHFont::collectGarbage();
-    //PHGameManager::sharedInstance()->setIndependentTiming(true);
     ready1 = true;
     resume();
 	mutex->unlock();
 	
-    
-    
-	//double targetTime = PHTime::getTime();
 	int fps = _gameManager->framesPerSecond();
 	double frameInterval = 1.0f/fps;
 	
 	while (running)
 	{
-		//targetTime+=frameInterval;
-		
         bool p = paused;
         if (!p)
         {
@@ -643,24 +626,16 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             scripingEngine->scriptingStep(frameInterval);
             world->updateTimers(frameInterval);
         }
-            pSem2->wait();
-            mutex->lock();
+        world->realTimeEventQueue()->updateTimers();
+        
+        pSem2->wait();
+        mutex->lock();
         if(!p)
         {
             animPool->advanceAnimation(frameInterval);
             world->updateScene();
         }
-            mutex->unlock();
-            pSem1->signal();
-                                      
-		/*double currentTime = PHTime::getTime();
-		double time = targetTime - currentTime;
-		if (time>0)
-			PHTime::sleep(time);
-		else
-			targetTime = currentTime;*/
+        mutex->unlock();
+        pSem1->signal();
 	}
 }
-
-PHImage * PHLevelController::dialogImage = NULL;
-PHImage * PHLevelController::questImage = NULL;

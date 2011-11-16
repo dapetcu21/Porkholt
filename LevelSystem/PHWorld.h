@@ -30,6 +30,9 @@ class PHScripting;
 class PHTextView;
 class PHHeartView;
 class PHGameManager;
+class PHImage;
+class PHSound;
+class PHSoundPool;
 
 class PHWorld : public PHObject 
 {
@@ -39,6 +42,8 @@ private:
 	PHView * layerView;
     PHEventQueue * modelQueue; 
     PHEventQueue * viewQueue;
+    PHEventQueue * realQueue;
+    PHSoundPool * sndPool;
 	
 	PHLevelController * controller;
 	
@@ -71,8 +76,6 @@ private:
 	};
 	list<layer> layers;
     
-    multimap<void *,PHTimer*>timers;
-    
     PHScripting * scripting;
     
     PHGameManager * _gameManager;
@@ -99,18 +102,15 @@ public:
     
     void updatePositions();
 	void updateScene();
+    void updateTimers(double frameInterval);
     
     b2World * getPhysicsWorld() { return physicsWorld; }
-    
-    void scheduleTimer(PHTimer * timer) { scheduleTimer(timer, NULL); }
-    void scheduleTimer(PHTimer * timer, void * ud);
-    void updateTimers(double timeElapsed);
-    void invalidateTimersWithUserdata(void * ud);
-    void invalidateAllTimers();
-    
+        
     PHLevelController * levelController() { return controller; }
     PHEventQueue * viewEventQueue() { return viewQueue; }
     PHEventQueue * modelEventQueue() { return modelQueue; }
+    PHEventQueue * realTimeEventQueue() { return realQueue; }
+    PHSoundPool * soundPool() { return sndPool; }
     
     PHLCamera * getCamera() { return camera; }
     PHLPlayer * getPlayer() { return player; }
@@ -151,6 +151,12 @@ private:
     list<PHDialog*> dialogs;
     PHDialog * currentDialog;
     PHLNPC * dialogInitiator;
+    
+    set<PHImage*> preloadedImages;
+    set<PHSound*> preloadedSounds;
+public:
+    void preloadAssets();
+    void unloadAssets();
   
 };
 

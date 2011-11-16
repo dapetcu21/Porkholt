@@ -23,14 +23,10 @@ public:
 
     static PHImage * poofImage();
     static PHImage * boomImage();
-    static void poofImageRelease();
-    static void boomImageRelease();
     
     PHPoofView(const PHRect & frame, int image);
     PHPoofView(int image);
 private:
-    static PHImage * poofImg, * boomImg;
-    
     void init(int image);
     void destroy(PHObject * sender, void * ud);
 };

@@ -18,10 +18,8 @@ class PHShieldView : public PHView
 {
 private:
     PHImageView * imv;
-    static PHImage * img;
 public:
     PHShieldView(const PHRect & fr);
-    ~PHShieldView();
     
     void dismiss();
     

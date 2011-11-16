@@ -11,8 +11,6 @@
 #include "PHImage.h"
 #include "PHAnimationDescriptor.h"
 
-PHImage * PHShieldView::img = NULL;
-
 #define factor 1.5f
 
 PHShieldView::PHShieldView(const PHRect & fr) : PHView(fr)
@@ -40,22 +38,9 @@ PHShieldView::PHShieldView(const PHRect & fr) : PHView(fr)
     
 }
 
-PHShieldView::~PHShieldView()
+PHImage * PHShieldView::shieldImage() 
 {
-    imv->release();
-}
-
-PHImage * PHShieldView::shieldImage() {
-    if (!img)
-    {
-        img = PHImage::imageNamed("shield");
-    }
-    return img;
-}
-
-void PHShieldView::shieldImageRelease()
-{
-    img = (PHImage*)img->release();
+    return PHImage::imageNamed("shield");
 }
 
 void PHShieldView::dismiss()

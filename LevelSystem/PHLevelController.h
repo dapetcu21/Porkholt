@@ -55,7 +55,7 @@ protected:
     void returnToMenu();
     void menuDismissed(PHObject * sender, void * ud);
 public:
-	
+    
     void setEndLevelCallback(PHInvocation inv){
         ec_invocation = inv;
     }
@@ -93,11 +93,7 @@ public:
 	
     void textViewControllerFinished(PHTextController * sender, void * ud);
     
-    PHAnimatorPool * animatorPool() { return animPool; }
-    
-    static PHImage * dialogImage;
-    static PHImage * questImage;
-    
+    PHAnimatorPool * animatorPool() { return animPool; }    
 };
 
 #endif
