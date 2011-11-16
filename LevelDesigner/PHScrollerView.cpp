@@ -236,7 +236,7 @@ void PHScrollerView::touchEvent(PHEvent * event)
     {
         if (PHEventHandler::modifierMask() == PHEventHandler::optionModifier)
         {
-            double sc = 1+(event->delta().y/150.0f);
+            double sc = 1-(event->delta().y/150.0f);
             if (sc<0.1)
                 sc = 0.1;
             setScale(scale()*sc, toMyCoordinates(event->location()));
