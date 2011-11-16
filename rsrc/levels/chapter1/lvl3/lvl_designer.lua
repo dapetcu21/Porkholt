@@ -287,7 +287,7 @@ addObject(obj16)
 local obj17 = objectWithClass("PHLGround")
 obj17.levelDes = true
 obj17.rotation = 10.000000
-obj17.pos = point(0.152912,0.282873)
+obj17.pos = point(0.077541,-0.083903)
 objectAddImage(obj,[[/ground.png]],14.001186,-0.747695,2.200000,1.000000)
 objectAddImage(obj,[[/ground.png]],11.989651,-0.746157,2.200000,1.000000)
 objectAddImage(obj,[[/ground.png]],9.987148,-0.748292,2.200000,1.000000)
@@ -319,8 +319,8 @@ addObject(obj18)
 
 local sign = objectWithClass("PHLSign")
 sign.levelDes = true
-sign.rotation = 0.000000
 sign.text = [[This is a power potion. They help you dash faster and jump higher]]
+sign.rotation = 0.000000
 sign.scripting = [[sign]]
 sign.pos = point(20.479834,-1.880127)
 addObject(sign)
@@ -559,8 +559,8 @@ player.levelDes = true
 player.maximumForce = 40.000000
 player.scripting = [[player]]
 player.maxVelocityX = 2.500000
-player.rotation = 0.000000
 player.barHidden = true
+player.rotation = 0.000000
 player.trail = false
 player.pos = point(5.468906,-0.140351)
 addObject(player)
@@ -634,22 +634,22 @@ addObject(obj41)
 
 local obj42 = objectWithClass("PHLBull")
 obj42.levelDes = true
-obj42.rotation = 0.000000
 obj42.flipped = true
+obj42.rotation = 0.000000
 obj42.pos = point(43.635510,1.237271)
 addObject(obj42)
 
 local obj43 = objectWithClass("PHLBull")
 obj43.levelDes = true
-obj43.rotation = 0.000000
 obj43.flipped = true
+obj43.rotation = 0.000000
 obj43.pos = point(85.345460,-4.212340)
 addObject(obj43)
 
 local obj44 = objectWithClass("PHLBull")
 obj44.levelDes = true
-obj44.rotation = 0.000000
 obj44.flipped = true
+obj44.rotation = 0.000000
 obj44.pos = point(100.055499,-4.295894)
 addObject(obj44)
 
