@@ -7,8 +7,8 @@ player.levelDes = true
 player.maximumForce = 40.000000
 player.scripting = [[player]]
 player.maxVelocityX = 2.500000
-player.rotation = 0.000000
 player.barHidden = true
+player.rotation = 0.000000
 player.trail = false
 player.pos = point(2.357300,0.756473)
 addObject(player)
@@ -22,7 +22,7 @@ addObject(obj0)
 
 local camera = objectWithClass("PHLCamera")
 camera.levelDes = true
-camera.camH = 4.000000
+camera.camH = 5.000000
 camera.rotation = 0.000000
 camera.scripting = [[camera]]
 camera.pos = point(-0.640588,1.626719)
@@ -279,8 +279,8 @@ addObject(obj26)
 
 local obj27 = objectWithClass("PHLBull")
 obj27.levelDes = true
-obj27.rotation = 0.000000
 obj27.flipped = true
+obj27.rotation = 0.000000
 obj27.pos = point(28.354421,17.789764)
 addObject(obj27)
 
