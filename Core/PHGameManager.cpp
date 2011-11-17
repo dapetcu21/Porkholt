@@ -94,32 +94,43 @@ void PHGameManager::renderFrame(double timeElapsed)
 
 void PHGameManager::_appSuspended(PHObject * sender, void * ud)
 {
-    if (!loaded) return;
-	if (suspended) return;
-	suspended = true;
-	PHMessage::messageWithName("appSuspended")->broadcast(this, NULL);
 	if (viewController)
 	{
 		viewController->_viewWillDisappear();
 		viewController->_viewDidDisappear();
 	}
-	PHLog("appSuspended");
-#ifdef PH_SIMULATOR
-    remote->stop();
-#endif
 }
 
 void PHGameManager::_appResumed(PHObject * sender, void * ud)
 {
-	if (!suspended) return;
-	suspended = false;
-	PHLog("appResumed");
-	PHMessage::messageWithName("appResumed")->broadcast(this, NULL);
-	if (viewController)
+    if (viewController)
 	{
 		viewController->_viewWillAppear();
 		viewController->_viewDidAppear();
 	}
+}
+
+void PHGameManager::appSuspended()
+{
+    if (!loaded) return;
+    if (!loaded) return;
+	if (suspended) return;
+	suspended = true;
+	PHMessage::messageWithName("appSuspended")->broadcast(this, NULL);
+    PHLog("appSuspended");
+#ifdef PH_SIMULATOR
+    remote->stop();
+#endif
+    PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appSuspended, NULL), false);
+}
+
+void PHGameManager::appResumed()
+{
+    if (!loaded) return;
+    if (!suspended) return;
+	suspended = false;
+	PHLog("appResumed");
+	PHMessage::messageWithName("appResumed")->broadcast(this, NULL);
 #ifdef PH_SIMULATOR
     try {
         remote->start();
@@ -127,17 +138,6 @@ void PHGameManager::_appResumed(PHObject * sender, void * ud)
         PHLog("URemote: %s",err.c_str());
     }
 #endif
-}
-
-void PHGameManager::appSuspended()
-{
-    if (!loaded) return;
-    PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appSuspended, NULL), false);
-}
-
-void PHGameManager::appResumed()
-{
-    if (!loaded) return;
     PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appResumed, NULL), false);
 }
 

@@ -246,6 +246,7 @@ void PHLevelController::pause()
 	if (paused) return;
 	paused = true;
     world->soundPool()->pause();
+    PHMusicManager::singleton()->pauseRecursive();
 }
 
 void PHLevelController::resume()
@@ -255,6 +256,7 @@ void PHLevelController::resume()
     if (!ready1 || !ready2) return;
 	paused = false;
     world->soundPool()->resume();
+    PHMusicManager::singleton()->playRecursive();
     dismissMenu();
 }
 

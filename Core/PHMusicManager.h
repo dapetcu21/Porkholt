@@ -34,7 +34,18 @@ public:
     
     PHMusicManager();
     
+    bool isPaused() { return paused; }
+    void pause();
+    void roughPause();
+    void play();
+    
+    void pauseRecursive() { if (!pr) pause(); pr++; }
+    void roughPauseRecursive() { if (!pr) roughPause(); pr++; }
+    void playRecursive() { if (pr) { pr--; if (!pr) play(); } }
+    
 private:
+    bool paused;
+    int pr;
 #ifdef PH_IPHONE_OS
     struct args 
     {
@@ -44,7 +55,9 @@ private:
     
     AVAudioPlayer * currentSound;
     PHMutex * m;
-    void fadeThread(PHThread, args * a);
+    void fadeThread(PHThread * sender, args * a);
+    void pauseThread(PHThread * sender, void * ud);
+    void playThread(PHThread * sender, void * ud);
 #endif
 };
 
