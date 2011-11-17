@@ -32,6 +32,7 @@
 		C13E6C1313AC78C100365340 /* URServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C1013AC78C100365340 /* URServer.cpp */; };
 		C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */; };
 		C152809612B97169009067A7 /* PHGameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHGameManager.cpp */; };
+		C1638F401474FA5600E297BA /* PHMusicManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1638F3F1474FA5600E297BA /* PHMusicManager.mm */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
 		C1748C5F1400258300FB2796 /* PHMenuController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C5E1400258300FB2796 /* PHMenuController.cpp */; };
 		C1748C63140042ED00FB2796 /* PHTitleScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */; };
@@ -276,6 +277,8 @@
 		C152809412B97169009067A7 /* PHGameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGameManager.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHGameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGameManager.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
+		C1638F3E1474F88500E297BA /* PHMusicManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMusicManager.h; sourceTree = "<group>"; };
+		C1638F3F1474FA5600E297BA /* PHMusicManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHMusicManager.mm; sourceTree = "<group>"; };
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
 		C1707D77137D13D400395313 /* PHJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHJoint.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1707D78137D13D400395313 /* PHJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHJoint.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -544,6 +547,7 @@
 				C11E57BB13446F83008881B9 /* PHSemaphore.h */,
 				C1B3C84C1470FD50000FD6DF /* PHSound.mm */,
 				C1B3C84E1470FDF0000FD6DF /* PHSoundManager.mm */,
+				C1638F3F1474FA5600E297BA /* PHMusicManager.mm */,
 			);
 			path = "iOS Bindings";
 			sourceTree = "<group>";
@@ -680,6 +684,7 @@
 				C1B3C8381470F9C6000FD6DF /* PHSound.h */,
 				C1B3C85A14738C38000FD6DF /* PHSoundPool.h */,
 				C1B3C85B14738C46000FD6DF /* PHSoundPool.cpp */,
+				C1638F3E1474F88500E297BA /* PHMusicManager.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1207,6 +1212,7 @@
 				C1B3C84D1470FD50000FD6DF /* PHSound.mm in Sources */,
 				C1B3C84F1470FDF0000FD6DF /* PHSoundManager.mm in Sources */,
 				C1B3C85C14738C48000FD6DF /* PHSoundPool.cpp in Sources */,
+				C1638F401474FA5600E297BA /* PHMusicManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,6 +28,7 @@
 #include "PHButtonView.h"
 #include "PHMessage.h"
 #include "PHSoundPool.h"
+#include "PHMusicManager.h"
 
 #include <fstream>
 #include <sstream>
@@ -480,11 +481,13 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	b2World * fWorld = world->physicsWorld;
 	mutex->unlock();
 	
+    PHMusicManager::singleton()->setBackgroundMusic(directory+"/backtrack.mp3");
+    
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
 	string resourcePath = PHFileManager::resourcePath();
-	
+    
 	PHLuaSetIncludePath(L, directory+"/?.lua;"+resourcePath+"/scripts/?.lua");
 	
     PHLuaLoadFile(L,directory+"/init.lua");

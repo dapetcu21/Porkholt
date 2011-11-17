@@ -11,6 +11,7 @@
 #include "PHNavigationController.h"
 #include "PHTitleScreen.h"
 #include "PHImageView.h"
+#include "PHMusicManager.h"
 
 static const double cloudX[] = {0.0f,1.0f,0.3f};
 static const double cloudY[] = {0.5f,0.7f,0.12f};
@@ -55,6 +56,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
 void PHMenuController::viewWillAppear()
 {
     resetClouds(getView());
+    PHMusicManager::singleton()->setBackgroundMusic(PHMusicManager::musicNamed("title"));
 }
 
 void PHMenuController::resetClouds(PHView * v)
