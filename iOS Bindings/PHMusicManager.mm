@@ -35,7 +35,6 @@ void PHMusicManager::pause()
         return;
     }
     paused = true;
-    PHLog("pause");
     if (currentSound)
     {
         PHThread * t = new PHThread;
@@ -55,7 +54,6 @@ void PHMusicManager::roughPause()
         return;
     }
     paused = true;
-    PHLog("pause");
     [currentSound pause];
     m->unlock();
 }
@@ -69,7 +67,6 @@ void PHMusicManager::play()
         return;
     }
     paused = false;
-    PHLog("play");
     if (currentSound)
     {
         PHThread * t = new PHThread;
@@ -98,7 +95,6 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
         tm = oal;
     double oav = ca.volume;
     m->unlock();
-    PHLog("hii %d",ca.playing);
     static const double tick = 0.1;
     double ammount = oav/(tm/tick);
     while (tm)
@@ -116,7 +112,6 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
         if (ov>1) ov = 1;
         ca.volume = ov;
         m->unlock();
-        PHLog("%lf",ov);
         PHTime::sleep(st);
     }
     m->lock();
@@ -125,7 +120,6 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
         ca.currentTime = pos;
         [ca pause];
     }
-    PHLog("hii %d",ca.playing);
     [ca release];
     m->unlock();
 }
@@ -172,7 +166,6 @@ void PHMusicManager::playThread(PHThread * sender, void * ud)
         if (ov>1) ov = 1;
         ca.volume = ov;
         m->unlock();
-        PHLog("%lf",ov);
         PHTime::sleep(st);
     }
     m->lock();
@@ -223,7 +216,6 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
             if (ov<0) ov = 0;
             oa.volume = ov;
             m->unlock();
-            PHLog("%lf",ov);
             PHTime::sleep(st);
         }
         [oa stop];
