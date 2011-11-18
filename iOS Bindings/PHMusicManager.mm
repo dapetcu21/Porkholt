@@ -35,6 +35,7 @@ void PHMusicManager::pause()
         return;
     }
     paused = true;
+    PHLog("pause");
     if (currentSound)
     {
         PHThread * t = new PHThread;
@@ -67,6 +68,7 @@ void PHMusicManager::play()
         return;
     }
     paused = false;
+    PHLog("play");
     if (currentSound)
     {
         PHThread * t = new PHThread;
@@ -94,6 +96,7 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
     if (tm>oal)
         tm = oal;
     double oav = ca.volume;
+    PHLog("pausev:%lf",oav);
     m->unlock();
     static const double tick = 0.1;
     double ammount = oav/(tm/tick);
@@ -111,6 +114,11 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
         ov-=ammount*(st/tick);
         if (ov>1) ov = 1;
         ca.volume = ov;
+        if (!paused)
+        {
+            m->unlock();
+            break;
+        }
         m->unlock();
         PHTime::sleep(st);
     }
@@ -120,6 +128,7 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
         ca.currentTime = pos;
         [ca pause];
     }
+    PHLog("pausev2:%lf",(double)ca.volume);
     [ca release];
     m->unlock();
 }
@@ -165,10 +174,16 @@ void PHMusicManager::playThread(PHThread * sender, void * ud)
         ov+=ammount*(st/tick);
         if (ov>1) ov = 1;
         ca.volume = ov;
+        if (paused)
+        {
+            m->unlock();
+            break;
+        }
         m->unlock();
         PHTime::sleep(st);
     }
     m->lock();
+    PHLog("playv:%lf",(double)ca.volume);
     [ca release];
     m->unlock();
 }
@@ -221,8 +236,9 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
         [oa stop];
     }
     m->lock();
-    if (!paused)
-        [na play];
+    if (paused)
+        paused = false;
+    [na play];
     [oa release];
     [na release];
     m->unlock();
@@ -238,7 +254,6 @@ void PHMusicManager::setBackgroundMusic(const string & name,double fadeTime)
 {
     if (name==currentName) return;
     currentName = name;
-    
     m->lock();
     PHThread * t = new PHThread;
     args * a = new args;
