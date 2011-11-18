@@ -26,7 +26,7 @@ function sensordash:objectEntered()
 	end)
 end
 
-function sensordash:objectExited()
+function sensordash2:objectExited()
 	if (sensordash.washeredonethat or sign3.displayed) then
 		return
 	end
