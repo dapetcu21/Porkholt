@@ -140,6 +140,7 @@
 		C1B2418F13D1E8AF005B60BF /* PHTextView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B2418D13D1E8AC005B60BF /* PHTextView.cpp */; };
 		C1B2419213D21584005B60BF /* PHTextController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B2419013D21583005B60BF /* PHTextController.cpp */; };
 		C1B2419513D2CC5F005B60BF /* PHTextControllerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B2419313D2CC5D005B60BF /* PHTextControllerView.cpp */; };
+		C1B258DA14768E2C009A26A0 /* PHParticleView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B258D914768E2C009A26A0 /* PHParticleView.cpp */; };
 		C1B3C80314697CAE000FD6DF /* PHLBomberBird.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C80214697CAD000FD6DF /* PHLBomberBird.cpp */; };
 		C1B3C8061469B1FB000FD6DF /* PHLEggBomb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B3C8051469B1FB000FD6DF /* PHLEggBomb.cpp */; };
 		C1B3C84B1470FBDE000FD6DF /* libFinch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C8441470FBBB000FD6DF /* libFinch.a */; };
@@ -422,6 +423,8 @@
 		C1B2419113D21584005B60BF /* PHTextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTextController.h; sourceTree = "<group>"; };
 		C1B2419313D2CC5D005B60BF /* PHTextControllerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTextControllerView.cpp; sourceTree = "<group>"; };
 		C1B2419413D2CC5E005B60BF /* PHTextControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTextControllerView.h; sourceTree = "<group>"; };
+		C1B258D814768E1C009A26A0 /* PHParticleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHParticleView.h; sourceTree = "<group>"; };
+		C1B258D914768E2C009A26A0 /* PHParticleView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHParticleView.cpp; sourceTree = "<group>"; };
 		C1B3C80014697B49000FD6DF /* PHLBomberBird.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLBomberBird.h; sourceTree = "<group>"; };
 		C1B3C80214697CAD000FD6DF /* PHLBomberBird.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLBomberBird.cpp; sourceTree = "<group>"; };
 		C1B3C8041469B1ED000FD6DF /* PHLEggBomb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLEggBomb.h; sourceTree = "<group>"; };
@@ -685,6 +688,8 @@
 				C1B3C85A14738C38000FD6DF /* PHSoundPool.h */,
 				C1B3C85B14738C46000FD6DF /* PHSoundPool.cpp */,
 				C1638F3E1474F88500E297BA /* PHMusicManager.h */,
+				C1B258D814768E1C009A26A0 /* PHParticleView.h */,
+				C1B258D914768E2C009A26A0 /* PHParticleView.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1213,6 +1218,7 @@
 				C1B3C84F1470FDF0000FD6DF /* PHSoundManager.mm in Sources */,
 				C1B3C85C14738C48000FD6DF /* PHSoundPool.cpp in Sources */,
 				C1638F401474FA5600E297BA /* PHMusicManager.mm in Sources */,
+				C1B258DA14768E2C009A26A0 /* PHParticleView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
