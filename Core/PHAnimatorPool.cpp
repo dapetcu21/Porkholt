@@ -7,7 +7,10 @@
 //
 
 #include "PHAnimatorPool.h"
-#include "PHImageAnimator.h"
+#include "PHAnimator.h"
+
+map < PHThread*, list<PHAnimatorPool*> > PHAnimatorPool::stacks;
+PHMutex * PHAnimatorPool::staticMutex = new PHMutex;
 
 PHAnimatorPool::PHAnimatorPool() : mutex(new PHMutex(true)), insideJob(false)
 {
@@ -17,7 +20,7 @@ PHAnimatorPool::PHAnimatorPool() : mutex(new PHMutex(true)), insideJob(false)
 PHAnimatorPool::~PHAnimatorPool()
 {
     mutex->lock();
-    for (set<PHImageAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
+    for (set<PHAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
     {
         (*i)->pool = NULL;
     }
@@ -25,7 +28,7 @@ PHAnimatorPool::~PHAnimatorPool()
     mutex->release();
 }
 
-void PHAnimatorPool::insertAnimator(PHImageAnimator * a)
+void PHAnimatorPool::insertAnimator(PHAnimator * a)
 {
     mutex->lock();
     if (!insideJob)
@@ -38,7 +41,7 @@ void PHAnimatorPool::insertAnimator(PHImageAnimator * a)
     mutex->unlock();
 }
 
-void PHAnimatorPool::removeAnimator(PHImageAnimator * a)
+void PHAnimatorPool::removeAnimator(PHAnimator * a)
 {
     mutex->lock();
     if (!insideJob)
@@ -51,11 +54,51 @@ void PHAnimatorPool::removeAnimator(PHImageAnimator * a)
     mutex->unlock();
 }
 
+PHAnimatorPool * PHAnimatorPool::currentAnimatorPool()
+{
+    staticMutex->lock();
+    map < PHThread*, list<PHAnimatorPool*> >::iterator it = stacks.find(PHThread::currentThread());
+    if (it!=stacks.end())
+    {
+        if (!it->second.empty())
+        {
+            PHAnimatorPool * ap = it->second.back();
+            staticMutex->unlock();
+            return ap;
+        }
+    }
+    staticMutex->unlock();
+    return mainAnimatorPool();
+}
+
+void PHAnimatorPool::push()
+{
+    staticMutex->lock();
+    map < PHThread*, list<PHAnimatorPool*> >::iterator it = stacks.find(PHThread::currentThread());
+    if (it==stacks.end())
+        it = stacks.insert( make_pair<PHThread*, list<PHAnimatorPool*> >(PHThread::currentThread(),list<PHAnimatorPool*>())).first;
+    it->second.push_back(this);
+    staticMutex->unlock();
+}
+
+void PHAnimatorPool::popPool()
+{
+    staticMutex->lock();
+    map < PHThread*, list<PHAnimatorPool*> >::iterator it = stacks.find(PHThread::currentThread());
+    if (it!=stacks.end())
+    {
+        it->second.pop_back();
+    }
+    staticMutex->unlock();
+}
+
 PHAnimatorPool * PHAnimatorPool::mainAnimatorPool()
 {
+    staticMutex->lock();
     static PHAnimatorPool * main = NULL;
     if (!main)
         main = new PHAnimatorPool;
+    staticMutex->unlock();
     return main;
 }
 
@@ -64,14 +107,14 @@ void PHAnimatorPool::advanceAnimation(double elapsedTime)
 {
     mutex->lock();
     insideJob = true;
-    for (set<PHImageAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
+    for (set<PHAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
     {
         if (deleteQueue.count(*i))
             continue;
         if (!((*i)->advanceManually))
             (*i)->advanceAnimation(elapsedTime);
     }
-    for (set<PHImageAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
+    for (set<PHAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
         animators.erase(*i);
     animators.insert(insertQueue.begin(),insertQueue.end());
     insideJob = false;

@@ -101,6 +101,7 @@ public:
     PHBezierPath * bezierPath() { return curve; }
     void setBezierPath(PHBezierPath * bp);
     
+    virtual void loadFromLua(lua_State * L);
     static PHImageView * imageFromLua(lua_State * L,const string & rootPath);
     static PHImageView * imageFromLua(lua_State * L,const string & root, PHAnimatorPool * pool);
     static PHImageView * imageFromClass(const string & clss);

@@ -177,6 +177,7 @@ void PHLNPC::setIdle(bool i)
     if (i==_idle) return;
     _idle = i;
     if (!canBlink) return;
+    if (!faceView) return;
     const list<PHView*> & l = faceView->subViews();
     list<PHView*>::const_iterator j;
     for (j = l.begin(); j!=l.end(); j++)
@@ -198,7 +199,8 @@ void PHLNPC::flip()
     if (fflip)
     {
         flipped = !flipped;
-        faceView->setHorizontallyFlipped(flipped);
+        if (faceView)
+            faceView->setHorizontallyFlipped(flipped);
     } else
         PHLObject::flip();
 }

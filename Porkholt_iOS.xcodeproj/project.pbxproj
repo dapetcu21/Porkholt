@@ -132,6 +132,8 @@
 		C1A03613132E062300F0200C /* b2Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CC132E062300F0200C /* b2Shape.h */; };
 		C1A03614132E062300F0200C /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A035CD132E062300F0200C /* Box2D.h */; };
 		C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A034E9132DF62700F0200C /* libBox2D.a */; };
+		C1A78D30147BDEB9009347AE /* PHAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1A78D2F147BDEB9009347AE /* PHAnimator.cpp */; };
+		C1A78D33147CBC9E009347AE /* PHParticleAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1A78D32147CBC9E009347AE /* PHParticleAnimator.cpp */; };
 		C1A8855413B87E1F00A1A402 /* PHScripting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1A8855213B87E1F00A1A402 /* PHScripting.cpp */; };
 		C1AF4FBF13A6589A00ED2ED7 /* PHChapterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */; };
 		C1AF893313387B850046179B /* PHGaugeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1AF893213387B850046179B /* PHGaugeView.cpp */; };
@@ -407,6 +409,10 @@
 		C1A035CB132E062300F0200C /* b2PolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2PolygonShape.h; sourceTree = "<group>"; };
 		C1A035CC132E062300F0200C /* b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Shape.h; sourceTree = "<group>"; };
 		C1A035CD132E062300F0200C /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
+		C1A78D2E147BDEB0009347AE /* PHAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimator.h; sourceTree = "<group>"; };
+		C1A78D2F147BDEB9009347AE /* PHAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimator.cpp; sourceTree = "<group>"; };
+		C1A78D31147BE868009347AE /* PHParticleAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHParticleAnimator.h; sourceTree = "<group>"; };
+		C1A78D32147CBC9E009347AE /* PHParticleAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHParticleAnimator.cpp; sourceTree = "<group>"; };
 		C1A8855213B87E1F00A1A402 /* PHScripting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScripting.cpp; sourceTree = "<group>"; };
 		C1A8855313B87E1F00A1A402 /* PHScripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScripting.h; sourceTree = "<group>"; };
 		C1AF4FBD13A6589A00ED2ED7 /* PHChapterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHChapterController.cpp; sourceTree = "<group>"; };
@@ -690,6 +696,10 @@
 				C1638F3E1474F88500E297BA /* PHMusicManager.h */,
 				C1B258D814768E1C009A26A0 /* PHParticleView.h */,
 				C1B258D914768E2C009A26A0 /* PHParticleView.cpp */,
+				C1A78D2E147BDEB0009347AE /* PHAnimator.h */,
+				C1A78D2F147BDEB9009347AE /* PHAnimator.cpp */,
+				C1A78D31147BE868009347AE /* PHParticleAnimator.h */,
+				C1A78D32147CBC9E009347AE /* PHParticleAnimator.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1219,6 +1229,8 @@
 				C1B3C85C14738C48000FD6DF /* PHSoundPool.cpp in Sources */,
 				C1638F401474FA5600E297BA /* PHMusicManager.mm in Sources */,
 				C1B258DA14768E2C009A26A0 /* PHParticleView.cpp in Sources */,
+				C1A78D30147BDEB9009347AE /* PHAnimator.cpp in Sources */,
+				C1A78D33147CBC9E009347AE /* PHParticleAnimator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

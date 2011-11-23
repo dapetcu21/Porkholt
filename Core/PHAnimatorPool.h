@@ -11,22 +11,30 @@
 
 #include "PHMain.h"
 
-class PHImageAnimator;
+class PHAnimator;
 class PHAnimatorPool : public PHObject
 {
 private:
-    set<PHImageAnimator*> animators,insertQueue,deleteQueue;
+    set<PHAnimator*> animators,insertQueue,deleteQueue;
     bool insideJob;
     PHMutex * mutex;
+    
+    static map < PHThread*, list<PHAnimatorPool*> > stacks;
+    static PHMutex * staticMutex;
 public:
     PHAnimatorPool();
     ~PHAnimatorPool();
     
-    void insertAnimator(PHImageAnimator * a);
-    void removeAnimator(PHImageAnimator * a);
+    void insertAnimator(PHAnimator * a);
+    void removeAnimator(PHAnimator * a);
     void advanceAnimation(double elapsed);
     
+    void push();
+    void pop() { popPool(); }
+    static void popPool();
+    
     static PHAnimatorPool * mainAnimatorPool();
+    static PHAnimatorPool * currentAnimatorPool();
 };
 
 #endif

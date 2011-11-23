@@ -18,8 +18,9 @@
 #include "PHImageAnimator.h"
 #include "PHAnimatorPool.h"
 #include "PHBezierPath.h"
+#include "PHParticleView.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::mainAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -374,9 +375,64 @@ void PHImageView::draw()
         renderStraight();
 }
 
+void PHImageView::loadFromLua(lua_State *L)
+{
+    if (lua_istable(L, -1))
+    {
+        PHRect portion = PHWholeRect;
+        PHRect frame = PHWholeRect;
+        int tag = 0;
+        double rot = 0;
+        bool flipHoriz = false;
+        bool flipVert = false;
+        bool constrain = true;
+        double repX=1,repY=1;
+        PHColor tint = PHInvalidColor;
+
+        PHLuaGetRectField(frame, "pos");
+        PHLuaGetRectField(portion , "texCoord");
+        PHLuaGetNumberField(tag, "tag");
+        PHLuaGetAngleField(rot, "rotation");
+        PHLuaGetBoolField(flipHoriz, "horizontallyFlipped");
+        PHLuaGetBoolField(flipVert, "verticallyFlipped");
+        PHLuaGetNumberField(repX, "repeatX");
+        PHLuaGetNumberField(repY, "repeatY");
+        PHLuaGetColorField(tint, "tint");
+        PHLuaGetBoolField(constrain, "constrainCurveToFrame");
+        
+        lua_getfield(L, -1, "bezierPath");
+        PHBezierPath * bp = PHBezierPath::fromLua(L);
+        lua_pop(L,1);
+        
+        lua_pushstring(L, "alpha");
+        lua_gettable(L, -2);
+        if (lua_isnumber(L , -1))
+        {
+            if (tint == PHInvalidColor)
+                tint = PHWhiteColor;
+            tint.a *= lua_tonumber(L, -1);
+        }
+        lua_pop(L,1);
+        
+        setTintColor(tint);
+        setTextureCoordinates(portion);
+        setFrame(frame);
+        setRotation(rot);
+        setTag(tag);
+        setHorizontallyFlipped(flipHoriz);
+        setVerticallyFlipped(flipVert);
+        setRepeatX(repX);
+        setRepeatY(repY);
+        setBezierPath(bp);
+        setConstrainCurveToFrame(constrain);
+        if (bp)
+            bp->release();
+    }
+}
+
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root)
 {
-    return imageFromLua(L, root, PHAnimatorPool::mainAnimatorPool());
+    return imageFromLua(L, root, PHAnimatorPool::currentAnimatorPool());
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAnimatorPool * pool)
@@ -401,59 +457,14 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
         
         if (isV)
         {
-            PHRect portion = PHWholeRect;
-            PHRect frame = PHWholeRect;
             string clss;
-            int tag = 0;
-            double rot = 0;
-            bool flipHoriz = false;
-            bool flipVert = false;
-            bool constrain = true;
-            double repX=1,repY=1;
-            PHColor tint = PHInvalidColor;
             PHLuaGetStringField(clss, "class");
-            PHLuaGetRectField(frame, "pos");
-            PHLuaGetRectField(portion , "texCoord");
-            PHLuaGetNumberField(tag, "tag");
-            PHLuaGetAngleField(rot, "rotation");
-            PHLuaGetBoolField(flipHoriz, "horizontallyFlipped");
-            PHLuaGetBoolField(flipVert, "verticallyFlipped");
-            PHLuaGetNumberField(repX, "repeatX");
-            PHLuaGetNumberField(repY, "repeatY");
-            PHLuaGetColorField(tint, "tint");
-            PHLuaGetBoolField(constrain, "constrainCurveToFrame");
-            
-            lua_getfield(L, -1, "bezierPath");
-            PHBezierPath * bp = PHBezierPath::fromLua(L);
-            lua_pop(L,1);
-            
-            lua_pushstring(L, "alpha");
-            lua_gettable(L, -2);
-            if (lua_isnumber(L , -1))
-            {
-                if (tint == PHInvalidColor)
-                    tint = PHWhiteColor;
-                tint.a *= lua_tonumber(L, -1);
-            }
-            lua_pop(L,1);
             
             img = PHImageView::imageFromClass(clss);
             img->setAnimatorPool(pool);
             img->setImage(PHImage::imageFromPath(filename));
-            img->setTintColor(tint);
-            img->setTextureCoordinates(portion);
-            img->setFrame(frame);
-            img->setRotation(rot);
             img->setOptimizations(true);
-            img->setTag(tag);
-            img->setHorizontallyFlipped(flipHoriz);
-            img->setVerticallyFlipped(flipVert);
-            img->setRepeatX(repX);
-            img->setRepeatY(repY);
-            img->setBezierPath(bp);
-            img->setConstrainCurveToFrame(constrain);
-            if (bp)
-                bp->release();
+            img->loadFromLua(L);
         }
     }
     return img;
@@ -463,6 +474,8 @@ PHImageView * PHImageView::imageFromClass(const string & clss)
 {
     if (clss=="PHTrailImageView")
         return new PHTrailImageView();
+    if (clss=="PHParticleView")
+        return new PHParticleView();
     return new PHImageView();
 }
 

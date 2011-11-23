@@ -235,10 +235,18 @@ PHNormalImage::~PHNormalImage()
 
 void PHNormalImage::bindToTexture()
 {
-	glBindTexture(GL_TEXTURE_2D,texid);
+    glBindTexture(GL_TEXTURE_2D,texid);
 }
 
-
+PHRect PHNormalImage::textureCoordinates(const PHRect & port)
+{
+    double xc = 0.5f/actWidth;
+    double yc = 0.5f/actHeight;
+	double xC = (double)_width/actWidth;
+	double yC = (double)_height/actHeight;
+	
+    return PHRect(xC*port.x+xc,yC*(port.y+port.height)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
+}
 
 void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)
 {

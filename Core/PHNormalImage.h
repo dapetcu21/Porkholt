@@ -35,6 +35,7 @@ public:
     virtual ~PHNormalImage();
     
     void bindToTexture();
+    PHRect textureCoordinates(const PHRect & port);
     
     //immediate mode
     void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHInvalidColor); }

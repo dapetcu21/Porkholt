@@ -9,20 +9,19 @@
 #ifndef PHIMAGEANIMATOR_H
 #define PHIMAGEANIMATOR_H
 
-#include "PHMain.h"
+#include "PHAnimator.h"
 #include "PHImage.h"
 
 class PHAnimatedImage;
 class PHAnimatorPool;
 class PHImageView;
 
-class PHImageAnimator : public PHObject
+class PHImageAnimator : public PHAnimator
 {
 private:
     PHAnimatedImage * _image;
     PHImageAnimator(PHAnimatedImage * img);
     PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p);
-    virtual ~PHImageAnimator();
     
     friend class PHAnimatedImage;
     friend class PHAnimatorPool;
@@ -38,11 +37,7 @@ private:
     double timeForFrameInSection(int fr, int sec);
     int realFrame(int fr, int sec);
     
-    bool advanceManually;
-    
     bool running;
-    
-    PHAnimatorPool * pool;
     
 public:
     PHAnimatedImage * image() { return _image; }
@@ -58,11 +53,9 @@ public:
     void pause() { running = false; }
     void resume() { running = true; }
     
-    bool isAdvancingManually() { return advanceManually; }
-    void setAdvanceManually(bool s) { advanceManually = s; }
+    bool isFading() { return fade; }
+    
     void advanceAnimation(double elapsedTime);
-    void setAnimatorPool(PHAnimatorPool * p);
-    PHAnimatorPool * animatorPool() { return pool; }
     
     double currentFrameTime() { return time; }
     double remainingFrameTime() { return remaining; }
@@ -81,6 +74,8 @@ public:
     void bindCurrentFrameToTexture();
     void bindLastFrameToTexture();
     
+    PHRect currentFrameTextureCoordinates(const PHRect & port);
+    PHRect lastFrameTextureCoordinates(const PHRect & port);
 };
 
 #endif

@@ -61,3 +61,9 @@ joint.collideConnected = false;
 addJoint(joint);
 
 require("lvl_designer");
+
+--fireworks
+obj = objectWithClass("PHLObject")
+obj.pos = point(7,2)
+objectAddImage(obj,"/particle.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { velocity = vector(0,1), spreadAngle = 60} })
+addObject(obj)

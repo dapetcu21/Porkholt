@@ -14,35 +14,16 @@
 #include "PHImage.h"
 
 
-#define INIT _image(img), advanceManually(false), running(true)
+#define INIT _image(img), running(true)
 
-PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : pool(PHAnimatorPool::mainAnimatorPool()), INIT
+PHImageAnimator::PHImageAnimator(PHAnimatedImage * img) : PHAnimator(), INIT
 {
     reset();
-    if (pool)
-        pool->insertAnimator(this);
 }
 
-PHImageAnimator::PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p) : pool(p), INIT
+PHImageAnimator::PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p) : PHAnimator(p), INIT
 {
     reset();
-    if (pool)
-        pool->insertAnimator(this);
-}
-
-void PHImageAnimator::setAnimatorPool(PHAnimatorPool * p)
-{
-    if (pool)
-        pool->removeAnimator(this);
-    pool = p;
-    if (pool)
-        pool->insertAnimator(this);
-}
-
-PHImageAnimator::~PHImageAnimator()
-{
-    if (pool)
-        pool->removeAnimator(this);
 }
 
 double PHImageAnimator::timeForFrameInSection(int fr, int sec)
@@ -159,6 +140,56 @@ void PHImageAnimator::advanceAnimation(double elapsedTime)
         realframe = realFrame(frame,section);
         fade = frm->fade;
     }
+}
+
+PHRect PHImageAnimator::currentFrameTextureCoordinates(const PHRect & port)
+{
+    int actWidth,actHeight, _width, _height;
+    double xc,yc,xC,yC;
+    
+    int nt,p,r,c;
+    
+    nt = realframe/_image->ipt;
+    p = realframe-nt*_image->ipt;
+    r = p/_image->cols;
+    c = p%_image->cols;
+    
+    actWidth = _image->textures[nt].awidth;
+    actHeight = _image->textures[nt].aheight;
+    _width = _image->_width;
+    _height = _image->_height;
+    
+    xc = 0.5f/actWidth;
+    yc = 0.5f/actHeight;
+    xC = (double)_width/actWidth;
+    yC = (double)_height/actHeight;
+
+    return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
+}
+
+PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
+{
+    int actWidth,actHeight, _width, _height;
+    double xc,yc,xC,yC;
+    
+    int nt,p,r,c;
+    
+    nt = lastframe/_image->ipt;
+    p = lastframe-nt*_image->ipt;
+    r = p/_image->cols;
+    c = p%_image->cols;
+    
+    actWidth = _image->textures[nt].awidth;
+    actHeight = _image->textures[nt].aheight;
+    _width = _image->_width;
+    _height = _image->_height;
+    
+    xc = 0.5f/actWidth;
+    yc = 0.5f/actHeight;
+    xC = (double)_width/actWidth;
+    yC = (double)_height/actHeight;
+    
+    return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
 
 void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)

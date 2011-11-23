@@ -483,6 +483,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	b2World * fWorld = world->physicsWorld;
 	mutex->unlock();
 	
+    animPool->push();
+    
     PHMusicManager::singleton()->setBackgroundMusic(directory+"/backtrack.mp3");
     
 	lua_State *L = lua_open();   /* opens Lua */
@@ -643,4 +645,6 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         mutex->unlock();
         pSem1->signal();
 	}
+    
+    animPool->pop();
 }

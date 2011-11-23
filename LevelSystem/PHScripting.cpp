@@ -26,6 +26,8 @@
 #include "PHMessage.h"
 #include "PHLBomberBird.h"
 #include "PHLEggBomb.h"
+#include "PHParticleAnimator.h"
+#include "PHParticleView.h"
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
@@ -207,6 +209,8 @@ void PHScripting::loadWorld()
     PHLCamera::registerLuaInterface(L);
     PHView::registerLuaInterface(L);
     PHImageView::registerLuaInterface(L);
+    PHParticleView::registerLuaInterface(L);
+    PHParticleAnimator::registerLuaInterface(L);
     PHLMob::registerLuaInterface(L);
     PHLBull::registerLuaInterface(L);
     PHLSign::registerLuaInterface(L);
