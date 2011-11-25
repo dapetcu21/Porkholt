@@ -27,10 +27,32 @@ end
 boxW = ((792-29-12)/792)*2;
 posBox = (29/792-0.5)*2;
 
+local bezierCurve_0 = {
+	points = { n=7,
+		[0] = { point = point(7.000000,2.000000), tag = 1 },
+		[1] = { point = point(7.000000,1.000000) },
+		[2] = { point = point(7.500000,3.000000) },
+		[3] = { point = point(8.000000,3.000000) },
+		[4] = { point = point(8.000000,2.000000), tag = 2 },
+		[5] = { point = point(8.000000,3.000000), tag = 3 },
+		[6] = { point = point(7.000000,3.000000), tag = 4 }},
+	curves = { n=1,
+		[0] = range(0,5)}
+}
+
+local bezierCurve_0 = {
+	points = { n=2,
+		[0] = { point = point(8.000000,3.000000), tag = 3 },
+		[1] = { point = point(7.000000,3.000000), tag = 4 }}
+}
 
 --platforma 0
 obj = objectWithClass("PHLPlatform")
-obj.pos = point(7,2);
+obj.pos = point(7,2)
+obj.patrolPath = bezierCurve_0
+obj.patrolSpeed = 1
+--obj.patrolInCircle = true
+
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"/platform.png",-1,-0.15,2,0.3)
 platforma0=addObject(obj);
@@ -39,7 +61,7 @@ platforma0=addObject(obj);
 joint = jointWithClass("PHDistanceJoint");
 joint.body1 = platforma0;
 joint.body2 = br1;
-joint.anchor1 = point(1.0,0.1);
+joint.anchor1 = point(1.0,0.05);
 joint.anchor2 = point(-0.15,0);
 joint.collideConnected = false;
 addJoint(joint);

@@ -101,6 +101,7 @@ public:
 	void removeAllJoints();
     
     void updatePositions();
+    void updatePhysics();
 	void updateScene();
     void updateTimers(double frameInterval);
     

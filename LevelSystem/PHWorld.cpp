@@ -202,6 +202,16 @@ PHWorld::~PHWorld()
     sndPool->release();
 }
 
+void PHWorld::updatePhysics()
+{
+    double frameInterval = 1.0f/(_gameManager->framesPerSecond());
+    for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
+    {
+        PHLObject * obj = *i;
+        obj->updatePhysics();
+    }
+}
+
 void PHWorld::updatePositions()
 {
     double frameInterval = 1.0f/(_gameManager->framesPerSecond());

@@ -24,6 +24,7 @@ PHLGround::~PHLGround()
 
 void PHLGround::contactBegin(bool b,b2Contact* contact)
 {
+    PHLObject::contactBegin(b, contact);
     PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
     PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
     PHWorld * w = getWorld();
@@ -34,6 +35,7 @@ void PHLGround::contactBegin(bool b,b2Contact* contact)
 
 void PHLGround::contactEnd(bool b,b2Contact* contact)
 {
+    PHLObject::contactEnd(b, contact);
     PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
     PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
     PHWorld * w = getWorld();

@@ -629,8 +629,9 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
                 fWorld->Step(frameInterval, 6, 3);
 
             fWorld->ClearForces();
-            world->updatePositions();
+            world->updatePhysics();
             scripingEngine->scriptingStep(frameInterval);
+            world->updatePositions();
             world->updateTimers(frameInterval);
         }
         world->realTimeEventQueue()->updateTimers();

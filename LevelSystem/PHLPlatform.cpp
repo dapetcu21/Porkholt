@@ -21,6 +21,7 @@ PHLPlatform::~PHLPlatform()
 
 void PHLPlatform::contactPreSolve(bool b, b2Contact* contact, const b2Manifold* oldManifold)
 {
+    PHLObject::contactPreSolve(b, contact, oldManifold);
     if (contacts.count(contact))
     {
         contact->SetEnabled(false);
@@ -40,5 +41,6 @@ void PHLPlatform::contactPreSolve(bool b, b2Contact* contact, const b2Manifold* 
 
 void PHLPlatform::contactEnd(bool b, b2Contact * contact)
 {
+    PHLObject::contactEnd(b, contact);
     contacts.erase(contact);
 }

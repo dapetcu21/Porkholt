@@ -145,6 +145,7 @@ void PHLPlayer::updatePosition()
 
 void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse)
 {
+    PHLObject::contactPostSolve(b, contact, impulse);
     touchesSomething = 1.0f;
     b2Manifold * man = contact->GetManifold();
     b2WorldManifold wMan;

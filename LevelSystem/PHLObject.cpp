@@ -84,7 +84,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0)
 {
 }
 
@@ -127,6 +127,7 @@ PHLObject::~PHLObject()
         delete (PHBezierFixtureProps*)(def->userData);
         delete def;
     }
+    setPatrolPath(NULL);
     for (list<b2FixtureDef*>::iterator i = fixturesDefinitions.begin(); i!=fixturesDefinitions.end(); i++)
     {
         delete (*i)->shape;
@@ -417,7 +418,18 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
     PHLuaGetNumberField(maxSpeedY,"maxVelocityY");
     PHLuaGetRectField(poofRect, "poofRect");
     PHLuaGetBoolField(shouldFlipUponLoad,"flipped");
-	
+    PHLuaGetBoolField(patCircle, "patrolInCircle");
+    PHLuaGetNumberField(patSpeed, "patrolSpeed");
+    lua_getfield(L, -1, "patrolPath");
+    PHBezierPath * b = PHBezierPath::fromLua(L);
+    setPatrolPath(b);
+    if (b)
+        b->release();
+    lua_pop(L, 1);
+    PHLuaGetNumberField(patPos,"patrolPosition");
+    PHLuaGetBoolField(patRev,"patrolReversed");
+    
+    
 	PHRect min;
 	min.x = 0x3f3f3f3f;
 	min.y = 0x3f3f3f3f;
@@ -630,6 +642,142 @@ PHPoint PHLObject::centerOfMass()
 }
 
 #pragma mark -
+#pragma mark Patrol
+
+void PHLObject::setPatrolPath(PHBezierPath *p)
+{
+    if (p)
+        p->retain();
+    if (patrol)
+        patrol->release();
+    patrol = p;
+}
+
+void PHLObject::updatePatrol(double elapsed)
+{
+    if (!patrol)
+        return;
+    const vector<PHBezierPath::anchorPoint> & v = patrol->calculatedVertices();
+    int n = v.size();
+    if (!n) return;
+    bool rebuild = (&v!=patSignature);
+    if (rebuild)
+    {
+        patSignature = &v;
+        patP = 0;
+        patLength = 0;
+        for (int i=1; i<n; i++)
+        {
+            PHPoint delta = v[i].point - v[i-1].point;
+            double l = delta.length();
+            if (patP == i-1 && l<=patLength-lastPos)
+            {
+                lastPos += l;
+                patP = i;
+            }
+            patLength += l;
+        }
+        jointLength = (v[0].point - v[n-1].point).length();
+    }
+    patPos+=(patRev?(-1):1)*patSpeed*elapsed;
+    if (patCircle)
+    {
+        while (patPos<0)
+            patPos+=patLength+jointLength;
+        while (patPos>=patLength+jointLength)
+            patPos-=patLength+jointLength;
+    } else {
+        if (patPos<0 && !patRev)
+            patPos = 0;
+        if (patPos>patLength && patRev)
+            patPos = patLength;
+        while (1)
+        {
+            if (patPos<=0)
+            {
+                patPos=-patPos;
+                patRev = false;
+            }
+            if (patPos>=patLength)
+            {
+                patPos=2*patLength-patPos;
+                patRev = true;
+            }
+            if (patPos>=0 && patPos<=patLength)
+                break;
+        }
+    }
+    double delta = patPos - lastPos;
+    do {
+        int nx = patP+1;
+        if (nx>=n)
+            nx-=n;
+        double d  = (v[nx].point-v[patP].point).length();
+        if (d<=delta)
+        {
+            delta-=d;
+            patP = nx;
+            lastPos+=d;
+        } else
+            break;
+    } while (1);
+    while (delta<0)
+    {
+        int pv = patP-1;
+        if (pv<0)
+            pv+=n;
+        double d = (v[patP].point-v[pv].point).length();
+        delta+=d;
+        patP = pv;
+        lastPos-=d;
+    }
+    int nx = patP+1;
+    if (nx>=n)
+        nx-=n;
+    double d  = delta/(v[nx].point-v[patP].point).length();
+    PHPoint newPoint = v[patP].point*(1-d)+v[nx].point*d;
+    if (body && ! rebuild)
+    {
+        if (body->GetType() == b2_staticBody)
+            body->SetType(b2_kinematicBody);
+        b2Vec2 v(body->GetPosition());
+        v.x = (newPoint.x - v.x)/elapsed;
+        v.y = (newPoint.y - v.y)/elapsed;
+        body->SetLinearVelocity(v);
+    } else
+        setPosition(newPoint);
+}
+
+void PHLObject::updatePhysics()
+{
+    double elapsed = 1.0f/_gameManager->framesPerSecond();
+    PHPoint pp = pos;
+    updatePatrol(elapsed);
+    patLastVel = patVel;
+    if (body && patrol)
+    {
+        b2Vec2 v = body->GetLinearVelocity();
+        patVel = PHPoint(v.x,v.y);
+        PHPoint delta = patVel-patLastVel;
+        if (!delta.x && !delta.y) return;
+        b2ContactEdge * cl = body->GetContactList();
+        while (cl)
+        {
+            b2Body * b = cl->other;
+            if (b)
+            {
+                b2Vec2 v(b->GetLinearVelocity());
+                v.x+=delta.x;
+                v.y+=delta.y;
+                b->SetLinearVelocity(v);
+            }
+            cl = cl->next;
+        }
+    } else
+        patVel = (pos-pp)/elapsed;
+}
+
+#pragma mark -
 #pragma mark Some other stuff
 
 void PHLObject::updatePosition()
@@ -722,12 +870,12 @@ bool PHLObject::collidesWith(PHLObject * obj)
 
 void PHLObject::contactBegin(bool b,b2Contact* contact)
 {
-    
+    contacts.insert(contact);
 }
 
 void PHLObject::contactEnd(bool b,b2Contact* contact)
 {
-    
+    contacts.erase(contact);
 }
 
 void PHLObject::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold)
@@ -1156,6 +1304,28 @@ PHLuaBoolGetter(PHLObject, isFlipped);
 PHLuaBoolSetter(PHLObject, setFlipped);
 PHLuaDefineCall(PHLObject, flip);
 
+static int PHLObject_setPatrolPath(lua_State * L)
+{
+    PHLObject * o = (PHLObject*)PHLuaThisPointer(L);
+    lua_pushvalue(L, 2);
+    PHBezierPath * bp = PHBezierPath::fromLua(L);
+    lua_pop(L, 1);
+    o->setPatrolPath(bp);
+    if (bp)
+        bp->release();
+    return 0;
+}
+
+PHLuaNumberGetter(PHLObject, patrolSpeed);
+PHLuaNumberSetter(PHLObject, setPatrolSpeed);
+PHLuaBoolGetter(PHLObject, patrolInCircle);
+PHLuaBoolSetter(PHLObject, setPatrolInCircle);
+PHLuaNumberGetter(PHLObject, patrolLength)
+PHLuaNumberGetter(PHLObject, patrolPosition)
+PHLuaNumberSetter(PHLObject, setPatrolPosition)
+PHLuaBoolGetter(PHLObject, patrolReversed)
+PHLuaBoolSetter(PHLObject, setPatrolReversed)
+
 void PHLObject::registerLuaInterface(lua_State * L)
 {
     lua_getglobal(L, "PHLObject");
@@ -1197,6 +1367,17 @@ void PHLObject::registerLuaInterface(lua_State * L)
     PHLuaAddMethod(PHLObject, isFlipped);
     PHLuaAddMethod(PHLObject, setFlipped);
     PHLuaAddMethod(PHLObject, flip);
+    
+    PHLuaAddMethod(PHLObject, setPatrolPath);
+    PHLuaAddMethod(PHLObject, patrolSpeed);
+    PHLuaAddMethod(PHLObject, setPatrolSpeed);
+    PHLuaAddMethod(PHLObject, patrolInCircle);
+    PHLuaAddMethod(PHLObject, setPatrolInCircle);
+    PHLuaAddMethod(PHLObject, patrolLength)
+    PHLuaAddMethod(PHLObject, patrolPosition)
+    PHLuaAddMethod(PHLObject, setPatrolPosition)
+    PHLuaAddMethod(PHLObject, patrolReversed)
+    PHLuaAddMethod(PHLObject, setPatrolReversed)
     
     lua_pop(L, 1);
 }

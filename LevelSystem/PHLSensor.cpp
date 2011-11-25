@@ -76,6 +76,7 @@ void PHLSensor::objectExited(PHLObject * obj)
 
 void PHLSensor::contactBegin(bool b,b2Contact* contact)
 {
+    PHLObject::contactBegin(b, contact);
     PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
     PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
     if (o1==this)
@@ -87,6 +88,7 @@ void PHLSensor::contactBegin(bool b,b2Contact* contact)
 
 void PHLSensor::contactEnd(bool b,b2Contact* contact)
 {
+    PHLObject::contactEnd(b, contact);
     PHLObject * o1 = (PHLObject*)contact->GetFixtureA()->GetBody()->GetUserData();
     PHLObject * o2 = (PHLObject*)contact->GetFixtureB()->GetBody()->GetUserData();
     if (o1==this)

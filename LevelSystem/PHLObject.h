@@ -26,6 +26,7 @@ struct b2FixtureDef;
 class b2Fixture;
 class PHLevelController;
 class PHGameManager;
+class PHBezierPath;
 
 class PHLObject : public PHObject
 {
@@ -129,6 +130,7 @@ public:
     static bool initialized;
 	static PHLObject * objectWithClass(const string & str);
 	
+    virtual void updatePhysics();
     virtual void updatePosition();
     virtual void updateView();
     
@@ -141,11 +143,41 @@ public:
     void poof();
     
 protected:
+    PHBezierPath * patrol;
+    double patSpeed;
+    bool patCircle;
+    double patLength;
+    double jointLength;
+    double patPos;
+    PHPoint patLastVel;
+    PHPoint patVel;
+    bool patRev;
+    void updatePatrol(double elapsed);
+    
+    const void * patSignature;
+    int patP;
+    double lastPos;
+public:
+    PHBezierPath * patrolPath() { return patrol; }
+    void setPatrolPath(PHBezierPath * p);
+    double patrolSpeed() { return patSpeed; }
+    void setPatrolSpeed(double p) { patSpeed = p; }
+    bool patrolInCircle() { return patCircle; }
+    void setPatrolInCircle(bool c) { patCircle = c; }
+    double patrolLength() { return patLength+(patCircle?jointLength:0); }
+    double patrolPosition() { return patPos; }
+    void setPatrolPosition(double d) { patPos = d; }
+    bool patrolReversed() { return patRev; }
+    void setPatrolReversed(bool pr) { patRev = pr; }
+    
+protected:
     PHPoint offset;
     
-private:
+protected:
     PHRect poofRect;
     void _poof();
+    
+    set<b2Contact*> contacts;
     
     virtual bool customizeFixture(lua_State * L, b2FixtureDef & fixtureDef);
     

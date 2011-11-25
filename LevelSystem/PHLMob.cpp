@@ -34,6 +34,7 @@ double PHLMob::speedNeededForDamagingFixture(b2Fixture * f)
 
 void PHLMob::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold)
 {
+    PHLObject::contactPreSolve(b, contact, oldManifold);
     if (hinvuln) return;
     PHLPlayer * p = getWorld()->getPlayer();
     if (p->hurt()) return;
