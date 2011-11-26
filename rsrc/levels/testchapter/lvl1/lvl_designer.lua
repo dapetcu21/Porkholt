@@ -1,4 +1,4 @@
---This file was generated with the Porkholt Level Designer
+ --This file was generated with the Porkholt Level Designer
 --Do not modify this file. If you do, please note that this
 --file is reset every time you use the Level Designer
 
@@ -131,21 +131,6 @@ sensor.scripting = [[sensor]]
 sensor.pos = point(2.201172,0.768594)
 objectAddBox(obj,-0.250000,-0.250000,0.500000,0.500000)
 addObject(sensor)
-
-local obj8 = objectWithClass("PHLObject")
-obj8.levelDes = true
-obj8.rotation = 0.000000
-obj8.pos = point(3.244219,1.082617)
-objectAddImage(obj,[[/master_body.png]],6.957336,-0.372015,1.400000,1.058473)
-objectAddImage(obj,[[/master_face.png]],6.957336,-0.372015,1.400000,1.058473)
-addObject(obj8)
-
-local obj9 = objectWithClass("PHLObject")
-obj9.levelDes = true
-obj9.rotation = 0.000000
-obj9.pos = point(3.244219,1.082617)
-objectAddImage(obj,[[bird_nostroke.png]],5.779306,2.348841,0.750000,0.726471)
-addObject(obj9)
 
 local joint
 

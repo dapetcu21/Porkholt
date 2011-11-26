@@ -154,7 +154,7 @@ void PHView::render()
 		
 		PHRect bounds = _gameManager->screenBounds();
 		
-		optimizeOut =	(minX<bounds.x && maxX<bounds.x) || (minY<bounds.y && maxY<bounds.y) ||
+		optimizeOut = (minX<bounds.x && maxX<bounds.x) || (minY<bounds.y && maxY<bounds.y) ||
 						(minX>bounds.x+bounds.width && maxX>bounds.x+bounds.width) || (minY>bounds.y+bounds.height && maxY>bounds.y+bounds.height);
 	}
 	

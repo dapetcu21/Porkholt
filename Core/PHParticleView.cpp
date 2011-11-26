@@ -163,7 +163,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         }
         for (int j=0; j<4; j++)
         {
-            if (i&&j || !i)
+            if ((i&&j) || !i)
             {
                 pp[j].rotate(p.rotation);
                 pp[j]+=p.position;

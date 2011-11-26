@@ -2,23 +2,23 @@
 --Do not modify this file. If you do, please note that this
 --file is reset every time you use the Level Designer
 
-local player = objectWithClass("PHLPlayer")
-player.levelDes = true
-player.maximumForce = 40.000000
-player.scripting = [[player]]
-player.maxVelocityX = 2.500000
-player.rotation = 0.000000
-player.barHidden = true
-player.trail = false
-player.pos = point(2.357300,0.756473)
-addObject(player)
-
 local obj0 = objectWithClass("PHLAuxLayer")
 obj0.levelDes = true
 obj0.name = 20.000000
 obj0.rotation = 0.000000
 obj0.pos = point(0.000000,0.000000)
 addObject(obj0)
+
+local player = objectWithClass("PHLPlayer")
+player.levelDes = true
+player.maximumForce = 40.000000
+player.scripting = [[player]]
+player.maxVelocityX = 2.500000
+player.barHidden = true
+player.rotation = 0.000000
+player.trail = false
+player.pos = point(2.357300,0.756473)
+addObject(player)
 
 local camera = objectWithClass("PHLCamera")
 camera.levelDes = true
@@ -430,8 +430,8 @@ addObject(obj45)
 
 local obj46 = objectWithClass("PHLBull")
 obj46.levelDes = true
-obj46.rotation = 0.000000
 obj46.flipped = true
+obj46.rotation = 0.000000
 obj46.pos = point(26.468679,27.596209)
 addObject(obj46)
 

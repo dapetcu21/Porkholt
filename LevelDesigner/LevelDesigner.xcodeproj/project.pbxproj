@@ -59,6 +59,9 @@
 		C14DC668143C23D000F0C82D /* WorldController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC667143C23D000F0C82D /* WorldController.mm */; };
 		C14DC66B143C2C5B00F0C82D /* PLObjectView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */; };
 		C14DC687143EEABA00F0C82D /* FixtureViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C14DC686143EEABA00F0C82D /* FixtureViewController.mm */; };
+		C1503BDA1480EF37002358B5 /* PHAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1503BD21480EF37002358B5 /* PHAnimator.cpp */; };
+		C1503BDB1480EF37002358B5 /* PHParticleAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1503BD41480EF37002358B5 /* PHParticleAnimator.cpp */; };
+		C1503BDC1480EF37002358B5 /* PHParticleView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1503BD61480EF37002358B5 /* PHParticleView.cpp */; };
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
 		C15331FA1425DD61005E6806 /* PLDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F71425DD61005E6806 /* PLDocument.xib */; };
 		C153A1841443642E00DCD01F /* PHFileManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C153A1831443642E00DCD01F /* PHFileManager.mm */; };
@@ -214,6 +217,12 @@
 		C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLObjectView.mm; sourceTree = "<group>"; };
 		C14DC685143EEABA00F0C82D /* FixtureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixtureViewController.h; sourceTree = "<group>"; };
 		C14DC686143EEABA00F0C82D /* FixtureViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FixtureViewController.mm; sourceTree = "<group>"; };
+		C1503BD21480EF37002358B5 /* PHAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimator.cpp; sourceTree = "<group>"; };
+		C1503BD31480EF37002358B5 /* PHAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimator.h; sourceTree = "<group>"; };
+		C1503BD41480EF37002358B5 /* PHParticleAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHParticleAnimator.cpp; sourceTree = "<group>"; };
+		C1503BD51480EF37002358B5 /* PHParticleAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHParticleAnimator.h; sourceTree = "<group>"; };
+		C1503BD61480EF37002358B5 /* PHParticleView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHParticleView.cpp; sourceTree = "<group>"; };
+		C1503BD71480EF37002358B5 /* PHParticleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHParticleView.h; sourceTree = "<group>"; };
 		C15331F61425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C15331F81425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/PLDocument.xib; sourceTree = "<group>"; };
 		C153A1831443642E00DCD01F /* PHFileManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHFileManager.mm; sourceTree = SOURCE_ROOT; };
@@ -396,6 +405,12 @@
 		C127D2F6143A1AF6004DEB16 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C1503BD21480EF37002358B5 /* PHAnimator.cpp */,
+				C1503BD31480EF37002358B5 /* PHAnimator.h */,
+				C1503BD41480EF37002358B5 /* PHParticleAnimator.cpp */,
+				C1503BD51480EF37002358B5 /* PHParticleAnimator.h */,
+				C1503BD61480EF37002358B5 /* PHParticleView.cpp */,
+				C1503BD71480EF37002358B5 /* PHParticleView.h */,
 				C125DFBE1450B76C0068E76E /* PHInvocation.h */,
 				C127D2F7143A1AF6004DEB16 /* PHAccelInterface.h */,
 				C127D2F8143A1AF6004DEB16 /* PHAnimatedImage.cpp */,
@@ -769,6 +784,9 @@
 				C16D477E146126790026D475 /* PLObjectSelector.m in Sources */,
 				C1B3C7F414628336000FD6DF /* PLDotView.cpp in Sources */,
 				C1B3C7F7146287CC000FD6DF /* PLJointDot.mm in Sources */,
+				C1503BDA1480EF37002358B5 /* PHAnimator.cpp in Sources */,
+				C1503BDB1480EF37002358B5 /* PHParticleAnimator.cpp in Sources */,
+				C1503BDC1480EF37002358B5 /* PHParticleView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
