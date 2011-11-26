@@ -1,9 +1,25 @@
 require("init_common");
 
-lyr = { scale = 0.3; }
-for i=-2,3 do
-	layerAddImage(lyr,"/hills.png",i*6/0.3,0,6.06/0.3,6/5*2/0.3);
-end
+local ar = 1600.0/282.0;
+lyr = { scale = 0.15; }
+local width = 6
+local rep = 10
+local posy = 0.8
+local swatch_height = 10
+layerAddImage(lyr,"/hills_back.png",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_back_swatch.png",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
+ar = 1600.0/256.0
+addLayer(lyr);
+lyr = { scale = 0.4 }
+posy = 0.75
+layerAddImage(lyr,"/hills_middle.png",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_middle_swatch.png",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
+addLayer(lyr);
+ar = 1600.0/203.0
+lyr = { scale = 0.8 }
+posy = 0.6
+layerAddImage(lyr,"/hills_front.png",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_front_swatch.png",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
 addLayer(lyr);
 
 lyr = { scale = 0.2; }
@@ -40,18 +56,18 @@ local bezierCurve_0 = {
 		[0] = range(0,5)}
 }
 
-local bezierCurve_0 = {
-	points = { n=2,
-		[0] = { point = point(8.000000,3.000000), tag = 3 },
-		[1] = { point = point(7.000000,3.000000), tag = 4 }}
-}
+--local bezierCurve_0 = {
+--	points = { n=2,
+--		[0] = { point = point(8.000000,3.000000), tag = 3 },
+--		[1] = { point = point(7.000000,3.000000), tag = 4 }}
+--}
 
 --platforma 0
 obj = objectWithClass("PHLPlatform")
 obj.pos = point(7,2)
 obj.patrolPath = bezierCurve_0
 obj.patrolSpeed = 1
---obj.patrolInCircle = true
+obj.patrolInCircle = true
 
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
 objectAddImage(obj,"/platform.png",-1,-0.15,2,0.3)
@@ -86,6 +102,14 @@ require("lvl_designer");
 
 --fireworks
 obj = objectWithClass("PHLObject")
-obj.pos = point(7,2)
-objectAddImage(obj,"/particle.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { velocity = vector(0,1), spreadAngle = 60} })
+obj.pos = point(4,2)
+objectAddImage(obj,"/particle.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { 
+	velocity = vector(2,2), 
+	spreadAngle = 60, 
+	velocityVariation = 2, 
+	initialSize = point(0.3,0.3), 
+	finalSize = point(0.7,0.7), 
+	initialColor = rgba(1,1,1,1), 
+	finalColor = rgba(1,1,1,0.5)
+	} })
 addObject(obj)
