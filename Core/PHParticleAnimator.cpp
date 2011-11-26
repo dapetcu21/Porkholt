@@ -253,41 +253,71 @@ void PHParticleAnimator::clear()
     heap.clear();
 }
 
-PHParticleAnimator::PHParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), initSize(0.05,0.05), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotQuot(0)
+PHParticleAnimator::PHParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), initSize(0.1,0.1), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotQuot(0), genQueue(0)
+{}
+
+void PHParticleAnimator::animateParticle(PHParticleAnimator::particle_state * p, double elapsed)
 {
-    particle_state * ps;
-    ps = new particle_state;
-    ps->particle.color = PHWhiteColor;
-    ps->particle.position = PHPoint(0,0);
-    ps->particle.rotation = 0;
-    ps->particle.size = PHSize(0.05,0.05);
-    heap.push_back(ps);
-    
-    ps = new particle_state;
-    ps->particle.color = PHWhiteColor;
-    ps->particle.position = PHPoint(0,0.5);
-    ps->particle.rotation = 0;
-    ps->particle.size = PHSize(0.05,0.05);
-    heap.push_back(ps);
-    
-    ps = new particle_state;
-    ps->particle.color = PHWhiteColor;
-    ps->particle.position = PHPoint(0,0.25);
-    ps->particle.rotation = 0;
-    ps->particle.size = PHSize(0.05,0.05);
-    heap.push_back(ps);
-    
-    ps = new particle_state;
-    ps->particle.color = PHWhiteColor;
-    ps->particle.position = PHPoint(0,1);
-    ps->particle.rotation = 0;
-    ps->particle.size = PHSize(0.05,0.05);
-    heap.push_back(ps);
+    p->lifespan -= elapsed;
+    if (p->lifespan<=0) return;
+    p->particle.position += p->velocity*elapsed;
+    p->velocity += grav*elapsed;
+    double q = (p->lifespan)/(p->totalLife);
+    p->particle.size = initSize*q + endSize*(1-q);
+    p->particle.color = PHColor(initColor.r*q+endColor.r*(1-q),
+                                initColor.g*q+endColor.g*(1-q),
+                                initColor.b*q+endColor.b*(1-q),
+                                initColor.a*q+endColor.a*(1-q));
 }
 
 void PHParticleAnimator::advanceAnimation(double elapsedTime)
 {
     mutex->lock();
-    
+    if (playing)
+    {
+        if (generating)
+        {
+            genQueue+=elapsedTime;
+            genFor-=elapsedTime;
+            if (genFor<=0)
+            {
+                genFor=0;
+                generating = false;
+            }
+        }
+        int n = heap.size();
+        for (int i=0; i<n; i++)
+            animateParticle(heap[i],elapsedTime);
+        while (hp_top() && hp_top()->lifespan<=0)
+            delete hp_pop();
+        
+        double interval = 1.0f/pps;
+        while (genQueue>=interval)
+        {
+            genQueue-=interval;
+            particle_state * st = new particle_state;
+            double r1 = (double)rand()/RAND_MAX;
+            double r2 = (double)rand()/RAND_MAX;
+            PHPoint p;
+            if (elArea)
+                p = PHPoint((cos(r2*M_PI*2)*r2+1)/2,(sin(r1*M_PI*2)*r2+1)/2);
+            else
+                p = PHPoint(r1,r2);
+            p.x = genArea.x + p.x*genArea.width;
+            p.y = genArea.y + p.y*genArea.height;
+            st->particle.position = p;
+            st->particle.rotation = 0;
+            st->particle.size = initSize;
+            st->particle.color = initColor;
+            //double ang = PHAngleFromNormalizedVector(vel);
+            //double module = vel.length()+((double)rand()/RAND_MAX)*deltavel;
+            //ang += (((double)rand()/RAND_MAX)-0.5)*spreadAngl;
+            st->velocity = vel;//PHPoint(cos(ang)*module,sin(ang)*module);
+            st->lifespan = st->totalLife = lifetime+((double)rand()/RAND_MAX)*deltalifetime;
+            animateParticle(st,genQueue);
+            if (st->lifespan>0)
+                hp_push(st);
+        }
+    }
     mutex->unlock();
 }

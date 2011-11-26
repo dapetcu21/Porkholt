@@ -249,6 +249,7 @@ function colorWithRGBA(r,g,b,a)
 end
 
 rgba = colorWithRGBA
+color = rgba
 
 function point(x,y)
     return {

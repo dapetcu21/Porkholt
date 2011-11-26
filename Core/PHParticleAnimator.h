@@ -105,6 +105,7 @@ private:
         double lifespan;
         double totalLife;
     };
+    double genQueue;
     
     vector<particle_state*> heap;
     
@@ -115,6 +116,8 @@ private:
     particle_state * hp_top();
     particle_state * hp_pop();
     void hp_push(particle_state * p);
+    
+    void animateParticle(particle_state * p,double elapsed);
 };
 
 #undef setter

@@ -113,7 +113,81 @@ void PHParticleView::registerLuaInterface(lua_State * L)
 void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PHColor & tint)
 {
     vector<PHParticleAnimator::particle> * particles = (vector<PHParticleAnimator::particle>*)p;
-    if (!p) return;
+    if (!p || !particles->size()) return;
+    int n = particles->size();
+    int nrVertices = particles->size()*6-2;
+    GLfloat * vertices = new GLfloat[nrVertices*2];
+    GLfloat * textureCoords = new GLfloat[nrVertices*2];
+    GLfloat * colors = new GLfloat[nrVertices*4];
+    GLfloat * v = vertices;
+    GLfloat * txC = textureCoords;
+    GLfloat * clr = colors;
+    GLfloat stdTxC[8] = 
+    {
+        texCoord.x, texCoord.y,
+        texCoord.x+texCoord.width, texCoord.y,
+        texCoord.x, texCoord.y+texCoord.height,
+        texCoord.x+texCoord.width, texCoord.y+texCoord.height
+    };
+    for (int i = 0; i<n; i++)
+    {
+        PHParticleAnimator::particle & p = particles->at(i);
+        const PHSize & sz = p.size;
+        PHPoint pp[4];
+        pp[0] = PHPoint(-sz.width/2,-sz.height/2);
+        pp[1] = PHPoint(+sz.width/2,-sz.height/2);
+        pp[2] = PHPoint(-sz.width/2,+sz.height/2);
+        pp[3] = PHPoint(+sz.width/2,+sz.height/2);
+        if (i)
+        {
+            v[0] = v[-2];
+            v[1] = v[-1];
+            pp[0].rotate(p.rotation);
+            pp[0]+=p.position;
+            v[2] = pp[0].x; v[3] = pp[0].y;
+            txC[0] = stdTxC[6];
+            txC[1] = stdTxC[7];
+            txC[2] = stdTxC[0];
+            txC[3] = stdTxC[1];
+            clr[0] = clr[-4];
+            clr[1] = clr[-3];
+            clr[2] = clr[-2];
+            clr[3] = clr[-1];
+            clr[4] = p.color.r;
+            clr[5] = p.color.g;
+            clr[6] = p.color.b;
+            clr[7] = p.color.a;
+            v+=4;
+            txC+=4;
+            clr+=8;
+        }
+        for (int j=0; j<4; j++)
+        {
+            if (i&&j || !i)
+            {
+                pp[j].rotate(p.rotation);
+                pp[j]+=p.position;
+            }
+            v[(j<<1)] = pp[j].x; v[(j<<1)+1] = pp[j].y;
+            clr[(j<<2)] = p.color.r;
+            clr[(j<<2)+1] = p.color.g;
+            clr[(j<<2)+2] = p.color.b;
+            clr[(j<<2)+3] = p.color.a;
+        }
+        memcpy(txC, stdTxC, sizeof(GLfloat)*8);
+        v+=8;
+        txC+=8;
+        clr+=16;
+    }
+    PHGLSetStates(PHGLTexture | PHGLVertexArray | PHGLTextureCoordArray | PHGLColorArray);
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
+    glColorPointer(4, GL_FLOAT, 0, colors);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, nrVertices);
+    
+    delete [] vertices;
+    delete [] colors;
+    delete [] textureCoords;
 }
 
 void PHParticleView::render()

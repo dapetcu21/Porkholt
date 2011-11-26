@@ -48,7 +48,6 @@ PHColor PHColor::fromLua(lua_State * L, int index)
     lua_pop(L, 1);
     
     lua_getfield(L, index, "a");
-    lua_gettable(L, -2);
     if (lua_isnumber(L, -1))
         color.a = lua_tonumber(L, -1);
     lua_pop(L, 1);
@@ -287,6 +286,26 @@ bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2)
             PHPointInRect(r2.corner(1), r1)||
             PHPointInRect(r2.corner(2), r1)||
             PHPointInRect(r2.corner(3), r1));
+}
+
+double PHAngleFromNormalizedVector(PHPoint vec)
+{
+    double ang;
+    if (abs(vec.x)<0.5)
+    {
+        ang = acos(vec.x);
+        if (vec.y<0)
+            ang = M_PI*2-ang;
+    } else {
+        ang = asin(vec.y);
+        if (vec.x<0)
+            ang = M_PI-ang;
+    }
+    if (ang>=M_PI*2)
+        ang-=M_PI*2;
+    if (ang<0)
+        ang+=M_PI*2;
+    return ang;
 }
 
 void PHGLRotate(double angle)
