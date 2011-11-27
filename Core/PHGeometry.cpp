@@ -290,6 +290,7 @@ bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2)
 
 double PHAngleFromNormalizedVector(PHPoint vec)
 {
+    vec.normalize();
     double ang;
     if (abs(vec.x)<0.5)
     {

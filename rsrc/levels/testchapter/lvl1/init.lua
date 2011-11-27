@@ -104,6 +104,7 @@ require("lvl_designer");
 obj = objectWithClass("PHLObject")
 obj.pos = point(4,2)
 objectAddImage(obj,"/particle.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { 
+	particlesPerSecond = 10,
 	velocity = vector(2,2), 
 	spreadAngle = 60, 
 	velocityVariation = 2, 

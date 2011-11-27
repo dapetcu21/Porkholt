@@ -270,6 +270,11 @@ void PHParticleAnimator::animateParticle(PHParticleAnimator::particle_state * p,
                                 initColor.a*q+endColor.a*(1-q));
 }
 
+void PHParticleAnimator::setVelocity(const PHPoint &v)
+{
+    mutex->lock(); vel = v; mutex->unlock();
+}
+
 void PHParticleAnimator::advanceAnimation(double elapsedTime)
 {
     mutex->lock();
@@ -309,10 +314,10 @@ void PHParticleAnimator::advanceAnimation(double elapsedTime)
             st->particle.rotation = 0;
             st->particle.size = initSize;
             st->particle.color = initColor;
-            //double ang = PHAngleFromNormalizedVector(vel);
-            //double module = vel.length()+((double)rand()/RAND_MAX)*deltavel;
-            //ang += (((double)rand()/RAND_MAX)-0.5)*spreadAngl;
-            st->velocity = vel;//PHPoint(cos(ang)*module,sin(ang)*module);
+            double ang = PHAngleFromNormalizedVector(vel);
+            double module = vel.length()+((double)rand()/RAND_MAX)*deltavel;
+            ang += (((double)rand()/RAND_MAX)-0.5)*spreadAngl;
+            st->velocity = PHPoint(cos(ang)*module,sin(ang)*module);
             st->lifespan = st->totalLife = lifetime+((double)rand()/RAND_MAX)*deltalifetime;
             animateParticle(st,genQueue);
             if (st->lifespan>0)

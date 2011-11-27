@@ -54,7 +54,8 @@ public:
     getter(bool,elipticalArea,elArea);
     setter(bool,setElipticalArea,elArea);
     getter(PHPoint,velocity,vel);
-    setter_(PHPoint,setVelocity,vel);
+    void setVelocity(const PHPoint & p);
+//    setter_(PHPoint,setVelocity,vel);
     getter(double,velocityVariation,deltavel);
     setter(double,setVelocityVariation,deltavel);
     getter(double,spreadAngle,spreadAngl);
