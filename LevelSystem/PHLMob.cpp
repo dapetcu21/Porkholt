@@ -12,6 +12,8 @@
 #include "PHWorld.h"
 #include <Box2D/Box2D.h>
 
+PHL_REGISTEROBJECT(PHLMob)
+
 PHLMob::PHLMob() : PHLNPC(), damage(1)
 {
     _class = "PHLMob";

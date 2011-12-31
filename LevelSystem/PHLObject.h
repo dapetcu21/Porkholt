@@ -28,6 +28,8 @@ class PHLevelController;
 class PHGameManager;
 class PHBezierPath;
 
+#define PHL_REGISTEROBJECT(clss) PH_REGISTERCLASS(PHLObject::initMap, #clss, clss)
+
 class PHLObject : public PHObject
 {
 protected:
@@ -125,9 +127,7 @@ public:
 	virtual void loadFromLua(lua_State * L, b2World * _world, PHLevelController * lvlc);
 	virtual void loadView();
 	
-    typedef PHLObject * (*initializer)();
-    static map<string,initializer> initMap;
-    static bool initialized;
+    static map<string,PHAllocator> * initMap;
 	static PHLObject * objectWithClass(const string & str);
 	
     virtual void updatePhysics();

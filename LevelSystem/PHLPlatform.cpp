@@ -9,6 +9,8 @@
 #include "PHLPlatform.h"
 #include <Box2D/Box2D.h>
 
+PHL_REGISTEROBJECT(PHLPlatform)
+
 PHLPlatform::PHLPlatform() : PHLObject()
 {
     

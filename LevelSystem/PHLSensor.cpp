@@ -10,6 +10,8 @@
 #include <Box2D/Box2D.h>
 #include "PHLua.h"
 
+PHL_REGISTEROBJECT(PHLSensor)
+
 PHLSensor::PHLSensor() : markAsSensor(true)
 {
     _class = "PHLSensor";

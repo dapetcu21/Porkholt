@@ -25,6 +25,24 @@
 #include <utility>
 using namespace std;
 
+#ifdef _MSC_VER
+
+    #define PH_CCALL __cdecl
+    #pragma section(".CRT$XCU",read)
+    #define PH_INITIALIZER(f) \
+    static void __cdecl f(void); \
+    __declspec(allocate(".CRT$XCU")) void (__cdecl*f##_)(void) = f; \
+    static void __cdecl f(void)
+
+#elif defined(__GNUC__)
+
+    #define PH_CCALL
+    #define PH_INITIALIZER(f) \
+    static void f(void) __attribute__((constructor)); \
+    static void f(void)
+
+#endif
+
 #ifdef __APPLE__
     #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
         #define PH_IPHONE_OS
@@ -36,6 +54,17 @@ using namespace std;
     #endif
 	#define PH_DARWIN
 #endif
+
+typedef void * (*PHAllocator)(void);
+
+template <class T>
+void * PHAlloc(void)
+{
+    return (void*) new T;
+}
+
+//map<string,PHAllocator> * list;
+#define PH_REGISTERCLASS(list,name,clss) PH_INITIALIZER( PHRegister_ ## clss ) { if (!list) list = new map<string,PHAllocator>; list->insert(make_pair<string,void * (*)(void)>(name,PHAlloc<clss>)); }
 
 #ifdef PH_IPHONE_OS
 	#import <OpenGLES/ES1/gl.h>

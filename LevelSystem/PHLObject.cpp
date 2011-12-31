@@ -9,32 +9,16 @@
 
 #include "PHLObject.h"
 
-#include "PHLCamera.h"
 #include "PHGameManager.h"
-#include "PHLPlatform.h"
-#include "PHLAuxLayer.h"
-#include "PHLPlayer.h"
+
 #include "PHEventQueue.h"
 #include "PHLAnimation.h"
-#include "PHLSensor.h"
-#include "PHLGround.h"
-#include "PHLSign.h"
-#include "PHLBull.h"
-#include "PHLMob.h"
-#include "PHLLevelEnd.h"
-#include "PHLPit.h"
 #include "PHLevelController.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
 #include "PHImageView.h"
-#include "PHLPowerup.h"
-#include "PHLShieldPowerup.h"
-#include "PHLHPPowerup.h"
-#include "PHLPowerPowerup.h"
 #include "PHBezierPath.h"
-#include "PHLBomberBird.h"
-#include "PHLEggBomb.h"
 
 #include "PHImage.h"
 #include "PHPoofView.h"
@@ -42,46 +26,16 @@
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
-template <class T>
-PHLObject * newObject() { return (PHLObject*)(new T); }
+map<string,PHAllocator> * PHLObject::initMap = NULL;
 
-map<string,PHLObject::initializer> PHLObject::initMap;
-bool PHLObject::initialized;
-
-#define addClassForName(class,name) initMap.insert(make_pair<string,initializer>(#name,(initializer)(newObject<class>)))
-#define addClass(name) addClassForName(name,name) 
+PHL_REGISTEROBJECT(PHLObject)
 
 PHLObject * PHLObject::objectWithClass(const string & str)
-{
-    if (!initialized)
-    {
-        addClass(PHLObject);
-        addClass(PHLCamera);
-        addClass(PHLPlayer);
-        addClass(PHLAuxLayer);
-        addClass(PHLPlatform);
-        addClass(PHLSensor);
-        addClass(PHLNPC);
-        addClass(PHLMob);
-        addClass(PHLBull);
-        addClass(PHLGround);
-        addClass(PHLSign);
-        addClass(PHLShieldPowerup);
-        addClass(PHLHPPowerup);
-        addClass(PHLPowerPowerup);
-        addClass(PHLPowerup);
-        addClass(PHLLevelEnd);
-        addClass(PHLPit);
-        addClass(PHLBomberBird);
-        addClass(PHLEggBomb);
-        
-        initialized = true;
-    }
-    
-    map<string,initializer>::iterator i = initMap.find(str);
-    if (i==initMap.end())
+{        
+    map<string,PHAllocator>::iterator i = initMap->find(str);
+    if (i==initMap->end())
         return new PHLObject;
-    return (i->second)();
+    return (PHLObject*)(i->second)();
 }
 
 PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0)

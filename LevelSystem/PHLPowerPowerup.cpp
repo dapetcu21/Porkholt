@@ -10,6 +10,7 @@
 #include "PHWorld.h"
 #include "PHLPlayer.h"
 
+PHL_REGISTEROBJECT(PHLPowerPowerup)
 
 PHLPowerPowerup::PHLPowerPowerup()
 {

@@ -16,6 +16,8 @@
 #include "PHImageAnimator.h"
 #include "PHEventQueue.h"
 
+PHL_REGISTEROBJECT(PHLBull)
+
 PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDuration(0.5f), unrageTime(1.0f), attacking(false), cooldownDuration(2.0f)
 {
     _class = "PHLBull";

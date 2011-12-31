@@ -11,6 +11,8 @@
 #include "PHLua.h"
 #include "PHGameManager.h"
 
+PHL_REGISTEROBJECT(PHLCamera)
+
 PHLCamera::PHLCamera() : follow(true), strict(false), strictcount(0), sstrict(0)
 {
 	_class = "PHLCamera";

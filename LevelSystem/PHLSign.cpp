@@ -12,6 +12,8 @@
 
 #include <sstream>
 
+PHL_REGISTEROBJECT(PHLSign)
+
 PHLSign::PHLSign()
 {
     _class = "PHLSign";

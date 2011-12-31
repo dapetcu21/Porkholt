@@ -12,6 +12,9 @@
 #include "PHView.h"
 #include "PHLPlayer.h"
 #include "PHGameManager.h"
+
+PHL_REGISTEROBJECT(PHLPowerup)
+
 PHLPowerup::PHLPowerup() : dismissing(false)
 {
     _class = "PHLPowerup";

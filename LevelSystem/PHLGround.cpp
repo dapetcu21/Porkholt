@@ -12,6 +12,8 @@
 #include "PHWorld.h"
 #include <Box2D/Box2D.h>
 
+PHL_REGISTEROBJECT(PHLGround)
+
 PHLGround::PHLGround()
 {
     _class = "PHLGround";

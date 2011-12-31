@@ -10,6 +10,8 @@
 #include "PHAuxLayerView.h"
 #include "PHLua.h"
 
+PHL_REGISTEROBJECT(PHLAuxLayer)
+
 PHLAuxLayer::PHLAuxLayer()
 {
     _class = "PHLAuxLayer";

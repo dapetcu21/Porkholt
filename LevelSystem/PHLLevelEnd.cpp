@@ -10,6 +10,8 @@
 #include "PHWorld.h"
 #include "PHLevelController.h"
 
+PHL_REGISTEROBJECT(PHLLevelEnd)
+
 PHLLevelEnd::PHLLevelEnd() 
 {
     _class = "PHLLevelEnd"; 

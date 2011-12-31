@@ -10,6 +10,8 @@
 #include "PHWorld.h"
 #include "PHLPlayer.h"
 
+PHL_REGISTEROBJECT(PHLPit)
+
 void PHLPit::objectEntered(PHLObject * obj)
 {
     PHLNPC * p = dynamic_cast<PHLNPC*>(obj);

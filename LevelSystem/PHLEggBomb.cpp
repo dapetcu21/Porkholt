@@ -10,6 +10,8 @@
 #include "PHLEggBomb.h"
 #include "PHWorld.h"
 
+PHL_REGISTEROBJECT(PHLEggBomb)
+
 PHLEggBomb::PHLEggBomb() : magnitude(1), damage(1), radius(1)
 {
     

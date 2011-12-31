@@ -16,6 +16,8 @@
 
 #include <Box2D/Box2D.h>
 
+PHL_REGISTEROBJECT(PHLBomberBird)
+
 PHLBomberBird::PHLBomberBird() : startingPoint(PHPoint(0,3)), rotationAxis(PHPoint(1,10)), attacking(false), inCamera(false), droppedCargo(false), accuracy(0.7), dropVelocity(0)
 {
     _class = "PHLBomberBird";

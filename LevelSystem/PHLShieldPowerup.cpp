@@ -10,6 +10,8 @@
 #include "PHLPlayer.h"
 #include "PHWorld.h"
 
+PHL_REGISTEROBJECT(PHLShieldPowerup)
+
 PHLShieldPowerup::PHLShieldPowerup()
 {
     _class = "PHLShieldPowerup";
