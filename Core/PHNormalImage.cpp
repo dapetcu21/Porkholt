@@ -12,10 +12,11 @@
 #include <sstream>
 #include "PHFileManager.h"
 #include "PHImageView.h"
+#include "PHGameManager.h"
 
 PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thread(NULL)
 {
-    fp = fopen(path.c_str(), "rb");
+    fp = fopen((PHGameManager::isGloballyHD()?(path+".hd"):path).c_str(), "rb");
 	if (!fp)
 		throw PHIOError + ": " + path;
     antialiasing = PHFileManager::fileExists(path+".aa");

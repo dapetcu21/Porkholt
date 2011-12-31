@@ -21,6 +21,27 @@
 PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false)
 {}
 
+PHGameManager::~PHGameManager()
+{
+    if (hd)
+        --globalHD;
+}
+
+int PHGameManager::globalHD = 0;
+
+void PHGameManager::updateHD()
+{
+    double x = _screenWidth;
+    double y = _screenHeight;
+    double diagsq = x*x+y*y;
+    bool newhd = (diagsq > 500000);
+    if (newhd && !hd)
+        ++globalHD;
+    if (!newhd && hd)
+        --globalHD;
+    hd = newhd;
+}
+
 void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
 	fps = params.fps;
@@ -30,6 +51,9 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	suspended = 0;
     loaded = true;
 	setUserData(ud);
+    
+    hd = false;
+    updateHD();
     
 	PHThread::mainThread();
 
@@ -62,6 +86,7 @@ void PHGameManager::setScreenSize(double w, double h)
 {
     _screenWidth = w;
     _screenHeight = h;
+    updateHD();
     setProjection(); 
     if (view)
         view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
@@ -161,7 +186,7 @@ void PHGameManager::memoryWarning()
 
 int PHGameManager::interfaceType()
 {
-//    if (_screenHeight >= 400)
-//        return interfaceHD;
+    if (isGloballyHD())        
+        return interfaceHD;
     return interfaceSD;
 }

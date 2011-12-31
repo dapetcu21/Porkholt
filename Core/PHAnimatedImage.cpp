@@ -10,6 +10,7 @@
 #include "PHLua.h"
 #include "PHFileManager.h"
 #include "PHImageAnimator.h"
+#include "PHGameManager.h"
 
 #define PNG_DEBUG 4
 #include <png.h>
@@ -201,7 +202,7 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
         
         stringstream s;
         s<<path<<"/"<<i<<".png";
-        FILE * fp = fopen(s.str().c_str(), "rb");
+        FILE * fp = fopen((PHGameManager::isGloballyHD()?(s.str()+".hd"):s.str()).c_str(), "rb");
         if (!fp)
         {
             continue;

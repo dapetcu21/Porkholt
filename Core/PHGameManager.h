@@ -41,6 +41,8 @@ private:
 	int fps;
 	bool suspended;
     bool loaded;
+    static int globalHD;
+    bool hd;
     
 #ifdef PH_SIMULATOR
     PHRemote * remote;
@@ -51,8 +53,11 @@ private:
     void setProjection();
     void * ud;
     
+    void updateHD();
+    
 public:
     PHGameManager();
+    ~PHGameManager();
     void init(const PHGameManagerInitParameters & params);
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
@@ -63,6 +68,8 @@ public:
 	void renderFrame(double timeElapsed);
 	void appSuspended();
 	void appResumed();
+    bool isHD() { return hd; }
+    static bool isGloballyHD() { return globalHD > 0; }
     void _appResumed(PHObject * sender, void * ud);
     void _appSuspended(PHObject * sender, void * ud);
 	void appQuits();

@@ -31,7 +31,6 @@
 		C13E6C1213AC78C100365340 /* URField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C0F13AC78C100365340 /* URField.cpp */; };
 		C13E6C1313AC78C100365340 /* URServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C1013AC78C100365340 /* URServer.cpp */; };
 		C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */; };
-		C1504A8914ACC91E00F25B2A /* PHARGOController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1504A8814ACC91E00F25B2A /* PHARGOController.cpp */; };
 		C152809612B97169009067A7 /* PHGameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHGameManager.cpp */; };
 		C1638F401474FA5600E297BA /* PHMusicManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1638F3F1474FA5600E297BA /* PHMusicManager.mm */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
@@ -281,8 +280,6 @@
 		C13E6C1013AC78C100365340 /* URServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = URServer.cpp; path = src/URServer.cpp; sourceTree = "<group>"; };
 		C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHHeartView.cpp; sourceTree = "<group>"; };
 		C143AF1113DE124A00EBCF8D /* PHHeartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHHeartView.h; sourceTree = "<group>"; };
-		C1504A8714ACC90E00F25B2A /* PHARGOController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHARGOController.h; sourceTree = "<group>"; };
-		C1504A8814ACC91E00F25B2A /* PHARGOController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHARGOController.cpp; sourceTree = "<group>"; };
 		C152809412B97169009067A7 /* PHGameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGameManager.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHGameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGameManager.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
@@ -957,8 +954,6 @@
 				C1748C61140042DE00FB2796 /* PHTitleScreen.h */,
 				C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */,
 				C1769BCD140A4E6E00638068 /* PHEntryPoint.cpp */,
-				C1504A8714ACC90E00F25B2A /* PHARGOController.h */,
-				C1504A8814ACC91E00F25B2A /* PHARGOController.cpp */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1262,7 +1257,6 @@
 				C19FC304148F4A6000EACE24 /* PHLuaConsole.cpp in Sources */,
 				C19FC30A148F959E00EACE24 /* PHTCPServer.cpp in Sources */,
 				C19FC30D148F976600EACE24 /* PHTCPConsole.cpp in Sources */,
-				C1504A8914ACC91E00F25B2A /* PHARGOController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

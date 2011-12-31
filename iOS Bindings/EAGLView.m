@@ -54,7 +54,6 @@
     [super dealloc];
 }
 
-
 - (void)initMain
 {
 	pthread_mutex_lock(&mutex);
@@ -184,6 +183,9 @@
 - (void)layoutSubviews
 {
     // The framebuffer will be re-created at the beginning of the next setFramebuffer method call.
+    if ([self respondsToSelector: NSSelectorFromString(@"contentScaleFactor")]) {
+        [self setContentScaleFactor:[[UIScreen mainScreen] scale]];
+    }
     [self deleteFramebuffer];
 	//[self createFramebuffer];
 }

@@ -21,6 +21,7 @@ class PHMutex;
 @interface PHTouchInterface : UIView <UIAccelerometerDelegate> {
 	PHMutex * mutex;
 	list<TouchTask> queue;
+    double scale;
 }
 
 extern PHTouchInterface * PHTouchInterfaceSingleton;

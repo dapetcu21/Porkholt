@@ -23,7 +23,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 		PHTouchInterfaceSingleton = self;
 		self.multipleTouchEnabled = YES;
 		[UIAccelerometer sharedAccelerometer].delegate=self;
- 
+        scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?[UIScreen mainScreen].scale:1.0f;
 		mutex = new PHMutex;
 		queue.clear();
     }
@@ -89,8 +89,8 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 {
 	TouchTask tmp;
 	tmp.ud = ud;
-	tmp.x = x;
-	tmp.y = y;
+	tmp.x = x*scale;
+	tmp.y = y*scale;
 	tmp.state = state;
 	mutex->lock();
 	queue.push_back(tmp);
