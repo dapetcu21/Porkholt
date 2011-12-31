@@ -8,6 +8,8 @@
 
 #include "PHTrailImageView.h"
 
+PH_REGISTERIMAGEVIEW(PHTrailImageView)
+
 #define INIT_LIST ,snap(1),ssnap(0),trail(0),_stopView(NULL), auxImg(NULL)
 
 PHTrailImageView::PHTrailImageView() : PHImageView() INIT_LIST { dontDrawOnMain = false; }

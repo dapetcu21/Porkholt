@@ -17,6 +17,8 @@ class PHImage;
 class PHImageAnimator;
 class PHAnimatorPool;
 
+#define PH_REGISTERIMAGEVIEW(clss) PH_REGISTERCLASS(PHImageView::initMap, #clss, clss)
+
 class PHImageView : public PHView
 {
 protected:
@@ -107,6 +109,8 @@ public:
     static PHImageView * imageFromClass(const string & clss);
   
     static void registerLuaInterface(lua_State * L);
+    
+    static map<string,PHAllocator> * initMap;
 };
 
 #endif

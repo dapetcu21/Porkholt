@@ -13,6 +13,8 @@
 #include "PHNormalImage.h"
 #include "PHImageAnimator.h"
 
+PH_REGISTERIMAGEVIEW(PHParticleView)
+
 #define INIT particleM(new PHMutex), particleAnim(NULL), particlePool(PHAnimatorPool::currentAnimatorPool())
 
 PHParticleView::PHParticleView() : PHImageView(), INIT 

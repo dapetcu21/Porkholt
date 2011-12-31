@@ -470,13 +470,16 @@ PHImageView * PHImageView::imageFromLua(lua_State * L,const string & root, PHAni
     return img;
 }
 
+map<string, PHAllocator> * PHImageView::initMap = NULL;
+
+PH_REGISTERIMAGEVIEW(PHImageView)
+
 PHImageView * PHImageView::imageFromClass(const string & clss)
 {
-    if (clss=="PHTrailImageView")
-        return new PHTrailImageView();
-    if (clss=="PHParticleView")
-        return new PHParticleView();
-    return new PHImageView();
+    map<string,PHAllocator>::iterator i = initMap->find(clss);
+    if (i==initMap->end())
+        return new PHImageView;
+    return (PHImageView*)(i->second)();
 }
 
 #pragma mark -
