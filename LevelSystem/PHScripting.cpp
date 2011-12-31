@@ -29,6 +29,10 @@
 #include "PHParticleAnimator.h"
 #include "PHParticleView.h"
 
+#ifdef PH_SIMULATOR
+#include "PHLuaConsole.h"
+#endif
+
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
 {
     L = lua_open();
@@ -53,10 +57,16 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
             PHLuaLoadFile(L, path);
     }
     
+#ifdef PH_SIMULATOR
+    console = new PHLuaConsole(L);
+#endif
 }
 
 PHScripting::~PHScripting()
 {
+#ifdef PH_SIMULATOR
+    console->release();
+#endif
     PHMessage::messageWithName("luaDestroy")->broadcast(this, L);
     lua_close(L);
 }
@@ -223,3 +233,10 @@ void PHScripting::scriptingStep(double timeElapsed)
 {
     
 }
+
+#ifdef PH_SIMULATOR
+void PHScripting::executeConsole()
+{
+    console->execute();
+}
+#endif

@@ -51,7 +51,7 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 
 #define MAX_TILT 30.0f
 #define TILT_FORCE_FACTOR 0.05f
-#define TOUCH_FORCE_FACTOR 100.0f
+#define TOUCH_FORCE_FACTOR 30.0f
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;

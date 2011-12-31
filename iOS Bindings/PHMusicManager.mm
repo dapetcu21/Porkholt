@@ -186,6 +186,9 @@ void PHMusicManager::playThread(PHThread * sender, void * ud)
 void PHMusicManager::fadeThread(PHThread * sender, args * a)
 {    
     NSAutoreleasePool * ap = [[NSAutoreleasePool alloc] init];
+#ifdef PH_SIMULATOR
+    a->name = noMusic;
+#endif
     AVAudioPlayer * na = (a->name==noMusic)?nil:[[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:(a->name).c_str()]] error:nil];
     [na setNumberOfLoops:-1];
     [na prepareToPlay];

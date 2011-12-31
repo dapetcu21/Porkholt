@@ -8,13 +8,17 @@ jointWithClass = nil
 addJoint = nil
 addObject = function (o) return PHWorld:insertObject(o) end
 
+function PHOutput(s)
+    print("Porkholt: "..s)
+end
+
 function PHLog(fmt, ...)
 	for i,v in pairs(arg) do
 		if (type(v) == "table") then
 			arg[i] = tostring(v)
 		end
 	end
-	print(string.format("Porkholt: "..fmt,unpack(arg)))
+	PHOutput(string.format(fmt,unpack(arg)))
 end
 
 function PHCallbackHelper(cb)

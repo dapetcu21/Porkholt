@@ -18,6 +18,17 @@ class PHNavigationController;
 class PHRemote;
 class PHEventHandler;
 
+class PHGameManagerInitParameters
+{
+public:
+    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150) {}
+
+    double screenWidth;
+    double screenHeight;
+    int fps;
+    double dpi;
+};
+
 class PHGameManager : public PHObject
 {
 private:
@@ -26,6 +37,7 @@ private:
     PHEventHandler * evtHandler;
 	double _screenWidth;
 	double _screenHeight;
+    double dpi;
 	int fps;
 	bool suspended;
     bool loaded;
@@ -41,12 +53,13 @@ private:
     
 public:
     PHGameManager();
-    void init(double screenX, double screenY,int FPS);
+    void init(const PHGameManagerInitParameters & params);
 	double screenWidth() { return _screenWidth; };
 	double screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
     void setScreenSize(double w, double h);
 	int framesPerSecond() { return fps; }
+    double dotsPerInch() { return dpi; }
 	void renderFrame(double timeElapsed);
 	void appSuspended();
 	void appResumed();

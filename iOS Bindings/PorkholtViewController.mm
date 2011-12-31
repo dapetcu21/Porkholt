@@ -123,7 +123,15 @@ PHGameManager * PHGameManagerSingleton;
     }
     
     gameManager = new PHGameManager;
-    gameManager->init([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, FPS);
+    
+    PHGameManagerInitParameters params;
+    UIScreen * s = [UIScreen mainScreen];
+    double scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
+    params.screenHeight = s.bounds.size.width*scale;
+    params.screenWidth = s.bounds.size.height*scale;
+    params.fps = FPS;
+    params.dpi = 160*scale;
+    gameManager->init(params);
     PHGameManagerSingleton = gameManager;
     
     while (![thread isCancelled] && [theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);

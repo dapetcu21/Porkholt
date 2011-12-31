@@ -21,11 +21,12 @@
 PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false)
 {}
 
-void PHGameManager::init(double screenX, double screenY, int FPS)
+void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
-	fps = FPS;
-	_screenWidth = screenX;
-	_screenHeight = screenY;
+	fps = params.fps;
+	_screenWidth = params.screenWidth;
+	_screenHeight = params.screenHeight;
+    dpi = params.dpi;
 	suspended = 0;
     loaded = true;
 	setUserData(ud);

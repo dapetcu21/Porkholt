@@ -11,6 +11,10 @@
 
 #include "PHMain.h"
 
+#ifdef PH_SIMULATOR
+class PHLuaConsole;
+#endif
+
 class PHWorld;
 struct lua_State;
 
@@ -28,6 +32,14 @@ public:
     void worldHasFadedAway(void * ud);
     
     lua_State * luaState() { return L; }
+    
+#ifdef PH_SIMULATOR
+public:
+    void executeConsole();
+private:
+    PHLuaConsole * console;
+#endif
+    
 };
 
 #endif

@@ -633,7 +633,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
             scripingEngine->scriptingStep(frameInterval);
             world->updatePositions();
             world->updateTimers(frameInterval);
+            
         }
+#ifdef PH_SIMULATOR
+        scripingEngine->executeConsole();
+#endif
+        
         world->realTimeEventQueue()->updateTimers();
         
         pSem2->wait();
