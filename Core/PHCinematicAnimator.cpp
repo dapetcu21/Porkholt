@@ -117,6 +117,13 @@ void PHCinematicAnimator::advanceAnimation(double elapsedTime)
             _actor->setCinematicRotation(_actor->cinematicRotation()+(rotate*ratio - rotate*lastRatio));
         if (customValue)
             _actor->setCinematicCustomValue(_actor->cinematicCustomValue()+(customValue*ratio - customValue*lastRatio));
+        if (scale.x != 1 || scale.y != 1)
+        {
+            PHSize lastFactor = (scale-PHSize(1,1))*lastRatio+PHSize(1,1);
+            PHSize factor = (scale-PHSize(1,1))*ratio+PHSize(1,1);
+            PHSize orig = _actor->cinematicScale();
+            _actor->setCinematicScale(PHSize(orig.x/lastFactor.x*factor.x,orig.y/lastFactor.y*factor.y));
+        }
         if (_bgColor.a>=0)
         {
             PHColor clr,trg,crr;
