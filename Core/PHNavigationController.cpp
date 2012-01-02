@@ -122,6 +122,7 @@ void PHNavigationController::cancelAnimation()
 		if (lastVC)
 			lastVC->getView()->removeFromSuperview();
 		view->cancelAllAnimationsWithTag(-4432);
+        view->removeCinematicAnimationsWithTag(-4432);
 		stopAnimating();
 	}
 }
@@ -133,6 +134,7 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		PHView * lastV = lastVC->getView();
 		view->addSubview(lastV);
 		lastV->setPosition(PHPoint(0,0));
+        /*
 		PHAnimationDescriptor * anim = new PHAnimationDescriptor;
 		anim->moveX=x;
 		anim->moveY=y;
@@ -142,7 +144,15 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
 		anim->callback = PHInvN(this,PHNavigationController::endSlideAnimation);
 		PHView::addAnimation(anim);
-		anim->release();
+		anim->release();*/
+        PHCinematicAnimator * anim = new PHCinematicAnimator;
+        anim->setTimeFunction(PHCinematicAnimator::FadeOutFunction);
+        anim->setDuration(0.5f);
+        anim->setCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
+        anim->setMovement(PHPoint(x,y));
+        anim->setTag(-4432);
+        lastV->addCinematicAnimation(anim);
+        anim->release();
 	}
 	if (currentVC)
 	{

@@ -16,7 +16,8 @@ class PHAnimator : public PHObject {
 protected:
     bool advanceManually;
     PHAnimatorPool * pool;
-        
+    int _tag;
+    
     friend class PHAnimatorPool;
 public:
     PHAnimator();
@@ -28,6 +29,9 @@ public:
     void setAdvanceManually(bool s) { advanceManually = s; }
     void setAnimatorPool(PHAnimatorPool * p);
     PHAnimatorPool * animatorPool() { return pool; }
+    
+    void setTag(int tg) { _tag = tg; }
+    int tag() { return _tag; }
 };
 
 #endif

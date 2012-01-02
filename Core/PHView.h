@@ -12,12 +12,13 @@
 
 #include "PHMain.h"
 #include "PHAnimationDescriptor.h"
+#include "PHCinematicAnimator.h"
 #include "PHEvent.h"
 
 class PHMutex;
 class PHAuxLayerView;
 class PHGameManager;
-class PHView : public PHObject
+class PHView : public PHObject, public PHCinematicActor
 {
 protected:
     list<PHView*> views;
@@ -149,6 +150,15 @@ public:
     virtual const PHColor & animatedColor() { return PHInvalidColor; };
     virtual void setAnimatedColor(const PHColor &) {};
     virtual void incrementAnimatedValue(double) {}
+    
+    void setCinematicPosition(const PHPoint & p) { setPosition(p); }
+    PHPoint cinematicPosition() { return position(); }
+    void setCinematicRotation(double r) { setRotation(r); }
+    double cinematicRotation() { return rotation(); }
+    void setCinematicScale(const PHSize & s) { setScaleX(s.x); setScaleY(s.y); }
+    PHSize cinematicScale() { return PHSize(scaleX(),scaleY()); }
+    void setCinematicBgColor(const PHColor & c) { setBackgroundColor(c); }
+    PHColor cinematicBgColor() { return backgroundColor(); }
     
 	static void addAnimation(PHAnimationDescriptor * anim);
 	static void updateAnimation(double time);
