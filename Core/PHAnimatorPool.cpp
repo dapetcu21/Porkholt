@@ -1,4 +1,4 @@
-//
+    //
 //  PHAnimatorPool.cpp
 //  Porkholt_iOS
 //
@@ -117,6 +117,8 @@ void PHAnimatorPool::advanceAnimation(double elapsedTime)
     for (set<PHAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
         animators.erase(*i);
     animators.insert(insertQueue.begin(),insertQueue.end());
+    deleteQueue.clear();
+    insertQueue.clear();
     insideJob = false;
     mutex->unlock();
 }

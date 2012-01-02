@@ -28,7 +28,7 @@ protected:
     virtual void setCinematicCustomValue(double);
     virtual double cinematicCustomValue();
     
-    PHCinematicAnimator * _cinematicAnimator;
+    PHCinematicAnimator * _cinematicAnimator, * _rootAnimator;
     set<PHCinematicAnimator *> _cinematicAnimators;
     friend class PHCinematicAnimator;
     
@@ -38,12 +38,20 @@ public:
     void removeAllCinematicAnimations();
     void removeCinematicAnimationsWithTag(int tag);
     
+    PHCinematicAnimator * cinematicAnimator() { return _cinematicAnimator; }
     void beginCinematicAnimation(double duration);
     void beginCinematicAnimation(double duration, int type);
     void chainCinematicAnimation(double duration);
     void chainCinematicAnimation(double duration, int type);
     void commitCinematicAnimation();
     void dropCinematicAnimation();
+    
+    void animateMove(const PHPoint & mv);
+    void animateScale(const PHSize & mv);
+    void animateRotate(double rot);
+    void animateBgColor(const PHColor & clr);
+    void animateCustomColor(const PHColor & clr);
+    void animateCustomValue(double val);
     
     PHCinematicActor();
     ~PHCinematicActor();

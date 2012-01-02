@@ -134,25 +134,11 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		PHView * lastV = lastVC->getView();
 		view->addSubview(lastV);
 		lastV->setPosition(PHPoint(0,0));
-        /*
-		PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-		anim->moveX=x;
-		anim->moveY=y;
-		anim->tag=-4432;
-		anim->view = lastV;
-		anim->time = 0.5f;
-		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-		anim->callback = PHInvN(this,PHNavigationController::endSlideAnimation);
-		PHView::addAnimation(anim);
-		anim->release();*/
-        PHCinematicAnimator * anim = new PHCinematicAnimator;
-        anim->setTimeFunction(PHCinematicAnimator::FadeOutFunction);
-        anim->setDuration(0.5f);
-        anim->setCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
-        anim->setMovement(PHPoint(x,y));
-        anim->setTag(-4432);
-        lastV->addCinematicAnimation(anim);
-        anim->release();
+        lastV->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+        lastV->animateMove(PHPoint(x,y));
+        lastV->cinematicAnimator()->setCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
+        lastV->cinematicAnimator()->setTag(-4432);
+        lastV->commitCinematicAnimation();
 	}
 	if (currentVC)
 	{
