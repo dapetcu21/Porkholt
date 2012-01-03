@@ -88,8 +88,8 @@ public:
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; VBOneedsRebuilding = true; };
     
-    virtual const PHColor & animatedColor() { return tint; }
-    virtual void setAnimatedColor(const PHColor & c) { setTintColor(c); }
+    virtual PHColor cinematicCustomColor() { return tint; }
+    virtual void setCinematicCustomColor(const PHColor & c) { setTintColor(c); }
     
     bool constrainCurveToFrame() { return constrain; }
     void setConstrainCurveToFrame(bool c) { constrain = c; }

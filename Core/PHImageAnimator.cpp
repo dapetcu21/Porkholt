@@ -73,18 +73,18 @@ int PHImageAnimator::realFrame(int fr, int sec)
     }
 }
 
-void PHImageAnimator::animateSection(const string & name, PHInvocation inv)
+void PHImageAnimator::animateSection(const string & name, const PHInvocation & inv)
 {
     animateSection(_image->sectionNo(name),inv);
 }
 
 
-void PHImageAnimator::reset(PHInvocation inv)
+void PHImageAnimator::reset(const PHInvocation & inv)
 {
     animateSection(_image->defaultSection,inv);
 }
 
-void PHImageAnimator::animateSection(int sect, PHInvocation inv)
+void PHImageAnimator::animateSection(int sect, const PHInvocation & inv)
 {
     if (sect<0 || sect>=_image->sections.size())
     {

@@ -42,7 +42,7 @@ public:
     void stop();
     void pause();
     void resume();
-    void playAndCallBack(PHInvocation inv, PHEventQueue * timerQueue);
+    void playAndCallBack(const PHInvocation & inv, PHEventQueue * timerQueue);
     void playAndRelease(PHEventQueue * timerQueue) { playAndCallBack(PHInv(this,PHObject::release,NULL),timerQueue); }
     bool isPlaying();
     float duration();

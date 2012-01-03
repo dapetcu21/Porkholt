@@ -13,8 +13,6 @@
 #include "PHEventHandler.h"
 #include "PHLua.h"
 
-std::list<PHAnimationDescriptor*> PHView::animations;
-
 #define PHVIEW_INITLIST superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
 						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), _gameManager(NULL)
@@ -208,37 +206,8 @@ void PHView::removeAllSubviews()
         (*i)->removeFromSuperview();
 }
 
-void PHView::cancelAnimationsWithTag(int tag)
-{
-	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i++)
-	{
-		PHAnimationDescriptor * p  = *i;
-		while (p)
-		{
-			if ((p->view == this) && ((tag==0) || (p->tag == tag)))
-				p->view = NULL;
-			p=p->nextAnimation();
-		}
-	}
-}
-
-void PHView::cancelAllAnimationsWithTag(int tag)
-{
-	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i++)
-	{
-		PHAnimationDescriptor * p  = *i;
-		while (p)
-		{
-			if ((tag==0) || (p->tag == tag))
-				p->view = NULL;
-			p=p->nextAnimation();
-		}
-	}
-}
-
 PHView::~PHView()
 {
-    cancelAnimations();
 	for (set<lua_State*>::iterator i = luaStates.begin(); i!=luaStates.end(); i++)
         PHLuaDeleteWeakRef(*i, this);
     if (auxLayer)
@@ -292,180 +261,6 @@ void PHView::draw()
 
 void PHView::touchEvent(PHEvent * touch)
 {
-}
-
-//animation system
-void PHView::addAnimation(PHAnimationDescriptor * anim)
-{
-	anim->retain();
-	anim->totalTime = anim->time;
-	animations.push_back(anim);
-}
-
-
-inline double circleEq(double x,double mx,double my,double r)
-{
-	return sqrt(r*r-(x-mx)*(x-mx))+my;
-}
-
-#define bounceL 0.5f
-
-double PHView::animFunction(double time,int ftype)
-{
-	if (ftype==PHAnimationDescriptor::LinearFunction)
-		return time;
-	if (ftype==PHAnimationDescriptor::BounceFunction)
-	{
-		if (time<1-bounceL)
-		{
-			return time/(1-bounceL);
-		} else {
-			double m = (bounceL-1);
-			double n = 1-m*(1-bounceL);
-			double yy = m*(1-bounceL/2)+n;
-			double r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
-			return circleEq(time, 1-bounceL/2, yy, r);
-		}
-	}
-	if (ftype==PHAnimationDescriptor::FadeInFunction)
-	{
-		return time*time;
-	}
-	if (ftype==PHAnimationDescriptor::FadeOutFunction)
-	{
-		return -time*time+2*time;
-	}
-	if (ftype==PHAnimationDescriptor::FadeInOutFunction)
-	{
-		return sin(M_PI*(time-0.5f))/2+0.5;
-	}
-	return time; //revert to linear
-}
-
-void PHView::updateAnimation(double time)
-{
-	std::list<PHAnimationDescriptor*>::iterator nx;
-	for (std::list<PHAnimationDescriptor*>::iterator i = animations.begin(); i!=animations.end(); i=nx)
-	{
-		double tm = time;
-		nx = i;
-		nx++;
-		while (tm)
-		{
-			double lastRatio,ratio,diff;
-			PHAnimationDescriptor * anim = *i;
-			if (tm<anim->time)
-			{
-				lastRatio = animFunction((anim->totalTime-anim->time)/anim->totalTime,anim->timeFunction);
-				anim->time -= tm;
-				ratio = animFunction((anim->totalTime-anim->time)/anim->totalTime,anim->timeFunction);
-				tm = 0;
-			} else {
-				lastRatio = animFunction((anim->totalTime-anim->time)/anim->totalTime,anim->timeFunction);
-				tm -= anim->time;
-				anim->time = 0;
-				ratio = 1;
-			}
-			diff = ratio-lastRatio;
-			if (anim->view)
-			{
-				if ((anim->moveX) || (anim->moveY))
-				{
-					PHRect fr = ((PHView*)anim->view)->frame();
-					fr.x += diff * anim->moveX;
-					fr.y += diff * anim->moveY;
-					((PHView*)anim->view)->setFrame(fr);
-				}
-				if (anim->rotate)
-				{
-					((PHView*)anim->view)->rotate(diff * anim->rotate);
-				}
-                if (anim->customValue)
-                {
-                    ((PHView*)anim->view)->incrementAnimatedValue(diff * anim->customValue);
-                }
-				if (anim->scaleX!=1)
-				{
-					double lastM,m;
-					lastM = 1 + (anim->scaleX-1)*lastRatio;
-					m = 1 + (anim->scaleX-1)*ratio;
-					((PHView*)anim->view)->setScaleX(((PHView*)anim->view)->scaleX()/lastM*m);
-				}
-				if (anim->scaleY!=1)
-				{
-					double lastM,m;
-					lastM = 1 + (anim->scaleY-1)*lastRatio;
-					m = 1 + (anim->scaleY-1)*ratio;
-					((PHView*)anim->view)->setScaleY(((PHView*)anim->view)->scaleY()/lastM*m);
-				}
-				if (anim->bgColor.a>=0)
-				{
-					PHColor clr,trg,crr;
-					crr = ((PHView*)anim->view)->backgroundColor();
-					trg = anim->bgColor;
-                    if (trg.a>0)
-                    {
-                        if (crr.a>0)
-                        {
-                            clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
-                            clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
-                            clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
-                        } else {
-                            clr.r = trg.r;
-                            clr.g = trg.g;
-                            clr.b = trg.b;
-                        }
-                    } else {
-                        clr.r = crr.r;
-                        clr.g = crr.g;
-                        clr.b = crr.b;
-                    }
-					clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
-					((PHView*)anim->view)->setBackgroundColor(clr);
-				}
-                if (anim->customColor.a>=0)
-				{
-					PHColor clr,trg,crr;
-					crr = ((PHView*)anim->view)->animatedColor();
-					trg = anim->customColor;
-                    if (trg.a>0)
-                    {
-                        if (crr.a>0)
-                        {
-                            clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
-                            clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
-                            clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
-                        } else {
-                            clr.r = trg.r;
-                            clr.g = trg.g;
-                            clr.b = trg.b;
-                        }
-                    } else {
-                        clr.r = crr.r;
-                        clr.g = crr.g;
-                        clr.b = crr.b;
-                    }
-					clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
-					((PHView*)anim->view)->setAnimatedColor(clr);
-				}
-			}
-			if (tm)
-			{
-				PHAnimationDescriptor * next = anim->nextAnimation();
-				if (next)
-					next->retain();
-				*i = next;
-                if (anim->view)
-                    anim->callback.call(anim->callback.target);
-				anim->release();
-				if (!*i)
-				{
-					animations.erase(i);
-					tm = 0;
-				}
-			}
-		}
-	}
 }
 
 //stuff

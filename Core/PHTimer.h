@@ -35,7 +35,7 @@ public:
     bool callsBackOnInvalidate() { return cboninvalidate; }
     void setCallsBackOnInvalidate(bool b) { cboninvalidate = b; }
     
-    void setCallback(PHInvocation inv) { invocation = inv; }
+    void setCallback(const PHInvocation & inv) { invocation = inv; }
     bool isValid() { return valid; } 
     void invalidate() { if (cboninvalidate&&valid) timerFired(); valid = false; }
     

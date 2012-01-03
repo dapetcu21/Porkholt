@@ -33,8 +33,8 @@ public:
 	PHImage * pressedImage() { return imgDown; };
 	PHImage * image() { return imgUp; };
 	int state() { return _state; }
-	void setUpCallback(PHInvocation inv) { invUp = inv; };
-	void setDownCallback(PHInvocation inv) { invDown = inv; };
+	void setUpCallback(const PHInvocation & inv) { invUp = inv; };
+	void setDownCallback(const PHInvocation & inv) { invDown = inv; };
 protected:
 	virtual void draw();
 	virtual void touchEvent(PHEvent * touch);

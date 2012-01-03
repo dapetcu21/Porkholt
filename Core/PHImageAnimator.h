@@ -43,9 +43,9 @@ public:
     PHAnimatedImage * image() { return _image; }
     void animateSection(const string & name) { animateSection(name, PHInvocation()); }
     void animateSection(int sec) { animateSection(sec, PHInvocation()); }
-    void animateSection(const string & name, PHInvocation inv);
-    void animateSection(int sec, PHInvocation inv);
-    void reset(PHInvocation inv);
+    void animateSection(const string & name, const PHInvocation & inv);
+    void animateSection(int sec, const PHInvocation & inv);
+    void reset(const PHInvocation & inv);
     void reset() { reset(PHInvocation()); }
     
     bool isPaused() { return !running; }

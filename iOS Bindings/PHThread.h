@@ -27,13 +27,13 @@ private:
     PHInvocation invocation;
     
 public:
-	void executeOnThread(PHInvocation invocation,bool waitUntilDone);
-    void scheduleOnThread(PHInvocation invocation, bool waitUntilDone);
+	void executeOnThread(const PHInvocation & invocation,bool waitUntilDone);
+    void scheduleOnThread(const PHInvocation & invocation, bool waitUntilDone);
 	void processQueue();
 public:
 	void execute(); //DON'T USE THIS
 	
-	void setFunction(PHInvocation inv) { invocation = inv; };
+	void setFunction(const PHInvocation & inv) { invocation = inv; };
 	void start();
 	void terminate();
 	void join();

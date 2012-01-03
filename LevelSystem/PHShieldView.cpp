@@ -9,7 +9,6 @@
 #include "PHShieldView.h"
 #include "PHImageView.h"
 #include "PHImage.h"
-#include "PHAnimationDescriptor.h"
 
 #define factor 1.5f
 
@@ -27,15 +26,10 @@ PHShieldView::PHShieldView(const PHRect & fr) : PHView(fr)
     
     imv->setScaleX(1.0f/1024);
     imv->setScaleY(1.0f/1024);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->time = 1;
-    anim->timeFunction = PHAnimationDescriptor::BounceFunction;
-    anim->scaleX = 1024;
-    anim->scaleY = 1024;
-    anim->view = imv;
-    PHView::addAnimation(anim);
-    anim->release();
     
+    imv->beginCinematicAnimation(1,PHCinematicAnimator::BounceFunction);
+    imv->animateScale(PHSize(1024,1024));
+    imv->commitCinematicAnimation();
 }
 
 PHImage * PHShieldView::shieldImage() 
@@ -45,13 +39,8 @@ PHImage * PHShieldView::shieldImage()
 
 void PHShieldView::dismiss()
 {
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->time = 0.5;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->scaleX = 1.0f/1024;
-    anim->scaleY = 1.0f/1024;
-    anim->view = imv;
-    anim->callback = PHInvN(this,PHView::removeFromSuperview);
-    PHView::addAnimation(anim);
-    anim->release();
+    imv->beginCinematicAnimation(0.5,PHCinematicAnimator::FadeInFunction);
+    imv->animateScale(PHSize(1.0f/1024,1.0f/1024));
+    imv->animationCallback(PHInvN(this,PHView::removeFromSuperview));
+    imv->commitCinematicAnimation();
 }

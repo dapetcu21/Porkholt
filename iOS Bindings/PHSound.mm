@@ -66,7 +66,7 @@ void PHSound::fireCallback(PHObject * sender, PHEventQueue * timerQueue)
     timer->release();
 }
 
-void PHSound::playAndCallBack(PHInvocation invo, PHEventQueue * timerQueue)
+void PHSound::playAndCallBack(const PHInvocation & invo, PHEventQueue * timerQueue)
 {
     inv = invo;
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];

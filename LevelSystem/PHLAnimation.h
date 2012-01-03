@@ -85,7 +85,7 @@ public:
     }
     PHLAnimation * nextAnimation() { return next; }
     
-    void setCallback(PHInvocation inv) { invocation = inv; }
+    void setCallback(const PHInvocation & inv) { invocation = inv; }
     void setCallbackOnInvalidate(bool ci) { invalidateCallback = ci; }
     void animationFinished();
     

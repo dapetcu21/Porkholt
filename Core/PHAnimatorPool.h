@@ -27,6 +27,8 @@ public:
     
     void insertAnimator(PHAnimator * a);
     void removeAnimator(PHAnimator * a);
+    void removeAllAnimators();
+    void removeAnimatorsWithTag(int d);
     void advanceAnimation(double elapsed);
     
     void push();

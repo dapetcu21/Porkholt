@@ -8,6 +8,7 @@
  */
 
 #include "PHNavigationController.h"
+#include "PHAnimatorPool.h"
 
 void PHNavigationController::viewDidDisappear()
 {
@@ -50,7 +51,6 @@ void PHNavigationController::viewWillAppear()
 void PHNavigationController::startFadeAnimation()
 {
 	fadeView = new PHView(view->bounds());
-	PHAnimationDescriptor * anim = new PHAnimationDescriptor;
     PHColor fc = _fadeColor;
     PHColor f;
     if ((f = currentVC->fadeToColor())!=PHInvalidColor)
@@ -58,14 +58,11 @@ void PHNavigationController::startFadeAnimation()
     else
     if ((f = lastVC->fadeToColor())!=PHInvalidColor)
         fc = f;
-	anim->bgColor = fc;
-	anim->tag=-4432;
-	anim->view = fadeView;
-	anim->time = 0.5f;
-	anim->callback = PHInvN(this,PHNavigationController::middleFadeAnimation);
-	anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-	PHView::addAnimation(anim);
-	anim->release();
+    fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+    fadeView->animateBgColor(fc);
+    fadeView->animationTag(-4432);
+    fadeView->animationCallback(PHInvN(this,PHNavigationController::middleFadeAnimation));
+    fadeView->commitCinematicAnimation();
 	view->addSubview(fadeView);
 }
 
@@ -75,15 +72,13 @@ void PHNavigationController::middleFadeAnimation()
         lastVC->_viewDidAppear();
     if (currentVC)
         currentVC->_viewWillAppear();
-	PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-	anim->bgColor = PHClearColor;
-	anim->tag=-4432;
-	anim->view = fadeView;
-	anim->time = 0.5f;
-	anim->callback = PHInvN(this,PHNavigationController::endFadeAnimation);
-	anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-	PHView::addAnimation(anim);
-	anim->release();
+    
+    fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
+    fadeView->animateBgColor(PHClearColor);
+    fadeView->animationTag(-4432);
+    fadeView->animationCallback(PHInvN(this,PHNavigationController::endFadeAnimation));
+    fadeView->commitCinematicAnimation();
+    
 	if (lastVC)
 		lastVC->getView()->removeFromSuperview();
 	if (currentVC)
@@ -121,8 +116,7 @@ void PHNavigationController::cancelAnimation()
 		}
 		if (lastVC)
 			lastVC->getView()->removeFromSuperview();
-		view->cancelAllAnimationsWithTag(-4432);
-        view->removeCinematicAnimationsWithTag(-4432);
+        PHAnimatorPool::currentAnimatorPool()->removeAnimatorsWithTag(-4432);
 		stopAnimating();
 	}
 }
@@ -136,8 +130,8 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		lastV->setPosition(PHPoint(0,0));
         lastV->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
         lastV->animateMove(PHPoint(x,y));
-        lastV->cinematicAnimator()->setCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
-        lastV->cinematicAnimator()->setTag(-4432);
+        lastV->animationCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
+        lastV->animationTag(-4432);
         lastV->commitCinematicAnimation();
 	}
 	if (currentVC)
@@ -145,16 +139,11 @@ void PHNavigationController::startSlideAnimation(double x, double y)
 		PHView * currentV = currentVC->getView();
 		view->addSubview(currentV);
 		currentV->setPosition(PHPoint(-x, -y));
-		PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-		anim->moveX=x;
-		anim->moveY=y;
-		anim->tag=-4432;
-		anim->view = currentV;
-		anim->time = 0.5f;
-		anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-		anim->callback = PHInvN(this,PHNavigationController::endSlideAnimation);
-		PHView::addAnimation(anim);
-		anim->release();
+        currentV->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+        currentV->animateMove(PHPoint(x,y));
+        currentV->animationTag(-4432);
+        currentV->animationCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
+        currentV->commitCinematicAnimation();
 	}
 }
 

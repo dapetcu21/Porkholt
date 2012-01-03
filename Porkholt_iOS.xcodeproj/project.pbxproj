@@ -298,7 +298,6 @@
 		C177803E13BBA4F50003640D /* PHTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTimer.h; sourceTree = "<group>"; };
 		C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScriptableTimer.cpp; sourceTree = "<group>"; };
 		C177805113BCDAB00003640D /* PHScriptableTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScriptableTimer.h; sourceTree = "<group>"; };
-		C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
 		C17B480A130719FF00C2EC8D /* PHTestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTestView.h; sourceTree = "<group>"; };
 		C17B480B130719FF00C2EC8D /* PHTestView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTestView.cpp; sourceTree = "<group>"; };
 		C17B48491307B82300C2EC8D /* PHImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHImage.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -712,7 +711,6 @@
 				C1A78D2F147BDEB9009347AE /* PHAnimator.cpp */,
 				C1A78D31147BE868009347AE /* PHParticleAnimator.h */,
 				C1A78D32147CBC9E009347AE /* PHParticleAnimator.cpp */,
-				C17B47711305B6C800C2EC8D /* PHAnimationDescriptor.h */,
 				C1B6D46314B09A8600AC18D7 /* PHCinematicAnimator.h */,
 				C1B6D46414B09D3600AC18D7 /* PHCinematicAnimator.cpp */,
 			);

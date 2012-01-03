@@ -142,7 +142,6 @@ protected:
     
     void animateHurtInvuln();
     void _animateHurtInvuln(PHObject * sender, void * ud);
-    void _animateHurtInvulnEnd(PHObject * sender, void * ud);
     
 public:
     void setHP(double HP) { hp = HP; if (hp<=0) { hp=0; lowHP(); } if (hp>maxHP) hp=maxHP; }

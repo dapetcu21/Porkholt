@@ -52,15 +52,10 @@ void PHLPowerup::dismiss()
         return;
     }
     remaining = animationTime;
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->view = v;
+    v->beginCinematicAnimation(animationTime,PHCinematicAnimator::FadeInFunction);
     double scale = 1024;
-    anim->scaleX = 1/scale;
-    anim->scaleY = 1/scale;
-    anim->time = animationTime;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    PHView::addAnimation(anim);
-    anim->release();
+    v->animateScale(PHSize(1/scale,1/scale));
+    v->commitCinematicAnimation();
 }
 
 void PHLPowerup::updatePosition()

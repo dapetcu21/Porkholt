@@ -45,7 +45,7 @@ public:
     void setBackgroundColor(const PHColor & c);
     void setForegroundColor(const PHColor & c);
     
-    void setDoneCallback(PHInvocation inv) { invocation = inv; }
+    void setDoneCallback(const PHInvocation & inv) { invocation = inv; }
 };
 
 #endif

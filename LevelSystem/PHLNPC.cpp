@@ -27,6 +27,7 @@
 #include "PHImageAnimator.h"
 #include "PHImageView.h"
 #include "PHLPlayer.h"
+#include "PHAnimatorPool.h"
 
 #include <typeinfo>
 
@@ -260,7 +261,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
         getWorld()->getWorldView()->addSubview(dialogView);
     }
     dialogView->mutex()->lock();
-    PHView::cancelAllAnimationsWithTag(5836);
+    PHAnimatorPool::currentAnimatorPool()->removeAnimatorsWithTag(5836);
     PHPoint bubblePoint = pos;
     bubblePoint.y+=overHeadPoint.y;
     PHLCamera * camera = getWorld()->getCamera();
@@ -285,15 +286,10 @@ void PHLNPC::showDialog(PHDialog *dialog)
     dialogView->setScaleX(1/scale);
     dialogView->setScaleY(1/scale);
     dialogView->setScalingCenter(PHOriginPoint);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->scaleX = scale;
-    anim->scaleY = scale;
-    anim->view = dialogView;
-    anim->time = 0.5f;
-    anim->tag = 5836;
-    anim->timeFunction = PHAnimationDescriptor::BounceFunction;
-    PHView::addAnimation(anim);
-    anim->release();
+    dialogView->beginCinematicAnimation(0.5f,PHCinematicAnimator::BounceFunction);
+    dialogView->animateScale(PHSize(scale,scale));
+    dialogView->animationTag(5836);
+    dialogView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
 }
 
@@ -344,19 +340,14 @@ void PHLNPC::dismissDialog()
     }
     if (!dialogView) return;
     dialogView->mutex()->lock();
-    dialogView->cancelAnimationsWithTag(5836);
-    dialogTextView->cancelAnimationsWithTag(5836);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
+    dialogView->removeCinematicAnimationsWithTag(5836);
+    dialogTextView->removeCinematicAnimationsWithTag(5836);
+    dialogView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
     double scale = 1024;
-    anim->scaleX = 1/scale;
-    anim->scaleY = 1/scale;
-    anim->time = 0.5f;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->callback = PHInvN(this, PHLNPC::_dialogDismissed);
-    anim->view = dialogView;
-    anim->tag = 5838;
-    PHView::addAnimation(anim);
-    anim->release();
+    dialogView->animateScale(PHSize(1/scale,1/scale));
+    dialogView->animationCallback(PHInvN(this, PHLNPC::_dialogDismissed));
+    dialogView->animationTag(5838);
+    dialogView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
 }
 
@@ -376,17 +367,13 @@ void PHLNPC::swapDialog(PHDialog *dialog)
         return;
     }
     dialogView->mutex()->lock();
-    dialogView->cancelAnimationsWithTag(5836);
-    dialogTextView->cancelAnimationsWithTag(5836);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->customColor = PHClearColor;
-    anim->time = 0.2f;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    anim->callback = PHInvN(this, PHLNPC::_dialogSwapBegin);
-    anim->view = dialogTextView;
-    anim->tag = 5838;
-    PHView::addAnimation(anim);
-    anim->release();
+    dialogView->removeCinematicAnimationsWithTag(5836);
+    dialogTextView->removeCinematicAnimationsWithTag(5836);
+    dialogTextView->beginCinematicAnimation(0.2f,PHCinematicAnimator::FadeOutFunction);
+    dialogTextView->animateCustomColor(PHClearColor);
+    dialogTextView->animationCallback(PHInvN(this, PHLNPC::_dialogSwapBegin));
+    dialogTextView->animationTag(5838);
+    dialogTextView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
 }
 
@@ -422,36 +409,22 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     {
         dialogTextView->setScaleX(width/owidth);
         dialogTextView->setScaleY(height/oheight);
-        PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-        anim->scaleX = owidth/width;
-        anim->scaleY = oheight/height;
-        anim->time = 0.5;
-        anim->tag = 5838;
-        anim->timeFunction = PHAnimationDescriptor::FadeInOutFunction;
-        anim->view = dialogTextView;
-        PHView::addAnimation(anim);
-        anim->release();
+        dialogTextView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInOutFunction);
+        dialogTextView->animateScale(PHSize(owidth/width,oheight/height));
+        dialogTextView->animationTag(5838);
+        dialogTextView->commitCinematicAnimation();
     }
     
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->scaleX = width/owidth;
-    anim->scaleY = height/oheight;
-    anim->time = 0.5;
-    anim->tag = 5838;
-    anim->timeFunction = PHAnimationDescriptor::FadeInOutFunction;
-    anim->view = dialogView;
-    anim->callback = PHInvN(this, PHLNPC::_dialogSwapEnd);
-    PHView::addAnimation(anim);
-    anim->release();
+    dialogView->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInOutFunction);
+    dialogView->animateScale(PHSize(width/owidth,height/oheight));
+    dialogView->animationTag(5838);
+    dialogView->animationCallback(PHInvN(this, PHLNPC::_dialogSwapEnd));
+    dialogView->commitCinematicAnimation();
     
-    anim = new PHAnimationDescriptor;
-    anim->customColor = PHBlackColor;
-    anim->time = 0.2f;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->view = dialogTextView;
-    anim->tag = 5838;
-    PHView::addAnimation(anim);
-    anim->release();
+    dialogTextView->beginCinematicAnimation(0.2f, PHCinematicAnimator::FadeInFunction);
+    dialogTextView->animateCustomColor(PHBlackColor);
+    dialogTextView->animationTag(5838);
+    dialogTextView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
 }
 
@@ -473,7 +446,7 @@ void PHLNPC::showQuest()
         getWorld()->getWorldView()->addSubview(questView);
     }
     questView->mutex()->lock();
-    questView->cancelAnimationsWithTag(4867);
+    questView->removeCinematicAnimationsWithTag(4867);
     questView->setUserInput(true);
     
     double aspectRatio = qi?((double)(qi->width())/qi->height()):1.0f;
@@ -486,16 +459,11 @@ void PHLNPC::showQuest()
     questView->setScaleX(1/scale);
     questView->setScaleY(1/scale);
     animatingquest = true;
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->scaleX = scale;
-    anim->scaleY = scale;
-    anim->tag = 4867;
-    anim->view = questView;
-    anim->callback = PHInvN(this,PHLNPC::questShowedUp);
-    anim->time = 0.5;
-    anim->timeFunction = PHAnimationDescriptor::BounceFunction;
-    PHView::addAnimation(anim);
-    anim->release();
+    questView->beginCinematicAnimation(0.5f,PHCinematicAnimator::BounceFunction);
+    questView->animateScale(PHSize(scale,scale));
+    questView->animationTag(4867);
+    questView->animationCallback(PHInvN(this,PHLNPC::questShowedUp));
+    questView->commitCinematicAnimation();
     questView->mutex()->unlock();
 }
 
@@ -522,21 +490,16 @@ void PHLNPC::hideQuest()
         return;
     }
     questView->mutex()->lock();
-    questView->cancelAnimationsWithTag(4867);
+    questView->removeCinematicAnimationsWithTag(4867);
     questView->setUserInput(false);
     
     double scale = 1024;
     animatingquest = true;
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->scaleX = 1/scale;
-    anim->scaleY = 1/scale;
-    anim->tag = 4867;
-    anim->view = questView;
-    anim->callback = PHInvN(this, PHLNPC::questHiddenItself);
-    anim->time = 0.3;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    PHView::addAnimation(anim);
-    anim->release();
+    questView->beginCinematicAnimation(0.3f,PHCinematicAnimator::FadeOutFunction);
+    questView->animateScale(PHSize(1/scale,1/scale));
+    questView->animationTag(4867);
+    questView->animationCallback(PHInvN(this, PHLNPC::questHiddenItself));
+    questView->commitCinematicAnimation();
     questView->mutex()->unlock();
 
 }
@@ -679,32 +642,16 @@ void PHLNPC::decreasedHP()
     animateHurtInvuln();
 }
 
-void PHLNPC::_animateHurtInvulnEnd(PHObject * sender, void * ud)
-{
-    if (!bodyView) return;
-    
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->time = hInvulnTime/2;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->view = bodyView;
-    anim->customColor = PHWhiteColor;
-    PHView::addAnimation(anim);
-    anim->release();
-}
-
 void PHLNPC::_animateHurtInvuln(PHObject * sender, void * ud)
 {
     if (hInvulnFadeColor == PHInvalidColor) return;
     if (!bodyView) return;
     bodyView->setTintColor(PHWhiteColor);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->time = hInvulnTime/2;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    anim->view = bodyView;
-    anim->customColor = hInvulnFadeColor;
-    anim->callback = PHInvN(this, PHLNPC::_animateHurtInvulnEnd);
-    PHView::addAnimation(anim);
-    anim->release();
+    bodyView->beginCinematicAnimation(hInvulnTime/2,PHCinematicAnimator::FadeOutFunction);
+    bodyView->animateCustomColor(hInvulnFadeColor);
+    bodyView->chainCinematicAnimation(hInvulnTime/2,PHCinematicAnimator::FadeInFunction);
+    bodyView->animateCustomColor(PHWhiteColor);
+    bodyView->commitCinematicAnimation();
 }
 
 void PHLNPC::animateHurtInvuln()

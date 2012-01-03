@@ -64,15 +64,15 @@ void PHTextController::setForegroundColor(const PHColor & c)
 void PHTextController::beginBlackout()
 {
     blackoutView->setBackgroundColor(PHInvalidColor);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->bgColor = bColor;
-	anim->tag=-4444;
-	anim->view = blackoutView;
-	anim->time = 0.5f;
-	anim->callback = PHInvN(this, PHTextController::middleBlackout);
-	anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-	PHView::addAnimation(anim);
-	anim->release();
+    blackoutView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+    blackoutView->animateBgColor(bColor);
+    blackoutView->animationTag(-4444);
+    blackoutView->animationCallback(PHInvN(this, PHTextController::middleBlackout));
+    blackoutView->chainCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
+    blackoutView->animateBgColor(PHClearColor);
+    blackoutView->animationTag(-4444);
+    blackoutView->animationCallback(PHInvN(this,PHTextController::endBlackout));
+    blackoutView->commitCinematicAnimation();
 }
 
 void PHTextController::middleBlackout()
@@ -80,15 +80,6 @@ void PHTextController::middleBlackout()
     textView->setFontSize(0.1f);
     textView->adjustFontSizeToFit(5);
     textView->setText((*strings)[pos]);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->bgColor = PHClearColor;
-	anim->tag=-4444;
-	anim->view = blackoutView;
-	anim->time = 0.5f;
-	anim->callback = PHInvN(this,PHTextController::endBlackout);
-	anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-	PHView::addAnimation(anim);
-	anim->release();
 }
 
 void PHTextController::endBlackout()

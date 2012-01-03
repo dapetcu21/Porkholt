@@ -20,7 +20,7 @@ PHEventQueue::~PHEventQueue()
     mutex->release();
 }
 
-void PHEventQueue::schedule(PHInvocation inv, bool waitTillDone)
+void PHEventQueue::schedule(const PHInvocation & inv, bool waitTillDone)
 {
     event evt;
     evt.invocation = inv;

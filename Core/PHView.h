@@ -11,7 +11,6 @@
 #define PHVIEW_H
 
 #include "PHMain.h"
-#include "PHAnimationDescriptor.h"
 #include "PHCinematicAnimator.h"
 #include "PHEvent.h"
 
@@ -140,17 +139,11 @@ public:
 	friend class PHGameManager;
 	friend class PHEventHandler;
 	
-//animation system
 private:
-	static std::list<PHAnimationDescriptor*> animations;
-	PHView * pointerDeepFirst(PHEvent * touch);
-	static double animFunction(double time,int ftype);
-public:
+    PHView * pointerDeepFirst(PHEvent * touch);
     
-    virtual const PHColor & animatedColor() { return PHInvalidColor; };
-    virtual void setAnimatedColor(const PHColor &) {};
-    virtual void incrementAnimatedValue(double) {}
-    
+//animation system
+protected:
     void setCinematicPosition(const PHPoint & p) { setPosition(p); }
     PHPoint cinematicPosition() { return position(); }
     void setCinematicRotation(double r) { setRotation(r); }
@@ -159,13 +152,6 @@ public:
     PHSize cinematicScale() { return PHSize(scaleX(),scaleY()); }
     void setCinematicBgColor(const PHColor & c) { setBackgroundColor(c); }
     PHColor cinematicBgColor() { return backgroundColor(); }
-    
-	static void addAnimation(PHAnimationDescriptor * anim);
-	static void updateAnimation(double time);
-	void cancelAnimationsWithTag(int tag);
-	void cancelAnimations() { cancelAnimationsWithTag(0); };
-	static void cancelAllAnimationsWithTag(int tag);
-	static void cancelAllAnimations() { cancelAllAnimationsWithTag(0); };
 
 //auxiliar view binding
 protected:

@@ -56,7 +56,7 @@ protected:
     void menuDismissed(PHObject * sender, void * ud);
 public:
     
-    void setEndLevelCallback(PHInvocation inv){
+    void setEndLevelCallback(const PHInvocation & inv){
         ec_invocation = inv;
     }
     

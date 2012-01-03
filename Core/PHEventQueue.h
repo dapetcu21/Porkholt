@@ -26,7 +26,7 @@ private:
 public:
     PHEventQueue();
     virtual ~PHEventQueue();
-    void schedule(PHInvocation inv, bool waitTillDone); //WARNING: don't use waitTillDone unless you call processQueue on another thread
+    void schedule(const PHInvocation & inv, bool waitTillDone); //WARNING: don't use waitTillDone unless you call processQueue on another thread
     void processQueue();
     void updateTimers(double maxTime);
     void updateTimers() { updateTimers(INFINITY); }

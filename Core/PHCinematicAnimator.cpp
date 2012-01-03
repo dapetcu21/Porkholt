@@ -303,6 +303,16 @@ void PHCinematicActor::animateCustomColor(const PHColor & clr)
     _cinematicAnimator->setCustomColor(clr);
 }
 
+void PHCinematicActor::animationCallback(const PHInvocation & inv)
+{
+    _cinematicAnimator->setCallback(inv);
+}
+
+void PHCinematicActor::animationTag(int tag)
+{
+    _cinematicAnimator->setTag(tag);
+}
+
 void PHCinematicActor::animateCustomValue(double val)
 {
     _cinematicAnimator->setCustomValueDelta(_cinematicAnimator->customValueDelta()+val);

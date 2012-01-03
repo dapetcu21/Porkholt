@@ -204,7 +204,6 @@ PHWorld::~PHWorld()
 
 void PHWorld::updatePhysics()
 {
-    double frameInterval = 1.0f/(_gameManager->framesPerSecond());
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -501,16 +500,12 @@ void PHWorld::_fadeToColor(PHObject * sender, void * ud)
         dimView = new PHView(view->bounds());
         view->addSubview(dimView);
     }
-    dimView->cancelAnimationsWithTag(5072);
+    dimView->removeCinematicAnimationsWithTag(5072);
     dimView->setBackgroundColor(PHClearColor);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    anim->time = 0.5;
-    anim->view = dimView;
-    anim->bgColor = dimColor;
-    anim->callback = PHInv(this,PHWorld::fadedToColor,ud);
-    PHView::addAnimation(anim);
-    anim->release();
+    dimView->beginCinematicAnimation(0.5,PHCinematicAnimator::FadeOutFunction);
+    dimView->animateBgColor(dimColor);
+    dimView->animationCallback(PHInv(this,PHWorld::fadedToColor,ud));
+    dimView->commitCinematicAnimation();
 }
 
 void PHWorld::fadeToColor(const PHColor & color, void * ud)
@@ -527,16 +522,11 @@ void PHWorld::fadeToColor(const PHColor & color, void * ud)
 void PHWorld::_dismissFading(PHObject * sender, void * ud)
 {
     if (!dimView) return;
-    dimView->cancelAnimationsWithTag(5072);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    anim->time = 0.5;
-    anim->view = dimView;
-    anim->bgColor = PHClearColor;
-    anim->callback = PHInv(this,PHWorld::_fadedToColor,ud);
-    PHView::addAnimation(anim);
-    anim->release();
-
+    dimView->removeCinematicAnimationsWithTag(5072);
+    dimView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+    dimView->animateBgColor(PHClearColor);
+    dimView->animationCallback(PHInv(this,PHWorld::_fadedToColor,ud));
+    dimView->commitCinematicAnimation();
 }
 
 void PHWorld::dismissFading(void * ud)
@@ -558,14 +548,10 @@ void PHWorld::dismissOverlayText()
 {
     if (!overlayView) return;
     overlayView->mutex()->lock();
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->customColor = PHClearColor;
-    anim->time = 0.5;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->view = overlayView;
-    anim->callback = PHInvN(this,PHWorld::_overlayDismissed);
-    PHView::addAnimation(anim);
-    anim->release();
+    overlayView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
+    overlayView->animateCustomColor(PHClearColor);
+    overlayView->animationCallback(PHInvN(this,PHWorld::_overlayDismissed));
+    overlayView->commitCinematicAnimation();
     overlayView->mutex()->unlock();
 }
 
@@ -588,13 +574,9 @@ void PHWorld::overlayText(const string & s, double duration)
     overlayView->mutex()->lock();
     overlayView->setFontColor(PHClearColor);
     overlayView->setText(s);
-    PHAnimationDescriptor * anim = new PHAnimationDescriptor;
-    anim->customColor = PHColor(0, 0, 0, 0.5);
-    anim->time = 0.5;
-    anim->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    anim->view = overlayView;
-    PHView::addAnimation(anim);
-    anim->release();
+    overlayView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
+    overlayView->animateCustomColor(PHColor(0, 0, 0, 0.5));
+    overlayView->commitCinematicAnimation();
     
     PHTimer * timer = new PHTimer;
     timer->setTimeInterval(duration-0.5);

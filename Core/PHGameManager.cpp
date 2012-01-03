@@ -107,7 +107,6 @@ void PHGameManager::renderFrame(double timeElapsed)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
     
-	PHView::updateAnimation(timeElapsed);
     PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
     
 	if (viewController)  

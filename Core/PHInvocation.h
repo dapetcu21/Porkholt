@@ -28,7 +28,7 @@ public:
     PHInvocation() : target(NULL), callback(NULL), userdata(NULL) {}
     PHInvocation(const PHInvocation & o) : target(o.target), callback(o.callback), userdata(o.userdata) {}
     
-    bool valid() 
+    bool valid() const
     {
         return target && callback;
     }
@@ -40,19 +40,19 @@ public:
         userdata = NULL;
     }
     
-    void call()
+    void call() const
     {
         if (target && callback)
             (target->*callback)(NULL,userdata);
     }
     
-    void call(PHObject * sender) 
+    void call(PHObject * sender) const
     {
         if (target && callback)
             (target->*callback)(sender,userdata);
     }
     
-    void call(PHObject * sender, void * ud) 
+    void call(PHObject * sender, void * ud) const
     {
         if (target && callback)
             (target->*callback)(sender,ud);

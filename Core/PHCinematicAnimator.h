@@ -52,6 +52,8 @@ public:
     void animateBgColor(const PHColor & clr);
     void animateCustomColor(const PHColor & clr);
     void animateCustomValue(double val);
+    void animationCallback(const PHInvocation & inv);
+    void animationTag(int tag);
     
     PHCinematicActor();
     ~PHCinematicActor();
@@ -93,7 +95,7 @@ public:
     double duration() { return time; }
     double totalDuration() { return totalTime; }
     void setDuration(double d) { time = totalTime = d; }
-    void setCallback(PHInvocation cb) { callback = cb; }
+    void setCallback(const PHInvocation & cb) { callback = cb; }
     
     void setActor(PHCinematicActor * a) { _actor = a; }
     PHCinematicActor * actor() { return _actor; }

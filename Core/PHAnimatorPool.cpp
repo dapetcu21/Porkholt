@@ -54,6 +54,29 @@ void PHAnimatorPool::removeAnimator(PHAnimator * a)
     mutex->unlock();
 }
 
+void PHAnimatorPool::removeAllAnimators()
+{
+    mutex->lock();
+    if (insideJob)
+        deleteQueue.insert(animators.begin(),animators.end());
+    else
+        animators.clear();
+    mutex->unlock();
+}
+
+void PHAnimatorPool::removeAnimatorsWithTag(int d)
+{
+    for (set<PHAnimator*>::iterator i = animators.begin(); i != animators.end(); i++)
+        if ((*i)->tag() == d)
+            deleteQueue.insert(*i);
+    if (!insideJob)
+    {
+        for (set<PHAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
+            animators.erase(*i);
+        deleteQueue.clear();
+    }
+}
+
 PHAnimatorPool * PHAnimatorPool::currentAnimatorPool()
 {
     staticMutex->lock();
@@ -102,6 +125,8 @@ PHAnimatorPool * PHAnimatorPool::mainAnimatorPool()
     return main;
 }
 
+void removeAllAnimators();
+void remoteAnimatorsWithTag(int d);
 
 void PHAnimatorPool::advanceAnimation(double elapsedTime)
 {

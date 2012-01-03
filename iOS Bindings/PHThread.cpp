@@ -110,7 +110,7 @@ bool PHThread::isMainThread()
 	return (pthread_self()==main->thread);
 }
 
-void PHThread::executeOnThread(PHInvocation invocation,bool waitUntilDone)
+void PHThread::executeOnThread(const PHInvocation & invocation,bool waitUntilDone)
 {
 	if (pthread_self()==thread)
 	{
@@ -120,7 +120,7 @@ void PHThread::executeOnThread(PHInvocation invocation,bool waitUntilDone)
     eventQueue->schedule(invocation,waitUntilDone);
 }
 
-void PHThread::scheduleOnThread(PHInvocation invocation, bool waitUntilDone)
+void PHThread::scheduleOnThread(const PHInvocation & invocation, bool waitUntilDone)
 {
     eventQueue->schedule(invocation,waitUntilDone);
 }

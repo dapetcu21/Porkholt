@@ -56,7 +56,7 @@ void PHLevelController::pauseWithMenu()
     world->getView()->setUserInput(false);
     if (menuView)
     {
-        menuView->cancelAnimationsWithTag(3752);
+        menuView->removeCinematicAnimationsWithTag(3752);
         rv = menuView->viewWithTag(66);
         if (rv)
         {
@@ -100,24 +100,15 @@ void PHLevelController::pauseWithMenu()
         qb->release();
     }
     menuView->setBackgroundColor(PHInvalidColor);
-    PHAnimationDescriptor * a = new PHAnimationDescriptor;
-    a->time = 0.5;
-    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    a->bgColor = PHColor(0.0f,0.0f,0.0f,0.8f);
-    a->view = menuView;
-    a->tag = 3752;
-    PHView::addAnimation(a);
-    a->release();
+    menuView->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+    menuView->animateBgColor(PHColor(0.0f,0.0f,0.0f,0.8f));
+    menuView->animationTag(3752);
+    menuView->commitCinematicAnimation();
     rv->setRotation(3*M_PI/2);
-    
-    a = new PHAnimationDescriptor;
-    a->time = 0.5;
-    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    a->tag = 3752;
-    a->view = rv;
-    a->rotate = -3*M_PI/2;
-    PHView::addAnimation(a);
-    a->release();
+    rv->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+    rv->animationTag(3752);
+    rv->animateRotate(-3*M_PI/2);
+    rv->commitCinematicAnimation();
     
     double rs = fr.width*BT_SIZE;
     double rg = rs/2+fr.width*BT_GAP/2;
@@ -125,25 +116,15 @@ void PHLevelController::pauseWithMenu()
     rb->setFrame(PHRect(fr.width/2+rg+off-rs/2,fr.height/2-rs/2,rs,rs));
     qb->setFrame(PHRect(fr.width/2-rg-off-rs/2,fr.height/2-rs/2,rs,rs));
     
+    rb->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+    rb->animateMove(PHPoint(-off,0));
+    rb->animationTag(3752);
+    rb->commitCinematicAnimation();
     
-    a = new PHAnimationDescriptor;
-    a->time = 0.5;
-    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    a->tag = 3752;
-    a->view = rb;
-    a->moveX = -off;
-    PHView::addAnimation(a);
-    a->release();
-
-    a = new PHAnimationDescriptor;
-    a->time = 0.5;
-    a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-    a->tag = 3752;
-    a->view = qb;
-    a->moveX = off;
-    PHView::addAnimation(a);
-    a->release();
-    
+    qb->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+    qb->animateMove(PHPoint(off,0));
+    qb->animationTag(3752);
+    qb->commitCinematicAnimation();
 }
 
 void PHLevelController::dismissMenu()
@@ -161,25 +142,19 @@ void PHLevelController::dismissMenu()
         qb = (PHButtonView*)rv->viewWithTag(65);
     }
     
-    PHAnimationDescriptor * a;
-    
     bool cb = false;
     
     if (rv)
     {
-        a = new PHAnimationDescriptor;
-        a->time = 0.25;
-        a->timeFunction = PHAnimationDescriptor::FadeInFunction;
-        a->tag = 3752;
-        a->view = rv;
-        a->rotate = -M_PI/2;
+        rv->beginCinematicAnimation(0.25f,PHCinematicAnimator::FadeInFunction);
+        rv->animationTag(3752);
+        rv->animateRotate(-M_PI/2);
         if (!cb)
         {
-            a->callback = PHInvN(this,PHLevelController::menuDismissed);
+            rv->animationCallback(PHInvN(this,PHLevelController::menuDismissed));
             cb = true;
         }
-        PHView::addAnimation(a);
-        a->release();
+        rv->commitCinematicAnimation();
     }
     
     double rs = fr.width*BT_SIZE;
@@ -188,42 +163,29 @@ void PHLevelController::dismissMenu()
     
     if (rb)
     {
-        a = new PHAnimationDescriptor;
-        a->time = 0.25;
-        a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-        a->tag = 3752;
-        a->view = rb;
-        a->moveX = off;
-        PHView::addAnimation(a);
-        a->release();
+        rb->beginCinematicAnimation(0.25f, PHCinematicAnimator::FadeOutFunction);
+        rb->animateMove(PHPoint(off,0));
+        rb->animationTag(3752);
+        rb->commitCinematicAnimation();
     }
     
     if (qb)
     {
-        a = new PHAnimationDescriptor;
-        a->time = 0.25;
-        a->timeFunction = PHAnimationDescriptor::FadeOutFunction;
-        a->tag = 3752;
-        a->view = qb;
-        a->moveX = -off;
-        PHView::addAnimation(a);
-        a->release();
+        qb->beginCinematicAnimation(0.25f, PHCinematicAnimator::FadeOutFunction);
+        qb->animateMove(PHPoint(-off,0));
+        qb->animationTag(3752);
+        qb->commitCinematicAnimation();
     }
     
-    a = new PHAnimationDescriptor;
-    a->time = 0.25;
-    a->timeFunction = PHAnimationDescriptor::FadeInFunction;
-    a->bgColor = PHClearColor;
-    a->view = menuView;
-    a->tag = 3752;
+    menuView->beginCinematicAnimation(0.25f, PHCinematicAnimator::FadeInFunction);
+    menuView->animateBgColor(PHClearColor);
+    menuView->animationTag(3752);
     if (!cb)
     {
-        a->callback = PHInvN(this, PHLevelController::menuDismissed);
+        menuView->animationCallback(PHInvN(this, PHLevelController::menuDismissed));
         cb = true;
     }
-    PHView::addAnimation(a);
-    a->release();
-    
+    menuView->commitCinematicAnimation();
 }
 
 void PHLevelController::menuDismissed(PHObject *, void *)
@@ -645,8 +607,10 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         mutex->lock();
         if(!p)
         {
+            animPool->pop();
             animPool->advanceAnimation(frameInterval);
             world->updateScene();
+            animPool->push();
         }
         mutex->unlock();
         pSem1->signal();
