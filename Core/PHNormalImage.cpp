@@ -16,7 +16,11 @@
 
 PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thread(NULL)
 {
-    fp = fopen((PHGameManager::isGloballyHD()?(path+".hd"):path).c_str(), "rb");
+    fp = NULL;
+    if (PHGameManager::isGloballyHD())
+        fp = fopen((path+".hd").c_str(), "rb");
+    if (!fp)
+        fp = fopen(path.c_str(), "rb");
 	if (!fp)
 		throw PHIOError + ": " + path;
     antialiasing = PHFileManager::fileExists(path+".aa");
@@ -249,7 +253,7 @@ PHRect PHNormalImage::textureCoordinates(const PHRect & port)
     return PHRect(xC*port.x+xc,yC*(port.y+port.height)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
 
-void PHNormalImage::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)
+void PHNormalImage::renderInFramePortionTint(PHGameManager * _gameManager, const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
     load();
     

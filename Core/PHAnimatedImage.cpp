@@ -202,11 +202,13 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
         
         stringstream s;
         s<<path<<"/"<<i<<".png";
-        FILE * fp = fopen((PHGameManager::isGloballyHD()?(s.str()+".hd"):s.str()).c_str(), "rb");
+        FILE * fp = NULL;
+        if (PHGameManager::isGloballyHD())
+            fp = fopen((s.str() + ".hd").c_str(), "rb");
         if (!fp)
-        {
+            fp = fopen(s.str().c_str(), "rb");
+        if (!fp)
             continue;
-        }
         
         fread(header, 1, 8, fp);
         if (png_sig_cmp(header, 0, 8))

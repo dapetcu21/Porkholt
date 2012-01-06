@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C104A3D514B6FCF1001CDCD3 /* PHCinematicAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C104A3D314B6FCF1001CDCD3 /* PHCinematicAnimator.cpp */; };
 		C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A2143E28500002A811 /* ImageViewController.mm */; };
 		C11DF2AA143F6BC30002A811 /* PLWorldView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A9143F6BC30002A811 /* PLWorldView.mm */; };
 		C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11EA9DC1425B7A300795880 /* Cocoa.framework */; };
@@ -104,6 +105,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C104A3D314B6FCF1001CDCD3 /* PHCinematicAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCinematicAnimator.cpp; sourceTree = "<group>"; };
+		C104A3D414B6FCF1001CDCD3 /* PHCinematicAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCinematicAnimator.h; sourceTree = "<group>"; };
 		C112BEC3145D78CF00FAE1A6 /* PLMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLMatching.h; sourceTree = "<group>"; };
 		C11DF2A1143E28500002A811 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		C11DF2A2143E28500002A811 /* ImageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageViewController.mm; sourceTree = "<group>"; };
@@ -131,7 +134,6 @@
 		C127D2F7143A1AF6004DEB16 /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
 		C127D2F8143A1AF6004DEB16 /* PHAnimatedImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimatedImage.cpp; sourceTree = "<group>"; };
 		C127D2F9143A1AF6004DEB16 /* PHAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimatedImage.h; sourceTree = "<group>"; };
-		C127D2FA143A1AF6004DEB16 /* PHAnimationDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimationDescriptor.h; sourceTree = "<group>"; };
 		C127D2FB143A1AF6004DEB16 /* PHAnimatorPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimatorPool.cpp; sourceTree = "<group>"; };
 		C127D2FC143A1AF6004DEB16 /* PHAnimatorPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAnimatorPool.h; sourceTree = "<group>"; };
 		C127D2FD143A1AF6004DEB16 /* PHAuxLayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAuxLayerView.cpp; sourceTree = "<group>"; };
@@ -405,6 +407,8 @@
 		C127D2F6143A1AF6004DEB16 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C104A3D314B6FCF1001CDCD3 /* PHCinematicAnimator.cpp */,
+				C104A3D414B6FCF1001CDCD3 /* PHCinematicAnimator.h */,
 				C1503BD21480EF37002358B5 /* PHAnimator.cpp */,
 				C1503BD31480EF37002358B5 /* PHAnimator.h */,
 				C1503BD41480EF37002358B5 /* PHParticleAnimator.cpp */,
@@ -415,7 +419,6 @@
 				C127D2F7143A1AF6004DEB16 /* PHAccelInterface.h */,
 				C127D2F8143A1AF6004DEB16 /* PHAnimatedImage.cpp */,
 				C127D2F9143A1AF6004DEB16 /* PHAnimatedImage.h */,
-				C127D2FA143A1AF6004DEB16 /* PHAnimationDescriptor.h */,
 				C127D2FB143A1AF6004DEB16 /* PHAnimatorPool.cpp */,
 				C127D2FC143A1AF6004DEB16 /* PHAnimatorPool.h */,
 				C127D2FD143A1AF6004DEB16 /* PHAuxLayerView.cpp */,
@@ -787,6 +790,7 @@
 				C1503BDA1480EF37002358B5 /* PHAnimator.cpp in Sources */,
 				C1503BDB1480EF37002358B5 /* PHParticleAnimator.cpp in Sources */,
 				C1503BDC1480EF37002358B5 /* PHParticleView.cpp in Sources */,
+				C104A3D514B6FCF1001CDCD3 /* PHCinematicAnimator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

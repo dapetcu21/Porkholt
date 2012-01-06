@@ -29,6 +29,8 @@ class PHView;
 -(PHView*)worldView;
 -(IBAction)resetToOrigin:(id)sender;
 -(void)render;
+-(void)makeCurrent;
++(void)globalFrame;
 
 @property(nonatomic,retain) IBOutlet OverlayController * overlay;
 @property(nonatomic,assign) IBOutlet id<PLPorkholtViewDelegate> delegate;

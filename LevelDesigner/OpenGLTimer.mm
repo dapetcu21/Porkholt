@@ -32,9 +32,10 @@ static CVReturn MyDisplayLinkCallback (
 
 -(void)timerFired
 {
+    [PLPorkholtView globalFrame];
     for (PLPorkholtView * v in views)
     {
-        [[v openGLContext] makeCurrentContext];
+        [v makeCurrent];
         [v render];
     }
 }
@@ -57,12 +58,18 @@ static CVReturn MyDisplayLinkCallback (
 {
     CVDisplayLinkRelease(displayLink);
     [views release];
+    [context release];
     OpenGLTimer_singleton = nil;
     [super dealloc];
 }
 
--(void)addView:(PLPorkholtView*)v
+-(void)addView:(PLPorkholtView*)v withPixelFormat:(NSOpenGLPixelFormat*)pf
 {
+    NSOpenGLContext * c = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:context];
+    if (!context)
+        context = [c retain];
+    [v setOpenGLContext: c];
+    [c release];
     [views addObject:v];
 }
 -(void)removeView:(PLPorkholtView*)v

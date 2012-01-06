@@ -373,14 +373,6 @@ double PHAngleFromNormalizedVector(PHPoint vec);
 
 void PHGLRotate(double angle);
 void PHGLFlip(PHPoint center, bool horiz, bool vert);
-enum PHGLStates
-{
-    PHGLVertexArray = 1<<0,
-    PHGLColorArray = 1<<1,
-    PHGLTextureCoordArray = 1<<2,
-    PHGLTexture = 1<<3
-};
-void PHGLSetStates(int states);
 
 extern PHColor PHGLCurrentColor;
 

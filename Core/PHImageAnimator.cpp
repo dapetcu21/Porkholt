@@ -192,7 +192,7 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
     return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
 
-void PHImageAnimator::renderInFramePortionTint(const PHRect & frm,const PHRect & port,const PHColor & tint)
+void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
     if (realframe<0) return;
     

@@ -28,11 +28,11 @@ void PHButtonView::draw()
 	{
 		if (imgDown)
             if (imgDown->isNormal())
-                ((PHNormalImage*)imgDown)->renderInFrame(_bounds);
+                ((PHNormalImage*)imgDown)->renderInFrame(_gameManager, _bounds);
 	} else {
 		if (imgUp)
             if (imgUp->isNormal())
-                ((PHNormalImage*)imgUp)->renderInFrame(_bounds);
+                ((PHNormalImage*)imgUp)->renderInFrame(_gameManager, _bounds);
 	}
 }
 

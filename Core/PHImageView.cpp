@@ -84,10 +84,10 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
     if (_image)
     {
         if (_image->isNormal())
-            ((PHNormalImage*)_image)->renderInFramePortionTint(fr,crd,clr);
+            ((PHNormalImage*)_image)->renderInFramePortionTint(_gameManager,fr,crd,clr);
         
         if (_image->isAnimated())
-            _animator->renderInFramePortionTint(fr,crd,clr);
+            _animator->renderInFramePortionTint(_gameManager,fr,crd,clr);
     }
 }
 

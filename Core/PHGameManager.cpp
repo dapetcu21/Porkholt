@@ -18,7 +18,7 @@
 #include "PHNavigationController.h"
 #include "PHEventHandler.h"
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0)
 {}
 
 PHGameManager::~PHGameManager()
@@ -71,6 +71,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     PHGLHasCapability(PHGLCapabilityOpenGLES);
     
     entryPoint();
+    view->setGameManager(this);
 }
 
 void PHGameManager::setProjection()
@@ -99,22 +100,69 @@ void PHGameManager::processInput()
 #endif
 }
 
+void PHGameManager::globalFrame(double timeElapsed)
+{
+    PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
+    PHThread::mainThread()->processQueue();
+}
+
 void PHGameManager::renderFrame(double timeElapsed)
 {	
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 		
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
     
-    PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
-    
 	if (viewController)  
 		viewController->_updateScene(timeElapsed);
-	
-	PHThread::mainThread()->processQueue();
-	
+    
 	view->render();
+}
+
+void PHGameManager::setOpenGLStates(uint32_t states)
+{
+    if (states & PHGLResetAllStates)
+    {
+        states = 0;
+        openGLStates = 0xffffffff;
+    }
+    
+    int xr = states^openGLStates;
+    openGLStates = states;
+    
+    if (xr & PHGLVertexArray)
+    {
+        if (states & PHGLVertexArray)
+            glEnableClientState(GL_VERTEX_ARRAY);
+        else
+            glDisableClientState(GL_VERTEX_ARRAY);
+    }
+    
+    
+    if (xr & PHGLColorArray)
+    {
+        if (states & PHGLColorArray)
+            glEnableClientState(GL_COLOR_ARRAY);
+        else
+            glDisableClientState(GL_COLOR_ARRAY);
+    }
+    
+    if (xr & PHGLTextureCoordArray)
+    {
+        if (states & PHGLTextureCoordArray)
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        else
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+    
+    if (xr & PHGLTexture)
+    {
+        if (states & PHGLTexture)
+            glEnable(GL_TEXTURE_2D);
+        else
+            glDisable(GL_TEXTURE_2D);
+    }
 }
 
 void PHGameManager::_appSuspended(PHObject * sender, void * ud)

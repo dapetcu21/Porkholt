@@ -13,10 +13,10 @@
 #include "PHMain.h"
 #include "PHCinematicAnimator.h"
 #include "PHEvent.h"
+#include "PHGameManager.h"
 
 class PHMutex;
 class PHAuxLayerView;
-class PHGameManager;
 class PHView : public PHObject, public PHCinematicActor
 {
 protected:
@@ -178,5 +178,7 @@ public:
     PHGameManager * gameManager() { return _gameManager; }
     void setGameManager(PHGameManager * gm);
 };
+
+#define PHGLSetStates _gameManager->setOpenGLStates
 
 #endif

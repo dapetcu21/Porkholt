@@ -157,6 +157,7 @@ PHGameManager * PHGameManagerSingleton;
     double elapsedTime = time-lastTime;
     if (elapsedTime>1.5*frameInterval)
         elapsedTime = 1.5*frameInterval;
+    PHGameManager::globalFrame(elapsedTime);
     gameManager->renderFrame(elapsedTime);
     
     if (![v presentFramebuffer])

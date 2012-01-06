@@ -15,9 +15,10 @@
 {
     NSMutableSet * views;
     CVDisplayLinkRef displayLink;
+    NSOpenGLContext * context;
 }
 
--(void)addView:(PLPorkholtView*)v;
+-(void)addView:(PLPorkholtView*)v withPixelFormat:(NSOpenGLPixelFormat*)pf;
 -(void)removeView:(PLPorkholtView*)v;
 -(void)timerFired;
 

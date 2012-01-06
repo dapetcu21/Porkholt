@@ -38,9 +38,12 @@
     [overlay reshapeToRect:[self convertRectToBase:[self bounds]]];
 }
 
--(void)load
+-(void)loadWithPixelFormat:(NSOpenGLPixelFormat*)pf
 {
     if (gameManager) return;
+    
+    [[OpenGLTimer retainedInstance] addView:self withPixelFormat:pf];
+    
     [[self openGLContext] makeCurrentContext];
     
     GLint swapInt = 1;
@@ -49,17 +52,39 @@
     NSRect frame = [self bounds];
     gameManager = new PHGameManager;
     gameManager->setUserData(self);
-    gameManager->init(frame.size.width, frame.size.height, 60);
-    
-    [[OpenGLTimer retainedInstance] addView:self];
+    PHGameManagerInitParameters initParams;
+    initParams.screenWidth = frame.size.width;
+    initParams.screenHeight = frame.size.height;
+    initParams.fps = 60;
+    gameManager->init(initParams);
+}
+
+-(void)load
+{
+    [self loadWithPixelFormat:[NSOpenGLView defaultPixelFormat]];
+}
+
+
+-(void)makeCurrent
+{
+    NSOpenGLContext* context = [self openGLContext];
+    if ([context view] != self) {
+        [context setView:self];
+    }
+    [context makeCurrentContext];
 }
 
 -(id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat *)format
 {
-    self = [super initWithFrame:frameRect pixelFormat:format];
+    self = [super initWithFrame:frameRect];
     if (self)
-        [self load];
+        [self loadWithPixelFormat:format];
     return self;
+}
+
+-(BOOL) isOpaque {
+    
+    return YES;
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder
@@ -103,6 +128,7 @@
 
 -(void)render
 {
+    
     gameManager->processInput();
     
     static double time = 0;
@@ -370,6 +396,11 @@ int PHEventHandler::modifierMask()
 -(IBAction)resetAspectRatio:(id)sender
 {
     [delegate resetAspectRatio:sender];
+}
+
++(void)globalFrame
+{
+    PHGameManager::globalFrame(1/60.0f);
 }
 
 @end

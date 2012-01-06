@@ -29,6 +29,15 @@ public:
     double dpi;
 };
 
+enum PHGLStates
+{
+    PHGLVertexArray = 1<<0,
+    PHGLColorArray = 1<<1,
+    PHGLTextureCoordArray = 1<<2,
+    PHGLTexture = 1<<3,
+    PHGLResetAllStates = 1<<4
+};
+
 class PHGameManager : public PHObject
 {
 private:
@@ -55,6 +64,8 @@ private:
     
     void updateHD();
     
+    uint32_t openGLStates;
+    
 public:
     PHGameManager();
     ~PHGameManager();
@@ -66,6 +77,7 @@ public:
 	int framesPerSecond() { return fps; }
     double dotsPerInch() { return dpi; }
 	void renderFrame(double timeElapsed);
+    static void globalFrame(double timeElapsed);
 	void appSuspended();
 	void appResumed();
     bool isHD() { return hd; }
@@ -93,6 +105,8 @@ public:
     
     PHNavigationController * navigationController() { return viewController; }
     PHView * rootView() { return view; }
+    
+    void setOpenGLStates(uint32_t states);
 };
 
 #endif

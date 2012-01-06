@@ -15,6 +15,7 @@
 class PHAnimatedImage;
 class PHAnimatorPool;
 class PHImageView;
+class PHGameManager;
 
 class PHImageAnimator : public PHAnimator
 {
@@ -65,9 +66,9 @@ public:
     int lastRealFrame() { return lastframe; }
     
     //immediate mode
-    void renderInFrame(const PHRect & frm) { renderInFramePortionTint(frm,PHWholeRect,PHInvalidColor); }
-	void renderInFramePortion(const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(frm, cnstr,PHInvalidColor); }
-    void renderInFramePortionTint(const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
+    void renderInFrame(PHGameManager * gameManager, const PHRect & frm) { renderInFramePortionTint(gameManager, frm,PHWholeRect,PHInvalidColor); }
+	void renderInFramePortion(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(gameManager, frm, cnstr,PHInvalidColor); }
+    void renderInFramePortionTint(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
     
     //VBOs
     void rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImage::VBOParams & params1, GLuint & vbo2, PHImage::VBOParams & params2);
