@@ -31,6 +31,7 @@ protected:
     PHCinematicAnimator * _cinematicAnimator, * _rootAnimator;
     set<PHCinematicAnimator *> _cinematicAnimators;
     friend class PHCinematicAnimator;
+    PHMutex * _cinematicMutex;
     
 public:
     void addCinematicAnimation(PHCinematicAnimator * anim);

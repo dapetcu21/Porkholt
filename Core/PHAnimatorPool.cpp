@@ -66,6 +66,7 @@ void PHAnimatorPool::removeAllAnimators()
 
 void PHAnimatorPool::removeAnimatorsWithTag(int d)
 {
+    mutex->lock();
     for (set<PHAnimator*>::iterator i = animators.begin(); i != animators.end(); i++)
         if ((*i)->tag() == d)
             deleteQueue.insert(*i);
@@ -75,6 +76,7 @@ void PHAnimatorPool::removeAnimatorsWithTag(int d)
             animators.erase(*i);
         deleteQueue.clear();
     }
+    mutex->unlock();
 }
 
 PHAnimatorPool * PHAnimatorPool::currentAnimatorPool()

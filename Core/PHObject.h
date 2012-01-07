@@ -18,6 +18,8 @@
 #define PHOBJECT_PREFIX
 #endif
 
+//#define DEBUG_ZOMBIES
+
 class PHObject
 {
 private:
@@ -25,7 +27,24 @@ private:
 public:
 	PHObject(): _refcount(1) {};
 	PHOBJECT_PREFIX PHObject * retain() { _refcount++; return this;};
-	PHOBJECT_PREFIX PHObject * release() { _refcount--; if (!_refcount) { delete this; return NULL; }; return this; };
+	PHOBJECT_PREFIX PHObject * release() 
+    { 
+        _refcount--; 
+        if (!_refcount) 
+        { 
+#ifdef DEBUG_ZOMBIES
+            this->~PHObject();
+#else
+            delete this; 
+#endif
+            return NULL; 
+        }
+        if (_refcount<0) 
+        {
+            fprintf(stderr,"HEY YOU! this(%x) is a zombie object. Set a breakpoint in PHObject::release() to debug",(unsigned int)this);
+        }
+        return this; 
+    };
 	virtual ~PHObject() {}
 	int referenceCount() { return _refcount; };
 };
