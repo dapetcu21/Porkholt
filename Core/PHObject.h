@@ -41,7 +41,7 @@ public:
         }
         if (_refcount<0) 
         {
-            fprintf(stderr,"HEY YOU! this(%x) is a zombie object. Set a breakpoint in PHObject::release() to debug",(unsigned int)this);
+            fprintf(stderr,"HEY YOU! this(%llx) is a zombie object. Set a breakpoint in PHObject::release() to debug",(unsigned long long)(size_t)this);
         }
         return this; 
     };

@@ -87,6 +87,15 @@
     return YES;
 }
 
+-(void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+    if (!newWindow)
+    {
+        [overlay release];
+        overlay = nil;
+    }
+}
+
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];

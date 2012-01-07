@@ -82,7 +82,7 @@
     [[window contentView] setFrame:rect];
     [rightView reshape];
     [bottomView reshape];
-    [[openGLView openGLContext] makeCurrentContext];
+    [openGLView makeCurrent];
     [openGLView render];
 }
 
