@@ -13,6 +13,8 @@
 #include "PHChapterController.h"
 #include "PHFileManager.h"
 
+#include "PHTestViewController.h"
+
 #define POS_BG_Y 0.65
 #define BORDER_BG_LEFT 0.05
 #define SIZ_BG_WID 0.6
@@ -52,12 +54,26 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     bt->setUpCallback(PHInv(this,PHTitleScreen::buttonPressed, NULL));
     bt->setUserInput(true);
     
+    PHButtonView * bl = new PHButtonView(PHRect(0,0,50,50));
+    bl->setImage(PHImage::imageNamed("placeholder"));
+    bl->setPressedImage(PHImage::imageNamed("placeholder"));
+    bl->setUpCallback(PHInv(this,PHTitleScreen::testPressed, NULL));
+    bl->setUserInput(true);
+    
     v->addSubview(bg);
     v->addSubview(bt);
+    v->addSubview(bl);
     bg->release();
     bt->release();
     
     return v;
+}
+
+void PHTitleScreen::testPressed(PHObject * sender, void * ud)
+{
+    PHTestViewController * vc = new PHTestViewController();
+	vc->init(gameManager());
+    navigationController()->pushViewController(vc);
 }
 
 void PHTitleScreen::buttonPressed(PHObject * sender, void * ud)

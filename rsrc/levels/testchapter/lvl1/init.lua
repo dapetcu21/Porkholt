@@ -63,14 +63,38 @@ local bezierCurve_0 = {
 --}
 
 --platforma 0
-obj = objectWithClass("PHLPlatform")
+obj = objectWithClass("PHLObject")
 obj.pos = point(7,2)
-obj.patrolPath = bezierCurve_0
+--obj.patrolPath = bezierCurve_0
 obj.patrolSpeed = 1
 obj.patrolInCircle = true
+obj.keyframeAnimations = {
+	n = 1,
+	[0] = {
+		sections  = {
+			default = {
+				n = 8,
+				[0] = { time = 1.0, position = point(8,2), rotation = 0},
+				[1] = { time = 1.5, position = point(8,2), rotation = 90},
+				[2] = { time = 2.5, position = point(8,3), rotation = 90},
+				[3] = { time = 3.0, position = point(8,3), rotation = 180},
+				[4] = { time = 4.0, position = point(7,3), rotation = 180},
+				[5] = { time = 4.5, position = point(7,3), rotation = 270},
+				[6] = { time = 5.5, position = point(7,2), rotation = 270},
+				[7] = { time = 6.0, position = point(7,2), rotation = 360},
+				--[8] = { time = 6.0, jumpSection = "center", jumpTime = 0}
+			},
+			center = {
+				n = 1,
+				[0] = { time = 1.0, position = point(5,5) }
+			}
+		}
+	}
+}
 
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
-objectAddImage(obj,"/platform.png",-1,-0.15,2,0.3)
+objectAddImage(obj,"/platform.png",-1,-0.15,2,0.3,{
+})
 platforma0=addObject(obj);
 
 --platforma0->pod

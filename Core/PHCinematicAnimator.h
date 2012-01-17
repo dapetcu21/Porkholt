@@ -9,58 +9,10 @@
 #ifndef PHCINEMATICANIMATOR_H
 #define PHCINEMATICANIMATOR_H
 
-#include "PHAnimator.h"
+#include "PHGenericCinematicAnimator.h"
 
-class PHCinematicAnimator;
-class PHCinematicActor
-{
-protected:
-    virtual void setCinematicPosition(const PHPoint &) = 0;
-    virtual PHPoint cinematicPosition() = 0;
-    virtual void setCinematicRotation(double) = 0;
-    virtual double cinematicRotation() = 0;
-    virtual void setCinematicScale(const PHSize &) = 0;
-    virtual PHSize cinematicScale() = 0;
-    virtual void setCinematicBgColor(const PHColor &) = 0;
-    virtual PHColor cinematicBgColor() = 0;
-    virtual void setCinematicCustomColor(const PHColor &);
-    virtual PHColor cinematicCustomColor();
-    virtual void setCinematicCustomValue(double);
-    virtual double cinematicCustomValue();
-    
-    PHCinematicAnimator * _cinematicAnimator, * _rootAnimator;
-    set<PHCinematicAnimator *> _cinematicAnimators;
-    friend class PHCinematicAnimator;
-    PHMutex * _cinematicMutex;
-    
-public:
-    void addCinematicAnimation(PHCinematicAnimator * anim);
-    void removeCinematicAnimation(PHCinematicAnimator * anim);
-    void removeAllCinematicAnimations();
-    void removeCinematicAnimationsWithTag(int tag);
-    
-    PHCinematicAnimator * cinematicAnimator() { return _cinematicAnimator; }
-    void beginCinematicAnimation(double duration);
-    void beginCinematicAnimation(double duration, int type);
-    void chainCinematicAnimation(double duration);
-    void chainCinematicAnimation(double duration, int type);
-    void commitCinematicAnimation();
-    void dropCinematicAnimation();
-    
-    void animateMove(const PHPoint & mv);
-    void animateScale(const PHSize & mv);
-    void animateRotate(double rot);
-    void animateBgColor(const PHColor & clr);
-    void animateCustomColor(const PHColor & clr);
-    void animateCustomValue(double val);
-    void animationCallback(const PHInvocation & inv);
-    void animationTag(int tag);
-    
-    PHCinematicActor();
-    ~PHCinematicActor();
-};
-
-class PHCinematicAnimator : public PHAnimator
+class PHCinematicActor;
+class PHCinematicAnimator : public PHGenericCinematicAnimator
 {
 public:
     PHCinematicAnimator();
@@ -98,8 +50,6 @@ public:
     void setDuration(double d) { time = totalTime = d; }
     void setCallback(const PHInvocation & cb) { callback = cb; }
     
-    void setActor(PHCinematicActor * a) { _actor = a; }
-    PHCinematicActor * actor() { return _actor; }
     void setNextAnimation(PHCinematicAnimator * nx);
     PHCinematicAnimator * nextAnimation() { return next; }
     void invalidate();
@@ -109,7 +59,6 @@ public:
     
     
 private:
-    PHCinematicActor * _actor;
     PHCinematicAnimator * next;
     
     PHSize scale;

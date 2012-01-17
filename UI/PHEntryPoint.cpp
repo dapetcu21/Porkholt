@@ -23,7 +23,7 @@ void PHGameManager::entryPoint()
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
     
-    PHViewController * vc = new PHMenuController();
+    PHMenuController * vc = new PHMenuController();
 	vc->init(this);
     viewController->pushViewController(vc);
 }

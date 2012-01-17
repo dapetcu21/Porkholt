@@ -7,17 +7,16 @@
 //
 
 #include "PHCinematicAnimator.h"
+#include "PHCinematicActor.h"
 
-#define ANIMATOR_INIT _actor(NULL), next(NULL), scale(PHSize(1,1)), move(PHSize(0,0)), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), time(0), totalTime(0), function(LinearFunction)
+#define ANIMATOR_INIT next(NULL), scale(PHSize(1,1)), move(PHSize(0,0)), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), time(0), totalTime(0), function(LinearFunction)
 
-PHCinematicAnimator::PHCinematicAnimator() : PHAnimator(), ANIMATOR_INIT
+PHCinematicAnimator::PHCinematicAnimator() : PHGenericCinematicAnimator(), ANIMATOR_INIT
 {
-    
 }
 
-PHCinematicAnimator::PHCinematicAnimator(PHAnimatorPool * pool) : PHAnimator(pool), ANIMATOR_INIT
+PHCinematicAnimator::PHCinematicAnimator(PHAnimatorPool * pool) : PHGenericCinematicAnimator(pool), ANIMATOR_INIT
 {
-    
 }
 
 PHCinematicAnimator::~PHCinematicAnimator()
@@ -179,161 +178,4 @@ void PHCinematicAnimator::advanceAnimation(double elapsedTime)
     {
         completed(elapsedTime-tm);
     }
-}
-
-
-void PHCinematicActor::addCinematicAnimation(PHCinematicAnimator * anim)
-{
-    if (!anim) return;
-    _cinematicMutex->lock();
-    if (_cinematicAnimators.insert(anim).second)
-        anim->retain();
-    anim->setActor(this);
-    _cinematicMutex->unlock();
-}
-
-void PHCinematicActor::removeCinematicAnimation(PHCinematicAnimator * anim)
-{
-    if (!anim) return;
-    _cinematicMutex->lock();
-    anim->setActor(NULL);
-    if (_cinematicAnimators.erase(anim))
-        anim->release();
-    _cinematicMutex->unlock();
-}
-
-void PHCinematicActor::removeAllCinematicAnimations()
-{
-    _cinematicMutex->lock();
-    for (set<PHCinematicAnimator*>::iterator i = _cinematicAnimators.begin(); i!=_cinematicAnimators.end(); i++)
-    {
-        (*i)->setActor(NULL);
-        (*i)->release();
-    }
-    _cinematicAnimators.clear();
-    _cinematicMutex->unlock();
-}
-
-void PHCinematicActor::removeCinematicAnimationsWithTag(int tag)
-{
-    list<PHCinematicAnimator*> delList;
-    _cinematicMutex->lock();
-    for (set<PHCinematicAnimator*>::iterator i = _cinematicAnimators.begin(); i!=_cinematicAnimators.end(); i++)
-        {
-            PHCinematicAnimator * anim = (*i);
-            if (anim->tag() == tag)
-            {
-                delList.push_back(anim);
-            }
-        }
-    for (list<PHCinematicAnimator*>::iterator i = delList.begin(); i!=delList.end(); i++)
-    {
-        PHCinematicAnimator * anim = (*i);
-        _cinematicAnimators.erase(anim);
-        anim->setActor(NULL);
-        anim->release();
-    }
-    _cinematicMutex->unlock();
-}
-
-void PHCinematicActor::setCinematicCustomColor(const PHColor &) {}
-PHColor PHCinematicActor::cinematicCustomColor() { return PHInvalidColor; }
-void PHCinematicActor::setCinematicCustomValue(double) {}
-double PHCinematicActor::cinematicCustomValue() { return 0; }
-
-PHCinematicActor::PHCinematicActor() : _cinematicAnimator(NULL) , _rootAnimator(NULL), _cinematicMutex(new PHMutex) {};
-PHCinematicActor::~PHCinematicActor()
-{
-    dropCinematicAnimation();
-    removeAllCinematicAnimations();
-    _cinematicMutex->release();
-}
-
-void PHCinematicActor::beginCinematicAnimation(double duration)
-{
-    beginCinematicAnimation(duration, PHCinematicAnimator::LinearFunction);
-}
-
-void PHCinematicActor::chainCinematicAnimation(double duration)
-{
-    chainCinematicAnimation(duration, PHCinematicAnimator::LinearFunction);
-}
-
-void PHCinematicActor::beginCinematicAnimation(double duration, int type)
-{
-    if (_cinematicAnimator)
-        dropCinematicAnimation();
-    _cinematicAnimator = _rootAnimator = new PHCinematicAnimator;
-    _cinematicAnimator->setDuration(duration);
-    _cinematicAnimator->setTimeFunction(type);
-}
-
-void PHCinematicActor::chainCinematicAnimation(double duration, int type)
-{
-    if (!_cinematicAnimator)
-    {
-        beginCinematicAnimation(duration,type);
-    }
-    PHCinematicAnimator * ca = new PHCinematicAnimator;
-    ca->setDuration(duration);
-    ca->setTimeFunction(type);
-    _cinematicAnimator->setNextAnimation(ca);
-    ca->release();
-    _cinematicAnimator = ca;
-}
-
-void PHCinematicActor::commitCinematicAnimation()
-{
-    addCinematicAnimation(_rootAnimator);
-    dropCinematicAnimation();
-}
-
-void PHCinematicActor::dropCinematicAnimation()
-{
-    if (_rootAnimator)
-    {
-        _rootAnimator->release();
-    }
-    _rootAnimator = _cinematicAnimator = NULL;
-}
-
-void PHCinematicActor::animateMove(const PHPoint & mv)
-{
-    _cinematicAnimator->setMovement(_cinematicAnimator->movement()+mv);
-}
-
-void PHCinematicActor::animateScale(const PHSize & mv)
-{
-    PHSize s = _cinematicAnimator->scaling();
-    _cinematicAnimator->setScaling(PHSize(mv.x*s.x,mv.y*s.y));
-}
-
-void PHCinematicActor::animateRotate(double rot)
-{
-    _cinematicAnimator->setRotation(_cinematicAnimator->rotation()+rot);
-}
-
-void PHCinematicActor::animateBgColor(const PHColor & clr)
-{
-    _cinematicAnimator->setBgColor(clr);
-}
-
-void PHCinematicActor::animateCustomColor(const PHColor & clr)
-{
-    _cinematicAnimator->setCustomColor(clr);
-}
-
-void PHCinematicActor::animationCallback(const PHInvocation & inv)
-{
-    _cinematicAnimator->setCallback(inv);
-}
-
-void PHCinematicActor::animationTag(int tag)
-{
-    _cinematicAnimator->setTag(tag);
-}
-
-void PHCinematicActor::animateCustomValue(double val)
-{
-    _cinematicAnimator->setCustomValueDelta(_cinematicAnimator->customValueDelta()+val);
 }

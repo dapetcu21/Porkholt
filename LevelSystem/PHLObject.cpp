@@ -14,6 +14,7 @@
 #include "PHEventQueue.h"
 #include "PHLAnimation.h"
 #include "PHLevelController.h"
+#include "PHKeyframeAnimator.h"
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -38,7 +39,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (PHLObject*)(i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0), needsCinePos(false), needsCineRot(false), needsLOmega(false), needsLVel(false)
 {
 }
 
@@ -384,6 +385,29 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
     PHLuaGetBoolField(patRev,"patrolReversed");
     
     
+    lua_getfield(L, -1, "keyframeAnimations");
+    if (lua_istable(L, -1))
+    {
+        int n;
+        PHLuaGetNumberField(n, "n");
+        
+        for (int i=0; i<n; i++)
+        {
+            lua_pushnumber(L, i);
+            lua_gettable(L, -2);
+            PHKeyframeAnimator * anim = PHKeyframeAnimator::fromLua(L);
+            if (anim)
+            {
+                addCinematicAnimation(anim);
+                anim->playSection("default");
+                anim->release();
+            }
+            lua_pop(L,1);
+        }
+    }
+    lua_pop(L,1);
+    
+    
 	PHRect min;
 	min.x = 0x3f3f3f3f;
 	min.y = 0x3f3f3f3f;
@@ -702,11 +726,98 @@ void PHLObject::updatePatrol(double elapsed)
         setPosition(newPoint);
 }
 
+PHPoint cinePos;
+bool needsCinePos;
+double cineRot;
+bool needsCineRot;
+
+void PHLObject::setCinematicPosition(const PHPoint & pos)
+{
+    if (body)
+    {
+        needsCinePos = true;
+        cinePos = pos;
+    } else
+        setPosition(pos);
+}
+
+PHPoint PHLObject::cinematicPosition()
+{
+    if (needsCinePos)
+        return cinePos;
+    return position();
+}
+
+void PHLObject::setCinematicRotation(double rot)
+{
+    if (body)
+    {
+        needsCineRot = true;
+        cineRot = rot;
+    } else
+        setRotation(rot);
+}
+
+double PHLObject::cinematicRotation()
+{
+    if (needsCineRot)
+        return cineRot;
+    return rotation();
+}
+
+void PHLObject::updateCinematics(double elapsed)
+{
+    if (needsCinePos)
+    {
+        PHPoint newPoint = cinePos;
+        if (body->GetType() == b2_staticBody)
+            body->SetType(b2_kinematicBody);
+        b2Vec2 v(body->GetPosition());
+        v.x = (newPoint.x - v.x)/elapsed;
+        v.y = (newPoint.y - v.y)/elapsed;
+        if (!needsLVel)
+        {
+            b2Vec2 lv(body->GetLinearVelocity());
+            lastVel.x = lv.x;
+            lastVel.y = lv.y;
+            needsLVel = true;
+        }
+        body->SetLinearVelocity(v);
+        needsCinePos = false;
+    } else {
+        if (needsLVel)
+        {
+            body->SetLinearVelocity(b2Vec2(lastVel.x,lastVel.y));
+            needsLVel = false;
+        }
+    }
+    if (needsCineRot)
+    {
+        double rot = rotation();
+        if (body->GetType() == b2_staticBody)
+            body->SetType(b2_kinematicBody);
+        if (!needsLOmega)
+        {
+            lastOmega = body->GetAngularVelocity();
+            needsLOmega = true;
+        }
+        body->SetAngularVelocity((cineRot-rot)/elapsed);
+        needsCineRot = false;
+    } else {
+        if (needsLOmega)
+        {
+            body->SetAngularVelocity(lastOmega);
+            needsLOmega = false;
+        }
+    }
+}
+
 void PHLObject::updatePhysics()
 {
     double elapsed = 1.0f/_gameManager->framesPerSecond();
     PHPoint pp = pos;
     updatePatrol(elapsed);
+    updateCinematics(elapsed);
     patLastVel = patVel;
     if (body && patrol)
     {

@@ -642,6 +642,7 @@ void PHLNPC::decreasedHP()
     animateHurtInvuln();
 }
 
+
 void PHLNPC::_animateHurtInvuln(PHObject * sender, void * ud)
 {
     if (hInvulnFadeColor == PHInvalidColor) return;

@@ -11,6 +11,7 @@
 #define PHVIEW_H
 
 #include "PHMain.h"
+#include "PHCinematicActor.h"
 #include "PHCinematicAnimator.h"
 #include "PHEvent.h"
 #include "PHGameManager.h"
@@ -144,7 +145,7 @@ private:
     
 //animation system
 protected:
-    void setCinematicPosition(const PHPoint & p) { setPosition(p); }
+    void setCinematicPosition(const PHPoint & p) { PHLog("%lf %lf",p.x,p.y); setPosition(p); }
     PHPoint cinematicPosition() { return position(); }
     void setCinematicRotation(double r) { setRotation(r); }
     double cinematicRotation() { return rotation(); }

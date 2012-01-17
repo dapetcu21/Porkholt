@@ -11,6 +11,7 @@
 #define PHLOBJECT_H
 
 #include "PHMain.h"
+#include "PHCinematicActor.h"
 
 class PHImageView;
 class PHJoint;
@@ -30,7 +31,7 @@ class PHBezierPath;
 
 #define PHL_REGISTEROBJECT(clss) PH_REGISTERCLASS(PHLObject::initMap, #clss, clss)
 
-class PHLObject : public PHObject
+class PHLObject : public PHObject, public PHCinematicActor
 {
 protected:
 	string _class;
@@ -95,6 +96,16 @@ public:
 	double maxVelocityY() { return maxSpeedY; }
 	void setMaxVelocityY(double v) { maxSpeedY = v; }
 	void temporarilyDisableVelocityLimit() { disableLimit = true; }
+    
+    virtual void setCinematicPosition(const PHPoint &);
+    virtual PHPoint cinematicPosition();
+    virtual void setCinematicRotation(double);
+    virtual double cinematicRotation();
+    virtual void setCinematicScale(const PHSize &) {};
+    virtual PHSize cinematicScale() { return PHSize(1,1); }
+    virtual void setCinematicBgColor(const PHColor &) {}
+    virtual PHColor cinematicBgColor() { return PHInvalidColor; }
+    
 	void setRotation(double r);
 	void setPosition(PHPoint p);
     void setTransform(PHPoint p,double r);
@@ -152,7 +163,17 @@ protected:
     PHPoint patLastVel;
     PHPoint patVel;
     bool patRev;
+    PHPoint cinePos;
+    bool needsCinePos;
+    double cineRot;
+    bool needsCineRot;
+    PHPoint lastVel;
+    double lastOmega;
+    bool needsLVel;
+    bool needsLOmega;
+    
     void updatePatrol(double elapsed);
+    void updateCinematics(double elapsed);
     
     const void * patSignature;
     int patP;

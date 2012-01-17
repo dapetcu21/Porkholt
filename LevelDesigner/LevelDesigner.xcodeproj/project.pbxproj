@@ -66,6 +66,7 @@
 		C15331F91425DD61005E6806 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F51425DD61005E6806 /* MainMenu.xib */; };
 		C15331FA1425DD61005E6806 /* PLDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C15331F71425DD61005E6806 /* PLDocument.xib */; };
 		C153A1841443642E00DCD01F /* PHFileManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C153A1831443642E00DCD01F /* PHFileManager.mm */; };
+		C155C10814B9E25700D89933 /* PHCinematicActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C155C10414B9E25700D89933 /* PHCinematicActor.cpp */; };
 		C16B38C31425EF6700260851 /* ResourcePathAccesory.xib in Resources */ = {isa = PBXBuildFile; fileRef = C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */; };
 		C16B38CA1425F5AF00260851 /* ObjectController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C16B38C91425F5AF00260851 /* ObjectController.mm */; };
 		C16B38D2142622D900260851 /* PLEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D1142622D900260851 /* PLEntity.m */; };
@@ -228,6 +229,10 @@
 		C15331F61425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C15331F81425DD61005E6806 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = LevelDesigner/en.lproj/PLDocument.xib; sourceTree = "<group>"; };
 		C153A1831443642E00DCD01F /* PHFileManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHFileManager.mm; sourceTree = SOURCE_ROOT; };
+		C155C10414B9E25700D89933 /* PHCinematicActor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCinematicActor.cpp; sourceTree = "<group>"; };
+		C155C10514B9E25700D89933 /* PHCinematicActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCinematicActor.h; sourceTree = "<group>"; };
+		C155C10614B9E25700D89933 /* PHGenericCinematicAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGenericCinematicAnimator.h; sourceTree = "<group>"; };
+		C155C10714B9E25700D89933 /* PHKeyframeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHKeyframeAnimator.h; sourceTree = "<group>"; };
 		C16B38C21425EF6700260851 /* ResourcePathAccesory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResourcePathAccesory.xib; sourceTree = "<group>"; };
 		C16B38C81425F5AF00260851 /* ObjectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ObjectController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C16B38C91425F5AF00260851 /* ObjectController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ObjectController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -407,6 +412,10 @@
 		C127D2F6143A1AF6004DEB16 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C155C10414B9E25700D89933 /* PHCinematicActor.cpp */,
+				C155C10514B9E25700D89933 /* PHCinematicActor.h */,
+				C155C10614B9E25700D89933 /* PHGenericCinematicAnimator.h */,
+				C155C10714B9E25700D89933 /* PHKeyframeAnimator.h */,
 				C104A3D314B6FCF1001CDCD3 /* PHCinematicAnimator.cpp */,
 				C104A3D414B6FCF1001CDCD3 /* PHCinematicAnimator.h */,
 				C1503BD21480EF37002358B5 /* PHAnimator.cpp */,
@@ -791,6 +800,7 @@
 				C1503BDB1480EF37002358B5 /* PHParticleAnimator.cpp in Sources */,
 				C1503BDC1480EF37002358B5 /* PHParticleView.cpp in Sources */,
 				C104A3D514B6FCF1001CDCD3 /* PHCinematicAnimator.cpp in Sources */,
+				C155C10814B9E25700D89933 /* PHCinematicActor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

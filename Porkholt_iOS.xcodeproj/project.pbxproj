@@ -32,6 +32,8 @@
 		C13E6C1313AC78C100365340 /* URServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13E6C1013AC78C100365340 /* URServer.cpp */; };
 		C143AF0F13DE123B00EBCF8D /* PHHeartView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C143AF0E13DE123B00EBCF8D /* PHHeartView.cpp */; };
 		C152809612B97169009067A7 /* PHGameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C152809512B97169009067A7 /* PHGameManager.cpp */; };
+		C155C0FE14B9CCD000D89933 /* PHCinematicActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C155C0FD14B9CCD000D89933 /* PHCinematicActor.cpp */; };
+		C155C10B14B9E4D000D89933 /* PHKeyframeAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C155C10A14B9E4D000D89933 /* PHKeyframeAnimator.cpp */; };
 		C1638F401474FA5600E297BA /* PHMusicManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1638F3F1474FA5600E297BA /* PHMusicManager.mm */; };
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
 		C1748C5F1400258300FB2796 /* PHMenuController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C5E1400258300FB2796 /* PHMenuController.cpp */; };
@@ -246,6 +248,7 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Porkholt_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Porkholt-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Porkholt-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C104A3D614B9C3BA001CDCD3 /* PHKeyframeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHKeyframeAnimator.h; sourceTree = "<group>"; };
 		C106E47913DD427C007E6357 /* PHLGround.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLGround.cpp; sourceTree = "<group>"; };
 		C106E47C13DD4289007E6357 /* PHLGround.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLGround.h; sourceTree = "<group>"; };
 		C106E47D13DD5DAA007E6357 /* PHLSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLSign.h; sourceTree = "<group>"; };
@@ -284,6 +287,10 @@
 		C152809412B97169009067A7 /* PHGameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGameManager.h; sourceTree = "<group>"; };
 		C152809512B97169009067A7 /* PHGameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGameManager.cpp; sourceTree = "<group>"; };
 		C152809A12B971A7009067A7 /* PHObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHObject.h; sourceTree = "<group>"; };
+		C155C0FC14B9CCC100D89933 /* PHCinematicActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCinematicActor.h; sourceTree = "<group>"; };
+		C155C0FD14B9CCD000D89933 /* PHCinematicActor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCinematicActor.cpp; sourceTree = "<group>"; };
+		C155C0FF14B9CE5100D89933 /* PHGenericCinematicAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGenericCinematicAnimator.h; sourceTree = "<group>"; };
+		C155C10A14B9E4D000D89933 /* PHKeyframeAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHKeyframeAnimator.cpp; sourceTree = "<group>"; };
 		C1638F3E1474F88500E297BA /* PHMusicManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMusicManager.h; sourceTree = "<group>"; };
 		C1638F3F1474FA5600E297BA /* PHMusicManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHMusicManager.mm; sourceTree = "<group>"; };
 		C163951812BA3FD000B0A72E /* PHMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMain.h; sourceTree = "<group>"; };
@@ -711,8 +718,13 @@
 				C1A78D2F147BDEB9009347AE /* PHAnimator.cpp */,
 				C1A78D31147BE868009347AE /* PHParticleAnimator.h */,
 				C1A78D32147CBC9E009347AE /* PHParticleAnimator.cpp */,
+				C155C0FC14B9CCC100D89933 /* PHCinematicActor.h */,
+				C155C0FD14B9CCD000D89933 /* PHCinematicActor.cpp */,
+				C155C0FF14B9CE5100D89933 /* PHGenericCinematicAnimator.h */,
 				C1B6D46314B09A8600AC18D7 /* PHCinematicAnimator.h */,
 				C1B6D46414B09D3600AC18D7 /* PHCinematicAnimator.cpp */,
+				C104A3D614B9C3BA001CDCD3 /* PHKeyframeAnimator.h */,
+				C155C10A14B9E4D000D89933 /* PHKeyframeAnimator.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1261,6 +1273,8 @@
 				C19FC30A148F959E00EACE24 /* PHTCPServer.cpp in Sources */,
 				C19FC30D148F976600EACE24 /* PHTCPConsole.cpp in Sources */,
 				C1B6D46514B09D3600AC18D7 /* PHCinematicAnimator.cpp in Sources */,
+				C155C0FE14B9CCD000D89933 /* PHCinematicActor.cpp in Sources */,
+				C155C10B14B9E4D000D89933 /* PHKeyframeAnimator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

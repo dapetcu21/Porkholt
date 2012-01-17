@@ -24,5 +24,6 @@ public:
 	
 	void callback1(PHObject * sender, void * ud);
 	void callback2(PHObject * sender, void * ud);
+    void callback3(PHObject * sender, void * ud);
 };
 #endif

@@ -19,6 +19,7 @@
 #include "PHAnimatorPool.h"
 #include "PHBezierPath.h"
 #include "PHParticleView.h"
+#include "PHKeyframeAnimator.h"
 
 #define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1)
 
@@ -411,6 +412,29 @@ void PHImageView::loadFromLua(lua_State *L)
             if (tint == PHInvalidColor)
                 tint = PHWhiteColor;
             tint.a *= lua_tonumber(L, -1);
+        }
+        lua_pop(L,1);
+        
+        lua_getfield(L, -1, "keyframeAnimations");
+        if (lua_istable(L, -1))
+        {
+            int n;
+            PHLuaGetNumberField(n, "n");
+            
+            for (int i=0; i<n; i++)
+            {
+                lua_pushnumber(L, i);
+                lua_gettable(L, -2);
+                PHKeyframeAnimator * anim = PHKeyframeAnimator::fromLua(L);
+                if (anim)
+                {
+                    anim->setAnimatorPool(pool);
+                    addCinematicAnimation(anim);
+                    anim->playSection("default");
+                    anim->release();
+                }
+                lua_pop(L,1);
+            }
         }
         lua_pop(L,1);
         

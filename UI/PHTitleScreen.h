@@ -16,6 +16,7 @@ class PHTitleScreen : public PHViewController
 protected:
     virtual PHView * loadView(const PHRect & frame);
     void buttonPressed(PHObject * sender, void * ud);
+    void testPressed(PHObject * sender, void * ud);
 };
 
 #endif

@@ -8,6 +8,7 @@
  */
 
 #include "PHImage.h"
+#include "PHKeyframeAnimator.h"
 #include "PHTestViewController.h"
 #include "PHTestView.h"
 #include "PHButtonView.h"
@@ -42,6 +43,11 @@ void PHTestViewController::callback2(PHObject * sender, void * ud)
 	vc->release();
 }
 
+void PHTestViewController::callback3(PHObject * sender, void * ud)
+{
+    PHLog("callback3: %x %x", (unsigned)(unsigned long long)sender, (unsigned int)(unsigned long long)ud);
+}
+
 PHView * PHTestViewController::loadView(const PHRect & frame)
 {
 	PHView * view = new PHView(frame);
@@ -62,6 +68,46 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	
 	view4->setUserInput(true);
 	view->addSubview(view4);
+    
+    vector<PHKeyframeAnimator::Keyframe> k;
+    k.push_back(PHKeyframeAnimator::positionFrame(1.0f, PHPoint(200,150)));
+    k.back().addRotation(0);
+    
+    k.push_back(PHKeyframeAnimator::rotationFrame(1.5f, M_PI_2));
+    k.back().addPosition(PHPoint(200,150));
+    
+    k.push_back(PHKeyframeAnimator::jumpFrame(2.0f, 1, 0.0f));
+    
+    k.push_back(PHKeyframeAnimator::positionFrame(2.5f, PHPoint(200,200)));
+    k.back().addRotation(M_PI_2);
+    
+    k.push_back(PHKeyframeAnimator::rotationFrame(3.0f, M_PI));
+    k.back().addPosition(PHPoint(200,200));
+    
+    k.push_back(PHKeyframeAnimator::positionFrame(4.0f, PHPoint(150,200)));
+    k.back().addRotation(M_PI);
+    
+    k.push_back(PHKeyframeAnimator::rotationFrame(4.5f, M_PI_2*3));
+    k.back().addPosition(PHPoint(150,200));
+    
+    k.push_back(PHKeyframeAnimator::positionFrame(5.5f, PHPoint(150,150)));
+    k.back().addRotation(M_PI_2*3);
+    
+    k.push_back(PHKeyframeAnimator::rotationFrame(6.0f, M_PI*2));
+    k.back().addPosition(PHPoint(150,150));
+    
+    vector<PHKeyframeAnimator::Section> s;
+    s.push_back(PHKeyframeAnimator::Section("default",k));
+    
+    k.clear();
+    k.push_back(PHKeyframeAnimator::positionFrame(1.0f, PHPoint(175,175)));
+    k.push_back(PHKeyframeAnimator::jumpFrame(1.0f, 0, 2.001f));
+    s.push_back(PHKeyframeAnimator::Section("decoy",k));
+    
+    PHKeyframeAnimator * ka = new PHKeyframeAnimator(s);
+    view4->addCinematicAnimation(ka);
+    ka->playSection("default", PHInv(this, PHTestViewController::callback3, NULL));
+    ka->release();
 	view4->release();
 	
 	
@@ -92,5 +138,5 @@ void PHTestViewController::updateScene(double timeElapsed)
 {
 	PHTilt tilt = PHMotion::sharedInstance()->getTilt();
 	view2->setRotation(-tilt.roll); // "geostationary" view
-	view4->setRotation(tilt.pitch);
+	//view4->setRotation(tilt.pitch);
 }
