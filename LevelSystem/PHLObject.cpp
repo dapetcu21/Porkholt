@@ -726,11 +726,6 @@ void PHLObject::updatePatrol(double elapsed)
         setPosition(newPoint);
 }
 
-PHPoint cinePos;
-bool needsCinePos;
-double cineRot;
-bool needsCineRot;
-
 void PHLObject::setCinematicPosition(const PHPoint & pos)
 {
     if (body)
@@ -783,6 +778,7 @@ void PHLObject::updateCinematics(double elapsed)
             needsLVel = true;
         }
         body->SetLinearVelocity(v);
+        pos = cinePos;
         needsCinePos = false;
     } else {
         if (needsLVel)
@@ -793,7 +789,7 @@ void PHLObject::updateCinematics(double elapsed)
     }
     if (needsCineRot)
     {
-        double rot = rotation();
+        double rot = body->GetAngle();
         if (body->GetType() == b2_staticBody)
             body->SetType(b2_kinematicBody);
         if (!needsLOmega)
@@ -802,6 +798,7 @@ void PHLObject::updateCinematics(double elapsed)
             needsLOmega = true;
         }
         body->SetAngularVelocity((cineRot-rot)/elapsed);
+        rot = cineRot;
         needsCineRot = false;
     } else {
         if (needsLOmega)

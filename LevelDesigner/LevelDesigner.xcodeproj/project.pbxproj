@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C104A3D514B6FCF1001CDCD3 /* PHCinematicAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C104A3D314B6FCF1001CDCD3 /* PHCinematicAnimator.cpp */; };
+		C1082A9D14C7595D000774F9 /* PHKeyframeAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1082A9C14C7595C000774F9 /* PHKeyframeAnimator.cpp */; };
 		C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A2143E28500002A811 /* ImageViewController.mm */; };
 		C11DF2AA143F6BC30002A811 /* PLWorldView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A9143F6BC30002A811 /* PLWorldView.mm */; };
 		C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11EA9DC1425B7A300795880 /* Cocoa.framework */; };
@@ -108,6 +109,7 @@
 /* Begin PBXFileReference section */
 		C104A3D314B6FCF1001CDCD3 /* PHCinematicAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCinematicAnimator.cpp; sourceTree = "<group>"; };
 		C104A3D414B6FCF1001CDCD3 /* PHCinematicAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCinematicAnimator.h; sourceTree = "<group>"; };
+		C1082A9C14C7595C000774F9 /* PHKeyframeAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHKeyframeAnimator.cpp; sourceTree = "<group>"; };
 		C112BEC3145D78CF00FAE1A6 /* PLMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLMatching.h; sourceTree = "<group>"; };
 		C11DF2A1143E28500002A811 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		C11DF2A2143E28500002A811 /* ImageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageViewController.mm; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 		C127D2F6143A1AF6004DEB16 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C1082A9C14C7595C000774F9 /* PHKeyframeAnimator.cpp */,
 				C155C10414B9E25700D89933 /* PHCinematicActor.cpp */,
 				C155C10514B9E25700D89933 /* PHCinematicActor.h */,
 				C155C10614B9E25700D89933 /* PHGenericCinematicAnimator.h */,
@@ -801,6 +804,7 @@
 				C1503BDC1480EF37002358B5 /* PHParticleView.cpp in Sources */,
 				C104A3D514B6FCF1001CDCD3 /* PHCinematicAnimator.cpp in Sources */,
 				C155C10814B9E25700D89933 /* PHCinematicActor.cpp in Sources */,
+				C1082A9D14C7595D000774F9 /* PHKeyframeAnimator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

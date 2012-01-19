@@ -584,14 +584,14 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         if (!p)
         {
             world->player->updateControls(q);
+            world->updatePhysics();
             
             if (fps<=40)
                 fWorld->Step(frameInterval, 10, 6);
             else
                 fWorld->Step(frameInterval, 6, 3);
-
             fWorld->ClearForces();
-            world->updatePhysics();
+            
             scripingEngine->scriptingStep(frameInterval);
             world->updatePositions();
             world->updateTimers(frameInterval);

@@ -145,7 +145,7 @@ private:
     
 //animation system
 protected:
-    void setCinematicPosition(const PHPoint & p) { PHLog("%lf %lf",p.x,p.y); setPosition(p); }
+    void setCinematicPosition(const PHPoint & p) { setPosition(p); }
     PHPoint cinematicPosition() { return position(); }
     void setCinematicRotation(double r) { setRotation(r); }
     double cinematicRotation() { return rotation(); }
