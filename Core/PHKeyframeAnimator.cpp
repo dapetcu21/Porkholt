@@ -7,6 +7,7 @@
 //
 
 #include "PHKeyframeAnimator.h"
+#include "PHKeyframeAnimatorGroup.h"
 #include "PHLua.h"
 #include "PHCinematicActor.h"
 
@@ -197,7 +198,7 @@ void PHKeyframeAnimator::advanceAnimation(double elapsedTime)
         { \
             type keyval = v[next].framegetter; \
             if ((v[next].time-time == 0) || ( touch && (frame==next))) \
-                {_actor->actorsetter(keyval); PHLog("pula");} \
+                _actor->actorsetter(keyval); \
             else { \
                 type old = _actor->actorgetter(); \
                 _actor->actorsetter(old+(keyval-old)*(delta/(v[next].time-time))); \
@@ -209,7 +210,7 @@ void PHKeyframeAnimator::advanceAnimation(double elapsedTime)
         { \
             PHColor keyval = v[next].framegetter; \
             if ((v[next].time-time == 0) || ( touch && (frame==next))) \
-                {_actor->actorsetter(keyval); PHLog("pula");} \
+                _actor->actorsetter(keyval); \
             else { \
                 PHColor old = _actor->actorgetter(); \
                 if (!old.isValid()) old = PHColor(1,1,1,0); \
@@ -278,13 +279,7 @@ PHKeyframeAnimator * PHKeyframeAnimator::fromLua(lua_State * L)
             vector<Keyframe> k;
             if (lua_istable(L, -1))
             {
-                int n = 0;
-                PHLuaGetNumberField(n, "n");
-                for (int i=0; i<n; i++)
-                {
-                    lua_pushnumber(L, i);
-                    lua_gettable(L, -2);
-                    
+                PHLuaForEach(-1)
                     if (lua_istable(L, -1))
                     {
                         lua_getfield(L, -1, "time");
@@ -342,8 +337,7 @@ PHKeyframeAnimator * PHKeyframeAnimator::fromLua(lua_State * L)
                         } else
                             lua_pop(L, 1);
                     }
-                    lua_pop(L,1);
-                }
+                PHLuaForEach_
             }
             lua_pop(L, 1);
             if (!k.empty())
@@ -361,6 +355,45 @@ PHKeyframeAnimator * PHKeyframeAnimator::fromLua(lua_State * L)
     }
     lua_pop(L, 1);
     
+    if (a)
+    {
+        int tg = 0;
+        PHLuaGetNumberField(tg, "tag");
+        a->setTag(tg);
+        
+        lua_getfield(L, -1, "group");
+        if (lua_isstring(L, -1))
+        {
+            PHKeyframeAnimatorGroup::groupNamed(lua_tostring(L, -1))->addKeyframeAnimator(a);
+        }
+        if (lua_istable(L, -1))
+        {
+            PHLuaForEach(-1)
+            if (lua_isstring(L, -1))
+                PHKeyframeAnimatorGroup::groupNamed(lua_tostring(L, -1))->addKeyframeAnimator(a);
+            PHLuaForEach_
+        }
+        lua_pop(L, 1);
+    }
+    
     return a;
 }
 
+void PHKeyframeAnimator::addIntoGroup(PHKeyframeAnimatorGroup * g)
+{
+    groups.insert(g);
+}
+
+void PHKeyframeAnimator::removeFromGroup(PHKeyframeAnimatorGroup * g)
+{
+    groups.erase(g);
+}
+
+PHKeyframeAnimator::~PHKeyframeAnimator()
+{
+    set<PHKeyframeAnimatorGroup*> gps(groups);
+    for (set<PHKeyframeAnimatorGroup*>::iterator i = gps.begin(); i!=gps.end(); i++)
+    {
+        (*i)->removeKeyframeAnimator(this);
+    }
+}

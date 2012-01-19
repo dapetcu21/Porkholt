@@ -69,26 +69,24 @@ obj.pos = point(7,2)
 obj.patrolSpeed = 1
 obj.patrolInCircle = true
 obj.keyframeAnimations = {
-	n = 1,
-	[0] = {
-		group = "platform",
+	{
+		group = { "platform", "anim" },
 		tag = 845,
 		sections  = {
-			default = {
-				n = 9,
-				[0] = { time = 1.0, position = point(8,2), rotation = 0},
-				[1] = { time = 1.5, position = point(8,2), rotation = -90},
-				[2] = { time = 2.5, position = point(8,3), rotation = -90},
-				[3] = { time = 3.0, position = point(8,3), rotation = -180},
-				[4] = { time = 4.0, position = point(7,3), rotation = -180},
-				[5] = { time = 4.5, position = point(7,3), rotation = -270},
-				[6] = { time = 5.5, position = point(7,2), rotation = -270},
-				[7] = { time = 6.0, position = point(7,2), rotation = -360},
-				[8] = { time = 6.0, jumpSection = "center", jumpTime = 0}
+			move = {
+				{ time = 0, rotation = 0},
+				{ time = 1.0, position = point(8,2), rotation = 0},
+				{ time = 1.5, position = point(8,2), rotation = -90},
+				{ time = 2.5, position = point(8,3), rotation = -90},
+				{ time = 3.0, position = point(8,3), rotation = -180},
+				{ time = 4.0, position = point(7,3), rotation = -180},
+				{ time = 4.5, position = point(7,3), rotation = -270},
+				{ time = 5.5, position = point(7,2), rotation = -270},
+				{ time = 6.0, position = point(7,2), rotation = -360},
+				{ time = 6.0, jumpSection = "center", jumpTime = 0}
 			},
 			center = {
-				n = 1,
-				[0] = { time = 1.0, position = point(7.5,2.5) }
+				{ time = 1.0, position = point(7.5,2.5) }
 			}
 		}
 	}

@@ -28,6 +28,7 @@
 #include "PHLEggBomb.h"
 #include "PHParticleAnimator.h"
 #include "PHParticleView.h"
+#include "PHKeyframeAnimatorGroup.h"
 
 #ifdef PH_SIMULATOR
 #include "PHLuaConsole.h"
@@ -211,6 +212,7 @@ void PHScripting::loadWorld()
 
     lua_pop(L, 1);
     
+    PHKeyframeAnimatorGroup::registerLuaInterface(L);
     PHScriptableTimer::registerLuaInterface(L);
     PHLObject::registerLuaInterface(L);
     PHLNPC::registerLuaInterface(L);

@@ -11,6 +11,7 @@
 
 #include "PHGenericCinematicAnimator.h"
 
+class PHKeyframeAnimatorGroup;
 class PHKeyframeAnimator : public PHGenericCinematicAnimator
 {
 public:
@@ -125,6 +126,16 @@ public:
     virtual void advanceAnimation(double elapsedTime);
     
     static PHKeyframeAnimator * fromLua(lua_State * L);
+    
+    virtual ~PHKeyframeAnimator();
+    
+private:
+    friend class PHKeyframeAnimatorGroup;
+    
+    set<PHKeyframeAnimatorGroup*> groups;
+    
+    void addIntoGroup(PHKeyframeAnimatorGroup * g);
+    void removeFromGroup(PHKeyframeAnimatorGroup * g);
 };
 
 #endif

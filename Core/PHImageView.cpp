@@ -418,13 +418,7 @@ void PHImageView::loadFromLua(lua_State *L)
         lua_getfield(L, -1, "keyframeAnimations");
         if (lua_istable(L, -1))
         {
-            int n;
-            PHLuaGetNumberField(n, "n");
-            
-            for (int i=0; i<n; i++)
-            {
-                lua_pushnumber(L, i);
-                lua_gettable(L, -2);
+            PHLuaForEach(-1)
                 PHKeyframeAnimator * anim = PHKeyframeAnimator::fromLua(L);
                 if (anim)
                 {
@@ -434,7 +428,7 @@ void PHImageView::loadFromLua(lua_State *L)
                     anim->release();
                 }
                 lua_pop(L,1);
-            }
+            PHLuaForEach_
         }
         lua_pop(L,1);
         

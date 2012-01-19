@@ -19,6 +19,8 @@
 		C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47E13DD5E2B007E6357 /* PHLSign.cpp */; };
 		C106E48113DD76CC007E6357 /* PHLPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48013DD76CB007E6357 /* PHLPowerup.cpp */; };
 		C106E48513DD8314007E6357 /* PHLShieldPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */; };
+		C1082AA214C80E88000774F9 /* PHLuaObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1082AA114C80E87000774F9 /* PHLuaObject.cpp */; };
+		C1082AA414C81A5E000774F9 /* PHKeyframeAnimatorGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1082AA314C81A5E000774F9 /* PHKeyframeAnimatorGroup.cpp */; };
 		C11855A1130FDEAD004F341A /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */; };
 		C11855A4130FDF09004F341A /* PHMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11855A3130FDF09004F341A /* PHMotion.cpp */; };
 		C1185A09131426F9004F341A /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1185A08131426F9004F341A /* PHViewController.cpp */; };
@@ -257,6 +259,10 @@
 		C106E48213DD76EB007E6357 /* PHLPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPowerup.h; sourceTree = "<group>"; };
 		C106E48313DD82BF007E6357 /* PHLShieldPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLShieldPowerup.h; sourceTree = "<group>"; };
 		C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLShieldPowerup.cpp; sourceTree = "<group>"; };
+		C1082A9F14C8017D000774F9 /* PHKeyframeAnimatorGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHKeyframeAnimatorGroup.h; sourceTree = "<group>"; };
+		C1082AA014C80E6F000774F9 /* PHLuaObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLuaObject.h; sourceTree = "<group>"; };
+		C1082AA114C80E87000774F9 /* PHLuaObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLuaObject.cpp; sourceTree = "<group>"; };
+		C1082AA314C81A5E000774F9 /* PHKeyframeAnimatorGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHKeyframeAnimatorGroup.cpp; sourceTree = "<group>"; };
 		C1185540130FDDB8004F341A /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
 		C11855A0130FDEAD004F341A /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
 		C11855A2130FDF09004F341A /* PHMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMotion.h; sourceTree = "<group>"; };
@@ -725,6 +731,10 @@
 				C1B6D46414B09D3600AC18D7 /* PHCinematicAnimator.cpp */,
 				C104A3D614B9C3BA001CDCD3 /* PHKeyframeAnimator.h */,
 				C155C10A14B9E4D000D89933 /* PHKeyframeAnimator.cpp */,
+				C1082A9F14C8017D000774F9 /* PHKeyframeAnimatorGroup.h */,
+				C1082AA314C81A5E000774F9 /* PHKeyframeAnimatorGroup.cpp */,
+				C1082AA014C80E6F000774F9 /* PHLuaObject.h */,
+				C1082AA114C80E87000774F9 /* PHLuaObject.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1275,6 +1285,8 @@
 				C1B6D46514B09D3600AC18D7 /* PHCinematicAnimator.cpp in Sources */,
 				C155C0FE14B9CCD000D89933 /* PHCinematicActor.cpp in Sources */,
 				C155C10B14B9E4D000D89933 /* PHKeyframeAnimator.cpp in Sources */,
+				C1082AA214C80E88000774F9 /* PHLuaObject.cpp in Sources */,
+				C1082AA414C81A5E000774F9 /* PHKeyframeAnimatorGroup.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -196,4 +196,21 @@ lua_pop(L,1);
 #define PHLuaGetRectField(var,name) PHLuaGetStructField(var,name,PHRect)
 #define PHLuaGetColorField(var,name) PHLuaGetStructField(var,name,PHColor)
 
+class PHLuaCallback : public PHObject
+{
+private:
+    lua_State * L;
+    PHInvocation inv;
+public:
+    PHLuaCallback(lua_State * l, int index);
+    virtual ~PHLuaCallback();
+    void call();
+    
+    void setConsequentCallback(const PHInvocation & invocation) { inv = invocation; };
+};
+
+#define PHLuaForEach(index) for(int i=0; ; i++) { lua_pushnumber(L,i); lua_gettable(L,(index)-1); if (lua_isnil(L,-1)) { lua_pop(L,1); if (i) break; else continue; } {
+#define _PHLuaForEach(index) for(int i=0; ; i++) { lua_pushnumber(L,i); lua_gettable(L,(index)); if (lua_isnil(L,-1)) { lua_pop(L,1); if (i) break; else continue; } {
+#define PHLuaForEach_  } lua_pop(L,1); }
+
 #endif

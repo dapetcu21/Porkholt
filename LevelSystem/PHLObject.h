@@ -171,6 +171,7 @@ protected:
     double lastOmega;
     bool needsLVel;
     bool needsLOmega;
+    bool correctPos,correctRot;
     
     void updatePatrol(double elapsed);
     void updateCinematics(double elapsed);

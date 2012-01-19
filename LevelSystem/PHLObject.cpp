@@ -39,7 +39,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (PHLObject*)(i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0), needsCinePos(false), needsCineRot(false), needsLOmega(false), needsLVel(false)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0), needsCinePos(false), needsCineRot(false), needsLOmega(false), needsLVel(false), correctRot(false), correctPos(false)
 {
 }
 
@@ -388,13 +388,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
     lua_getfield(L, -1, "keyframeAnimations");
     if (lua_istable(L, -1))
     {
-        int n;
-        PHLuaGetNumberField(n, "n");
-        
-        for (int i=0; i<n; i++)
-        {
-            lua_pushnumber(L, i);
-            lua_gettable(L, -2);
+        PHLuaForEach(-1)
             PHKeyframeAnimator * anim = PHKeyframeAnimator::fromLua(L);
             if (anim)
             {
@@ -402,8 +396,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
                 anim->playSection("default");
                 anim->release();
             }
-            lua_pop(L,1);
-        }
+        PHLuaForEach_
     }
     lua_pop(L,1);
     
@@ -762,6 +755,8 @@ double PHLObject::cinematicRotation()
 
 void PHLObject::updateCinematics(double elapsed)
 {
+    correctPos=needsCinePos;
+    correctRot=needsCineRot;
     if (needsCinePos)
     {
         PHPoint newPoint = cinePos;
@@ -797,7 +792,15 @@ void PHLObject::updateCinematics(double elapsed)
             lastOmega = body->GetAngularVelocity();
             needsLOmega = true;
         }
-        body->SetAngularVelocity((cineRot-rot)/elapsed);
+        double delta = cineRot-rot;
+        if (abs(delta)>4) //because box2D doesn't behave nicely when abs(delta)>1.5*M_PI
+        {
+            static const double pi2 = 2*M_PI;
+            delta-=(int)(delta/pi2)*pi2;
+            if (abs(pi2-delta)<abs(delta))
+                delta = pi2-delta;
+        }
+        body->SetAngularVelocity(delta/elapsed);
         rot = cineRot;
         needsCineRot = false;
     } else {
@@ -847,8 +850,33 @@ void PHLObject::updatePosition()
 	if (!body)
 		return;
 	b2Vec2 p = body->GetPosition();
+    double r = body->GetAngle();
+    
+    if (correctPos)
+    {
+        if ((p.x==(float)(cinePos.x)) && (p.y==(float)(cinePos.y)))
+            correctPos = false;
+        else
+        {
+            p.x = cinePos.x;
+            p.y = cinePos.y;
+        }
+    }
+    if (correctRot) 
+    {
+        if (r==cineRot)
+            correctRot = false;
+        else
+            r = cineRot;
+    }
+    if (correctPos || correctRot)
+    {
+        body->SetTransform(p, r);
+        correctPos=correctRot=false;
+    }
+    
     pos = PHPoint(p.x, p.y);
-    rot = body->GetAngle();
+    rot = r;
     if (shouldFlipUponLoad)
     {
         setFlipped(true);

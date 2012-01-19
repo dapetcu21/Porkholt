@@ -137,3 +137,23 @@ void PHLuaSeedRandom(lua_State * L)
     }
     lua_pop(L, 1);
 }
+
+PHLuaCallback::PHLuaCallback(lua_State * l, int index) : L(l)
+{
+    if (!lua_isfunction(L, index))
+        throw "this is not a valid Lua function";
+    lua_pushvalue(L, index);
+    PHLuaSetHardRef(L, this);
+}
+
+PHLuaCallback::~PHLuaCallback()
+{
+    PHLuaDeleteHardRef(L, this);
+}
+
+void PHLuaCallback::call()
+{
+    PHLuaGetHardRef(L, this);
+    PHLuaCall(L, 0, 0);
+    inv.call(this);
+}

@@ -132,6 +132,14 @@ function PHObject:init()
 	return self
 end
 
+PHKeyframeAnimatorGroup = PHObject:new()
+-- function PHKeyframeAnimatorGroup:pause()
+-- function PHKeyframeAnimatorGroup:resume()
+-- function PHKeyframeAnimatorGroup:setFilterTag(tag)
+-- function PHKeyframeAnimatorGroup:clearFilterTag()
+-- function PHKeyframeAnimatorGroup:playSection()
+-- function PHKeyframeAnimatorGroup.groupNamed()
+
 PHTimer = PHObject:new{time = 0, willrepeat = false}
 function PHTimer:init(tm,rep,cb, ...)
 	if (PHObject.init(self)) then
