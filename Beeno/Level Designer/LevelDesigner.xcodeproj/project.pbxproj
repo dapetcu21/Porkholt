@@ -125,8 +125,8 @@
 		C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		C14D119E1425C3DA000A9CFC /* ImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAndTextCell.h; sourceTree = "<group>"; };
 		C14D119F1425C3DA000A9CFC /* ImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImageAndTextCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		C14DC666143C23D000F0C82D /* WorldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldController.h; path = LevelDesigner/WorldController.h; sourceTree = "<group>"; };
-		C14DC667143C23D000F0C82D /* WorldController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WorldController.mm; path = LevelDesigner/WorldController.mm; sourceTree = "<group>"; };
+		C14DC666143C23D000F0C82D /* WorldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldController.h; sourceTree = "<group>"; };
+		C14DC667143C23D000F0C82D /* WorldController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WorldController.mm; sourceTree = "<group>"; };
 		C14DC669143C2C4C00F0C82D /* PLObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLObjectView.h; sourceTree = "<group>"; };
 		C14DC66A143C2C5B00F0C82D /* PLObjectView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLObjectView.mm; sourceTree = "<group>"; };
 		C14DC685143EEABA00F0C82D /* FixtureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixtureViewController.h; sourceTree = "<group>"; };
@@ -340,7 +340,6 @@
 				C1B3C7F6146287CC000FD6DF /* PLJointDot.mm */,
 			);
 			name = Canvas;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		C16B38C41425F07900260851 /* Resources */ = {
