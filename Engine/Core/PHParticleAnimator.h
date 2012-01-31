@@ -21,17 +21,17 @@ private:
     PHMutex * mutex;
     
     bool playing,generating;
-    double genFor;
-    double pps;
+    ph_float genFor;
+    ph_float pps;
     PHRect genArea;
     bool elArea;
     PHPoint vel;
-    double deltavel;
-    double spreadAngl;
+    ph_float deltavel;
+    ph_float spreadAngl;
     PHPoint grav;
     PHSize initSize,endSize;
-    double lifetime;
-    double deltalifetime;
+    ph_float lifetime;
+    ph_float deltalifetime;
     PHColor initColor,endColor;
     bool rotates;
     
@@ -45,10 +45,10 @@ public:
     setter(bool,setPlaying,playing);
     getter(bool,isGenerating,generating);
     setter(bool,setGenerating,generating);
-    getter(double,generatingFor,genFor);
-    setter(double,setGeneratingFor,genFor);
-    getter(double,particlesPerSecond,pps);
-    setter(double,setParticlesPerSecond,pps);
+    getter(ph_float,generatingFor,genFor);
+    setter(ph_float,setGeneratingFor,genFor);
+    getter(ph_float,particlesPerSecond,pps);
+    setter(ph_float,setParticlesPerSecond,pps);
     getter(PHRect,generationArea,genArea);
     setter_(PHRect,setGenerationArea,genArea);
     getter(bool,elipticalArea,elArea);
@@ -56,20 +56,20 @@ public:
     getter(PHPoint,velocity,vel);
     void setVelocity(const PHPoint & p);
 //    setter_(PHPoint,setVelocity,vel);
-    getter(double,velocityVariation,deltavel);
-    setter(double,setVelocityVariation,deltavel);
-    getter(double,spreadAngle,spreadAngl);
-    setter(double,setSpreadAngle,spreadAngl);
+    getter(ph_float,velocityVariation,deltavel);
+    setter(ph_float,setVelocityVariation,deltavel);
+    getter(ph_float,spreadAngle,spreadAngl);
+    setter(ph_float,setSpreadAngle,spreadAngl);
     getter(PHPoint,gravity,grav);
     setter_(PHPoint,setGravity,grav);
     getter(PHSize,initialSize,initSize);
     setter_(PHSize,setInitSize,initSize);
     getter(PHSize,finalSize,endSize);
     setter_(PHSize,setFinalSize,endSize);
-    getter(double,particleLifetime,lifetime);
-    setter(double,setParticleLifetime,lifetime);
-    getter(double,lifetimeVariation,deltalifetime);
-    setter(double,setLifetimeVariation,deltalifetime);
+    getter(ph_float,particleLifetime,lifetime);
+    setter(ph_float,setParticleLifetime,lifetime);
+    getter(ph_float,lifetimeVariation,deltalifetime);
+    setter(ph_float,setLifetimeVariation,deltalifetime);
     getter(PHColor,initialColor,initColor);
     setter_(PHColor,setInitColor,initColor);
     getter(PHColor,finalColor,endColor);
@@ -78,7 +78,7 @@ public:
     setter(bool,setRotatesWithVelocity,rotates);
     
     PHParticleAnimator();
-    virtual void advanceAnimation(double elapsedTime);
+    virtual void advanceAnimation(ph_float elapsedTime);
     virtual ~PHParticleAnimator();
     
     void luaDestroy(PHObject * sender, void * ud);
@@ -90,7 +90,7 @@ public:
     struct particle
     {
         PHPoint position;
-        double rotation;
+        ph_float rotation;
         PHSize size;
         PHColor color;
     };
@@ -103,10 +103,10 @@ private:
     {
         particle particle;
         PHPoint velocity;
-        double lifespan;
-        double totalLife;
+        ph_float lifespan;
+        ph_float totalLife;
     };
-    double genQueue;
+    ph_float genQueue;
     
     vector<particle_state*> heap;
     
@@ -118,7 +118,7 @@ private:
     particle_state * hp_pop();
     void hp_push(particle_state * p);
     
-    void animateParticle(particle_state * p,double elapsed);
+    void animateParticle(particle_state * p,ph_float elapsed);
 };
 
 #undef setter

@@ -220,7 +220,7 @@ void PHParticleView::render()
         {
             _animator->bindCurrentFrameToTexture();
             bool fd = _animator->isFading();
-            double rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
+            ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
             renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t*(1-rem));
             if (fd)
             {

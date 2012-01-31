@@ -14,7 +14,7 @@
 class PHLEggBomb : public PHLSensor
 {
 private:
-    double magnitude,damage,radius;
+    ph_float magnitude,damage,radius;
     void objectEntered(PHLObject * obj);
 public:
     PHLEggBomb();

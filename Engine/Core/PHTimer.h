@@ -14,24 +14,24 @@ class PHTimer : public PHObject
 private:
     bool valid;
     bool repeat;
-    double time;
-    double timeleft;
-    double lastupd;
+    ph_float time;
+    ph_float timeleft;
+    ph_float lastupd;
     bool cboninvalidate;
     PHInvocation invocation;
 public:
     PHTimer() : valid(true), repeat(false), time(0), timeleft(0), cboninvalidate(false) {}
     ~PHTimer() { invalidate(); }
     
-    void timePassed(double timeElapsed);
-    void setTimeInterval(double tm) { time = tm; timeleft = tm; }
-    double timeInterval() { return time; }
-    void setTimeLeft(double tm) { timeleft = tm; }
-    double timeLeft() { return timeleft; }
+    void timePassed(ph_float timeElapsed);
+    void setTimeInterval(ph_float tm) { time = tm; timeleft = tm; }
+    ph_float timeInterval() { return time; }
+    void setTimeLeft(ph_float tm) { timeleft = tm; }
+    ph_float timeLeft() { return timeleft; }
     bool repeats() { return repeat; }
     void setRepeats(bool rpt) { repeat = rpt; }
-    void setLastUpdatedAt(double u) { lastupd = u; }
-    double lastUpdatedAt() { return lastupd; }
+    void setLastUpdatedAt(ph_float u) { lastupd = u; }
+    ph_float lastUpdatedAt() { return lastupd; }
     bool callsBackOnInvalidate() { return cboninvalidate; }
     void setCallsBackOnInvalidate(bool b) { cboninvalidate = b; }
     

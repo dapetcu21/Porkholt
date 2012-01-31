@@ -36,9 +36,9 @@ int PHGameManager::globalHD = 0;
 
 void PHGameManager::updateHD()
 {
-    double x = _screenWidth;
-    double y = _screenHeight;
-    double diagsq = x*x+y*y;
+    ph_float x = _screenWidth;
+    ph_float y = _screenHeight;
+    ph_float diagsq = x*x+y*y;
     bool newhd = (diagsq > 500000);
     if (newhd && !hd)
         ++globalHD;
@@ -92,7 +92,7 @@ void PHGameManager::setProjection()
 	glScalef(2.0f/(_screenWidth), 2.0f/(_screenHeight), 1.0f);
 }
 
-void PHGameManager::setScreenSize(double w, double h)
+void PHGameManager::setScreenSize(ph_float w, ph_float h)
 {
     _screenWidth = w;
     _screenHeight = h;
@@ -109,13 +109,13 @@ void PHGameManager::processInput()
 #endif
 }
 
-void PHGameManager::globalFrame(double timeElapsed)
+void PHGameManager::globalFrame(ph_float timeElapsed)
 {
     PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
     PHThread::mainThread()->processQueue();
 }
 
-void PHGameManager::renderFrame(double timeElapsed)
+void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

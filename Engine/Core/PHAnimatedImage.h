@@ -32,7 +32,7 @@ private:
         int type;
         union
         {
-            double duration;
+            ph_float duration;
             int fnumber;
             string * sectionName;
             int section;

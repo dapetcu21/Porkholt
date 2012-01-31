@@ -46,7 +46,7 @@ void PHRevoluteJoint::recreateJoint()
     joint = world->getPhysicsWorld()->CreateJoint(&jointDef);
 }
 
-void PHRevoluteJoint::setLimits(double lower, double upper)
+void PHRevoluteJoint::setLimits(ph_float lower, ph_float upper)
 {
     _lowerAngle = lower;
     _upperAngle = upper;
@@ -54,13 +54,13 @@ void PHRevoluteJoint::setLimits(double lower, double upper)
         ((b2RevoluteJoint*)joint)->SetLimits(_lowerAngle,_upperAngle);
 }
 
-void PHRevoluteJoint::setLowerAngle(double val)
+void PHRevoluteJoint::setLowerAngle(ph_float val)
 {
     _lowerAngle = val;
     if (joint)
         ((b2RevoluteJoint*)joint)->SetLimits(_lowerAngle,_upperAngle);
 }
-void PHRevoluteJoint::setUpperAngle(double val)
+void PHRevoluteJoint::setUpperAngle(ph_float val)
 {
     _upperAngle = val;
     if (joint)

@@ -72,7 +72,7 @@ private:
 	struct layer
 	{
 		PHView * container;
-		double scale;
+		ph_float scale;
 	};
 	list<layer> layers;
     
@@ -81,7 +81,7 @@ private:
     PHGameManager * _gameManager;
 	
 public:
-	PHWorld::layer * addLayer(double scale);
+	PHWorld::layer * addLayer(ph_float scale);
 	void addToLayer(layer * lyr, PHImageView * img);
 	
     void setScripting(PHScripting * s) { scripting = s; } 
@@ -103,7 +103,7 @@ public:
     void updatePositions();
     void updatePhysics();
 	void updateScene();
-    void updateTimers(double frameInterval);
+    void updateTimers(ph_float frameInterval);
     
     b2World * getPhysicsWorld() { return physicsWorld; }
         
@@ -126,13 +126,13 @@ public:
     void dismissFading() { dismissFading(NULL); }
     void dismissFading(void * ud);
     
-    void overlayText(const string & s, double duration);
+    void overlayText(const string & s, ph_float duration);
     
     void advanceDialog();
     void updateDialogs();
     void addDialog(PHDialog* d);
     
-    void boom(const PHPoint & location, double magnitude, double damage, double radius);
+    void boom(const PHPoint & location, ph_float magnitude, ph_float damage, ph_float radius);
     
     const string & resourcePath();
     

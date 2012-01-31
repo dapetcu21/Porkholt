@@ -14,13 +14,13 @@
 class PHLAnimation : public PHObject
 {
 private:
-    double time;
+    ph_float time;
     PHPoint move,rotateCenter,force,impulse,forceapp,velocity;
     bool useRotateCenter,objCoord;
-    double rotate,angularImpulse,corrForce;
-    double elapsed;
-    double position; //f(elapsed)
-    double braking;
+    ph_float rotate,angularImpulse,corrForce;
+    ph_float elapsed;
+    ph_float position; //f(elapsed)
+    ph_float braking;
     bool valid,skipped,statica,odyn;
     
     lua_State * L;
@@ -48,26 +48,26 @@ public:
     PHLAnimation();
     virtual ~PHLAnimation();
     
-    void setBrakeForce(double force) { braking = force; }
-    double brakeForce() { return braking; }
+    void setBrakeForce(ph_float force) { braking = force; }
+    ph_float brakeForce() { return braking; }
     void setMovement(PHPoint movement) { move = movement; }
     void setForce(PHPoint frc, bool objectCoordinates) { force = frc;  objCoord = objectCoordinates;}
     void setImpulse(PHPoint frc, bool objectCoordinates) { impulse = frc;  objCoord = objectCoordinates;}
-    void setAngularImpulse(double ai) { angularImpulse = ai; }
-    void setVelocity(PHPoint vel, double correctorForce) { velocity = vel; corrForce = correctorForce; }
+    void setAngularImpulse(ph_float ai) { angularImpulse = ai; }
+    void setVelocity(PHPoint vel, ph_float correctorForce) { velocity = vel; corrForce = correctorForce; }
     void setForceApplicationPoint(PHPoint app) { forceapp = app; }
-    void setRotation(double rot)
+    void setRotation(ph_float rot)
     {
         rotate = rot;
         useRotateCenter = false;
     }
-    void setRotationAround(double rot, PHPoint rc)
+    void setRotationAround(ph_float rot, PHPoint rc)
     {
         rotate = rot;
         rotateCenter = rc;
         useRotateCenter = true;
     }
-    void setTime(double tm) { time = tm; }
+    void setTime(ph_float tm) { time = tm; }
     bool isValid() { return valid; }
     void invalidate() { valid = false; }
     bool isSkipped() { return skipped; }
@@ -92,9 +92,9 @@ public:
     void loadFromLua(lua_State * L);
     static void registerLuaInterface(lua_State * L);
     
-    double f(double x);
+    ph_float f(ph_float x);
     
-    virtual void animationStepped(double elapsed) {};
+    virtual void animationStepped(ph_float elapsed) {};
 };
 
 #endif

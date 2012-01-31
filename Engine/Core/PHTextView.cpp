@@ -84,9 +84,9 @@ inline bool PHIsMandatoryBreakCharacter(char c)
     return c=='\n';
 }
 
-double PHTextView::lengthForInterval(int st, int en)
+ph_float PHTextView::lengthForInterval(int st, int en)
 {
-    double len = 0;
+    ph_float len = 0;
     for (int i=st; i<=en; i++)
     {
         const PHFont::glyph & glyph = _font->glyphForCharacter(_text[i]);
@@ -98,10 +98,10 @@ double PHTextView::lengthForInterval(int st, int en)
 struct PHTextViewLine
 {
     int first,second;
-    double length;
+    ph_float length;
 };
 
-static PHTextViewLine makeLine(int f, int s, double l)
+static PHTextViewLine makeLine(int f, int s, ph_float l)
 {
     PHTextViewLine tmp;
     tmp.first = f;
@@ -117,7 +117,7 @@ void PHTextView::recalculatePositions()
     
     vector< pair<int,int> > words;
     vector<PHTextViewLine> lines;
-    double width = bounds().width;
+    ph_float width = bounds().width;
     int p = 0;
     int st = 0;
     int n = (int)_text.size();
@@ -146,7 +146,7 @@ void PHTextView::recalculatePositions()
     st = words[0].first;
     int last = st;
     int stW = 0;
-    double lineLen = 0;
+    ph_float lineLen = 0;
     n = (int)words.size();
     p = 0;
     
@@ -162,7 +162,7 @@ void PHTextView::recalculatePositions()
                 mandatoryBreak = true;
                 break;
             }
-        double wordLen = lengthForInterval(last,words[p].second);
+        ph_float wordLen = lengthForInterval(last,words[p].second);
         if (mandatoryBreak || ((lineLen+wordLen)>width && p!=stW))
         {
             lines.push_back(makeLine(st,last-1,lineLen));
@@ -185,8 +185,8 @@ void PHTextView::recalculatePositions()
         PHLog("%d %d %f \"%s\"",lines[i].first,lines[i].second,lines[i].length,_text.substr(lines[i].first,lines[i].second-lines[i].first+1).c_str());*/
     
     n = (int)(lines.size());
-    double blockHeight = n*size + (n>=1?(n-1)*lineSpace*size:0);
-    double startY;
+    ph_float blockHeight = n*size + (n>=1?(n-1)*lineSpace*size:0);
+    ph_float startY;
     if ((_alignment & 3) == alignBottom)
         startY = blockHeight-size;
     else
@@ -210,13 +210,13 @@ void PHTextView::recalculatePositions()
     
     GLushort index = 0;
     
-    double maxLen = 0;
+    ph_float maxLen = 0;
     
     for (int i=0; i<n; i++)
     {
         if (lines[i].length>maxLen)
             maxLen = lines[i].length;
-        double startX = 0;
+        ph_float startX = 0;
         if ((_alignment & 12) == justifyRight)
             startX = width-lines[i].length;
         if ((_alignment & 12) == justifyCenter)
@@ -254,11 +254,11 @@ void PHTextView::recalculatePositions()
 
 void PHTextView::adjustFontSizeToFit(int precision)
 {
-    double st = 0;
-    double en = fontSize();
+    ph_float st = 0;
+    ph_float en = fontSize();
     for (int i=0; i<precision; i++)
     {
-        double middle = (st+en)/2;
+        ph_float middle = (st+en)/2;
         setFontSize(middle);
         PHSize size = textSize();
         if (size.width>_frame.width || size.height>_frame.height)

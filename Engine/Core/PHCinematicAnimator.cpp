@@ -42,7 +42,7 @@ void PHCinematicAnimator::invalidate()
     _actor = NULL;
 }
 
-void PHCinematicAnimator::completed(double remaining)
+void PHCinematicAnimator::completed(ph_float remaining)
 {
     callback.call((PHObject*)_actor);
     if (next && _actor)
@@ -55,12 +55,12 @@ void PHCinematicAnimator::completed(double remaining)
     invalidate();
 }
 
-inline double circleEq(double x,double mx,double my,double r)
+inline ph_float circleEq(ph_float x,ph_float mx,ph_float my,ph_float r)
 {
 	return sqrt(r*r-(x-mx)*(x-mx))+my;
 }
 #define bounceL 0.5f
-double PHCinematicAnimator::f(double time,int ftype)
+ph_float PHCinematicAnimator::f(ph_float time,int ftype)
 {
 	if (ftype==LinearFunction)
 		return time;
@@ -70,10 +70,10 @@ double PHCinematicAnimator::f(double time,int ftype)
 		{
 			return time/(1-bounceL);
 		} else {
-			double m = (bounceL-1);
-			double n = 1-m*(1-bounceL);
-			double yy = m*(1-bounceL/2)+n;
-			double r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
+			ph_float m = (bounceL-1);
+			ph_float n = 1-m*(1-bounceL);
+			ph_float yy = m*(1-bounceL/2)+n;
+			ph_float r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
 			return circleEq(time, 1-bounceL/2, yy, r);
 		}
 	}
@@ -92,12 +92,12 @@ double PHCinematicAnimator::f(double time,int ftype)
 	return time; //revert to linear
 }
 
-void PHCinematicAnimator::advanceAnimation(double elapsedTime)
+void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
 {
     if (!_actor)
         return;
-    double tm = elapsedTime;
-    double lastTime = time;
+    ph_float tm = elapsedTime;
+    ph_float lastTime = time;
     if (elapsedTime >= time)
     {  
         tm = time;
@@ -108,8 +108,8 @@ void PHCinematicAnimator::advanceAnimation(double elapsedTime)
     }
     if (tm>0 && totalTime>0)
     {
-        double lastRatio = f(1.0f - (lastTime/totalTime),function);
-        double ratio = f(1.0f - (time/totalTime),function);
+        ph_float lastRatio = f(1.0f - (lastTime/totalTime),function);
+        ph_float ratio = f(1.0f - (time/totalTime),function);
         if (move.x || move.y)
             _actor->setCinematicPosition(_actor->cinematicPosition()+(move*ratio - move*lastRatio));
         if (rotate)

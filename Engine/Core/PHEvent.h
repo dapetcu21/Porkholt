@@ -31,34 +31,34 @@ public:
         multitouchEnd
 	};
 private:
-	double _lastTime;
-	double _time;
+	ph_float _lastTime;
+	ph_float _time;
 	PHView * _ownerView;
 	PHPoint _location;
 	PHPoint _lastLocation;
-    double _zoom;
+    ph_float _zoom;
     PHPoint _delta;
-    double _rotation;
+    ph_float _rotation;
 	int state;
 	void * ud;
     PHObject * _sender;
     bool _handled;
 	friend class PHEventHandler;
-	void updateLocation(const PHPoint & pnt, double time, int nstate);
+	void updateLocation(const PHPoint & pnt, ph_float time, int nstate);
 public:
 	
 	PHEvent() : _ownerView(NULL), _sender(NULL), _handled(false) {};
 	
-	double time() { return _time; };
-	double lastTime() { return _lastTime; };
+	ph_float time() { return _time; };
+	ph_float lastTime() { return _lastTime; };
 	PHPoint location() { return _location; };
 	PHPoint lastLocation() { return _lastLocation; };
 	PHView * ownerView() { return _ownerView; };
     PHPoint delta() { return _delta; }
-    double deltaX() { return _delta.x; }
-    double deltaY() { return _delta.y; }
-    double rotation() { return _rotation; }
-    double zoom() { return _zoom; }
+    ph_float deltaX() { return _delta.x; }
+    ph_float deltaY() { return _delta.y; }
+    ph_float rotation() { return _rotation; }
+    ph_float zoom() { return _zoom; }
 	int type() { return state; };
     void * userData() { return ud; }
     PHObject * sender() { return _sender; }

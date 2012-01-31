@@ -24,18 +24,18 @@ void PHImage::buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repe
 {
     vector<GLfloat> v;
     PHRect r = portion*repeat;
-    double lx = r.x;
+    ph_float lx = r.x;
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    for (double x = ((int)r.x)+1; lx<r.x+r.width; (lx=x),(x+=1))
+    for (ph_float x = ((int)r.x)+1; lx<r.x+r.width; (lx=x),(x+=1))
     {
         if (x>r.x+r.width)
             x=r.x+r.width;
-        double ly = r.y;
+        ph_float ly = r.y;
         if (!v.empty())
             for (int i=0; i<4; i++)
                 v.push_back(v[v.size()-4]);
         bool first = !v.empty();
-        for (double y = ((int)r.y)+1; ly<r.y+r.height; (ly=y),(y+=1))
+        for (ph_float y = ((int)r.y)+1; ly<r.y+r.height; (ly=y),(y+=1))
         {
             if (y>r.y+r.height)
                 y=r.y+r.height;

@@ -71,7 +71,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	b2Vec2 center = body->GetWorldCenter();
     if (userInp)
         body->ApplyForce(frc, center);
-	double jumpGauge = _forceGauge;
+	ph_float jumpGauge = _forceGauge;
     b2Vec2 totalJump(0,0);
     if (mutex)
         mutex->lock();
@@ -84,7 +84,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         queue->pop_front();
         if (mutex)
             mutex->unlock();
-		double length = sqrt(frc.x*frc.x+frc.y*frc.y);
+		ph_float length = sqrt(frc.x*frc.x+frc.y*frc.y);
 		if (frc.y<0)
 			length = fabs(frc.x);
 		if (length)
@@ -110,17 +110,17 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         totalJump.Normalize();
         if (totalJump.y>0.1 && normal.y>0)
         {
-            b2Vec2 imp(0,min<double>(normal.y*2,10.0f/fps));
+            b2Vec2 imp(0,min<ph_float>(normal.y*2,10.0f/fps));
             body->ApplyLinearImpulse(imp,center);
         }
     }
     normal.x = normal.y = 0;
     if (touchesSomething>0 && (touchesSomething<1 || !forceGap))
     {
-        jumpGauge+=touchesSomething * _forceGrowth/(double)fps;
+        jumpGauge+=touchesSomething * _forceGrowth/(ph_float)fps;
         if (jumpGauge > maxForce)
             jumpGauge = maxForce;
-        touchesSomething -= 1.0f/(double)fps;
+        touchesSomething -= 1.0f/(ph_float)fps;
     }
     _forceGauge = jumpGauge;
     if (forceUsed)
@@ -133,7 +133,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 void PHLPlayer::updatePosition()
 {
     PHLNPC::updatePosition();
-    double interval = 1.0f/_gameManager->framesPerSecond();
+    ph_float interval = 1.0f/_gameManager->framesPerSecond();
     if (powerTime>0)
     {
         powerTime-=interval;
@@ -232,7 +232,7 @@ void PHLPlayer::_deactivatePower(PHObject * sender, void * ud)
 
 void PHLPlayer::activatePower()
 {
-    double pt = powerTime;
+    ph_float pt = powerTime;
     powerTime = 10.0f;
     if (pt<=0)
     {

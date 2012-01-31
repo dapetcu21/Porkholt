@@ -21,13 +21,13 @@ class PHLPlayer : public PHLNPC
 private:
     PHView * worldView;
     PHPoint normal;
-    double touchesSomething;
+    ph_float touchesSomething;
     int forceGap;
     bool userInp,force;
-    double damage;
+    ph_float damage;
     PHMutex * mutex;
     
-    double powerTime;
+    ph_float powerTime;
     bool resumeTrail;
     
 public:
@@ -48,15 +48,15 @@ public:
     bool userInput() { return userInp; }
     void setUsesForce(bool f) { force = f; }
     bool usesForce() { return force; }
-    void setAttackDamage( double dmg ) { damage = dmg; }
-    double attackDamage() { return damage; }
+    void setAttackDamage( ph_float dmg ) { damage = dmg; }
+    ph_float attackDamage() { return damage; }
     
     virtual void updatePosition();
     virtual void updateView();
     
     static void registerLuaInterface(lua_State *L);
 private:
-    double _forceGauge,maxForce,_forceGrowth;
+    ph_float _forceGauge,maxForce,_forceGrowth;
     bool barHidden;
     bool shield;
     
@@ -69,12 +69,12 @@ private:
     virtual void die();
     
 public:
-    double forceGauge() { return _forceGauge; }
-	void setForceGauge(double j) { _forceGauge = j; }
-	double maximumForce() { return maxForce; }
-	void setMaximumForce(double j) { maxForce = j; }
-	double forceGrowth() { return _forceGrowth; }
-	void setForceGrowth(double g) { _forceGrowth = g; }
+    ph_float forceGauge() { return _forceGauge; }
+	void setForceGauge(ph_float j) { _forceGauge = j; }
+	ph_float maximumForce() { return maxForce; }
+	void setMaximumForce(ph_float j) { maxForce = j; }
+	ph_float forceGrowth() { return _forceGrowth; }
+	void setForceGrowth(ph_float g) { _forceGrowth = g; }
     bool isBarHidden() { return barHidden; } 
     void setBarHidden(bool s) { barHidden = s; }
     

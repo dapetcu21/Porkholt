@@ -29,7 +29,7 @@ public:
     void removeAnimator(PHAnimator * a);
     void removeAllAnimators();
     void removeAnimatorsWithTag(int d);
-    void advanceAnimation(double elapsed);
+    void advanceAnimation(ph_float elapsed);
     
     void push();
     void pop() { popPool(); }

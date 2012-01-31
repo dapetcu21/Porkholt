@@ -21,14 +21,14 @@ protected:
 	PHRect sz;
     bool follow, strict;
     int strictcount;
-    double sstrict;
+    ph_float sstrict;
 public:
 	PHLCamera();
 	virtual ~PHLCamera();
 	
 	PHRect bounds() { return sz; };
-    double width() { return sz.width; }
-    double height() { return sz.height; }
+    ph_float width() { return sz.width; }
+    ph_float height() { return sz.height; }
 	
 	virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
 	virtual void loadView();

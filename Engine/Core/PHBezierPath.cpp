@@ -305,7 +305,7 @@ static bool cmp(pnt * a, pnt * b)
 
 static inline int angleof(const PHPoint & a, const PHPoint & b, const PHPoint & c)
 {
-    double determinant = a.x*b.y-a.y*b.x + b.x*c.y-b.y*c.x + c.x*a.y-c.y*a.x;
+    ph_float determinant = a.x*b.y-a.y*b.x + b.x*c.y-b.y*c.x + c.x*a.y-c.y*a.x;
     if (determinant==0)
         return 0;
     if (determinant>0)
@@ -356,9 +356,9 @@ const vector<PHBezierPath::anchorPoint> * PHBezierPath::tesselate(const vector<a
         pnt * crr = aa[i];
         pnt * pv = crr->prev;
         pnt * nx = crr->next;
-        double cx = crr->it()->point.x;
-        double pvx = pv->it()->point.x;
-        double nxx = nx->it()->point.x;
+        ph_float cx = crr->it()->point.x;
+        ph_float pvx = pv->it()->point.x;
+        ph_float nxx = nx->it()->point.x;
         
         int j = crr->p;
         edge * nxe = &b[j];
@@ -578,9 +578,9 @@ GLushort * PHBezierPath::triangulate(const vector<anchorPoint> & points, int & n
         pnt * crr = aa[i];
         pnt * pv = crr->prev;
         pnt * nx = crr->next;
-        double cx = crr->i->point.x;
-        double pvx = pv->i->point.x;
-        double nxx = nx->i->point.x;
+        ph_float cx = crr->i->point.x;
+        ph_float pvx = pv->i->point.x;
+        ph_float nxx = nx->i->point.x;
         
         #define edgenamed(x,y) ((x->p==y->p-1)?&b[x->p]:((x->p-1==y->p)?&b[y->p]:(((x->p==0 && y->p==m-1)||(x->p==m-1 && y->p==0))?&b[m-1]:NULL)))
         edge * nxe = edgenamed(crr, nx);
@@ -751,7 +751,7 @@ vector<PHBezierPath::anchorPoint> * PHBezierPath::bezierPath(vector<anchorPoint>
             int n = (int)v.size();
             for (int j = 0; j<n; j++)
                 vv.push_back(v[j].point);
-            double ammount = (1.0f/count)*i;
+            ph_float ammount = (1.0f/count)*i;
             while (n>1)
             {
                 for (int i=0; i<n-1; i++)

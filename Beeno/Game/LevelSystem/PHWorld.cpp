@@ -213,7 +213,7 @@ void PHWorld::updatePhysics()
 
 void PHWorld::updatePositions()
 {
-    double frameInterval = 1.0f/(_gameManager->framesPerSecond());
+    ph_float frameInterval = 1.0f/(_gameManager->framesPerSecond());
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -241,11 +241,11 @@ void PHWorld::updateScene()
 		PHRect pos = camera->bounds();
 		PHPoint ps = camera->position();
         PHPoint posit = ps;
-        double rot = camera->rotation();
+        ph_float rot = camera->rotation();
 		ps.x -= pos.width/2;			
 		ps.y -= pos.height/2;
-		double scaleX = view->bounds().width / pos.width;
-		double scaleY = view->bounds().height / pos.height;
+		ph_float scaleX = view->bounds().width / pos.width;
+		ph_float scaleY = view->bounds().height / pos.height;
 		pos.x = -ps.x * scaleX;
 		pos.y = -ps.y * scaleY;
 		pos.width = worldSize.width * scaleX;
@@ -263,8 +263,8 @@ void PHWorld::updateScene()
 			PHPoint ps = camera->position();
 			ps.x -= pos.width/2;			
 			ps.y -= pos.height/2;
-			double scaleX = view->bounds().width / pos.width * ly.scale;
-			double scaleY = view->bounds().height / pos.height * ly.scale;
+			ph_float scaleX = view->bounds().width / pos.width * ly.scale;
+			ph_float scaleY = view->bounds().height / pos.height * ly.scale;
 			pos.x = -ps.x * scaleX;
 			pos.y = -ps.y * scaleY;
 			pos.width = worldSize.width * scaleX;
@@ -287,7 +287,7 @@ void PHWorld::updateScene()
     heartView->setActiveHearts(round(player->healthPoints()/player->maximumHP()*hn));
 }
 
-void PHWorld::updateTimers(double frameInterval)
+void PHWorld::updateTimers(ph_float frameInterval)
 {
     modelQueue->updateTimers(frameInterval);
 }
@@ -404,7 +404,7 @@ void PHWorld::removeAllJoints()
     objects.clear();
 }
 
-PHWorld::layer * PHWorld::addLayer(double scale)
+PHWorld::layer * PHWorld::addLayer(ph_float scale)
 {
 	layer tmp;
 	tmp.container = new PHView(worldSize);
@@ -558,7 +558,7 @@ void PHWorld::dismissOverlayText()
 #define OVERLAYFONTSIZE 0.15
 #define OVERLAYPOS (5.1f/6)
 
-void PHWorld::overlayText(const string & s, double duration)
+void PHWorld::overlayText(const string & s, ph_float duration)
 {
     if (!overlayView)
     {
@@ -587,7 +587,7 @@ void PHWorld::overlayText(const string & s, double duration)
     overlayView->mutex()->unlock();
 }
 
-void PHWorld::boom(const PHPoint &location, double magnitude, double damage, double radius)
+void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage, ph_float radius)
 {
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
@@ -598,14 +598,14 @@ void PHWorld::boom(const PHPoint &location, double magnitude, double damage, dou
         if (b && (b->GetType() == b2_dynamicBody))
         {
             PHPoint p = o->position()-location;
-            double d = p.length();
+            ph_float d = p.length();
             if (d==0)
             {
                 d = 0.1;
                 p = PHPoint(0,0.1);
             }
             p.normalize();
-            double amm = (magnitude/(d*d));
+            ph_float amm = (magnitude/(d*d));
             if (amm > magnitude*2)
                 amm = magnitude*2;
             b2Vec2 im(p.x*amm,p.y*amm);

@@ -91,7 +91,7 @@ void PHLBomberBird::updatePosition()
             PHLObject * obj = PHLObject::objectWithClass(clss);
             obj->loadFromLua(L, wrld->getPhysicsWorld(),wrld->levelController());
             obj->defferedLoading(wrld, 3, this);
-            double vel = wrld->getPlayer()->getBody()->GetLinearVelocity().x;
+            ph_float vel = wrld->getPlayer()->getBody()->GetLinearVelocity().x;
             if (vel<0)
                 vel = 0;
             obj->getBody()->SetLinearVelocity(b2Vec2(vel*accuracy,dropVelocity));

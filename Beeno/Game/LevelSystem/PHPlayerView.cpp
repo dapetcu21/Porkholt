@@ -10,11 +10,11 @@
 #include "PHPlayerView.h"
 #include "PHGameManager.h"
 
-void PHPlayerView::setRotation( double rot)
+void PHPlayerView::setRotation( ph_float rot)
 {
-    double oldRot = _rotation;
+    ph_float oldRot = _rotation;
     PHView::setRotation(rot);
-    double dif = rot-oldRot;
+    ph_float dif = rot-oldRot;
     while (abs(dif+360)<abs(dif))
         dif+=360;
     while (abs(dif-360)<abs(dif))

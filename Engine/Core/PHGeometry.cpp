@@ -162,20 +162,20 @@ void PHColor::saveToLua(lua_State * L) const
 
 void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 {
-	double a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
-    double a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
-    double a2 = m[ 0]*m[ 7] - m[ 3]*m[ 4];
-    double a3 = m[ 1]*m[ 6] - m[ 2]*m[ 5];
-    double a4 = m[ 1]*m[ 7] - m[ 3]*m[ 5];
-    double a5 = m[ 2]*m[ 7] - m[ 3]*m[ 6];
-    double b0 = m[ 8]*m[13] - m[ 9]*m[12];
-    double b1 = m[ 8]*m[14] - m[10]*m[12];
-    double b2 = m[ 8]*m[15] - m[11]*m[12];
-    double b3 = m[ 9]*m[14] - m[10]*m[13];
-    double b4 = m[ 9]*m[15] - m[11]*m[13];
-    double b5 = m[10]*m[15] - m[11]*m[14];
+	ph_float a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
+    ph_float a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
+    ph_float a2 = m[ 0]*m[ 7] - m[ 3]*m[ 4];
+    ph_float a3 = m[ 1]*m[ 6] - m[ 2]*m[ 5];
+    ph_float a4 = m[ 1]*m[ 7] - m[ 3]*m[ 5];
+    ph_float a5 = m[ 2]*m[ 7] - m[ 3]*m[ 6];
+    ph_float b0 = m[ 8]*m[13] - m[ 9]*m[12];
+    ph_float b1 = m[ 8]*m[14] - m[10]*m[12];
+    ph_float b2 = m[ 8]*m[15] - m[11]*m[12];
+    ph_float b3 = m[ 9]*m[14] - m[10]*m[13];
+    ph_float b4 = m[ 9]*m[15] - m[11]*m[13];
+    ph_float b5 = m[10]*m[15] - m[11]*m[14];
 	
-    double det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
+    ph_float det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
 	
 	inverse[ 0] = + m[ 5]*b5 - m[ 6]*b4 + m[ 7]*b3;
 	inverse[ 4] = - m[ 4]*b5 + m[ 6]*b2 - m[ 7]*b1;
@@ -194,7 +194,7 @@ void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 	inverse[11] = - m[ 8]*a4 + m[ 9]*a2 - m[11]*a0;
 	inverse[15] = + m[ 8]*a3 - m[ 9]*a1 + m[10]*a0;
 	
-	double invDet = (1.0f)/det;
+	ph_float invDet = (1.0f)/det;
 	inverse[ 0] *= invDet;
 	inverse[ 1] *= invDet;
 	inverse[ 2] *= invDet;
@@ -215,7 +215,7 @@ void PHInvertMatrix(const GLfloat * m, GLfloat * inverse)
 
 PHPoint PHTransformPointMatrix(const GLfloat * m,const PHPoint & pnt)
 {
-	double x,y,w;
+	ph_float x,y,w;
 	x = pnt.x * m[0] + pnt.y * m[4] /*+ 0 * m[8] */ + 1 * m[12];
 	y = pnt.x * m[1] + pnt.y * m[5] /*+ 0 * m[9] */ + 1 * m[13];
 	w = pnt.x * m[3] + pnt.y * m[7] /*+ 0 * m[11]*/ + 1 * m[15];        
@@ -231,7 +231,7 @@ PHPoint PHUnTransformPointMatrix(const GLfloat * m, const PHPoint & pnt)
 	GLfloat inverted[16];
 	PHInvertMatrix(m, inverted);
 	//return PHTransformPointMatrix(inverted, pnt);
-	double x,y,w;
+	ph_float x,y,w;
 	x = pnt.x * inverted[0] + pnt.y * inverted[4] /*+ 0 * inverted[8] */ + 1 * inverted[12];
 	y = pnt.x * inverted[1] + pnt.y * inverted[5] /*+ 0 * inverted[9] */ + 1 * inverted[13];
 	w = pnt.x * inverted[3] + pnt.y * inverted[7] /*+ 0 * inverted[11]*/ + 1 * inverted[15];        
@@ -256,10 +256,10 @@ PHPoint PHUnTransformedPoint(const PHPoint & pnt)
 	return PHUnTransformPointMatrix(m, pnt);
 }
 
-void PHLowPassFilter(double & var, double newval, double period, double cutoff)
+void PHLowPassFilter(ph_float & var, ph_float newval, ph_float period, ph_float cutoff)
 {
-	double RC=1.0/cutoff;
-	double alpha=period/(period+RC);
+	ph_float RC=1.0/cutoff;
+	ph_float alpha=period/(period+RC);
 	//alpha = 0.000005;
 	var = newval * alpha + var * (1.0 - alpha);
 }
@@ -271,7 +271,7 @@ bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)
     return true;
 }
 
-bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, double radius)
+bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, ph_float radius)
 {
     return (pnt-origin).length()<=radius;
 }
@@ -288,10 +288,10 @@ bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2)
             PHPointInRect(r2.corner(3), r1));
 }
 
-double PHAngleFromNormalizedVector(PHPoint vec)
+ph_float PHAngleFromNormalizedVector(PHPoint vec)
 {
     vec.normalize();
-    double ang;
+    ph_float ang;
     if (abs(vec.x)<0.5)
     {
         ang = acos(vec.x);
@@ -309,9 +309,9 @@ double PHAngleFromNormalizedVector(PHPoint vec)
     return ang;
 }
 
-void PHGLRotate(double angle)
+void PHGLRotate(ph_float angle)
 {
-    double sinv = sin(angle), cosv = cos(angle);
+    ph_float sinv = sin(angle), cosv = cos(angle);
     GLfloat m[16] = {
          cosv, sinv, 0, 0,
         -sinv,  cosv, 0, 0,
@@ -324,8 +324,8 @@ void PHGLRotate(double angle)
 void PHGLFlip(PHPoint center, bool horiz, bool vert)
 {
     if (!horiz && !vert) return;
-    double px = horiz?-1:1;
-    double py = vert?-1:1;
+    ph_float px = horiz?-1:1;
+    ph_float py = vert?-1:1;
     GLfloat m[16] = {
         px                    , 0                    , 0, 0,
         0                     , py                   , 0, 0,

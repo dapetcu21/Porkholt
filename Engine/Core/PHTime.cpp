@@ -14,7 +14,7 @@
 #include <errno.h>
 #include "PHMain.h"
 
-double PHTime::getTime()
+float PHTime::getTime()
 {
 	uint64_t tm = mach_absolute_time();
 	
@@ -23,14 +23,14 @@ double PHTime::getTime()
         (void) mach_timebase_info(&sTimebaseInfo);
     }
 	
-	return tm * (double)(sTimebaseInfo.numer / sTimebaseInfo.denom / 1000000000.0f);
+	return tm * (float)(sTimebaseInfo.numer / sTimebaseInfo.denom / 1000000000.0f);
 }
 
-void PHTime::sleep(double time)
+void PHTime::sleep(float time)
 {
 	if (time==0)
 		return;
-	//double tm = getTime();
+	//ph_float tm = getTime();
 	//PHLog("getTime:%lf",tm);
 	
 	struct timespec s1,s2;
@@ -49,7 +49,7 @@ void PHTime::sleep(double time)
 		}
 	}
 	
-	/*double ttosleep = time;
+	/*float ttosleep = time;
 	while (usleep(ttosleep*1000000))
 	{
 		if (errno!=EINTR)
@@ -64,9 +64,9 @@ void PHTime::sleep(double time)
 	
 	//[NSThread sleepForTimeInterval:time];
 	
-	/*double actual =getTime()-tm;
-	double err = actual-time;
-	double deltaerr = err/time;
+	/*float actual =getTime()-tm;
+	float err = actual-time;
+	float deltaerr = err/time;
 	if (fabs(deltaerr)>=0.5)
 		PHLog("PHTime::sleep(%+lf) error:%+lf delta err:%+lf actual:%+lf",time,err,deltaerr,actual);*/
 }

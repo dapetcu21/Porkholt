@@ -9,7 +9,7 @@
 
 #include "PHEvent.h"
 
-void PHEvent::updateLocation(const PHPoint & pnt, double time, int nstate)
+void PHEvent::updateLocation(const PHPoint & pnt, ph_float time, int nstate)
 {
 	if (nstate == touchDown)
 	{

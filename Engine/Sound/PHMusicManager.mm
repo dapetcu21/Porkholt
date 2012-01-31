@@ -88,18 +88,18 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
     }
     [ca retain];
     
-    double tm = 1.0f;
-    double pos = ca.currentTime;
-    double oal = ca.duration-pos;
+    ph_float tm = 1.0f;
+    ph_float pos = ca.currentTime;
+    ph_float oal = ca.duration-pos;
     if (tm>oal)
         tm = oal;
-    double oav = ca.volume;
+    ph_float oav = ca.volume;
     m->unlock();
-    static const double tick = 0.1;
-    double ammount = oav/(tm/tick);
+    static const ph_float tick = 0.1;
+    ph_float ammount = oav/(tm/tick);
     while (tm)
     {
-        double st = tick;
+        ph_float st = tick;
         if (tm<st)
         {
             st = tm;
@@ -107,7 +107,7 @@ void PHMusicManager::pauseThread(PHThread * sender, void * ud)
         } else
             tm-= st;
         m->lock();
-        double ov = ca.volume;
+        ph_float ov = ca.volume;
         ov-=ammount*(st/tick);
         if (ov>1) ov = 1;
         ca.volume = ov;
@@ -140,16 +140,16 @@ void PHMusicManager::playThread(PHThread * sender, void * ud)
     }
     [ca retain];
     
-    double tm = 1.0f;
+    ph_float tm = 1.0f;
     ca.volume = 0;
-    static const double tick = 0.1;
-    double ammount = 1.0f/(tm/tick);
+    static const ph_float tick = 0.1;
+    ph_float ammount = 1.0f/(tm/tick);
     bool alreadyplaying = ca.playing;
     if (!alreadyplaying)
     {
         [ca play];
         NSTimeInterval pos = ca.currentTime;
-        double du = ca.duration;
+        ph_float du = ca.duration;
         pos-=tm;
         while (du && pos<0)
             pos+=du;
@@ -158,7 +158,7 @@ void PHMusicManager::playThread(PHThread * sender, void * ud)
     m->unlock();
     while (tm)
     {
-        double st = tick;
+        ph_float st = tick;
         if (tm<st)
         {
             st = tm;
@@ -166,7 +166,7 @@ void PHMusicManager::playThread(PHThread * sender, void * ud)
         } else
             tm-= st;
         m->lock();
-        double ov = ca.volume;
+        ph_float ov = ca.volume;
         ov+=ammount*(st/tick);
         if (ov>1) ov = 1;
         ca.volume = ov;
@@ -192,7 +192,7 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
     AVAudioPlayer * na = (a->name==noMusic)?nil:[[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:(a->name).c_str()]] error:nil];
     [na setNumberOfLoops:-1];
     [na prepareToPlay];
-    double tm = a->time;
+    ph_float tm = a->time;
     delete a;
     [na retain];
     
@@ -207,16 +207,16 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
     {
         m->lock();
         [oa setNumberOfLoops:1];
-        double oal = oa.duration-oa.currentTime;
+        ph_float oal = oa.duration-oa.currentTime;
         if (tm>oal)
             tm = oal;
-        double oav = oa.volume;
+        ph_float oav = oa.volume;
         m->unlock();
-        static const double tick = 0.1;
-        double ammount = oav/(tm/tick);
+        static const ph_float tick = 0.1;
+        ph_float ammount = oav/(tm/tick);
         while (tm)
         {
-            double st = tick;
+            ph_float st = tick;
             if (tm<st)
             {
                 st = tm;
@@ -224,7 +224,7 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
             } else
                 tm-= st;
             m->lock();
-            double ov = oa.volume;
+            ph_float ov = oa.volume;
             ov-=ammount*(st/tick);
             if (ov<0) ov = 0;
             oa.volume = ov;
@@ -246,7 +246,7 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
     [ap drain];
 }
 
-void PHMusicManager::setBackgroundMusic(const string & name,double fadeTime)
+void PHMusicManager::setBackgroundMusic(const string & name,ph_float fadeTime)
 {
     if (name==currentName) return;
     currentName = name;

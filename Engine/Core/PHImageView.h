@@ -27,7 +27,7 @@ protected:
 	PHRect coords;
     PHColor tint;
     bool constrain;
-    double _repeatX, _repeatY;
+    ph_float _repeatX, _repeatY;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
     void renderCurved();
@@ -94,11 +94,11 @@ public:
     bool constrainCurveToFrame() { return constrain; }
     void setConstrainCurveToFrame(bool c) { constrain = c; }
     
-    double repeatX() { return _repeatX; }
-    void setRepeatX(double rx) { _repeatX = rx; VBOneedsRebuilding = true; }
+    ph_float repeatX() { return _repeatX; }
+    void setRepeatX(ph_float rx) { _repeatX = rx; VBOneedsRebuilding = true; }
     
-    double repeatY() { return _repeatY; }
-    void setRepeatY(double ry) { _repeatY = ry; VBOneedsRebuilding = true; }
+    ph_float repeatY() { return _repeatY; }
+    void setRepeatY(ph_float ry) { _repeatY = ry; VBOneedsRebuilding = true; }
     
     PHBezierPath * bezierPath() { return curve; }
     void setBezierPath(PHBezierPath * bp);

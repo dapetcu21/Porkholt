@@ -130,7 +130,7 @@ PHAnimatorPool * PHAnimatorPool::mainAnimatorPool()
 void removeAllAnimators();
 void remoteAnimatorsWithTag(int d);
 
-void PHAnimatorPool::advanceAnimation(double elapsedTime)
+void PHAnimatorPool::advanceAnimation(ph_float elapsedTime)
 {
     mutex->lock();
     insideJob = true;

@@ -30,8 +30,8 @@ protected:
 	PHRect _frame,_bounds;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
     bool fhoriz,fvert;
-	double _rotation,_scaleX,_scaleY;
-	double _alpha;
+	ph_float _rotation,_scaleX,_scaleY;
+	ph_float _alpha;
 	bool _userInput;
 	bool _optimize;
 	PHColor _backColor;
@@ -93,17 +93,17 @@ public:
     void setVerticallyFlipped(bool b) { fvert = b; }  
 	void setRotationalCenter(const PHPoint &center) { _rotationalCenter = center;}
 	void setScalingCenter(const PHPoint &center) { _scalingCenter = center; }
-	double rotation() { return _rotation; };
-	virtual void setRotation(double rot) { _rotation = rot; };
-	double scaleX() { return _scaleX; };
-	void setScaleX(double scale) { _scaleX = scale; };
-	double scaleY() { return _scaleY; };
-	void setScaleY(double scale) { _scaleY = scale; };
+	ph_float rotation() { return _rotation; };
+	virtual void setRotation(ph_float rot) { _rotation = rot; };
+	ph_float scaleX() { return _scaleX; };
+	void setScaleX(ph_float scale) { _scaleX = scale; };
+	ph_float scaleY() { return _scaleY; };
+	void setScaleY(ph_float scale) { _scaleY = scale; };
 	int effectOrder() { return effOrder; };
 	void setEffectOrder(int eff) { effOrder = eff; };
-	void rotate(double rot) { _rotation+= rot; };
-	void setAlpha(double alpha) { _alpha = alpha; if (alpha<0) alpha = 0; if (alpha>1) alpha = 1; };
-	double alpha() { return _alpha; }
+	void rotate(ph_float rot) { _rotation+= rot; };
+	void setAlpha(ph_float alpha) { _alpha = alpha; if (alpha<0) alpha = 0; if (alpha>1) alpha = 1; };
+	ph_float alpha() { return _alpha; }
 	void setBackgroundColor(const PHColor &color) { _backColor = color; };
 	PHColor backgroundColor() { return _backColor; };
 	void setUserInput(bool ui) { _userInput = ui; };
@@ -147,8 +147,8 @@ private:
 protected:
     void setCinematicPosition(const PHPoint & p) { setPosition(p); }
     PHPoint cinematicPosition() { return position(); }
-    void setCinematicRotation(double r) { setRotation(r); }
-    double cinematicRotation() { return rotation(); }
+    void setCinematicRotation(ph_float r) { setRotation(r); }
+    ph_float cinematicRotation() { return rotation(); }
     void setCinematicScale(const PHSize & s) { setScaleX(s.x); setScaleY(s.y); }
     PHSize cinematicScale() { return PHSize(scaleX(),scaleY()); }
     void setCinematicBgColor(const PHColor & c) { setBackgroundColor(c); }

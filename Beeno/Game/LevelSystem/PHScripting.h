@@ -26,7 +26,7 @@ private:
 public:
     PHScripting(PHWorld * world,string level_dir);
     virtual ~PHScripting();
-    void scriptingStep(double timeElapsed);
+    void scriptingStep(ph_float timeElapsed);
     void loadWorld();
         
     void worldHasFadedAway(void * ud);

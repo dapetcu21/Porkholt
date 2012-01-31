@@ -56,6 +56,7 @@ using namespace std;
 #endif
 
 typedef void * (*PHAllocator)(void);
+typedef float ph_float;
 
 template <class T>
 void * PHAlloc(void)

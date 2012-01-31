@@ -57,7 +57,7 @@ void PHSound::fireCallback(PHObject * sender, PHEventQueue * timerQueue)
         inv.call();
         return;
     }
-    double tm = (impl.duration-impl.time)*impl.pitch;
+    ph_float tm = (impl.duration-impl.time)*impl.pitch;
     PHTimer * timer = new PHTimer;
     timer->setTimeInterval(tm);
     timer->setCallsBackOnInvalidate(true);

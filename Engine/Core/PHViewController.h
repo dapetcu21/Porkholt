@@ -28,7 +28,7 @@ protected:
     bool rmNav;
     
     void setNavigationController(PHNavigationController * nc);
-    virtual void updateScene(double timeElapsed);
+    virtual void updateScene(ph_float timeElapsed);
     
     set<PHViewController*> managedControllers;
     
@@ -44,7 +44,7 @@ public:
 	
     PHNavigationController * navigationController() { return navController; }
     
-	virtual void _updateScene(double timeElapsed);
+	virtual void _updateScene(ph_float timeElapsed);
 	
 	enum ViewStates
 	{

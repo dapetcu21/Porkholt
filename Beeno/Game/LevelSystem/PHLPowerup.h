@@ -16,7 +16,7 @@ class PHLPowerup : public PHLSensor
 private:
     void _collected();
     bool dismissing;
-    double remaining;
+    ph_float remaining;
     virtual void collected();
     virtual void objectEntered(PHLObject * obj);
     void dismissed();

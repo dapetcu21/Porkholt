@@ -103,7 +103,7 @@ PHGameManager * PHGameManagerSingleton;
     [v setFramebuffer];
     NSRunLoop *theRL = [NSRunLoop currentRunLoop];
     
-    double FPS = fps;
+    ph_float FPS = fps;
 #ifdef PH_SIMULATOR
     BOOL useDisplayLink = NO;
 #else
@@ -126,7 +126,7 @@ PHGameManager * PHGameManagerSingleton;
     
     PHGameManagerInitParameters params;
     UIScreen * s = [UIScreen mainScreen];
-    double scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
+    ph_float scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
     params.screenHeight = s.bounds.size.width*scale;
     params.screenWidth = s.bounds.size.height*scale;
     params.fps = FPS;
@@ -149,13 +149,13 @@ PHGameManager * PHGameManagerSingleton;
     gameManager->processInput();
     [v setFramebuffer];
     
-    static double time = 0;
-    static double lastTime = 0;
+    static ph_float time = 0;
+    static ph_float lastTime = 0;
     
-    double frameInterval = 1.0f/gameManager->framesPerSecond();
+    ph_float frameInterval = 1.0f/gameManager->framesPerSecond();
     lastTime = time;
     time = PHTime::getTime();
-    double elapsedTime = time-lastTime;
+    ph_float elapsedTime = time-lastTime;
     if (elapsedTime>1.5*frameInterval)
         elapsedTime = 1.5*frameInterval;
     PHGameManager::globalFrame(elapsedTime);

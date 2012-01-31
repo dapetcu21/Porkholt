@@ -38,8 +38,8 @@ public:
         playSection(name, callback, 0.0f); }
     void playSection(int section, const PHInvocation & callback) {
         playSection(section, callback, 0.0f); }
-    void playSection(const string & name, const PHInvocation & callback, double seek);
-    void playSection(int section, const PHInvocation & callback, double seek);
+    void playSection(const string & name, const PHInvocation & callback, ph_float seek);
+    void playSection(int section, const PHInvocation & callback, ph_float seek);
     
     void pause();
     void resume();

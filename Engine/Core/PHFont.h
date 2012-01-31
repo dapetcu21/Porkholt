@@ -17,13 +17,13 @@ public:
 	
     struct glyph
     {
-        double minX,maxX,minY,maxY,aspectRatio;
+        ph_float minX,maxX,minY,maxY,aspectRatio;
         glyph() : minX(0), maxX(0), minY(0), maxY(0), aspectRatio(0) {};
     };
     
     
     const string & fontName() { return name; }
-    double prerenderPointSize() { return pntSize; }
+    ph_float prerenderPointSize() { return pntSize; }
     
 protected:
 	PHFont(const string & path);
@@ -36,7 +36,7 @@ protected:
     bool loadImage(uint8_t * d, size_t len);
     
     string name;
-    double pntSize;
+    ph_float pntSize;
     
     uint8_t * data;
     uint8_t * imageData;

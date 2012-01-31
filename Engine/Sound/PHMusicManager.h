@@ -27,7 +27,7 @@ public:
     
     string currentName;
     
-    void setBackgroundMusic(const string & name,double fadeTime);
+    void setBackgroundMusic(const string & name,ph_float fadeTime);
     void setBackgroundMusic(const string & name) { setBackgroundMusic(name,2.0f); }
     
     PHMusicManager();
@@ -48,7 +48,7 @@ private:
     struct args 
     {
         string name;
-        double time;
+        ph_float time;
     };
     
     AVAudioPlayer * currentSound;

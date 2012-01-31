@@ -53,7 +53,7 @@ void PHLPowerup::dismiss()
     }
     remaining = animationTime;
     v->beginCinematicAnimation(animationTime,PHCinematicAnimator::FadeInFunction);
-    double scale = 1024;
+    ph_float scale = 1024;
     v->animateScale(PHSize(1/scale,1/scale));
     v->commitCinematicAnimation();
 }
@@ -63,7 +63,7 @@ void PHLPowerup::updatePosition()
     PHLSensor::updatePosition();
     if (!dismissing) return;
     PHPoint p = getWorld()->getPlayer()->position() - position();
-    double elapsed = 1.0f/(_gameManager->framesPerSecond());
+    ph_float elapsed = 1.0f/(_gameManager->framesPerSecond());
     if (elapsed>remaining) elapsed = remaining;
     p*=(animationTime/remaining)*elapsed;
     remaining-=elapsed;

@@ -121,7 +121,7 @@ void PHNavigationController::cancelAnimation()
 	}
 }
 
-void PHNavigationController::startSlideAnimation(double x, double y)
+void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
 {
 	if (lastVC)
 	{
@@ -266,7 +266,7 @@ void PHNavigationController::popViewController(int anim)
 	startAnimating();
 }
 
-void PHNavigationController::updateScene(double timeElapsed)
+void PHNavigationController::updateScene(ph_float timeElapsed)
 {
 	if (currentVC)
 		currentVC->_updateScene(timeElapsed);

@@ -85,10 +85,10 @@ void PHEventQueue::invalidateTimersWithUserdata(void * ud)
     mutex->unlock();
 }
 
-void PHEventQueue::updateTimers(double timeElapsed)
+void PHEventQueue::updateTimers(ph_float timeElapsed)
 {
     mutex->lock();
-    double time = PHTime::getTime();
+    ph_float time = PHTime::getTime();
     
     multimap<void *,PHTimer*>::iterator i,nx;
     for (i=timers.begin(); i!=timers.end(); i=nx)
@@ -97,7 +97,7 @@ void PHEventQueue::updateTimers(double timeElapsed)
         nx++;
         PHTimer * timer = i->second;
         mutex->unlock();
-        double real = time-timer->lastUpdatedAt();
+        ph_float real = time-timer->lastUpdatedAt();
         if (real>timeElapsed)
             real=timeElapsed;
         timer->setLastUpdatedAt(time);

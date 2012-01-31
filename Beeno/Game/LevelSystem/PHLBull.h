@@ -14,18 +14,18 @@
 class PHLBull : public PHLMob
 {
 private:
-    double attackRange;
-    double attackVelocity;
-    double attackDuration;
-    double cooldownDuration;
-    double unrageTime;
+    ph_float attackRange;
+    ph_float attackVelocity;
+    ph_float attackDuration;
+    ph_float cooldownDuration;
+    ph_float unrageTime;
     bool attacking;
     virtual void updatePosition();
     void attacked(PHObject * sender, void * ud);
     void cooldownEnded(PHObject * sender, void * ud);
     void reallyAttack(PHObject * sender, void * ud);
     virtual bool vulnerableFixture(b2Fixture * f);
-    virtual double speedNeededForDamagingFixture(b2Fixture * f);
+    virtual ph_float speedNeededForDamagingFixture(b2Fixture * f);
 public:
     PHLBull();
     virtual ~PHLBull();

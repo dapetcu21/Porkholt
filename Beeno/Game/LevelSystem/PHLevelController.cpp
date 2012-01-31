@@ -110,9 +110,9 @@ void PHLevelController::pauseWithMenu()
     rv->animateRotate(-3*M_PI/2);
     rv->commitCinematicAnimation();
     
-    double rs = fr.width*BT_SIZE;
-    double rg = rs/2+fr.width*BT_GAP/2;
-    double off = fr.height/2+rs/2-rg;
+    ph_float rs = fr.width*BT_SIZE;
+    ph_float rg = rs/2+fr.width*BT_GAP/2;
+    ph_float off = fr.height/2+rs/2-rg;
     rb->setFrame(PHRect(fr.width/2+rg+off-rs/2,fr.height/2-rs/2,rs,rs));
     qb->setFrame(PHRect(fr.width/2-rg-off-rs/2,fr.height/2-rs/2,rs,rs));
     
@@ -157,9 +157,9 @@ void PHLevelController::dismissMenu()
         rv->commitCinematicAnimation();
     }
     
-    double rs = fr.width*BT_SIZE;
-    double rg = rs/2+fr.width*BT_GAP/2;
-    double off = fr.height/2+rs/2-rg;    
+    ph_float rs = fr.width*BT_SIZE;
+    ph_float rg = rs/2+fr.width*BT_GAP/2;
+    ph_float off = fr.height/2+rs/2-rg;    
     
     if (rb)
     {
@@ -471,7 +471,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			lua_gettable(L, -2);
 			if (lua_istable(L, -1))
 			{
-				double scale = 1.0f;
+				ph_float scale = 1.0f;
                 PHLuaGetNumberField(scale, "scale");
 				
 				int n = 0;
@@ -576,7 +576,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	mutex->unlock();
 	
 	int fps = _gameManager->framesPerSecond();
-	double frameInterval = 1.0f/fps;
+	ph_float frameInterval = 1.0f/fps;
 	
 	while (running)
 	{

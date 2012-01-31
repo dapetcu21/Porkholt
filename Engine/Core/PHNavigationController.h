@@ -24,7 +24,7 @@ private:
 	
 	void startAnimating();
 	void stopAnimating();
-	void startSlideAnimation(double x, double y);
+	void startSlideAnimation(ph_float x, ph_float y);
 	void endSlideAnimation(void * dmy);
 	void cancelAnimation();
 	void startFadeAnimation();
@@ -50,7 +50,7 @@ public:
 	void pushViewController(PHViewController * vc)  { pushViewController(vc, NoAnim, false); };
 	void popViewController() { popViewController(NoAnim); }
 	
-	virtual void updateScene(double timeElapsed);
+	virtual void updateScene(ph_float timeElapsed);
 	
 	virtual void viewDidDisappear();
 	virtual void viewWillAppear();

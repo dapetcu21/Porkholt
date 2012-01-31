@@ -26,10 +26,10 @@ class PHGameManagerInitParameters
 public:
     PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc") {}
 
-    double screenWidth;
-    double screenHeight;
+    ph_float screenWidth;
+    ph_float screenHeight;
     int fps;
-    double dpi;
+    ph_float dpi;
     string resourcePath;
 };
 
@@ -49,9 +49,9 @@ private:
 	PHNavigationController * viewController;
     PHEventHandler * evtHandler;
     PHSoundManager * sndManager;
-	double _screenWidth;
-	double _screenHeight;
-    double dpi;
+	ph_float _screenWidth;
+	ph_float _screenHeight;
+    ph_float dpi;
 	int fps;
 	bool suspended;
     bool loaded;
@@ -76,16 +76,16 @@ public:
     PHGameManager();
     ~PHGameManager();
     void init(const PHGameManagerInitParameters & params);
-	double screenWidth() { return _screenWidth; };
-	double screenHeight() { return _screenHeight; };
+	ph_float screenWidth() { return _screenWidth; };
+	ph_float screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
-    void setScreenSize(double w, double h);
+    void setScreenSize(ph_float w, ph_float h);
 	int framesPerSecond() { return fps; }
-    double dotsPerInch() { return dpi; }
+    ph_float dotsPerInch() { return dpi; }
     const string & resourcePath() { return resPath; }
     void setResourcePath(const string & r) { resPath = r; }
-	void renderFrame(double timeElapsed);
-    static void globalFrame(double timeElapsed);
+	void renderFrame(ph_float timeElapsed);
+    static void globalFrame(ph_float timeElapsed);
 	void appSuspended();
 	void appResumed();
     bool isHD() { return hd; }

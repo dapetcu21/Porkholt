@@ -32,14 +32,14 @@ void PHViewController::init(PHGameManager * gm,const PHRect & frame)
     view->setGameManager(gm);
 }
 
-void PHViewController::_updateScene(double timeElapsed)
+void PHViewController::_updateScene(ph_float timeElapsed)
 {
     for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
         (*i)->_updateScene(timeElapsed);
     updateScene(timeElapsed);
 }
 
-void PHViewController::updateScene(double timeElapsed)
+void PHViewController::updateScene(ph_float timeElapsed)
 {	
 }
 

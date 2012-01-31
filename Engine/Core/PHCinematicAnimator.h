@@ -19,7 +19,7 @@ public:
     PHCinematicAnimator(PHAnimatorPool * pool);
     virtual ~PHCinematicAnimator();
     
-    virtual void advanceAnimation(double elapsedTime);
+    virtual void advanceAnimation(ph_float elapsedTime);
     
     enum Functions
 	{
@@ -35,19 +35,19 @@ public:
     const PHSize & scaling() { return scale; }
     void setMovement(const PHSize & sz) { move = sz; }
     const PHSize & movement() { return move; }
-    void setRotation(double r) { rotate = r; }
-    double rotation() { return rotate; }
-    void setCustomValueDelta(double val) { customValue = val; }
-    double customValueDelta() { return customValue; }
+    void setRotation(ph_float r) { rotate = r; }
+    ph_float rotation() { return rotate; }
+    void setCustomValueDelta(ph_float val) { customValue = val; }
+    ph_float customValueDelta() { return customValue; }
     void setBgColor(const PHColor & clr) { _bgColor = clr; }
     const PHColor & bgColor() { return _bgColor; }    
     void setCustomColor(const PHColor & clr) { _customColor = clr; }
     const PHColor & customColor() { return _customColor; }
     int timeFunction() { return function; }
     void setTimeFunction(int tf) { function = tf; }
-    double duration() { return time; }
-    double totalDuration() { return totalTime; }
-    void setDuration(double d) { time = totalTime = d; }
+    ph_float duration() { return time; }
+    ph_float totalDuration() { return totalTime; }
+    void setDuration(ph_float d) { time = totalTime = d; }
     void setCallback(const PHInvocation & cb) { callback = cb; }
     
     void setNextAnimation(PHCinematicAnimator * nx);
@@ -55,7 +55,7 @@ public:
     void invalidate();
     void skip() { advanceAnimation(time); }
     void completed() { completed(0); }
-    void completed(double remaining);
+    void completed(ph_float remaining);
     
     
 private:
@@ -63,14 +63,14 @@ private:
     
     PHSize scale;
     PHSize move;
-    double rotate;
+    ph_float rotate;
 	PHColor _bgColor,_customColor;
-    double customValue;
+    ph_float customValue;
     int function;
-    double time,totalTime;
+    ph_float time,totalTime;
     PHInvocation callback;
     
-    double f(double time,int ftype);
+    ph_float f(ph_float time,int ftype);
 };
 
 #endif

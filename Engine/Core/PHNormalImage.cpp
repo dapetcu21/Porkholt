@@ -245,10 +245,10 @@ void PHNormalImage::bindToTexture()
 
 PHRect PHNormalImage::textureCoordinates(const PHRect & port)
 {
-    double xc = 0.5f/actWidth;
-    double yc = 0.5f/actHeight;
-	double xC = (double)_width/actWidth;
-	double yC = (double)_height/actHeight;
+    ph_float xc = 0.5f/actWidth;
+    ph_float yc = 0.5f/actHeight;
+	ph_float xC = (ph_float)_width/actWidth;
+	ph_float yC = (ph_float)_height/actHeight;
 	
     return PHRect(xC*port.x+xc,yC*(port.y+port.height)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
@@ -264,10 +264,10 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * _gameManager, const
         frm.x+frm.width,frm.y+frm.height,
     };
 	
-    double xc = 0.5f/actWidth;
-    double yc = 0.5f/actHeight;
-	double xC = (double)_width/actWidth;
-	double yC = (double)_height/actHeight;
+    ph_float xc = 0.5f/actWidth;
+    ph_float yc = 0.5f/actHeight;
+	ph_float xC = (ph_float)_width/actWidth;
+	ph_float yC = (ph_float)_height/actHeight;
 	
 	const GLfloat squareTexCoords[] = {
         xC*port.x+xc				, yC*(port.y+port.height)-yc,
@@ -294,7 +294,7 @@ void PHNormalImage::rebuildVBO(PHImageView * imageView, GLuint & vbo, VBOParams 
                            params,
                            PHPoint(imageView->repeatX(),imageView->repeatY()),
                            imageView->textureCoordinates(),
-                           PHRect(0,0,(double)_width/actWidth,(double)_height/actHeight),
+                           PHRect(0,0,(ph_float)_width/actWidth,(ph_float)_height/actHeight),
                            PHPoint(0.5f/actWidth,0.5f/actHeight)
                            );
 }

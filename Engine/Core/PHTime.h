@@ -13,8 +13,8 @@
 class PHTime
 {
 public:
-	static double getTime();
-	static void sleep(double time);
+	static float getTime();
+	static void sleep(float time);
 };
 
 #endif

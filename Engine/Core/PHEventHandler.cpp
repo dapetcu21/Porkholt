@@ -88,7 +88,7 @@ void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
     event->release();
 }
 
-void PHEventHandler::pinchZoom(PHPoint pnt, double zoom, void *ud)
+void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
 {
     PHEvent * event = new PHEvent;
     event->ud = ud;
@@ -101,7 +101,7 @@ void PHEventHandler::pinchZoom(PHPoint pnt, double zoom, void *ud)
     event->release();
 }
 
-void PHEventHandler::pinchRotate(PHPoint pnt, double rotation, void *ud)
+void PHEventHandler::pinchRotate(PHPoint pnt, ph_float rotation, void *ud)
 {
     PHEvent * event = new PHEvent;
     event->ud = ud;

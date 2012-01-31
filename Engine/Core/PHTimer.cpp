@@ -8,7 +8,7 @@
 
 #include "PHTimer.h"
 
-void PHTimer::timePassed(double timeElapsed)
+void PHTimer::timePassed(ph_float timeElapsed)
 {
     timeleft -= timeElapsed;
     if (timeleft<=0)

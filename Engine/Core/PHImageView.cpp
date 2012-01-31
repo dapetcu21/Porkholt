@@ -125,10 +125,10 @@ void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stri
     int _height = img->height();
     int actWidth = img->actualWidth();
     int actHeight = img->actualHeight();
-    double sX = ((double)_width/(double)actWidth)*repeatX();
-    double sY = ((double)_height/(double)actHeight)*repeatY();
-    double sx = 0.5f/actWidth;
-    double sy = 0.5f/actHeight;
+    ph_float sX = ((ph_float)_width/(ph_float)actWidth)*repeatX();
+    ph_float sY = ((ph_float)_height/(ph_float)actHeight)*repeatY();
+    ph_float sx = 0.5f/actWidth;
+    ph_float sy = 0.5f/actHeight;
     PHRect p = textureCoordinates();
     p.width*=sX;
     p.height*=sY;
@@ -141,7 +141,7 @@ void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stri
     
     for (int k=0; k<4; k++)
     {
-        double len = 0;
+        ph_float len = 0;
         int tag;
         for (i = nx = corners[k];((tag = anchors->at(i).tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
         {
@@ -150,14 +150,14 @@ void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stri
                 nx-=n;
             len+=(anchors->at(nx).point-anchors->at(i).point).length();
         }
-        double l = 0;
+        ph_float l = 0;
         for (i = nx = corners[k];((tag = anchors->at(i).tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
         {
             nx++;
             if (nx>=n)
                 nx-=n;
-            double d = l/len;
-            double x,y;
+            ph_float d = l/len;
+            ph_float x,y;
             switch (k+1) {
                 case 1:
                     y = 1;
@@ -342,7 +342,7 @@ void PHImageView::renderStraight()
         glScalef(_bounds.width, _bounds.height, 1);
         
         PHColor t = tint.isValid()?tint:PHWhiteColor;
-        double rem = indexesVBO?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
+        ph_float rem = indexesVBO?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
         glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
         PHGLSetColor(t*(1-rem));
         PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
@@ -383,11 +383,11 @@ void PHImageView::loadFromLua(lua_State *L)
         PHRect portion = PHWholeRect;
         PHRect frame = PHWholeRect;
         int tag = 0;
-        double rot = 0;
+        ph_float rot = 0;
         bool flipHoriz = false;
         bool flipVert = false;
         bool constrain = true;
-        double repX=1,repY=1;
+        ph_float repX=1,repY=1;
         PHColor tint = PHInvalidColor;
 
         PHLuaGetRectField(frame, "pos");

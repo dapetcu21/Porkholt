@@ -16,15 +16,15 @@ struct PHRect;
 struct PHPoint
 {
     union {
-        double x;
-        double width;
+        ph_float x;
+        ph_float width;
     };
     union {
-        double y;
-        double height;
+        ph_float y;
+        ph_float height;
     };
     PHPoint() {};
-    PHPoint(double xx,double yy) : x(xx), y(yy) {};
+    PHPoint(ph_float xx,ph_float yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
     PHPoint(const PHRect & o);
     static PHPoint fromLua(lua_State * L, int index);
@@ -50,13 +50,13 @@ struct PHPoint
         PHPoint res(x-o.x,y-o.y);
         return res;
     }
-    const PHPoint & operator *= (double d)
+    const PHPoint & operator *= (ph_float d)
     {
         x*=d;
         y*=d;
         return * this;
     }
-    PHPoint operator * (double d) const
+    PHPoint operator * (ph_float d) const
     {
         PHPoint res(x*d,y*d);
         return res;
@@ -74,30 +74,30 @@ struct PHPoint
         return res;
     }
     
-    const PHPoint & operator /= (double d)
+    const PHPoint & operator /= (ph_float d)
     {
         x/=d;
         y/=d;
         return * this;
     }
-    PHPoint operator / (double d) const
+    PHPoint operator / (ph_float d) const
     {
         PHPoint res(x/d,y/d);
         return res;
     }
-    void rotate(double angle)
+    void rotate(ph_float angle)
     {
-        double ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
+        ph_float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
         x = cosv*ox-sinv*oy;
         y = sinv*ox+cosv*oy;
     }
-    double length() { return sqrt(x*x+y*y); } 
-    double squaredLength() { return x*x+y*y; }
+    ph_float length() { return sqrt(x*x+y*y); } 
+    ph_float squaredLength() { return x*x+y*y; }
     void normalize() { (*this)/=length(); }
-    PHPoint rotated(double angle) const
+    PHPoint rotated(ph_float angle) const
     {
         PHPoint p;
-        double sinv = sin(angle), cosv = cos(angle);
+        ph_float sinv = sin(angle), cosv = cos(angle);
         p.x = cosv*x-sinv*y;
         p.y = sinv*x+cosv*y;
         return p;
@@ -130,11 +130,11 @@ typedef PHPoint PHSize;
 
 struct PHRect
 {
-	PHRect(double _x, double _y, double w, double h) : x(_x),y(_y),width(w),height(h) {};
+	PHRect(ph_float _x, ph_float _y, ph_float w, ph_float h) : x(_x),y(_y),width(w),height(h) {};
 	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
 	PHRect() {};
-	double x,y;
-	double width,height;
+	ph_float x,y;
+	ph_float width,height;
     static PHRect fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
     
@@ -167,13 +167,13 @@ struct PHRect
     {
         return PHRect(x-o.x,y-o.y,width,height);
     }
-    const PHRect & operator *= (double d)
+    const PHRect & operator *= (ph_float d)
     {
         width*=d;
         height*=d;
         return * this;
     }
-    PHRect operator * (double d) const
+    PHRect operator * (ph_float d) const
     {
         return PHRect(x,y,width*d,height*d);
     }
@@ -187,13 +187,13 @@ struct PHRect
     {
         return PHRect(x,y,width*d.x,height*d.y);
     }
-    const PHRect & operator /= (double d)
+    const PHRect & operator /= (ph_float d)
     {
         width/=d;
         height/=d;
         return * this;
     }
-    PHRect operator / (double d) const
+    PHRect operator / (ph_float d) const
     {
         return PHRect(x,y,width/d,height/d);
     }
@@ -201,19 +201,19 @@ struct PHRect
 
 struct PHColor
 {
-	double r,g,b,a;
+	ph_float r,g,b,a;
     bool operator == (const PHColor & o) const {
         return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
     }
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
-    const PHColor & operator *= (double d)
+    const PHColor & operator *= (ph_float d)
     {
         if (a>0) a*=d;
         return * this;
     }
-    PHColor operator * (double d) const
+    PHColor operator * (ph_float d) const
     {
         if (a<0) return *this;
         PHColor res(r,g,b,a*d);
@@ -229,8 +229,8 @@ struct PHColor
         PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
         return res;
     }
-    PHColor(double red, double green, double blue, double alpha) : r(red), g(green), b(blue), a(alpha) {};
-    PHColor(double red, double green, double blue) : r(red), g(green), b(blue), a(1.0f) {};
+    PHColor(ph_float red, ph_float green, ph_float blue, ph_float alpha) : r(red), g(green), b(blue), a(alpha) {};
+    PHColor(ph_float red, ph_float green, ph_float blue) : r(red), g(green), b(blue), a(1.0f) {};
     PHColor() {};
     bool isValid() { return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1); }
     static PHColor fromLua(lua_State * L, int index);
@@ -355,13 +355,13 @@ PHPoint PHTransformedPoint(const PHPoint & pnt);
 PHPoint PHUnTransformedPoint(const PHPoint & pnt);
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
 bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2);
-bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, double radius);
+bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, ph_float radius);
 
-void PHLowPassFilter(double & var, double newval, double period, double cutoff);
+void PHLowPassFilter(ph_float & var, ph_float newval, ph_float period, ph_float cutoff);
 
 #define toRad(x) ((x)/180.0f*M_PI)
 #define toDeg(x) ((x)/M_PI*180.0f)
-inline double PHWarp(double v, double f)
+inline ph_float PHWarp(ph_float v, ph_float f)
 {
     if (v<0)
         v-=((int)(v/f)-1)*f;
@@ -369,9 +369,9 @@ inline double PHWarp(double v, double f)
         v-=((int)(v/f))*f;
     return v;
 }
-double PHAngleFromNormalizedVector(PHPoint vec);
+ph_float PHAngleFromNormalizedVector(PHPoint vec);
 
-void PHGLRotate(double angle);
+void PHGLRotate(ph_float angle);
 void PHGLFlip(PHPoint center, bool horiz, bool vert);
 
 extern PHColor PHGLCurrentColor;

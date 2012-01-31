@@ -16,13 +16,13 @@
 class PHGaugeView : public PHImageView
 {
 private:
-	double lvl;
+	ph_float lvl;
 public:
 	PHGaugeView() : PHImageView(), lvl(0) {};
 	PHGaugeView(const PHRect &frame) : PHImageView(frame), lvl(0) {};
 	PHGaugeView(PHImage * image) : PHImageView(image), lvl(0) {};
-	double level() { return lvl; }
-	void setLevel(double l) { lvl = l; }
+	ph_float level() { return lvl; }
+	void setLevel(ph_float l) { lvl = l; }
 	virtual void draw();
 };
 

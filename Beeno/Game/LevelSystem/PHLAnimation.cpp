@@ -43,12 +43,12 @@ void PHLAnimation::invalidateChain()
 
 #define bounceL 0.5f
 
-inline double circleEq(double x,double mx,double my,double r)
+inline ph_float circleEq(ph_float x,ph_float mx,ph_float my,ph_float r)
 {
 	return sqrt(r*r-(x-mx)*(x-mx))+my;
 }
 
-double PHLAnimation::f(double time)
+ph_float PHLAnimation::f(ph_float time)
 {
     if (function==LinearFunction)
 		return time;
@@ -60,10 +60,10 @@ double PHLAnimation::f(double time)
 		{
 			return time/(1-bounceL);
 		} else {
-			double m = (bounceL-1);
-			double n = 1-m*(1-bounceL);
-			double yy = m*(1-bounceL/2)+n;
-			double r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
+			ph_float m = (bounceL-1);
+			ph_float n = 1-m*(1-bounceL);
+			ph_float yy = m*(1-bounceL/2)+n;
+			ph_float r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
 			return circleEq(time, 1-bounceL/2, yy, r);
 		}
 	}
@@ -84,7 +84,7 @@ double PHLAnimation::f(double time)
         PHLuaGetHardRef(L, this);
         lua_getfield(L, -1, "curveFunction");
         lua_pushnumber(L, time);
-        double res = time;
+        ph_float res = time;
         if (PHLuaCall(L, 1, 1))
         {
             if (lua_isnumber(L, -1))

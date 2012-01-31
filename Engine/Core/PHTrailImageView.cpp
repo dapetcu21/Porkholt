@@ -66,7 +66,7 @@ void PHTrailImageView::auxRender()
         nr++;
         if (tint==PHInvalidColor)
             tint=PHWhiteColor;
-        tint.a*= ((double)nr)/n * 0.4;
+        tint.a*= ((ph_float)nr)/n * 0.4;
         //tint.r*=0.6;
         //tint.g*=0.6;
         //tint.b*=0.6;

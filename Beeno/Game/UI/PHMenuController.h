@@ -22,7 +22,7 @@ private:
     void resetClouds(PHView * v);
 protected:
     virtual PHView * loadView(const PHRect & frame);
-    virtual void updateScene(double timeElapsed);
+    virtual void updateScene(ph_float timeElapsed);
 };
 
 #endif

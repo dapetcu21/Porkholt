@@ -49,8 +49,8 @@ void PHRemote::recievedPacket(uint8_t signature, const URField * const * fields,
             if (tag==0x08)
             {
                 PHEventHandler * eh = me->eventHandler();
-                pnt.x = ((double)(int32_t)x)/w*me->screenWidth();
-                pnt.y = (1-((double)(int32_t)y)/h)*me->screenHeight();
+                pnt.x = ((ph_float)(int32_t)x)/w*me->screenWidth();
+                pnt.y = (1-((ph_float)(int32_t)y)/h)*me->screenHeight();
                 switch (state) {
                     case 0:
                     {

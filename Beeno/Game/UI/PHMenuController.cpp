@@ -13,10 +13,10 @@
 #include "PHImageView.h"
 #include "PHMusicManager.h"
 
-static const double cloudX[] = {0.0f,1.0f,0.3f};
-static const double cloudY[] = {0.5f,0.7f,0.12f};
-static const double cloudW[] = {0.4f,0.4f,0.4f};
-static const double cloudS[] = {0.015f,-0.01f,0.02f};
+static const ph_float cloudX[] = {0.0f,1.0f,0.3f};
+static const ph_float cloudY[] = {0.5f,0.7f,0.12f};
+static const ph_float cloudW[] = {0.4f,0.4f,0.4f};
+static const ph_float cloudS[] = {0.015f,-0.01f,0.02f};
 static const char * const cloudP[] = {"cloud1","cloud2","cloud3"};
 
 
@@ -26,7 +26,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     v->setImage(_gameManager->imageNamed("bg_gradient"));
     v->setUserInput(true);
     
-    for(int i=0; i<(sizeof(cloudX)/sizeof(double)); i++)
+    for(int i=0; i<(sizeof(cloudX)/sizeof(ph_float)); i++)
     {
         PHImageView * c = new PHImageView;
         c->setImage(_gameManager->imageNamed(cloudP[i]));
@@ -61,12 +61,12 @@ void PHMenuController::viewWillAppear()
 
 void PHMenuController::resetClouds(PHView * v)
 {
-    double w = v->bounds().width;
-    double h = v->bounds().height;
+    ph_float w = v->bounds().width;
+    ph_float h = v->bounds().height;
     for (int i=0; i<clouds.size(); i++)
     {
         PHImage * img = clouds[i]->image();
-        double hi = ((double)img->height())/((double)img->width())*(cloudW[i]*w);
+        ph_float hi = ((ph_float)img->height())/((ph_float)img->width())*(cloudW[i]*w);
         clouds[i]->setFrame(PHRect(
                                    cloudX[i]*w-(cloudW[i]*w)/2,
                                    cloudY[i]*h-hi/2,
@@ -76,11 +76,11 @@ void PHMenuController::resetClouds(PHView * v)
     }
 }
 
-void PHMenuController::updateScene(double timeElapsed)
+void PHMenuController::updateScene(ph_float timeElapsed)
 {
     PHView * v = getView();
     if (!v) return;
-    double w = v->bounds().width;
+    ph_float w = v->bounds().width;
     for (int i=0; i<clouds.size(); i++)
     {
         PHRect fr = clouds[i]->frame()+PHPoint(cloudS[i]*w*timeElapsed,0);

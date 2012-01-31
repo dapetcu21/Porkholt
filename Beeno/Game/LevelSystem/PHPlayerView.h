@@ -15,12 +15,12 @@ class PHPlayerView : public PHView
 {
 private:
     int _designatedTag;
-    double lastDif;
+    ph_float lastDif;
 public:
     int designatedTag() { return _designatedTag; }
     void setDesignatedTag(int tag) { _designatedTag = tag; };
     
-    virtual void setRotation( double rot);
+    virtual void setRotation( ph_float rot);
     
 public:
 #define PHPLAYERVIEW_INIT _designatedTag(-1), lastDif(0)

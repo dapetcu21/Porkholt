@@ -129,7 +129,7 @@ void PHView::render()
 		GLfloat m[16];
 		glGetFloatv(GL_MODELVIEW, m);
 		PHPoint pnt;
-		double minX,minY,maxX,maxY;
+		ph_float minX,minY,maxX,maxY;
 		minX=minY=0x3f3f3f3f;
 		maxX=maxY=-0x3f3f3f3f;
 #define test\

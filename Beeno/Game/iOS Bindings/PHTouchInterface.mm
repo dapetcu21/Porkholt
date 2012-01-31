@@ -85,7 +85,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	mutex->unlock();
 }
 
--(void)addTask:(void *)ud state:(int)state X:(double)x Y:(double)y
+-(void)addTask:(void *)ud state:(int)state X:(ph_float)x Y:(ph_float)y
 {
 	TouchTask tmp;
 	tmp.ud = ud;
@@ -97,7 +97,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	mutex->unlock();
 }
 
--(void)processEvent:(void*)event state:(int)state X:(double)x Y:(double)y
+-(void)processEvent:(void*)event state:(int)state X:(ph_float)x Y:(ph_float)y
 {
 	PHPoint pnt;
 	pnt.y = x*self.frame.size.height;

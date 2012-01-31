@@ -24,7 +24,7 @@ public:
     PHAnimator(PHAnimatorPool * pool);
     virtual ~PHAnimator();
     
-    virtual void advanceAnimation(double elapsedTime) = 0;
+    virtual void advanceAnimation(ph_float elapsedTime) = 0;
     bool isAdvancingManually() { return advanceManually; }
     void setAdvanceManually(bool s) { advanceManually = s; }
     void setAnimatorPool(PHAnimatorPool * p);

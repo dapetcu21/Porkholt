@@ -65,8 +65,8 @@ void PHCinematicActor::removeCinematicAnimationsWithTag(int tag)
 
 void PHCinematicActor::setCinematicCustomColor(const PHColor &) {}
 PHColor PHCinematicActor::cinematicCustomColor() { return PHInvalidColor; }
-void PHCinematicActor::setCinematicCustomValue(double) {}
-double PHCinematicActor::cinematicCustomValue() { return 0; }
+void PHCinematicActor::setCinematicCustomValue(ph_float) {}
+ph_float PHCinematicActor::cinematicCustomValue() { return 0; }
 
 PHCinematicActor::PHCinematicActor() : _cinematicAnimator(NULL) , _rootAnimator(NULL), _cinematicMutex(new PHMutex) {};
 PHCinematicActor::~PHCinematicActor()
@@ -76,17 +76,17 @@ PHCinematicActor::~PHCinematicActor()
     _cinematicMutex->release();
 }
 
-void PHCinematicActor::beginCinematicAnimation(double duration)
+void PHCinematicActor::beginCinematicAnimation(ph_float duration)
 {
     beginCinematicAnimation(duration, PHCinematicAnimator::LinearFunction);
 }
 
-void PHCinematicActor::chainCinematicAnimation(double duration)
+void PHCinematicActor::chainCinematicAnimation(ph_float duration)
 {
     chainCinematicAnimation(duration, PHCinematicAnimator::LinearFunction);
 }
 
-void PHCinematicActor::beginCinematicAnimation(double duration, int type)
+void PHCinematicActor::beginCinematicAnimation(ph_float duration, int type)
 {
     if (_cinematicAnimator)
         dropCinematicAnimation();
@@ -95,7 +95,7 @@ void PHCinematicActor::beginCinematicAnimation(double duration, int type)
     _cinematicAnimator->setTimeFunction(type);
 }
 
-void PHCinematicActor::chainCinematicAnimation(double duration, int type)
+void PHCinematicActor::chainCinematicAnimation(ph_float duration, int type)
 {
     if (!_cinematicAnimator)
     {
@@ -135,7 +135,7 @@ void PHCinematicActor::animateScale(const PHSize & mv)
     _cinematicAnimator->setScaling(PHSize(mv.x*s.x,mv.y*s.y));
 }
 
-void PHCinematicActor::animateRotate(double rot)
+void PHCinematicActor::animateRotate(ph_float rot)
 {
     _cinematicAnimator->setRotation(_cinematicAnimator->rotation()+rot);
 }
@@ -160,7 +160,7 @@ void PHCinematicActor::animationTag(int tag)
     _cinematicAnimator->setTag(tag);
 }
 
-void PHCinematicActor::animateCustomValue(double val)
+void PHCinematicActor::animateCustomValue(ph_float val)
 {
     _cinematicAnimator->setCustomValueDelta(_cinematicAnimator->customValueDelta()+val);
 }

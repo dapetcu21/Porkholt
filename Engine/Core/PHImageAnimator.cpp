@@ -26,7 +26,7 @@ PHImageAnimator::PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p) : PH
     reset();
 }
 
-double PHImageAnimator::timeForFrameInSection(int fr, int sec)
+ph_float PHImageAnimator::timeForFrameInSection(int fr, int sec)
 {
     try {
         PHAnimatedImage::section * section = _image->sections.at(sec);
@@ -39,7 +39,7 @@ double PHImageAnimator::timeForFrameInSection(int fr, int sec)
         }
         if (frame.type == 1)
         {
-            double res = 0;
+            ph_float res = 0;
             PHAnimatedImage::luaMutex->lock();
             
             lua_State * L = PHAnimatedImage::L;
@@ -113,7 +113,7 @@ void PHImageAnimator::animateSection(int sect, const PHInvocation & inv)
     fade = frm->fade;
 }
 
-void PHImageAnimator::advanceAnimation(double elapsedTime)
+void PHImageAnimator::advanceAnimation(ph_float elapsedTime)
 {
     if (section==-1 || frame==-1) return;
     if (!running) return;
@@ -145,7 +145,7 @@ void PHImageAnimator::advanceAnimation(double elapsedTime)
 PHRect PHImageAnimator::currentFrameTextureCoordinates(const PHRect & port)
 {
     int actWidth,actHeight, _width, _height;
-    double xc,yc,xC,yC;
+    ph_float xc,yc,xC,yC;
     
     int nt,p,r,c;
     
@@ -161,8 +161,8 @@ PHRect PHImageAnimator::currentFrameTextureCoordinates(const PHRect & port)
     
     xc = 0.5f/actWidth;
     yc = 0.5f/actHeight;
-    xC = (double)_width/actWidth;
-    yC = (double)_height/actHeight;
+    xC = (ph_float)_width/actWidth;
+    yC = (ph_float)_height/actHeight;
 
     return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
@@ -170,7 +170,7 @@ PHRect PHImageAnimator::currentFrameTextureCoordinates(const PHRect & port)
 PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
 {
     int actWidth,actHeight, _width, _height;
-    double xc,yc,xC,yC;
+    ph_float xc,yc,xC,yC;
     
     int nt,p,r,c;
     
@@ -186,8 +186,8 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
     
     xc = 0.5f/actWidth;
     yc = 0.5f/actHeight;
-    xC = (double)_width/actWidth;
-    yC = (double)_height/actHeight;
+    xC = (ph_float)_width/actWidth;
+    yC = (ph_float)_height/actHeight;
     
     return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
@@ -206,7 +206,7 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, con
     };
 
     int actWidth,actHeight, _width, _height;
-    double xc,yc,xC,yC;
+    ph_float xc,yc,xC,yC;
     
     int nt,p,r,c;
     PHColor tt = tint;
@@ -226,8 +226,8 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, con
         _height = _image->_height;
         xc = 0.5f/actWidth;
         yc = 0.5f/actHeight;
-        xC = (double)_width/actWidth;
-        yC = (double)_height/actHeight;
+        xC = (ph_float)_width/actWidth;
+        yC = (ph_float)_height/actHeight;
         
         const GLfloat squareTexCoords2[] = {
             xC*(port.x+c)+xc				, yC*(port.y+port.height+r)-yc,
@@ -257,8 +257,8 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, con
     _height = _image->_height;
     xc = 0.5f/actWidth;
     yc = 0.5f/actHeight;
-    xC = (double)_width/actWidth;
-	yC = (double)_height/actHeight;
+    xC = (ph_float)_width/actWidth;
+	yC = (ph_float)_height/actHeight;
 	
 	const GLfloat squareTexCoords[] = {
         xC*(port.x+c)+xc				, yC*(port.y+port.height+r)-yc,
@@ -307,7 +307,7 @@ void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImag
     PHRect port = imageView->textureCoordinates();
     
     int actWidth,actHeight, _width, _height;
-    double xc,yc,xC,yC;
+    ph_float xc,yc,xC,yC;
     
     int nt,p,r,c;
     
@@ -322,8 +322,8 @@ void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImag
     _height = _image->_height;
     xc = 0.5f/actWidth;
     yc = 0.5f/actHeight;
-    xC = (double)_width/actWidth;
-    yC = (double)_height/actHeight;
+    xC = (ph_float)_width/actWidth;
+    yC = (ph_float)_height/actHeight;
 
     
     PHImage::buildImageVBO(vbo1, params1, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
@@ -341,8 +341,8 @@ void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImag
         _height = _image->_height;
         xc = 0.5f/actWidth;
         yc = 0.5f/actHeight;
-        xC = (double)_width/actWidth;
-        yC = (double)_height/actHeight;
+        xC = (ph_float)_width/actWidth;
+        yC = (ph_float)_height/actHeight;
 
         PHImage::buildImageVBO(vbo2, params2, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
     }
