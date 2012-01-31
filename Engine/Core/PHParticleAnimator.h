@@ -33,7 +33,7 @@ private:
     double lifetime;
     double deltalifetime;
     PHColor initColor,endColor;
-    double rotQuot;
+    bool rotates;
     
     lua_State * L;
     
@@ -74,8 +74,8 @@ public:
     setter_(PHColor,setInitColor,initColor);
     getter(PHColor,finalColor,endColor);
     setter_(PHColor,setFinalColor,endColor);
-    getter(double,rotationQuotient,rotQuot);
-    setter(double,setRotationQuotient,rotQuot);
+    getter(bool,rotatesWithVelocity,rotates);
+    setter(bool,setRotatesWithVelocity,rotates);
     
     PHParticleAnimator();
     virtual void advanceAnimation(double elapsedTime);

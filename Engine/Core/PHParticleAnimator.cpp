@@ -80,7 +80,7 @@ void PHParticleAnimator::loadFromLua(lua_State *L)
     PHLuaGetNumberField(deltalifetime,"lifetimeVariation");
     PHLuaGetColorField(initColor,"initialColor");
     PHLuaGetColorField(endColor,"finalColor");
-    PHLuaGetNumberField(rotQuot,"rotationQuotient");
+    PHLuaGetBoolField(rotates,"rotatesWithVelocity");
     mutex->unlock();
 }
 
@@ -116,8 +116,8 @@ PHLuaColorGetter(PHParticleAnimator,initialColor);
 PHLuaColorSetter(PHParticleAnimator,setInitColor);
 PHLuaColorGetter(PHParticleAnimator,finalColor);
 PHLuaColorSetter(PHParticleAnimator,setFinalColor);
-PHLuaNumberGetter(PHParticleAnimator,rotationQuotient);
-PHLuaNumberSetter(PHParticleAnimator,setRotationQuotient);
+PHLuaBoolGetter(PHParticleAnimator,rotatesWithVelocity);
+PHLuaBoolSetter(PHParticleAnimator,setRotatesWithVelocity);
 PHLuaDefineCall(PHParticleAnimator,play);
 PHLuaDefineCall(PHParticleAnimator,pause);
 PHLuaDefineCall(PHParticleAnimator,clear);
@@ -159,8 +159,8 @@ void PHParticleAnimator::registerLuaInterface(lua_State *L)
         PHLuaAddMethod(PHParticleAnimator,setInitColor);
         PHLuaAddMethod(PHParticleAnimator,finalColor);
         PHLuaAddMethod(PHParticleAnimator,setFinalColor);
-        PHLuaAddMethod(PHParticleAnimator,rotationQuotient);
-        PHLuaAddMethod(PHParticleAnimator,setRotationQuotient);
+        PHLuaAddMethod(PHParticleAnimator,rotatesWithVelocity);
+        PHLuaAddMethod(PHParticleAnimator,setRotatesWithVelocity);
         PHLuaAddMethod(PHParticleAnimator,play);
         PHLuaAddMethod(PHParticleAnimator,pause);
         PHLuaAddMethod(PHParticleAnimator,clear);
@@ -253,7 +253,7 @@ void PHParticleAnimator::clear()
     heap.clear();
 }
 
-PHParticleAnimator::PHParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), initSize(0.1,0.1), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotQuot(0), genQueue(0)
+PHParticleAnimator::PHParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), initSize(0.1,0.1), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotates(false), genQueue(0)
 {}
 
 void PHParticleAnimator::animateParticle(PHParticleAnimator::particle_state * p, double elapsed)
@@ -268,6 +268,8 @@ void PHParticleAnimator::animateParticle(PHParticleAnimator::particle_state * p,
                                 initColor.g*q+endColor.g*(1-q),
                                 initColor.b*q+endColor.b*(1-q),
                                 initColor.a*q+endColor.a*(1-q));
+    if (rotates)
+        p->particle.rotation = PHAngleFromNormalizedVector(p->velocity)-M_PI_2;
 }
 
 void PHParticleAnimator::setVelocity(const PHPoint &v)
@@ -311,12 +313,12 @@ void PHParticleAnimator::advanceAnimation(double elapsedTime)
             p.x = genArea.x + p.x*genArea.width;
             p.y = genArea.y + p.y*genArea.height;
             st->particle.position = p;
-            st->particle.rotation = 0;
             st->particle.size = initSize;
             st->particle.color = initColor;
             double ang = PHAngleFromNormalizedVector(vel);
             double module = vel.length()+((double)rand()/RAND_MAX)*deltavel;
             ang += (((double)rand()/RAND_MAX)-0.5)*spreadAngl;
+            st->particle.rotation = rotates?(ang-M_PI_2):0;
             st->velocity = PHPoint(cos(ang)*module,sin(ang)*module);
             st->lifespan = st->totalLife = lifetime+((double)rand()/RAND_MAX)*deltalifetime;
             animateParticle(st,genQueue);

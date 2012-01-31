@@ -135,6 +135,7 @@ objectAddImage(obj,"/particle.png",0,0,1,1,{ class = "PHParticleView", particleA
 	initialSize = point(0.3,0.3), 
 	finalSize = point(0.7,0.7), 
 	initialColor = rgba(1,1,1,1), 
-	finalColor = rgba(1,1,1,0.5)
+	finalColor = rgba(1,1,1,0.5),
+    rotatesWithVelocity = true
 	} })
 addObject(obj)
