@@ -443,9 +443,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				C12069CD14D733C3007DACEA /* liblua.a */,
-				C12069CE14D733C3007DACEA /* libpng15.a */,
-				C12069CF14D733C4007DACEA /* libz.a */,
 				C120696314D7163D007DACEA /* Porkholt.xcodeproj */,
 				C17D0F501322A18300BDB8EF /* LevelSystem */,
 				C1AF4FBB13A657BD00ED2ED7 /* UI */,
@@ -471,6 +468,9 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C12069CD14D733C3007DACEA /* liblua.a */,
+				C12069CE14D733C3007DACEA /* libpng15.a */,
+				C12069CF14D733C4007DACEA /* libz.a */,
 				C1B3C8541471382D000FD6DF /* OpenAL.framework */,
 				C1B3C85214713823000FD6DF /* AudioToolbox.framework */,
 				C1B3C85014713816000FD6DF /* AVFoundation.framework */,

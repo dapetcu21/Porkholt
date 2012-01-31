@@ -12,6 +12,15 @@
 @implementation PLAppController
 
 
+-(id)init
+{
+    if (self = [super init])
+    {
+        [self loadResourcePath];
+    }
+    return self;
+}
+
 -(BOOL)isResourcePathValid:(NSString*)path
 {
     if (path == nil) return NO;
@@ -21,10 +30,21 @@
 
 -(void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+    if (!resourcePath)
+        [self loadResourcePath];
+}
+
+-(void)loadResourcePath
+{
+    if (loadingResourcePath)
+        return;
+    if ([self isResourcePathValid:resourcePath]) return;
+    loadingResourcePath = YES;
     [NSBundle loadNibNamed:@"ResourcePathAccesory" owner:self];
     resourcePath = [[[NSUserDefaults standardUserDefaults] stringForKey:@"resourcePath"] retain];
     if (![self isResourcePathValid:resourcePath])
         [self resourcePathDialog:self];
+    loadingResourcePath = NO;
 }
 
 -(void)dealloc
@@ -44,6 +64,8 @@
 }
 
 -(NSString*)resourcePath{
+    if (!resourcePath)
+        [self loadResourcePath];
     return resourcePath;
 }
 

@@ -20,6 +20,7 @@
 #import "SubentityController.h"
 #import "PLObject.h"
 #import "SubentityViewController.h"
+#import "PLAppController.h"
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
@@ -56,6 +57,7 @@
     initParams.screenWidth = frame.size.width;
     initParams.screenHeight = frame.size.height;
     initParams.fps = 60;
+    initParams.resourcePath = string([[(PLAppController*)[NSApp delegate] resourcePath] UTF8String]);
     gameManager->init(initParams);
 }
 

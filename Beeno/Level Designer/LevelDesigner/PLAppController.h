@@ -12,10 +12,13 @@
 @interface PLAppController : NSObject<NSApplicationDelegate> {
     NSString * resourcePath;
     IBOutlet NSView * resourcePathAccesoryView;
+    BOOL loadingResourcePath;
 }
 
 -(IBAction)resourcePathDialog:(id)sender;
 -(BOOL)isResourcePathValid:(NSString*)path;
+-(void)loadResourcePath;
+
 
 @property(nonatomic,retain) NSString * resourcePath;
 

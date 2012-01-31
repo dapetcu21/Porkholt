@@ -34,6 +34,8 @@ protected:
     void resizeWithTypeAndDelta(int type, PHPoint delta);
     void resizeToBounds(const PHRect & newBounds);
     
+    void setGameManager(PHGameManager * gm);
+    
 public:
     PLImageView(PLImage * _model);
     ~PLImageView();

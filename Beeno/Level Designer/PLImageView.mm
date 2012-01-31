@@ -20,13 +20,20 @@
 #import "PHImage.h"
 #import "PLBezier.h"
 #import "PLBezierView.h"
+#import "PHGameManager.h"
 
 PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false), grab(0), bezierView(NULL)
 {
     setUserInput(true);
     [model retain];
     [model setActor:this];
-    modelChanged();
+}
+
+void PLImageView::setGameManager(PHGameManager * gm)
+{
+    PHView::setGameManager(gm);
+    if (gm)
+        modelChanged();
 }
 
 PLImageView::~PLImageView()
@@ -49,10 +56,10 @@ void PLImageView::modelChanged()
         s = @"";
     string path = string([s UTF8String]);
     if (path[0]=='/')
-        path = PHFileManager::resourcePath()+"/img/"+path;
+        path = _gameManager->resourcePath()+"/img/"+path;
     else
         path = string([[[[((ObjectController*)(((SubentityController*)(model.owner)).object.owner)) fileURL] URLByAppendingPathComponent:s] path] UTF8String]);;
-    setImage(PHImage::imageFromPath(path));
+    setImage(_gameManager->imageFromPath(path));
     setRotation(-toRad(model.rotation));
     NSRect portion = model.portion;
     setTextureCoordinates(PHRect(portion.origin.x,portion.origin.y,portion.size.width,portion.size.height));

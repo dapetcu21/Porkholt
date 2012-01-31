@@ -69,7 +69,9 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 #endif
 	
     evtHandler = new PHEventHandler(this);
+#ifdef PH_IPHONE_OS
     sndManager = new PHSoundManager(resPath + "/snd/fx");
+#endif
     
     setProjection();
 	glDisable(GL_DEPTH_TEST);
