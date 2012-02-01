@@ -269,7 +269,7 @@ void PHParticleAnimator::animateParticle(PHParticleAnimator::particle_state * p,
                                 initColor.b*q+endColor.b*(1-q),
                                 initColor.a*q+endColor.a*(1-q));
     if (rotates)
-        p->particle.rotation = PHAngleFromNormalizedVector(p->velocity)-M_PI_2;
+        p->particle.rotation = PHAngleFromVector(p->velocity)-M_PI_2;
 }
 
 void PHParticleAnimator::setVelocity(const PHPoint &v)
@@ -315,7 +315,7 @@ void PHParticleAnimator::advanceAnimation(ph_float elapsedTime)
             st->particle.position = p;
             st->particle.size = initSize;
             st->particle.color = initColor;
-            ph_float ang = PHAngleFromNormalizedVector(vel);
+            ph_float ang = PHAngleFromVector(vel);
             ph_float module = vel.length()+((ph_float)rand()/RAND_MAX)*deltavel;
             ang += (((ph_float)rand()/RAND_MAX)-0.5)*spreadAngl;
             st->particle.rotation = rotates?(ang-M_PI_2):0;

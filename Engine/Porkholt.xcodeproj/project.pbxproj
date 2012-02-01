@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C11F59B914D9279300D85AF1 /* PHMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59B814D9279300D85AF1 /* PHMatrix.h */; };
+		C11F59BB14D92A5900D85AF1 /* PHPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59BA14D92A5900D85AF1 /* PHPoint.h */; };
+		C11F59BD14D92AC000D85AF1 /* PHPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */; };
+		C11F59BF14D92AD600D85AF1 /* PHRect.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59BE14D92AD600D85AF1 /* PHRect.h */; };
+		C11F59C114D92B6100D85AF1 /* PHRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C014D92B6100D85AF1 /* PHRect.cpp */; };
+		C11F59C314D92C8E00D85AF1 /* PHColor.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59C214D92C8E00D85AF1 /* PHColor.h */; };
+		C11F59C514D92CBF00D85AF1 /* PHColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C414D92CBF00D85AF1 /* PHColor.cpp */; };
+		C11F59C714D92CE900D85AF1 /* PHRange.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59C614D92CE900D85AF1 /* PHRange.h */; };
+		C11F59C914D92CF600D85AF1 /* PHRange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C814D92CF600D85AF1 /* PHRange.cpp */; };
+		C11F59CC14D92D2600D85AF1 /* PHMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59CB14D92D2600D85AF1 /* PHMatrix.cpp */; };
 		C120690E14D6F860007DACEA /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C120690A14D6F860007DACEA /* PHAccelInterface.cpp */; };
 		C120690F14D6F860007DACEA /* PHAccelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C120690A14D6F860007DACEA /* PHAccelInterface.cpp */; };
 		C120691014D6F860007DACEA /* PHThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C120690B14D6F860007DACEA /* PHThread.cpp */; };
@@ -287,6 +297,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C11F59B814D9279300D85AF1 /* PHMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMatrix.h; sourceTree = "<group>"; };
+		C11F59BA14D92A5900D85AF1 /* PHPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPoint.h; sourceTree = "<group>"; };
+		C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPoint.cpp; sourceTree = "<group>"; };
+		C11F59BE14D92AD600D85AF1 /* PHRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHRect.h; sourceTree = "<group>"; };
+		C11F59C014D92B6100D85AF1 /* PHRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHRect.cpp; sourceTree = "<group>"; };
+		C11F59C214D92C8E00D85AF1 /* PHColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHColor.h; sourceTree = "<group>"; };
+		C11F59C414D92CBF00D85AF1 /* PHColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHColor.cpp; sourceTree = "<group>"; };
+		C11F59C614D92CE900D85AF1 /* PHRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHRange.h; sourceTree = "<group>"; };
+		C11F59C814D92CF600D85AF1 /* PHRange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHRange.cpp; sourceTree = "<group>"; };
+		C11F59CB14D92D2600D85AF1 /* PHMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHMatrix.cpp; sourceTree = "<group>"; };
 		C120690A14D6F860007DACEA /* PHAccelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAccelInterface.cpp; sourceTree = "<group>"; };
 		C120690B14D6F860007DACEA /* PHThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHThread.cpp; sourceTree = "<group>"; };
 		C120690C14D6F860007DACEA /* PHThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHThread.h; sourceTree = "<group>"; };
@@ -447,6 +467,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C11F59B414D9271800D85AF1 /* Geometry */ = {
+			isa = PBXGroup;
+			children = (
+				C1B5BDA014D6EFA9005483ED /* PHGeometry.h */,
+				C1B5BD9F14D6EFA9005483ED /* PHGeometry.cpp */,
+				C11F59B814D9279300D85AF1 /* PHMatrix.h */,
+				C11F59CB14D92D2600D85AF1 /* PHMatrix.cpp */,
+				C11F59BA14D92A5900D85AF1 /* PHPoint.h */,
+				C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */,
+				C11F59BE14D92AD600D85AF1 /* PHRect.h */,
+				C11F59C014D92B6100D85AF1 /* PHRect.cpp */,
+				C11F59C214D92C8E00D85AF1 /* PHColor.h */,
+				C11F59C414D92CBF00D85AF1 /* PHColor.cpp */,
+				C11F59C614D92CE900D85AF1 /* PHRange.h */,
+				C11F59C814D92CF600D85AF1 /* PHRange.cpp */,
+			);
+			path = Geometry;
+			sourceTree = "<group>";
+		};
 		C120692C14D6FB81007DACEA /* uremote */ = {
 			isa = PBXGroup;
 			children = (
@@ -570,6 +609,7 @@
 			isa = PBXGroup;
 			children = (
 				C1B5BD8114D6EFA9005483ED /* Core */,
+				C11F59B414D9271800D85AF1 /* Geometry */,
 				C12069EC14D7C112007DACEA /* UI */,
 				C120699814D72035007DACEA /* Sound */,
 				C12069E414D7C093007DACEA /* Frameworks */,
@@ -625,8 +665,6 @@
 				C1B5BD9C14D6EFA9005483ED /* PHGameManager.cpp */,
 				C1B5BD9D14D6EFA9005483ED /* PHGameManager.h */,
 				C1B5BD9E14D6EFA9005483ED /* PHGenericCinematicAnimator.h */,
-				C1B5BD9F14D6EFA9005483ED /* PHGeometry.cpp */,
-				C1B5BDA014D6EFA9005483ED /* PHGeometry.h */,
 				C1B5BDA114D6EFA9005483ED /* PHImage.cpp */,
 				C1B5BDA214D6EFA9005483ED /* PHImage.h */,
 				C1B5BDA314D6EFA9005483ED /* PHImageAnimator.cpp */,
@@ -746,6 +784,11 @@
 				C1206A0114D7C112007DACEA /* PHTestViewController.h in Headers */,
 				C1206A0514D7C112007DACEA /* PHTextController.h in Headers */,
 				C1206A0914D7C112007DACEA /* PHTextControllerView.h in Headers */,
+				C11F59B914D9279300D85AF1 /* PHMatrix.h in Headers */,
+				C11F59BB14D92A5900D85AF1 /* PHPoint.h in Headers */,
+				C11F59BF14D92AD600D85AF1 /* PHRect.h in Headers */,
+				C11F59C314D92C8E00D85AF1 /* PHColor.h in Headers */,
+				C11F59C714D92CE900D85AF1 /* PHRange.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -985,6 +1028,11 @@
 				C12069FF14D7C112007DACEA /* PHTestViewController.cpp in Sources */,
 				C1206A0314D7C112007DACEA /* PHTextController.cpp in Sources */,
 				C1206A0714D7C112007DACEA /* PHTextControllerView.cpp in Sources */,
+				C11F59BD14D92AC000D85AF1 /* PHPoint.cpp in Sources */,
+				C11F59C114D92B6100D85AF1 /* PHRect.cpp in Sources */,
+				C11F59C514D92CBF00D85AF1 /* PHColor.cpp in Sources */,
+				C11F59C914D92CF600D85AF1 /* PHRange.cpp in Sources */,
+				C11F59CC14D92D2600D85AF1 /* PHMatrix.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
