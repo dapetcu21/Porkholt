@@ -865,7 +865,7 @@
 			buildConfigurationList = C1B5BE7314D6F140005483ED /* Build configuration list for PBXLegacyTarget "Externals" */;
 			buildPhases = (
 			);
-			buildToolPath = ./make_darwin.sh;
+			buildToolPath = ../Externals/make_darwin.sh;
 			buildWorkingDirectory = "${PROJECT_DIR}/../Externals";
 			dependencies = (
 			);
