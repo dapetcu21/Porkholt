@@ -364,14 +364,14 @@ void PLImageView::draw()
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         PHGLSetColor(PHColor(0.5,0.5,1));
         
-
+        PHMatrix om = _gameManager->modelViewMatrix();
         for (int i=0; i<4; i++)
         {
-            glPushMatrix();
-            glTranslatef(_bounds.x+(i&1)?_bounds.width:0, _bounds.y+(i&2)?_bounds.height:0, 0);
-            glScalef(((i&1)?-1:1)*0.1, ((i&2)?-1:1)*0.1, 1);
+            _gameManager->setModelViewMatrix(om * 
+                PHMatrix::translation(PHPoint(_bounds.x+(i&1)?_bounds.width:0, _bounds.y+(i&2)?_bounds.height:0)) * 
+                PHMatrix::scaling(PHSize(((i&1)?-1:1)*0.1, ((i&2)?-1:1)*0.1)));
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
-            glPopMatrix();
         }
+        _gameManager->setModelViewMatrix(om);
     }
 }
