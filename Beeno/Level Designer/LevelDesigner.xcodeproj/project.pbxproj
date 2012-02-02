@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C11B48A014DA9C7400431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B489D14DA9C7400431210 /* liblua.a */; };
+		C11B48A114DA9C7400431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B489E14DA9C7400431210 /* libpng15.a */; };
+		C11B48A214DA9C7400431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B489F14DA9C7400431210 /* libz.a */; };
 		C11DF2A3143E28500002A811 /* ImageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A2143E28500002A811 /* ImageViewController.mm */; };
 		C11DF2AA143F6BC30002A811 /* PLWorldView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C11DF2A9143F6BC30002A811 /* PLWorldView.mm */; };
 		C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11EA9DC1425B7A300795880 /* Cocoa.framework */; };
@@ -35,9 +38,6 @@
 		C16B38D51426270700260851 /* PLObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D41426270700260851 /* PLObject.mm */; };
 		C16B38D81426272A00260851 /* PLJoint.mm in Sources */ = {isa = PBXBuildFile; fileRef = C16B38D71426272A00260851 /* PLJoint.mm */; };
 		C16D477E146126790026D475 /* PLObjectSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = C16D477D146126790026D475 /* PLObjectSelector.m */; };
-		C17386F414D7C1BE005B18E6 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F114D7C1BE005B18E6 /* liblua.a */; };
-		C17386F514D7C1BE005B18E6 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F214D7C1BE005B18E6 /* libpng15.a */; };
-		C17386F614D7C1BE005B18E6 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F314D7C1BE005B18E6 /* libz.a */; };
 		C17386F714D7C1EF005B18E6 /* libporkholt-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069E314D7C018007DACEA /* libporkholt-osx.a */; };
 		C19759721440447700870005 /* StatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = C19759711440447700870005 /* StatusController.m */; };
 		C19D7D08142CBE75003E92C1 /* PLProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D7D07142CBE75003E92C1 /* PLProperty.m */; };
@@ -89,6 +89,9 @@
 
 /* Begin PBXFileReference section */
 		C112BEC3145D78CF00FAE1A6 /* PLMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLMatching.h; sourceTree = "<group>"; };
+		C11B489D14DA9C7400431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../Externals/lib/darwin/osx/liblua.a; sourceTree = "<group>"; };
+		C11B489E14DA9C7400431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../Externals/lib/darwin/osx/libpng15.a; sourceTree = "<group>"; };
+		C11B489F14DA9C7400431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../Externals/lib/darwin/osx/libz.a; sourceTree = "<group>"; };
 		C11DF2A1143E28500002A811 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		C11DF2A2143E28500002A811 /* ImageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageViewController.mm; sourceTree = "<group>"; };
 		C11DF2A9143F6BC30002A811 /* PLWorldView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PLWorldView.mm; sourceTree = "<group>"; };
@@ -144,9 +147,6 @@
 		C16B38D71426272A00260851 /* PLJoint.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = PLJoint.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C16D477C146126790026D475 /* PLObjectSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLObjectSelector.h; sourceTree = "<group>"; };
 		C16D477D146126790026D475 /* PLObjectSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLObjectSelector.m; sourceTree = "<group>"; };
-		C17386F114D7C1BE005B18E6 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
-		C17386F214D7C1BE005B18E6 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
-		C17386F314D7C1BE005B18E6 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../Externals/lib/darwin/libz.a; sourceTree = "<group>"; };
 		C17626551441939400BC366C /* PLImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLImageView.h; sourceTree = "<group>"; };
 		C19759701440447700870005 /* StatusController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusController.h; sourceTree = "<group>"; };
 		C19759711440447700870005 /* StatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusController.m; sourceTree = "<group>"; };
@@ -215,9 +215,9 @@
 				C11EA9DD1425B7A300795880 /* Cocoa.framework in Frameworks */,
 				C127D386143A2960004DEB16 /* OpenGL.framework in Frameworks */,
 				C14AAAF0143AF8CC006D71ED /* CoreVideo.framework in Frameworks */,
-				C17386F414D7C1BE005B18E6 /* liblua.a in Frameworks */,
-				C17386F514D7C1BE005B18E6 /* libpng15.a in Frameworks */,
-				C17386F614D7C1BE005B18E6 /* libz.a in Frameworks */,
+				C11B48A014DA9C7400431210 /* liblua.a in Frameworks */,
+				C11B48A114DA9C7400431210 /* libpng15.a in Frameworks */,
+				C11B48A214DA9C7400431210 /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,9 +246,9 @@
 		C11EA9DB1425B7A300795880 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C17386F114D7C1BE005B18E6 /* liblua.a */,
-				C17386F214D7C1BE005B18E6 /* libpng15.a */,
-				C17386F314D7C1BE005B18E6 /* libz.a */,
+				C11B489D14DA9C7400431210 /* liblua.a */,
+				C11B489E14DA9C7400431210 /* libpng15.a */,
+				C11B489F14DA9C7400431210 /* libz.a */,
 				C14AAAEF143AF8CC006D71ED /* CoreVideo.framework */,
 				C127D385143A2960004DEB16 /* OpenGL.framework */,
 				C11EA9DC1425B7A300795880 /* Cocoa.framework */,
@@ -675,7 +675,10 @@
 					"../../Engine/**",
 				);
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
-				LIBRARY_SEARCH_PATHS = ../../Externals/lib/darwin;
+				LIBRARY_SEARCH_PATHS = (
+					../../Externals/lib/darwin,
+					"\"$(SRCROOT)/../../Externals/lib/darwin/osx\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -692,7 +695,10 @@
 					"../../Engine/**",
 				);
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
-				LIBRARY_SEARCH_PATHS = ../../Externals/lib/darwin;
+				LIBRARY_SEARCH_PATHS = (
+					../../Externals/lib/darwin,
+					"\"$(SRCROOT)/../../Externals/lib/darwin/osx\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

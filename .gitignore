@@ -1,5 +1,6 @@
 /Beeno/Level Designer/build
 /Engine/build
+/Externals/log
 /Externals/lib
 *.pbxuser
 *.mode1v3
@@ -49,3 +50,4 @@ _
 /Externals/zlib/minigzip
 /Externals/zlib/minigzipsh
 /Externals/zlib/zlib.pc
+/Externals/zlib/libz.*

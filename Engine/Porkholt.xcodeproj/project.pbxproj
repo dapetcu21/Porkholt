@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C11B488514DA9B1F00431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488214DA9B1F00431210 /* liblua.a */; };
+		C11B488614DA9B1F00431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488314DA9B1F00431210 /* libpng15.a */; };
+		C11B488714DA9B1F00431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488414DA9B1F00431210 /* libz.a */; };
+		C11B488B14DA9B2F00431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488814DA9B2F00431210 /* liblua.a */; };
+		C11B488C14DA9B2F00431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488914DA9B2F00431210 /* libpng15.a */; };
+		C11B488D14DA9B2F00431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488A14DA9B2F00431210 /* libz.a */; };
+		C11B48B414DA9F1900431210 /* PHMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59B814D9279300D85AF1 /* PHMatrix.h */; };
+		C11B48B514DA9F1900431210 /* PHMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59CB14D92D2600D85AF1 /* PHMatrix.cpp */; };
+		C11B48B614DA9F1900431210 /* PHPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59BA14D92A5900D85AF1 /* PHPoint.h */; };
+		C11B48B714DA9F1900431210 /* PHPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */; };
+		C11B48B814DA9F1900431210 /* PHRect.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59BE14D92AD600D85AF1 /* PHRect.h */; };
+		C11B48B914DA9F1900431210 /* PHRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C014D92B6100D85AF1 /* PHRect.cpp */; };
+		C11B48BA14DA9F1900431210 /* PHColor.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59C214D92C8E00D85AF1 /* PHColor.h */; };
+		C11B48BB14DA9F1900431210 /* PHColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C414D92CBF00D85AF1 /* PHColor.cpp */; };
+		C11B48BC14DA9F1900431210 /* PHRange.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59C614D92CE900D85AF1 /* PHRange.h */; };
+		C11B48BD14DA9F1900431210 /* PHRange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C814D92CF600D85AF1 /* PHRange.cpp */; };
 		C11F59B914D9279300D85AF1 /* PHMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59B814D9279300D85AF1 /* PHMatrix.h */; };
 		C11F59BB14D92A5900D85AF1 /* PHPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59BA14D92A5900D85AF1 /* PHPoint.h */; };
 		C11F59BD14D92AC000D85AF1 /* PHPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */; };
@@ -67,9 +83,6 @@
 		C12069A614D72035007DACEA /* PHSoundManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C120699E14D72035007DACEA /* PHSoundManager.h */; };
 		C12069A714D72035007DACEA /* PHSoundPool-iOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C120699F14D72035007DACEA /* PHSoundPool-iOS.cpp */; };
 		C12069A814D72035007DACEA /* PHSoundPool.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069A014D72035007DACEA /* PHSoundPool.h */; };
-		C12069AC14D73132007DACEA /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069A914D73132007DACEA /* liblua.a */; };
-		C12069AD14D73132007DACEA /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069AA14D73132007DACEA /* libpng15.a */; };
-		C12069AE14D73132007DACEA /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069AB14D73132007DACEA /* libz.a */; };
 		C12069B114D7313D007DACEA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069AF14D7313D007DACEA /* OpenAL.framework */; };
 		C12069B214D7313D007DACEA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069B014D7313D007DACEA /* OpenGLES.framework */; };
 		C12069C314D7315D007DACEA /* libFinch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069BE14D7314C007DACEA /* libFinch.a */; };
@@ -104,9 +117,6 @@
 		C14677CB14D99AD0001BAD91 /* vfp_clobbers.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677B914D99ACF001BAD91 /* vfp_clobbers.h */; };
 		C17386F914D7C22A005B18E6 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F814D7C22A005B18E6 /* CoreVideo.framework */; };
 		C17386FE14D7C22F005B18E6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386FD14D7C22F005B18E6 /* OpenGL.framework */; };
-		C17386FF14D7C24C005B18E6 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069A914D73132007DACEA /* liblua.a */; };
-		C173870014D7C24C005B18E6 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069AA14D73132007DACEA /* libpng15.a */; };
-		C173870114D7C24C005B18E6 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069AB14D73132007DACEA /* libz.a */; };
 		C1B5BDCE14D6EFA9005483ED /* PHAccelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */; };
 		C1B5BDCF14D6EFA9005483ED /* PHAccelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */; };
 		C1B5BDD014D6EFA9005483ED /* PHAnimatedImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B5BD8314D6EFA9005483ED /* PHAnimatedImage.cpp */; };
@@ -303,6 +313,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C11B488214DA9B1F00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/ios/liblua.a; sourceTree = "<group>"; };
+		C11B488314DA9B1F00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../Externals/lib/darwin/ios/libpng15.a; sourceTree = "<group>"; };
+		C11B488414DA9B1F00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../Externals/lib/darwin/ios/libz.a; sourceTree = "<group>"; };
+		C11B488814DA9B2F00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/osx/liblua.a; sourceTree = "<group>"; };
+		C11B488914DA9B2F00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../Externals/lib/darwin/osx/libpng15.a; sourceTree = "<group>"; };
+		C11B488A14DA9B2F00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../Externals/lib/darwin/osx/libz.a; sourceTree = "<group>"; };
 		C11F59B814D9279300D85AF1 /* PHMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMatrix.h; sourceTree = "<group>"; };
 		C11F59BA14D92A5900D85AF1 /* PHPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPoint.h; sourceTree = "<group>"; };
 		C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPoint.cpp; sourceTree = "<group>"; };
@@ -342,9 +358,6 @@
 		C120699E14D72035007DACEA /* PHSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSoundManager.h; sourceTree = "<group>"; };
 		C120699F14D72035007DACEA /* PHSoundPool-iOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "PHSoundPool-iOS.cpp"; sourceTree = "<group>"; };
 		C12069A014D72035007DACEA /* PHSoundPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHSoundPool.h; sourceTree = "<group>"; };
-		C12069A914D73132007DACEA /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
-		C12069AA14D73132007DACEA /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
-		C12069AB14D73132007DACEA /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../Externals/lib/darwin/libz.a; sourceTree = "<group>"; };
 		C12069AF14D7313D007DACEA /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		C12069B014D7313D007DACEA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		C12069B314D7314B007DACEA /* Finch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Finch.xcodeproj; path = ../Externals/finch/Finch.xcodeproj; sourceTree = "<group>"; };
@@ -457,10 +470,10 @@
 				C12069C314D7315D007DACEA /* libFinch.a in Frameworks */,
 				C12069B114D7313D007DACEA /* OpenAL.framework in Frameworks */,
 				C12069B214D7313D007DACEA /* OpenGLES.framework in Frameworks */,
-				C12069AC14D73132007DACEA /* liblua.a in Frameworks */,
-				C12069AD14D73132007DACEA /* libpng15.a in Frameworks */,
-				C12069AE14D73132007DACEA /* libz.a in Frameworks */,
 				C137061314D6C4ED002CA4CA /* Foundation.framework in Frameworks */,
+				C11B488514DA9B1F00431210 /* liblua.a in Frameworks */,
+				C11B488614DA9B1F00431210 /* libpng15.a in Frameworks */,
+				C11B488714DA9B1F00431210 /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,11 +481,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C17386FF14D7C24C005B18E6 /* liblua.a in Frameworks */,
-				C173870014D7C24C005B18E6 /* libpng15.a in Frameworks */,
-				C173870114D7C24C005B18E6 /* libz.a in Frameworks */,
 				C17386FE14D7C22F005B18E6 /* OpenGL.framework in Frameworks */,
 				C17386F914D7C22A005B18E6 /* CoreVideo.framework in Frameworks */,
+				C11B488B14DA9B2F00431210 /* liblua.a in Frameworks */,
+				C11B488C14DA9B2F00431210 /* libpng15.a in Frameworks */,
+				C11B488D14DA9B2F00431210 /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,9 +587,6 @@
 			children = (
 				C120692C14D6FB81007DACEA /* uremote */,
 				C137061214D6C4ED002CA4CA /* Foundation.framework */,
-				C12069A914D73132007DACEA /* liblua.a */,
-				C12069AA14D73132007DACEA /* libpng15.a */,
-				C12069AB14D73132007DACEA /* libz.a */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -584,6 +594,9 @@
 		C12069E614D7C0A8007DACEA /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				C11B488214DA9B1F00431210 /* liblua.a */,
+				C11B488314DA9B1F00431210 /* libpng15.a */,
+				C11B488414DA9B1F00431210 /* libz.a */,
 				C12069C814D731FB007DACEA /* AudioToolbox.framework */,
 				C12069C614D731F4007DACEA /* AVFoundation.framework */,
 				C12069B314D7314B007DACEA /* Finch.xcodeproj */,
@@ -596,6 +609,9 @@
 		C12069E714D7C0B1007DACEA /* Mac OS */ = {
 			isa = PBXGroup;
 			children = (
+				C11B488814DA9B2F00431210 /* liblua.a */,
+				C11B488914DA9B2F00431210 /* libpng15.a */,
+				C11B488A14DA9B2F00431210 /* libz.a */,
 				C17386FD14D7C22F005B18E6 /* OpenGL.framework */,
 				C17386F814D7C22A005B18E6 /* CoreVideo.framework */,
 			);
@@ -892,6 +908,11 @@
 				C1206A0214D7C112007DACEA /* PHTestViewController.h in Headers */,
 				C1206A0614D7C112007DACEA /* PHTextController.h in Headers */,
 				C1206A0A14D7C112007DACEA /* PHTextControllerView.h in Headers */,
+				C11B48B414DA9F1900431210 /* PHMatrix.h in Headers */,
+				C11B48B614DA9F1900431210 /* PHPoint.h in Headers */,
+				C11B48B814DA9F1900431210 /* PHRect.h in Headers */,
+				C11B48BA14DA9F1900431210 /* PHColor.h in Headers */,
+				C11B48BC14DA9F1900431210 /* PHRange.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1129,6 +1150,11 @@
 				C1206A0014D7C112007DACEA /* PHTestViewController.cpp in Sources */,
 				C1206A0414D7C112007DACEA /* PHTextController.cpp in Sources */,
 				C1206A0814D7C112007DACEA /* PHTextControllerView.cpp in Sources */,
+				C11B48B514DA9F1900431210 /* PHMatrix.cpp in Sources */,
+				C11B48B714DA9F1900431210 /* PHPoint.cpp in Sources */,
+				C11B48B914DA9F1900431210 /* PHRect.cpp in Sources */,
+				C11B48BB14DA9F1900431210 /* PHColor.cpp in Sources */,
+				C11B48BD14DA9F1900431210 /* PHRange.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1237,6 +1263,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../Externals/lib/darwin/osx\"",
+					"\"$(SRCROOT)/../Externals/lib/darwin/ios\"",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=armv6]" = (
@@ -1273,6 +1301,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../Externals/lib/darwin/osx\"",
+					"\"$(SRCROOT)/../Externals/lib/darwin/ios\"",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=armv6]" = (
@@ -1300,6 +1330,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../Externals/lib/darwin/osx\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1320,6 +1351,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../Externals/lib/darwin/osx\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = "porkholt-osx";

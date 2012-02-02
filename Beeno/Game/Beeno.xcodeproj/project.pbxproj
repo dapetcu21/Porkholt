@@ -18,12 +18,12 @@
 		C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47E13DD5E2B007E6357 /* PHLSign.cpp */; };
 		C106E48113DD76CC007E6357 /* PHLPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48013DD76CB007E6357 /* PHLPowerup.cpp */; };
 		C106E48513DD8314007E6357 /* PHLShieldPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */; };
+		C11B489114DA9B5C00431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488E14DA9B5C00431210 /* liblua.a */; };
+		C11B489214DA9B5C00431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488F14DA9B5C00431210 /* libpng15.a */; };
+		C11B489314DA9B5C00431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B489014DA9B5C00431210 /* libz.a */; };
 		C12069CA14D732D3007DACEA /* libporkholt-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C120696A14D7163D007DACEA /* libporkholt-ios.a */; };
 		C12069CB14D73391007DACEA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		C12069CC14D733A9007DACEA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C8541471382D000FD6DF /* OpenAL.framework */; };
-		C12069D014D733C4007DACEA /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069CD14D733C3007DACEA /* liblua.a */; };
-		C12069D114D733C4007DACEA /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069CE14D733C3007DACEA /* libpng15.a */; };
-		C12069D214D733C4007DACEA /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069CF14D733C4007DACEA /* libz.a */; };
 		C12069D314D733DC007DACEA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85014713816000FD6DF /* AVFoundation.framework */; };
 		C12069D414D733EC007DACEA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85214713823000FD6DF /* AudioToolbox.framework */; };
 		C13664281337F972009B755B /* PHCaptureView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C13664271337F972009B755B /* PHCaptureView.cpp */; };
@@ -202,10 +202,10 @@
 		C106E48213DD76EB007E6357 /* PHLPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPowerup.h; sourceTree = "<group>"; };
 		C106E48313DD82BF007E6357 /* PHLShieldPowerup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLShieldPowerup.h; sourceTree = "<group>"; };
 		C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLShieldPowerup.cpp; sourceTree = "<group>"; };
+		C11B488E14DA9B5C00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../Externals/lib/darwin/ios/liblua.a; sourceTree = "<group>"; };
+		C11B488F14DA9B5C00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../Externals/lib/darwin/ios/libpng15.a; sourceTree = "<group>"; };
+		C11B489014DA9B5C00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../Externals/lib/darwin/ios/libz.a; sourceTree = "<group>"; };
 		C120696314D7163D007DACEA /* Porkholt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Porkholt.xcodeproj; path = ../../Engine/Porkholt.xcodeproj; sourceTree = "<group>"; };
-		C12069CD14D733C3007DACEA /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
-		C12069CE14D733C3007DACEA /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
-		C12069CF14D733C4007DACEA /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../Externals/lib/darwin/libz.a; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
 		C13664261337F972009B755B /* PHCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCaptureView.h; sourceTree = "<group>"; };
 		C13664271337F972009B755B /* PHCaptureView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCaptureView.cpp; sourceTree = "<group>"; };
@@ -222,7 +222,6 @@
 		C177805113BCDAB00003640D /* PHScriptableTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScriptableTimer.h; sourceTree = "<group>"; };
 		C17B487313C1C44200FAD712 /* PHLAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLAnimation.cpp; sourceTree = "<group>"; };
 		C17B487413C1C44200FAD712 /* PHLAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAnimation.h; sourceTree = "<group>"; };
-		C17B48C5130800C600C2EC8D /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = Externals/lib/darwin/libz.a; sourceTree = "<group>"; };
 		C17B4E35130EA1F400C2EC8D /* PHTouchInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTouchInterface.h; sourceTree = "<group>"; };
 		C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHTouchInterface.mm; sourceTree = "<group>"; };
 		C17D0F531322A31000BDB8EF /* PHLevelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelController.h; sourceTree = "<group>"; };
@@ -351,14 +350,12 @@
 		C1B9E41913E2BD8500B1C0C6 /* PHShieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHShieldView.h; sourceTree = "<group>"; };
 		C1C0397F13CEE6DB004BCC24 /* PHLSensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLSensor.cpp; sourceTree = "<group>"; };
 		C1C0398013CEE6DB004BCC24 /* PHLSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLSensor.h; sourceTree = "<group>"; };
-		C1C358241323B6E700D3A95A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Externals/lib/darwin/liblua.a; sourceTree = "<group>"; };
 		C1D6A1EE1381233E0010009E /* PHPlayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPlayerView.cpp; sourceTree = "<group>"; };
 		C1D6A1EF1381233E0010009E /* PHPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPlayerView.h; sourceTree = "<group>"; };
 		C1D6A2161382A31C0010009E /* PHLAuxLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLAuxLayer.cpp; sourceTree = "<group>"; };
 		C1D6A2171382A31C0010009E /* PHLAuxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAuxLayer.h; sourceTree = "<group>"; };
 		C1F1DE15138B963500C8051C /* PHLPlatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLPlatform.cpp; sourceTree = "<group>"; };
 		C1F1DE16138B963500C8051C /* PHLPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLPlatform.h; sourceTree = "<group>"; };
-		C1F23269130550AA00DE3624 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = Externals/lib/darwin/libpng15.a; sourceTree = "<group>"; };
 		C1FEC0E81337D3CB00FEBDA6 /* PHLPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PHLPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C1FEC0E91337D3CB00FEBDA6 /* PHLPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C1FF4DD613DC1F16003B7673 /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = rsrc; path = _/rsrc; sourceTree = "<group>"; };
@@ -375,9 +372,6 @@
 			files = (
 				C12069D414D733EC007DACEA /* AudioToolbox.framework in Frameworks */,
 				C12069D314D733DC007DACEA /* AVFoundation.framework in Frameworks */,
-				C12069D014D733C4007DACEA /* liblua.a in Frameworks */,
-				C12069D114D733C4007DACEA /* libpng15.a in Frameworks */,
-				C12069D214D733C4007DACEA /* libz.a in Frameworks */,
 				C12069CC14D733A9007DACEA /* OpenAL.framework in Frameworks */,
 				C12069CB14D73391007DACEA /* OpenGLES.framework in Frameworks */,
 				C12069CA14D732D3007DACEA /* libporkholt-ios.a in Frameworks */,
@@ -385,6 +379,9 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				C1A03619132E071F00F0200C /* libBox2D.a in Frameworks */,
+				C11B489114DA9B5C00431210 /* liblua.a in Frameworks */,
+				C11B489214DA9B5C00431210 /* libpng15.a in Frameworks */,
+				C11B489314DA9B5C00431210 /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,9 +450,9 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C12069CD14D733C3007DACEA /* liblua.a */,
-				C12069CE14D733C3007DACEA /* libpng15.a */,
-				C12069CF14D733C4007DACEA /* libz.a */,
+				C11B488E14DA9B5C00431210 /* liblua.a */,
+				C11B488F14DA9B5C00431210 /* libpng15.a */,
+				C11B489014DA9B5C00431210 /* libz.a */,
 				C1B3C8541471382D000FD6DF /* OpenAL.framework */,
 				C1B3C85214713823000FD6DF /* AudioToolbox.framework */,
 				C1B3C85014713816000FD6DF /* AVFoundation.framework */,
@@ -463,9 +460,6 @@
 				28FD14FF0DC6FC520079059D /* OpenGLES.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				C1F23269130550AA00DE3624 /* libpng15.a */,
-				C17B48C5130800C600C2EC8D /* libz.a */,
-				C1C358241323B6E700D3A95A /* liblua.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1014,6 +1008,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../../Externals/lib/darwin/ios\"",
 				);
 				PRODUCT_NAME = Beeno;
 				SDKROOT = iphoneos;
@@ -1033,6 +1028,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../../Externals/lib/darwin/ios\"",
 				);
 				PRODUCT_NAME = Beeno;
 				SDKROOT = iphoneos;
@@ -1151,6 +1147,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Externals/lib/darwin\"",
+					"\"$(SRCROOT)/../../Externals/lib/darwin/ios\"",
 				);
 				PRODUCT_NAME = Beeno;
 				SDKROOT = iphoneos;
