@@ -102,7 +102,7 @@ PHMatrix PHView::applyMatrices()
                 case EffectScale:
                 {
                     if (_scaleX==1 && _scaleY==1) break;
-                    effectCache *= PHMatrix::translation(_scalingCenter) * PHMatrix::scaling(PHSize(_scaleX,_scaleY)) * PHMatrix::translation(-_scalingCenter);                    
+                    effectCache *= PHMatrix::translation(_scalingCenter) * PHMatrix::scaling(_scaleX,_scaleY) * PHMatrix::translation(-_scalingCenter);                    
                     break;
                 }
                 case EffectFlip:
@@ -117,9 +117,9 @@ PHMatrix PHView::applyMatrices()
     }
     matrixCached = true;
     matrixCache = 
-        PHMatrix::translation(PHPoint(_frame.x,_frame.y)) * 
-        PHMatrix::scaling(PHSize(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1)) *
-        PHMatrix::translation(PHPoint(-_bounds.x, -_bounds.y)) *
+        PHMatrix::translation(_frame.x,_frame.y) * 
+        PHMatrix::scaling(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1) *
+        PHMatrix::translation(-_bounds.x, -_bounds.y) *
         effectCache;
     return matrixCache;
 }
@@ -127,9 +127,9 @@ extern PHView * playerView;
 void PHView::render()
 {
     if (mtx) mtx->lock();
-    PHMatrix om = _gameManager->modelViewMatrix();
+    PHMatrix om = PHGLModelView();
     PHMatrix m = om * applyMatrices();
-    _gameManager->setModelViewMatrix(m);
+    PHGLSetModelView(m);
 	
 	bool optimizeOut = false;
 	if (_optimize)
@@ -172,7 +172,7 @@ void PHView::render()
         for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
             (*i)->render();
 	}
-    _gameManager->setModelViewMatrix(om);
+    PHGLSetModelView(om);
     if (mtx) mtx->unlock();
 }
 

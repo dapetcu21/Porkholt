@@ -47,7 +47,7 @@ void PHTrailImageView::loadMinState(const pframe & fr)
 
 void PHTrailImageView::auxRender()
 {
-    PHMatrix om = _gameManager->modelViewMatrix();
+    PHMatrix om = PHGLModelView();
     pframe fr;
     saveMinState(fr);
     PHMatrix m = _stopView?_stopView->loadMatrixTree(NULL):PHIdentityMatrix;
@@ -55,7 +55,7 @@ void PHTrailImageView::auxRender()
     int nr = 1;
     for (list<pframe>::iterator i = frames.begin(); i!=frames.end(); i++)
     {
-        _gameManager->setModelViewMatrix(m*loadState(*i));
+        PHGLSetModelView(m*loadState(*i));
         nr++;
         if (tint==PHInvalidColor)
             tint=PHWhiteColor;
@@ -78,7 +78,7 @@ void PHTrailImageView::auxRender()
             draw();
     }
     loadMinState(fr);
-    _gameManager->setModelViewMatrix(om);
+    PHGLSetModelView(om);
 }
 
 void PHTrailImageView::render()

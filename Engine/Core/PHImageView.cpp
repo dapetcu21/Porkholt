@@ -267,10 +267,10 @@ void PHImageView::renderCurved()
     
     if (constrain)
     {
-        PHMatrix om = _gameManager->modelViewMatrix();
-        _gameManager->setModelViewMatrix(om * PHMatrix::translation(PHPoint(_bounds.x, _bounds.y)) * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
+        PHMatrix om = PHGLModelView();
+        PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
-        _gameManager->setModelViewMatrix(om);
+        PHGLSetModelView(om);
     } else
         glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
     
@@ -318,8 +318,8 @@ void PHImageView::renderStraight()
     
     if (arraysVBO)
     {
-        PHMatrix om = _gameManager->modelViewMatrix();
-        _gameManager->setModelViewMatrix(om * PHMatrix::translation(PHPoint(_bounds.x, _bounds.y)) * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
+        PHMatrix om = PHGLModelView();
+        PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         if (_image->isNormal())
         {
             glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
@@ -356,7 +356,7 @@ void PHImageView::renderStraight()
             }
             glBindBuffer(GL_ARRAY_BUFFER,0);
         }
-        _gameManager->setModelViewMatrix(om);
+        PHGLSetModelView(om);
     }
     //renderInFramePortionTint(_bounds, coords, tint);
 }

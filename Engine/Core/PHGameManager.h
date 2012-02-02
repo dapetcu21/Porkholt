@@ -126,4 +126,7 @@ public:
     PHMatrix projectionMatrix() { return _projection; }
 };
 
+#define PHGLModelView _gameManager->modelViewMatrix
+#define PHGLSetModelView _gameManager->setModelViewMatrix
+
 #endif

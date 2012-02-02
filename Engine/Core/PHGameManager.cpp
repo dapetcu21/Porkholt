@@ -101,8 +101,8 @@ void PHGameManager::setProjection()
 {
     glViewport(0, 0, _screenWidth, _screenHeight);
     PHMatrix m;
-    m.setToTranslation(PHPoint(-1,-1));
-    m.scale(PHSize(2.0f/(_screenWidth), 2.0f/(_screenHeight)));
+    m.loadTranslation(-1,-1);
+    m.scale(2.0f/(_screenWidth), 2.0f/(_screenHeight));
     setProjectionMatrix(m);
 }
 
