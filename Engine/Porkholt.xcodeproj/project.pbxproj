@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C11B488514DA9B1F00431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488214DA9B1F00431210 /* liblua.a */; };
-		C11B488614DA9B1F00431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488314DA9B1F00431210 /* libpng15.a */; };
-		C11B488714DA9B1F00431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488414DA9B1F00431210 /* libz.a */; };
 		C11B488B14DA9B2F00431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488814DA9B2F00431210 /* liblua.a */; };
 		C11B488C14DA9B2F00431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488914DA9B2F00431210 /* libpng15.a */; };
 		C11B488D14DA9B2F00431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488A14DA9B2F00431210 /* libz.a */; };
@@ -83,11 +80,6 @@
 		C12069A614D72035007DACEA /* PHSoundManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C120699E14D72035007DACEA /* PHSoundManager.h */; };
 		C12069A714D72035007DACEA /* PHSoundPool-iOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C120699F14D72035007DACEA /* PHSoundPool-iOS.cpp */; };
 		C12069A814D72035007DACEA /* PHSoundPool.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069A014D72035007DACEA /* PHSoundPool.h */; };
-		C12069B114D7313D007DACEA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069AF14D7313D007DACEA /* OpenAL.framework */; };
-		C12069B214D7313D007DACEA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069B014D7313D007DACEA /* OpenGLES.framework */; };
-		C12069C314D7315D007DACEA /* libFinch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069BE14D7314C007DACEA /* libFinch.a */; };
-		C12069C714D731F5007DACEA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069C614D731F4007DACEA /* AVFoundation.framework */; };
-		C12069C914D731FB007DACEA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069C814D731FB007DACEA /* AudioToolbox.framework */; };
 		C12069F714D7C112007DACEA /* PHButtonView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C12069ED14D7C112007DACEA /* PHButtonView.cpp */; };
 		C12069F814D7C112007DACEA /* PHButtonView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C12069ED14D7C112007DACEA /* PHButtonView.cpp */; };
 		C12069F914D7C112007DACEA /* PHButtonView.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069EE14D7C112007DACEA /* PHButtonView.h */; };
@@ -108,7 +100,6 @@
 		C1206A0814D7C112007DACEA /* PHTextControllerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C12069F514D7C112007DACEA /* PHTextControllerView.cpp */; };
 		C1206A0914D7C112007DACEA /* PHTextControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069F614D7C112007DACEA /* PHTextControllerView.h */; };
 		C1206A0A14D7C112007DACEA /* PHTextControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069F614D7C112007DACEA /* PHTextControllerView.h */; };
-		C137061314D6C4ED002CA4CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C137061214D6C4ED002CA4CA /* Foundation.framework */; };
 		C146779714D99ABE001BAD91 /* math_mat4.c in Sources */ = {isa = PBXBuildFile; fileRef = C146777414D99ABE001BAD91 /* math_mat4.c */; };
 		C146779914D99ABE001BAD91 /* math_neon.h in Headers */ = {isa = PBXBuildFile; fileRef = C146777614D99ABE001BAD91 /* math_neon.h */; };
 		C14677C014D99AD0001BAD91 /* common_macros.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677A814D99ACF001BAD91 /* common_macros.h */; };
@@ -265,6 +256,10 @@
 		C1B5BE6314D6EFA9005483ED /* PHViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B5BDCC14D6EFA9005483ED /* PHViewController.cpp */; };
 		C1B5BE6414D6EFA9005483ED /* PHViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BDCD14D6EFA9005483ED /* PHViewController.h */; };
 		C1B5BE6514D6EFA9005483ED /* PHViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BDCD14D6EFA9005483ED /* PHViewController.h */; };
+		C1C1BF1A14DABDE000AC9076 /* libFinch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069BE14D7314C007DACEA /* libFinch.a */; };
+		C1C1BF1B14DABDFE00AC9076 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069C614D731F4007DACEA /* AVFoundation.framework */; };
+		C1C1BF1C14DABDFE00AC9076 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C137061214D6C4ED002CA4CA /* Foundation.framework */; };
+		C1C1BF1D14DABE0A00AC9076 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069C814D731FB007DACEA /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -465,15 +460,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C12069C914D731FB007DACEA /* AudioToolbox.framework in Frameworks */,
-				C12069C714D731F5007DACEA /* AVFoundation.framework in Frameworks */,
-				C12069C314D7315D007DACEA /* libFinch.a in Frameworks */,
-				C12069B114D7313D007DACEA /* OpenAL.framework in Frameworks */,
-				C12069B214D7313D007DACEA /* OpenGLES.framework in Frameworks */,
-				C137061314D6C4ED002CA4CA /* Foundation.framework in Frameworks */,
-				C11B488514DA9B1F00431210 /* liblua.a in Frameworks */,
-				C11B488614DA9B1F00431210 /* libpng15.a in Frameworks */,
-				C11B488714DA9B1F00431210 /* libz.a in Frameworks */,
+				C1C1BF1D14DABE0A00AC9076 /* AudioToolbox.framework in Frameworks */,
+				C1C1BF1B14DABDFE00AC9076 /* AVFoundation.framework in Frameworks */,
+				C1C1BF1C14DABDFE00AC9076 /* Foundation.framework in Frameworks */,
+				C1C1BF1A14DABDE000AC9076 /* libFinch.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1333,7 +1323,6 @@
 					"\"$(SRCROOT)/../Externals/lib/darwin/osx\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "porkholt-osx";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
