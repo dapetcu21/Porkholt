@@ -52,15 +52,17 @@ void PHAuxLayerView::removeView(PHView * view)
 
 void PHAuxLayerView::draw()
 {
+    PHMatrix om = _gameManager->modelViewMatrix();
     for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
-    {
-        glPushMatrix();
+    {   
         PHView * view = *i;
         if (view->superview()!=view->auxSuperview)
-            view->superview()->loadMatrixTree(view->auxSuperview);
+            _gameManager->setModelViewMatrix(om * view->superview()->loadMatrixTree(view->auxSuperview));
+        else
+            _gameManager->setModelViewMatrix(om);
         view->drawingOnAuxLayer = true;
         view->auxRender();
         view->drawingOnAuxLayer = false;
-        glPopMatrix();
     }
+    _gameManager->setModelViewMatrix(om);
 }

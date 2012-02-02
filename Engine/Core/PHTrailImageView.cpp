@@ -25,17 +25,13 @@ PHTrailImageView::~PHTrailImageView() {
 
 void PHTrailImageView::saveState(pframe & fr)
 {
-   	glPushMatrix();
-	glLoadIdentity();
-	loadMatrixTree(_stopView);
-	glGetFloatv(GL_MODELVIEW, fr.m);
-	glPopMatrix();
+    fr.m = loadMatrixTree(_stopView);
     saveMinState(fr);
 }
 
-void PHTrailImageView::loadState(const pframe & fr)
+const PHMatrix & PHTrailImageView::loadState(const pframe & fr)
 {
-    glMultMatrixf(fr.m);
+    return fr.m;
     loadMinState(fr);
 }
 
@@ -51,18 +47,15 @@ void PHTrailImageView::loadMinState(const pframe & fr)
 
 void PHTrailImageView::auxRender()
 {
-    glPushMatrix();
+    PHMatrix om = _gameManager->modelViewMatrix();
     pframe fr;
     saveMinState(fr);
-    glLoadIdentity();
-    if (_stopView)
-        _stopView->loadMatrixTree(NULL);
+    PHMatrix m = _stopView?_stopView->loadMatrixTree(NULL):PHIdentityMatrix;
     int n = (int)frames.size();
     int nr = 1;
     for (list<pframe>::iterator i = frames.begin(); i!=frames.end(); i++)
     {
-        glPushMatrix();
-        loadState(*i);
+        _gameManager->setModelViewMatrix(m*loadState(*i));
         nr++;
         if (tint==PHInvalidColor)
             tint=PHWhiteColor;
@@ -76,10 +69,9 @@ void PHTrailImageView::auxRender()
             _image = auxImg;
         draw();
         _image = im;
-        glPopMatrix();
     }
     loadMinState(fr);
-    glPopMatrix();
+    _gameManager->setModelViewMatrix(om);
 }
 
 void PHTrailImageView::render()

@@ -200,8 +200,8 @@ void PHParticleView::render()
         particleM->unlock();
         return;
     }
-    glPushMatrix();
-	applyMatrices();
+    PHMatrix om = _gameManager->modelViewMatrix();
+    _gameManager->setModelViewMatrix(om * applyMatrices());
     vector<PHParticleAnimator::particle> * particles = particleAnim->calculatedParticles();
     particleM->unlock();
     if (!particles) return;
@@ -230,5 +230,5 @@ void PHParticleView::render()
         }
     }
     delete particles;
-    glPopMatrix();
+    _gameManager->setModelViewMatrix(om);
 }

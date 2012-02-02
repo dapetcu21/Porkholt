@@ -44,13 +44,15 @@ protected:
 	void drawBackground();
 	virtual void draw();
 	
-	void apply_rotation();
-	void apply_scaling();
-	void applyMatrices();
+    PHMatrix effectCache;
+    PHMatrix matrixCache;
+    bool effectCached;
+    bool matrixCached;
+	PHMatrix applyMatrices();
 	
 public:
     virtual void touchEvent(PHEvent * touch);
-    void loadMatrixTree(PHView * until);
+    PHMatrix loadMatrixTree(PHView * until);
 	
     enum Effects
     {
@@ -86,22 +88,22 @@ public:
 	PHPoint rotationalCenter() const {return _rotationalCenter;}
 	PHPoint scalingCenter() const {return _scalingCenter; }
     PHPoint flipCenter() const { return _flipCenter; };
-    void setFlipCenter(const PHPoint &center) { _flipCenter = center; }
+    void setFlipCenter(const PHPoint &center) { _flipCenter = center; effectCached = false; }
     bool horizontallyFlipped() const { return fhoriz; }
     bool verticallyFlipped() const { return fvert; }
-    void setHorizontallyFlipped(bool b) { fhoriz = b; }
-    void setVerticallyFlipped(bool b) { fvert = b; }  
-	void setRotationalCenter(const PHPoint &center) { _rotationalCenter = center;}
-	void setScalingCenter(const PHPoint &center) { _scalingCenter = center; }
+    void setHorizontallyFlipped(bool b) { fhoriz = b; effectCached = false; }
+    void setVerticallyFlipped(bool b) { fvert = b; effectCached = false; }  
+	void setRotationalCenter(const PHPoint &center) { _rotationalCenter = center; effectCached = false; }
+	void setScalingCenter(const PHPoint &center) { _scalingCenter = center; effectCached = false; }
 	ph_float rotation() { return _rotation; };
-	virtual void setRotation(ph_float rot) { _rotation = rot; };
+	virtual void setRotation(ph_float rot) { _rotation = rot; effectCached = false; };
 	ph_float scaleX() { return _scaleX; };
-	void setScaleX(ph_float scale) { _scaleX = scale; };
+	void setScaleX(ph_float scale) { _scaleX = scale; effectCached = false; };
 	ph_float scaleY() { return _scaleY; };
-	void setScaleY(ph_float scale) { _scaleY = scale; };
+	void setScaleY(ph_float scale) { _scaleY = scale; effectCached = false; };
 	int effectOrder() { return effOrder; };
-	void setEffectOrder(int eff) { effOrder = eff; };
-	void rotate(ph_float rot) { _rotation+= rot; };
+	void setEffectOrder(int eff) { effOrder = eff; effectCached = false; };
+	void rotate(ph_float rot) { _rotation+= rot; effectCached = false; };
 	void setAlpha(ph_float alpha) { _alpha = alpha; if (alpha<0) alpha = 0; if (alpha>1) alpha = 1; };
 	ph_float alpha() { return _alpha; }
 	void setBackgroundColor(const PHColor &color) { _backColor = color; };
@@ -141,7 +143,7 @@ public:
 	friend class PHEventHandler;
 	
 private:
-    PHView * pointerDeepFirst(PHEvent * touch);
+    PHView * pointerDeepFirst(PHMatrix m, PHEvent * touch);
     
 //animation system
 protected:

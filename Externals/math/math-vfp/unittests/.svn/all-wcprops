@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/12/trunk/unittests
+END
+main.m
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/6/trunk/unittests/main.m
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/5/trunk/unittests/Info.plist
+END
+Unittests_Prefix.pch
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/6/trunk/unittests/Unittests_Prefix.pch
+END

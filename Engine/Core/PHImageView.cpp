@@ -267,13 +267,12 @@ void PHImageView::renderCurved()
     
     if (constrain)
     {
-        glPushMatrix();
-        glTranslatef(_bounds.x, _bounds.y, 0);
-        glScalef(_bounds.width, _bounds.height, 1);
-    }
-    glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
-    if (constrain)
-        glPopMatrix();
+        PHMatrix om = _gameManager->modelViewMatrix();
+        _gameManager->setModelViewMatrix(om * PHMatrix::translation(PHPoint(_bounds.x, _bounds.y)) * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
+        glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
+        _gameManager->setModelViewMatrix(om);
+    } else
+        glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -317,53 +316,47 @@ void PHImageView::renderStraight()
         VBOneedsRebuilding = true;
     loadVBO();
     
-    if (_image->isNormal() && arraysVBO)
+    if (arraysVBO)
     {
-        glPushMatrix();
-        glTranslatef(_bounds.x, _bounds.y, 0);
-        glScalef(_bounds.width, _bounds.height, 1);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
-        PHGLSetColor(tint);
-        PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-        glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-        glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-        ((PHNormalImage*)image())->bindToTexture();
-        glDrawArrays(params1.renderMode, 0, params1.nElements);
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-        
-        glPopMatrix();
-    }
-    
-    if (_image->isAnimated() && arraysVBO)
-    {
-        glPushMatrix();
-        glTranslatef(_bounds.x, _bounds.y, 0);
-        glScalef(_bounds.width, _bounds.height, 1);
-        
-        PHColor t = tint.isValid()?tint:PHWhiteColor;
-        ph_float rem = indexesVBO?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-        glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
-        PHGLSetColor(t*(1-rem));
-        PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-        glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-        glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-        _animator->bindCurrentFrameToTexture();
-        glDrawArrays(params1.renderMode, 0, params1.nElements);
-        
-        if (indexesVBO)
+        PHMatrix om = _gameManager->modelViewMatrix();
+        _gameManager->setModelViewMatrix(om * PHMatrix::translation(PHPoint(_bounds.x, _bounds.y)) * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
+        if (_image->isNormal())
         {
-            glBindBuffer(GL_ARRAY_BUFFER, indexesVBO);
-            PHGLSetColor(t*rem);
+            glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+            PHGLSetColor(tint);
             PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-            glVertexPointer(params2.vertexSize, params2.vertexType, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
-            glTexCoordPointer(params2.texCoordSize, params2.texCoordType, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
-            _animator->bindLastFrameToTexture();
-            glDrawArrays(params2.renderMode, 0, params2.nElements);
+            glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
+            glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
+            ((PHNormalImage*)image())->bindToTexture();
+            glDrawArrays(params1.renderMode, 0, params1.nElements);
+            glBindBuffer(GL_ARRAY_BUFFER,0);
         }
-        glBindBuffer(GL_ARRAY_BUFFER,0);
         
-        glPopMatrix();
+        if (_image->isAnimated())
+        {
+            PHColor t = tint.isValid()?tint:PHWhiteColor;
+            ph_float rem = indexesVBO?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
+            glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+            PHGLSetColor(t*(1-rem));
+            PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+            glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
+            glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
+            _animator->bindCurrentFrameToTexture();
+            glDrawArrays(params1.renderMode, 0, params1.nElements);
+            
+            if (indexesVBO)
+            {
+                glBindBuffer(GL_ARRAY_BUFFER, indexesVBO);
+                PHGLSetColor(t*rem);
+                PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+                glVertexPointer(params2.vertexSize, params2.vertexType, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
+                glTexCoordPointer(params2.texCoordSize, params2.texCoordType, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
+                _animator->bindLastFrameToTexture();
+                glDrawArrays(params2.renderMode, 0, params2.nElements);
+            }
+            glBindBuffer(GL_ARRAY_BUFFER,0);
+        }
+        _gameManager->setModelViewMatrix(om);
     }
     //renderInFramePortionTint(_bounds, coords, tint);
 }

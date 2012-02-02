@@ -71,6 +71,7 @@ private:
     void updateHD();
     
     uint32_t openGLStates;
+    PHMatrix _modelView,_projection;
     
 public:
     PHGameManager();
@@ -119,6 +120,10 @@ public:
     PHView * rootView() { return view; }
     
     void setOpenGLStates(uint32_t states);
+    void setModelViewMatrix(const PHMatrix & m);
+    PHMatrix modelViewMatrix() { return _modelView; }
+    void setProjectionMatrix(const PHMatrix & m);
+    PHMatrix projectionMatrix() { return _projection; }
 };
 
 #endif

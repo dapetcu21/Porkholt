@@ -15,7 +15,7 @@
 
 #define PHVIEW_INITLIST superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), _gameManager(NULL)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), _gameManager(NULL), effectCached(false), matrixCached(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -42,18 +42,21 @@ void PHView::setFrame(const PHRect &frame)
 	if (_bounds.width != frame.width || _bounds.height != frame.height)
         setBounds(PHRect(0,0,frame.width,frame.height));
 	_frame = frame;
+    matrixCached = false;
 }
 
 void PHView::setBounds(const PHRect &bnd) 
 { 
 	_bounds = bnd; 
 	_scalingCenter = _rotationalCenter = _flipCenter = boundsCenter();
+    matrixCached = false;
 }
 
 void PHView::setPosition(const PHPoint &pos)
 {
 	_frame.x = pos.x;
 	_frame.y = pos.y;
+    effectCached = false;
 }
 
 PHPoint PHView::center() const
@@ -77,57 +80,60 @@ PHPoint PHView::boundsCenter() const
 	return tmp;
 }
 
-void PHView::apply_rotation()
+PHMatrix PHView::applyMatrices()
 {
-	if (!_rotation) return;
-	glTranslatef(_rotationalCenter.x, _rotationalCenter.y, 0);
-    PHGLRotate(_rotation);
-	glTranslatef(-_rotationalCenter.x, -_rotationalCenter.y, 0);
-}
-
-void PHView::apply_scaling()
-{
-	if (_scaleX==1 && _scaleY==1) return;
-	glTranslatef(_scalingCenter.x, _scalingCenter.y, 0);
-	glScalef(_scaleX, _scaleY, 1);
-	glTranslatef(-_scalingCenter.x, -_scalingCenter.y, 0);
-}
-
-void PHView::applyMatrices()
-{
-	glTranslatef(_frame.x, _frame.y, 0);
-	glScalef(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1, 1);
-    glTranslatef(-_bounds.x, -_bounds.y, 0);
-    int eo = effOrder;
-    while (eo)
+    if (matrixCached && effectCached)
+        return matrixCache;
+    if (!effectCached)
     {
-        switch (eo&3)
+        effectCached = true;
+        effectCache = PHIdentityMatrix;
+        int eo = effOrder;
+        while (eo)
         {
-            case EffectRotate:
-                apply_rotation();
-                break;
-            case EffectScale:
-                apply_scaling();
-                break;
-            case EffectFlip:
-                PHGLFlip(_flipCenter,fhoriz,fvert);
-                break;
+            switch (eo&3)
+            {
+                case EffectRotate:
+                {
+                    if (!_rotation) break;
+                    effectCache *= PHMatrix::translation(_rotationalCenter) * PHMatrix::rotation(_rotation) * PHMatrix::translation(-_rotationalCenter);
+                    break;
+                }
+                case EffectScale:
+                {
+                    if (_scaleX==1 && _scaleY==1) break;
+                    effectCache *= PHMatrix::translation(_scalingCenter) * PHMatrix::scaling(PHSize(_scaleX,_scaleY)) * PHMatrix::translation(-_scalingCenter);                    
+                    break;
+                }
+                case EffectFlip:
+                {
+                    if (!fhoriz && !fvert) break;
+                    effectCache *= PHMatrix::flipping(_flipCenter, fhoriz, fvert, false);
+                    break;
+                }
+            }
+            eo>>=2;
         }
-        eo>>=2;
     }
+    matrixCached = true;
+    matrixCache = 
+        PHMatrix::translation(PHPoint(_frame.x,_frame.y)) * 
+        PHMatrix::scaling(PHSize(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1)) *
+        PHMatrix::translation(PHPoint(-_bounds.x, -_bounds.y)) *
+        effectCache;
+    return matrixCache;
 }
 extern PHView * playerView;
 void PHView::render()
 {
     if (mtx) mtx->lock();
-	glPushMatrix();
-	applyMatrices();
+    PHMatrix om = _gameManager->modelViewMatrix();
+    PHMatrix m = om * applyMatrices();
+    _gameManager->setModelViewMatrix(m);
 	
 	bool optimizeOut = false;
 	if (_optimize)
 	{
-		GLfloat m[16];
-		glGetFloatv(GL_MODELVIEW, m);
 		PHPoint pnt;
 		ph_float minX,minY,maxX,maxY;
 		minX=minY=0x3f3f3f3f;
@@ -141,13 +147,13 @@ void PHView::render()
 			minY = pnt.y;\
 		if (pnt.y>maxY)\
 			maxY = pnt.y;
-		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x,_bounds.y));
+		pnt = m.transformPoint(PHPoint(_bounds.x,_bounds.y));
 		test;
-		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x+_bounds.width,_bounds.y));
+		pnt = m.transformPoint(PHPoint(_bounds.x+_bounds.width,_bounds.y));
 		test;
-		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x+_bounds.width,_bounds.y+_bounds.height));
+		pnt = m.transformPoint(PHPoint(_bounds.x+_bounds.width,_bounds.y+_bounds.height));
 		test;
-		pnt = PHTransformPointMatrix(m, PHPoint(_bounds.x,_bounds.y+_bounds.height));
+		pnt = m.transformPoint(PHPoint(_bounds.x,_bounds.y+_bounds.height));
 		test;
 		
 		PHRect bounds = _gameManager->screenBounds();
@@ -166,7 +172,7 @@ void PHView::render()
         for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
             (*i)->render();
 	}
-	glPopMatrix();
+    _gameManager->setModelViewMatrix(om);
     if (mtx) mtx->unlock();
 }
 
@@ -264,15 +270,14 @@ void PHView::touchEvent(PHEvent * touch)
 }
 
 //stuff
-PHView * PHView::pointerDeepFirst(PHEvent * touch)
+PHView * PHView::pointerDeepFirst(PHMatrix m, PHEvent * touch)
 {
 	if (!_userInput) return NULL;
-	glPushMatrix();
-	applyMatrices();
+    m *= applyMatrices();
 	PHView * view = NULL;
     for (list<PHView*>::reverse_iterator i = views.rbegin(); i!= views.rend(); i++)
     {
-        PHView * v = (*i)->pointerDeepFirst(touch);
+        PHView * v = (*i)->pointerDeepFirst(m, touch);
         if (v)
         {
             view = v;
@@ -281,78 +286,50 @@ PHView * PHView::pointerDeepFirst(PHEvent * touch)
     }
 	if (!view)
 	{
-		PHPoint pnt = PHUnTransformedPoint(touch->location());
+		PHPoint pnt = m.untransformPoint(touch->location());
 		if (PHPointInRect(pnt,_bounds))
         {
             touchEvent(touch);
 			view = touch->handled()?this:NULL;
         }
 	}
-	glPopMatrix();
 	return view;
 }
 
 //geometry
-void PHView::loadMatrixTree(PHView * until)
+PHMatrix PHView::loadMatrixTree(PHView * until)
 {
 	if (superView&&(superView!=until))
-	{
-		superView->loadMatrixTree(until);
-	}
-	applyMatrices();
+        return (superView->loadMatrixTree(until)) * applyMatrices();
+    return applyMatrices();
 }
 
 PHPoint PHView::toMyCoordinates(const PHPoint & pnt, PHView * until)
 {
     if (until==this) return pnt;
-	GLfloat m[16];
-	glPushMatrix();
-	glLoadIdentity();
-	loadMatrixTree(until);
-	glGetFloatv(GL_MODELVIEW, m);
-	glPopMatrix();
-	return PHUnTransformPointMatrix(m, pnt);
+    return loadMatrixTree(until).untransformPoint(pnt);
 }
 
 void PHView::toMyCoordinates(PHPoint * pnt, int n, PHView * until)
 {
     if (until==this) return;
-	GLfloat m[16],inverse[16];
-	glPushMatrix();
-	glLoadIdentity();
-	loadMatrixTree(until);
-	glGetFloatv(GL_MODELVIEW, m);
-	glPopMatrix();
-	PHInvertMatrix(m, inverse);
+    PHMatrix m = loadMatrixTree(until).inverse();
 	for (int i=0; i<n; i++)
-		pnt[i] = PHTransformPointMatrix(inverse, pnt[i]);
+		pnt[i] = m.transformPoint(pnt[i]);
 }
 
 PHPoint PHView::fromMyCoordinates(const PHPoint & pnt, PHView * until)
 {
     if (until==this) return pnt;
-	GLfloat m[16];
-	glPushMatrix();
-	glLoadIdentity();
-	loadMatrixTree(until);
-	glGetFloatv(GL_MODELVIEW, m);
-	glPopMatrix();
-    //PHLog("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n",
-    //      m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9],m[10],m[11],m[12],m[13],m[14],m[15]);
-	return PHTransformPointMatrix(m, pnt);
+    return loadMatrixTree(until).transformPoint(pnt);
 }
 
 void PHView::fromMyCoordinates(PHPoint * pnt, int n, PHView * until)
 {
     if (until==this) return;
-	GLfloat m[16];
-	glPushMatrix();
-	glLoadIdentity();
-	loadMatrixTree(until);
-	glGetFloatv(GL_MODELVIEW, m);
-	glPopMatrix();
-	for (int i=0; i<n; i++)
-		pnt[i] = PHTransformPointMatrix(m, pnt[i]);
+    PHMatrix m = loadMatrixTree(until);
+    for (int i=0; i<n; i++)
+		pnt[i] = m.transformPoint(pnt[i]);
 }
 
 PHView * PHView::viewWithTag(int tag)

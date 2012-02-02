@@ -175,7 +175,7 @@ vector<PHParticleAnimator::particle> * PHParticleAnimator::calculatedParticles()
     mutex->lock();
     v->reserve(heap.size());
     for (i = heap.begin(); i!=heap.end(); i++)
-        v->push_back((*i)->particle);
+        v->push_back((*i)->part);
     mutex->unlock();
     return v;
 }
@@ -260,16 +260,16 @@ void PHParticleAnimator::animateParticle(PHParticleAnimator::particle_state * p,
 {
     p->lifespan -= elapsed;
     if (p->lifespan<=0) return;
-    p->particle.position += p->velocity*elapsed;
+    p->part.position += p->velocity*elapsed;
     p->velocity += grav*elapsed;
     ph_float q = (p->lifespan)/(p->totalLife);
-    p->particle.size = initSize*q + endSize*(1-q);
-    p->particle.color = PHColor(initColor.r*q+endColor.r*(1-q),
+    p->part.size = initSize*q + endSize*(1-q);
+    p->part.color = PHColor(initColor.r*q+endColor.r*(1-q),
                                 initColor.g*q+endColor.g*(1-q),
                                 initColor.b*q+endColor.b*(1-q),
                                 initColor.a*q+endColor.a*(1-q));
     if (rotates)
-        p->particle.rotation = PHAngleFromVector(p->velocity)-M_PI_2;
+        p->part.rotation = PHAngleFromVector(p->velocity)-M_PI_2;
 }
 
 void PHParticleAnimator::setVelocity(const PHPoint &v)
@@ -312,13 +312,13 @@ void PHParticleAnimator::advanceAnimation(ph_float elapsedTime)
                 p = PHPoint(r1,r2);
             p.x = genArea.x + p.x*genArea.width;
             p.y = genArea.y + p.y*genArea.height;
-            st->particle.position = p;
-            st->particle.size = initSize;
-            st->particle.color = initColor;
+            st->part.position = p;
+            st->part.size = initSize;
+            st->part.color = initColor;
             ph_float ang = PHAngleFromVector(vel);
             ph_float module = vel.length()+((ph_float)rand()/RAND_MAX)*deltavel;
             ang += (((ph_float)rand()/RAND_MAX)-0.5)*spreadAngl;
-            st->particle.rotation = rotates?(ang-M_PI_2):0;
+            st->part.rotation = rotates?(ang-M_PI_2):0;
             st->velocity = PHPoint(cos(ang)*module,sin(ang)*module);
             st->lifespan = st->totalLife = lifetime+((ph_float)rand()/RAND_MAX)*deltalifetime;
             animateParticle(st,genQueue);

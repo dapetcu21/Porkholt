@@ -83,13 +83,27 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     view->setGameManager(this);
 }
 
+void PHGameManager::setModelViewMatrix(const PHMatrix & m)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(m.floats());
+    _modelView = m;
+}
+
+void PHGameManager::setProjectionMatrix(const PHMatrix & m)
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(m.floats());
+    _projection = m;
+}
+
 void PHGameManager::setProjection()
 {
     glViewport(0, 0, _screenWidth, _screenHeight);
-    glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glTranslatef(-1.0f, -1.0f, 0.0f);
-	glScalef(2.0f/(_screenWidth), 2.0f/(_screenHeight), 1.0f);
+    PHMatrix m;
+    m.setToTranslation(PHPoint(-1,-1));
+    m.scale(PHSize(2.0f/(_screenWidth), 2.0f/(_screenHeight)));
+    setProjectionMatrix(m);
 }
 
 void PHGameManager::setScreenSize(ph_float w, ph_float h)
@@ -120,8 +134,7 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 		
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+    setModelViewMatrix(PHIdentityMatrix);
     
 	if (viewController)  
 		viewController->_updateScene(timeElapsed);

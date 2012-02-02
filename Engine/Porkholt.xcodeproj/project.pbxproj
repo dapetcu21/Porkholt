@@ -96,6 +96,12 @@
 		C1206A0914D7C112007DACEA /* PHTextControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069F614D7C112007DACEA /* PHTextControllerView.h */; };
 		C1206A0A14D7C112007DACEA /* PHTextControllerView.h in Headers */ = {isa = PBXBuildFile; fileRef = C12069F614D7C112007DACEA /* PHTextControllerView.h */; };
 		C137061314D6C4ED002CA4CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C137061214D6C4ED002CA4CA /* Foundation.framework */; };
+		C146779714D99ABE001BAD91 /* math_mat4.c in Sources */ = {isa = PBXBuildFile; fileRef = C146777414D99ABE001BAD91 /* math_mat4.c */; };
+		C146779914D99ABE001BAD91 /* math_neon.h in Headers */ = {isa = PBXBuildFile; fileRef = C146777614D99ABE001BAD91 /* math_neon.h */; };
+		C14677C014D99AD0001BAD91 /* common_macros.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677A814D99ACF001BAD91 /* common_macros.h */; };
+		C14677C114D99AD0001BAD91 /* matrix_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C14677A914D99ACF001BAD91 /* matrix_impl.cpp */; };
+		C14677C214D99AD0001BAD91 /* matrix_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677AA14D99ACF001BAD91 /* matrix_impl.h */; };
+		C14677CB14D99AD0001BAD91 /* vfp_clobbers.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677B914D99ACF001BAD91 /* vfp_clobbers.h */; };
 		C17386F914D7C22A005B18E6 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F814D7C22A005B18E6 /* CoreVideo.framework */; };
 		C17386FE14D7C22F005B18E6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386FD14D7C22F005B18E6 /* OpenGL.framework */; };
 		C17386FF14D7C24C005B18E6 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069A914D73132007DACEA /* liblua.a */; };
@@ -356,6 +362,12 @@
 		C12069F614D7C112007DACEA /* PHTextControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTextControllerView.h; sourceTree = "<group>"; };
 		C137060F14D6C4ED002CA4CA /* libporkholt-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libporkholt-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C137061214D6C4ED002CA4CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C146777414D99ABE001BAD91 /* math_mat4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math_mat4.c; path = "../../Externals/math/math-neon/math_mat4.c"; sourceTree = "<group>"; };
+		C146777614D99ABE001BAD91 /* math_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = math_neon.h; path = "../../Externals/math/math-neon/math_neon.h"; sourceTree = "<group>"; };
+		C14677A814D99ACF001BAD91 /* common_macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common_macros.h; sourceTree = "<group>"; };
+		C14677A914D99ACF001BAD91 /* matrix_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_impl.cpp; sourceTree = "<group>"; };
+		C14677AA14D99ACF001BAD91 /* matrix_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix_impl.h; sourceTree = "<group>"; };
+		C14677B914D99ACF001BAD91 /* vfp_clobbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vfp_clobbers.h; sourceTree = "<group>"; };
 		C17386F814D7C22A005B18E6 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		C17386FD14D7C22F005B18E6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		C1B5BD6F14D6EACA005483ED /* libporkholt-osx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libporkholt-osx.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -470,6 +482,8 @@
 		C11F59B414D9271800D85AF1 /* Geometry */ = {
 			isa = PBXGroup;
 			children = (
+				C14677A714D99ACF001BAD91 /* math-vfp */,
+				C146776014D99A9C001BAD91 /* NEON */,
 				C1B5BDA014D6EFA9005483ED /* PHGeometry.h */,
 				C1B5BD9F14D6EFA9005483ED /* PHGeometry.cpp */,
 				C11F59B814D9279300D85AF1 /* PHMatrix.h */,
@@ -624,6 +638,27 @@
 				C1B5BD6F14D6EACA005483ED /* libporkholt-osx.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C146776014D99A9C001BAD91 /* NEON */ = {
+			isa = PBXGroup;
+			children = (
+				C146777414D99ABE001BAD91 /* math_mat4.c */,
+				C146777614D99ABE001BAD91 /* math_neon.h */,
+			);
+			name = NEON;
+			sourceTree = "<group>";
+		};
+		C14677A714D99ACF001BAD91 /* math-vfp */ = {
+			isa = PBXGroup;
+			children = (
+				C14677A814D99ACF001BAD91 /* common_macros.h */,
+				C14677A914D99ACF001BAD91 /* matrix_impl.cpp */,
+				C14677AA14D99ACF001BAD91 /* matrix_impl.h */,
+				C14677B914D99ACF001BAD91 /* vfp_clobbers.h */,
+			);
+			name = "math-vfp";
+			path = "../../Externals/math/math-vfp";
 			sourceTree = "<group>";
 		};
 		C1B5BD8114D6EFA9005483ED /* Core */ = {
@@ -789,6 +824,10 @@
 				C11F59BF14D92AD600D85AF1 /* PHRect.h in Headers */,
 				C11F59C314D92C8E00D85AF1 /* PHColor.h in Headers */,
 				C11F59C714D92CE900D85AF1 /* PHRange.h in Headers */,
+				C146779914D99ABE001BAD91 /* math_neon.h in Headers */,
+				C14677C014D99AD0001BAD91 /* common_macros.h in Headers */,
+				C14677C214D99AD0001BAD91 /* matrix_impl.h in Headers */,
+				C14677CB14D99AD0001BAD91 /* vfp_clobbers.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,6 +1072,8 @@
 				C11F59C514D92CBF00D85AF1 /* PHColor.cpp in Sources */,
 				C11F59C914D92CF600D85AF1 /* PHRange.cpp in Sources */,
 				C11F59CC14D92D2600D85AF1 /* PHMatrix.cpp in Sources */,
+				C146779714D99ABE001BAD91 /* math_mat4.c in Sources */,
+				C14677C114D99AD0001BAD91 /* matrix_impl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1180,11 +1221,31 @@
 		C137061D14D6C4ED002CA4CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				DSTROOT = /tmp/porkholt_engine.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					../Externals/finch/Finch,
+					../Externals/lua/include,
+					"../Externals/math/math-vfp",
+					"../Externals/math/math-neon",
+					../Externals/libpng,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+				);
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[arch=armv6]" = (
+					"-mno-thumb",
+					"-marm",
+				);
+				"OTHER_CFLAGS[arch=armv7]" = (
+					"-mno-thumb",
+					"-marm",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "porkholt-ios";
@@ -1196,11 +1257,31 @@
 		C137061E14D6C4ED002CA4CA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				DSTROOT = /tmp/porkholt_engine.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					../Externals/finch/Finch,
+					../Externals/lua/include,
+					"../Externals/math/math-vfp",
+					"../Externals/math/math-neon",
+					../Externals/libpng,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
+				);
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[arch=armv6]" = (
+					"-mno-thumb",
+					"-marm",
+				);
+				"OTHER_CFLAGS[arch=armv7]" = (
+					"-mno-thumb",
+					"-marm",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "porkholt-ios";

@@ -101,7 +101,7 @@ private:
     
     struct particle_state
     {
-        particle particle;
+        particle part;
         PHPoint velocity;
         ph_float lifespan;
         ph_float totalLife;

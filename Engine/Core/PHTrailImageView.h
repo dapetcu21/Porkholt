@@ -17,7 +17,7 @@ class PHTrailImageView : public PHImageView
 protected:
     struct pframe
     {
-        GLfloat m[16];
+        PHMatrix m;
         PHColor tint;
     };
     int trail;
@@ -29,7 +29,7 @@ protected:
     PHImage * auxImg;
     
     void saveState(pframe & fr);
-    void loadState(const pframe & fr);
+    const PHMatrix & loadState(const pframe & fr);
     void saveMinState(pframe & fr);
     void loadMinState(const pframe & fr);
 public:
