@@ -42,7 +42,7 @@ DEVROOT=/Developer/Platforms/iPhoneSimulator.platform/Developer
 SDKROOT=$DEVROOT/$SIMSDK
 CC=$DEVROOT/usr/bin/cc
 
-CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
 make -f scripts/makefile.darwin clean
 make -f scripts/makefile.darwin CC="$CC $CFLAGS"
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim

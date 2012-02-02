@@ -44,7 +44,7 @@ DEVROOT=/Developer/Platforms/iPhoneSimulator.platform/Developer
 SDKROOT=$DEVROOT/$SIMSDK
 export CC=$DEVROOT/usr/bin/cc
 
-export CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+export CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
 make distclean
 ./configure
 make
