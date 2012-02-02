@@ -86,7 +86,7 @@ public:
 	void setTextureCoordinates(const PHRect & r) { coords = r; VBOneedsRebuilding = true; };
     
     PHColor & tintColor() { return tint; };
-    void setTintColor(const PHColor & clr) { tint = clr; VBOneedsRebuilding = true; };
+    void setTintColor(const PHColor & clr) { tint = clr; };
     
     virtual PHColor cinematicCustomColor() { return tint; }
     virtual void setCinematicCustomColor(const PHColor & c) { setTintColor(c); }

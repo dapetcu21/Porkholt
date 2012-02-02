@@ -31,8 +31,8 @@ void PHTrailImageView::saveState(pframe & fr)
 
 const PHMatrix & PHTrailImageView::loadState(const pframe & fr)
 {
-    return fr.m;
     loadMinState(fr);
+    return fr.m;
 }
 
 void PHTrailImageView::saveMinState(pframe & fr)
@@ -64,11 +64,18 @@ void PHTrailImageView::auxRender()
         //tint.g*=0.6;
         //tint.b*=0.6;
         drawBackground();
-        PHImage * im = _image;
         if (auxImg)
-            _image = auxImg;
-        draw();
-        _image = im;
+        {
+            PHImage * im = image();
+            if (im) 
+                im->retain();
+            setImage(auxImg);
+            draw();
+            setImage(im);
+            if (im)
+                im->release();
+        } else 
+            draw();
     }
     loadMinState(fr);
     _gameManager->setModelViewMatrix(om);

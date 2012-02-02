@@ -117,13 +117,12 @@ public:
     void preScale(const PH3DPoint & origin, bool flipX, bool flipY, bool flipZ) { PHMatrix m; m.setToFlipping(origin,flipX,flipY,flipZ); (*this)=m*(*this); }
     void setToFlipping(const PH3DPoint & o, bool flipX, bool flipY, bool flipZ)
     {
-        ph_float px = flipX?2:0;
-        ph_float py = flipY?2:0;
-        ph_float pz = flipZ?2:0;
-        m[ 0] = px;     m[ 1] = 0;      m[ 2] = 0;      m[ 3] = 0;
-        m[ 4] = 0;      m[ 5] = py;     m[ 6] = 0;      m[ 7] = 0;
-        m[ 8] = 0;      m[ 9] = 0;      m[10] = pz;     m[11] = 0;
-        m[12] = o.x*px; m[13] = o.y*py; m[14] = o.z*pz; m[15] = 1;
+        m[ 0] = flipX?-1:1; m[ 1] = 0;          m[ 2] = 0;          m[ 3] = 0;
+        m[ 4] = 0;          m[ 5] = flipY?-1:1; m[ 6] = 0;          m[ 7] = 0;
+        m[ 8] = 0;          m[ 9] = 0;          m[10] = flipZ?-1:1; m[11] = 0;
+        m[12] = flipX?o.x*2:0; 
+        m[13] = flipY?o.y*2:0; 
+        m[14] = flipZ?o.z*2:0; m[15] = 1;
     }
     
     void setToMatrix(const PHMatrix & mx)

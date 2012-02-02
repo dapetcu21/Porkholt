@@ -675,10 +675,7 @@
 					"../../Engine/**",
 				);
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					../../Externals/lib/darwin,
-					"\"$(SRCROOT)/../../Externals/lib/darwin/osx\"",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../Externals/lib/darwin/osx\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -695,10 +692,7 @@
 					"../../Engine/**",
 				);
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					../../Externals/lib/darwin,
-					"\"$(SRCROOT)/../../Externals/lib/darwin/osx\"",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../Externals/lib/darwin/osx\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
