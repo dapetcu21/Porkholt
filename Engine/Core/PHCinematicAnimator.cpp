@@ -87,7 +87,7 @@ ph_float PHCinematicAnimator::f(ph_float time,int ftype)
 	}
 	if (ftype==FadeInOutFunction)
 	{
-		return sin(M_PI*(time-0.5f))/2+0.5;
+		return (ph_float)(sin(M_PI*(time-0.5f))/2+0.5);
 	}
 	return time; //revert to linear
 }

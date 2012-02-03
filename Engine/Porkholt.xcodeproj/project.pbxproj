@@ -106,7 +106,6 @@
 		C146779714D99ABE001BAD91 /* math_mat4.c in Sources */ = {isa = PBXBuildFile; fileRef = C146777414D99ABE001BAD91 /* math_mat4.c */; };
 		C146779914D99ABE001BAD91 /* math_neon.h in Headers */ = {isa = PBXBuildFile; fileRef = C146777614D99ABE001BAD91 /* math_neon.h */; };
 		C14677C014D99AD0001BAD91 /* common_macros.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677A814D99ACF001BAD91 /* common_macros.h */; };
-		C14677C114D99AD0001BAD91 /* matrix_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C14677A914D99ACF001BAD91 /* matrix_impl.cpp */; };
 		C14677C214D99AD0001BAD91 /* matrix_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677AA14D99ACF001BAD91 /* matrix_impl.h */; };
 		C14677CB14D99AD0001BAD91 /* vfp_clobbers.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677B914D99ACF001BAD91 /* vfp_clobbers.h */; };
 		C17386F914D7C22A005B18E6 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F814D7C22A005B18E6 /* CoreVideo.framework */; };
@@ -1092,7 +1091,6 @@
 				C11F59C514D92CBF00D85AF1 /* PHColor.cpp in Sources */,
 				C11F59C914D92CF600D85AF1 /* PHRange.cpp in Sources */,
 				C11F59CC14D92D2600D85AF1 /* PHMatrix.cpp in Sources */,
-				C14677C114D99AD0001BAD91 /* matrix_impl.cpp in Sources */,
 				C146779714D99ABE001BAD91 /* math_mat4.c in Sources */,
 				C11B48F714DBC77300431210 /* math_vec2.c in Sources */,
 				C11B48F814DBC77300431210 /* math_vec3.c in Sources */,
@@ -1201,7 +1199,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1230,7 +1228,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1249,7 +1247,10 @@
 		C137061D14D6C4ED002CA4CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				DSTROOT = /tmp/porkholt_engine.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1284,7 +1285,10 @@
 		C137061E14D6C4ED002CA4CA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				DSTROOT = /tmp/porkholt_engine.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1322,7 +1326,6 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",
@@ -1342,7 +1345,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Externals/lib/darwin\"",

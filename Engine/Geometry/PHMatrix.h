@@ -12,6 +12,14 @@
 #include "PHMain.h"
 #include "PHPoint.h"
 
+
+class PHMatrix;
+PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m, const PHPoint & pnt);
+PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m, const PH3DPoint & pnt);
+void PHMultiplyMatrix(const GLfloat m0[16], const GLfloat m1[16], GLfloat d[16]);
+void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse);
+
+
 class PHMatrix
 {
 private:
@@ -160,11 +168,54 @@ public:
     
     PHMatrix & operator *= (const  PHMatrix & o) { (*this) = (*this) * o; return (*this); }
     
-    PHMatrix inverse() const;
-    PHMatrix operator * (const PHMatrix & b) const;
-    PH3DPoint transformPoint(const PH3DPoint & p) const;
+    PHMatrix inverse() const
+    {
+        PHMatrix d;
+#ifdef PH_MATRIX_VFP
+        Matrix4Invert(m,d.m);
+#else
+        PHInvertMatrix(m,d.m);
+#endif
+        return d;
+    }
+    PHMatrix operator * (const PHMatrix & b) const
+    {
+        PHMatrix d;
+#ifdef PH_MATRIX_NEON
+        matmul4_neon(m,b.m,d.m);
+#else
+#ifdef PH_MATRIX_VFP
+        Matrix4Mul(m,b.m,d.m);
+#else
+        PHMultiplyMatrix(m, b.m, d.m);
+#endif
+#endif
+        return d;
+    }
+    
+    PH3DPoint transformPoint(const PH3DPoint & p) const
+    {
+#ifdef PH_MATRIX_VFP
+        GLfloat v[3] = {p.x,p.y,p.z};
+        GLfloat r[4];
+        Matrix4Vector3Mul(m,v,r);
+        return PH3DPoint(r[0]/r[3],r[1]/r[3],r[2]/r[3]);
+#else
+        return PHTransformPointMatrix(m,p);
+#endif
+    }
     PH3DPoint untransformPoint(const PH3DPoint & p) const { return inverse().transformPoint(p); }
-    PHPoint transformPoint(const PHPoint & p) const;
+    PHPoint transformPoint(const PHPoint & p) const
+    {
+#ifdef PH_MATRIX_VFP
+        GLfloat v[3] = {p.x,p.y,1};
+        GLfloat r[4];
+        Matrix4Vector3Mul(m,v,r);
+        return PHPoint(r[0]/r[3],r[1]/r[3]);
+#else
+        return PHTransformPointMatrix(m,p);
+#endif
+    }
     PHPoint untransformPoint(const PHPoint & p) const { return inverse().transformPoint(p); }
 };
 

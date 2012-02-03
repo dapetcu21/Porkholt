@@ -116,8 +116,8 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
 {
     vector<PHParticleAnimator::particle> * particles = (vector<PHParticleAnimator::particle>*)p;
     if (!p || !particles->size()) return;
-    int n = particles->size();
-    int nrVertices = particles->size()*6-2;
+    int n = (int)(particles->size());
+    int nrVertices = (int)(particles->size()*6-2);
     GLfloat * vertices = new GLfloat[nrVertices*2];
     GLfloat * textureCoords = new GLfloat[nrVertices*2];
     GLfloat * colors = new GLfloat[nrVertices*4];

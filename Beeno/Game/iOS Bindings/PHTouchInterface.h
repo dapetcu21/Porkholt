@@ -20,7 +20,7 @@ class PHMutex;
 
 @interface PHTouchInterface : UIView <UIAccelerometerDelegate> {
 	PHMutex * mutex;
-	list<TouchTask> queue;
+	list<TouchTask> q;
     ph_float scale;
 }
 

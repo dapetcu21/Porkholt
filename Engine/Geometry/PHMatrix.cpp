@@ -9,13 +9,7 @@
 #include "PHMain.h"
 #include "PHMatrix.h"
 
-#if (__STDC_VERSION__ >= 199901L)
-#define PH_RESTRICT restrict
-#else
-#define PH_RESTRICT __restrict
-#endif
-
-static void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse)
+void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse)
 {
 	ph_float a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
     ph_float a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
@@ -52,7 +46,7 @@ static void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT 
 	
 }
 
-static void PHMultiplyMatrix(const GLfloat m0[16], const GLfloat m1[16], GLfloat d[16])
+void PHMultiplyMatrix(const GLfloat m0[16], const GLfloat m1[16], GLfloat d[16])
 {
 	d[0] = m0[0]*m1[0] + m0[4]*m1[1] + m0[8]*m1[2] + m0[12]*m1[3];
 	d[1] = m0[1]*m1[0] + m0[5]*m1[1] + m0[9]*m1[2] + m0[13]*m1[3];
@@ -72,7 +66,7 @@ static void PHMultiplyMatrix(const GLfloat m0[16], const GLfloat m1[16], GLfloat
 	d[15] = m0[3]*m1[12] + m0[7]*m1[13] + m0[11]*m1[14] + m0[15]*m1[15];
 }
 
-static PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoint & pnt)
+PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoint & pnt)
 {
 	ph_float x,y,w;
 	x = pnt.x * m[0] + pnt.y * m[4] + /*0 * m[8] + 1 * */m[12];
@@ -85,7 +79,7 @@ static PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoin
 	return npnt;
 }
 
-static PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3DPoint & pnt)
+PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3DPoint & pnt)
 {
 	ph_float x,y,z,w;
 	x = pnt.x * m[0] + pnt.y * m[4] + /*0 * m[8] + 1 * */m[12];
@@ -98,57 +92,6 @@ static PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3D
 	npnt.y = y/w;
     npnt.z = z/w;
 	return npnt;
-}
-
-PHMatrix PHMatrix::inverse() const 
-{
-    PHMatrix d;
-#ifdef PH_MATRIX_VFP
-    Matrix4Invert(m,d.m);
-#else
-    PHInvertMatrix(m,d.m);
-#endif
-    return d;
-    
-}
-
-PHMatrix PHMatrix::operator * (const PHMatrix & b) const
-{
-    PHMatrix d;
-#ifdef PH_MATRIX_NEON
-    matmul4_neon(m,b.m,d.m);
-#else
-#ifdef PH_MATRIX_VFP
-    Matrix4Mul(m,b.m,d.m);
-#else
-    PHMultiplyMatrix(m, b.m, d.m);
-#endif
-#endif
-    return d;
-}
-
-PH3DPoint PHMatrix::transformPoint(const PH3DPoint & p) const
-{
-#ifdef PH_MATRIX_VFP
-    GLfloat v[3] = {p.x,p.y,p.z};
-    GLfloat r[4];
-    Matrix4Vector3Mul(m,v,r);
-    return PH3DPoint(r[0]/r[3],r[1]/r[3],r[2]/r[3]);
-#else
-    return PHTransformPointMatrix(m,p);
-#endif
-}
-
-PHPoint PHMatrix::transformPoint(const PHPoint & p) const
-{
-#ifdef PH_MATRIX_VFP
-    GLfloat v[3] = {p.x,p.y,1};
-    GLfloat r[4];
-    Matrix4Vector3Mul(m,v,r);
-    return PHPoint(r[0]/r[3],r[1]/r[3]);
-#else
-    return PHTransformPointMatrix(m,p);
-#endif
 }
 
 const PHMatrix PHIdentityMatrix(1,0,0,0,

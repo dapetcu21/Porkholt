@@ -55,6 +55,12 @@ using namespace std;
 	#define PH_DARWIN
 #endif
 
+#if (__STDC_VERSION__ >= 199901L)
+    #define PH_RESTRICT restrict
+#else
+    #define PH_RESTRICT __restrict
+#endif
+
 typedef void * (*PHAllocator)(void);
 typedef float ph_float;
 

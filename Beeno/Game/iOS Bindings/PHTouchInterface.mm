@@ -25,7 +25,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 		[UIAccelerometer sharedAccelerometer].delegate=self;
         scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?[UIScreen mainScreen].scale:1.0f;
 		mutex = new PHMutex;
-		queue.clear();
+		q.clear();
     }
     return self;
 }
@@ -50,10 +50,10 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 -(void)processQueue
 {
 	mutex->lock();
-	while (!queue.empty())
+	while (!q.empty())
 	{
 		PHPoint pnt;
-		TouchTask & task = queue.front();
+		TouchTask & task = q.front();
 		pnt.x = task.x;
 		pnt.y = task.y;
 		void * event = task.ud;
@@ -80,7 +80,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 				break;
 			}
 		}
-		queue.pop_front();
+		q.pop_front();
 	}
 	mutex->unlock();
 }
@@ -93,7 +93,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 	tmp.y = y*scale;
 	tmp.state = state;
 	mutex->lock();
-	queue.push_back(tmp);
+	q.push_back(tmp);
 	mutex->unlock();
 }
 
@@ -148,7 +148,7 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 
 - (void)dealloc {
 	mutex->release();
-	queue.clear();
+	q.clear();
 	[UIAccelerometer sharedAccelerometer].delegate=nil;
     [super dealloc];
 }

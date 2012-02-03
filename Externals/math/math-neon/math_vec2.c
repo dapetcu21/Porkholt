@@ -67,7 +67,6 @@ dot2_neon_hfp(const float v0[2], const float v1[2])
 	"vmul.f32 		d0, d2, d4			\n\t"	//d0 = d2*d4
 	"vpadd.f32 		d0, d0, d0			\n\t"	//d0 = d[0] + d[1]
 	:: "r"(v0), "r"(v1) 
-    : 
 	);	
 #endif
 }

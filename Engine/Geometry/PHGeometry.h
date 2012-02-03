@@ -11,18 +11,16 @@
 #define PHGEOMETRY_H
 
 #if !defined(__i386__) && defined(__arm__)
-#   ifdef _ARM_ARCH_7
+#   ifdef __ARM_NEON__
 #       include "math_neon.h"
 #       define PH_MATRIX_NEON
-#       warning PH_MATRIX_NEON
 #   else
-#       include "matrix_impl.h"
-#       define PH_MATRIX_VFP
-#       warning PH_MATRIX_VFP
+//#       include "matrix_impl.h"
+//#       define PH_MATRIX_VFP
+#         define PH_MATRIX_C
 #   endif
 #else
 #   define PH_MATRIX_C
-#   warning PH_MATRIX_C
 #endif
 
 #include "PHPoint.h"

@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 extern "C" {
 #endif
 
-#if !defined(__i386__) && defined(__arm__) && defined(_ARM_ARCH_7)
+#if !defined(__i386__) && defined(__arm__) && defined(__ARM_NEON__)
 //if defined neon ASM routines are used, otherwise all calls to *_neon 
 //functions are rerouted to their equivalent *_c function.
 #define __MATH_NEON			

@@ -46,7 +46,7 @@ protected:
     
     bool loaded;
 
-    void loadToTexture(PHObject * sender, void * ud);
+    virtual void loadToTexture(PHObject * sender, void * ud);
     void correctTextureCoordinates();
     
 public:

@@ -67,7 +67,7 @@ static int classn ## _ ## method (lua_State * L) \
 { \
     classn * o = (classn *)PHLuaThisPointer(L); \
     luaL_checknumber(L, 2); \
-    o->method(lua_tonumber(L, 2)); \
+    o->method((ph_float)lua_tonumber(L, 2)); \
     return 0; \
 }
 
@@ -92,7 +92,7 @@ static int classn ## _ ## method (lua_State * L) \
 { \
     classn * o = (classn *)PHLuaThisPointer(L); \
     luaL_checknumber(L, 2); \
-    o->method(-toRad(lua_tonumber(L, 2))); \
+    o->method(-toRad((ph_float)lua_tonumber(L, 2))); \
     return 0; \
 }
 
@@ -167,7 +167,7 @@ static int classn ## _ ## method (lua_State * L) \
 #define PHLuaGetNumberField(var,name) \
 lua_getfield(L, -1, name); \
 if (lua_isnumber(L, -1)) \
-    var = lua_tonumber(L, -1); \
+    var = (ph_float)lua_tonumber(L, -1); \
 lua_pop(L,1)
 
 #define PHLuaGetBoolField(var,name) \
@@ -185,7 +185,7 @@ lua_pop(L,1)
 #define PHLuaGetAngleField(var,name) \
 lua_getfield(L, -1, name); \
 if (lua_isnumber(L, -1)) \
-    var = -toRad(lua_tonumber(L, -1)); \
+    var = -toRad((ph_float)lua_tonumber(L, -1)); \
 lua_pop(L,1)
 
 #define PHLuaGetStructField(var,name,structname) \
