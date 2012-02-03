@@ -21,6 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MATH_NEON_H__ 
 #define __MATH_NEON_H__ 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(__i386__) && defined(__arm__) && defined(_ARM_ARCH_7)
 //if defined neon ASM routines are used, otherwise all calls to *_neon 
 //functions are rerouted to their equivalent *_c function.
@@ -119,22 +123,22 @@ function:	enable_runfast
 void		enable_runfast();
 
 
-float dot2_c(float v0[2], float v1[2]);
-float dot2_neon(float v0[2], float v1[2]);
-float dot3_c(float v0[3], float v1[3]);
-float dot3_neon(float v0[3], float v1[3]);
-float dot4_c(float v0[4], float v1[4]);
-float dot4_neon(float v0[4], float v1[4]);
+float dot2_c(const float v0[2], const float v1[2]);
+float dot2_neon(const float v0[2], const float v1[2]);
+float dot3_c(const float v0[3], const float v1[3]);
+float dot3_neon(const float v0[3], const float v1[3]);
+float dot4_c(const float v0[4], const float v1[4]);
+float dot4_neon(const float v0[4], const float v1[4]);
 
-void cross3_c(float v0[3], float v1[3], float d[3]);
-void cross3_neon(float v0[3], float v1[3], float d[3]);
+void cross3_c(const float v0[3], const float v1[3], float d[3]);
+void cross3_neon(const float v0[3], const float v1[3], float d[3]);
 
-void normalize2_c(float v[2], float d[2]);
-void normalize2_neon(float v[2], float d[2]);
-void normalize3_c(float v[3], float d[3]);
-void normalize3_neon(float v[3], float d[3]);
-void normalize4_c(float v[4], float d[4]);
-void normalize4_neon(float v[4], float d[4]);
+void normalize2_c(const float v[2], float d[2]);
+void normalize2_neon(const float v[2], float d[2]);
+void normalize3_c(const float v[3], float d[3]);
+void normalize3_neon(const float v[3], float d[3]);
+void normalize4_c(const float v[4], float d[4]);
+void normalize4_neon(const float v[4], float d[4]);
 
 /* 
 function:	matmul2
@@ -142,8 +146,8 @@ arguments:  m0 2x2 matrix, m1 2x2 matrix
 return: 	d 2x2 matrix
 expression: d = m0 * m1
 */
-void		matmul2_c(float m0[4], float m1[4], float d[4]);
-void		matmul2_neon(float m0[4], float m1[4], float d[4]);
+void		matmul2_c(const float m0[4], const float m1[4], float d[4]);
+void		matmul2_neon(const float m0[4], const float m1[4], float d[4]);
 
 /* 
 function:	matmul3
@@ -151,8 +155,8 @@ arguments:  m0 3x3 matrix, m1 3x3 matrix
 return: 	d 3x3 matrix
 expression: d = m0 * m1
 */
-void		matmul3_c(float m0[9], float m1[9], float d[9]);
-void		matmul3_neon(float m0[9], float m1[9], float d[9]);
+void		matmul3_c(const float m0[9], const float m1[9], float d[9]);
+void		matmul3_neon(const float m0[9], const float m1[9], float d[9]);
 
 /* 
 function:	matmul4
@@ -160,8 +164,8 @@ arguments:  m0 4x4 matrix, m1 4x4 matrix
 return: 	d 4x4 matrix
 expression: d = m0 * m1
 */
-void		matmul4_c(float m0[16], float m1[16], float d[16]);
-void		matmul4_neon(float m0[16], float m1[16], float d[16]);
+void		matmul4_c(const float m0[16], const float m1[16], float d[16]);
+void		matmul4_neon(const float m0[16], const float m1[16], float d[16]);
 \
 /* 
 function:	matvec2
@@ -169,8 +173,8 @@ arguments:  m 2x2 matrix, v 2 element vector
 return: 	d 2x2 matrix
 expression: d = m * v
 */
-void		matvec2_c(float m[4], float v[2], float d[2]);
-void		matvec2_neon(float m[4], float v[2], float d[2]);
+void		matvec2_c(const float m[4], const float v[2], float d[2]);
+void		matvec2_neon(const float m[4], const float v[2], float d[2]);
 
 /* 
 function:	matvec3
@@ -178,8 +182,8 @@ arguments:  m 3x3 matrix, v 3 element vector
 return: 	d 3x3 matrix
 expression: d = m * v
 */
-void		matvec3_c(float m[9], float v[3], float d[3]);
-void		matvec3_neon(float m[9], float v[3], float d[3]);
+void		matvec3_c(const float m[9], const float v[3], float d[3]);
+void		matvec3_neon(const float m[9], const float v[3], float d[3]);
 
 /* 
 function:	matvec4
@@ -187,8 +191,8 @@ arguments:  m 4x4 matrix, v 4 element vector
 return: 	d 4x4 matrix
 expression: d = m * v
 */
-void		matvec4_c(float m[16], float v[4], float d[4]);
-void		matvec4_neon(float m[16], float v[4], float d[4]);
+void		matvec4_c(const float m[16], const float v[4], float d[4]);
+void		matvec4_neon(const float m[16], const float v[4], float d[4]);
 
 /* 
 function:	sinf
@@ -428,4 +432,8 @@ float 		invsqrtf_c(float x);
 float 		invsqrtf_neon_hfp(float x);
 float 		invsqrtf_neon_sfp(float x);
 
+#ifdef __cplusplus
+}
+#endif
+    
 #endif

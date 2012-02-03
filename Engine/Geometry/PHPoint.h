@@ -95,9 +95,8 @@ struct PHPoint
         x = cosv*ox-sinv*oy;
         y = sinv*ox+cosv*oy;
     }
-    ph_float length() { return sqrt(x*x+y*y); } 
-    ph_float squaredLength() { return x*x+y*y; }
-    void normalize() { (*this)/=length(); }
+    ph_float length() const { return sqrt(x*x+y*y); } 
+    ph_float squaredLength() const { return x*x+y*y; }
     PHPoint rotated(ph_float angle) const
     {
         PHPoint p;
@@ -127,10 +126,39 @@ struct PHPoint
     }
     
     void saveToLua(lua_State * L) const;
+    
+    void normalize() { 
+#ifdef PH_MATRIX_NEON
+        (*this) = normalized();
+#else
+        (*this)/=length();
+#endif
+    }
+    PHPoint normalized() const { 
+#ifdef PH_MATRIX_NEON
+        PHPoint p;
+        normalize2_neon((const float*)this, (float*)&p);
+        return p;
+#else
+        return (*this) / length();
+#endif
+    }
+    
+    ph_float dot(const PHPoint & v) { return dot(*this,v); }
+    static ph_float dot(const PHPoint & v1, const PHPoint & v2)
+    {
+#ifdef PH_MATRIX_NEON
+        return dot2_neon((const float *)&v1,(const float *)&v2);
+#else
+        return v1.x*v2.x+v1.y*v2.y;
+#endif
+    }
 };
 
 typedef PHPoint PHSize;
+typedef PHPoint PHVector2;
 #define PHNullSize PHOriginPoint
+#define PHNullVector2 PHOriginPoint
 extern const PHSize PHUnitSize;
 extern const PHPoint PHOriginPoint;
 
@@ -220,9 +248,8 @@ struct PH3DPoint
         PH3DPoint res(x/d,y/d,z/d);
         return res;
     }
-    ph_float length() { return sqrt(x*x+y*y+z*z); } 
-    ph_float squaredLength() { return x*x+y*y+z*z; }
-    void normalize() { (*this)/=length(); }
+    ph_float length() const { return sqrt(x*x+y*y+z*z); } 
+    ph_float squaredLength() const { return x*x+y*y+z*z; }
     
     bool operator < (const PH3DPoint & o) const
     {
@@ -252,10 +279,52 @@ struct PH3DPoint
     }
     
     void saveToLua(lua_State * L) const;
+    
+    void normalize() { 
+#ifdef PH_MATRIX_NEON
+        (*this) = normalized();
+#else
+        (*this)/=length();
+#endif
+    }
+    PH3DPoint normalized() const { 
+#ifdef PH_MATRIX_NEON
+        PH3DPoint p;
+        normalize3_neon((const float*)this, (float*)&p);
+        return p;
+#else
+        return (*this) / length();
+#endif
+    }
+    
+    ph_float dot(const PH3DPoint & v) { return dot(*this,v); }
+    static ph_float dot(const PH3DPoint & v1, const PH3DPoint & v2)
+    {
+#ifdef PH_MATRIX_NEON
+        return dot3_neon((const float *)&v1,(const float *)&v2);
+#else
+        return v1.x*v2.x+v1.y*v2.y+v1.z*v2.z;
+#endif
+    }
+    
+    PH3DPoint cross(const PH3DPoint & v) { return cross((*this),v); }
+    static PH3DPoint cross(const PH3DPoint & v1, const PH3DPoint & v2)
+    {
+#ifdef PH_MATRIX_NEON
+        PH3DPoint d;
+        cross3_neon((const float *)&v1,(const float *)&v2,(float*)&d);
+        return d;
+#else
+        return PH3DPoint(v1.y*v2.z-v1.z*v2.y,v1.z*v2.x-v1.x*v2.z,v1.x*v2.y-v1.y*v2.x);
+#endif
+    }
+    
 };
 
 typedef PH3DPoint PH3DSize;
+typedef PH3DPoint PHVector3;
 #define PH3DNullSize PH3DOriginPoint
+#define PHNullVector3 PH3DOriginPoint 
 extern const PH3DSize PH3DUnitSize;
 extern const PH3DPoint PH3DOriginPoint;
 

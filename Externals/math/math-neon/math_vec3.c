@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //vec4 scalar product
 float 
-dot3_c(float v0[3], float v1[3])
+dot3_c(const float v0[3], const float v1[3])
 {
 	float r;
 	r = v0[0]*v1[0];
@@ -33,7 +33,7 @@ dot3_c(float v0[3], float v1[3])
 }
 
 void
-cross3_c(float v0[3], float v1[3], float d[3])
+cross3_c(const float v0[3], const float v1[3], float d[3])
 {
 	d[0] = v0[1]*v1[2] - v0[2]*v1[1];
 	d[1] = v0[2]*v1[0] - v0[0]*v1[2];
@@ -41,7 +41,7 @@ cross3_c(float v0[3], float v1[3], float d[3])
 }
 
 void 
-normalize3_c(float v[3], float d[3])
+normalize3_c(const float v[3], float d[3])
 {
 	float b, c, x;
 	union {
@@ -70,7 +70,7 @@ normalize3_c(float v[3], float d[3])
 
 
 float 
-dot3_neon_hfp(float v0[3], float v1[3])
+dot3_neon_hfp(const float v0[3], const float v1[3])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -89,7 +89,7 @@ dot3_neon_hfp(float v0[3], float v1[3])
 }
 
 float 
-dot3_neon_sfp(float v0[3], float v1[3])
+dot3_neon_sfp(const float v0[3], const float v1[3])
 {
 #ifdef __MATH_NEON
 	dot3_neon_hfp(v0, v1);
@@ -100,7 +100,7 @@ dot3_neon_sfp(float v0[3], float v1[3])
 };
 
 
-void cross3_neon(float v0[3], float v1[3], float d[3])
+void cross3_neon(const float v0[3], const float v1[3], float d[3])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -133,7 +133,7 @@ void cross3_neon(float v0[3], float v1[3], float d[3])
 }
 
 void 
-normalize3_neon(float v[3], float d[3])
+normalize3_neon(const float v[3], float d[3])
 {
 #ifdef __MATH_NEON
 	asm volatile (

@@ -10,6 +10,21 @@
 #ifndef PHGEOMETRY_H
 #define PHGEOMETRY_H
 
+#if !defined(__i386__) && defined(__arm__)
+#   ifdef _ARM_ARCH_7
+#       include "math_neon.h"
+#       define PH_MATRIX_NEON
+#       warning PH_MATRIX_NEON
+#   else
+#       include "matrix_impl.h"
+#       define PH_MATRIX_VFP
+#       warning PH_MATRIX_VFP
+#   endif
+#else
+#   define PH_MATRIX_C
+#   warning PH_MATRIX_C
+#endif
+
 #include "PHPoint.h"
 #include "PHRect.h"
 #include "PHColor.h"

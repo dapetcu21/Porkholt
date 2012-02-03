@@ -15,21 +15,6 @@
 #define PH_RESTRICT __restrict
 #endif
 
-#if !defined(__i386__) && defined(__arm__)
-#   ifdef _ARM_ARCH_7
-#       include "math_neon.h"
-#       define PH_MATRIX_NEON
-#       warning PH_MATRIX_NEON
-#   else
-#       include "matrix_impl.h"
-#       define PH_MATRIX_VFP
-#       warning PH_MATRIX_VFP
-#   endif
-#else
-#   define PH_MATRIX_C
-#   warning PH_MATRIX_C
-#endif
-
 static void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse)
 {
 	ph_float a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];

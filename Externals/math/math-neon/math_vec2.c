@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //vec2 scalar product
 float 
-dot2_c(float v0[2], float v1[2])
+dot2_c(const float v0[2], const float v1[2])
 {
 	float r;
 	r = v0[0]*v1[0];
@@ -32,7 +32,7 @@ dot2_c(float v0[2], float v1[2])
 }
 
 void 
-normalize2_c(float v[2], float d[2])
+normalize2_c(const float v[2], float d[2])
 {
 	float b, c, x;
 	union {
@@ -58,7 +58,7 @@ normalize2_c(float v[2], float d[2])
 }
 
 float 
-dot2_neon_hfp(float v0[2], float v1[2])
+dot2_neon_hfp(const float v0[2], const float v1[2])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -73,7 +73,7 @@ dot2_neon_hfp(float v0[2], float v1[2])
 }
 
 float 
-dot2_neon_sfp(float v0[2], float v1[2])
+dot2_neon_sfp(const float v0[2], const float v1[2])
 {
 #ifdef __MATH_NEON
 	dot2_neon_hfp(v0, v1);
@@ -84,7 +84,7 @@ dot2_neon_sfp(float v0[2], float v1[2])
 };
 
 void 
-normalize2_neon(float v[2], float d[2])
+normalize2_neon(const float v[2], float d[2])
 {
 #ifdef __MATH_NEON
 	asm volatile (

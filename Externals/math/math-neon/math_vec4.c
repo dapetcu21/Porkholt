@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //vec4 scalar product
 float 
-dot4_c(float v0[4], float v1[4])
+dot4_c(const float v0[4], const float v1[4])
 {
 	float r;
 	r = v0[0]*v1[0];
@@ -38,7 +38,7 @@ dot4_c(float v0[4], float v1[4])
 }
 
 void 
-normalize4_c(float v[4], float d[4])
+normalize4_c(const float v[4], float d[4])
 {
 	float b, c, x;
 	union {
@@ -68,7 +68,7 @@ normalize4_c(float v[4], float d[4])
 }
 
 void 
-normalize4_neon(float v[4], float d[4])
+normalize4_neon(const float v[4], float d[4])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -100,7 +100,7 @@ normalize4_neon(float v[4], float d[4])
 
 
 float 
-dot4_neon_hfp(float v0[4], float v1[4])
+dot4_neon_hfp(const float v0[4], const float v1[4])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -116,7 +116,7 @@ dot4_neon_hfp(float v0[4], float v1[4])
 
 #ifdef __MATH_NEON
 float32_t 
-dot4_neon(float32x4_t v0, float32x4_t v1)
+dot4_neon(const float32x4_t v0, const float32x4_t v1)
 {	
 	float32x2_t a, b, c, d, r;
 	a = vget_high_f32(v0);
@@ -132,7 +132,7 @@ dot4_neon(float32x4_t v0, float32x4_t v1)
 #endif
 
 float 
-dot4_neon_sfp(float v0[4], float v1[4])
+dot4_neon_sfp(const float v0[4], const float v1[4])
 {
 #ifdef __MATH_NEON
 	dot4_neon_hfp(v0, v1);

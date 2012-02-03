@@ -20,6 +20,9 @@
 		C11B48BB14DA9F1900431210 /* PHColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C414D92CBF00D85AF1 /* PHColor.cpp */; };
 		C11B48BC14DA9F1900431210 /* PHRange.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59C614D92CE900D85AF1 /* PHRange.h */; };
 		C11B48BD14DA9F1900431210 /* PHRange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59C814D92CF600D85AF1 /* PHRange.cpp */; };
+		C11B48F714DBC77300431210 /* math_vec2.c in Sources */ = {isa = PBXBuildFile; fileRef = C11B48F414DBC77300431210 /* math_vec2.c */; };
+		C11B48F814DBC77300431210 /* math_vec3.c in Sources */ = {isa = PBXBuildFile; fileRef = C11B48F514DBC77300431210 /* math_vec3.c */; };
+		C11B48F914DBC77300431210 /* math_vec4.c in Sources */ = {isa = PBXBuildFile; fileRef = C11B48F614DBC77300431210 /* math_vec4.c */; };
 		C11F59B914D9279300D85AF1 /* PHMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59B814D9279300D85AF1 /* PHMatrix.h */; };
 		C11F59BB14D92A5900D85AF1 /* PHPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = C11F59BA14D92A5900D85AF1 /* PHPoint.h */; };
 		C11F59BD14D92AC000D85AF1 /* PHPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */; };
@@ -314,6 +317,9 @@
 		C11B488814DA9B2F00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/osx/liblua.a; sourceTree = "<group>"; };
 		C11B488914DA9B2F00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../Externals/lib/darwin/osx/libpng15.a; sourceTree = "<group>"; };
 		C11B488A14DA9B2F00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../Externals/lib/darwin/osx/libz.a; sourceTree = "<group>"; };
+		C11B48F414DBC77300431210 /* math_vec2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math_vec2.c; path = "../../Externals/math/math-neon/math_vec2.c"; sourceTree = "<group>"; };
+		C11B48F514DBC77300431210 /* math_vec3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math_vec3.c; path = "../../Externals/math/math-neon/math_vec3.c"; sourceTree = "<group>"; };
+		C11B48F614DBC77300431210 /* math_vec4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math_vec4.c; path = "../../Externals/math/math-neon/math_vec4.c"; sourceTree = "<group>"; };
 		C11F59B814D9279300D85AF1 /* PHMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMatrix.h; sourceTree = "<group>"; };
 		C11F59BA14D92A5900D85AF1 /* PHPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPoint.h; sourceTree = "<group>"; };
 		C11F59BC14D92AC000D85AF1 /* PHPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPoint.cpp; sourceTree = "<group>"; };
@@ -649,6 +655,9 @@
 		C146776014D99A9C001BAD91 /* NEON */ = {
 			isa = PBXGroup;
 			children = (
+				C11B48F414DBC77300431210 /* math_vec2.c */,
+				C11B48F514DBC77300431210 /* math_vec3.c */,
+				C11B48F614DBC77300431210 /* math_vec4.c */,
 				C146777414D99ABE001BAD91 /* math_mat4.c */,
 				C146777614D99ABE001BAD91 /* math_neon.h */,
 			);
@@ -1083,8 +1092,11 @@
 				C11F59C514D92CBF00D85AF1 /* PHColor.cpp in Sources */,
 				C11F59C914D92CF600D85AF1 /* PHRange.cpp in Sources */,
 				C11F59CC14D92D2600D85AF1 /* PHMatrix.cpp in Sources */,
-				C146779714D99ABE001BAD91 /* math_mat4.c in Sources */,
 				C14677C114D99AD0001BAD91 /* matrix_impl.cpp in Sources */,
+				C146779714D99ABE001BAD91 /* math_mat4.c in Sources */,
+				C11B48F714DBC77300431210 /* math_vec2.c in Sources */,
+				C11B48F814DBC77300431210 /* math_vec3.c in Sources */,
+				C11B48F914DBC77300431210 /* math_vec4.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1237,10 +1249,7 @@
 		C137061D14D6C4ED002CA4CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DSTROOT = /tmp/porkholt_engine.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1275,10 +1284,7 @@
 		C137061E14D6C4ED002CA4CA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DSTROOT = /tmp/porkholt_engine.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (

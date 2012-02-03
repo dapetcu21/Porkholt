@@ -32,7 +32,7 @@ therefore m[2] = x2
 
 //matrix matrix multipication. d = m0 * m1;
 void
-matmul4_c(float m0[16], float m1[16], float d[16])
+matmul4_c(const float m0[16], const float m1[16], float d[16])
 {
 	d[0] = m0[0]*m1[0] + m0[4]*m1[1] + m0[8]*m1[2] + m0[12]*m1[3];
 	d[1] = m0[1]*m1[0] + m0[5]*m1[1] + m0[9]*m1[2] + m0[13]*m1[3];
@@ -53,7 +53,7 @@ matmul4_c(float m0[16], float m1[16], float d[16])
 }
 
 void 
-matmul4_neon(float m0[16], float m1[16], float d[16])
+matmul4_neon(const float m0[16], const float m1[16], float d[16])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -100,7 +100,7 @@ matmul4_neon(float m0[16], float m1[16], float d[16])
 
 //matrix vector multiplication. d = m * v
 void
-matvec4_c(float m[16], float v[4], float d[4])
+matvec4_c(const float m[16], const float v[4], float d[4])
 {
 	d[0] = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12]*v[3];
 	d[1] = m[1]*v[0] + m[5]*v[1] + m[9]*v[2] + m[13]*v[3];
@@ -109,7 +109,7 @@ matvec4_c(float m[16], float v[4], float d[4])
 }
 
 void
-matvec4_neon(float m[16], float v[4], float d[4])
+matvec4_neon(const float m[16], const float v[4], float d[4])
 {
 #ifdef __MATH_NEON
 	asm volatile (
