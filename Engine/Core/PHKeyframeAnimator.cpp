@@ -182,7 +182,7 @@ void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
     vector<Keyframe> & v = sections[section].frames;
     size_t n = v.size();
     
-    while (elapsedTime>0)
+    while (elapsedTime>FLT_EPSILON)
     {
         ph_float nextTime;
         bool touch = (elapsedTime>=v[frame].time-time);
@@ -248,6 +248,9 @@ void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
                 return;
             }
         }
+        else 
+            if (delta<FLT_EPSILON)
+                break;
     }
 }
 

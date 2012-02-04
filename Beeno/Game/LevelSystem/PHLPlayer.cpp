@@ -51,8 +51,8 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 }
 
 
-#define MAX_TILT 30.0f
-#define TILT_FORCE_FACTOR 0.05f
+#define MAX_TILT (M_PI_2/3)
+#define TILT_FORCE_FACTOR 3.0f
 #define TOUCH_FORCE_FACTOR 50.0f
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
@@ -61,13 +61,13 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	
 	b2Vec2 frc;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
-	int f = t.roll;
+	ph_float f = t.roll;
 	if (f>MAX_TILT)
 		f = MAX_TILT;
 	if (f<-MAX_TILT)
 		f = -MAX_TILT;
 	frc.y = 0;
-	frc.x = f*TILT_FORCE_FACTOR;
+	frc.x = -f*TILT_FORCE_FACTOR;
 	b2Vec2 center = body->GetWorldCenter();
     if (userInp)
         body->ApplyForce(frc, center);

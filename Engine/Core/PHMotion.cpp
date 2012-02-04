@@ -22,8 +22,8 @@ PHTilt PHMotion::tiltFromAcceleration(const PHAcceleration & acc)
 		tilt.roll = tilt.pitch = 0;
 	else
 	{
-		tilt.roll = - atan(acc.y/sqrt(acc.x*acc.x+acc.z*acc.z))/M_PI*180;
-		tilt.pitch = atan(acc.x/sqrt(acc.y*acc.y+acc.z*acc.z))/M_PI*180;
+		tilt.roll = atan(acc.y/sqrt(acc.x*acc.x+acc.z*acc.z));
+		tilt.pitch = -atan(acc.x/sqrt(acc.y*acc.y+acc.z*acc.z));
 	}
 	return tilt;
 }

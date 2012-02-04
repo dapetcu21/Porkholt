@@ -114,6 +114,7 @@ dot4_neon_hfp(const float v0[4], const float v1[4])
 #endif
 }
 
+/*
 #ifdef __MATH_NEON
 float32_t 
 dot4_neon(const float32x4_t v0, const float32x4_t v1)
@@ -130,6 +131,7 @@ dot4_neon(const float32x4_t v0, const float32x4_t v1)
 	return vget_lane_f32(r, 0);
 }
 #endif
+ */
 
 float 
 dot4_neon_sfp(const float v0[4], const float v1[4])

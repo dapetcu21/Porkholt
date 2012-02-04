@@ -106,7 +106,7 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
     {
         time -= tm;
     }
-    if (tm>0 && totalTime>0)
+    if (tm>FLT_EPSILON && totalTime>FLT_EPSILON)
     {
         ph_float lastRatio = f(1.0f - (lastTime/totalTime),function);
         ph_float ratio = f(1.0f - (time/totalTime),function);
@@ -174,7 +174,7 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
             _actor->setCinematicCustomColor(clr);
         }
     }
-    if (time<=0)
+    if (time<=FLT_EPSILON)
     {
         completed(elapsedTime-tm);
     }
