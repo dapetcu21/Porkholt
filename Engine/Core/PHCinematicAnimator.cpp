@@ -110,12 +110,13 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
     {
         ph_float lastRatio = f(1.0f - (lastTime/totalTime),function);
         ph_float ratio = f(1.0f - (time/totalTime),function);
+        ph_float delta = ratio - lastRatio;
         if (move.x || move.y)
-            _actor->setCinematicPosition(_actor->cinematicPosition()+(move*ratio - move*lastRatio));
+            _actor->setCinematicPosition(_actor->cinematicPosition()+(move * delta));
         if (rotate)
-            _actor->setCinematicRotation(_actor->cinematicRotation()+(rotate*ratio - rotate*lastRatio));
+            _actor->setCinematicRotation(_actor->cinematicRotation()+(rotate * delta));
         if (customValue)
-            _actor->setCinematicCustomValue(_actor->cinematicCustomValue()+(customValue*ratio - customValue*lastRatio));
+            _actor->setCinematicCustomValue(_actor->cinematicCustomValue()+(customValue * delta));
         if (scale.x != 1 || scale.y != 1)
         {
             PHSize lastFactor = (scale-PHSize(1,1))*lastRatio+PHSize(1,1);

@@ -18,7 +18,7 @@
 #define PHOBJECT_PREFIX
 #endif
 
-#define DEBUG_ZOMBIES
+//#define DEBUG_ZOMBIES
 
 class PHObject
 {
