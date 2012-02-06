@@ -9,6 +9,8 @@
 #ifndef PHCINEMATICANIMATOR_H
 #define PHCINEMATICANIMATOR_H
 
+//#define PH_SLOW_CINEMATIC_ANIMATIONS
+
 #include "PHGenericCinematicAnimator.h"
 
 class PHCinematicActor;
@@ -47,7 +49,11 @@ public:
     void setTimeFunction(int tf) { function = tf; }
     ph_float duration() { return time; }
     ph_float totalDuration() { return totalTime; }
-    void setDuration(ph_float d) { time = totalTime = d; }
+    void setDuration(ph_float d) { time = totalTime = d
+#ifdef PH_SLOW_CINEMATIC_ANIMATIONS
+        * 5;
+#endif
+        ; }
     void setCallback(const PHInvocation & cb) { callback = cb; }
     
     void setNextAnimation(PHCinematicAnimator * nx);

@@ -143,12 +143,17 @@ PHGameManager * PHGameManagerSingleton;
     [dl release];
 }
 
+#define PH_FRAME_ANIMATION
+
 - (void)openGLFrame:(CADisplayLink*)displayLink
 {
     [PHTouchInterfaceSingleton processQueue];
     gameManager->processInput();
     [v setFramebuffer];
     
+#ifdef PH_FRAME_ANIMATION
+    ph_float elapsedTime = 1.0f/gameManager->framesPerSecond();
+#else
     static ph_float time = 0;
     static ph_float lastTime = 0;
     
@@ -158,6 +163,7 @@ PHGameManager * PHGameManagerSingleton;
     ph_float elapsedTime = time-lastTime;
     if (elapsedTime>1.5*frameInterval)
         elapsedTime = 1.5*frameInterval;
+#endif
     PHGameManager::globalFrame(elapsedTime);
     gameManager->renderFrame(elapsedTime);
     

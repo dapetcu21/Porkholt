@@ -9,7 +9,7 @@
 #include "PHCinematicAnimator.h"
 #include "PHCinematicActor.h"
 
-#define ANIMATOR_INIT next(NULL), scale(PHSize(1,1)), move(PHSize(0,0)), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), time(0), totalTime(0), function(LinearFunction)
+#define ANIMATOR_INIT next(NULL), scale(1,1), move(0,0), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), time(0), totalTime(0), function(LinearFunction)
 
 PHCinematicAnimator::PHCinematicAnimator() : PHGenericCinematicAnimator(), ANIMATOR_INIT
 {
@@ -106,7 +106,7 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
     {
         time -= tm;
     }
-    if (tm>FLT_EPSILON && totalTime>FLT_EPSILON)
+    if (tm>0 && totalTime>0)
     {
         ph_float lastRatio = f(1.0f - (lastTime/totalTime),function);
         ph_float ratio = f(1.0f - (time/totalTime),function);
