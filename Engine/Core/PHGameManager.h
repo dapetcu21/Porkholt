@@ -13,6 +13,7 @@
 #include "PHMain.h"
 #include "PHImageInitPool.h"
 #include "PHFontInitPool.h"
+#include "PHGLProgramInitPool.h"
 
 class PHView;
 class PHViewController;
@@ -20,6 +21,19 @@ class PHNavigationController;
 class PHRemote;
 class PHEventHandler;
 class PHSoundManager;
+class PHGLShaderProgram;
+class PHGLUniformStates;
+
+enum PHGLCapabilities
+{
+    PHGLCapabilityNPOT = 0,
+    PHGLCapabilityAppleLimitedNPOT,
+    PHGLCapabilityOpenGLES,
+    PHGLCapabilityGLES1,
+    PHGLCapabilityGLES2,
+    PHGLCapabilityShaders,
+    PHGLNumberCapabilities
+};
 
 class PHGameManagerInitParameters
 {
@@ -42,7 +56,7 @@ enum PHGLStates
     PHGLResetAllStates = 1<<4
 };
 
-class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool
+class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool
 {
 private:
 	PHView * view;
@@ -72,6 +86,16 @@ private:
     
     uint32_t openGLStates;
     PHMatrix _modelView,_projection;
+    PHColor _currentColor;
+    set<string> extensions;
+    bool parsedExtensions;
+    int openGLVersionMajor,openGLVersionMinor;
+    bool openGLCaps[PHGLNumberCapabilities];
+    
+    list<PHGLShaderProgram*> spriteShaderStack;
+    PHGLUniformStates * spriteStates;
+    PHGLShaderProgram * _shader;
+    PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader;
     
 public:
     PHGameManager();
@@ -98,7 +122,9 @@ public:
 	PHView * mainView() { return view; };
 	void remove(void * ud);
     const string imageDirectory();
+    PHGameManager * gameManager() { return this; }
     const string fontDirectory();
+    const string shaderDirectory();
     const string musicNamed(const string & name);
     
     void * userData() { return ud; }
@@ -124,9 +150,87 @@ public:
     PHMatrix modelViewMatrix() { return _modelView; }
     void setProjectionMatrix(const PHMatrix & m);
     PHMatrix projectionMatrix() { return _projection; }
+    void setColor(PHColor clr)
+    {
+        if (clr.a<0)
+            clr = PHWhiteColor;
+        if (clr != _currentColor)
+        {
+            _currentColor = clr;
+            if (!useShaders())
+            {
+                PH24BitColor t(clr);
+                glColor4ub(t.r,t.g,t.b,t.a);
+            }
+        }
+    }
+    const PHColor & color();
+    void loadCapabilities();
+    bool isGLES() { return openGLCaps[PHGLCapabilityOpenGLES]; }
+    bool useShaders() { return openGLCaps[PHGLCapabilityShaders]; }
+    int openGLMajorVersion() { return openGLVersionMajor; }
+    int openGlMinorVersion() { return openGLVersionMinor; }
+    bool hasCapability(int cap) { return openGLCaps[cap]; }
+    
+    PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
+    void pushSpriteShader(PHGLShaderProgram * p);
+    void popSpriteShader();
+    
+    PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
+    PHGLShaderProgram * coloredSpriteShader() { return _coloredSpriteShader; }
+    PHGLShaderProgram * noTexSpriteShader() { return _noTexSpriteShader; }
+    PHGLShaderProgram * coloredNoTexSpriteShader() { return _coloredNoTexSpriteShader; }
+    PHGLShaderProgram * textShader() { return _textShader; }
+    
+    enum
+    {
+        modelViewSpriteUniform = 0,
+        colorSpriteUniform,
+        textureSpriteUniform
+    };
+    
+    PHGLUniformStates * spriteUniformStates() { return spriteStates; }
+    void applySpriteShader();
+    void reapplyMatrixUniform();
+    void reapplyColorUniform();
+    PHGLShaderProgram * shader() { return _shader; }
+    void useShader(PHGLShaderProgram * prog);
+    
+#define PHIMAGEATTRIBUTE_POS 0
+#define PHIMAGEATTRIBUTE_TXC 1
+#define PHIMAGEATTRIBUTE_CLR 2
+    void vertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
+    {
+        if (openGLCaps[PHGLCapabilityShaders])
+            glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, size, type, GL_FALSE, stride, ptr);
+        else
+            glVertexPointer(size, type, stride, ptr);
+    }
+    
+    void texCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
+    {
+        if (openGLCaps[PHGLCapabilityShaders])
+            glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, size, type, GL_FALSE, stride, ptr);
+        else
+            glTexCoordPointer(size, type, stride, ptr);
+    }
+    
+    void colorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
+    {
+        if (openGLCaps[PHGLCapabilityShaders])
+            glVertexAttribPointer(PHIMAGEATTRIBUTE_CLR, size, type, (type==GL_UNSIGNED_BYTE), stride, ptr);
+        else
+            glColorPointer(size, type, stride, ptr);
+    }
 };
+
+#define PHGLVertexPointer _gameManager->vertexPointer
+#define PHGLTexCoordPointer _gameManager->texCoordPointer
+#define PHGLColorPointer _gameManager->colorPointer
 
 #define PHGLModelView _gameManager->modelViewMatrix
 #define PHGLSetModelView _gameManager->setModelViewMatrix
+#define PHGLSetColor _gameManager->setColor
+#define PHGLHasCapability _gameManager->hasCapability
 
 #endif

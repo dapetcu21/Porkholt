@@ -18,11 +18,12 @@ PHImage * PHImageInitPool::imageFromPath(const string & path)
 	map<string,PHImage*>::iterator i = images.find(path);
 	if (i==images.end())
 	{
+        PHGameManager * gm = gameManager();
 		try {
             if (PHFileManager::isDirectory(path))
-                img = new PHAnimatedImage(path);
+                img = new PHAnimatedImage(path,gm);
             else
-                img = new PHNormalImage(path);
+                img = new PHNormalImage(path,gm);
 		} catch (string ex)
 		{
 			PHLog(ex);
@@ -33,7 +34,7 @@ PHImage * PHImageInitPool::imageFromPath(const string & path)
 		}
 		images[path] = img;
 	} else {
-		img = images[path];
+		img = i->second;
 	}
 	return img;
 }

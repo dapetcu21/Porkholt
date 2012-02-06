@@ -256,7 +256,10 @@ void PHView::drawBackground()
 	
     PHGLSetStates(PHGLVertexArray);
     PHGLSetColor(_backColor);
-	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+    _gameManager->pushSpriteShader(_gameManager->noTexSpriteShader());
+    _gameManager->applySpriteShader();
+    _gameManager->popSpriteShader();
+	PHGLVertexPointer(2, GL_FLOAT, 0, squareVertices);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

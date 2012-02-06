@@ -20,6 +20,7 @@
 #include "PHBezierPath.h"
 #include "PHParticleView.h"
 #include "PHKeyframeAnimator.h"
+#include "PHGLUniformStates.h"
 
 #define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1)
 
@@ -260,19 +261,21 @@ void PHImageView::renderCurved()
     
     PHGLSetColor(tint);
     PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-    
-    glVertexPointer(2, GL_FLOAT, 4*sizeof(GLfloat), NULL);
-    glTexCoordPointer(2, GL_FLOAT, 4*sizeof(GLfloat), (GLfloat*)NULL+2);
-    ((PHNormalImage*)image())->bindToTexture();
+    ((PHNormalImage*)image())->bindToTexture(0);
+    _gameManager->applySpriteShader();
+    PHGLVertexPointer(2, GL_FLOAT, 4*sizeof(GLfloat), NULL);
+    PHGLTexCoordPointer(2, GL_FLOAT, 4*sizeof(GLfloat), (GLfloat*)NULL+2);
+
     
     if (constrain)
     {
         PHMatrix om = PHGLModelView();
         PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
+        _gameManager->reapplyMatrixUniform();
         glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
         PHGLSetModelView(om);
-    } else
-        glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
+    } else     
+    glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -315,7 +318,6 @@ void PHImageView::renderStraight()
     if (animatorNeedsVBORebuild())
         VBOneedsRebuilding = true;
     loadVBO();
-    
     if (arraysVBO)
     {
         PHMatrix om = PHGLModelView();
@@ -325,9 +327,16 @@ void PHImageView::renderStraight()
             glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
             PHGLSetColor(tint);
             PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-            glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-            glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-            ((PHNormalImage*)image())->bindToTexture();
+            ((PHNormalImage*)image())->bindToTexture(0);
+            _gameManager->applySpriteShader();
+            if (_gameManager->useShaders())
+            {
+                glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, params1.vertexSize, params1.vertexType, GL_FALSE, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
+                glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, params1.texCoordSize, params1.texCoordType, GL_FALSE, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
+            } else {
+                glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
+                glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
+            }
             glDrawArrays(params1.renderMode, 0, params1.nElements);
             glBindBuffer(GL_ARRAY_BUFFER,0);
         }
@@ -339,19 +348,33 @@ void PHImageView::renderStraight()
             glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
             PHGLSetColor(t*(1-rem));
             PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-            glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-            glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-            _animator->bindCurrentFrameToTexture();
+            _animator->bindCurrentFrameToTexture(0);
+            _gameManager->applySpriteShader();
+            if (_gameManager->useShaders())
+            {
+                glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, params1.vertexSize, params1.vertexType, GL_FALSE, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
+                glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, params1.texCoordSize, params1.texCoordType, GL_FALSE, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
+            } else {
+                glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
+                glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
+            }
             glDrawArrays(params1.renderMode, 0, params1.nElements);
             
             if (indexesVBO)
             {
                 glBindBuffer(GL_ARRAY_BUFFER, indexesVBO);
                 PHGLSetColor(t*rem);
-                PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
-                glVertexPointer(params2.vertexSize, params2.vertexType, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
-                glTexCoordPointer(params2.texCoordSize, params2.texCoordType, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
-                _animator->bindLastFrameToTexture();
+                _animator->bindLastFrameToTexture(0);
+                if (_gameManager->useShaders())
+                {
+                    _gameManager->reapplyColorUniform();
+                    glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, params2.vertexSize, params2.vertexType, GL_FALSE, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
+                    glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, params2.texCoordSize, params2.texCoordType, GL_FALSE, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
+                } else
+                {
+                    glVertexPointer(params2.vertexSize, params2.vertexType, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
+                    glTexCoordPointer(params2.texCoordSize, params2.texCoordType, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
+                }
                 glDrawArrays(params2.renderMode, 0, params2.nElements);
             }
             glBindBuffer(GL_ARRAY_BUFFER,0);

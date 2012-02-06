@@ -18,7 +18,7 @@
 PHMutex * PHImage::loadingMutex = new PHMutex;
 #endif
 
-PHImage::PHImage(const string & path) : loaded(false) { };
+PHImage::PHImage(const string & path, PHGameManager * gm) : loaded(false), _gameManager(gm) { };
 
 void PHImage::buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adj)
 {

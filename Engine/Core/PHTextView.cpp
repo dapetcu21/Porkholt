@@ -63,10 +63,14 @@ void PHTextView::draw()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVBO);
     
     PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _font->textureID());
-	glVertexPointer(  2, GL_FLOAT, sizeof(GLfloat)*4, (GLfloat*)NULL);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(GLfloat)*4, ((GLfloat*)NULL)+2);
     PHGLSetColor(color);
+    _gameManager->pushSpriteShader(_gameManager->textShader());
+    _gameManager->applySpriteShader();
+    _gameManager->popSpriteShader();
+	PHGLVertexPointer(  2, GL_FLOAT, sizeof(GLfloat)*4, (GLfloat*)NULL);
+    PHGLTexCoordPointer(2, GL_FLOAT, sizeof(GLfloat)*4, ((GLfloat*)NULL)+2);
     
     glDrawElements(GL_TRIANGLES, 6*nGlyphs, GL_UNSIGNED_SHORT, NULL);
     

@@ -72,8 +72,8 @@ public:
     
     //VBOs
     void rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImage::VBOParams & params1, GLuint & vbo2, PHImage::VBOParams & params2);
-    void bindCurrentFrameToTexture();
-    void bindLastFrameToTexture();
+    void bindCurrentFrameToTexture(int tx);
+    void bindLastFrameToTexture(int tx);
     
     PHRect currentFrameTextureCoordinates(const PHRect & port);
     PHRect lastFrameTextureCoordinates(const PHRect & port);

@@ -59,7 +59,7 @@ function default(name) \
     def = nametable[name] \
 end"
 
-PHAnimatedImage::PHAnimatedImage(const string & s) : PHImage(s), thread(NULL), defaultSection(0), path(s)
+PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gm) : PHImage(s,gm), thread(NULL), defaultSection(0), path(s)
 {
     luaMutex->lock();
     if (!L)
@@ -445,6 +445,7 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
                     }
                 }
                 
+                glActiveTexture(GL_TEXTURE0);
                 glGenTextures(1,&textures[i].texid);
                 glBindTexture(GL_TEXTURE_2D, textures[i].texid);
                 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -454,7 +455,6 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
                 glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 if (aa) 
                     glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-                glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                 glTexImage2D(GL_TEXTURE_2D, 0, format, textures[i].awidth, textures[i].aheight, 0, 
                              format, GL_UNSIGNED_BYTE, textures[i].buffer);	
                 delete [] textures[i].buffer;

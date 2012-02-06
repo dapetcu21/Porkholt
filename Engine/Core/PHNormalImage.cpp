@@ -14,7 +14,7 @@
 #include "PHImageView.h"
 #include "PHGameManager.h"
 
-PHNormalImage::PHNormalImage(const string & path): PHImage(path), texid(-1), thread(NULL)
+PHNormalImage::PHNormalImage(const string & path, PHGameManager * gm): PHImage(path,gm), texid(-1), thread(NULL)
 {
     fp = NULL;
     if (PHGameManager::isGloballyHD())
@@ -192,7 +192,7 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
     }
     
 	glGenTextures(1,&texid);
-	bindToTexture();
+	bindToTexture(0);
     
     bool repeat = true;
     if (PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
@@ -226,7 +226,6 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	if (antialiasing) 
 		glTexParameterf(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, format, actWidth, actHeight, 0, 
 				 format, GL_UNSIGNED_BYTE, buffer);	
 	delete[] buffer;
@@ -238,8 +237,9 @@ PHNormalImage::~PHNormalImage()
 	glDeleteTextures(1, &texid);
 }
 
-void PHNormalImage::bindToTexture()
+void PHNormalImage::bindToTexture(int tx)
 {
+    glActiveTexture(GL_TEXTURE0+tx);
     glBindTexture(GL_TEXTURE_2D,texid);
 }
 
@@ -275,14 +275,20 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * _gameManager, const
 		xC*port.x+xc				, yC*port.y+yc,
 		xC*(port.x+port.width)-xc	, yC*port.y+yc,
     };
-	
-	bindToTexture();
     
     int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
     PHGLSetStates(states);
-	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+    bindToTexture(0);
     PHGLSetColor(tint);
+    _gameManager->applySpriteShader();
+    if (_gameManager->useShaders())
+    {
+        glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
+        glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);
+    } else {
+        glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+        glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+    }
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 

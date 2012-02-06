@@ -57,12 +57,10 @@
 - (void)initMain
 {
 	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]; No GLES 2.0 ... yet...
+	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
     if (!aContext)
-    {
         aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-    }
     
     if (!aContext)
         NSLog(@"Failed to create ES context");
@@ -77,12 +75,10 @@
 - (void) initSecondary
 {
 	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = nil; //[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:context.sharegroup]; No GLES 2.0 ... yet...
+	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:context.sharegroup];
     
     if (!aContext)
-    {
         aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1 sharegroup:context.sharegroup];
-    }
     
     if (!aContext)
         NSLog(@"Failed to create ES context");

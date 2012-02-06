@@ -44,13 +44,13 @@ uint8_t * PHFileManager::loadFile(const string & path, size_t & size)
 	size = file.tellg();
 	file.seekg (0, ios::beg);
 	if (!file.good())
-		throw PHIOError;
+		throw PHIOError + ": "  + path;
 	uint8_t * buf = new uint8_t[size];
 	file.read((char*)buf, size);
 	if (!file.good())
 	{
 		delete[] buf;
-		throw PHIOError;
+		throw PHIOError + ": " + path;
 	}
 	return buf;
 }

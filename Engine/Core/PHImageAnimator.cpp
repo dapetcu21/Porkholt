@@ -12,7 +12,7 @@
 #include "PHLua.h"
 #include "PHImageView.h"
 #include "PHImage.h"
-
+#include "PHGameManager.h"
 
 #define INIT _image(img), running(true)
 
@@ -213,6 +213,8 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, con
     if (tt==PHInvalidColor)
         tt = PHWhiteColor;
     
+    glActiveTexture(GL_TEXTURE0);
+    
     if (fade)
     {
         nt = lastframe/_image->ipt;
@@ -240,9 +242,16 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, con
         
         int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
         PHGLSetStates(states);
-        glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-        glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
+        if (_gameManager->useShaders())
+        {
+            glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
+            glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords2);
+        } else {
+            glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+            glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
+        }
         PHGLSetColor(tt*(remaining/time));
+        _gameManager->applySpriteShader();
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
     
@@ -271,24 +280,33 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * _gameManager, con
     
     int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture ;
     PHGLSetStates(states);
-	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+    if (_gameManager->useShaders())
+    {
+        glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
+        glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);
+    } else {
+        glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+        glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+    }
     if (fade)
     {
         tt.a *= 1.0f-(remaining/time);
     }
     PHGLSetColor(tt);
+    _gameManager->applySpriteShader();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void PHImageAnimator::bindCurrentFrameToTexture()
+void PHImageAnimator::bindCurrentFrameToTexture(int tx)
 {
     int nt = realframe/_image->ipt;
+    glActiveTexture(GL_TEXTURE0+tx);
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
 }
-void PHImageAnimator::bindLastFrameToTexture()
+void PHImageAnimator::bindLastFrameToTexture(int tx)
 {
     int nt = lastframe/_image->ipt;
+    glActiveTexture(GL_TEXTURE0+tx);
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
 }
 

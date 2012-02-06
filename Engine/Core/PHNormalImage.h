@@ -32,10 +32,10 @@ private:
     virtual void _load() { loadToTexture(NULL,NULL); }
 public:
     
-    PHNormalImage(const string & path);
+    PHNormalImage(const string & path, PHGameManager * gm);
     virtual ~PHNormalImage();
     
-    void bindToTexture();
+    void bindToTexture(int tx);
     PHRect textureCoordinates(const PHRect & port);
     
     //immediate mode

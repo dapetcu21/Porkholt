@@ -76,10 +76,16 @@ void * PHAlloc(void)
 #ifdef PH_IPHONE_OS
 	#import <OpenGLES/ES1/gl.h>
 	#import <OpenGLES/ES1/glext.h>
+    #import <OpenGLES/ES2/gl.h>
+    #import <OpenGLES/ES2/glext.h>
 #endif
 #ifdef PH_MAC_OS
     #import <OpenGL/gl.h>
     #import <OpenGL/glext.h>
+#endif
+
+#if defined(DEBUG) || defined(_DEBUG)
+    #define PH_DEBUG
 #endif
 
 struct lua_State; 

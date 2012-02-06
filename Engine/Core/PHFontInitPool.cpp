@@ -29,7 +29,7 @@ PHFont* PHFontInitPool::fontFromPath(const string & path)
 		}
 		fonts[path] = fnt;
 	} else {
-		fnt = fonts[path];
+		fnt = i->second;
 	}
 	return fnt;
 }

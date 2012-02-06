@@ -53,30 +53,4 @@ inline ph_float PHWarp(ph_float v, ph_float f)
     return v;
 }
 
-//move this to PHGameManager
-
-extern PHColor PHGLCurrentColor;
-
-inline void PHGLSetColor(PHColor clr)
-{
-    if (clr.a<0)
-        clr = PHWhiteColor;
-    if (clr != PHGLCurrentColor)
-    {
-        PHGLCurrentColor = clr;
-        PH24BitColor t(clr);
-        glColor4ub(t.r,t.g,t.b,t.a);
-    }
-}
-
-enum PHGLCapabilities
-{
-    PHGLCapabilityNPOT = 0,
-    PHGLCapabilityAppleLimitedNPOT,
-    PHGLCapabilityOpenGLES,
-    PHGLNumberCapabilities
-};
-
-bool PHGLHasCapability(int cap);
-
 #endif

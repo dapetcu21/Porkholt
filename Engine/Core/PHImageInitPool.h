@@ -12,6 +12,7 @@
 #include "PHMain.h"
 
 class PHImage;
+class PHGameManager;
 class PHImageInitPool
 {
 public:
@@ -21,7 +22,7 @@ public:
     void loadAllImages();
 	void collectGarbageImages();
     virtual const string imageDirectory();
-    
+    virtual PHGameManager * gameManager() = 0;
 private:
     map<string,PHImage*> images;
 };

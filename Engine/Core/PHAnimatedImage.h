@@ -13,6 +13,7 @@
 
 class PHImageAnimator;
 class PHAnimatorPool;
+class PHGameManager;
 
 class PHAnimatedImage: public PHImage
 {
@@ -74,7 +75,7 @@ private:
     virtual void _load() { loadImages(NULL,NULL); }
     
 public:
-    PHAnimatedImage(const string & s);
+    PHAnimatedImage(const string & s, PHGameManager * gm);
     virtual ~PHAnimatedImage();
     
     virtual bool isAnimated() { return true; }

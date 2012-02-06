@@ -16,6 +16,7 @@
 class PHImage;
 #include <map>
 class PHBezierPath;
+class PHGameManager;
 
 
 class PHImage : public PHObject
@@ -26,13 +27,15 @@ public:
 #endif
 	
 protected:
-	PHImage(const string & path);
+	PHImage(const string & path, PHGameManager * gm);
 	
 	int _height;
     int _width;
     
     bool loaded;
     virtual void _load() = 0;
+    
+    PHGameManager * _gameManager;
     
     struct VBOParams
     {

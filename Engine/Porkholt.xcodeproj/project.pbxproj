@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C113ACF314DEEA350095BFC1 /* PHGLProgramInitPool.h in Headers */ = {isa = PBXBuildFile; fileRef = C113ACF214DEEA350095BFC1 /* PHGLProgramInitPool.h */; };
+		C113ACF814DEEA440095BFC1 /* PHGLProgramInitPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C113ACF714DEEA440095BFC1 /* PHGLProgramInitPool.cpp */; };
 		C11B488B14DA9B2F00431210 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488814DA9B2F00431210 /* liblua.a */; };
 		C11B488C14DA9B2F00431210 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488914DA9B2F00431210 /* libpng15.a */; };
 		C11B488D14DA9B2F00431210 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488A14DA9B2F00431210 /* libz.a */; };
@@ -110,6 +112,18 @@
 		C14677CB14D99AD0001BAD91 /* vfp_clobbers.h in Headers */ = {isa = PBXBuildFile; fileRef = C14677B914D99ACF001BAD91 /* vfp_clobbers.h */; };
 		C17386F914D7C22A005B18E6 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386F814D7C22A005B18E6 /* CoreVideo.framework */; };
 		C17386FE14D7C22F005B18E6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17386FD14D7C22F005B18E6 /* OpenGL.framework */; };
+		C175D01E14DE8C3200970811 /* PHGLShader.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D01D14DE8C3200970811 /* PHGLShader.h */; };
+		C175D01F14DE8C3200970811 /* PHGLShader.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D01D14DE8C3200970811 /* PHGLShader.h */; };
+		C175D02414DE8F1300970811 /* PHGLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02314DE8F1300970811 /* PHGLShader.cpp */; };
+		C175D02514DE8F1300970811 /* PHGLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02314DE8F1300970811 /* PHGLShader.cpp */; };
+		C175D02714DE976700970811 /* PHGLShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D02614DE976700970811 /* PHGLShaderProgram.h */; };
+		C175D02814DE976700970811 /* PHGLShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D02614DE976700970811 /* PHGLShaderProgram.h */; };
+		C175D02A14DE9F2F00970811 /* PHGLShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02914DE9F2F00970811 /* PHGLShaderProgram.cpp */; };
+		C175D02B14DE9F2F00970811 /* PHGLShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02914DE9F2F00970811 /* PHGLShaderProgram.cpp */; };
+		C175D02D14DEC44500970811 /* PHGLUniformStates.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D02C14DEC44400970811 /* PHGLUniformStates.h */; };
+		C175D02E14DEC44500970811 /* PHGLUniformStates.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D02C14DEC44400970811 /* PHGLUniformStates.h */; };
+		C175D03014DEC46900970811 /* PHGLUniformStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */; };
+		C175D03114DEC46900970811 /* PHGLUniformStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */; };
 		C1B5BDCE14D6EFA9005483ED /* PHAccelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */; };
 		C1B5BDCF14D6EFA9005483ED /* PHAccelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */; };
 		C1B5BDD014D6EFA9005483ED /* PHAnimatedImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B5BD8314D6EFA9005483ED /* PHAnimatedImage.cpp */; };
@@ -310,6 +324,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C113ACF214DEEA350095BFC1 /* PHGLProgramInitPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLProgramInitPool.h; sourceTree = "<group>"; };
+		C113ACF714DEEA440095BFC1 /* PHGLProgramInitPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLProgramInitPool.cpp; sourceTree = "<group>"; };
 		C11B488214DA9B1F00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../Externals/lib/darwin/ios/liblua.a; sourceTree = "<group>"; };
 		C11B488314DA9B1F00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../Externals/lib/darwin/ios/libpng15.a; sourceTree = "<group>"; };
 		C11B488414DA9B1F00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../Externals/lib/darwin/ios/libz.a; sourceTree = "<group>"; };
@@ -383,6 +399,12 @@
 		C14677B914D99ACF001BAD91 /* vfp_clobbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vfp_clobbers.h; sourceTree = "<group>"; };
 		C17386F814D7C22A005B18E6 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		C17386FD14D7C22F005B18E6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
+		C175D01D14DE8C3200970811 /* PHGLShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLShader.h; sourceTree = "<group>"; };
+		C175D02314DE8F1300970811 /* PHGLShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLShader.cpp; sourceTree = "<group>"; };
+		C175D02614DE976700970811 /* PHGLShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLShaderProgram.h; sourceTree = "<group>"; };
+		C175D02914DE9F2F00970811 /* PHGLShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLShaderProgram.cpp; sourceTree = "<group>"; };
+		C175D02C14DEC44400970811 /* PHGLUniformStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLUniformStates.h; sourceTree = "<group>"; };
+		C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLUniformStates.cpp; sourceTree = "<group>"; };
 		C1B5BD6F14D6EACA005483ED /* libporkholt-osx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libporkholt-osx.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
 		C1B5BD8314D6EFA9005483ED /* PHAnimatedImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimatedImage.cpp; sourceTree = "<group>"; };
@@ -761,6 +783,14 @@
 				C120695014D708B9007DACEA /* PHImageInitPool.cpp */,
 				C120695314D70AE1007DACEA /* PHFontInitPool.h */,
 				C120695614D70B2C007DACEA /* PHFontInitPool.cpp */,
+				C175D01D14DE8C3200970811 /* PHGLShader.h */,
+				C175D02314DE8F1300970811 /* PHGLShader.cpp */,
+				C175D02614DE976700970811 /* PHGLShaderProgram.h */,
+				C175D02914DE9F2F00970811 /* PHGLShaderProgram.cpp */,
+				C113ACF214DEEA350095BFC1 /* PHGLProgramInitPool.h */,
+				C113ACF714DEEA440095BFC1 /* PHGLProgramInitPool.cpp */,
+				C175D02C14DEC44400970811 /* PHGLUniformStates.h */,
+				C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -842,6 +872,10 @@
 				C14677C014D99AD0001BAD91 /* common_macros.h in Headers */,
 				C14677C214D99AD0001BAD91 /* matrix_impl.h in Headers */,
 				C14677CB14D99AD0001BAD91 /* vfp_clobbers.h in Headers */,
+				C175D01E14DE8C3200970811 /* PHGLShader.h in Headers */,
+				C175D02714DE976700970811 /* PHGLShaderProgram.h in Headers */,
+				C175D02D14DEC44500970811 /* PHGLUniformStates.h in Headers */,
+				C113ACF314DEEA350095BFC1 /* PHGLProgramInitPool.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -911,6 +945,9 @@
 				C11B48B814DA9F1900431210 /* PHRect.h in Headers */,
 				C11B48BA14DA9F1900431210 /* PHColor.h in Headers */,
 				C11B48BC14DA9F1900431210 /* PHRange.h in Headers */,
+				C175D01F14DE8C3200970811 /* PHGLShader.h in Headers */,
+				C175D02814DE976700970811 /* PHGLShaderProgram.h in Headers */,
+				C175D02E14DEC44500970811 /* PHGLUniformStates.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1095,6 +1132,10 @@
 				C11B48F714DBC77300431210 /* math_vec2.c in Sources */,
 				C11B48F814DBC77300431210 /* math_vec3.c in Sources */,
 				C11B48F914DBC77300431210 /* math_vec4.c in Sources */,
+				C175D02414DE8F1300970811 /* PHGLShader.cpp in Sources */,
+				C175D02A14DE9F2F00970811 /* PHGLShaderProgram.cpp in Sources */,
+				C175D03014DEC46900970811 /* PHGLUniformStates.cpp in Sources */,
+				C113ACF814DEEA440095BFC1 /* PHGLProgramInitPool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1155,6 +1196,9 @@
 				C11B48B914DA9F1900431210 /* PHRect.cpp in Sources */,
 				C11B48BB14DA9F1900431210 /* PHColor.cpp in Sources */,
 				C11B48BD14DA9F1900431210 /* PHRange.cpp in Sources */,
+				C175D02514DE8F1300970811 /* PHGLShader.cpp in Sources */,
+				C175D02B14DE9F2F00970811 /* PHGLShaderProgram.cpp in Sources */,
+				C175D03114DEC46900970811 /* PHGLUniformStates.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

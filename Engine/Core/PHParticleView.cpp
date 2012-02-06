@@ -12,6 +12,7 @@
 #include "PHLua.h"
 #include "PHNormalImage.h"
 #include "PHImageAnimator.h"
+#include "PHGameManager.h"
 
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
@@ -182,9 +183,12 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         clr+=16;
     }
     PHGLSetStates(PHGLTexture | PHGLVertexArray | PHGLTextureCoordArray | PHGLColorArray);
-    glVertexPointer(2, GL_FLOAT, 0, vertices);
-    glTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
-    glColorPointer(4, GL_FLOAT, 0, colors);
+    _gameManager->pushSpriteShader(_gameManager->coloredSpriteShader());
+    _gameManager->applySpriteShader();
+    _gameManager->popSpriteShader();
+    PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
+    PHGLTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
+    PHGLColorPointer(4, GL_FLOAT, 0, colors);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, nrVertices);
     
     delete [] vertices;
@@ -213,18 +217,18 @@ void PHParticleView::render()
         _image->load();
         if (_image->isNormal())
         {
-            ((PHNormalImage*)_image)->bindToTexture();
+            ((PHNormalImage*)_image)->bindToTexture(0);
             renderParticles(particles,((PHNormalImage*)_image)->textureCoordinates(textureCoordinates()),t);
         }
         if (_image->isAnimated())
         {
-            _animator->bindCurrentFrameToTexture();
+            _animator->bindCurrentFrameToTexture(0);
             bool fd = _animator->isFading();
             ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
             renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t*(1-rem));
             if (fd)
             {
-                _animator->bindLastFrameToTexture();
+                _animator->bindLastFrameToTexture(0);
                 renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t*rem);
             }   
         }
