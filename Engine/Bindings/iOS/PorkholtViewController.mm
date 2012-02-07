@@ -6,6 +6,9 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import <QuartzCore/QuartzCore.h>
 #import <mach/mach.h>
 #import <mach/mach_time.h>
@@ -18,6 +21,12 @@
 #import "EAGLView.h"
 
 PHGameManager * PHGameManagerSingleton;
+
+#include "PHStartGame.h"
+
+extern int PHStartGameFlags;
+extern void (*PHStartGameEntryPoint)(PHGameManager *);
+extern void * PHStartGameUD;
 
 @interface PorkholtViewController ()
 @property (nonatomic, retain) EAGLContext *context;
@@ -132,6 +141,8 @@ PHGameManager * PHGameManagerSingleton;
     params.fps = FPS;
     params.dpi = 160*scale;
     params.resourcePath = (string)([[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"rsrc"] UTF8String]);
+    params.entryPoint = PHStartGameEntryPoint;
+    gameManager->setUserData(PHStartGameUD);
     gameManager->init(params);
     PHGameManagerSingleton = gameManager;
     
@@ -143,27 +154,27 @@ PHGameManager * PHGameManagerSingleton;
     [dl release];
 }
 
-#define PH_FRAME_ANIMATION
-
 - (void)openGLFrame:(CADisplayLink*)displayLink
 {
     [PHTouchInterfaceSingleton processQueue];
     gameManager->processInput();
     [v setFramebuffer];
     
-#ifdef PH_FRAME_ANIMATION
-    ph_float elapsedTime = 1.0f/gameManager->framesPerSecond();
-#else
-    static ph_float time = 0;
-    static ph_float lastTime = 0;
-    
-    ph_float frameInterval = 1.0f/gameManager->framesPerSecond();
-    lastTime = time;
-    time = PHTime::getTime();
-    ph_float elapsedTime = time-lastTime;
-    if (elapsedTime>1.5*frameInterval)
-        elapsedTime = 1.5*frameInterval;
-#endif
+    ph_float elapsedTime;
+    if (PHStartGameFlags & PHStartGame_frameAnimation)
+        elapsedTime = 1.0f/gameManager->framesPerSecond();
+    else
+    {
+        static ph_float time = 0;
+        static ph_float lastTime = 0;
+        
+        ph_float frameInterval = 1.0f/gameManager->framesPerSecond();
+        lastTime = time;
+        time = PHTime::getTime();
+        elapsedTime = time-lastTime;
+        if (elapsedTime>1.5*frameInterval)
+            elapsedTime = 1.5*frameInterval;
+    }
     PHGameManager::globalFrame(elapsedTime);
     gameManager->renderFrame(elapsedTime);
     

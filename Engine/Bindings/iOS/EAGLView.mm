@@ -6,9 +6,14 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
 #import "EAGLView.h"
+
+extern int PHStartGameFlags;
+#include "PHStartGame.h"
 
 @interface EAGLView (PrivateMethods)
 - (void)createFramebuffer;
@@ -57,9 +62,9 @@
 - (void)initMain
 {
 	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+	EAGLContext *aContext = (PHStartGameFlags & PHStartGame_GLES2)?[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]:nil;
     
-    if (!aContext)
+    if (!aContext && (PHStartGameFlags & PHStartGame_GLES1))
         aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     
     if (!aContext)
@@ -75,10 +80,10 @@
 - (void) initSecondary
 {
 	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:context.sharegroup];
+	EAGLContext *aContext = (PHStartGameFlags & PHStartGame_GLES2)?[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]:nil;
     
-    if (!aContext)
-        aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1 sharegroup:context.sharegroup];
+    if (!aContext && (PHStartGameFlags & PHStartGame_GLES1))
+        aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     
     if (!aContext)
         NSLog(@"Failed to create ES context");

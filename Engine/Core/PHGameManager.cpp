@@ -60,6 +60,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     dpi = params.dpi;
 	suspended = 0;
     loaded = true;
+    entryPoint = params.entryPoint;
 	setUserData(ud);
     
     hd = false;
@@ -100,7 +101,18 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         spriteStates->insert("texture",textureSpriteUniform) = 0;
     }
     
-    entryPoint();
+    view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
+    view->setGameManager(this);
+	view->setBackgroundColor(PHGrayColor);
+	view->setUserInput(true);
+    
+    viewController = new PHNavigationController();
+	viewController->init(this);
+	viewController->_viewWillAppear();
+	view->addSubview(viewController->getView());
+	viewController->_viewDidAppear();
+
+    entryPoint(this);
     
     view->setGameManager(this);
 }

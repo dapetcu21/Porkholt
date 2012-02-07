@@ -124,6 +124,18 @@
 		C175D02E14DEC44500970811 /* PHGLUniformStates.h in Headers */ = {isa = PBXBuildFile; fileRef = C175D02C14DEC44400970811 /* PHGLUniformStates.h */; };
 		C175D03014DEC46900970811 /* PHGLUniformStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */; };
 		C175D03114DEC46900970811 /* PHGLUniformStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */; };
+		C188A65714E1510B00C2DD9D /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A64E14E1510B00C2DD9D /* EAGLView.h */; };
+		C188A65814E1510B00C2DD9D /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C188A64F14E1510B00C2DD9D /* EAGLView.mm */; };
+		C188A65914E1510B00C2DD9D /* PHAccelerometerInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A65014E1510B00C2DD9D /* PHAccelerometerInterface.h */; };
+		C188A65A14E1510B00C2DD9D /* PHTouchInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A65114E1510B00C2DD9D /* PHTouchInterface.h */; };
+		C188A65B14E1510B00C2DD9D /* PHTouchInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = C188A65214E1510B00C2DD9D /* PHTouchInterface.mm */; };
+		C188A65C14E1510B00C2DD9D /* PorkholtAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A65314E1510B00C2DD9D /* PorkholtAppDelegate.h */; };
+		C188A65D14E1510B00C2DD9D /* PorkholtAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = C188A65414E1510B00C2DD9D /* PorkholtAppDelegate.mm */; };
+		C188A65E14E1510B00C2DD9D /* PorkholtViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A65514E1510B00C2DD9D /* PorkholtViewController.h */; };
+		C188A65F14E1510B00C2DD9D /* PorkholtViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C188A65614E1510B00C2DD9D /* PorkholtViewController.mm */; };
+		C188A66114E1517800C2DD9D /* PHStartGame.mm in Sources */ = {isa = PBXBuildFile; fileRef = C188A66014E1517800C2DD9D /* PHStartGame.mm */; };
+		C188A66314E153E300C2DD9D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C188A66214E153E300C2DD9D /* UIKit.framework */; };
+		C188A66714E1550800C2DD9D /* PHStartGame.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A66614E1550800C2DD9D /* PHStartGame.h */; };
 		C1B5BDCE14D6EFA9005483ED /* PHAccelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */; };
 		C1B5BDCF14D6EFA9005483ED /* PHAccelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */; };
 		C1B5BDD014D6EFA9005483ED /* PHAnimatedImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1B5BD8314D6EFA9005483ED /* PHAnimatedImage.cpp */; };
@@ -405,6 +417,18 @@
 		C175D02914DE9F2F00970811 /* PHGLShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLShaderProgram.cpp; sourceTree = "<group>"; };
 		C175D02C14DEC44400970811 /* PHGLUniformStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLUniformStates.h; sourceTree = "<group>"; };
 		C175D02F14DEC46900970811 /* PHGLUniformStates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLUniformStates.cpp; sourceTree = "<group>"; };
+		C188A64E14E1510B00C2DD9D /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
+		C188A64F14E1510B00C2DD9D /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
+		C188A65014E1510B00C2DD9D /* PHAccelerometerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelerometerInterface.h; sourceTree = "<group>"; };
+		C188A65114E1510B00C2DD9D /* PHTouchInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTouchInterface.h; sourceTree = "<group>"; };
+		C188A65214E1510B00C2DD9D /* PHTouchInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHTouchInterface.mm; sourceTree = "<group>"; };
+		C188A65314E1510B00C2DD9D /* PorkholtAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PorkholtAppDelegate.h; sourceTree = "<group>"; };
+		C188A65414E1510B00C2DD9D /* PorkholtAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PorkholtAppDelegate.mm; sourceTree = "<group>"; };
+		C188A65514E1510B00C2DD9D /* PorkholtViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PorkholtViewController.h; sourceTree = "<group>"; };
+		C188A65614E1510B00C2DD9D /* PorkholtViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PorkholtViewController.mm; sourceTree = "<group>"; };
+		C188A66014E1517800C2DD9D /* PHStartGame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHStartGame.mm; sourceTree = "<group>"; };
+		C188A66214E153E300C2DD9D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C188A66614E1550800C2DD9D /* PHStartGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHStartGame.h; sourceTree = "<group>"; };
 		C1B5BD6F14D6EACA005483ED /* libporkholt-osx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libporkholt-osx.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1B5BD8214D6EFA9005483ED /* PHAccelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAccelInterface.h; sourceTree = "<group>"; };
 		C1B5BD8314D6EFA9005483ED /* PHAnimatedImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHAnimatedImage.cpp; sourceTree = "<group>"; };
@@ -487,6 +511,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C188A66314E153E300C2DD9D /* UIKit.framework in Frameworks */,
 				C1C1BF1D14DABE0A00AC9076 /* AudioToolbox.framework in Frameworks */,
 				C1C1BF1B14DABDFE00AC9076 /* AVFoundation.framework in Frameworks */,
 				C1C1BF1C14DABDFE00AC9076 /* Foundation.framework in Frameworks */,
@@ -614,6 +639,7 @@
 				C11B488214DA9B1F00431210 /* liblua.a */,
 				C11B488314DA9B1F00431210 /* libpng15.a */,
 				C11B488414DA9B1F00431210 /* libz.a */,
+				C188A66214E153E300C2DD9D /* UIKit.framework */,
 				C12069C814D731FB007DACEA /* AudioToolbox.framework */,
 				C12069C614D731F4007DACEA /* AVFoundation.framework */,
 				C12069B314D7314B007DACEA /* Finch.xcodeproj */,
@@ -655,6 +681,7 @@
 		C137060414D6C4ED002CA4CA = {
 			isa = PBXGroup;
 			children = (
+				C188A63814E1505A00C2DD9D /* iOS Bindings */,
 				C1B5BD8114D6EFA9005483ED /* Core */,
 				C11F59B414D9271800D85AF1 /* Geometry */,
 				C12069EC14D7C112007DACEA /* UI */,
@@ -697,9 +724,28 @@
 			path = "../../Externals/math/math-vfp";
 			sourceTree = "<group>";
 		};
+		C188A63814E1505A00C2DD9D /* iOS Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				C188A64E14E1510B00C2DD9D /* EAGLView.h */,
+				C188A66014E1517800C2DD9D /* PHStartGame.mm */,
+				C188A64F14E1510B00C2DD9D /* EAGLView.mm */,
+				C188A65014E1510B00C2DD9D /* PHAccelerometerInterface.h */,
+				C188A65114E1510B00C2DD9D /* PHTouchInterface.h */,
+				C188A65214E1510B00C2DD9D /* PHTouchInterface.mm */,
+				C188A65314E1510B00C2DD9D /* PorkholtAppDelegate.h */,
+				C188A65414E1510B00C2DD9D /* PorkholtAppDelegate.mm */,
+				C188A65514E1510B00C2DD9D /* PorkholtViewController.h */,
+				C188A65614E1510B00C2DD9D /* PorkholtViewController.mm */,
+			);
+			name = "iOS Bindings";
+			path = Bindings/iOS;
+			sourceTree = "<group>";
+		};
 		C1B5BD8114D6EFA9005483ED /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C188A66614E1550800C2DD9D /* PHStartGame.h */,
 				C120691A14D6FA28007DACEA /* PHFileManager.cpp */,
 				C120691B14D6FA28007DACEA /* PHSemaphore.h */,
 				C120691714D6F883007DACEA /* PHMutex.h */,
@@ -876,6 +922,12 @@
 				C175D02714DE976700970811 /* PHGLShaderProgram.h in Headers */,
 				C175D02D14DEC44500970811 /* PHGLUniformStates.h in Headers */,
 				C113ACF314DEEA350095BFC1 /* PHGLProgramInitPool.h in Headers */,
+				C188A65714E1510B00C2DD9D /* EAGLView.h in Headers */,
+				C188A65914E1510B00C2DD9D /* PHAccelerometerInterface.h in Headers */,
+				C188A65A14E1510B00C2DD9D /* PHTouchInterface.h in Headers */,
+				C188A65C14E1510B00C2DD9D /* PorkholtAppDelegate.h in Headers */,
+				C188A65E14E1510B00C2DD9D /* PorkholtViewController.h in Headers */,
+				C188A66714E1550800C2DD9D /* PHStartGame.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1136,6 +1188,11 @@
 				C175D02A14DE9F2F00970811 /* PHGLShaderProgram.cpp in Sources */,
 				C175D03014DEC46900970811 /* PHGLUniformStates.cpp in Sources */,
 				C113ACF814DEEA440095BFC1 /* PHGLProgramInitPool.cpp in Sources */,
+				C188A65814E1510B00C2DD9D /* EAGLView.mm in Sources */,
+				C188A65B14E1510B00C2DD9D /* PHTouchInterface.mm in Sources */,
+				C188A65D14E1510B00C2DD9D /* PorkholtAppDelegate.mm in Sources */,
+				C188A65F14E1510B00C2DD9D /* PorkholtViewController.mm in Sources */,
+				C188A66114E1517800C2DD9D /* PHStartGame.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

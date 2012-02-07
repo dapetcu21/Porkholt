@@ -6,6 +6,9 @@
 //  Copyright 2011 Porkholt Labs!. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "PHTouchInterface.h"
 #import "PHAccelInterface.h"
 #include "PHEventHandler.h"

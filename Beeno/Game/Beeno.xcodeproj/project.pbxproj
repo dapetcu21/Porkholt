@@ -7,12 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D3623260D0F684500981E51 /* PorkholtAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* PorkholtAppDelegate.mm */; };
-		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589B0D05DD56006BFB54 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.cpp */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		28EC4C5911D54ECE0027AA9F /* PorkholtViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28EC4C5711D54ECE0027AA9F /* PorkholtViewController.mm */; };
-		28FD14FE0DC6FC130079059D /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FD14FD0DC6FC130079059D /* EAGLView.m */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		C106E47A13DD427C007E6357 /* PHLGround.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47913DD427C007E6357 /* PHLGround.cpp */; };
 		C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47E13DD5E2B007E6357 /* PHLSign.cpp */; };
@@ -28,10 +25,8 @@
 		C1707D79137D13D400395313 /* PHJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1707D77137D13D400395313 /* PHJoint.cpp */; };
 		C1748C5F1400258300FB2796 /* PHMenuController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C5E1400258300FB2796 /* PHMenuController.cpp */; };
 		C1748C63140042ED00FB2796 /* PHTitleScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */; };
-		C1769BCE140A4E6E00638068 /* PHEntryPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1769BCD140A4E6E00638068 /* PHEntryPoint.cpp */; };
 		C177805213BCDAB50003640D /* PHScriptableTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */; };
 		C17B487513C1C44200FAD712 /* PHLAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17B487313C1C44200FAD712 /* PHLAnimation.cpp */; };
-		C17B4E37130EA1F400C2EC8D /* PHTouchInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */; };
 		C17D0F551322A31000BDB8EF /* PHLevelController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F541322A31000BDB8EF /* PHLevelController.cpp */; };
 		C17D0F581322AD7700BDB8EF /* PHWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F571322AD7700BDB8EF /* PHWorld.cpp */; };
 		C19B4B2913D8D00F00C714FB /* PHDialogView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19B4B2813D8D00F00C714FB /* PHDialogView.cpp */; };
@@ -181,18 +176,11 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D3623240D0F684500981E51 /* PorkholtAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PorkholtAppDelegate.h; sourceTree = "<group>"; };
-		1D3623250D0F684500981E51 /* PorkholtAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PorkholtAppDelegate.mm; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Beeno.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beeno.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		28EC4C5611D54ECE0027AA9F /* PorkholtViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PorkholtViewController.h; sourceTree = "<group>"; };
-		28EC4C5711D54ECE0027AA9F /* PorkholtViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PorkholtViewController.mm; sourceTree = "<group>"; };
-		28FD14FC0DC6FC130079059D /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
-		28FD14FD0DC6FC130079059D /* EAGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EAGLView.m; sourceTree = "<group>"; };
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Porkholt_Prefix.pch; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Porkholt-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Porkholt-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		C106E47913DD427C007E6357 /* PHLGround.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLGround.cpp; sourceTree = "<group>"; };
 		C106E47C13DD4289007E6357 /* PHLGround.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLGround.h; sourceTree = "<group>"; };
@@ -217,13 +205,10 @@
 		C1748C601400259C00FB2796 /* PHMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHMenuController.h; sourceTree = "<group>"; };
 		C1748C61140042DE00FB2796 /* PHTitleScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTitleScreen.h; sourceTree = "<group>"; };
 		C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTitleScreen.cpp; sourceTree = "<group>"; };
-		C1769BCD140A4E6E00638068 /* PHEntryPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHEntryPoint.cpp; sourceTree = "<group>"; };
 		C177805013BCDAAB0003640D /* PHScriptableTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHScriptableTimer.cpp; sourceTree = "<group>"; };
 		C177805113BCDAB00003640D /* PHScriptableTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHScriptableTimer.h; sourceTree = "<group>"; };
 		C17B487313C1C44200FAD712 /* PHLAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLAnimation.cpp; sourceTree = "<group>"; };
 		C17B487413C1C44200FAD712 /* PHLAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLAnimation.h; sourceTree = "<group>"; };
-		C17B4E35130EA1F400C2EC8D /* PHTouchInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTouchInterface.h; sourceTree = "<group>"; };
-		C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PHTouchInterface.mm; sourceTree = "<group>"; };
 		C17D0F531322A31000BDB8EF /* PHLevelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLevelController.h; sourceTree = "<group>"; };
 		C17D0F541322A31000BDB8EF /* PHLevelController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PHLevelController.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		C17D0F561322AD7700BDB8EF /* PHWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHWorld.h; sourceTree = "<group>"; };
@@ -395,22 +380,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* iOS Bindings */ = {
+		080E96DDFE201D6D7F000001 /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
-				28FD14FC0DC6FC130079059D /* EAGLView.h */,
-				28FD14FD0DC6FC130079059D /* EAGLView.m */,
-				1D3623240D0F684500981E51 /* PorkholtAppDelegate.h */,
-				1D3623250D0F684500981E51 /* PorkholtAppDelegate.mm */,
-				28EC4C5611D54ECE0027AA9F /* PorkholtViewController.h */,
-				28EC4C5711D54ECE0027AA9F /* PorkholtViewController.mm */,
-				32CA4F630368D1EE00C91783 /* Porkholt_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
+				29B97316FDCFA39411CA2CEA /* main.cpp */,
 				8D1107310486CEB800E47090 /* Porkholt-Info.plist */,
-				C17B4E35130EA1F400C2EC8D /* PHTouchInterface.h */,
-				C17B4E36130EA1F400C2EC8D /* PHTouchInterface.mm */,
 			);
-			path = "iOS Bindings";
+			name = Bindings;
+			path = ../../Igor/Game/Bindings;
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -429,7 +406,7 @@
 				C17D0F501322A18300BDB8EF /* LevelSystem */,
 				C1AF4FBB13A657BD00ED2ED7 /* UI */,
 				C19FC307148F944900EACE24 /* Network */,
-				080E96DDFE201D6D7F000001 /* iOS Bindings */,
+				080E96DDFE201D6D7F000001 /* Bindings */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				C1A034E4132DF60700F0200C /* Box2D */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -702,7 +679,6 @@
 				C1748C5E1400258300FB2796 /* PHMenuController.cpp */,
 				C1748C61140042DE00FB2796 /* PHTitleScreen.h */,
 				C1748C62140042EC00FB2796 /* PHTitleScreen.cpp */,
-				C1769BCD140A4E6E00638068 /* PHEntryPoint.cpp */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -879,11 +855,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
-				1D3623260D0F684500981E51 /* PorkholtAppDelegate.mm in Sources */,
-				28FD14FE0DC6FC130079059D /* EAGLView.m in Sources */,
-				28EC4C5911D54ECE0027AA9F /* PorkholtViewController.mm in Sources */,
-				C17B4E37130EA1F400C2EC8D /* PHTouchInterface.mm in Sources */,
+				1D60589B0D05DD56006BFB54 /* main.cpp in Sources */,
 				C17D0F551322A31000BDB8EF /* PHLevelController.cpp in Sources */,
 				C17D0F581322AD7700BDB8EF /* PHWorld.cpp in Sources */,
 				C1B7ECAC1323E1250004C8EA /* PHLObject.cpp in Sources */,
@@ -921,7 +893,6 @@
 				C1B9E41813E2BD7600B1C0C6 /* PHShieldView.cpp in Sources */,
 				C1748C5F1400258300FB2796 /* PHMenuController.cpp in Sources */,
 				C1748C63140042ED00FB2796 /* PHTitleScreen.cpp in Sources */,
-				C1769BCE140A4E6E00638068 /* PHEntryPoint.cpp in Sources */,
 				C1B3C80314697CAE000FD6DF /* PHLBomberBird.cpp in Sources */,
 				C1B3C8061469B1FB000FD6DF /* PHLEggBomb.cpp in Sources */,
 				C19FC304148F4A6000EACE24 /* PHLuaConsole.cpp in Sources */,
@@ -1000,15 +971,10 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
-				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
+				INFOPLIST_FILE = "Bindings/Porkholt-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../Externals/lib/darwin/ios\"",
-				);
-				PRODUCT_NAME = Beeno;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1018,15 +984,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
-				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
+				INFOPLIST_FILE = "Bindings/Porkholt-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../Externals/lib/darwin/ios\"",
-				);
-				PRODUCT_NAME = Beeno;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1150,15 +1111,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iOS Bindings/Porkholt_Prefix.pch";
-				INFOPLIST_FILE = "iOS Bindings/Porkholt-Info.plist";
+				INFOPLIST_FILE = "Bindings/Porkholt-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../Externals/lib/darwin/ios\"",
-				);
-				PRODUCT_NAME = Beeno;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

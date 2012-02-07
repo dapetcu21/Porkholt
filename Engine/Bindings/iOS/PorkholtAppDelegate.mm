@@ -6,6 +6,9 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "PorkholtAppDelegate.h"
 #import "PorkholtViewController.h"
 #import "PHGameManager.h"

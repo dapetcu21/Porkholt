@@ -38,13 +38,14 @@ enum PHGLCapabilities
 class PHGameManagerInitParameters
 {
 public:
-    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc") {}
+    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc"), entryPoint(NULL) {}
 
     ph_float screenWidth;
     ph_float screenHeight;
     int fps;
     ph_float dpi;
     string resourcePath;
+    void (*entryPoint)(PHGameManager *);
 };
 
 enum PHGLStates
@@ -77,7 +78,7 @@ private:
     PHRemote * remote;
 #endif
     
-    void entryPoint();
+    void (*entryPoint)(PHGameManager*);
     
     void setProjection();
     void * ud;
