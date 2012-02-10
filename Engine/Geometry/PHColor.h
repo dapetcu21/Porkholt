@@ -11,7 +11,26 @@
 
 struct PHColor
 {
-	ph_float r,g,b,a;
+    union
+    {
+        ph_float r;
+        ph_float x;
+    };
+    union
+    {
+        ph_float g;
+        ph_float y;
+    };
+    union
+    {
+        ph_float b;
+        ph_float z;
+    };
+    union
+    {
+        ph_float a;
+        ph_float t;
+    };
     bool operator == (const PHColor & o) const {
         return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
     }
@@ -59,6 +78,8 @@ struct PH24BitColor
     PH24BitColor() {};
     PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
 };
+
+typedef PHColor PHVector4;
 
 extern const PHColor PHClearColor;
 extern const PHColor PHBlackColor;

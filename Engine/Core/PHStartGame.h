@@ -17,6 +17,7 @@ enum PHStartGame_flags
     PHStartGame_GLES1 = 1<<0,
     PHStartGame_GLES2 = 1<<1,
     PHStartGame_frameAnimation = 1<<2,
+    PHStartGame_30FPS = 1<<3
 };
 
 int PHStartGame(int argc, char * argv[], int flags, void (*entryPoint)(PHGameManager *), void * ud);

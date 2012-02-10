@@ -26,6 +26,7 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader)
 {
     if (!active) return;
     GLint loc = location(shader);
+    if (loc==-1) return;
     switch  (type)
     {
     case float3Type:

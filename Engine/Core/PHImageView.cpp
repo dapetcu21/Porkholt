@@ -21,8 +21,14 @@
 #include "PHParticleView.h"
 #include "PHKeyframeAnimator.h"
 #include "PHGLUniformStates.h"
+#include "PHDeferredView.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true)
+
+bool PHImageView::supportsRenderMode(int rm)
+{
+    return (rm == PHGameManager::defaultRenderMode) || (rm == PHDeferredView::normalMapRenderMode);
+}
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
@@ -83,13 +89,29 @@ PHImageView::~PHImageView()
 
 void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd, const PHColor & clr)
 {
-    if (_image)
+    if (!_image) return;
+    bool nrm =  (_gameManager->renderMode() == PHDeferredView::normalMapRenderMode);
+    PHImage * img = _image;
+    if (nrm)
     {
-        if (_image->isNormal())
-            ((PHNormalImage*)_image)->renderInFramePortionTint(_gameManager,fr,crd,clr);
-        
-        if (_image->isAnimated())
-            _animator->renderInFramePortionTint(_gameManager,fr,crd,clr);
+        if (_normalMapping && (img->normalMap()))
+            _image = img->normalMap();
+        else
+            _gameManager->pushSpriteShader(_gameManager->missingNormalSpriteShader());
+    }
+
+    if (_image->isNormal())
+        ((PHNormalImage*)_image)->renderInFramePortionTint(_gameManager,fr,crd,clr);
+    
+    if (_image->isAnimated())
+        _animator->renderInFramePortionTint(_gameManager,fr,crd,clr);
+    
+    if (nrm)
+    {
+        if (_normalMapping && (img->normalMap()))
+            _image = img;
+        else
+            _gameManager->popSpriteShader();
     }
 }
 
@@ -386,10 +408,27 @@ void PHImageView::renderStraight()
 
 void PHImageView::draw()
 {
+    if (!_image) return;
+    bool nrm =  (_gameManager->renderMode() == PHDeferredView::normalMapRenderMode);
+    PHImage * img = _image;
+    if (nrm)
+    {
+        if (_normalMapping && (img->normalMap()))
+            _image = img->normalMap();
+        else
+            _gameManager->pushSpriteShader(_gameManager->missingNormalSpriteShader());
+    }
     if (curve)
         renderCurved();
     else
         renderStraight();
+    if (nrm)
+    {
+        if (_normalMapping && (img->normalMap()))
+            _image = img;
+        else
+            _gameManager->popSpriteShader();
+    }
 }
 
 void PHImageView::loadFromLua(lua_State *L)

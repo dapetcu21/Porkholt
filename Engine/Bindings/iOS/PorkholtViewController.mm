@@ -56,6 +56,8 @@ extern void * PHStartGameUD;
 #ifdef PH_SIMULATOR
     return true;
 #endif
+    if (PHStartGameFlags & PHStartGame_30FPS)
+        return true;
 	NSString * platform = [self platform];
 	PHLog("Running on %s",[platform UTF8String]);
 	if ([platform isEqual:@"iPhone1,1"]|| //iPhone 1G

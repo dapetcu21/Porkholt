@@ -20,10 +20,22 @@ PHImage * PHImageInitPool::imageFromPath(const string & path)
 	{
         PHGameManager * gm = gameManager();
 		try {
+            string nmpath = path + ".nmap";
+            PHImage * nmap = NULL;
+            try {
+                if (PHFileManager::isDirectory(nmpath))
+                    nmap = new PHAnimatedImage(nmpath,gm);
+                else
+                    nmap = new PHNormalImage(nmpath,gm);
+            } catch (...) {};
+            
             if (PHFileManager::isDirectory(path))
                 img = new PHAnimatedImage(path,gm);
             else
                 img = new PHNormalImage(path,gm);
+            
+            img->_normalMap = nmap;
+            
 		} catch (string ex)
 		{
 			PHLog(ex);

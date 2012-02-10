@@ -1,0 +1,3 @@
+attributeBindings = {
+	pos = 0
+}

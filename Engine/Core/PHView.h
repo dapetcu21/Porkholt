@@ -52,6 +52,7 @@ protected:
 	
 public:
     virtual void touchEvent(PHEvent * touch);
+    virtual bool supportsRenderMode(int rm) { return rm == PHGameManager::defaultRenderMode; }
     PHMatrix loadMatrixTree(PHView * until);
 	
     enum Effects

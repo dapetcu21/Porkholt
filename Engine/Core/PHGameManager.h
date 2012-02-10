@@ -38,13 +38,14 @@ enum PHGLCapabilities
 class PHGameManagerInitParameters
 {
 public:
-    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc"), entryPoint(NULL) {}
+    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc"), entryPoint(NULL), defaultFBO(0) {}
 
     ph_float screenWidth;
     ph_float screenHeight;
     int fps;
     ph_float dpi;
     string resourcePath;
+    GLuint defaultFBO;
     void (*entryPoint)(PHGameManager *);
 };
 
@@ -54,7 +55,8 @@ enum PHGLStates
     PHGLColorArray = 1<<1,
     PHGLTextureCoordArray = 1<<2,
     PHGLTexture = 1<<3,
-    PHGLResetAllStates = 1<<4
+    PHGLResetAllStates = 1<<4,
+    PHGLNormalArray = 1<<5
 };
 
 class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool
@@ -73,6 +75,7 @@ private:
     static int globalHD;
     bool hd;
     string resPath;
+    GLuint _defaultFBO,_defaultFBOf;
     
 #ifdef PH_SIMULATOR
     PHRemote * remote;
@@ -96,7 +99,8 @@ private:
     list<PHGLShaderProgram*> spriteShaderStack;
     PHGLUniformStates * spriteStates;
     PHGLShaderProgram * _shader;
-    PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader;
+    PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader, * _missingNormalSpriteShader;
+    int rndMode;
     
 public:
     PHGameManager();
@@ -115,6 +119,7 @@ public:
 	void appSuspended();
 	void appResumed();
     bool isHD() { return hd; }
+    GLuint defaultFBO() { if (_defaultFBOf==0) return _defaultFBO; return _defaultFBOf; }
     static bool isGloballyHD() { return globalHD > 0; }
     void _appResumed(PHObject * sender, void * ud);
     void _appSuspended(PHObject * sender, void * ud);
@@ -130,6 +135,14 @@ public:
     
     void * userData() { return ud; }
     void setUserData(void * u) { ud = u; }
+    
+    enum renderModes
+    {
+        defaultRenderMode = 0
+    };
+    
+    void setRenderMode(int rm) { rndMode = rm; }
+    int renderMode() { return rndMode; }
     
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
@@ -182,6 +195,7 @@ public:
     PHGLShaderProgram * noTexSpriteShader() { return _noTexSpriteShader; }
     PHGLShaderProgram * coloredNoTexSpriteShader() { return _coloredNoTexSpriteShader; }
     PHGLShaderProgram * textShader() { return _textShader; }
+    PHGLShaderProgram * missingNormalSpriteShader() { return _missingNormalSpriteShader; }
     
     enum
     {
@@ -200,6 +214,7 @@ public:
 #define PHIMAGEATTRIBUTE_POS 0
 #define PHIMAGEATTRIBUTE_TXC 1
 #define PHIMAGEATTRIBUTE_CLR 2
+#define PHIMAGEATTRIBUTE_NRM 3
     void vertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
         if (openGLCaps[PHGLCapabilityShaders])
@@ -216,6 +231,14 @@ public:
             glTexCoordPointer(size, type, stride, ptr);
     }
     
+    void normalPointer(GLenum type, GLsizei stride, const GLvoid *ptr)
+    {
+        if (openGLCaps[PHGLCapabilityShaders])
+            glVertexAttribPointer(PHIMAGEATTRIBUTE_NRM, 3, type, GL_FALSE, stride, ptr);
+        else
+            glNormalPointer(type, stride, ptr);
+    }
+    
     void colorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
         if (openGLCaps[PHGLCapabilityShaders])
@@ -228,6 +251,7 @@ public:
 #define PHGLVertexPointer _gameManager->vertexPointer
 #define PHGLTexCoordPointer _gameManager->texCoordPointer
 #define PHGLColorPointer _gameManager->colorPointer
+#define PHGLNormalPointer _gameManager->normalPointer
 
 #define PHGLModelView _gameManager->modelViewMatrix
 #define PHGLSetModelView _gameManager->setModelViewMatrix

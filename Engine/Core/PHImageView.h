@@ -69,6 +69,8 @@ protected:
         }
     }
     
+    bool _normalMapping;
+    
 public:
     PHAnimatorPool * animatorPool() { return pool; }
     void setAnimatorPool(PHAnimatorPool * p);
@@ -81,6 +83,10 @@ public:
 	virtual ~PHImageView();
 	virtual void draw();
     virtual void render() { PHView::render();};
+    bool supportsRenderMode(int rm);
+    
+    void setNormalMapping(bool nm) { _normalMapping = nm; }
+    bool normalMapping() { return _normalMapping; }
     
     const PHRect & textureCoordinates() { return coords; };
 	void setTextureCoordinates(const PHRect & r) { coords = r; VBOneedsRebuilding = true; };

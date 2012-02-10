@@ -61,6 +61,8 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	suspended = 0;
     loaded = true;
     entryPoint = params.entryPoint;
+    _defaultFBOf = params.defaultFBO;
+    _defaultFBO = 0;
 	setUserData(ud);
     
     hd = false;
@@ -95,6 +97,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         _noTexSpriteShader = shaderProgramNamed("notex_sprites");
         _coloredNoTexSpriteShader = shaderProgramNamed("color_notex_sprites");
         _textShader = shaderProgramNamed("text");
+        _missingNormalSpriteShader = shaderProgramNamed("missingnormals_sprites");
         spriteStates = new PHGLUniformStates;
         spriteStates->insert("modelViewProjectionMatrix", modelViewSpriteUniform);
         spriteStates->insert("color", colorSpriteUniform);
@@ -171,7 +174,10 @@ void PHGameManager::globalFrame(ph_float timeElapsed)
 
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
-    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    if (_defaultFBOf==0)
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
+    
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 		
     setModelViewMatrix(PHIdentityMatrix);
@@ -214,7 +220,7 @@ void PHGameManager::setOpenGLStates(uint32_t states)
     {
         if (useShaders())
         {
-            if (states & PHGLVertexArray)
+            if (states & PHGLColorArray)
                 glEnableVertexAttribArray(PHIMAGEATTRIBUTE_CLR);
             else
                 glDisableVertexAttribArray(PHIMAGEATTRIBUTE_CLR);            
@@ -230,7 +236,7 @@ void PHGameManager::setOpenGLStates(uint32_t states)
     {
         if (useShaders())
         {
-            if (states & PHGLVertexArray)
+            if (states & PHGLTextureCoordArray)
                 glEnableVertexAttribArray(PHIMAGEATTRIBUTE_TXC);
             else
                 glDisableVertexAttribArray(PHIMAGEATTRIBUTE_TXC);            
@@ -239,6 +245,22 @@ void PHGameManager::setOpenGLStates(uint32_t states)
                 glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             else
                 glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        }
+    }
+    
+    if (xr & PHGLNormalArray)
+    {
+        if (useShaders())
+        {
+            if (states & PHGLNormalArray)
+                glEnableVertexAttribArray(PHIMAGEATTRIBUTE_NRM);
+            else
+                glDisableVertexAttribArray(PHIMAGEATTRIBUTE_NRM);            
+        } else {
+            if (states & PHGLNormalArray)
+                glEnableClientState(GL_NORMAL_ARRAY);
+            else
+                glDisableClientState(GL_NORMAL_ARRAY);
         }
     }
     

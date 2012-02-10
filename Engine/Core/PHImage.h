@@ -37,6 +37,8 @@ protected:
     
     PHGameManager * _gameManager;
     
+    PHImage * _normalMap;
+    
     struct VBOParams
     {
         int nElements;
@@ -47,6 +49,7 @@ protected:
     };
     friend class PHImageView;
     friend class PHImageAnimator;
+    friend class PHImageInitPool;
     
     static void buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adjustment);
     
@@ -57,6 +60,10 @@ public:
 
     virtual bool isNormal() { return false; };
     virtual bool isAnimated() { return false; };
+    
+    PHImage * normalMap() { return _normalMap; } 
+    
+    virtual ~PHImage() { if (_normalMap) _normalMap->release(); }
     
 };
 

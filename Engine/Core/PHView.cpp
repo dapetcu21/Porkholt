@@ -164,7 +164,7 @@ void PHView::render()
 	
 	if (!optimizeOut)
 	{
-        if ( !auxLayer || !dontDrawOnMain )
+        if ( (!auxLayer || !dontDrawOnMain) && supportsRenderMode(_gameManager->renderMode()) )
         {
             drawBackground();
             draw();
@@ -247,6 +247,8 @@ void PHView::sendToBack()
 void PHView::drawBackground()
 {
 	if (_backColor.a <= 0) return;
+    if (_gameManager->renderMode() != PHGameManager::defaultRenderMode)
+        return;
 	const GLfloat squareVertices[] = {
         0, 0,
         _bounds.width, 0,
