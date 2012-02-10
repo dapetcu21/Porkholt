@@ -62,8 +62,8 @@ protected:
         ph_float height = img->height()/2;
         ph_float width = img->width()/2;
         
-#define columns 7
-#define rows 8
+#define columns 2
+#define rows 3
         PHImageView * tv = new PHImageView(PHRect(0,0,width*columns,height*rows));
         tv->setRepeatX(columns);
         tv->setRepeatY(rows);
