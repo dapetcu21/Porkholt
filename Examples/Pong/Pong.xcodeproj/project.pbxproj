@@ -730,7 +730,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../../Engine/**",
 					../../Externals/box2d/Box2D,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					../../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
@@ -755,7 +755,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../../Engine/**",
 					../../Externals/box2d/Box2D,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					../../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
@@ -807,7 +807,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../../Engine/**",
 					../../Externals/box2d/Box2D,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					../../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;

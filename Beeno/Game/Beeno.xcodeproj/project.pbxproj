@@ -386,8 +386,7 @@
 				29B97316FDCFA39411CA2CEA /* main.cpp */,
 				8D1107310486CEB800E47090 /* Porkholt-Info.plist */,
 			);
-			name = Bindings;
-			path = ../../Igor/Game/Bindings;
+			path = Bindings;
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -1012,7 +1011,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../../Engine/**",
 					../../Externals/box2d/Box2D,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					../../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
@@ -1040,7 +1039,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../../Engine/**",
 					../../Externals/box2d/Box2D,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					../../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
@@ -1095,7 +1094,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../../Engine/**",
 					../../Externals/box2d/Box2D,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					../../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;

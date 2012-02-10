@@ -1318,7 +1318,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../Externals/finch/Finch,
-					../Externals/lua/include,
+					../Externals/lua/src,
 					../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
@@ -1348,7 +1348,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../Externals/finch/Finch,
-					../Externals/lua/include,
+					../Externals/lua/src,
 					../Externals/libpng,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
@@ -1369,7 +1369,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					../Externals/finch/Finch,
-					../Externals/lua/include,
+					../Externals/lua/src,
 					"../Externals/math/math-vfp",
 					"../Externals/math/math-neon",
 					../Externals/libpng,
@@ -1407,7 +1407,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					../Externals/finch/Finch,
-					../Externals/lua/include,
+					../Externals/lua/src,
 					"../Externals/math/math-vfp",
 					"../Externals/math/math-neon",
 					../Externals/libpng,
