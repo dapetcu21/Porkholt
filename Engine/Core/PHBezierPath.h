@@ -9,25 +9,13 @@
 #ifndef PHBEZIERPATH_H
 #define PHBEZIERPATH_H
 
-#include "PHMain.h"
+#include "PHCurve.h"
 
-class PHBezierPath : public PHObject
+class PHBezierPath : public PHCurve
 {
-public:
-    class anchorPoint {
-    public:
-        PHPoint point;
-        int tag;
-        anchorPoint() : point(PHOriginPoint), tag(0) {}
-        anchorPoint(const PHPoint & p, int t) : point(p), tag(t) {}
-        anchorPoint(const anchorPoint & o) : point(o.point), tag(o.tag) {}
-        bool operator == (const anchorPoint & o) const { return (tag==o.tag && point==o.point); }
-    };
-    
 protected:
     vector<anchorPoint> points;
     set<PHRange> curves;
-    int commitDisableCount;
     vector<anchorPoint> * cache;
     
     vector<anchorPoint> * bezierPath(vector<anchorPoint> & v);
@@ -51,15 +39,11 @@ public:
     void removeAnchorPoints(const PHRange & range);
     void removeAnchorPoint(int index) { removeAnchorPoints(PHRange(index,1)); }
     
-    static const vector<anchorPoint> * tesselate(const vector<anchorPoint> & points);
-    static GLushort * triangulate(const vector<anchorPoint> & points,int & n);
-    
     const vector<anchorPoint> & calculatedVertices();
     
-    void beginCommitGrouping();
-    void endCommitGrouping();
+    GLfloat * vertexData(size_t & nvertices, const PHRect & texCoord);
     
-    PHBezierPath() : L(NULL), cache(NULL), commitDisableCount(0) {}
+    PHBezierPath() : L(NULL), cache(NULL) {}
     ~PHBezierPath();
     static PHBezierPath * nonUniqueFromLua(lua_State * L) { return fromLua(L,false); }
     static PHBezierPath * fromLua(lua_State * L) { return fromLua(L,true); }
@@ -68,16 +52,10 @@ public:
     bool operator == (const PHBezierPath & othr);
     
 protected:
-    void modelChanged();
     void insertOffsets(const PHRange & rng);
     void removeOffsets(const PHRange & rng);
     
-protected:
-    multimap<PHObject *, PHInvocation> callbacks;
-    
-public:
-    void addCallback(PHInvocation cb) { callbacks.insert(make_pair<PHObject *,PHInvocation>(cb.target,cb)); }
-    void removeCallback(PHObject * target) { callbacks.erase(target); }
+    void _modelChanged();
 };
 
 #endif

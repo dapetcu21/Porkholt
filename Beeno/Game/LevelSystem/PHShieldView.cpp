@@ -10,13 +10,10 @@
 #include "PHImageView.h"
 #include "PHImage.h"
 
-void PHShieldView::setGameManager(PHGameManager * gm)
+void PHShieldView::attachedToGameManager()
 {
-    PHView::setGameManager(gm);
-    if (gm && !imv->image())
-    {
-        imv->setImage(shieldImage(gm));
-    }
+    if (!imv->image())
+        imv->setImage(shieldImage(_gameManager));
 }
 
 PHShieldView::~PHShieldView()

@@ -13,6 +13,8 @@
 #include "PHImageView.h"
 #include "PHImage.h"
 #include "PHGameManager.h"
+#include "PHGLVertexArrayObject.h"
+#include "PHGLVertexBufferObject.h"
 
 #define INIT _image(img), running(true)
 
@@ -310,16 +312,18 @@ void PHImageAnimator::bindLastFrameToTexture(int tx)
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
 }
 
-void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImage::VBOParams & params1, GLuint & vbo2, PHImage::VBOParams & params2)
+void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject * & vao1, PHGLVertexBufferObject * & vbo1, PHGLVertexArrayObject * & vao2, PHGLVertexBufferObject * & vbo2)
 {
+    if (!vao1)
+        vao1 = new PHGLVertexArrayObject(imageView->gameManager());
     if (!vbo1)
-        glGenBuffers(1, &vbo1);
+        vbo1 = new PHGLVertexBufferObject(imageView->gameManager());
     if (fade&&!vbo2)
-        glGenBuffers(1, &vbo2);
+        vbo2 = new PHGLVertexBufferObject(imageView->gameManager());
     if (!fade&&vbo2)
     {
-        glDeleteBuffers(1, &vbo2);
-        vbo2 = 0;
+        vbo2->release();
+        vbo2 = NULL;
     }
     PHPoint repeat = PHPoint(imageView->repeatX(),imageView->repeatY());
     PHRect port = imageView->textureCoordinates();
@@ -344,7 +348,7 @@ void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImag
     yC = (ph_float)_height/actHeight;
 
     
-    PHImage::buildImageVBO(vbo1, params1, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
+    PHImage::buildImageVAO(vao1, vbo1, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
     
     if (fade)
     {
@@ -362,6 +366,6 @@ void PHImageAnimator::rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImag
         xC = (ph_float)_width/actWidth;
         yC = (ph_float)_height/actHeight;
 
-        PHImage::buildImageVBO(vbo2, params2, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
+        PHImage::buildImageVAO(vao2, vbo2, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
     }
 }

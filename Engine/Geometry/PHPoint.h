@@ -177,6 +177,8 @@ struct PH3DPoint
         ph_float depth;
     };
     PH3DPoint() {};
+    PH3DPoint(const PHPoint & o, ph_float zz) : x(o.x), y(o.y), z(zz) {};
+    PH3DPoint(ph_float xx, const PHPoint & o) : x(xx), y(o.x), z(o.y) {};
     PH3DPoint(ph_float xx, ph_float yy) : x(xx), y(yy), z(0) {};
     PH3DPoint(ph_float xx, ph_float yy, ph_float zz) : x(xx), y(yy), z(zz) {};
     PH3DPoint(const PHPoint & o) : x(o.x), y(o.y), z(0) {};

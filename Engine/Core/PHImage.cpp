@@ -12,7 +12,10 @@
 #include "PHFileManager.h"
 #include "PHNormalImage.h"
 #include "PHAnimatedImage.h"
-#include "PHBezierPath.h"
+#include "PHCurve.h"
+#include "PHGLVertexArrayObject.h"
+#include "PHGLVertexBufferObject.h"
+#include "PHGameManager.h"
 
 #ifdef PHIMAGE_ORDERED_LOADING
 PHMutex * PHImage::loadingMutex = new PHMutex;
@@ -20,12 +23,11 @@ PHMutex * PHImage::loadingMutex = new PHMutex;
 
 PHImage::PHImage(const string & path, PHGameManager * gm) : loaded(false), _gameManager(gm), _normalMap(NULL) { };
 
-void PHImage::buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adj)
+void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adj)
 {
     vector<GLfloat> v;
     PHRect r = portion*repeat;
     ph_float lx = r.x;
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     for (ph_float x = ((int)r.x)+1; lx<r.x+r.width; (lx=x),(x+=1))
     {
         if (x>r.x+r.width)
@@ -61,17 +63,12 @@ void PHImage::buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repe
         }
     }
     
+    vbo->bindTo(PHGLVBO::arrayBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*v.size(), &v[0], GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    params.vertexSize = 2;
-    params.vertexOffset = 0;
-    params.vertexStride = sizeof(GLfloat)*4;
-    params.vertexType = GL_FLOAT;
-    params.texCoordSize = 2;
-    params.texCoordOffset = sizeof(GLfloat)*2;
-    params.texCoordStride = sizeof(GLfloat)*4;
-    params.texCoordType = GL_FLOAT;
-    params.nElements = (int)(v.size()/4);
-    params.renderMode = GL_TRIANGLE_STRIP;
+    vao->bindToEdit();
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, 0, vbo);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, sizeof(GLfloat)*2, vbo);
+    vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, (v.size()/4));
+    vao->unbind();
+    vbo->unbind();
 }

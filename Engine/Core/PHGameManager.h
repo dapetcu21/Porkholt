@@ -23,6 +23,8 @@ class PHEventHandler;
 class PHSoundManager;
 class PHGLShaderProgram;
 class PHGLUniformStates;
+class PHGLVertexBufferObject;
+class PHGLVertexArrayObject;
 
 enum PHGLCapabilities
 {
@@ -76,6 +78,7 @@ private:
     bool hd;
     string resPath;
     GLuint _defaultFBO,_defaultFBOf;
+    int _maxVertexAttribs;
     
 #ifdef PH_SIMULATOR
     PHRemote * remote;
@@ -88,7 +91,7 @@ private:
     
     void updateHD();
     
-    uint32_t openGLStates;
+    uint32_t openGLStates,openGLVertexAttribStates;
     PHMatrix _modelView,_projection;
     PHColor _currentColor;
     set<string> extensions;
@@ -101,6 +104,15 @@ private:
     PHGLShaderProgram * _shader;
     PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader, * _missingNormalSpriteShader;
     int rndMode;
+    PHGLVertexBufferObject * boundVBOs[5];
+    PHGLVertexArrayObject * _boundVAO;
+    
+    friend class PHGLVertexBufferObject;
+    friend class PHGLVertexArrayObject;
+    
+    GLvoid (*PHGLBindVertexArray)(GLuint);
+    GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
+    GLvoid (*PHGLGenVertexArrays)(GLsizei n, GLuint *);
     
 public:
     PHGameManager();
@@ -159,7 +171,10 @@ public:
     PHNavigationController * navigationController() { return viewController; }
     PHView * rootView() { return view; }
     
-    void setOpenGLStates(uint32_t states);
+    int maxVertexAttribs() { return _maxVertexAttribs; }
+    void setOpenGLStates(uint32_t states) { setOpenGLStates(states,0); }
+    void setOpenGLStates(uint32_t states, uint32_t vertexAttribStates);
+    void setOpenGLAttributeStates(uint32_t vertexAttribStates);
     void setModelViewMatrix(const PHMatrix & m);
     PHMatrix modelViewMatrix() { return _modelView; }
     void setProjectionMatrix(const PHMatrix & m);
@@ -210,6 +225,12 @@ public:
     void reapplyColorUniform();
     PHGLShaderProgram * shader() { return _shader; }
     void useShader(PHGLShaderProgram * prog);
+    
+    void bindVBO(PHGLVertexBufferObject * vbo, int target);
+    void bindVAO(PHGLVertexArrayObject * vao);
+    PHGLVertexBufferObject * boundVBO(int target) { return boundVBOs[target]; }
+    PHGLVertexArrayObject * boundVAO() { return _boundVAO; }
+    
     
 #define PHIMAGEATTRIBUTE_POS 0
 #define PHIMAGEATTRIBUTE_TXC 1

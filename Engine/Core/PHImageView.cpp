@@ -21,9 +21,11 @@
 #include "PHParticleView.h"
 #include "PHKeyframeAnimator.h"
 #include "PHGLUniformStates.h"
+#include "PHGLVertexArrayObject.h"
+#include "PHGLVertexBufferObject.h"
 #include "PHDeferredView.h"
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), arraysVBO(0), indexesVBO(0), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL)
 
 bool PHImageView::supportsRenderMode(int rm)
 {
@@ -72,15 +74,61 @@ void PHImageView::setImage(PHImage * img)
     VBOneedsRebuilding = true;
 }
 
+void PHImageView::destroyVAOs()
+{
+    destroyStraightVAO();
+    destroyCurvedVAO();
+}
+
+void PHImageView::destroyStraightVAO()
+{
+    if (straightVBO1)
+    {
+        straightVBO1->release();
+        straightVBO1 = NULL;
+    }
+    if (straightVBO2)
+    {
+        straightVBO2->release();
+        straightVBO2 = NULL;
+    }
+    if (straightVAO1)
+    {
+        straightVAO1->release();
+        straightVAO1 = NULL;
+    }
+    if (straightVAO2)
+    {
+        straightVAO2->release();
+        straightVAO2 = NULL;
+    }
+}
+
+void PHImageView::destroyCurvedVAO()
+{
+    if (curveVAO)
+    {
+        curveVAO->release();
+        curveVAO = NULL;
+    }
+    if (curveElementVBO)
+    {
+        curveElementVBO->release();
+        curveElementVBO = NULL;
+    }
+    if (curveAttributeVBO)
+    {
+        curveAttributeVBO->release();
+        curveAttributeVBO = NULL;
+    }
+}
+
 PHImageView::~PHImageView()
 {
     if (curve)
         curve->release();
     curve = NULL;
-    if (arraysVBO)
-        glDeleteBuffers(1, &arraysVBO);
-    if (indexesVBO)
-        glDeleteBuffers(1, &indexesVBO);
+    destroyVAOs();
     if (_animator)
         _animator->release();
 	if (_image)
@@ -115,146 +163,80 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
     }
 }
 
-GLfloat * PHImageView::interleavedArrayFromAnchorList(const void * ud, int & n)
-{
-    const vector<PHBezierPath::anchorPoint> * anchors = (const vector<PHBezierPath::anchorPoint>*)ud;
-    n = (int)anchors->size();
-    GLfloat * v = new GLfloat[n*4];
-    for (int i=0; i<n; i++)
-    {
-        v[(i<<2)] = anchors->at(i).point.x;
-        v[(i<<2)+1] = anchors->at(i).point.y;
-    }
-    textureCoordinatesFromAnchorList(v+2,sizeof(GLfloat)*4,ud);
-    return v;
-}
-
-void PHImageView::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, const void * ud)
-{
-    const vector<PHBezierPath::anchorPoint> * anchors = (const vector<PHBezierPath::anchorPoint>*)ud;
-    int i,nx;
-    nx = i = 0;
-    int corners[4] = {0,0,0,0};
-    int n = (int)anchors->size();
-    if (!stride)
-        stride = 2*sizeof(GLfloat);
-    
-    for (int i=0; i<n; i++)
-        if (anchors->at(i).tag>0 && anchors->at(i).tag<=4)
-            corners[(anchors->at(i).tag)-1] = i;
-    
-    PHNormalImage * img = (PHNormalImage*)_image;
-    int _width = img->width();
-    int _height = img->height();
-    int actWidth = img->actualWidth();
-    int actHeight = img->actualHeight();
-    ph_float sX = ((ph_float)_width/(ph_float)actWidth)*repeatX();
-    ph_float sY = ((ph_float)_height/(ph_float)actHeight)*repeatY();
-    ph_float sx = 0.5f/actWidth;
-    ph_float sy = 0.5f/actHeight;
-    PHRect p = textureCoordinates();
-    p.width*=sX;
-    p.height*=sY;
-    p.x*=sX;
-    p.y*=sX;
-    p.x+=sx;
-    p.y+=sy;
-    p.width-=sx*2;
-    p.height-=sx*2;
-    
-    for (int k=0; k<4; k++)
-    {
-        ph_float len = 0;
-        int tag;
-        for (i = nx = corners[k];((tag = anchors->at(i).tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
-        {
-            nx++;
-            if (nx>=n)
-                nx-=n;
-            len+=(anchors->at(nx).point-anchors->at(i).point).length();
-        }
-        ph_float l = 0;
-        for (i = nx = corners[k];((tag = anchors->at(i).tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
-        {
-            nx++;
-            if (nx>=n)
-                nx-=n;
-            ph_float d = l/len;
-            ph_float x,y;
-            switch (k+1) {
-                case 1:
-                    y = 1;
-                    x = d;
-                    break;
-                case 2:
-                    x = 1;
-                    y = 1-d;
-                    break;
-                case 3:
-                    x = 1-d;
-                    y = 0;
-                    break;
-                case 4:
-                    x = 0;
-                    y = d;
-                    break;
-                default:
-                    x = 0;
-                    y = 1;
-                    break;
-            }
-            if (_image && _image->isNormal())
-            {
-                x = p.x+p.width*x;
-                y = p.y+p.height*y;
-            }
-            //PHLog("point: (%lf,%lf) txtcoord: (%lf,%lf)",anchors->at(i).point.x,anchors->at(i).point.y,x,y);
-            buffer[0] = x;
-            buffer[1] = y;
-            buffer = (GLfloat*)(((char*)buffer)+stride);
-            l+=(anchors->at(nx).point-anchors->at(i).point).length();
-        }
-    }
-}
-
 void PHImageView::rebuildCurvedVBO()
 {
+    destroyStraightVAO();
     if (curve)
     {
-        if (arraysVBO == 0)
-            glGenBuffers(1, &arraysVBO);
-        if (indexesVBO == 0)
-            glGenBuffers(1, &indexesVBO);
-        const vector<PHBezierPath::anchorPoint> * anchors = PHBezierPath::tesselate(curve->calculatedVertices());
-        GLfloat * arr = interleavedArrayFromAnchorList(anchors,nVertices);
-        GLushort * indexes = PHBezierPath::triangulate(*anchors,nIndexes);
-        delete anchors;
-        glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
-        glBufferData(GL_ARRAY_BUFFER, nVertices*4*sizeof(GLfloat), arr, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if (!curveVAO) 
+            curveVAO = new PHGLVertexArrayObject(_gameManager);
         
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndexes*sizeof(GLushort), indexes, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        PHNormalImage * img = (PHNormalImage*)_image;
+        int _width = img->width();
+        int _height = img->height();
+        int actWidth = img->actualWidth();
+        int actHeight = img->actualHeight();
+        ph_float sX = ((ph_float)_width/(ph_float)actWidth)*repeatX();
+        ph_float sY = ((ph_float)_height/(ph_float)actHeight)*repeatY();
+        ph_float sx = 0.5f/actWidth;
+        ph_float sy = 0.5f/actHeight;
+        PHRect p = textureCoordinates();
+        p.width*=sX;
+        p.height*=sY;
+        p.x*=sX;
+        p.y*=sX;
+        p.x+=sx;
+        p.y+=sy;
+        p.width-=sx*2;
+        p.height-=sx*2;
         
+        curveVAO->bind();
+        size_t nVertices;
+        GLfloat * arr = curve->vertexData(nVertices, p);
+        if (!curveAttributeVBO)
+            curveAttributeVBO = new PHGLVertexBufferObject(_gameManager);
+        
+        curveAttributeVBO->bindTo(PHGLVBO::arrayBuffer);
+        curveAttributeVBO->setData(arr, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, curveAttributeVBO);
+        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), curveAttributeVBO);
+        curveAttributeVBO->unbind();
+        
+        size_t nIndexes;
+        GLushort * indexes = curve->indexData(arr, 4, nVertices, nIndexes);
         delete arr;
-        delete indexes;
+        
+        if (indexes)
+        {
+            if (!curveElementVBO)
+                curveElementVBO = new PHGLVertexBufferObject(_gameManager);
+            curveElementVBO->bindTo(PHGLVBO::elementArrayBuffer);
+            curveElementVBO->setData(indexes, nIndexes*sizeof(GLushort), PHGLVBO::dynamicDraw);
+            curveVAO->setDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0);
+            
+            delete indexes;
+        } else {
+            if (curveElementVBO)
+            {
+                curveElementVBO->release();
+                curveElementVBO = NULL;
+            }
+            curveVAO->setDrawArrays(GL_TRIANGLE_STRIP, 0, nVertices);
+        }
+        
+        curveVAO->unbind();
         
     } else {
-        if (arraysVBO)
-            glDeleteBuffers(1, &arraysVBO);
-        if (indexesVBO)
-            glDeleteBuffers(1, &indexesVBO);
-        arraysVBO = indexesVBO = 0;
+        destroyCurvedVAO();
     }
 }
 
-void PHImageView::bezierCallback(PHBezierPath *sender, void *ud)
+void PHImageView::curveCallback(PHCurve *sender, void *ud)
 {
     VBOneedsRebuilding = true;
 }
 
-void PHImageView::setBezierPath(PHBezierPath *bp)
+void PHImageView::setShape(PHCurve *bp)
 {
     if (curve)
     {
@@ -265,7 +247,7 @@ void PHImageView::setBezierPath(PHBezierPath *bp)
     if (bp)
     {
         bp->retain();
-        bp->addCallback(PHInv(this,PHImageView::bezierCallback,NULL));
+        bp->addCallback(PHInv(this,PHImageView::curveCallback,NULL));
     }
     curve = bp;
     VBOneedsRebuilding = true;
@@ -278,51 +260,49 @@ void PHImageView::renderCurved()
     image()->load();
     loadVBO();
     
-    glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
-    
     PHGLSetColor(tint);
-    PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+    PHGLSetStates(PHGLTexture);
     ((PHNormalImage*)image())->bindToTexture(0);
     _gameManager->applySpriteShader();
-    PHGLVertexPointer(2, GL_FLOAT, 4*sizeof(GLfloat), NULL);
-    PHGLTexCoordPointer(2, GL_FLOAT, 4*sizeof(GLfloat), (GLfloat*)NULL+2);
-
     
     if (constrain)
     {
         PHMatrix om = PHGLModelView();
         PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         _gameManager->reapplyMatrixUniform();
-        glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
+        curveVAO->draw();
         PHGLSetModelView(om);
     } else     
-    glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        curveVAO->draw();
 }
 
 void PHImageView::rebuildStraightVBO()
 {
+    destroyCurvedVAO();
     if (_image)
     {
         if (_image->isNormal())
         {
-            ((PHNormalImage*)_image)->rebuildVBO(this,arraysVBO,params1);
-            if (indexesVBO)
+            ((PHNormalImage*)_image)->rebuildVAO(this,straightVAO1,straightVBO1);
+            if (straightVBO2)
             {
-                glDeleteBuffers(1, &indexesVBO);
-                indexesVBO = false;
+                straightVBO2->release();
+                straightVBO2 = NULL;
+            }
+            if (straightVAO2)
+            {
+                straightVAO2->release();
+                straightVAO2 = NULL;
             }
         }
         if (_image->isAnimated())
         {
-            _animator->rebuildVBOs(this,arraysVBO,params1,indexesVBO,params2);
+            _animator->rebuildVAOs(this,straightVAO1,straightVBO1,straightVAO2,straightVBO2);
             lastAnimFrame = _animator->lastRealFrame();
             animFrame = _animator->currentRealFrame();
         }
-    }
+    } else
+        destroyStraightVAO();
 }
 
 bool PHImageView::animatorNeedsVBORebuild()
@@ -334,76 +314,47 @@ bool PHImageView::animatorNeedsVBORebuild()
 
 void PHImageView::renderStraight()
 {
-    //TODO: use VBOs
     if (!_image) return;
     _image->load();
     if (animatorNeedsVBORebuild())
         VBOneedsRebuilding = true;
     loadVBO();
-    if (arraysVBO)
+    if (straightVAO1)
     {
         PHMatrix om = PHGLModelView();
         PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         if (_image->isNormal())
         {
-            glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
             PHGLSetColor(tint);
-            PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+            PHGLSetStates(PHGLTexture);
             ((PHNormalImage*)image())->bindToTexture(0);
             _gameManager->applySpriteShader();
-            if (_gameManager->useShaders())
-            {
-                glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, params1.vertexSize, params1.vertexType, GL_FALSE, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-                glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, params1.texCoordSize, params1.texCoordType, GL_FALSE, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-            } else {
-                glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-                glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-            }
-            glDrawArrays(params1.renderMode, 0, params1.nElements);
-            glBindBuffer(GL_ARRAY_BUFFER,0);
+            straightVAO1->draw();
         }
         
         if (_image->isAnimated())
         {
             PHColor t = tint.isValid()?tint:PHWhiteColor;
-            ph_float rem = indexesVBO?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-            glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
+            ph_float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
             PHGLSetColor(t*(1-rem));
-            PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+            PHGLSetStates(PHGLTexture);
             _animator->bindCurrentFrameToTexture(0);
             _gameManager->applySpriteShader();
-            if (_gameManager->useShaders())
-            {
-                glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, params1.vertexSize, params1.vertexType, GL_FALSE, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-                glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, params1.texCoordSize, params1.texCoordType, GL_FALSE, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-            } else {
-                glVertexPointer(params1.vertexSize, params1.vertexType, params1.vertexStride, ((uint8_t*)NULL)+params1.vertexOffset);
-                glTexCoordPointer(params1.texCoordSize, params1.texCoordType, params1.texCoordStride, ((uint8_t*)NULL)+params1.texCoordOffset);
-            }
-            glDrawArrays(params1.renderMode, 0, params1.nElements);
+            straightVAO1->bind();
+            straightVAO1->draw();
             
-            if (indexesVBO)
+            if (straightVAO2)
             {
-                glBindBuffer(GL_ARRAY_BUFFER, indexesVBO);
                 PHGLSetColor(t*rem);
                 _animator->bindLastFrameToTexture(0);
-                if (_gameManager->useShaders())
-                {
-                    _gameManager->reapplyColorUniform();
-                    glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, params2.vertexSize, params2.vertexType, GL_FALSE, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
-                    glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, params2.texCoordSize, params2.texCoordType, GL_FALSE, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
-                } else
-                {
-                    glVertexPointer(params2.vertexSize, params2.vertexType, params2.vertexStride, ((uint8_t*)NULL)+params2.vertexOffset);
-                    glTexCoordPointer(params2.texCoordSize, params2.texCoordType, params2.texCoordStride, ((uint8_t*)NULL)+params2.texCoordOffset);
-                }
-                glDrawArrays(params2.renderMode, 0, params2.nElements);
+                straightVAO1->bind();
+                straightVAO2->draw();
             }
-            glBindBuffer(GL_ARRAY_BUFFER,0);
+            
+            _gameManager->bindVAO(NULL);
         }
         PHGLSetModelView(om);
     }
-    //renderInFramePortionTint(_bounds, coords, tint);
 }
 
 void PHImageView::draw()
@@ -496,7 +447,7 @@ void PHImageView::loadFromLua(lua_State *L)
         setVerticallyFlipped(flipVert);
         setRepeatX(repX);
         setRepeatY(repY);
-        setBezierPath(bp);
+        setShape(bp);
         setConstrainCurveToFrame(constrain);
         if (bp)
             bp->release();

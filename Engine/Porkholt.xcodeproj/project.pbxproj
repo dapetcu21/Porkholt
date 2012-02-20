@@ -291,6 +291,22 @@
 		C1C1BF1B14DABDFE00AC9076 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069C614D731F4007DACEA /* AVFoundation.framework */; };
 		C1C1BF1C14DABDFE00AC9076 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C137061214D6C4ED002CA4CA /* Foundation.framework */; };
 		C1C1BF1D14DABE0A00AC9076 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12069C814D731FB007DACEA /* AudioToolbox.framework */; };
+		C1F9681414EE93C600C20C16 /* PHCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9681314EE93C600C20C16 /* PHCurve.h */; };
+		C1F9681914EE93D000C20C16 /* PHCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9681814EE93D000C20C16 /* PHCurve.cpp */; };
+		C1F9684B14EEC37400C20C16 /* PHStripeCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9684A14EEC37400C20C16 /* PHStripeCurve.cpp */; };
+		C1F9685014EEC38200C20C16 /* PHStripeCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9684F14EEC38200C20C16 /* PHStripeCurve.h */; };
+		C1F9685214F018CD00C20C16 /* PHGLVertexBufferObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9685114F018CC00C20C16 /* PHGLVertexBufferObject.h */; };
+		C1F9685414F048D500C20C16 /* PHGLVertexBufferObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9685314F048D500C20C16 /* PHGLVertexBufferObject.cpp */; };
+		C1F9685514F048E600C20C16 /* PHCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9681814EE93D000C20C16 /* PHCurve.cpp */; };
+		C1F9685614F048EA00C20C16 /* PHStripeCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9684A14EEC37400C20C16 /* PHStripeCurve.cpp */; };
+		C1F9685714F048F000C20C16 /* PHCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9681314EE93C600C20C16 /* PHCurve.h */; };
+		C1F9685814F048F000C20C16 /* PHStripeCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9684F14EEC38200C20C16 /* PHStripeCurve.h */; };
+		C1F9685914F048FA00C20C16 /* PHGLVertexBufferObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9685114F018CC00C20C16 /* PHGLVertexBufferObject.h */; };
+		C1F9685A14F048FA00C20C16 /* PHGLVertexBufferObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9685314F048D500C20C16 /* PHGLVertexBufferObject.cpp */; };
+		C1F9685C14F0FA1C00C20C16 /* PHGLVertexArrayObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9685B14F0FA1C00C20C16 /* PHGLVertexArrayObject.h */; };
+		C1F9685E14F0FA3600C20C16 /* PHGLVertexArrayObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9685D14F0FA3600C20C16 /* PHGLVertexArrayObject.cpp */; };
+		C1F9685F14F1146C00C20C16 /* PHGLVertexArrayObject.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F9685B14F0FA1C00C20C16 /* PHGLVertexArrayObject.h */; };
+		C1F9686014F1146F00C20C16 /* PHGLVertexArrayObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9685D14F0FA3600C20C16 /* PHGLVertexArrayObject.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -510,6 +526,14 @@
 		C1B5BDCB14D6EFA9005483ED /* PHView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHView.h; sourceTree = "<group>"; };
 		C1B5BDCC14D6EFA9005483ED /* PHViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHViewController.cpp; sourceTree = "<group>"; };
 		C1B5BDCD14D6EFA9005483ED /* PHViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHViewController.h; sourceTree = "<group>"; };
+		C1F9681314EE93C600C20C16 /* PHCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCurve.h; sourceTree = "<group>"; };
+		C1F9681814EE93D000C20C16 /* PHCurve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCurve.cpp; sourceTree = "<group>"; };
+		C1F9684A14EEC37400C20C16 /* PHStripeCurve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHStripeCurve.cpp; sourceTree = "<group>"; };
+		C1F9684F14EEC38200C20C16 /* PHStripeCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHStripeCurve.h; sourceTree = "<group>"; };
+		C1F9685114F018CC00C20C16 /* PHGLVertexBufferObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLVertexBufferObject.h; sourceTree = "<group>"; };
+		C1F9685314F048D500C20C16 /* PHGLVertexBufferObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLVertexBufferObject.cpp; sourceTree = "<group>"; };
+		C1F9685B14F0FA1C00C20C16 /* PHGLVertexArrayObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGLVertexArrayObject.h; sourceTree = "<group>"; };
+		C1F9685D14F0FA3600C20C16 /* PHGLVertexArrayObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGLVertexArrayObject.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -770,6 +794,10 @@
 				C1B5BD8A14D6EFA9005483ED /* PHAuxLayerView.h */,
 				C1B5BD8B14D6EFA9005483ED /* PHBezierPath.cpp */,
 				C1B5BD8C14D6EFA9005483ED /* PHBezierPath.h */,
+				C1F9681814EE93D000C20C16 /* PHCurve.cpp */,
+				C1F9681314EE93C600C20C16 /* PHCurve.h */,
+				C1F9684A14EEC37400C20C16 /* PHStripeCurve.cpp */,
+				C1F9684F14EEC38200C20C16 /* PHStripeCurve.h */,
 				C1B5BD8D14D6EFA9005483ED /* PHCinematicActor.cpp */,
 				C1B5BD8E14D6EFA9005483ED /* PHCinematicActor.h */,
 				C1B5BD8F14D6EFA9005483ED /* PHCinematicAnimator.cpp */,
@@ -846,6 +874,10 @@
 				C17F4C7A14E24F1600F5E3AB /* PHDeferredView.h */,
 				C17F4C7F14E2504400F5E3AB /* PHDeferredView.cpp */,
 				C17F4C8614E27F0800F5E3AB /* PHGLLight.h */,
+				C1F9685114F018CC00C20C16 /* PHGLVertexBufferObject.h */,
+				C1F9685314F048D500C20C16 /* PHGLVertexBufferObject.cpp */,
+				C1F9685B14F0FA1C00C20C16 /* PHGLVertexArrayObject.h */,
+				C1F9685D14F0FA3600C20C16 /* PHGLVertexArrayObject.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -939,6 +971,10 @@
 				C188A66714E1550800C2DD9D /* PHStartGame.h in Headers */,
 				C17F4C7B14E24F1600F5E3AB /* PHDeferredView.h in Headers */,
 				C17F4C8714E27F0900F5E3AB /* PHGLLight.h in Headers */,
+				C1F9681414EE93C600C20C16 /* PHCurve.h in Headers */,
+				C1F9685014EEC38200C20C16 /* PHStripeCurve.h in Headers */,
+				C1F9685214F018CD00C20C16 /* PHGLVertexBufferObject.h in Headers */,
+				C1F9685C14F0FA1C00C20C16 /* PHGLVertexArrayObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1011,6 +1047,10 @@
 				C175D01F14DE8C3200970811 /* PHGLShader.h in Headers */,
 				C175D02814DE976700970811 /* PHGLShaderProgram.h in Headers */,
 				C175D02E14DEC44500970811 /* PHGLUniformStates.h in Headers */,
+				C1F9685714F048F000C20C16 /* PHCurve.h in Headers */,
+				C1F9685814F048F000C20C16 /* PHStripeCurve.h in Headers */,
+				C1F9685914F048FA00C20C16 /* PHGLVertexBufferObject.h in Headers */,
+				C1F9685F14F1146C00C20C16 /* PHGLVertexArrayObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1205,6 +1245,10 @@
 				C188A65F14E1510B00C2DD9D /* PorkholtViewController.mm in Sources */,
 				C188A66114E1517800C2DD9D /* PHStartGame.mm in Sources */,
 				C17F4C8014E2504400F5E3AB /* PHDeferredView.cpp in Sources */,
+				C1F9681914EE93D000C20C16 /* PHCurve.cpp in Sources */,
+				C1F9684B14EEC37400C20C16 /* PHStripeCurve.cpp in Sources */,
+				C1F9685414F048D500C20C16 /* PHGLVertexBufferObject.cpp in Sources */,
+				C1F9685E14F0FA3600C20C16 /* PHGLVertexArrayObject.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1268,6 +1312,10 @@
 				C175D02514DE8F1300970811 /* PHGLShader.cpp in Sources */,
 				C175D02B14DE9F2F00970811 /* PHGLShaderProgram.cpp in Sources */,
 				C175D03114DEC46900970811 /* PHGLUniformStates.cpp in Sources */,
+				C1F9685514F048E600C20C16 /* PHCurve.cpp in Sources */,
+				C1F9685614F048EA00C20C16 /* PHStripeCurve.cpp in Sources */,
+				C1F9685A14F048FA00C20C16 /* PHGLVertexBufferObject.cpp in Sources */,
+				C1F9686014F1146F00C20C16 /* PHGLVertexArrayObject.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

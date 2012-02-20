@@ -277,9 +277,9 @@ void PHLObject::_buildBezier(b2FixtureDef * def)
     PHPoint center = frm.center();
     static const PHPoint half(0.5,0.5);
     const vector<PHBezierPath::anchorPoint> & anchors = bp->calculatedVertices();
-    int n = 0;
-    GLushort * v = PHBezierPath::triangulate(anchors, n);
-    for (int i=0; i<n; i+=3)
+    size_t n = 0;
+    GLushort * v = PHCurve::triangulatePolygon(anchors, n);
+    for (size_t i=0; i<n; i+=3)
     {
         PHPoint p1 =  ((anchors[v[i]].point-half).rotated(props->rotation)+half)*sz+org;
         PHPoint p2 =  ((anchors[v[i+1]].point-half).rotated(props->rotation)+half)*sz+org;

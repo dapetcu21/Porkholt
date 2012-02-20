@@ -1,0 +1,123 @@
+//
+//  PHGLVertexBufferObject.cpp
+//  Porkholt
+//
+//  Created by Marius Petcu on 2/18/12.
+//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
+//
+
+#include "PHGLVertexBufferObject.h"
+#include "PHGameManager.h"
+
+GLenum PHGLVertexBufferObject::targets[] = {        
+    0,
+#ifdef GL_ARRAY_BUFFER
+    GL_ARRAY_BUFFER, 
+#else
+    0,
+#endif
+#ifdef GL_ELEMENT_ARRAY_BUFFER
+    GL_ELEMENT_ARRAY_BUFFER,
+#else
+    0,
+#endif
+#ifdef GL_PIXEL_PACK_BUFFER
+    GL_PIXEL_PACK_BUFFER,
+#else
+    0,
+#endif
+#ifdef GL_PIXEL_UNPACK_BUFFER
+    GL_PIXEL_UNPACK_BUFFER
+#else
+    0
+#endif
+};
+
+GLenum PHGLVertexBufferObject::usages[] = {
+#ifdef GL_STREAM_DRAW
+    GL_STREAM_DRAW,
+#else
+    0,
+#endif
+#ifdef GL_STREAM_READ
+    GL_STREAM_READ,
+#else
+    0,
+#endif
+#ifdef GL_STREAM_COPY
+    GL_STREAM_COPY,
+#else
+    0,
+#endif
+#ifdef GL_STATIC_DRAW
+    GL_STATIC_DRAW,
+#else
+    0,
+#endif
+#ifdef GL_STATIC_READ
+    GL_STATIC_READ,
+#else
+    0,
+#endif
+#ifdef GL_STATIC_COPY
+    GL_STATIC_COPY,
+#else
+    0,
+#endif
+#ifdef GL_DYNAMIC_DRAW
+    GL_DYNAMIC_DRAW,
+#else
+    0,
+#endif
+#ifdef GL_DYNAMIC_READ
+    GL_DYNAMIC_READ,
+#else
+    0,
+#endif
+#ifdef GL_DYNAMIC_COPY
+    GL_DYNAMIC_COPY
+#else
+    0
+#endif
+};
+
+PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gm) : _gameManager(gm), bound(0)
+{
+    glGenBuffers(1, &vbo);
+}
+
+PHGLVertexBufferObject::~PHGLVertexBufferObject()
+{
+    glDeleteBuffers(1, &vbo);
+}
+
+void PHGLVertexBufferObject::bindTo(int target)
+{
+    _gameManager->bindVBO(this, target);
+}
+
+void PHGLVertexBufferObject::unbind()
+{
+    if (bound)
+        _gameManager->bindVBO(NULL, bound);
+}
+
+#define bind_begin bool b = isBound(); PHGLVBO * old; \
+if (!b) { \
+    old = _gameManager->boundVBO(arrayBuffer); \
+    bindTo(arrayBuffer); }
+#define bind_end if (!b) _gameManager->bindVBO(old, arrayBuffer);
+
+void PHGLVertexBufferObject::setData(void * data, size_t size, int usage)
+{
+    bind_begin
+    glBufferData(targets[bound], size, data, usages[usage]);
+    bind_end
+}
+
+void PHGLVertexBufferObject::setSubData(void * data, size_t offset, size_t size)
+{
+    bind_begin
+    glBufferSubData(targets[bound], offset, size, data);
+    bind_end
+}

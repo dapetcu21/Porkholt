@@ -13,6 +13,8 @@
 #include "PHFileManager.h"
 #include "PHImageView.h"
 #include "PHGameManager.h"
+#include "PHGLVertexArrayObject.h"
+#include "PHGLVertexBufferObject.h"
 
 PHNormalImage::PHNormalImage(const string & path, PHGameManager * gm): PHImage(path,gm), texid(-1), thread(NULL)
 {
@@ -292,12 +294,14 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * _gameManager, const
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void PHNormalImage::rebuildVBO(PHImageView * imageView, GLuint & vbo, VBOParams & params)
+void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao, PHGLVertexBufferObject * & vbo)
 {
+    if (!vao)
+        vao = new PHGLVertexArrayObject(imageView->gameManager());
     if (!vbo)
-        glGenBuffers(1, &vbo);
-    PHImage::buildImageVBO(vbo,
-                           params,
+        vbo = new PHGLVertexBufferObject(imageView->gameManager());
+    PHImage::buildImageVAO(vao,
+                           vbo,
                            PHPoint(imageView->repeatX(),imageView->repeatY()),
                            imageView->textureCoordinates(),
                            PHRect(0,0,(ph_float)_width/actWidth,(ph_float)_height/actHeight),

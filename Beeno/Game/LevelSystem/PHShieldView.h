@@ -19,7 +19,7 @@ class PHShieldView : public PHView
 private:
     PHImageView * imv;
     
-    void setGameManager(PHGameManager * gm);
+    void attachedToGameManager();
 public:
     PHShieldView(const PHRect & fr);
     ~PHShieldView();

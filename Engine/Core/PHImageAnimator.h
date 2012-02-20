@@ -16,6 +16,8 @@ class PHAnimatedImage;
 class PHAnimatorPool;
 class PHImageView;
 class PHGameManager;
+class PHGLVertexArrayObject;
+class PHGLVertexBufferObject;
 
 class PHImageAnimator : public PHAnimator
 {
@@ -70,8 +72,8 @@ public:
 	void renderInFramePortion(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(gameManager, frm, cnstr,PHInvalidColor); }
     void renderInFramePortionTint(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
     
-    //VBOs
-    void rebuildVBOs(PHImageView * imageView, GLuint & vbo1, PHImage::VBOParams & params1, GLuint & vbo2, PHImage::VBOParams & params2);
+    //VAOs
+    void rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject * & vao1, PHGLVertexBufferObject * & vbo1, PHGLVertexArrayObject * & vao2, PHGLVertexBufferObject * & vbo2);
     void bindCurrentFrameToTexture(int tx);
     void bindLastFrameToTexture(int tx);
     

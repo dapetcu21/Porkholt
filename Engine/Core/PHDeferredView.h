@@ -21,7 +21,7 @@ protected:
     bool inited;
     
     void init();
-    void setGameManager(PHGameManager * gm);
+    void attachedToGameManager();
     
     void render();
     void composite();

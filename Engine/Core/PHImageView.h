@@ -16,6 +16,7 @@
 class PHImage;
 class PHImageAnimator;
 class PHAnimatorPool;
+class PHCurve;
 
 #define PH_REGISTERIMAGEVIEW(clss) PH_REGISTERCLASS(PHImageView::initMap, #clss, clss)
 
@@ -35,9 +36,12 @@ protected:
     
     PHAnimatorPool * pool;
     
-    void bezierCallback(PHBezierPath * sender, void *ud);
+    void curveCallback(PHCurve * sender, void *ud);
 	void rebuildCurvedVBO();
     void rebuildStraightVBO();
+    void destroyVAOs();
+    void destroyStraightVAO();
+    void destroyCurvedVAO();
     void rebuildVBO()
     {
         if (curve)
@@ -47,16 +51,15 @@ protected:
     }
     bool animatorNeedsVBORebuild();
     
-    GLfloat * interleavedArrayFromAnchorList(const void * anchors, int &n);
-    void textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, const void * anchors);
+    PHCurve * curve;
     
-    PHBezierPath * curve;
-    
-    GLuint arraysVBO,indexesVBO;
-    int nVertices;
-    int nIndexes;
     bool VBOneedsRebuilding;
-    PHImage::VBOParams params1,params2;
+    
+    PHGLVertexArrayObject * curveVAO;
+    PHGLVertexBufferObject * curveAttributeVBO, * curveElementVBO;
+    
+    PHGLVertexArrayObject * straightVAO1, * straightVAO2;
+    PHGLVertexBufferObject * straightVBO1, * straightVBO2;
     
     int lastAnimFrame,animFrame;
     
@@ -106,8 +109,8 @@ public:
     ph_float repeatY() { return _repeatY; }
     void setRepeatY(ph_float ry) { _repeatY = ry; VBOneedsRebuilding = true; }
     
-    PHBezierPath * bezierPath() { return curve; }
-    void setBezierPath(PHBezierPath * bp);
+    PHCurve * shape() { return curve; }
+    void setShape(PHCurve * bp);
     
     virtual void loadFromLua(lua_State * L);
     static PHImageView * imageFromLua(lua_State * L, PHGameManager * man, const string & rootPath);

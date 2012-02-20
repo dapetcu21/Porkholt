@@ -180,7 +180,11 @@ public:
     
 public:
     PHGameManager * gameManager() { return _gameManager; }
-    virtual void setGameManager(PHGameManager * gm);
+    void setGameManager(PHGameManager * gm);
+    
+protected:
+    virtual void attachedToGameManager() {};
+    
 };
 
 #define PHGLSetStates _gameManager->setOpenGLStates

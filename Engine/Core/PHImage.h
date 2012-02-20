@@ -15,9 +15,10 @@
 
 class PHImage;
 #include <map>
-class PHBezierPath;
+class PHCurve;
 class PHGameManager;
-
+class PHGLVertexArrayObject;
+class PHGLVertexBufferObject;
 
 class PHImage : public PHObject
 {
@@ -39,19 +40,11 @@ protected:
     
     PHImage * _normalMap;
     
-    struct VBOParams
-    {
-        int nElements;
-        size_t vertexOffset,texCoordOffset;
-        GLint vertexSize,texCoordSize;
-        GLenum vertexType, texCoordType, renderMode;
-        GLsizei vertexStride,texCoordStride;
-    };
     friend class PHImageView;
     friend class PHImageAnimator;
     friend class PHImageInitPool;
     
-    static void buildImageVBO(GLuint vbo, VBOParams & params, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adjustment);
+    static void buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adjustment);
     
 public:
     void load() { if (!loaded) _load(); }

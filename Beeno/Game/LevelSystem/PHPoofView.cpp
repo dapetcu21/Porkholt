@@ -28,31 +28,23 @@ PHPoofView::PHPoofView(int image) : PHImageView(), img(image)
 {
 }
 
-void PHPoofView::setGameManager(PHGameManager * gm)
+void PHPoofView::attachedToGameManager()
 {
-    PHView::setGameManager(gm);
-    if (gm && !image())
-    {
-        init(img);
-    }
-}
-
-void PHPoofView::init(int image)
-{
+    if (image()) return;
     mutex();
-    PHImage * img = NULL;
-    switch (image) {
+    PHImage * imag = NULL;
+    switch (img) {
         case poof:
-            img = poofImage(_gameManager);
+            imag = poofImage(_gameManager);
             break;
         case boom:
-            img = boomImage(_gameManager);
+            imag = boomImage(_gameManager);
             break;
         default:
             img = NULL;
             break;
     }
-    setImage(img);
+    setImage(imag);
     PHImageAnimator * a = animator();
     if (!a)
         destroy(NULL, NULL);

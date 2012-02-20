@@ -13,6 +13,8 @@
 
 class PHImageView;
 class PHGameManager;
+class PHGLVertexBufferObject;
+class PHGLVertexArrayObject;
 class PHNormalImage : public PHImage
 {
 private:
@@ -43,8 +45,8 @@ public:
 	void renderInFramePortion(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr) { renderInFramePortionTint(gameManager,frm, cnstr,PHInvalidColor); }
     void renderInFramePortionTint(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
     
-    //VBOs
-    void rebuildVBO(PHImageView * imageView, GLuint & vbo, VBOParams & params);
+    //VAOs
+    void rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao, PHGLVertexBufferObject * & vbo);
 	
     void loadFromFile(PHObject * sender, void * ud);
 	void loadToTexture(PHObject * sender, void * ud); //don't use

@@ -22,7 +22,7 @@ PHDeferredView::PHDeferredView(const PHRect & r) : PHView(r), INIT
 {
 }
 
-void PHDeferredView::init()
+void PHDeferredView::attachedToGameManager()
 {
     if (!_gameManager->useShaders())
         return;
@@ -90,13 +90,6 @@ PHDeferredView::~PHDeferredView()
         
         states->release();
     }
-}
-
-void PHDeferredView::setGameManager(PHGameManager * gm)
-{
-    PHView::setGameManager(gm);
-    if (gm)
-        init();
 }
 
 void PHDeferredView::render()

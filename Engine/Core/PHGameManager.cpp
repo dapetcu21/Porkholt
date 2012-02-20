@@ -20,9 +20,16 @@
 #include "PHSoundManager.h"
 #include "PHGLShaderProgram.h"
 #include "PHGLUniformStates.h"
+#include "PHGLVertexBufferObject.h"
+#include "PHGLVertexArrayObject.h"
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), spriteStates(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL)
-{}
+//#define PH_FORCE_FAKE_VAO
+
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), spriteStates(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), openGLVertexAttribStates(0), _boundVAO(NULL)
+{
+    memset(boundVBOs, 0, sizeof(boundVBOs));
+}
+
 
 PHGameManager::~PHGameManager()
 {
@@ -106,7 +113,6 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     
     view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
     view->setGameManager(this);
-	view->setBackgroundColor(PHGrayColor);
 	view->setUserInput(true);
     
     viewController = new PHNavigationController();
@@ -177,7 +183,7 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     if (_defaultFBOf==0)
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 		
     setModelViewMatrix(PHIdentityMatrix);
@@ -188,89 +194,105 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 	view->render();
 }
 
-void PHGameManager::setOpenGLStates(uint32_t states)
+void PHGameManager::setOpenGLAttributeStates(uint32_t vertexAttrib)
 {
-    if (states & PHGLResetAllStates)
-    {
-        states = 0;
-        openGLStates = 0xffffffff;
-    }
+    int xra = vertexAttrib^openGLVertexAttribStates;
+    openGLVertexAttribStates = vertexAttrib;
     
-    int xr = states^openGLStates;
-    openGLStates = states;
     
-    if (xr & PHGLVertexArray)
+    if (useShaders())
     {
-        if (useShaders())
+        int max = min<int>(_maxVertexAttribs,32);
+        for (int i=0; i<max; i++)
         {
-            if (states & PHGLVertexArray)
-                glEnableVertexAttribArray(PHIMAGEATTRIBUTE_POS);
-            else
-                glDisableVertexAttribArray(PHIMAGEATTRIBUTE_POS);            
-        } else {
-            if (states & PHGLVertexArray)
+            uint32_t flag = (1 << i);
+            if (xra & flag)
+            {
+                if (vertexAttrib & flag)
+                    glEnableVertexAttribArray(i);
+                else
+                    glDisableVertexAttribArray(i);
+            }
+        }
+    } else {
+        uint32_t mask;
+        mask = (1 << PHIMAGEATTRIBUTE_POS);
+        if (xra & mask )
+        {
+            if (vertexAttrib & mask)
                 glEnableClientState(GL_VERTEX_ARRAY);
             else
                 glDisableClientState(GL_VERTEX_ARRAY);
         }
-    }
-    
-    
-    if (xr & PHGLColorArray)
-    {
-        if (useShaders())
+        mask = (1 << PHIMAGEATTRIBUTE_CLR);
+        if (xra & mask)
         {
-            if (states & PHGLColorArray)
-                glEnableVertexAttribArray(PHIMAGEATTRIBUTE_CLR);
-            else
-                glDisableVertexAttribArray(PHIMAGEATTRIBUTE_CLR);            
-        } else {
-            if (states & PHGLColorArray)
+            if (vertexAttrib & mask)
                 glEnableClientState(GL_COLOR_ARRAY);
             else
                 glDisableClientState(GL_COLOR_ARRAY);
         }
-    }
-    
-    if (xr & PHGLTextureCoordArray)
-    {
-        if (useShaders())
+        mask = (1 << PHIMAGEATTRIBUTE_TXC);
+        if (xra & mask)
         {
-            if (states & PHGLTextureCoordArray)
-                glEnableVertexAttribArray(PHIMAGEATTRIBUTE_TXC);
-            else
-                glDisableVertexAttribArray(PHIMAGEATTRIBUTE_TXC);            
-        } else {
-            if (states & PHGLTextureCoordArray)
+            if (vertexAttrib & mask)
                 glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             else
                 glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
-    }
-    
-    if (xr & PHGLNormalArray)
-    {
-        if (useShaders())
+        mask = (1 << PHIMAGEATTRIBUTE_NRM);
+        if (xra & mask)
         {
-            if (states & PHGLNormalArray)
-                glEnableVertexAttribArray(PHIMAGEATTRIBUTE_NRM);
-            else
-                glDisableVertexAttribArray(PHIMAGEATTRIBUTE_NRM);            
-        } else {
-            if (states & PHGLNormalArray)
+            if (vertexAttrib & mask)
                 glEnableClientState(GL_NORMAL_ARRAY);
             else
                 glDisableClientState(GL_NORMAL_ARRAY);
         }
     }
+}
+
+void PHGameManager::setOpenGLStates(uint32_t states, uint32_t vertexAttrib)
+{
+    if (states & PHGLResetAllStates)
+    {
+        states = vertexAttrib = 0;
+        openGLStates = 0xffffffff;
+    }
     
-    if (xr & PHGLTexture)
+    if (states & PHGLVertexArray)
+    {
+        vertexAttrib |= (1 << PHIMAGEATTRIBUTE_POS);
+        states &= ~(uint32_t)PHGLVertexArray;
+    }
+    if (states & PHGLTextureCoordArray)
+    {
+        vertexAttrib |= (1 << PHIMAGEATTRIBUTE_TXC);
+        states &= ~(uint32_t)PHGLTextureCoordArray;
+    }
+    if (states & PHGLColorArray)
+    {
+        vertexAttrib |= (1 << PHIMAGEATTRIBUTE_CLR);
+        states &= ~(uint32_t)PHGLColorArray;
+    }
+    if (states & PHGLNormalArray)
+    {
+        vertexAttrib |= (1 << PHIMAGEATTRIBUTE_NRM);
+        states &= ~(uint32_t)PHGLNormalArray;
+    }
+    
+    int xr = states^openGLStates;
+    openGLStates = states;
+
+    if (!useShaders() && (xr & PHGLTexture))
     {
         if (states & PHGLTexture)
             glEnable(GL_TEXTURE_2D);
         else
             glDisable(GL_TEXTURE_2D);
     }
+    
+    if (vertexAttrib)
+        setOpenGLAttributeStates(vertexAttrib);
 }
 
 void PHGameManager::_appSuspended(PHObject * sender, void * ud)
@@ -441,6 +463,56 @@ void PHGameManager::loadCapabilities()
         openGLCaps[PHGLCapabilityGLES1] = es && (openGLVersionMajor == 1);
         openGLCaps[PHGLCapabilityGLES2] = es && (openGLVersionMajor >= 2);
         openGLCaps[PHGLCapabilityShaders] = (openGLVersionMajor>=2);
+        GLint tmp;
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &tmp);
+        _maxVertexAttribs = (int)tmp;
+        
+#ifndef PH_FORCE_FAKE_VAO
+#ifdef GL_VERSION_3_0
+        if (openGLVersionMajor >= 3 && !es)
+        {
+            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArray;
+            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArrays;
+            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArrays;
+        }
+        else
+#endif
+        
+#ifdef GL_OES_vertex_array_object
+        if (extensions.count("GL_OES_vertex_array_object"))
+        {
+            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayOES;
+            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysOES;
+            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysOES;
+        }
+        else
+#endif
+        
+#ifdef GL_APPLE_vertex_array_object
+        if (extensions.count("GL_APPLE_vertex_array_object"))
+        {
+            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayAPPLE;
+            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysAPPLE;
+            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysAPPLE;
+        }
+        else
+#endif
+        
+#ifdef GL_ARB_vertex_array_object
+        if (extensions.count("GL_ARB_vertex_array_object"))
+        {
+            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayARB;
+            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysARB;
+            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysARB;
+        }
+        else
+#endif
+#endif
+        {
+            PHGLBindVertexArray = NULL;
+            PHGLDeleteVertexArrays = NULL;
+            PHGLGenVertexArrays = NULL;
+        }
     }
 }
 
@@ -494,4 +566,59 @@ void PHGameManager::useShader(PHGLShaderProgram * prog)
         return;
     _shader = prog;
     prog->use();
+}
+
+void PHGameManager::bindVBO(PHGLVertexBufferObject * vbo, int location)
+{
+    if (location==0) return;
+    if ((location == PHGLVBO::elementArrayBuffer) && _boundVAO)
+    {
+        if (_boundVAO->elementVBO == vbo) return;
+        if (_boundVAO->elementVBO)
+            _boundVAO->elementVBO->bound = 0;
+        if (vbo)
+            vbo->bound = location;
+        _boundVAO->elementVBO = vbo;
+        glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
+        return;
+    }
+    if (boundVBOs[location]==vbo) return;
+    if (boundVBOs[location])
+        boundVBOs[location]->bound = 0;
+    if (vbo)
+        vbo->bound = location;
+    boundVBOs[location] = vbo;
+    glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
+}
+
+void PHGameManager::bindVAO(PHGLVertexArrayObject * vao)
+{
+    if (_boundVAO == vao) return;
+    if (_boundVAO)
+    {
+        _boundVAO->bound = false;
+        if (_boundVAO->elementVBO)
+            _boundVAO->elementVBO->bound = 0;
+    } else
+        if (boundVBOs[PHGLVBO::elementArrayBuffer])
+            boundVBOs[PHGLVBO::elementArrayBuffer]->bound = 0;
+    if (vao)
+    {
+        vao->bound = true;
+        if (vao->elementVBO)
+            vao->elementVBO->bound = PHGLVBO::elementArrayBuffer;
+    } else 
+        if (boundVBOs[PHGLVBO::elementArrayBuffer])
+            boundVBOs[PHGLVBO::elementArrayBuffer]->bound = PHGLVBO::elementArrayBuffer;
+    
+    if (PHGLBindVertexArray)
+        PHGLBindVertexArray(vao?(vao->vao):0);
+    else
+    {
+        if (vao)
+            vao->fakeBind();
+        else
+            _boundVAO->fakeUnbind();
+    }
+    _boundVAO = vao;
 }

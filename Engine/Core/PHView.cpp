@@ -34,6 +34,8 @@ void PHView::setGameManager(PHGameManager * gm)
     _gameManager = gm;
     for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
         (*i)->setGameManager(gm);
+    if (gm)
+        attachedToGameManager();
 }
 
 void PHView::setFrame(const PHRect &frame)

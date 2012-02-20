@@ -28,10 +28,9 @@ public:
     PHPoofView(int image);
 private:
     int img;
-    void init(int image);
     void destroy(PHObject * sender, void * ud);
     
-    void setGameManager(PHGameManager * gm);
+    void attachedToGameManager();
 };
 
 #endif
