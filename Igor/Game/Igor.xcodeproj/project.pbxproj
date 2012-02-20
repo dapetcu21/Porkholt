@@ -91,6 +91,9 @@
 		C1C1BF1E14DACEDF00AC9076 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488E14DA9B5C00431210 /* liblua.a */; };
 		C1C1BF1F14DACEDF00AC9076 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B488F14DA9B5C00431210 /* libpng15.a */; };
 		C1C1BF2014DACEDF00AC9076 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B489014DA9B5C00431210 /* libz.a */; };
+		C1F9680714ECEFDE00C20C16 /* PHGameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9680614ECEFDE00C20C16 /* PHGameController.cpp */; };
+		C1F9680A14ED3FB600C20C16 /* PHPlayerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9680914ED3FB600C20C16 /* PHPlayerView.cpp */; };
+		C1F9681214EE3F3100C20C16 /* PHGameView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1F9681114EE3F3100C20C16 /* PHGameView.cpp */; };
 		C1FF4DD713DC1F16003B7673 /* rsrc in Resources */ = {isa = PBXBuildFile; fileRef = C1FF4DD613DC1F16003B7673 /* rsrc */; };
 /* End PBXBuildFile section */
 
@@ -140,6 +143,7 @@
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Porkholt-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Porkholt-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C115CC9014E7F9740053B49E /* PHGameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGameController.h; sourceTree = "<group>"; };
 		C11B488E14DA9B5C00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../Externals/lib/darwin/ios/liblua.a; sourceTree = "<group>"; };
 		C11B488F14DA9B5C00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../Externals/lib/darwin/ios/libpng15.a; sourceTree = "<group>"; };
 		C11B489014DA9B5C00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../Externals/lib/darwin/ios/libz.a; sourceTree = "<group>"; };
@@ -220,6 +224,11 @@
 		C1B3C85014713816000FD6DF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C1B3C85214713823000FD6DF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C1B3C8541471382D000FD6DF /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		C1F9680614ECEFDE00C20C16 /* PHGameController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGameController.cpp; sourceTree = "<group>"; };
+		C1F9680814ED3FAE00C20C16 /* PHPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHPlayerView.h; sourceTree = "<group>"; };
+		C1F9680914ED3FB600C20C16 /* PHPlayerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHPlayerView.cpp; sourceTree = "<group>"; };
+		C1F9681014EE3F2100C20C16 /* PHGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHGameView.h; sourceTree = "<group>"; };
+		C1F9681114EE3F3100C20C16 /* PHGameView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHGameView.cpp; sourceTree = "<group>"; };
 		C1FF4DD613DC1F16003B7673 /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = rsrc; path = _/rsrc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -276,6 +285,7 @@
 			children = (
 				C120696314D7163D007DACEA /* Porkholt.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Bindings */,
+				C115CC7514E7EFD90053B49E /* Classes */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				C1A034E4132DF60700F0200C /* Box2D */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -308,6 +318,19 @@
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C115CC7514E7EFD90053B49E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C115CC9014E7F9740053B49E /* PHGameController.h */,
+				C1F9680614ECEFDE00C20C16 /* PHGameController.cpp */,
+				C1F9680814ED3FAE00C20C16 /* PHPlayerView.h */,
+				C1F9680914ED3FB600C20C16 /* PHPlayerView.cpp */,
+				C1F9681014EE3F2100C20C16 /* PHGameView.h */,
+				C1F9681114EE3F3100C20C16 /* PHGameView.cpp */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		C120696414D7163D007DACEA /* Products */ = {
@@ -619,6 +642,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.cpp in Sources */,
+				C1F9680714ECEFDE00C20C16 /* PHGameController.cpp in Sources */,
+				C1F9680A14ED3FB600C20C16 /* PHPlayerView.cpp in Sources */,
+				C1F9681214EE3F3100C20C16 /* PHGameView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
