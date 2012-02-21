@@ -57,8 +57,8 @@ public:
         dynamicCopy
     };
     
-    void setData(void * data, size_t size, int usage);
-    void setSubData(void * data, size_t offset, size_t size);
+    void setData(const void * data, size_t size, int usage);
+    void setSubData(const void * data, size_t offset, size_t size);
     void setData(void * data, size_t size) {
         setData(data, size, dynamicDraw);
     }

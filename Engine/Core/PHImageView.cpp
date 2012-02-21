@@ -190,14 +190,15 @@ void PHImageView::rebuildCurvedVBO()
         p.width-=sx*2;
         p.height-=sx*2;
         
-        curveVAO->bind();
+        curveVAO->bindToEdit();
         size_t nVertices;
         GLfloat * arr = curve->vertexData(nVertices, p);
         if (!curveAttributeVBO)
             curveAttributeVBO = new PHGLVertexBufferObject(_gameManager);
         
         curveAttributeVBO->bindTo(PHGLVBO::arrayBuffer);
-        curveAttributeVBO->setData(arr, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+        curveAttributeVBO->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+        curveAttributeVBO->setSubData(arr, 0, nVertices*4*sizeof(GLfloat));
         curveVAO->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, curveAttributeVBO);
         curveVAO->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), curveAttributeVBO);
         curveAttributeVBO->unbind();

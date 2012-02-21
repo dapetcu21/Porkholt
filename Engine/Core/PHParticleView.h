@@ -13,6 +13,9 @@
 
 class PHParticleAnimator;
 class PHAnimatorPool;
+class PHGLVertexArrayObject;
+class PHGLVertexBufferObject;
+
 class PHParticleView : public PHImageView
 {
 private:
@@ -22,11 +25,23 @@ private:
     
     void renderParticles(void * particles, const PHRect & texCoord, const PHColor & tint);
     
+    PHGLVertexArrayObject * vao;
+    PHGLVertexBufferObject * vbo, * indexVBO;
+    
+    bool useBytes;
+    size_t maxN;
+    
+    ph_float cacheTime;
+    ph_float cacheLeft;
+    
 public:
     PHParticleView();
     PHParticleView(const PHRect &frame);
     PHParticleView(PHImage * image);
     void init();
+    
+    void setIndexCacheTime(ph_float time) { cacheLeft = cacheTime = time; }
+    ph_float indexCacheTime() { return cacheTime; }
     
     virtual ~PHParticleView();
     virtual void render();

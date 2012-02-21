@@ -10,6 +10,7 @@
 #include "PHGLUniformStates.h"
 #include "PHGameManager.h"
 #include "PHGLShaderProgram.h"
+#include "PHGLVertexArrayObject.h"
 #include <assert.h>
 
 #define INIT inited(false), ambient(PHColor(0.1,0.1,0.1)), diffuse(PHWhiteColor), specular(PHWhiteColor), speculars(false), normal(false)
@@ -120,14 +121,7 @@ void PHDeferredView::composite()
     
     PHRect v = _gameManager->screenBounds();
     
-	const GLfloat attributes[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f
-    };
-
-    PHGLSetStates(PHGLVertexArray | PHGLTexture);
+    PHGLSetStates(PHGLTexture);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, colorTex);
     if (normal)
@@ -135,9 +129,10 @@ void PHDeferredView::composite()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, normalTex);
     }
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, attributes);
     
 	glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    PHGLVertexArrayObject * vao = _gameManager->solidSquareVAO();
+    vao->bind();
     
     PHVector2 scale(v.width,v.height);
     
@@ -148,7 +143,7 @@ void PHDeferredView::composite()
         states->at(PHGameManager::textureSpriteUniform).apply(ambientShader);
         (states->at(PHGameManager::colorSpriteUniform) = ambient).apply(ambientShader);
         (states->at(scaleUniform) = scale).apply(ambientShader);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        vao->draw();
     }
     if (!pointLights.empty())
     {
@@ -205,10 +200,11 @@ void PHDeferredView::composite()
             if (speculars)
                 (states->at(specularColorUniform) = (p->specular * specular)).apply(shader);
             
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            vao->draw();
         }
     }
     
+    vao->unbind();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

@@ -106,6 +106,10 @@ private:
     int rndMode;
     PHGLVertexBufferObject * boundVBOs[5];
     PHGLVertexArrayObject * _boundVAO;
+    PHGLVertexArrayObject * _solidSquareVAO;
+    PHGLVertexBufferObject * _solidSquareVBO;
+
+        
     
     friend class PHGLVertexBufferObject;
     friend class PHGLVertexArrayObject;
@@ -204,6 +208,8 @@ public:
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
     void pushSpriteShader(PHGLShaderProgram * p);
     void popSpriteShader();
+    PHGLVertexArrayObject * solidSquareVAO() { if (!_solidSquareVAO) buildSolidSquareVAO(); return _solidSquareVAO; }
+    void buildSolidSquareVAO();
     
     PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
     PHGLShaderProgram * coloredSpriteShader() { return _coloredSpriteShader; }

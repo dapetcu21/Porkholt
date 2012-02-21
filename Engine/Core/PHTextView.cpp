@@ -7,8 +7,10 @@
 //
 
 #include "PHTextView.h"
+#include "PHGLVertexBufferObject.h"
+#include "PHGLVertexArrayObject.h"
 
-#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(0), arraysVBO(0), lineSpace(0.5), vbuffer(NULL), indices(NULL)
+#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(NULL), arraysVBO(NULL), lineSpace(0.5), vbuffer(NULL), indices(NULL), vao(NULL)
 
 PHTextView::PHTextView() : PHView(), PHTEXTVIEW_INIT
 {
@@ -21,9 +23,11 @@ PHTextView::PHTextView(const PHRect &frame) : PHView(frame), PHTEXTVIEW_INIT
 PHTextView::~PHTextView()
 {
     if (indicesVBO)
-        glDeleteBuffers(1, &indicesVBO);
+        indicesVBO->release();
     if (arraysVBO)
-        glDeleteBuffers(1, &arraysVBO);
+        arraysVBO->release();
+    if (vao)
+        vao->release();
     if (vbuffer)
         delete [] vbuffer;
     if (indices)
@@ -35,16 +39,23 @@ PHTextView::~PHTextView()
 void PHTextView::loadVBOs()
 {
     if (!indices || !vbuffer) return;
+    if (!vao)
+        vao = new PHGLVertexArrayObject(_gameManager);
     if (!arraysVBO)
-        glGenBuffers(1, &arraysVBO);
+        arraysVBO = new PHGLVertexBufferObject(_gameManager);
     if (!indicesVBO)
-        glGenBuffers(1, &indicesVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*nGlyphs*4*4, vbuffer, GL_DYNAMIC_DRAW);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*nGlyphs*6, indices, GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        indicesVBO = new PHGLVertexBufferObject(_gameManager);
+
+    vao->bindToEdit();
+    arraysVBO->bindTo(PHGLVBO::arrayBuffer);
+    arraysVBO->setData(vbuffer, sizeof(GLfloat)*nGlyphs*4*4, PHGLVBO::dynamicDraw);
+    indicesVBO->bindTo(PHGLVBO::elementArrayBuffer);
+    indicesVBO->setData(indices, sizeof(GLushort)*nGlyphs*6, PHGLVBO::dynamicDraw);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, 0, arraysVBO);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, sizeof(GLfloat)*2, arraysVBO);
+    arraysVBO->unbind();
+    vao->setDrawElements(GL_TRIANGLES, 6*nGlyphs, GL_UNSIGNED_SHORT, 0);
+    vao->unbind();
     
     delete [] vbuffer;
     delete [] indices;
@@ -59,23 +70,14 @@ void PHTextView::draw()
         recalculatePositions();
     loadVBOs();
     
-    glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVBO);
-    
-    PHGLSetStates(PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture);
+    PHGLSetStates(PHGLTexture);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _font->textureID());
     PHGLSetColor(color);
     _gameManager->pushSpriteShader(_gameManager->textShader());
     _gameManager->applySpriteShader();
     _gameManager->popSpriteShader();
-	PHGLVertexPointer(  2, GL_FLOAT, sizeof(GLfloat)*4, (GLfloat*)NULL);
-    PHGLTexCoordPointer(2, GL_FLOAT, sizeof(GLfloat)*4, ((GLfloat*)NULL)+2);
-    
-    glDrawElements(GL_TRIANGLES, 6*nGlyphs, GL_UNSIGNED_SHORT, NULL);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    vao->draw();
 }
 
 inline bool PHIsBreakCharacter(char c)

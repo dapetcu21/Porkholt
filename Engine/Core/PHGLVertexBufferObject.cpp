@@ -108,14 +108,14 @@ if (!b) { \
     bindTo(arrayBuffer); }
 #define bind_end if (!b) _gameManager->bindVBO(old, arrayBuffer);
 
-void PHGLVertexBufferObject::setData(void * data, size_t size, int usage)
+void PHGLVertexBufferObject::setData(const void * data, size_t size, int usage)
 {
     bind_begin
     glBufferData(targets[bound], size, data, usages[usage]);
     bind_end
 }
 
-void PHGLVertexBufferObject::setSubData(void * data, size_t offset, size_t size)
+void PHGLVertexBufferObject::setSubData(const void * data, size_t offset, size_t size)
 {
     bind_begin
     glBufferSubData(targets[bound], offset, size, data);

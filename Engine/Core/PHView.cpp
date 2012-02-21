@@ -12,6 +12,7 @@
 #include "PHGameManager.h"
 #include "PHEventHandler.h"
 #include "PHLua.h"
+#include "PHGLVertexArrayObject.h"
 
 #define PHVIEW_INITLIST superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
@@ -251,21 +252,17 @@ void PHView::drawBackground()
 	if (_backColor.a <= 0) return;
     if (_gameManager->renderMode() != PHGameManager::defaultRenderMode)
         return;
-	const GLfloat squareVertices[] = {
-        0, 0,
-        _bounds.width, 0,
-        0,  _bounds.height,
-        _bounds.width,  _bounds.height,
-    };
 	
     PHGLSetStates(PHGLVertexArray);
     PHGLSetColor(_backColor);
+    PHMatrix old = PHGLModelView();
+    PHGLSetModelView(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
     _gameManager->pushSpriteShader(_gameManager->noTexSpriteShader());
     _gameManager->applySpriteShader();
     _gameManager->popSpriteShader();
-	PHGLVertexPointer(2, GL_FLOAT, 0, squareVertices);
+    _gameManager->solidSquareVAO()->draw();
+    PHGLSetModelView(old);
     
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 		
 void PHView::draw()

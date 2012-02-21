@@ -25,7 +25,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), spriteStates(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), openGLVertexAttribStates(0), _boundVAO(NULL)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), spriteStates(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), openGLVertexAttribStates(0), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
 }
@@ -33,6 +33,10 @@ PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false)
 
 PHGameManager::~PHGameManager()
 {
+    if (_solidSquareVAO)
+        _solidSquareVAO->release();
+    if (_solidSquareVBO)
+        _solidSquareVBO->release();
     if (evtHandler)
         evtHandler->release();
     if (sndManager)
@@ -621,4 +625,26 @@ void PHGameManager::bindVAO(PHGLVertexArrayObject * vao)
             _boundVAO->fakeUnbind();
     }
     _boundVAO = vao;
+}
+
+void PHGameManager::buildSolidSquareVAO()
+{
+    PHGLVertexArrayObject * vao = new PHGLVertexArrayObject(this);
+    PHGLVertexBufferObject * vbo = new PHGLVertexBufferObject(this);
+    
+    vao->bind();
+    vbo->bindTo(PHGLVBO::arrayBuffer);
+    static const GLfloat a[] = {
+        0,0,
+        1,0,
+        0,1,
+        1,1
+    };
+    vbo->setData(a, sizeof(GLfloat)*8, PHGLVBO::staticDraw);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*2, 0, vbo);
+    vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    vao->unbind();
+    vbo->unbind();
+    _solidSquareVAO = vao;
+    _solidSquareVBO = vbo;
 }

@@ -12,6 +12,8 @@
 #include "PHView.h"
 #include "PHFont.h"
 
+class PHGLVertexArrayObject;
+class PHGLVertexBufferObject;
 class PHTextView : public PHView
 {
 protected:
@@ -24,10 +26,12 @@ protected:
     
     bool needsReload;
     
+    PHGLVertexArrayObject * vao;
     GLfloat * vbuffer;
     GLushort * indices;
     
-    GLuint indicesVBO, arraysVBO;
+    PHGLVertexBufferObject * indicesVBO;
+    PHGLVertexBufferObject * arraysVBO;
     
     unsigned int nGlyphs;
     

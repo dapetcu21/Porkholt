@@ -13,10 +13,12 @@
 #include "PHNormalImage.h"
 #include "PHImageAnimator.h"
 #include "PHGameManager.h"
+#include "PHGLVertexArrayObject.h"
+#include "PHGLVertexBufferObject.h"
 
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
-#define INIT particleM(new PHMutex), particleAnim(NULL), particlePool(PHAnimatorPool::currentAnimatorPool())
+#define INIT particleM(new PHMutex), particleAnim(NULL), particlePool(PHAnimatorPool::currentAnimatorPool()), vao(NULL), vbo(NULL), indexVBO(NULL), maxN(0), cacheTime(15), cacheLeft(15)
 
 PHParticleView::PHParticleView() : PHImageView(), INIT 
 {
@@ -40,6 +42,12 @@ void PHParticleView::init()
 
 PHParticleView::~PHParticleView()
 {
+    if (vao)
+        vao->release();
+    if (vbo)
+        vbo->release();
+    if (indexVBO)
+        indexVBO->release();
     setParticleAnimator(NULL);
     particleM->unlock();
 }
@@ -117,14 +125,10 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
 {
     vector<PHParticleAnimator::particle> * particles = (vector<PHParticleAnimator::particle>*)p;
     if (!p || !particles->size()) return;
-    int n = (int)(particles->size());
-    int nrVertices = (int)(particles->size()*6-2);
-    GLfloat * vertices = new GLfloat[nrVertices*2];
-    GLfloat * textureCoords = new GLfloat[nrVertices*2];
-    GLfloat * colors = new GLfloat[nrVertices*4];
-    GLfloat * v = vertices;
-    GLfloat * txC = textureCoords;
-    GLfloat * clr = colors;
+    size_t n = particles->size();
+    size_t nrVertices = n*4;
+    GLfloat * buffer = new GLfloat[nrVertices*(2+2+1)];
+    GLfloat * b = buffer;
     GLfloat stdTxC[8] = 
     {
         texCoord.x, texCoord.y,
@@ -132,7 +136,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         texCoord.x, texCoord.y+texCoord.height,
         texCoord.x+texCoord.width, texCoord.y+texCoord.height
     };
-    for (int i = 0; i<n; i++)
+    for (size_t i = 0; i<n; i++)
     {
         PHParticleAnimator::particle & p = particles->at(i);
         const PHSize & sz = p.size;
@@ -141,59 +145,126 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         pp[1] = PHPoint(+sz.width/2,-sz.height/2);
         pp[2] = PHPoint(-sz.width/2,+sz.height/2);
         pp[3] = PHPoint(+sz.width/2,+sz.height/2);
-        if (i)
-        {
-            v[0] = v[-2];
-            v[1] = v[-1];
-            pp[0].rotate(p.rotation);
-            pp[0]+=p.position;
-            v[2] = pp[0].x; v[3] = pp[0].y;
-            txC[0] = stdTxC[6];
-            txC[1] = stdTxC[7];
-            txC[2] = stdTxC[0];
-            txC[3] = stdTxC[1];
-            clr[0] = clr[-4];
-            clr[1] = clr[-3];
-            clr[2] = clr[-2];
-            clr[3] = clr[-1];
-            clr[4] = p.color.r;
-            clr[5] = p.color.g;
-            clr[6] = p.color.b;
-            clr[7] = p.color.a;
-            v+=4;
-            txC+=4;
-            clr+=8;
-        }
+        
         for (int j=0; j<4; j++)
         {
-            if ((i&&j) || !i)
-            {
-                pp[j].rotate(p.rotation);
-                pp[j]+=p.position;
-            }
-            v[(j<<1)] = pp[j].x; v[(j<<1)+1] = pp[j].y;
-            clr[(j<<2)] = p.color.r;
-            clr[(j<<2)+1] = p.color.g;
-            clr[(j<<2)+2] = p.color.b;
-            clr[(j<<2)+3] = p.color.a;
+            pp[j].rotate(p.rotation);
+            pp[j]+=p.position;
+            
+            b[0] = pp[j].x;
+            b[1] = pp[j].y;
+            
+            b[2] = stdTxC[(j<<1)];
+            b[3] = stdTxC[(j<<1)+1];
+            
+            PH24BitColor c = PH24BitColor(p.color);
+            *((uint32_t*)(b+4)) = *((uint32_t*)&c);
+            
+            b+=5;
         }
-        memcpy(txC, stdTxC, sizeof(GLfloat)*8);
-        v+=8;
-        txC+=8;
-        clr+=16;
     }
-    PHGLSetStates(PHGLTexture | PHGLVertexArray | PHGLTextureCoordArray | PHGLColorArray);
+    
+    if (!indexVBO)
+        indexVBO = new PHGLVertexBufferObject(_gameManager);
+    if (!vbo)
+        vbo = new PHGLVertexBufferObject(_gameManager);
+    
+    vbo->bindTo(PHGLVBO::arrayBuffer);
+    vbo->setData(NULL, sizeof(GLfloat)*nrVertices*5, _gameManager->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
+    vbo->setSubData(buffer, 0, sizeof(GLfloat)*nrVertices*5);
+    
+    cacheLeft -= (1.0f / _gameManager->framesPerSecond());
+    if (cacheLeft <=0)
+    {
+        cacheLeft = cacheTime;
+        maxN = 0;
+    }
+    
+    if (n>maxN)
+    {
+        maxN = n;
+        
+        size_t nrIndices = n?(n*6-2):0;
+        useBytes = (nrVertices<=256);
+        
+        GLubyte * bIndices = useBytes?(new GLubyte[nrIndices]):NULL;
+        GLushort * sIndices = useBytes?NULL:(new GLushort[nrIndices]);
+        void * indexBuffer = useBytes?(void*)bIndices:(void*)sIndices;
+        size_t indexSize = nrIndices*(useBytes?sizeof(GLubyte):sizeof(GLushort));
+        
+        if (useBytes)
+        {
+            if (n)
+            {
+                bIndices[0] = 0;
+                bIndices[1] = 1;
+                bIndices[2] = 2;
+                bIndices[3] = 3;
+            }
+            for (size_t i=1; i<n; i++)
+            {
+                size_t i6 = i*6;
+                size_t i4 = i*4;
+                bIndices[i6-2] = i4-1;
+                bIndices[i6-1] = i4;
+                bIndices[i6] = i4;
+                bIndices[i6+1] = i4+1;
+                bIndices[i6+2] = i4+2;
+                bIndices[i6+3] = i4+3;
+            }
+        } else {
+            if (n)
+            {
+                sIndices[0] = 0;
+                sIndices[1] = 1;
+                sIndices[2] = 2;
+                sIndices[3] = 3;
+            }
+            for (size_t i=1; i<n; i++)
+            {
+                size_t i6 = i*6;
+                size_t i4 = i*4;
+                sIndices[i6-2] = i4-1;
+                sIndices[i6-1] = i4;
+                sIndices[i6] = i4;
+                sIndices[i6+1] = i4+1;
+                sIndices[i6+2] = i4+2;
+                sIndices[i6+3] = i4+3;
+            }
+        }
+        
+        indexVBO->bindTo(PHGLVBO::elementArrayBuffer);
+        indexVBO->setData(NULL, indexSize, PHGLVBO::dynamicDraw);
+        indexVBO->setSubData(indexBuffer, 0, indexSize);
+        indexVBO->unbind();
+
+        if (useBytes)
+            delete [] bIndices;
+        else
+            delete [] sIndices;
+    }
+    
+    if (!vao)
+    {
+        vao = new PHGLVertexArrayObject(_gameManager);
+        vao->bindToEdit();
+        vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, 0, vbo);
+        vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, sizeof(GLfloat)*2, vbo);
+        vao->vertexPointer(PHIMAGEATTRIBUTE_CLR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(GLfloat)*5, sizeof(GLfloat)*4, vbo);
+        indexVBO->bindTo(PHGLVBO::elementArrayBuffer);
+        vao->unbind();
+    }
+    vbo->unbind();
+    delete [] buffer;   
+    
+    PHGLSetStates(PHGLTexture);
     _gameManager->pushSpriteShader(_gameManager->coloredSpriteShader());
     _gameManager->applySpriteShader();
     _gameManager->popSpriteShader();
-    PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
-    PHGLTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
-    PHGLColorPointer(4, GL_FLOAT, 0, colors);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, nrVertices);
     
-    delete [] vertices;
-    delete [] colors;
-    delete [] textureCoords;
+    vao->bind();
+    glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);
+    vao->unbind();
 }
 
 void PHParticleView::render()
