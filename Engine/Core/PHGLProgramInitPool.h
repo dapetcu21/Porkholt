@@ -12,12 +12,15 @@
 #include "PHMain.h"
 
 class PHGLShaderProgram;
+class PHGameManager;
+
 class PHGLProgramInitPool
 {
 public:
     PHGLShaderProgram * shaderProgramNamed(const string & name);
     virtual const string shaderDirectory();
     ~PHGLProgramInitPool();
+    virtual PHGameManager * gameManager() = 0;
 private:
     map<string,PHGLShaderProgram*> shaders;
 };

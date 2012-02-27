@@ -12,13 +12,15 @@
 #include "PHMain.h"
 
 class PHGLShader;
+class PHGameManager;
+
 class PHGLShaderProgram : public PHObject
 {
 protected:
     GLint identifier;
     PHGLShader * vShader, * fShader;
 public:
-    PHGLShaderProgram(const string & path);
+    PHGLShaderProgram(PHGameManager * gameManager, const string & path);
     PHGLShader * vertexShader() { return vShader; }
     PHGLShader * fragmentShader() { return fShader; }
     bool validate();

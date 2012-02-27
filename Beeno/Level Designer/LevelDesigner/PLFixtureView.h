@@ -30,8 +30,8 @@ protected:
     PLBezierView * bezierView;
     
     GLuint arraysVBO,indexesVBO;
-    int nVertices;
-    int nIndexes;
+    size_t nVertices;
+    size_t nIndexes;
     int nLines;
     
     void draw();

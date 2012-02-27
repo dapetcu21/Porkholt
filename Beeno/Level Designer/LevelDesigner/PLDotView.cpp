@@ -24,6 +24,7 @@ void PLDotView::draw()
     
     PHGLSetStates(PHGLVertexArray);
     PHGLSetColor(color);
-    glVertexPointer(2, GL_FLOAT, 0, circleVertices);
+    PHGLVertexPointer(2, GL_FLOAT, 0, circleVertices);
+    _gameManager->applyShader(_gameManager->solidColorShader());
     glDrawArrays(GL_TRIANGLE_FAN, 0, circleChunks+2);
 }

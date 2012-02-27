@@ -103,7 +103,8 @@ void PLJointDot::draw()
         GLfloat v[] = { p1.x,p1.y, p2.x,p2.y };
         glLineWidth(1.0f);
         PHGLSetColor(color);
-        glVertexPointer(2, GL_FLOAT, 0, v);
+        PHGLVertexPointer(2, GL_FLOAT, 0, v);
+        _gameManager->applyShader(_gameManager->solidColorShader());
         glDrawArrays(GL_LINE_STRIP, 0, 2);
     }
     PLDotView::draw();

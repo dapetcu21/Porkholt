@@ -26,9 +26,7 @@ void PHTestView::draw()
     };
 	
     PHGLSetStates(PHGLVertexArray | PHGLColorArray);
-    _gameManager->pushSpriteShader(_gameManager->coloredNoTexSpriteShader());
-    _gameManager->applySpriteShader();
-    _gameManager->popSpriteShader();
+    _gameManager->applyShader(_gameManager->coloredNoTexSpriteShader());
 	PHGLVertexPointer(2, GL_FLOAT, 0, squareVertices);
 	PHGLColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
     

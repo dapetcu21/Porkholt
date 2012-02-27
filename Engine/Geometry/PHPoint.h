@@ -11,6 +11,10 @@
 
 #include "PHMain.h"
 
+#ifdef PH_PACKED_STRUCT_PRAGMA
+#pragma pack(1)
+#endif
+
 struct PHRect;
 struct PHPoint
 {
@@ -153,7 +157,7 @@ struct PHPoint
         return v1.x*v2.x+v1.y*v2.y;
 #endif
     }
-};
+} PH_PACKED_STRUCT;
 
 typedef PHPoint PHSize;
 typedef PHPoint PHVector2;
@@ -321,7 +325,11 @@ struct PH3DPoint
 #endif
     }
     
-};
+} PH_PACKED_STRUCT;
+
+#ifdef PH_PACKED_STRUCT_PRAGMA
+#pragma pack pop
+#endif
 
 typedef PH3DPoint PH3DSize;
 typedef PH3DPoint PHVector3;
@@ -329,5 +337,8 @@ typedef PH3DPoint PHVector3;
 #define PHNullVector3 PH3DOriginPoint 
 extern const PH3DSize PH3DUnitSize;
 extern const PH3DPoint PH3DOriginPoint;
+
+PH_STATIC_ASSERT(sizeof(PHVector3) == sizeof(ph_float)*3);
+PH_STATIC_ASSERT(sizeof(PHVector2) == sizeof(ph_float)*2);
 
 #endif

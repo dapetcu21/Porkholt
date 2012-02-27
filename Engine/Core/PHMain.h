@@ -88,7 +88,20 @@ void * PHAlloc(void)
     #define PH_DEBUG
 #endif
 
+template< bool cond > struct _PH_STATIC_ASSERTION_FAILURE;
+template <> struct _PH_STATIC_ASSERTION_FAILURE< true > {};
+template <> struct _PH_STATIC_ASSERTION_FAILURE< false > {};
+#define _PH_TOKENPASTE(x, y) x ## y
+#define PH_TOKENPASTE(x, y) _PH_TOKENPASTE(x, y)
+#define PH_STATIC_ASSERT(cond) enum { PH_TOKENPASTE(dummy,__LINE__) = sizeof(_PH_STATIC_ASSERTION_FAILURE< (bool)(cond) >) }
+
 struct lua_State; 
+
+#ifdef __GNUC__
+#define PH_PACKED_STRUCT __attribute__((packed))
+#elif _MSC_VER
+#define PH_PACKED_STRUCT_PRAGMA
+#endif
 
 #include "PHInvocation.h"
 #include "PHTime.h"

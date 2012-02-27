@@ -9,11 +9,10 @@
 #include "PHGLShader.h"
 #include "PHFileManager.h"
 
-PHGLShader::PHGLShader(const string & path, int type)
+PHGLShader::PHGLShader(const string & header, const string & path, int type)
 {
     size_t size;
     const GLchar * data = (const GLchar*)PHFileManager::loadFile(path, size);
-    GLint sz = size;
     GLint t;
     switch (type) {
         case vertexShader:
@@ -27,7 +26,9 @@ PHGLShader::PHGLShader(const string & path, int type)
             break;
     }
     identifier = glCreateShader(t);
-    glShaderSource(identifier, 1, &data, &sz);
+    const GLchar * strings[2] = { header.c_str(), data };
+    GLint sizes[2] = { header.length(), size };
+    glShaderSource(identifier, 2, strings, sizes);
     glCompileShader(identifier);
     delete [] data;
     

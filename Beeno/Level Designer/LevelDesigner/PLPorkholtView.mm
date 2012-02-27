@@ -22,6 +22,8 @@
 #import "SubentityViewController.h"
 #import "PLAppController.h"
 
+void PHLEntryPoint(PHGameManager * gm);
+
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
 - (float)deviceDeltaY;
@@ -58,6 +60,7 @@
     initParams.screenHeight = frame.size.height;
     initParams.fps = 60;
     initParams.resourcePath = string([[(PLAppController*)[NSApp delegate] resourcePath] UTF8String]);
+    initParams.entryPoint = &PHLEntryPoint;
     gameManager->init(initParams);
 }
 
@@ -284,12 +287,12 @@
     ((PHScrollerView*)gameManager->rootView())->resetToOrigin();
 }
 
-void PHGameManager::entryPoint()
+void PHLEntryPoint(PHGameManager * gm)
 {
     PHScrollerView * v = new PHScrollerView;
     v->setScale(100,PHOriginPoint);
-    view = v;
-    [(PLPorkholtView*)(this->userData()) entryPoint];
+    gm->setMainView(v);
+    [(PLPorkholtView*)(gm->userData()) entryPoint];
 }
 
 -(BOOL)acceptsFirstResponder

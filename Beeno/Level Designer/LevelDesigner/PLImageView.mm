@@ -21,6 +21,7 @@
 #import "PLBezier.h"
 #import "PLBezierView.h"
 #import "PHGameManager.h"
+#import "PHBezierPath.h"
 
 PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotating(false), grab(0), bezierView(NULL)
 {
@@ -29,11 +30,9 @@ PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotat
     [model setActor:this];
 }
 
-void PLImageView::setGameManager(PHGameManager * gm)
+void PLImageView::attachedToGameManager()
 {
-    PHView::setGameManager(gm);
-    if (gm)
-        modelChanged();
+    modelChanged();
 }
 
 PLImageView::~PLImageView()
@@ -49,6 +48,8 @@ PLImageView::~PLImageView()
 
 void PLImageView::modelChanged()
 {
+    if (!_gameManager)
+        return;
     NSRect frame = [model frame];
     setFrame(PHRect(frame.origin.x,frame.origin.y,frame.size.width,frame.size.height));
     NSString * s = [model fileName];
@@ -69,7 +70,7 @@ void PLImageView::modelChanged()
     setTintColor(PHColor(c.r,c.g,c.b,c.a));
     setAlpha(model.alpha);
     setConstrainCurveToFrame(model.constrainToFrame);
-    setBezierPath(model.bezierCurve.bezierPath);
+    setShape(model.bezierCurve.bezierPath);
     setRepeatX(model.repeatX);
     setRepeatY(model.repeatY);
     selectedChanged();
@@ -361,7 +362,7 @@ void PLImageView::draw()
             1,0.3
         };
         PHGLSetStates(PHGLVertexArray);
-        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
         PHGLSetColor(PHColor(0.5,0.5,1));
         
         PHMatrix om = PHGLModelView();
@@ -370,6 +371,7 @@ void PLImageView::draw()
             PHGLSetModelView(om * 
                 PHMatrix::translation(_bounds.x+(i&1)?_bounds.width:0, _bounds.y+(i&2)?_bounds.height:0) * 
                 PHMatrix::scaling(((i&1)?-1:1)*0.1, ((i&2)?-1:1)*0.1));
+            _gameManager->applyShader(_gameManager->solidColorShader());
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
         }
         PHGLSetModelView(om);

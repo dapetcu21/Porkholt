@@ -46,14 +46,14 @@ void PLFixtureView::bezierChanged(PHObject * sender, void * ud)
         if (indexesVBO == GL_INVALID_INDEX)
             glGenBuffers(1, &indexesVBO);
         
-        const vector<PHBezierPath::anchorPoint> * anchors = &bp->calculatedVertices();
-        nVertices = (int)anchors->size();
-        GLushort * indexes = PHBezierPath::triangulate(*anchors,nIndexes);
+        const vector<PHCurve::anchorPoint> * anchors = &bp->calculatedVertices();
+        nVertices = anchors->size();
+        GLushort * indexes = PHCurve::triangulatePolygon(*anchors,nIndexes);
         
         glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
         glBufferData(GL_ARRAY_BUFFER, nVertices*2*sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
         GLfloat * arr = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-        for (int i = 0 ; i<nVertices; i++)
+        for (size_t i = 0 ; i<nVertices; i++)
         {
             PHPoint p = anchors->at(i).point;
             arr[i<<1] = p.x;
@@ -452,13 +452,15 @@ void PLFixtureView::draw()
         
         PHGLSetStates(PHGLVertexArray);
         PHGLSetColor(PHColor(0.18,0.24,0.92,0.3));
-        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
+        _gameManager->applyShader(_gameManager->solidColorShader());
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
         const GLubyte idx[] = {0,1,3,2,0};
-        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
         PHGLSetColor(PHColor(0.7,0.7,1));
         glLineWidth(1.0f);
+        _gameManager->applyShader(_gameManager->solidColorShader());
         glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_BYTE, idx);
     }
     if (model.shape == PLFixtureFreestyle && arraysVBO!=GL_INVALID_INDEX && indexesVBO!=GL_INVALID_INDEX)
@@ -468,16 +470,18 @@ void PLFixtureView::draw()
         
         PHGLSetStates(PHGLVertexArray);
         PHGLSetColor(PHColor(0.18,0.24,0.92,0.3));
-        glVertexPointer(2, GL_FLOAT, 0, NULL);
+        PHGLVertexPointer(2, GL_FLOAT, 0, NULL);
         
         PHMatrix om = PHGLModelView();
         PHGLSetModelView(om *
              PHMatrix::translation(_bounds.x,_bounds.y) *
              PHMatrix::scaling(_bounds.width,_bounds.height));
-        glDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, NULL);
+        _gameManager->applyShader(_gameManager->solidColorShader());
+        glDrawElements(GL_TRIANGLES, (GLsizei)nIndexes, GL_UNSIGNED_SHORT, NULL);
         PHGLSetColor(PHColor(0.7,0.7,1));
         glLineWidth(1.0f);
-        glDrawElements(GL_LINE_STRIP, nVertices+1, GL_UNSIGNED_SHORT, ((GLushort*)NULL)+nIndexes);
+        _gameManager->applyShader(_gameManager->solidColorShader());
+        glDrawElements(GL_LINE_STRIP, (GLsizei)nVertices+1, GL_UNSIGNED_SHORT, ((GLushort*)NULL)+nIndexes);
         PHGLSetModelView(om);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -497,7 +501,7 @@ void PLFixtureView::draw()
             0,0.3,
             1,0.3
         };
-        glVertexPointer(2, GL_FLOAT, 0, markersVertices);
+        PHGLVertexPointer(2, GL_FLOAT, 0, markersVertices);
         PHGLSetStates(PHGLVertexArray);
         PHGLSetColor(PHColor(0.5,0.5,1));
         
@@ -508,6 +512,7 @@ void PLFixtureView::draw()
             PHGLSetModelView(om *
                 PHMatrix::translation(_bounds.x+(i&1)?_bounds.width:0, _bounds.y+(i&2)?_bounds.height:0) * 
                 PHMatrix::scaling(((i&1)?-1:1)*0.1, ((i&2)?-1:1)*0.1));
+            _gameManager->applyShader(_gameManager->solidColorShader());
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
         }
         PHGLSetModelView(om);
@@ -525,10 +530,12 @@ void PLFixtureView::draw()
             circleVertices[i*2+2] = sin(angle)*rad+center.x;
             circleVertices[i*2+3] = cos(angle)*rad+center.y;
         }
-
+        
         PHGLSetStates(PHGLVertexArray);
         PHGLSetColor(PHColor(0.18,0.24,0.92,0.3));
-        glVertexPointer(2, GL_FLOAT, 0, circleVertices);
+        _gameManager->applyShader(_gameManager->solidColorShader());
+        PHGLVertexPointer(2, GL_FLOAT, 0, circleVertices);
+        
         glDrawArrays(GL_TRIANGLE_FAN, 0, circleChunks+2);
         
         GLfloat circleBorder[(circleChunks+1)*2];
@@ -541,7 +548,8 @@ void PLFixtureView::draw()
         
         PHGLSetColor(selected?PHColor(0.5,0.5,1):PHColor(0.7,0.7,1));
         glLineWidth(selected?3.0f:1.0f);
-        glVertexPointer(2, GL_FLOAT, 0, circleBorder);
+        PHGLVertexPointer(2, GL_FLOAT, 0, circleBorder);
+        _gameManager->applyShader(_gameManager->solidColorShader());
         glDrawArrays(GL_LINE_STRIP, 0, circleChunks+1);
     }
 }

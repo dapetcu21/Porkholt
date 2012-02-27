@@ -144,9 +144,9 @@ void PLObjectView::reloadSubviews()
             {
                 obj.actor = new PLImageView(obj);
                 obj.actor->setController(this);
-            } else
-                obj.actor->modelChanged();
+            }
             addSubview(obj.actor);
+            obj.actor->modelChanged();
         }
     if (((ObjectController*)[model owner]).showFixtures)
         for (PLFixture * obj in [[model subentityModel] fixtures])

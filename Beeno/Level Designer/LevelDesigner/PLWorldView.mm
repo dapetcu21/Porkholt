@@ -116,9 +116,9 @@ void PLWorldView::draw()
     };
 	
     PHGLSetStates(PHGLVertexArray);
-	glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+	PHGLVertexPointer(2, GL_FLOAT, 0, squareVertices);
     PHGLSetColor(PHColor(1,1,1,0.5));
-               
+    _gameManager->applyShader(_gameManager->solidColorShader());           
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 }

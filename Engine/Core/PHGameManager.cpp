@@ -22,6 +22,7 @@
 #include "PHGLUniformStates.h"
 #include "PHGLVertexBufferObject.h"
 #include "PHGLVertexArrayObject.h"
+#include <sstream>
 
 //#define PH_FORCE_FAKE_VAO
 
@@ -33,6 +34,10 @@ PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false)
 
 PHGameManager::~PHGameManager()
 {
+    if (view)
+        view->release();
+    if (viewController)
+        viewController->release();
     if (_solidSquareVAO)
         _solidSquareVAO->release();
     if (_solidSquareVBO)
@@ -45,6 +50,24 @@ PHGameManager::~PHGameManager()
         spriteStates->release();
     if (hd)
         --globalHD;
+}
+
+void PHGameManager::setMainView(PHView * v)
+{
+    if (v)
+    {
+        v->setGameManager(this);
+        v->retain();
+    }
+    if (view)
+    {
+        view->setGameManager(NULL);
+        view->release();
+    }
+    view = v;
+    setProjection(); 
+    if (view)
+        view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
 }
 
 int PHGameManager::globalHD = 0;
@@ -124,10 +147,10 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	viewController->_viewWillAppear();
 	view->addSubview(viewController->getView());
 	viewController->_viewDidAppear();
-
+    view->setGameManager(this);
+    
     entryPoint(this);
     
-    view->setGameManager(this);
 }
 
 void PHGameManager::setModelViewMatrix(const PHMatrix & m)
@@ -397,6 +420,7 @@ void PHGameManager::loadCapabilities()
     if (!parsedExtensions)
     {
         const char * ver = (char*) glGetString(GL_VERSION);
+        const char * vers = ver;
         bool es = strstr(ver, "ES");
         openGLCaps[PHGLCapabilityOpenGLES] = es;
         
@@ -454,7 +478,22 @@ void PHGameManager::loadCapabilities()
             s+=*i;
             s+=" ";
         }
-        PHLog("OpenGL Version: %s %d.%d",es?"ES":"",openGLVersionMajor,openGLVersionMinor);
+        
+        glslVersion = 0;
+        const char * glslvp = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+        const char * glslv = glslvp;
+        for (;glslv && glslVersion<100; glslv++)
+        {
+            char c = *glslv;
+            if (c>='0' && c<='9')
+                glslVersion = glslVersion*10 + (c-'0');
+        }
+        while (glslVersion && glslVersion<100)
+            glslVersion *= 10;
+        
+        
+        PHLog("OpenGL Version: \"%s\" -> %s %d.%d",vers,es?"ES":"",openGLVersionMajor,openGLVersionMinor);
+        PHLog("GLSL Version: \"%s\" -> %d",glslvp,glslVersion);
         PHLog("OpenGL Extensions: %s",s.c_str());
         
         openGLCaps[PHGLCapabilityNPOT] = (openGLVersionMajor>=2 || extensions.count("OES_texture_npot") || extensions.count("GL_ARB_texture_non_power_of_two") || extensions.count("GL_IMG_texture_npot"));
@@ -470,6 +509,22 @@ void PHGameManager::loadCapabilities()
         GLint tmp;
         glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &tmp);
         _maxVertexAttribs = (int)tmp;
+        
+        stringstream sstr;
+        sstr<<"#version "<<glslVersion<<"\n";
+        sstr<<"#define PH_ENGINE\n";
+        sstr<<"#define PH_GLSL_VERSION "<<glslVersion<<"\n";
+        sstr<<"#define PH_GL_MINOR_VERSION "<<openGLVersionMinor<<"\n";
+        sstr<<"#define PH_GL_MAJOR_VERSION "<<openGLVersionMajor<<"\n";
+        if (!es)
+        {
+            sstr<<"#define highp \n";
+            sstr<<"#define mediump \n";
+            sstr<<"#define lowp \n";
+        }
+        
+        glslHeader = sstr.str();
+        
         
 #ifndef PH_FORCE_FAKE_VAO
 #ifdef GL_VERSION_3_0
@@ -551,17 +606,21 @@ void PHGameManager::reapplyColorUniform()
     (spriteStates->at(colorSpriteUniform) = _currentColor).apply(shader);
 }
 
-void PHGameManager::applySpriteShader()
+void PHGameManager::applyShader(PHGLShaderProgram * shader)
 {
     if (useShaders())
     {
-        PHGLShaderProgram * shader = spriteShader();
         if (!shader) return;
         (*spriteStates)[modelViewSpriteUniform] = _projection * _modelView;
         (*spriteStates)[colorSpriteUniform] = _currentColor;
         useShader(shader);
         spriteStates->apply(shader);
     }
+}
+
+void PHGameManager::applySpriteShader()
+{
+    applyShader(spriteShader());
 }
 
 void PHGameManager::useShader(PHGLShaderProgram * prog)

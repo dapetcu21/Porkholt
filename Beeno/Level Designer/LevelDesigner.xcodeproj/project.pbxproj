@@ -671,7 +671,7 @@
 				GCC_PREFIX_HEADER = "LevelDesigner/LevelDesigner-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					../../Externals/libpng,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					"../../Engine/**",
 				);
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";
@@ -688,7 +688,7 @@
 				GCC_PREFIX_HEADER = "LevelDesigner/LevelDesigner-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					../../Externals/libpng,
-					../../Externals/lua/include,
+					../../Externals/lua/src,
 					"../../Engine/**",
 				);
 				INFOPLIST_FILE = "LevelDesigner/LevelDesigner-Info.plist";

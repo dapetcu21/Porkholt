@@ -74,9 +74,7 @@ void PHTextView::draw()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _font->textureID());
     PHGLSetColor(color);
-    _gameManager->pushSpriteShader(_gameManager->textShader());
-    _gameManager->applySpriteShader();
-    _gameManager->popSpriteShader();
+    _gameManager->applyShader(_gameManager->textShader());
     vao->draw();
 }
 

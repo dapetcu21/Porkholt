@@ -9,6 +9,10 @@
 #ifndef PHCOLOR_H
 #define PHCOLOR_H
 
+#ifdef PH_PACKED_STRUCT_PRAGMA
+#pragma pack(1)
+#endif
+
 struct PHColor
 {
     union
@@ -57,14 +61,14 @@ struct PHColor
     {
         PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
         return res;
-    }
+    } 
     PHColor(ph_float red, ph_float green, ph_float blue, ph_float alpha) : r(red), g(green), b(blue), a(alpha) {};
     PHColor(ph_float red, ph_float green, ph_float blue) : r(red), g(green), b(blue), a(1.0f) {};
     PHColor() {};
     bool isValid() { return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1); }
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
-};
+} PH_PACKED_STRUCT;
 
 struct PH24BitColor
 {
@@ -77,7 +81,11 @@ struct PH24BitColor
     }
     PH24BitColor() {};
     PH24BitColor(const PHColor & o) : r(o.r*255), g(o.g*255), b(o.b*255), a(o.a*255) {}
-};
+} PH_PACKED_STRUCT;
+
+#ifdef PH_PACKED_STRUCT_PRAGMA
+#pragma pack pop
+#endif
 
 typedef PHColor PHVector4;
 
@@ -86,5 +94,8 @@ extern const PHColor PHBlackColor;
 extern const PHColor PHGrayColor;
 extern const PHColor PHWhiteColor;
 extern const PHColor PHInvalidColor;
+
+PH_STATIC_ASSERT(sizeof(PHVector4) == sizeof(ph_float)*4);
+PH_STATIC_ASSERT(sizeof(PH24BitColor) == 4);
 
 #endif

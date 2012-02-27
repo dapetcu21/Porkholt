@@ -257,9 +257,7 @@ void PHView::drawBackground()
     PHGLSetColor(_backColor);
     PHMatrix old = PHGLModelView();
     PHGLSetModelView(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
-    _gameManager->pushSpriteShader(_gameManager->noTexSpriteShader());
-    _gameManager->applySpriteShader();
-    _gameManager->popSpriteShader();
+    _gameManager->applyShader(_gameManager->solidColorShader());
     _gameManager->solidSquareVAO()->draw();
     PHGLSetModelView(old);
     

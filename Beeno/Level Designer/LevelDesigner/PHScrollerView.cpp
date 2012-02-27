@@ -1,4 +1,4 @@
-//
+ //
 //  PHScrollerView.cpp
 //  LevelDesigner
 //
@@ -169,7 +169,8 @@ void PHScrollerView::drawGrid(double gap, double width, const PHColor & color)
         v+=2;
     }
     
-    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
+    _gameManager->applyShader(_gameManager->solidColorShader());
     glDrawArrays(GL_TRIANGLE_STRIP, 0, nv);
     
     delete [] vertices;
@@ -203,7 +204,8 @@ void PHScrollerView::draw()
         
         PHGLSetStates(PHGLVertexArray);
         PHGLSetColor(PHColor(1,0,0,1));
-        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
+        _gameManager->applyShader(_gameManager->solidColorShader());
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 }

@@ -96,7 +96,8 @@ private:
     PHColor _currentColor;
     set<string> extensions;
     bool parsedExtensions;
-    int openGLVersionMajor,openGLVersionMinor;
+    int openGLVersionMajor,openGLVersionMinor,glslVersion;
+    string glslHeader;
     bool openGLCaps[PHGLNumberCapabilities];
     
     list<PHGLShaderProgram*> spriteShaderStack;
@@ -113,6 +114,7 @@ private:
     
     friend class PHGLVertexBufferObject;
     friend class PHGLVertexArrayObject;
+    friend class PHGLShaderProgram;
     
     GLvoid (*PHGLBindVertexArray)(GLuint);
     GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
@@ -142,6 +144,7 @@ public:
 	void appQuits();
 	void memoryWarning();
 	PHView * mainView() { return view; };
+    void setMainView(PHView * v);
 	void remove(void * ud);
     const string imageDirectory();
     PHGameManager * gameManager() { return this; }
@@ -203,6 +206,7 @@ public:
     bool useShaders() { return openGLCaps[PHGLCapabilityShaders]; }
     int openGLMajorVersion() { return openGLVersionMajor; }
     int openGlMinorVersion() { return openGLVersionMinor; }
+    int openGLSLVersion() { return glslVersion; }
     bool hasCapability(int cap) { return openGLCaps[cap]; }
     
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
@@ -213,7 +217,7 @@ public:
     
     PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
     PHGLShaderProgram * coloredSpriteShader() { return _coloredSpriteShader; }
-    PHGLShaderProgram * noTexSpriteShader() { return _noTexSpriteShader; }
+    PHGLShaderProgram * solidColorShader() { return _noTexSpriteShader; }
     PHGLShaderProgram * coloredNoTexSpriteShader() { return _coloredNoTexSpriteShader; }
     PHGLShaderProgram * textShader() { return _textShader; }
     PHGLShaderProgram * missingNormalSpriteShader() { return _missingNormalSpriteShader; }
@@ -227,6 +231,7 @@ public:
     
     PHGLUniformStates * spriteUniformStates() { return spriteStates; }
     void applySpriteShader();
+    void applyShader(PHGLShaderProgram * shader);
     void reapplyMatrixUniform();
     void reapplyColorUniform();
     PHGLShaderProgram * shader() { return _shader; }

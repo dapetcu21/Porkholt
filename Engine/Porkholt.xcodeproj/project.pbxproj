@@ -127,6 +127,7 @@
 		C17F4C7B14E24F1600F5E3AB /* PHDeferredView.h in Headers */ = {isa = PBXBuildFile; fileRef = C17F4C7A14E24F1600F5E3AB /* PHDeferredView.h */; };
 		C17F4C8014E2504400F5E3AB /* PHDeferredView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17F4C7F14E2504400F5E3AB /* PHDeferredView.cpp */; };
 		C17F4C8714E27F0900F5E3AB /* PHGLLight.h in Headers */ = {isa = PBXBuildFile; fileRef = C17F4C8614E27F0800F5E3AB /* PHGLLight.h */; };
+		C183D45F14F405DB0099D4BA /* PHGLProgramInitPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C113ACF714DEEA440095BFC1 /* PHGLProgramInitPool.cpp */; };
 		C188A65714E1510B00C2DD9D /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A64E14E1510B00C2DD9D /* EAGLView.h */; };
 		C188A65814E1510B00C2DD9D /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = C188A64F14E1510B00C2DD9D /* EAGLView.mm */; };
 		C188A65914E1510B00C2DD9D /* PHAccelerometerInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = C188A65014E1510B00C2DD9D /* PHAccelerometerInterface.h */; };
@@ -1316,6 +1317,7 @@
 				C1F9685614F048EA00C20C16 /* PHStripeCurve.cpp in Sources */,
 				C1F9685A14F048FA00C20C16 /* PHGLVertexBufferObject.cpp in Sources */,
 				C1F9686014F1146F00C20C16 /* PHGLVertexArrayObject.cpp in Sources */,
+				C183D45F14F405DB0099D4BA /* PHGLProgramInitPool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

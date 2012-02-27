@@ -258,9 +258,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     delete [] buffer;   
     
     PHGLSetStates(PHGLTexture);
-    _gameManager->pushSpriteShader(_gameManager->coloredSpriteShader());
-    _gameManager->applySpriteShader();
-    _gameManager->popSpriteShader();
+    _gameManager->applyShader(_gameManager->coloredSpriteShader());
     
     vao->bind();
     glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);

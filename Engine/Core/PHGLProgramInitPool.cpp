@@ -21,7 +21,7 @@ PHGLShaderProgram* PHGLProgramInitPool::shaderProgramNamed(const string & name)
 	if (i==shaders.end())
 	{
 		try {
-            shd = new PHGLShaderProgram(shaderDirectory() + name + ".lua");
+            shd = new PHGLShaderProgram(gameManager(), shaderDirectory() + name + ".lua");
 		} catch (string ex)
 		{
 			PHLog(ex);

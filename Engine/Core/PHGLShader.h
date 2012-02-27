@@ -22,7 +22,7 @@ public:
         fragmentShader = 1
     };
     
-    PHGLShader(const string & path, int type);
+    PHGLShader(const string & header, const string & path, int type);
     ~PHGLShader();
     GLint shaderID() { return identifier; }
 };
