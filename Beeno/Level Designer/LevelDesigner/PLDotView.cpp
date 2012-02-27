@@ -22,9 +22,9 @@ void PLDotView::draw()
         circleVertices[i*2+3] = cos(angle)*rad+center.y;
     }
     
-    PHGLSetStates(PHGLVertexArray);
-    PHGLSetColor(color);
-    PHGLVertexPointer(2, GL_FLOAT, 0, circleVertices);
-    _gameManager->applyShader(_gameManager->solidColorShader());
+    gm->setGLStates(PHGLVertexArray);
+    gm->setColor(color);
+    gm->vertexPointer(2, GL_FLOAT, 0, circleVertices);
+    gm->applyShader(gm->solidColorShader());
     glDrawArrays(GL_TRIANGLE_FAN, 0, circleChunks+2);
 }

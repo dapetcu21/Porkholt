@@ -23,13 +23,13 @@ static const char * const cloudP[] = {"cloud1","cloud2","cloud3"};
 PHView * PHMenuController::loadView(const PHRect & frame)
 {
     PHImageView * v = new PHImageView(frame);
-    v->setImage(_gameManager->imageNamed("bg_gradient"));
+    v->setImage(gm->imageNamed("bg_gradient"));
     v->setUserInput(true);
     
     for(int i=0; i<(sizeof(cloudX)/sizeof(ph_float)); i++)
     {
         PHImageView * c = new PHImageView;
-        c->setImage(_gameManager->imageNamed(cloudP[i]));
+        c->setImage(gm->imageNamed(cloudP[i]));
         c->setTag(i+10);
         clouds.push_back(c);
         v->addSubview(c);
@@ -38,14 +38,14 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     resetClouds(v);
     
     nav = new PHNavigationController();
-    nav->init(_gameManager,frame);
+    nav->init(gm,frame);
     nav->_viewWillAppear();
     v->addSubview(nav->getView());
     nav->_viewDidAppear();
     manageViewController(nav);
     
     PHViewController * vc = new PHTitleScreen();
-	vc->init(_gameManager,v->bounds());
+	vc->init(gm,v->bounds());
 	nav->pushViewController(vc);
     vc->release();
     nav->release();
@@ -56,7 +56,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
 void PHMenuController::viewWillAppear()
 {
     resetClouds(getView());
-    PHMusicManager::singleton()->setBackgroundMusic(_gameManager->musicNamed("title"));
+    PHMusicManager::singleton()->setBackgroundMusic(gm->musicNamed("title"));
 }
 
 void PHMenuController::resetClouds(PHView * v)

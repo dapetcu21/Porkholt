@@ -57,7 +57,7 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
-	int fps = _gameManager->framesPerSecond();
+	int fps = gm->framesPerSecond();
 	
 	b2Vec2 frc;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
@@ -133,7 +133,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 void PHLPlayer::updatePosition()
 {
     PHLNPC::updatePosition();
-    ph_float interval = 1.0f/_gameManager->framesPerSecond();
+    ph_float interval = 1.0f/gm->framesPerSecond();
     if (powerTime>0)
     {
         powerTime-=interval;
@@ -220,7 +220,7 @@ void PHLPlayer::_activatePower(PHObject * sender, void * ud)
 {
     PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);
     if (iv)
-        iv->setAuxImage(_gameManager->imageNamed("ball_green"));
+        iv->setAuxImage(gm->imageNamed("ball_green"));
     resumeTrail = hasTrail();
     setTrail(true);
 }

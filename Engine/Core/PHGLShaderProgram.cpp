@@ -11,7 +11,7 @@
 #include "PHLua.h"
 #include "PHGameManager.h"
 
-PHGLShaderProgram::PHGLShaderProgram(PHGameManager * _gameManager, const string & path)
+PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, const string & path)
 {
     lua_State * L = lua_open();
     PHLuaLoadFile(L, path);
@@ -37,8 +37,8 @@ PHGLShaderProgram::PHGLShaderProgram(PHGameManager * _gameManager, const string 
     
     vShader = fShader = NULL;
     try {
-        vShader = new PHGLShader(_gameManager->glslHeader, dir+vshader,PHGLShader::vertexShader);
-        fShader = new PHGLShader(_gameManager->glslHeader, dir+fshader,PHGLShader::fragmentShader);
+        vShader = new PHGLShader(gm->glslHeader, dir+vshader,PHGLShader::vertexShader);
+        fShader = new PHGLShader(gm->glslHeader, dir+fshader,PHGLShader::fragmentShader);
     }
     catch (string ex)
     {

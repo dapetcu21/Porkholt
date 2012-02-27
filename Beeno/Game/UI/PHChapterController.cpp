@@ -44,15 +44,15 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             if (!PHFileManager::isDirectory(oss.str())) continue;
             PHRect frame = PHRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*(rows-j-1), levelSize, levelSize);
             PHButtonView * vv = new PHButtonView(frame);
-            vv->setImage(_gameManager->imageFromPath(oss1.str()));
-            vv->setPressedImage(_gameManager->imageFromPath(oss2.str()));
+            vv->setImage(gm->imageFromPath(oss1.str()));
+            vv->setPressedImage(gm->imageFromPath(oss2.str()));
             vv->setUpCallback(PHInv(this, PHChapterController::mouseUp, (void*)(j*columns+i+1)));
             view->addSubview(vv);
             vv->release();
         }
    
     PHTextView * dadoamne = new PHTextView(PHRect(leftBorder,frame.height-upperBorder,frame.width-rightBorder-leftBorder, upperBorder));
-    dadoamne->setFont(_gameManager->fontNamed("BDCartoonShout"));
+    dadoamne->setFont(gm->fontNamed("BDCartoonShout"));
     dadoamne->setText("Da Doamne sa mearga");
     dadoamne->setFontSize(25);
     dadoamne->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
@@ -60,11 +60,11 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     view->addSubview(dadoamne);
     dadoamne->release();
     
-    PHImage * img = _gameManager->imageNamed("back");
+    PHImage * img = gm->imageNamed("back");
     ph_float hi = ((ph_float)img->height())/((ph_float)img->width())*(SIZ_BK_WID*frame.width);
     PHButtonView * back = new PHButtonView(PHRect((1.0f-BORDER_BK_RIGHT-SIZ_BK_WID)*frame.width,BORDER_BK_DOWN*frame.height,SIZ_BK_WID*frame.width,hi));
     back->setImage(img);
-    back->setPressedImage(_gameManager->imageNamed("back_pressed"));
+    back->setPressedImage(gm->imageNamed("back_pressed"));
     back->setUpCallback(PHInv(this, PHChapterController::backPressed,NULL));
     view->addSubview(back);
     back->release();
@@ -106,7 +106,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
     ostringstream oss;
     oss<<path<<"/lvl"<<nr;
     PHLevelController * lvlvc = new PHLevelController(oss.str());
-    lvlvc->init(_gameManager);
+    lvlvc->init(gm);
     lvlvc->setEndLevelCallback(PHInv(this, PHChapterController::levelEnded, (void*)nr));
     PHViewController * vc = lvlvc->mainViewController();
     navController->navigationController()->pushViewController(vc,PHNavigationController::FadeToColor,replace);
@@ -118,7 +118,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
 PHChapterController::PHChapterController(const string & _path) : path(_path)
 {
     if (PHFileManager::fileExists(path+"/bg.png"))
-        bg = _gameManager->imageFromPath(path+"/bg.png");
+        bg = gm->imageFromPath(path+"/bg.png");
     else
         bg = NULL;
     

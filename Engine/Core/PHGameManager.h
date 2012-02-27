@@ -179,9 +179,9 @@ public:
     PHView * rootView() { return view; }
     
     int maxVertexAttribs() { return _maxVertexAttribs; }
-    void setOpenGLStates(uint32_t states) { setOpenGLStates(states,0); }
-    void setOpenGLStates(uint32_t states, uint32_t vertexAttribStates);
-    void setOpenGLAttributeStates(uint32_t vertexAttribStates);
+    void setGLStates(uint32_t states) { setGLStates(states,0); }
+    void setGLStates(uint32_t states, uint32_t vertexAttribStates);
+    void setGLAttributeStates(uint32_t vertexAttribStates);
     void setModelViewMatrix(const PHMatrix & m);
     PHMatrix modelViewMatrix() { return _modelView; }
     void setProjectionMatrix(const PHMatrix & m);
@@ -279,15 +279,5 @@ public:
             glColorPointer(size, type, stride, ptr);
     }
 };
-
-#define PHGLVertexPointer _gameManager->vertexPointer
-#define PHGLTexCoordPointer _gameManager->texCoordPointer
-#define PHGLColorPointer _gameManager->colorPointer
-#define PHGLNormalPointer _gameManager->normalPointer
-
-#define PHGLModelView _gameManager->modelViewMatrix
-#define PHGLSetModelView _gameManager->setModelViewMatrix
-#define PHGLSetColor _gameManager->setColor
-#define PHGLHasCapability _gameManager->hasCapability
 
 #endif

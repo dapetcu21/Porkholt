@@ -48,7 +48,7 @@ PLImageView::~PLImageView()
 
 void PLImageView::modelChanged()
 {
-    if (!_gameManager)
+    if (!gm)
         return;
     NSRect frame = [model frame];
     setFrame(PHRect(frame.origin.x,frame.origin.y,frame.size.width,frame.size.height));
@@ -57,10 +57,10 @@ void PLImageView::modelChanged()
         s = @"";
     string path = string([s UTF8String]);
     if (path[0]=='/')
-        path = _gameManager->resourcePath()+"/img/"+path;
+        path = gm->resourcePath()+"/img/"+path;
     else
         path = string([[[[((ObjectController*)(((SubentityController*)(model.owner)).object.owner)) fileURL] URLByAppendingPathComponent:s] path] UTF8String]);;
-    setImage(_gameManager->imageFromPath(path));
+    setImage(gm->imageFromPath(path));
     setRotation(-toRad(model.rotation));
     NSRect portion = model.portion;
     setTextureCoordinates(PHRect(portion.origin.x,portion.origin.y,portion.size.width,portion.size.height));
@@ -361,19 +361,19 @@ void PLImageView::draw()
             0,0.3,
             1,0.3
         };
-        PHGLSetStates(PHGLVertexArray);
-        PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
-        PHGLSetColor(PHColor(0.5,0.5,1));
+        gm->setGLStates(PHGLVertexArray);
+        gm->vertexPointer(2, GL_FLOAT, 0, vertices);
+        gm->setColor(PHColor(0.5,0.5,1));
         
-        PHMatrix om = PHGLModelView();
+        PHMatrix om = gm->modelViewMatrix();
         for (int i=0; i<4; i++)
         {
-            PHGLSetModelView(om * 
+            gm->setModelViewMatrix(om * 
                 PHMatrix::translation(_bounds.x+(i&1)?_bounds.width:0, _bounds.y+(i&2)?_bounds.height:0) * 
                 PHMatrix::scaling(((i&1)?-1:1)*0.1, ((i&2)?-1:1)*0.1));
-            _gameManager->applyShader(_gameManager->solidColorShader());
+            gm->applyShader(gm->solidColorShader());
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
         }
-        PHGLSetModelView(om);
+        gm->setModelViewMatrix(om);
     }
 }

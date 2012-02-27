@@ -30,7 +30,7 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     v->setUserInput(true);
     ph_float w = frame.width;
     ph_float h = frame.height;
-    img = _gameManager->imageNamed("title");
+    img = gm->imageNamed("title");
     ph_float hi = ((ph_float)img->height())/((ph_float)img->width())*(SIZ_BG_WID*w);
     PHImageView * bg = new PHImageView(PHRect(
         BORDER_BG_LEFT*w,
@@ -41,7 +41,7 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     bg->setImage(img);
     bg->setTag(3562);
     
-    img = _gameManager->imageNamed("start_game");
+    img = gm->imageNamed("start_game");
     hi = ((ph_float)img->height())/((ph_float)img->width())*(SIZ_BT*w);
     PHButtonView * bt = new PHButtonView(PHRect(
         POS_BT_X*w-SIZ_BT*w/2,
@@ -50,13 +50,13 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
         hi
     ));
     bt->setImage(img);
-    bt->setPressedImage(_gameManager->imageNamed("start_game_pressed"));
+    bt->setPressedImage(gm->imageNamed("start_game_pressed"));
     bt->setUpCallback(PHInv(this,PHTitleScreen::buttonPressed, NULL));
     bt->setUserInput(true);
     
     PHButtonView * bl = new PHButtonView(PHRect(0,0,50,50));
-    bl->setImage(_gameManager->imageNamed("placeholder"));
-    bl->setPressedImage(_gameManager->imageNamed("placeholder"));
+    bl->setImage(gm->imageNamed("placeholder"));
+    bl->setPressedImage(gm->imageNamed("placeholder"));
     bl->setUpCallback(PHInv(this,PHTitleScreen::testPressed, NULL));
     bl->setUserInput(true);
     
@@ -78,9 +78,9 @@ void PHTitleScreen::testPressed(PHObject * sender, void * ud)
 
 void PHTitleScreen::buttonPressed(PHObject * sender, void * ud)
 {
-    PHViewController * vc = new PHChapterController(_gameManager->resourcePath()+"/levels/current");
-	vc->init(_gameManager);
-    _gameManager->loadAllImages();
+    PHViewController * vc = new PHChapterController(gm->resourcePath()+"/levels/current");
+	vc->init(gm);
+    gm->loadAllImages();
     navigationController()->pushViewController(vc,PHNavigationController::SlideLeft);
     vc->release();
 }

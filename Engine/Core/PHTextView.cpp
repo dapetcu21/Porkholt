@@ -40,11 +40,11 @@ void PHTextView::loadVBOs()
 {
     if (!indices || !vbuffer) return;
     if (!vao)
-        vao = new PHGLVertexArrayObject(_gameManager);
+        vao = new PHGLVertexArrayObject(gm);
     if (!arraysVBO)
-        arraysVBO = new PHGLVertexBufferObject(_gameManager);
+        arraysVBO = new PHGLVertexBufferObject(gm);
     if (!indicesVBO)
-        indicesVBO = new PHGLVertexBufferObject(_gameManager);
+        indicesVBO = new PHGLVertexBufferObject(gm);
 
     vao->bindToEdit();
     arraysVBO->bindTo(PHGLVBO::arrayBuffer);
@@ -70,11 +70,11 @@ void PHTextView::draw()
         recalculatePositions();
     loadVBOs();
     
-    PHGLSetStates(PHGLTexture);
+    gm->setGLStates(PHGLTexture);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _font->textureID());
-    PHGLSetColor(color);
-    _gameManager->applyShader(_gameManager->textShader());
+    gm->setColor(color);
+    gm->applyShader(gm->textShader());
     vao->draw();
 }
 

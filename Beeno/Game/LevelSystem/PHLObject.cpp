@@ -39,7 +39,7 @@ PHLObject * PHLObject::objectWithClass(const string & str)
     return (PHLObject*)(i->second)();
 }
 
-PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), _gameManager(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0), needsCinePos(false), needsCineRot(false), needsLOmega(false), needsLVel(false), correctRot(false), correctPos(false)
+PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL), body(NULL), rot(0.0f), maxSpeed(FLT_MAX), maxSpeedX(FLT_MAX), maxSpeedY(FLT_MAX), disableLimit(false), hasScripting(false), L(NULL), poofRect(PHNullRect), offset(PHOriginPoint), drfw(false), gm(NULL), flipped(false), shouldFlipUponLoad(false), patrol(NULL), patSpeed(0.3), patCircle(false), patLength(0), jointLength(0), patPos(0), patRev(0), patSignature(NULL), patP(0), lastPos(0), patLastVel(0,0), patVel(0,0), needsCinePos(false), needsCineRot(false), needsLOmega(false), needsLVel(false), correctRot(false), correctPos(false)
 {
 }
 
@@ -353,7 +353,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
 {
 	world = _world;
     const string & root = lvlc->bundlePath();
-    _gameManager = lvlc->gameManager();
+    gm = lvlc->gameManager();
     
     hasScripting = false;
     lua_getfield(L, -1, "scripting");
@@ -421,7 +421,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
 			lua_gettable(L, -2);
             
             Image img;
-            PHImageView * image = PHImageView::imageFromLua(L,_gameManager,root,lvlc->animatorPool());    
+            PHImageView * image = PHImageView::imageFromLua(L,gm,root,lvlc->animatorPool());    
             if (image)
             {
                 img.img = image;
@@ -814,7 +814,7 @@ void PHLObject::updateCinematics(ph_float elapsed)
 
 void PHLObject::updatePhysics()
 {
-    ph_float elapsed = 1.0f/_gameManager->framesPerSecond();
+    ph_float elapsed = 1.0f/gm->framesPerSecond();
     PHPoint pp = pos;
     updatePatrol(elapsed);
     updateCinematics(elapsed);
@@ -905,7 +905,7 @@ void PHLObject::limitVelocity()
 		return;
 	}
 	
-	int fps = _gameManager->framesPerSecond();
+	int fps = gm->framesPerSecond();
 	ph_float period = 1.0f/fps;
 	
 	b2Vec2 v = body->GetLinearVelocity();
@@ -1169,7 +1169,7 @@ void PHLObject::_poof()
     {
         poofRect = viewSize;
     }
-    PHImage * iv = PHPoofView::poofImage(_gameManager);
+    PHImage * iv = PHPoofView::poofImage(gm);
     ph_float w = iv->width();
     ph_float h = iv->height();
     ph_float dar = w/h;

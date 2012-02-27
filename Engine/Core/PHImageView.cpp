@@ -138,28 +138,28 @@ PHImageView::~PHImageView()
 void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd, const PHColor & clr)
 {
     if (!_image) return;
-    bool nrm =  (_gameManager->renderMode() == PHDeferredView::normalMapRenderMode);
+    bool nrm =  (gm->renderMode() == PHDeferredView::normalMapRenderMode);
     PHImage * img = _image;
     if (nrm)
     {
         if (_normalMapping && (img->normalMap()))
             _image = img->normalMap();
         else
-            _gameManager->pushSpriteShader(_gameManager->missingNormalSpriteShader());
+            gm->pushSpriteShader(gm->missingNormalSpriteShader());
     }
 
     if (_image->isNormal())
-        ((PHNormalImage*)_image)->renderInFramePortionTint(_gameManager,fr,crd,clr);
+        ((PHNormalImage*)_image)->renderInFramePortionTint(gm,fr,crd,clr);
     
     if (_image->isAnimated())
-        _animator->renderInFramePortionTint(_gameManager,fr,crd,clr);
+        _animator->renderInFramePortionTint(gm,fr,crd,clr);
     
     if (nrm)
     {
         if (_normalMapping && (img->normalMap()))
             _image = img;
         else
-            _gameManager->popSpriteShader();
+            gm->popSpriteShader();
     }
 }
 
@@ -169,7 +169,7 @@ void PHImageView::rebuildCurvedVBO()
     if (curve)
     {
         if (!curveVAO) 
-            curveVAO = new PHGLVertexArrayObject(_gameManager);
+            curveVAO = new PHGLVertexArrayObject(gm);
         
         PHNormalImage * img = (PHNormalImage*)_image;
         int _width = img->width();
@@ -194,7 +194,7 @@ void PHImageView::rebuildCurvedVBO()
         size_t nVertices;
         GLfloat * arr = curve->vertexData(nVertices, p);
         if (!curveAttributeVBO)
-            curveAttributeVBO = new PHGLVertexBufferObject(_gameManager);
+            curveAttributeVBO = new PHGLVertexBufferObject(gm);
         
         curveAttributeVBO->bindTo(PHGLVBO::arrayBuffer);
         curveAttributeVBO->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
@@ -210,7 +210,7 @@ void PHImageView::rebuildCurvedVBO()
         if (indexes)
         {
             if (!curveElementVBO)
-                curveElementVBO = new PHGLVertexBufferObject(_gameManager);
+                curveElementVBO = new PHGLVertexBufferObject(gm);
             curveElementVBO->bindTo(PHGLVBO::elementArrayBuffer);
             curveElementVBO->setData(indexes, nIndexes*sizeof(GLushort), PHGLVBO::dynamicDraw);
             curveVAO->setDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0);
@@ -261,18 +261,18 @@ void PHImageView::renderCurved()
     image()->load();
     loadVBO();
     
-    PHGLSetColor(tint);
-    PHGLSetStates(PHGLTexture);
+    gm->setColor(tint);
+    gm->setGLStates(PHGLTexture);
     ((PHNormalImage*)image())->bindToTexture(0);
-    _gameManager->applySpriteShader();
+    gm->applySpriteShader();
     
     if (constrain)
     {
-        PHMatrix om = PHGLModelView();
-        PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
-        _gameManager->reapplyMatrixUniform();
+        PHMatrix om = gm->modelViewMatrix();
+        gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
+        gm->reapplyMatrixUniform();
         curveVAO->draw();
-        PHGLSetModelView(om);
+        gm->setModelViewMatrix(om);
     } else     
         curveVAO->draw();
 }
@@ -322,14 +322,14 @@ void PHImageView::renderStraight()
     loadVBO();
     if (straightVAO1)
     {
-        PHMatrix om = PHGLModelView();
-        PHGLSetModelView(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
+        PHMatrix om = gm->modelViewMatrix();
+        gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         if (_image->isNormal())
         {
-            PHGLSetColor(tint);
-            PHGLSetStates(PHGLTexture);
+            gm->setColor(tint);
+            gm->setGLStates(PHGLTexture);
             ((PHNormalImage*)image())->bindToTexture(0);
-            _gameManager->applySpriteShader();
+            gm->applySpriteShader();
             straightVAO1->draw();
         }
         
@@ -337,38 +337,38 @@ void PHImageView::renderStraight()
         {
             PHColor t = tint.isValid()?tint:PHWhiteColor;
             ph_float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-            PHGLSetColor(t*(1-rem));
-            PHGLSetStates(PHGLTexture);
+            gm->setColor(t*(1-rem));
+            gm->setGLStates(PHGLTexture);
             _animator->bindCurrentFrameToTexture(0);
-            _gameManager->applySpriteShader();
+            gm->applySpriteShader();
             straightVAO1->bind();
             straightVAO1->draw();
             
             if (straightVAO2)
             {
-                PHGLSetColor(t*rem);
+                gm->setColor(t*rem);
                 _animator->bindLastFrameToTexture(0);
                 straightVAO1->bind();
                 straightVAO2->draw();
             }
             
-            _gameManager->bindVAO(NULL);
+            gm->bindVAO(NULL);
         }
-        PHGLSetModelView(om);
+        gm->setModelViewMatrix(om);
     }
 }
 
 void PHImageView::draw()
 {
     if (!_image) return;
-    bool nrm =  (_gameManager->renderMode() == PHDeferredView::normalMapRenderMode);
+    bool nrm =  (gm->renderMode() == PHDeferredView::normalMapRenderMode);
     PHImage * img = _image;
     if (nrm)
     {
         if (_normalMapping && (img->normalMap()))
             _image = img->normalMap();
         else
-            _gameManager->pushSpriteShader(_gameManager->missingNormalSpriteShader());
+            gm->pushSpriteShader(gm->missingNormalSpriteShader());
     }
     if (curve)
         renderCurved();
@@ -379,7 +379,7 @@ void PHImageView::draw()
         if (_normalMapping && (img->normalMap()))
             _image = img;
         else
-            _gameManager->popSpriteShader();
+            gm->popSpriteShader();
     }
 }
 

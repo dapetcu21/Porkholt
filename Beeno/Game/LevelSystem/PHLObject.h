@@ -77,7 +77,7 @@ protected:
     void rebuildBezier(b2FixtureDef * def);
     void _buildBezier(b2FixtureDef * def);
     
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
     
     bool flipped;
     bool shouldFlipUponLoad;
@@ -237,7 +237,7 @@ public:
 private:
     list<PHLAnimation*>animations;
 public:
-    PHGameManager * gameManager() { return _gameManager; }
-    void setGameManager(PHGameManager * gm) { _gameManager = gm; }
+    PHGameManager * gameManager() { return gm; }
+    void setGameManager(PHGameManager * gameManager) { gm = gameManager; }
 };
 #endif

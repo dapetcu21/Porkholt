@@ -114,8 +114,8 @@ void PHLNPC::loadView()
     if (staticFace) 
         ((PHPlayerView*)view)->setDesignatedTag(-21);
     if ((trailPossible = (dynamic_cast<PHTrailImageView*>(bodyView)!=NULL)))
-        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/_gameManager->framesPerSecond()));
-    view->setGameManager(_gameManager);
+        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/gm->framesPerSecond()));
+    view->setGameManager(gm);
 	view->setRotation(rot);
 }
 
@@ -125,7 +125,7 @@ void PHLNPC::updateView()
     if (hover)
     {
         offset.y = sin(hoverAmmount)*0.1;
-        ph_float frameInterval = 1.0f/_gameManager->framesPerSecond();
+        ph_float frameInterval = 1.0f/gm->framesPerSecond();
         hoverAmmount = PHWarp(hoverAmmount+frameInterval*2, M_PI*2);
     }
     PHLObject::updateView();
@@ -160,7 +160,7 @@ void PHLNPC::updatePosition()
         ((PHTrailImageView*)bodyView)->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
     }
     b2Vec2 speed = body->GetLinearVelocity();
-    ph_float elapsed = 1.0f/_gameManager->framesPerSecond();
+    ph_float elapsed = 1.0f/gm->framesPerSecond();
     if (aflip && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
     setIdle(abs(speed.x)<0.1);
@@ -246,12 +246,12 @@ void PHLNPC::showDialog(PHDialog *dialog)
     {
         dialogView = new PHDialogView(this);
         dialogView->mutex();
-        dialogView->setImage(_gameManager->imageNamed("dialogbubble"));
+        dialogView->setImage(gm->imageNamed("dialogbubble"));
         dialogView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogView->setUserInput(true);
         dialogView->setStretchBubble(true);
         dialogTextView = new PHTextView();
-        dialogTextView->setFont(_gameManager->fontNamed("BDCartoonShout"));
+        dialogTextView->setFont(gm->fontNamed("BDCartoonShout"));
         dialogTextView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
         dialogTextView->setFontSize(dialogFontSize);
         dialogTextView->setFontColor(PHBlackColor);
@@ -436,7 +436,7 @@ void PHLNPC::_dialogSwapEnd(PHLObject * sender, void * ud)
 
 void PHLNPC::showQuest()
 {
-    PHImage * qi = _gameManager->imageNamed("quest");
+    PHImage * qi = gm->imageNamed("quest");
     if (!questView)
     {
         questView = new PHDialogView(this);

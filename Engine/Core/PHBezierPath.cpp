@@ -98,6 +98,8 @@ PHBezierPath::~PHBezierPath()
     PHMessage::messageWithName("luaDestroy")->removeListener(this);
     if (L)
         PHLuaDeleteHardRef(L, this);
+    if (cache)
+        delete cache;
 }
 
 void PHBezierPath::addCurve(const PHRange & curve)

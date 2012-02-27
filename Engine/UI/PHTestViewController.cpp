@@ -30,7 +30,7 @@ void PHTestViewController::callback1(PHObject * sender, void * ud)
 void PHTestViewController::callback2(PHObject * sender, void * ud)
 {
 	PHTestViewController * vc = new PHTestViewController();
-	vc->init(_gameManager);
+	vc->init(gm);
 	if (navController)
     {
 #ifdef __x86_64__
@@ -115,11 +115,11 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	{
 		PHButtonView * button1 = new PHButtonView(PHRect(i*60+0, 0, 25, 40));
 		PHButtonView * button2 = new PHButtonView(PHRect(i*60+25, 0, 25, 40));
-		button1->setImage(_gameManager->imageNamed("stop"));
-		button1->setPressedImage(_gameManager->imageNamed("start"));
+		button1->setImage(gm->imageNamed("stop"));
+		button1->setPressedImage(gm->imageNamed("start"));
 	
-		button2->setPressedImage(_gameManager->imageNamed("stop"));
-		button2->setImage(_gameManager->imageNamed("start"));
+		button2->setPressedImage(gm->imageNamed("stop"));
+		button2->setImage(gm->imageNamed("start"));
 	
 		button1->setUpCallback(PHInv(this, PHTestViewController::callback1, (void*)i));
 		button2->setUpCallback(PHInv(this, PHTestViewController::callback2, (void*)i));

@@ -34,7 +34,7 @@ private:
     virtual void _load() { loadToTexture(NULL,NULL); }
 public:
     
-    PHNormalImage(const string & path, PHGameManager * gm);
+    PHNormalImage(const string & path, PHGameManager * gameManager);
     virtual ~PHNormalImage();
     
     void bindToTexture(int tx);

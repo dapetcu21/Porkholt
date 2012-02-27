@@ -24,7 +24,7 @@ protected:
     list<PHView*> views;
     list<PHView*>::iterator currPos;
     
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
     
 	PHView * superView;
 	PHRect _frame,_bounds;
@@ -179,14 +179,12 @@ public:
     PHMutex * mutex() { if (!mtx) mtx = new PHMutex(true); return mtx; }
     
 public:
-    PHGameManager * gameManager() { return _gameManager; }
-    void setGameManager(PHGameManager * gm);
+    PHGameManager * gameManager() { return gm; }
+    void setGameManager(PHGameManager * gameManager);
     
 protected:
     virtual void attachedToGameManager() {};
     
 };
-
-#define PHGLSetStates _gameManager->setOpenGLStates
 
 #endif

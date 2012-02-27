@@ -112,9 +112,9 @@ public:
     }
 };
 
-PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), realQueue(new PHEventQueue), sndPool(new PHSoundPool),  currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), _gameManager(mgr)
+PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), realQueue(new PHEventQueue), sndPool(new PHSoundPool),  currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), gm(mgr)
 {
-	PHRect bounds = _gameManager->screenBounds();
+	PHRect bounds = gm->screenBounds();
 	view = new PHCaptureView(bounds);
     PHRect gaugeFrame;
 	jumpGaugeView = new PHGaugeView(gaugeFrame = PHRect(bounds.x+GAUGE_X*bounds.width, bounds.height-(GAUGE_Y+GAUGE_HEIGHT)*bounds.width, GAUGE_WIDTH*bounds.width, GAUGE_HEIGHT*bounds.width));
@@ -213,7 +213,7 @@ void PHWorld::updatePhysics()
 
 void PHWorld::updatePositions()
 {
-    ph_float frameInterval = 1.0f/(_gameManager->framesPerSecond());
+    ph_float frameInterval = 1.0f/(gm->framesPerSecond());
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -300,7 +300,7 @@ void PHWorld::addObject(PHLObject * obj)
 void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * insObj)
 {
 	obj->wrld = this;
-    obj->setGameManager(_gameManager);
+    obj->setGameManager(gm);
     if (!obj) return;
     if (insPos==0)
     {
@@ -564,7 +564,7 @@ void PHWorld::overlayText(const string & s, ph_float duration)
     {
         PHRect bounds = view->bounds();
         overlayView = new PHTextView;
-        overlayView->setFont(_gameManager->fontNamed("ArialBlack"));
+        overlayView->setFont(gm->fontNamed("ArialBlack"));
         overlayView->setFontSize(OVERLAYFONTSIZE*bounds.height);
         overlayView->setFrame(PHRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
         overlayView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
@@ -616,7 +616,7 @@ void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage,
     bm->setAnimatorPool(levelController()->animatorPool());
     getWorldView()->addSubview(bm);
     bm->release();
-    PHSound * s = _gameManager->soundManager()->soundNamed("boom")->duplicate();
+    PHSound * s = gm->soundManager()->soundNamed("boom")->duplicate();
     sndPool->addSound(s);
     s->playAndRelease(realQueue);
 }
@@ -626,11 +626,11 @@ const string & PHWorld::resourcePath()
     return levelController()->bundlePath();
 }
 
-#define retainImage(fname) { PHImage * i = _gameManager->imageNamed(fname); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }
+#define retainImage(fname) { PHImage * i = gm->imageNamed(fname); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }
 
 #define retainImg(image) { PHImage * i = (image); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }
 
-#define retainSound(fname) { PHSound * s = _gameManager->soundManager()->soundNamed(fname); if (s) { if(preloadedSounds.insert(s).second) s->retain(); } }
+#define retainSound(fname) { PHSound * s = gm->soundManager()->soundNamed(fname); if (s) { if(preloadedSounds.insert(s).second) s->retain(); } }
 
 #define retainSnd(snd) { PHSound * s = (snd); if (s) { if(preloadedSounds.insert(s).second) s->retain(); } }
 
@@ -638,9 +638,9 @@ void PHWorld::preloadAssets()
 {
     retainImage("dialogbubble");
     retainImage("quest");
-    retainImg(PHPoofView::poofImage(_gameManager));
-    retainImg(PHPoofView::boomImage(_gameManager));
-    retainImg(PHShieldView::shieldImage(_gameManager));
+    retainImg(PHPoofView::poofImage(gm));
+    retainImg(PHPoofView::boomImage(gm));
+    retainImg(PHShieldView::shieldImage(gm));
     retainSound("boom");
 }
 

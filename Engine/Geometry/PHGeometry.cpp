@@ -18,8 +18,28 @@ void PHLowPassFilter(ph_float & var, ph_float newval, ph_float period, ph_float 
 {
 	ph_float RC=1.0/cutoff;
 	ph_float alpha=period/(period+RC);
-	//alpha = 0.000005;
 	var = newval * alpha + var * (1.0 - alpha);
+}
+
+void PHLowPassFilter(double & var, double newval, double period, double cutoff)
+{
+	double RC=1.0/cutoff;
+	double alpha=period/(period+RC);
+	var = newval * alpha + var * (1.0 - alpha);
+}
+
+void PHLowPassFilter(ph_float * var, ph_float newval, ph_float period, ph_float cutoff)
+{
+	ph_float RC=1.0/cutoff;
+	ph_float alpha=period/(period+RC);
+	(*var) = newval * alpha + (*var) * (1.0 - alpha);
+}
+
+void PHLowPassFilter(double * var, double newval, double period, double cutoff)
+{
+	double RC=1.0/cutoff;
+	double alpha=period/(period+RC);
+	(*var) = newval * alpha + (*var) * (1.0 - alpha);
 }
 
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)

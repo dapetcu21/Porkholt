@@ -18,18 +18,18 @@ PHView * PHViewController::loadView(const PHRect & frame)
 	return view;
 }
 
-void PHViewController::init(PHGameManager * gm)
+void PHViewController::init(PHGameManager * gameManager)
 {
-    _gameManager = gm;
-	view = loadView(gm->screenBounds());
-    view->setGameManager(gm);
+    gm = gameManager;
+	view = loadView(gameManager->screenBounds());
+    view->setGameManager(gameManager);
 }
 
-void PHViewController::init(PHGameManager * gm,const PHRect & frame)
+void PHViewController::init(PHGameManager * gameManager,const PHRect & frame)
 {
-    _gameManager = gm;
+    gm = gameManager;
 	view = loadView(frame);
-    view->setGameManager(gm);
+    view->setGameManager(gameManager);
 }
 
 void PHViewController::_updateScene(ph_float timeElapsed)

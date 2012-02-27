@@ -26,7 +26,7 @@ void PHLCamera::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 {
 	PHLObject::loadFromLua(L,world,lvlc);
     PHLuaGetNumberField(sz.height,"camH");	
-	PHRect bnd = _gameManager->screenBounds();
+	PHRect bnd = gm->screenBounds();
 	sz.width = sz.height*bnd.width/bnd.height;
 }
 
@@ -39,7 +39,7 @@ void PHLCamera::updateCamera(PHPoint pnt)
 	if (follow)
     {
         
-        int fps = _gameManager->framesPerSecond();
+        int fps = gm->framesPerSecond();
         
         if (sstrict>0)
         {
@@ -62,8 +62,8 @@ void PHLCamera::updateCamera(PHPoint pnt)
             else
                 pnt.y=pos.y;
         }
-        PHLowPassFilter(pos.x, pnt.x, 1.0f/fps, 5.0f);
-        PHLowPassFilter(pos.y, pnt.y, 1.0f/fps, 5.0f);
+        PHLowPassFilter(&pos.x, pnt.x, 1.0f/fps, 5.0f);
+        PHLowPassFilter(&pos.y, pnt.y, 1.0f/fps, 5.0f);
         setPosition(pos);
     }
     sz.setCenter(position());

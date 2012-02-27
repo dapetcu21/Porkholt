@@ -16,7 +16,7 @@
 
 #define PHVIEW_INITLIST superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
 						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), _gameManager(NULL), effectCached(false), matrixCached(false)
+						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), gm(NULL), effectCached(false), matrixCached(false)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -28,13 +28,13 @@ PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
 	setFrame(frame);
 }
 
-void PHView::setGameManager(PHGameManager * gm)
+void PHView::setGameManager(PHGameManager * gameManager)
 {
-    if (_gameManager == gm)
+    if (gm == gameManager)
         return;
-    _gameManager = gm;
+    gm = gameManager;
     for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
-        (*i)->setGameManager(gm);
+        (*i)->setGameManager(gameManager);
     if (gm)
         attachedToGameManager();
 }
@@ -130,9 +130,9 @@ extern PHView * playerView;
 void PHView::render()
 {
     if (mtx) mtx->lock();
-    PHMatrix om = PHGLModelView();
+    PHMatrix om = gm->modelViewMatrix();
     PHMatrix m = om * applyMatrices();
-    PHGLSetModelView(m);
+    gm->setModelViewMatrix(m);
 	
 	bool optimizeOut = false;
 	if (_optimize)
@@ -159,7 +159,7 @@ void PHView::render()
 		pnt = m.transformPoint(PHPoint(_bounds.x,_bounds.y+_bounds.height));
 		test;
 		
-		PHRect bounds = _gameManager->screenBounds();
+		PHRect bounds = gm->screenBounds();
 		
 		optimizeOut = (minX<bounds.x && maxX<bounds.x) || (minY<bounds.y && maxY<bounds.y) ||
 						(minX>bounds.x+bounds.width && maxX>bounds.x+bounds.width) || (minY>bounds.y+bounds.height && maxY>bounds.y+bounds.height);
@@ -167,7 +167,7 @@ void PHView::render()
 	
 	if (!optimizeOut)
 	{
-        if ( (!auxLayer || !dontDrawOnMain) && supportsRenderMode(_gameManager->renderMode()) )
+        if ( (!auxLayer || !dontDrawOnMain) && supportsRenderMode(gm->renderMode()) )
         {
             drawBackground();
             draw();
@@ -175,7 +175,7 @@ void PHView::render()
         for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
             (*i)->render();
 	}
-    PHGLSetModelView(om);
+    gm->setModelViewMatrix(om);
     if (mtx) mtx->unlock();
 }
 
@@ -185,7 +185,7 @@ void PHView::addSubviewBefore(PHView * view, PHView * before)
 		return;
     if (mtx) mtx->lock();
 	view->retain();
-    view->setGameManager(_gameManager);
+    view->setGameManager(gm);
 	view->removeFromSuperview();
     list<PHView*>::iterator i = views.end();
     if (before && before->superview() == this )
@@ -221,8 +221,8 @@ PHView::~PHView()
         PHLuaDeleteWeakRef(*i, this);
     if (auxLayer)
         auxLayer->removeView(this);
-    if (_gameManager)
-        _gameManager->eventHandler()->removeView(this);	
+    if (gm)
+        gm->eventHandler()->removeView(this);	
     removeFromSuperview();
     removeAllSubviews();
     if (mtx) mtx->release();
@@ -250,16 +250,16 @@ void PHView::sendToBack()
 void PHView::drawBackground()
 {
 	if (_backColor.a <= 0) return;
-    if (_gameManager->renderMode() != PHGameManager::defaultRenderMode)
+    if (gm->renderMode() != PHGameManager::defaultRenderMode)
         return;
 	
-    PHGLSetStates(PHGLVertexArray);
-    PHGLSetColor(_backColor);
-    PHMatrix old = PHGLModelView();
-    PHGLSetModelView(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
-    _gameManager->applyShader(_gameManager->solidColorShader());
-    _gameManager->solidSquareVAO()->draw();
-    PHGLSetModelView(old);
+    gm->setGLStates(PHGLVertexArray);
+    gm->setColor(_backColor);
+    PHMatrix old = gm->modelViewMatrix();
+    gm->setModelViewMatrix(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
+    gm->applyShader(gm->solidColorShader());
+    gm->solidSquareVAO()->draw();
+    gm->setModelViewMatrix(old);
     
 }
 		

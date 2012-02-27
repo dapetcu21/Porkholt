@@ -16,7 +16,7 @@
 #include "PHGLVertexArrayObject.h"
 #include "PHGLVertexBufferObject.h"
 
-PHNormalImage::PHNormalImage(const string & path, PHGameManager * gm): PHImage(path,gm), texid(-1), thread(NULL)
+PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), texid(-1), thread(NULL)
 {
     fp = NULL;
     if (PHGameManager::isGloballyHD())
@@ -104,7 +104,7 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 	number_of_passes = png_set_interlace_handling(png_ptr);
-    if (PHGLHasCapability(PHGLCapabilityNPOT) || PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+    if (gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
     {
         actWidth = _width;
         actHeight = _height;
@@ -197,7 +197,7 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 	bindToTexture(0);
     
     bool repeat = true;
-    if (PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+    if (gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
     {
         bool pots = true;
         int s = _width;
@@ -255,7 +255,7 @@ PHRect PHNormalImage::textureCoordinates(const PHRect & port)
     return PHRect(xC*port.x+xc,yC*(port.y+port.height)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
 }
 
-void PHNormalImage::renderInFramePortionTint(PHGameManager * _gameManager, const PHRect & frm,const PHRect & port,const PHColor & tint)
+void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
     load();
     
@@ -279,11 +279,11 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * _gameManager, const
     };
     
     int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
-    PHGLSetStates(states);
+    gm->setGLStates(states);
     bindToTexture(0);
-    PHGLSetColor(tint);
-    _gameManager->applySpriteShader();
-    if (_gameManager->useShaders())
+    gm->setColor(tint);
+    gm->applySpriteShader();
+    if (gm->useShaders())
     {
         glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
         glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);

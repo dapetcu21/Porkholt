@@ -78,7 +78,7 @@ private:
     
     PHScripting * scripting;
     
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
 	
 public:
 	PHWorld::layer * addLayer(ph_float scale);
@@ -117,7 +117,7 @@ public:
     PHLPlayer * getPlayer() { return player; }
     PHView * getWorldView() { return worldView; }
     
-    PHGameManager * gameManager() { return _gameManager; }
+    PHGameManager * gameManager() { return gm; }
     
 public:
     

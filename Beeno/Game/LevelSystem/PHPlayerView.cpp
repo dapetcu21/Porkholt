@@ -19,7 +19,7 @@ void PHPlayerView::setRotation( ph_float rot)
         dif+=360;
     while (abs(dif-360)<abs(dif))
         dif-=360;
-    int fps = _gameManager->framesPerSecond();
+    int fps = gm->framesPerSecond();
     PHLowPassFilter(lastDif, dif, 1.0f/fps, 50.0f);
     for (list<PHView*>::iterator i = views.begin(); i!= views.end(); i++)
     {

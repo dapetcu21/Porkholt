@@ -16,7 +16,7 @@ class PHGLVertexBufferObject : public PHObject
 {
 protected:
     GLuint vbo;
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
     int bound;
     
     static GLenum targets[];
@@ -26,7 +26,7 @@ protected:
     friend class PHGLVertexArrayObject;
     
 public:
-    PHGLVertexBufferObject(PHGameManager * gm);
+    PHGLVertexBufferObject(PHGameManager * gameManager);
     ~PHGLVertexBufferObject();
     
     

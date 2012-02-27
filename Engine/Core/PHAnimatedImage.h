@@ -75,7 +75,7 @@ private:
     virtual void _load() { loadImages(NULL,NULL); }
     
 public:
-    PHAnimatedImage(const string & s, PHGameManager * gm);
+    PHAnimatedImage(const string & s, PHGameManager * gameManager);
     virtual ~PHAnimatedImage();
     
     virtual bool isAnimated() { return true; }

@@ -52,17 +52,17 @@ void PHAuxLayerView::removeView(PHView * view)
 
 void PHAuxLayerView::draw()
 {
-    PHMatrix om = PHGLModelView();
+    PHMatrix om = gm->modelViewMatrix();
     for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
     {   
         PHView * view = *i;
         if (view->superview()!=view->auxSuperview)
-            PHGLSetModelView(om * view->superview()->loadMatrixTree(view->auxSuperview));
+            gm->setModelViewMatrix(om * view->superview()->loadMatrixTree(view->auxSuperview));
         else
-            PHGLSetModelView(om);
+            gm->setModelViewMatrix(om);
         view->drawingOnAuxLayer = true;
         view->auxRender();
         view->drawingOnAuxLayer = false;
     }
-    PHGLSetModelView(om);
+    gm->setModelViewMatrix(om);
 }

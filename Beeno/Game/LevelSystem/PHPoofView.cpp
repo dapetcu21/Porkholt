@@ -35,10 +35,10 @@ void PHPoofView::attachedToGameManager()
     PHImage * imag = NULL;
     switch (img) {
         case poof:
-            imag = poofImage(_gameManager);
+            imag = poofImage(gm);
             break;
         case boom:
-            imag = boomImage(_gameManager);
+            imag = boomImage(gm);
             break;
         default:
             img = NULL;

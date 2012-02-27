@@ -97,14 +97,14 @@ void PLJointDot::draw()
     setDotColor(model.selected?PHColor(0,0,1):PHColor(1,0,0));
     if (!first && model.actor1)
     {
-        PHGLSetStates(PHGLVertexArray);
+        gm->setGLStates(PHGLVertexArray);
         PHPoint p1 = boundsCenter();
         PHPoint p2 = toMyCoordinates(model.actor1->fromMyCoordinates(model.actor1->boundsCenter()));
         GLfloat v[] = { p1.x,p1.y, p2.x,p2.y };
         glLineWidth(1.0f);
-        PHGLSetColor(color);
-        PHGLVertexPointer(2, GL_FLOAT, 0, v);
-        _gameManager->applyShader(_gameManager->solidColorShader());
+        gm->setColor(color);
+        gm->vertexPointer(2, GL_FLOAT, 0, v);
+        gm->applyShader(gm->solidColorShader());
         glDrawArrays(GL_LINE_STRIP, 0, 2);
     }
     PLDotView::draw();

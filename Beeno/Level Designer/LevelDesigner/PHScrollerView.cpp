@@ -92,8 +92,8 @@ void PHScrollerView::drawGrid(double gap, double width, const PHColor & color)
     
     if (!nv) return;
     
-    PHGLSetStates(PHGLVertexArray);
-    PHGLSetColor(color);
+    gm->setGLStates(PHGLVertexArray);
+    gm->setColor(color);
     
     GLfloat * vertices = new GLfloat[nv*2];
     GLfloat * v = vertices;
@@ -169,8 +169,8 @@ void PHScrollerView::drawGrid(double gap, double width, const PHColor & color)
         v+=2;
     }
     
-    PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
-    _gameManager->applyShader(_gameManager->solidColorShader());
+    gm->vertexPointer(2, GL_FLOAT, 0, vertices);
+    gm->applyShader(gm->solidColorShader());
     glDrawArrays(GL_TRIANGLE_STRIP, 0, nv);
     
     delete [] vertices;
@@ -202,10 +202,10 @@ void PHScrollerView::draw()
             p.x, p.y-0.15
         };
         
-        PHGLSetStates(PHGLVertexArray);
-        PHGLSetColor(PHColor(1,0,0,1));
-        PHGLVertexPointer(2, GL_FLOAT, 0, vertices);
-        _gameManager->applyShader(_gameManager->solidColorShader());
+        gm->setGLStates(PHGLVertexArray);
+        gm->setColor(PHColor(1,0,0,1));
+        gm->vertexPointer(2, GL_FLOAT, 0, vertices);
+        gm->applyShader(gm->solidColorShader());
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 }

@@ -25,10 +25,10 @@ void PHTestView::draw()
         255,   0, 255, 255,
     };
 	
-    PHGLSetStates(PHGLVertexArray | PHGLColorArray);
-    _gameManager->applyShader(_gameManager->coloredNoTexSpriteShader());
-	PHGLVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	PHGLColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
+    gm->setGLStates(PHGLVertexArray | PHGLColorArray);
+    gm->applyShader(gm->coloredNoTexSpriteShader());
+    gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
+    gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

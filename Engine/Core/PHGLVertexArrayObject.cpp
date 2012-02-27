@@ -12,23 +12,23 @@
 
 #define MAX_VAO_ATTR 16
 
-PHGLVertexArrayObject::PHGLVertexArrayObject(PHGameManager * gm) : _gameManager(gm), vao(0), bound(false), elementVBO(NULL), drawType(drawNone), editBind(false)
+PHGLVertexArrayObject::PHGLVertexArrayObject(PHGameManager * gameManager) : gm(gameManager), vao(0), bound(false), elementVBO(NULL), drawType(drawNone), editBind(false)
 {
-    if (_gameManager->PHGLGenVertexArrays)
-        _gameManager->PHGLGenVertexArrays(1, &vao);
+    if (gm->PHGLGenVertexArrays)
+        gm->PHGLGenVertexArrays(1, &vao);
 }
 
 PHGLVertexArrayObject::~PHGLVertexArrayObject()
 {
-    if (vao && _gameManager->PHGLDeleteVertexArrays)
-        _gameManager->PHGLDeleteVertexArrays(1, &vao);
+    if (vao && gm->PHGLDeleteVertexArrays)
+        gm->PHGLDeleteVertexArrays(1, &vao);
     for (map<int, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
         delete i->second;
 }   
 
-#define bind_begin PHGLVAO * oldvao = _gameManager->boundVAO(); bindToEdit();
-#define bind_begin_draw PHGLVAO * oldvao = _gameManager->boundVAO(); bind();
-#define bind_end _gameManager->bindVAO(oldvao);
+#define bind_begin PHGLVAO * oldvao = gm->boundVAO(); bindToEdit();
+#define bind_begin_draw PHGLVAO * oldvao = gm->boundVAO(); bind();
+#define bind_end gm->bindVAO(oldvao);
 
 void PHGLVertexArrayObject::bindToEdit()
 {
@@ -41,8 +41,8 @@ void PHGLVertexArrayObject::fakeBind()
 {
     if (!editBind)
     {
-        PHGLVertexBufferObject * vbo = _gameManager->boundVBO(PHGLVBO::arrayBuffer);
-        if (_gameManager->useShaders())
+        PHGLVertexBufferObject * vbo = gm->boundVBO(PHGLVBO::arrayBuffer);
+        if (gm->useShaders())
         {
             uint32_t mask = 0;
             for (map<int, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
@@ -53,7 +53,7 @@ void PHGLVertexArrayObject::fakeBind()
                 glVertexAttribPointer(i->first, a->size, a->type, a->normalized, a->stride, (const GLvoid*)a->offset);
                 mask |= (1<< (i->first));
             }
-            _gameManager->setOpenGLAttributeStates(mask);
+            gm->setGLAttributeStates(mask);
         } else {
             uint32_t mask = 0;
             map<int, attribute*>::iterator i;
@@ -98,9 +98,9 @@ void PHGLVertexArrayObject::fakeBind()
                 mask |= (1 << PHIMAGEATTRIBUTE_NRM);
             }
             
-            _gameManager->setOpenGLAttributeStates(mask);
+            gm->setGLAttributeStates(mask);
         }
-        _gameManager->bindVBO(vbo, PHGLVBO::arrayBuffer);
+        gm->bindVBO(vbo, PHGLVBO::arrayBuffer);
     }
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementVBO?(elementVBO->vbo):0); 
 }
@@ -109,7 +109,7 @@ void PHGLVertexArrayObject::fakeUnbind()
 {
     if (elementVBO)
     {
-        PHGLVertexBufferObject * vbo = _gameManager->boundVBO(PHGLVBO::elementArrayBuffer);
+        PHGLVertexBufferObject * vbo = gm->boundVBO(PHGLVBO::elementArrayBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo?(vbo->vbo):0);
     }
 }
@@ -120,10 +120,10 @@ void PHGLVertexArrayObject::vertexPointer(GLuint index, GLint size, GLenum type,
     {
         bind_begin
          
-        PHGLVBO * oldvbo = _gameManager->boundVBO(PHGLVBO::arrayBuffer);
+        PHGLVBO * oldvbo = gm->boundVBO(PHGLVBO::arrayBuffer);
         vbo->bindTo(PHGLVBO::arrayBuffer);
 
-        if (!(_gameManager->useShaders()))
+        if (!(gm->useShaders()))
         {
             switch (index) {
                 case PHIMAGEATTRIBUTE_POS:
@@ -149,7 +149,7 @@ void PHGLVertexArrayObject::vertexPointer(GLuint index, GLint size, GLenum type,
             glVertexAttribPointer(index, size, type, normalized, stride, (const GLvoid *)offset);
         }
         
-        _gameManager->bindVBO(oldvbo, PHGLVBO::arrayBuffer);
+        gm->bindVBO(oldvbo, PHGLVBO::arrayBuffer);
         
         bind_end
         
@@ -174,7 +174,7 @@ void PHGLVertexArrayObject::disableAttribute(GLuint index)
     {
         bind_begin
         
-        if (!(_gameManager->useShaders()))
+        if (!(gm->useShaders()))
         {
             switch (index) {
                 case PHIMAGEATTRIBUTE_POS:
@@ -240,11 +240,11 @@ void PHGLVertexArrayObject::draw()
 
 void PHGLVertexArrayObject::bind()
 {
-    _gameManager->bindVAO(this);
+    gm->bindVAO(this);
 }
 
 void PHGLVertexArrayObject::unbind()
 {
     if (bound)
-        _gameManager->bindVAO(NULL);
+        gm->bindVAO(NULL);
 }

@@ -165,15 +165,15 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     }
     
     if (!indexVBO)
-        indexVBO = new PHGLVertexBufferObject(_gameManager);
+        indexVBO = new PHGLVertexBufferObject(gm);
     if (!vbo)
-        vbo = new PHGLVertexBufferObject(_gameManager);
+        vbo = new PHGLVertexBufferObject(gm);
     
     vbo->bindTo(PHGLVBO::arrayBuffer);
-    vbo->setData(NULL, sizeof(GLfloat)*nrVertices*5, _gameManager->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
+    vbo->setData(NULL, sizeof(GLfloat)*nrVertices*5, gm->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
     vbo->setSubData(buffer, 0, sizeof(GLfloat)*nrVertices*5);
     
-    cacheLeft -= (1.0f / _gameManager->framesPerSecond());
+    cacheLeft -= (1.0f / gm->framesPerSecond());
     if (cacheLeft <=0)
     {
         cacheLeft = cacheTime;
@@ -246,7 +246,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     
     if (!vao)
     {
-        vao = new PHGLVertexArrayObject(_gameManager);
+        vao = new PHGLVertexArrayObject(gm);
         vao->bindToEdit();
         vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, 0, vbo);
         vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, sizeof(GLfloat)*2, vbo);
@@ -257,8 +257,8 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     vbo->unbind();
     delete [] buffer;   
     
-    PHGLSetStates(PHGLTexture);
-    _gameManager->applyShader(_gameManager->coloredSpriteShader());
+    gm->setGLStates(PHGLTexture);
+    gm->applyShader(gm->coloredSpriteShader());
     
     vao->bind();
     glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);
@@ -273,8 +273,8 @@ void PHParticleView::render()
         particleM->unlock();
         return;
     }
-    PHMatrix om = PHGLModelView();
-    PHGLSetModelView(om * applyMatrices());
+    PHMatrix om = gm->modelViewMatrix();
+    gm->setModelViewMatrix(om * applyMatrices());
     vector<PHParticleAnimator::particle> * particles = particleAnim->calculatedParticles();
     particleM->unlock();
     if (!particles) return;
@@ -303,5 +303,5 @@ void PHParticleView::render()
         }
     }
     delete particles;
-    PHGLSetModelView(om);
+    gm->setModelViewMatrix(om);
 }

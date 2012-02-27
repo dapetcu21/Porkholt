@@ -37,7 +37,7 @@ public:
 protected:
     int commitDisableCount;
     void modelChanged();
-    void _modelChanged() {}
+    virtual void _modelChanged() {}
 protected:
     multimap<PHObject *, PHInvocation> callbacks;
     

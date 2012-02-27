@@ -33,7 +33,7 @@ void PHEventHandler::touchDown(PHPoint pnt,void * ud)
     event->setHandled(false);
 	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchDown);
 	event->ud = ud;
-    PHView * v = gameManager->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
+    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
     if (!event->_ownerView)
         event->_ownerView = v;
 }
@@ -82,7 +82,7 @@ void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
     event->_delta = delta;
     event->_location = pnt;
     event->state = PHEvent::scrollWheel;
-    PHView * v = gameManager->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
+    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
     if (!event->_ownerView)
         event->_ownerView = v;
     event->release();
@@ -95,7 +95,7 @@ void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
     event->_zoom = zoom;
     event->_location = pnt;
     event->state = PHEvent::pinchZoom;
-    PHView * v = gameManager->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
+    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
     if (!event->_ownerView)
         event->_ownerView = v;
     event->release();
@@ -108,7 +108,7 @@ void PHEventHandler::pinchRotate(PHPoint pnt, ph_float rotation, void *ud)
     event->_rotation = rotation;
     event->_location = pnt;
     event->state = PHEvent::pinchRotate;
-    PHView * v = gameManager->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
+    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
     if (!event->_ownerView)
         event->_ownerView = v;
     event->release();

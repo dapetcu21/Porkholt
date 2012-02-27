@@ -221,7 +221,7 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 	view->render();
 }
 
-void PHGameManager::setOpenGLAttributeStates(uint32_t vertexAttrib)
+void PHGameManager::setGLAttributeStates(uint32_t vertexAttrib)
 {
     int xra = vertexAttrib^openGLVertexAttribStates;
     openGLVertexAttribStates = vertexAttrib;
@@ -278,7 +278,7 @@ void PHGameManager::setOpenGLAttributeStates(uint32_t vertexAttrib)
     }
 }
 
-void PHGameManager::setOpenGLStates(uint32_t states, uint32_t vertexAttrib)
+void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
 {
     if (states & PHGLResetAllStates)
     {
@@ -319,7 +319,7 @@ void PHGameManager::setOpenGLStates(uint32_t states, uint32_t vertexAttrib)
     }
     
     if (vertexAttrib)
-        setOpenGLAttributeStates(vertexAttrib);
+        setGLAttributeStates(vertexAttrib);
 }
 
 void PHGameManager::_appSuspended(PHObject * sender, void * ud)
@@ -482,7 +482,7 @@ void PHGameManager::loadCapabilities()
         glslVersion = 0;
         const char * glslvp = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
         const char * glslv = glslvp;
-        for (;glslv && glslVersion<100; glslv++)
+        for (;(*glslv) && glslVersion<100; glslv++)
         {
             char c = *glslv;
             if (c>='0' && c<='9')

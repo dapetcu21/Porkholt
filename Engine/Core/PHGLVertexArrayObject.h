@@ -20,7 +20,7 @@ protected:
     GLuint vao;
     friend class PHGameManager;
     bool bound;
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
     
     struct attribute
     {
@@ -53,7 +53,7 @@ protected:
     };
     
 public:
-    PHGLVertexArrayObject(PHGameManager * gm);
+    PHGLVertexArrayObject(PHGameManager * gameManager);
     ~PHGLVertexArrayObject();
     
     void fakeBind();

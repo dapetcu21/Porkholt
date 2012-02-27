@@ -59,7 +59,7 @@ function default(name) \
     def = nametable[name] \
 end"
 
-PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gm) : PHImage(s,gm), thread(NULL), defaultSection(0), path(s)
+PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gameManager) : PHImage(s,gameManager), thread(NULL), defaultSection(0), path(s)
 {
     luaMutex->lock();
     if (!L)
@@ -340,7 +340,7 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
             c*=_width;
             r*=_height;
             int aw,ah;
-            if (PHGLHasCapability(PHGLCapabilityNPOT) || PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+            if (gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
             {
                 aw = c;
                 ah = r;
@@ -422,7 +422,7 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
             {
                 bool aa = antialiasing;
                 bool repeat = true;
-                if (PHGLHasCapability(PHGLCapabilityAppleLimitedNPOT))
+                if (gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
                 {
                     bool pots = true;
                     int s = textures[i].awidth;

@@ -28,7 +28,7 @@ public:
 #endif
 	
 protected:
-	PHImage(const string & path, PHGameManager * gm);
+	PHImage(const string & path, PHGameManager * gameManager);
 	
 	int _height;
     int _width;
@@ -36,7 +36,7 @@ protected:
     bool loaded;
     virtual void _load() = 0;
     
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
     
     PHImage * _normalMap;
     

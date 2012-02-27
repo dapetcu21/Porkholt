@@ -63,7 +63,7 @@ void PHLPowerup::updatePosition()
     PHLSensor::updatePosition();
     if (!dismissing) return;
     PHPoint p = getWorld()->getPlayer()->position() - position();
-    ph_float elapsed = 1.0f/(_gameManager->framesPerSecond());
+    ph_float elapsed = 1.0f/(gm->framesPerSecond());
     if (elapsed>remaining) elapsed = remaining;
     p*=(animationTime/remaining)*elapsed;
     remaining-=elapsed;

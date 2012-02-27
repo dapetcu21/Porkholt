@@ -51,10 +51,10 @@ void PLObjectMarker::draw()
         0,0,255,255
     };
 	
-    PHGLSetStates(PHGLVertexArray | PHGLColorArray);
-	PHGLVertexPointer(2, GL_FLOAT, 0, squareVertices);
-	PHGLColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
-    _gameManager->applyShader(_gameManager->coloredNoTexSpriteShader());
+    gm->setGLStates(PHGLVertexArray | PHGLColorArray);
+	gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
+	gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
+    gm->applyShader(gm->coloredNoTexSpriteShader());
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 12);
 }
 

@@ -37,6 +37,10 @@ bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, ph_float radiu
 #define toDeg(x) ((x)/M_PI*180.0f)
 
 void PHLowPassFilter(ph_float & var, ph_float newval, ph_float period, ph_float cutoff);
+void PHLowPassFilter(double & var, double newval, double period, double cutoff);
+void PHLowPassFilter(ph_float * var, ph_float newval, ph_float period, ph_float cutoff);
+void PHLowPassFilter(double * var, double newval, double period, double cutoff);
+
 ph_float PHAngleFromNormalizedVector(const PHPoint & vec);
 inline ph_float PHAngleFromVector(PHPoint vec)
 {

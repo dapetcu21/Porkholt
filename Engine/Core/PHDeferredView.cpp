@@ -25,16 +25,16 @@ PHDeferredView::PHDeferredView(const PHRect & r) : PHView(r), INIT
 
 void PHDeferredView::attachedToGameManager()
 {
-    if (!_gameManager->useShaders())
+    if (!gm->useShaders())
         return;
     if (inited) return;
     inited = true;
     
-    ambientShader = _gameManager->shaderProgramNamed("deferred_ambient");
-    diffusePointShader = _gameManager->shaderProgramNamed("deferred_diffuse_point");
-    diffuseNormalPointShader = _gameManager->shaderProgramNamed("deferred_diffuse_normal_point");
+    ambientShader = gm->shaderProgramNamed("deferred_ambient");
+    diffusePointShader = gm->shaderProgramNamed("deferred_diffuse_point");
+    diffuseNormalPointShader = gm->shaderProgramNamed("deferred_diffuse_normal_point");
     states = new PHGLUniformStates;
-    PHRect r = _gameManager->screenBounds();
+    PHRect r = gm->screenBounds();
     
     states->insert("modelViewProjectionMatrix", PHGameManager::modelViewSpriteUniform);
     states->insert("color", PHGameManager::colorSpriteUniform);
@@ -107,9 +107,9 @@ void PHDeferredView::render()
         glBindFramebuffer(GL_FRAMEBUFFER, normalFBO);
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        _gameManager->setRenderMode(normalMapRenderMode);
+        gm->setRenderMode(normalMapRenderMode);
         PHView::render();
-        _gameManager->setRenderMode(PHGameManager::defaultRenderMode);
+        gm->setRenderMode(PHGameManager::defaultRenderMode);
     }
     composite();
 }
@@ -117,11 +117,11 @@ void PHDeferredView::render()
 void PHDeferredView::composite()
 {
     if (!inited) return;
-    glBindFramebuffer(GL_FRAMEBUFFER, _gameManager->defaultFBO());
+    glBindFramebuffer(GL_FRAMEBUFFER, gm->defaultFBO());
     
-    PHRect v = _gameManager->screenBounds();
+    PHRect v = gm->screenBounds();
     
-    PHGLSetStates(PHGLTexture);
+    gm->setGLStates(PHGLTexture);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, colorTex);
     if (normal)
@@ -131,15 +131,15 @@ void PHDeferredView::composite()
     }
     
 	glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-    PHGLVertexArrayObject * vao = _gameManager->solidSquareVAO();
+    PHGLVertexArrayObject * vao = gm->solidSquareVAO();
     vao->bind();
     
     PHVector2 scale(v.width,v.height);
     
     if (ambient!=PHBlackColor)
     {
-        _gameManager->useShader(ambientShader);
-        (states->at(PHGameManager::modelViewSpriteUniform) = _gameManager->projectionMatrix()).apply(ambientShader);
+        gm->useShader(ambientShader);
+        (states->at(PHGameManager::modelViewSpriteUniform) = gm->projectionMatrix()).apply(ambientShader);
         states->at(PHGameManager::textureSpriteUniform).apply(ambientShader);
         (states->at(PHGameManager::colorSpriteUniform) = ambient).apply(ambientShader);
         (states->at(scaleUniform) = scale).apply(ambientShader);
@@ -148,8 +148,8 @@ void PHDeferredView::composite()
     if (!pointLights.empty())
     {
         PHGLShaderProgram * shader = speculars?(normal?specularNormalPointShader:specularPointShader):(normal?diffuseNormalPointShader:diffusePointShader);
-        _gameManager->useShader(shader);
-        (states->at(PHGameManager::modelViewSpriteUniform) = _gameManager->projectionMatrix()).apply(shader);
+        gm->useShader(shader);
+        (states->at(PHGameManager::modelViewSpriteUniform) = gm->projectionMatrix()).apply(shader);
         states->at(PHGameManager::textureSpriteUniform).apply(shader);
         (states->at(scaleUniform) = scale).apply(shader);
         if (normal)

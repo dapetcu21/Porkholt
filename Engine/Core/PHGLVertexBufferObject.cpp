@@ -81,7 +81,7 @@ GLenum PHGLVertexBufferObject::usages[] = {
 #endif
 };
 
-PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gm) : _gameManager(gm), bound(0)
+PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gameManager) : gm(gameManager), bound(0)
 {
     glGenBuffers(1, &vbo);
 }
@@ -93,20 +93,20 @@ PHGLVertexBufferObject::~PHGLVertexBufferObject()
 
 void PHGLVertexBufferObject::bindTo(int target)
 {
-    _gameManager->bindVBO(this, target);
+    gm->bindVBO(this, target);
 }
 
 void PHGLVertexBufferObject::unbind()
 {
     if (bound)
-        _gameManager->bindVBO(NULL, bound);
+        gm->bindVBO(NULL, bound);
 }
 
 #define bind_begin bool b = isBound(); PHGLVBO * old; \
 if (!b) { \
-    old = _gameManager->boundVBO(arrayBuffer); \
+    old = gm->boundVBO(arrayBuffer); \
     bindTo(arrayBuffer); }
-#define bind_end if (!b) _gameManager->bindVBO(old, arrayBuffer);
+#define bind_end if (!b) gm->bindVBO(old, arrayBuffer);
 
 void PHGLVertexBufferObject::setData(const void * data, size_t size, int usage)
 {

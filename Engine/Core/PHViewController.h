@@ -32,15 +32,15 @@ protected:
     
     set<PHViewController*> managedControllers;
     
-    PHGameManager * _gameManager;
+    PHGameManager * gm;
     
 public:
 	PHView * getView() { return view; };
 	PHViewController() : navController(NULL),view(NULL),viewState(StateNotAppeared),rmNav(false) {};
 	virtual ~PHViewController();
 	
-	void init(PHGameManager * gm);
-	void init(PHGameManager * gm, const PHRect & frame);
+	void init(PHGameManager * gameManager);
+	void init(PHGameManager * gameManager, const PHRect & frame);
 	
     PHNavigationController * navigationController() { return navController; }
     
@@ -100,8 +100,8 @@ public:
     void manageViewController(PHViewController *vc);
     void stopManagingViewController(PHViewController *vc);
     
-    void setGameManager(PHGameManager * gm) { _gameManager = gm; }
-    PHGameManager * gameManager() { return _gameManager; }
+    void setGameManager(PHGameManager * gameManager) { gm = gameManager; }
+    PHGameManager * gameManager() { return gm; }
     
 private:
 	virtual void viewDidAppear();

@@ -19,7 +19,7 @@ PHTextController::PHTextController(vector<string> * s) : PHViewController(), bCo
 PHView * PHTextController::loadView(const PHRect & frame)
 {
     PHTextControllerView * view = new PHTextControllerView(this);
-    PHRect fr = _gameManager->screenBounds();
+    PHRect fr = gm->screenBounds();
     view->setFrame(fr);
     fr.width/=fr.height;
     fr.height = 1;
@@ -29,7 +29,7 @@ PHView * PHTextController::loadView(const PHRect & frame)
     textView = new PHTextView(PHRect(fr.width/12,1.0f/6,fr.width*5/6,4.0f/6));
     textView->setFontSize(0.1f);
     textView->setFontColor(fColor);
-    textView->setFont(_gameManager->fontNamed("Arial"));
+    textView->setFont(gm->fontNamed("Arial"));
     pos = 0;
     textView->setText((*strings)[pos]);
     textView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);

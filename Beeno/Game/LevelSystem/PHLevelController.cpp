@@ -83,8 +83,8 @@ void PHLevelController::pauseWithMenu()
     {
         rb = new PHButtonView;
         rb->setTag(64);
-        rb->setImage(_gameManager->imageNamed("play"));
-        rb->setPressedImage(_gameManager->imageNamed("play_pressed"));
+        rb->setImage(gm->imageNamed("play"));
+        rb->setPressedImage(gm->imageNamed("play_pressed"));
         rv->addSubview(rb);
         rb->setUpCallback(PHInv(this, PHLevelController::resume, NULL));
         rb->release();
@@ -93,8 +93,8 @@ void PHLevelController::pauseWithMenu()
     {
         qb = new PHButtonView;
         qb->setTag(65);
-        qb->setImage(_gameManager->imageNamed("quit"));
-        qb->setPressedImage(_gameManager->imageNamed("quit_pressed"));
+        qb->setImage(gm->imageNamed("quit"));
+        qb->setPressedImage(gm->imageNamed("quit_pressed"));
         rv->addSubview(qb);
         qb->setUpCallback(PHInv(this, PHLevelController::returnToMenu, NULL));
         qb->release();
@@ -234,9 +234,9 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	pSem2 = new PHSemaphore(1);
     running = true;
 	paused = true;
-	world = new PHWorld(_gameManager,PHRect(0, 0, 1000, 1000),this);
+	world = new PHWorld(gm,PHRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
-	backgroundView->setImage(_gameManager->imageFromPath(directory+"/bg.png"));
+	backgroundView->setImage(gm->imageFromPath(directory+"/bg.png"));
 	view->addSubview(backgroundView);
 	view->addSubview(world->getView());
     animPool = new PHAnimatorPool;
@@ -297,7 +297,7 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
         }
         PHLog("_endLevel");
         PHTextController * vc = new PHTextController(v);
-        vc->init(_gameManager);
+        vc->init(gm);
         vc->setForegroundColor(PHWhiteColor);
         vc->setBackgroundColor(PHBlackColor);
         vc->setDoneCallback(PHInv(this, PHLevelController::textViewControllerFinished, (void*)2));
@@ -362,7 +362,7 @@ void PHLevelController::_curtainText(PHObject * sender, void * ud)
 {
     curtainData * cd = (curtainData*)ud;
     PHTextController * vc = new PHTextController(cd->v);
-    vc->init(_gameManager);
+    vc->init(gm);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
     vc->setDoneCallback(PHInv(this, PHLevelController::curtainEnded, ud));
@@ -401,7 +401,7 @@ PHViewController * PHLevelController::mainViewController()
         return this;
     }
     PHTextController * vc = new PHTextController(v);
-    vc->init(_gameManager);
+    vc->init(gm);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
     vc->setDoneCallback(PHInv(this, PHLevelController::textViewControllerFinished, (void*)1));
@@ -452,7 +452,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
-	string resourcePath = _gameManager->resourcePath();
+	string resourcePath = gm->resourcePath();
     
 	PHLuaSetIncludePath(L, directory+"/?.lua;"+resourcePath+"/scripts/?.lua");
 	
@@ -484,7 +484,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 					lua_pushnumber(L, j);
 					lua_gettable(L, -2);
                     
-                    PHImageView * img = PHImageView::imageFromLua(L, _gameManager, directory, animPool);
+                    PHImageView * img = PHImageView::imageFromLua(L, gm, directory, animPool);
                     if (img)
                     {
                         mutex->lock();
@@ -569,13 +569,13 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
-    _gameManager->collectGarbageImages();
-    _gameManager->collectGarbageFonts();
+    gm->collectGarbageImages();
+    gm->collectGarbageFonts();
     ready1 = true;
     resume();
 	mutex->unlock();
 	
-	int fps = _gameManager->framesPerSecond();
+	int fps = gm->framesPerSecond();
 	ph_float frameInterval = 1.0f/fps;
 	
 	while (running)
