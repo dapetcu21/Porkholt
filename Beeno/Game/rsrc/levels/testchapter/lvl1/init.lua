@@ -122,20 +122,25 @@ joint.anchor2 = point(0.15,0);
 joint.collideConnected = false;
 addJoint(joint);
 
-require("lvl_designer");
-
 --fireworks
 obj = objectWithClass("PHLObject")
-obj.pos = point(4,2)
-objectAddImage(obj,"/particle.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { 
+obj.pos = point(4,0.4716)
+objectAddImage(obj,[[tree.png]],-2.062651,-0.102099,4.529824,3.595760)
+objectAddImage(obj,"leaf.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { 
 	particlesPerSecond = 10,
-	velocity = vector(2,2), 
-	spreadAngle = 60, 
-	velocityVariation = 2, 
+	generationArea = rect(-0.842723,1.011111,2.272513,1.5),
+	velocity = vector(0.3,-0.6),
+	gravity = vector(0,-0.1), 
+	spreadAngle = 20, 
+	velocityVariation = 0.5, 
 	initialSize = point(0.3,0.3), 
-	finalSize = point(0.7,0.7), 
+	finalSize = point(0.3,0.3), 
 	initialColor = rgba(1,1,1,1), 
 	finalColor = rgba(1,1,1,0.5),
-    rotatesWithVelocity = true
+    rotatesWithVelocity = true,
+	particleLifetime = 2
 	} })
+
 addObject(obj)
+
+require("lvl_designer");

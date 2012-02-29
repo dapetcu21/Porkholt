@@ -318,6 +318,8 @@ void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject
         vao1 = new PHGLVertexArrayObject(imageView->gameManager());
     if (!vbo1)
         vbo1 = new PHGLVertexBufferObject(imageView->gameManager());
+    if (fade&&!vao2)
+        vao2 = new PHGLVertexArrayObject(imageView->gameManager());
     if (fade&&!vbo2)
         vbo2 = new PHGLVertexBufferObject(imageView->gameManager());
     if (!fade&&vbo2)
@@ -325,6 +327,12 @@ void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject
         vbo2->release();
         vbo2 = NULL;
     }
+    if (!fade&&vao2)
+    {
+        vao2->release();
+        vao2 = NULL;
+    }
+
     PHPoint repeat = PHPoint(imageView->repeatX(),imageView->repeatY());
     PHRect port = imageView->textureCoordinates();
     

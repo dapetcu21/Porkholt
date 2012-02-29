@@ -24,6 +24,9 @@
 #include "PHImage.h"
 #include "PHPoofView.h"
 
+#include "PHSoundManager.h"
+#include "PHSoundPool.h"
+
 #include "PHLua.h"
 #include <Box2D/Box2D.h>
 
@@ -1191,6 +1194,11 @@ void PHLObject::_poof()
     v->setAnimatorPool(wrld->levelController()->animatorPool());
     getWorld()->getWorldView()->addSubview(v);
     v->release();
+    
+    PHSound * s = gameManager()->soundManager()->soundNamed("poof")->duplicate();
+    getWorld()->soundPool()->addSound(s);
+    s->playAndRelease(getWorld()->realTimeEventQueue());
+    
     destroy();
 }
 

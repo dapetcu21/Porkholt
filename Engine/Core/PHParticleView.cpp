@@ -86,6 +86,7 @@ void PHParticleView::loadFromLua(lua_State * L)
             PHParticleAnimator * pa = PHParticleAnimator::fromLua(L);
             setParticleAnimator(pa);
         }
+        lua_pop(L, 1);
     }
 }
 

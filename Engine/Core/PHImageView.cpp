@@ -337,20 +337,23 @@ void PHImageView::renderStraight()
         {
             PHColor t = tint.isValid()?tint:PHWhiteColor;
             ph_float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-            gm->setColor(t*(1-rem));
+            
             gm->setGLStates(PHGLTexture);
-            _animator->bindCurrentFrameToTexture(0);
-            gm->applySpriteShader();
-            straightVAO1->bind();
-            straightVAO1->draw();
             
             if (straightVAO2)
             {
                 gm->setColor(t*rem);
                 _animator->bindLastFrameToTexture(0);
+                gm->applySpriteShader();
                 straightVAO1->bind();
                 straightVAO2->draw();
             }
+            
+            gm->setColor(t*(1-rem));
+            _animator->bindCurrentFrameToTexture(0);
+            gm->applySpriteShader();
+            straightVAO1->bind();
+            straightVAO1->draw();
             
             gm->bindVAO(NULL);
         }

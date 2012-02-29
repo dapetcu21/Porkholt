@@ -642,6 +642,7 @@ void PHWorld::preloadAssets()
     retainImg(PHPoofView::boomImage(gm));
     retainImg(PHShieldView::shieldImage(gm));
     retainSound("boom");
+    retainSound("poof");
 }
 
 void PHWorld::unloadAssets()
