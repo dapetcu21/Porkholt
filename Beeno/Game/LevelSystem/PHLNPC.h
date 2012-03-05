@@ -106,6 +106,7 @@ private:
     void showDialog(PHDialog * dialog);
     void swapDialog(PHDialog * dialog);
     void dismissDialog();
+    void updateDialogPosition();
     
 public:
     void setShowsQuest(bool q) { quest1 = q; updateShowsQuest(); }

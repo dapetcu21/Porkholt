@@ -97,10 +97,17 @@ template <> struct _PH_STATIC_ASSERTION_FAILURE< false > {};
 
 struct lua_State; 
 
+#define PH_NO_PACKED_STRUCT
+
+#ifdef PH_NO_PACKED_STRUCT
+#define PH_PACKED_STRUCT
+#else
 #ifdef __GNUC__
 #define PH_PACKED_STRUCT __attribute__((packed))
 #elif _MSC_VER
 #define PH_PACKED_STRUCT_PRAGMA
+#define PH_PACKED_STRUCT
+#endif
 #endif
 
 #include "PHInvocation.h"

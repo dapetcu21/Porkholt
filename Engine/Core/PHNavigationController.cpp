@@ -110,7 +110,7 @@ void PHNavigationController::cancelAnimation()
 	{
 		if (fadeView)
 			fadeView->removeFromSuperview();
-		if (animation==FadeToColor)
+		if (animation==FadeToColor && currentVC)
 		{
 			view->addSubview(currentVC->getView());
 		}

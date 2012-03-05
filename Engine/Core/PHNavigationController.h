@@ -33,7 +33,7 @@ private:
 	
 	friend class PHAnimationDescriptor;
 public:
-	PHNavigationController() : currentVC(NULL),lastVC(NULL),_fadeColor(PHBlackColor),fadeView(NULL),hidden(true) {};
+	PHNavigationController() : currentVC(NULL),lastVC(NULL),_fadeColor(PHBlackColor),fadeView(NULL),hidden(true), animation(NoAnim) {};
 	enum Animations
 	{
 		NoAnim = 0,

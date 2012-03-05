@@ -27,8 +27,9 @@ PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, const string & path)
             break;
     
     string dir = path.substr(0,i);
-    string vshader = path.substr(i,j-i)+".vsh";
-    string fshader = path.substr(i,j-i)+".fsh";
+    string pname = path.substr(i,j-i);
+    string vshader = pname+".vsh";
+    string fshader = pname+".fsh";
     
     lua_pushvalue(L, LUA_GLOBALSINDEX);
     PHLuaGetStringField(vshader, "vertexShader");
@@ -102,6 +103,9 @@ PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, const string & path)
     }
 #endif
     
+#ifdef PH_DEBUG
+    PHLog("Shader program \"%s\" compiled and linked",pname.c_str());
+#endif
 }
 
 bool PHGLShaderProgram::validate()

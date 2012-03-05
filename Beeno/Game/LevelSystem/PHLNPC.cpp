@@ -27,9 +27,10 @@
 #include "PHImageAnimator.h"
 #include "PHImageView.h"
 #include "PHLPlayer.h"
-#include "PHAnimatorPool.h"
 
 #include <typeinfo>
+
+#define dialogTag 5838
 
 PHL_REGISTEROBJECT(PHLNPC)
 
@@ -129,11 +130,7 @@ void PHLNPC::updateView()
         hoverAmmount = PHWarp(hoverAmmount+frameInterval*2, M_PI*2);
     }
     PHLObject::updateView();
-    if (dialogView)
-    {
-        bool flipped = dialogView->horizontallyFlipped();
-        dialogView->setPosition(PHPoint(pos.x+(flipped?-1:1)*overHeadPoint.x-(flipped?dialogView->frame().width:0), pos.y+overHeadPoint.y));
-    }
+    updateDialogPosition();
     if (questView)
     {
         ph_float width = questView->frame().width;
@@ -228,8 +225,37 @@ void PHLNPC::setDialog(PHDialog * dialog)
 #define dialogBorderLeft 0.15
 #define dialogBorderright 0.15
 
+void PHLNPC::updateDialogPosition()
+{
+    if (!dialogView) return;
+    
+    PHPoint bubblePoint = pos;
+    bubblePoint.y+=overHeadPoint.y;
+    PHLCamera * camera = getWorld()->getCamera();
+    ph_float camwidth = camera->width();
+    bool flipped = position().x>=camera->position().x;
+    ph_float width = abs(position().x-camera->position().x)+camwidth*0.45;
+    if (width>camwidth*0.6)
+        width=camwidth*0.6;
+    ph_float height = dialogFontSize/(1.0f-dialogBorderTop-dialogBorderBottom);
+    dialogView->setFrame(PHRect(bubblePoint.x, bubblePoint.y, width, height));
+    dialogView->setFlipCenter(PHOriginPoint);
+    dialogView->setHorizontallyFlipped(flipped);
+    dialogTextView->setHorizontallyFlipped(flipped);
+    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, width*(1.0f-dialogBorderLeft-dialogBorderright), dialogFontSize));
+    
+    PHPoint sz =  dialogTextView->textSize();
+    width = sz.x/(1.0f-dialogBorderLeft-dialogBorderright);
+    height = sz.y/(1.0f-dialogBorderTop-dialogBorderBottom);
+    dialogView->setFrame(PHRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
+    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
+    
+    dialogView->setScalingCenter(PHOriginPoint);
+}
+
 void PHLNPC::showDialog(PHDialog *dialog)
 {
+    if (!dialog) return;
     dialog->retain();
     if (currentDialog)
     {
@@ -261,44 +287,21 @@ void PHLNPC::showDialog(PHDialog *dialog)
         getWorld()->getWorldView()->addSubview(dialogView);
     }
     dialogView->mutex()->lock();
-    PHAnimatorPool::currentAnimatorPool()->removeAnimatorsWithTag(5836);
-    PHPoint bubblePoint = pos;
-    bubblePoint.y+=overHeadPoint.y;
-    PHLCamera * camera = getWorld()->getCamera();
-    ph_float camwidth = camera->width();
-    bool flipped = position().x>=camera->position().x;
-    ph_float width = abs(position().x-camera->position().x)+camwidth*0.45;
-    if (width>camwidth*0.6)
-        width=camwidth*0.6;
-    ph_float height = dialogFontSize/(1.0f-dialogBorderTop-dialogBorderBottom);
-    dialogView->setFrame(PHRect(bubblePoint.x, bubblePoint.y, width, height));
-    dialogView->setFlipCenter(PHOriginPoint);
-    dialogView->setHorizontallyFlipped(flipped);
-    dialogTextView->setHorizontallyFlipped(flipped);
-    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, width*(1.0f-dialogBorderLeft-dialogBorderright), dialogFontSize));
+    dialogView->removeCinematicAnimationsWithTag(dialogTag);
+    dialogTextView->removeCinematicAnimationsWithTag(dialogTag);
     dialogTextView->setText(currentDialog->text);
-    PHPoint sz =  dialogTextView->textSize();
-    width = sz.x/(1.0f-dialogBorderLeft-dialogBorderright);
-    height = sz.y/(1.0f-dialogBorderTop-dialogBorderBottom);
-    dialogView->setFrame(PHRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
-    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
-    ph_float scale = 1024;
+    dialogView->reenableTouch();
+
+    updateDialogPosition();
+    
+    static const ph_float scale = 1024;
     dialogView->setScaleX(1/scale);
     dialogView->setScaleY(1/scale);
-    dialogView->setScalingCenter(PHOriginPoint);
     dialogView->beginCinematicAnimation(0.5f,PHCinematicAnimator::BounceFunction);
     dialogView->animateScale(PHSize(scale,scale));
-    dialogView->animationTag(5836);
+    dialogView->animationTag(dialogTag);
     dialogView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
-}
-
-void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
-{
-    dialogView->removeFromSuperview();
-    dialogView->release();
-    dialogView=NULL;
-    setInternalShowsQuest2(true);
 }
 
 void PHLNPC::dialogViewFired(PHDialogView * dv)
@@ -338,26 +341,42 @@ void PHLNPC::dismissDialog()
         currentDialog->release();
         currentDialog = NULL;
     }
-    if (!dialogView) return;
-    dialogView->mutex()->lock();
-    dialogView->removeCinematicAnimationsWithTag(5836);
-    dialogTextView->removeCinematicAnimationsWithTag(5836);
-    dialogView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
-    ph_float scale = 1024;
-    dialogView->animateScale(PHSize(1/scale,1/scale));
-    dialogView->animationCallback(PHInvN(this, PHLNPC::_dialogDismissed));
-    dialogView->animationTag(5838);
-    dialogView->commitCinematicAnimation();
-    dialogView->mutex()->unlock();
+    PHDialogView * dv = dialogView;
+    PHTextView * dtv = dialogTextView;
+    if (!dv) return;
+    
+    dv->mutex()->lock();
+    dv->removeCinematicAnimationsWithTag(dialogTag);
+    dtv->removeCinematicAnimationsWithTag(dialogTag);
+    dv->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
+    static const ph_float scale = 1024;
+    dv->animateScale(PHSize(1/scale,1/scale));
+    dv->animationCallback(PHInvN(this, PHLNPC::_dialogDismissed));
+    dv->animationTag(dialogTag);
+    dv->commitCinematicAnimation();
+    dv->mutex()->unlock();
 }
+
+void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
+{
+    dialogView->removeFromSuperview();
+    dialogView->release();
+    dialogView=NULL;
+    setInternalShowsQuest2(true);
+}
+
 
 void PHLNPC::swapDialog(PHDialog *dialog)
 {
-    if (currentDialog)
+    if (!currentDialog || !dialogView)
     {
-        currentDialog->callback();
-        currentDialog->release();
+        if (dialog)
+            showDialog(dialog);
+        return;
     }
+    
+    currentDialog->callback();
+    currentDialog->release();
     currentDialog = dialog;
     if (currentDialog)
         currentDialog->retain();
@@ -367,65 +386,54 @@ void PHLNPC::swapDialog(PHDialog *dialog)
         return;
     }
     dialogView->mutex()->lock();
-    dialogView->removeCinematicAnimationsWithTag(5836);
-    dialogTextView->removeCinematicAnimationsWithTag(5836);
+    dialogView->removeCinematicAnimationsWithTag(dialogTag);
+    dialogTextView->removeCinematicAnimationsWithTag(dialogTag);
     dialogTextView->beginCinematicAnimation(0.2f,PHCinematicAnimator::FadeOutFunction);
     dialogTextView->animateCustomColor(PHClearColor);
     dialogTextView->animationCallback(PHInvN(this, PHLNPC::_dialogSwapBegin));
-    dialogTextView->animationTag(5838);
+    dialogTextView->animationTag(dialogTag);
     dialogTextView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
 }
 
 void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
 {
-    dialogView->mutex()->lock();
-    PHPoint bubblePoint = pos;
-    bubblePoint.y+=overHeadPoint.y;
-    bool flipped = dialogView->horizontallyFlipped();
-    PHLCamera * camera = getWorld()->getCamera();
-    ph_float camwidth = camera->width();
-    ph_float twidth = (flipped?1:-1)*(position().x-camera->position().x)+camwidth*0.45;
-    if (twidth>camwidth*0.6)
-        twidth=camwidth*0.6;
-    PHRect f = dialogTextView->frame();
-    f.x = twidth*dialogBorderLeft;
-    f.width = twidth*(1.0f-dialogBorderLeft-dialogBorderright);
-    dialogTextView->setFrame(f);
-    dialogTextView->setText(currentDialog->text);
-    PHPoint sz =  dialogTextView->textSize();
-    ph_float owidth = dialogView->frame().width;
-    ph_float oheight = dialogView->frame().height;
-    ph_float width = sz.x/(1.0f-dialogBorderLeft-dialogBorderright);
-    ph_float height = sz.y/(1.0f-dialogBorderTop-dialogBorderBottom);
-    dialogView->setFrame(PHRect(bubblePoint.x-(flipped?width:0)+(flipped?-1:1)*overHeadPoint.x, bubblePoint.y, width, height));
-    dialogTextView->setFrame(PHRect(width*dialogBorderLeft, height*dialogBorderBottom, sz.x, sz.y));
+    PHDialogView * dv = dialogView;
+    PHTextView * dtv = dialogTextView;
     
-    dialogView->setScalingCenter(PHOriginPoint);
-    dialogView->setScaleX(owidth/width);
-    dialogView->setScaleY(oheight/height);
+    dv->mutex()->lock();
+    dtv->setText(currentDialog->text);
+    
+    ph_float owidth = dv->frame().width;
+    ph_float oheight = dv->frame().height;
+    updateDialogPosition();
+    ph_float width = dv->frame().width;
+    ph_float height = dv->frame().height;
+    
+    dv->setScaleX(owidth/width);
+    dv->setScaleY(oheight/height);
     
     if ((owidth>=width && oheight>=height) || (owidth/width >=1 && owidth/width>=height/oheight) || (oheight/height >=1 && oheight/height>=width/owidth))
     {
-        dialogTextView->setScaleX(width/owidth);
-        dialogTextView->setScaleY(height/oheight);
-        dialogTextView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInOutFunction);
-        dialogTextView->animateScale(PHSize(owidth/width,oheight/height));
-        dialogTextView->animationTag(5838);
-        dialogTextView->commitCinematicAnimation();
+        dtv->setScaleX(width/owidth);
+        dtv->setScaleY(height/oheight);
+        dtv->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInOutFunction);
+        dtv->animateScale(PHSize(owidth/width,oheight/height));
+        dtv->animationTag(dialogTag);
+        dtv->commitCinematicAnimation();
     }
     
-    dialogView->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInOutFunction);
-    dialogView->animateScale(PHSize(width/owidth,height/oheight));
-    dialogView->animationTag(5838);
-    dialogView->animationCallback(PHInvN(this, PHLNPC::_dialogSwapEnd));
-    dialogView->commitCinematicAnimation();
+    dv->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInOutFunction);
+    dv->animateScale(PHSize(width/owidth,height/oheight));
+    dv->animationTag(dialogTag);
+    dv->animationCallback(PHInvN(this, PHLNPC::_dialogSwapEnd));
+    dv->commitCinematicAnimation();
     
-    dialogTextView->beginCinematicAnimation(0.2f, PHCinematicAnimator::FadeInFunction);
-    dialogTextView->animateCustomColor(PHBlackColor);
-    dialogTextView->animationTag(5838);
-    dialogTextView->commitCinematicAnimation();
-    dialogView->mutex()->unlock();
+    dtv->beginCinematicAnimation(0.2f, PHCinematicAnimator::FadeInFunction);
+    dtv->animateCustomColor(PHBlackColor);
+    dtv->animationTag(dialogTag);
+    dtv->commitCinematicAnimation();
+    dv->mutex()->unlock();
 }
 
 void PHLNPC::_dialogSwapEnd(PHLObject * sender, void * ud)

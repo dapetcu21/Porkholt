@@ -21,6 +21,28 @@ function PHLog(fmt, ...)
 	PHOutput(string.format(fmt,unpack(arg)))
 end
 
+function PHPrint(t,level,prefix,pre)
+	if (not t) then return end
+	level = level or 1
+	prefix = prefix or ""
+	pre = pre or ""
+	if (type(t)=="table" and level>0) then
+		PHLog(prefix..pre.."%s:",t)
+		for i,v in pairs(t) do 
+			PHLog(prefix.."  %s: %s",i,tostring(v)); 
+		end
+		local super = getmetatable(t);
+		if (type(super)=="table") then
+			super = super.__index
+		end
+		if (type(super)=="table") then
+			PHPrint(super,level-1,prefix.."  ","index")
+		end
+	else
+		PHLog(prefix..pre.."%s",tostring(t))
+	end
+end
+
 function PHCallbackHelper(cb)
 	cb.callback(unpack(cb.args))
 end

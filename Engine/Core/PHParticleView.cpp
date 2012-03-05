@@ -15,6 +15,7 @@
 #include "PHGameManager.h"
 #include "PHGLVertexArrayObject.h"
 #include "PHGLVertexBufferObject.h"
+#include "PHDeferredView.h"
 
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
@@ -37,7 +38,9 @@ PHParticleView::PHParticleView(PHImage * image) : PHImageView(image), INIT
 void PHParticleView::init()
 {
     luaClass = "PHParticleView";
-    setParticleAnimator(new PHParticleAnimator);
+    PHParticleAnimator * panim = new PHParticleAnimator;
+    setParticleAnimator(panim);
+    panim->release();
 }
 
 PHParticleView::~PHParticleView()
@@ -274,23 +277,37 @@ void PHParticleView::render()
         particleM->unlock();
         return;
     }
-    PHMatrix om = gm->modelViewMatrix();
-    gm->setModelViewMatrix(om * applyMatrices());
+    PHImage * img = _image;
+    switch (gm->renderMode())
+    {
+        case PHGameManager::defaultRenderMode:
+            break;
+        case PHDeferredView::normalMapRenderMode:
+            img = _image->normalMap();
+            if (!img)
+                return;
+            break;
+        default:
+            return;
+    }
     vector<PHParticleAnimator::particle> * particles = particleAnim->calculatedParticles();
     particleM->unlock();
     if (!particles) return;
     if (!particles->empty())
     {
+        PHMatrix om = gm->modelViewMatrix();
+        gm->setModelViewMatrix(om * applyMatrices());
+        
         PHColor t = tint;
         if (!t.isValid())
             t = PHWhiteColor;
-        _image->load();
-        if (_image->isNormal())
+        img->load();
+        if (img->isNormal())
         {
-            ((PHNormalImage*)_image)->bindToTexture(0);
-            renderParticles(particles,((PHNormalImage*)_image)->textureCoordinates(textureCoordinates()),t);
+            ((PHNormalImage*)img)->bindToTexture(0);
+            renderParticles(particles,((PHNormalImage*)img)->textureCoordinates(textureCoordinates()),t);
         }
-        if (_image->isAnimated())
+        if (img->isAnimated())
         {
             _animator->bindCurrentFrameToTexture(0);
             bool fd = _animator->isFading();
@@ -302,7 +319,8 @@ void PHParticleView::render()
                 renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t*rem);
             }   
         }
+        
+        gm->setModelViewMatrix(om);
     }
     delete particles;
-    gm->setModelViewMatrix(om);
 }

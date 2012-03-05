@@ -29,7 +29,7 @@
 
 bool PHImageView::supportsRenderMode(int rm)
 {
-    return (rm == PHGameManager::defaultRenderMode) || (rm == PHDeferredView::normalMapRenderMode);
+    return (rm == PHGameManager::defaultRenderMode) || ((rm == PHDeferredView::normalMapRenderMode) && _image && _image->normalMap());
 }
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT

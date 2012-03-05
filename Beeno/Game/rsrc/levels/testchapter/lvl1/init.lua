@@ -143,4 +143,9 @@ objectAddImage(obj,"leaf.png",0,0,1,1,{ class = "PHParticleView", particleAnimat
 
 addObject(obj)
 
+obj = objectWithClass("PHLSign")
+obj.pos = point(1,1)
+obj.scripting = "sign"
+addObject(obj)
+
 require("lvl_designer");

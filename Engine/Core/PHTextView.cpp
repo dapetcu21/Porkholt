@@ -69,6 +69,7 @@ void PHTextView::draw()
     if (needsReload)
         recalculatePositions();
     loadVBOs();
+    if (!vao) return;
     
     gm->setGLStates(PHGLTexture);
     glActiveTexture(GL_TEXTURE0);
