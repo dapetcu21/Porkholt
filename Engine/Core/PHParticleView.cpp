@@ -17,6 +17,8 @@
 #include "PHGLVertexBufferObject.h"
 #include "PHDeferredView.h"
 
+#include <vector> 
+
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
 #define INIT particleM(new PHMutex), particleAnim(NULL), particlePool(PHAnimatorPool::currentAnimatorPool()), vao(NULL), vbo(NULL), indexVBO(NULL), maxN(0), cacheTime(15), cacheLeft(15)

@@ -28,7 +28,9 @@ private:
     PHMutex * mutex;
     
     ph_float powerTime;
+    ph_float lastInsert;
     bool resumeTrail;
+    set<b2Contact*> contacts;
     
 public:
 	PHLPlayer();
@@ -41,6 +43,7 @@ public:
 	virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
     
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
+    virtual void contactEnd(bool b,b2Contact* contact);
     
     void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
     

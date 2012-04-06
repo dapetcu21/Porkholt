@@ -20,6 +20,7 @@
 #include "PHEventQueue.h"
 #include "PHShieldView.h"
 #include "PHLevelController.h"
+#include "PHTime.h"
 
 PHL_REGISTEROBJECT(PHLPlayer)
 
@@ -149,6 +150,16 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
 {
     PHLObject::contactPostSolve(b, contact, impulse);
     touchesSomething = 1.0f;
+    static int count = 0;
+    if (contacts.insert(contact).second)
+    {
+        ph_float a = PHTime::getTime();
+        if (a-lastInsert > 1.0f)
+        {
+            _forceGauge = maxForce;
+            lastInsert = a;
+        }
+    }
     b2Manifold * man = contact->GetManifold();
     b2WorldManifold wMan;
     contact->GetWorldManifold(&wMan);
@@ -161,6 +172,13 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
         normal.y+=val*norm.y;
     }
 }
+
+void PHLPlayer::contactEnd(bool b,b2Contact* contact)
+{
+    contacts.erase(contact);
+}
+
+
 
 void PHLPlayer::_activateShield(PHObject * sender, void * ud)
 {
