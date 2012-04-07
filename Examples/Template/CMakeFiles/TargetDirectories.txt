@@ -1,0 +1,3 @@
+/Users/da_petcu21/Programare/Porkholt/Examples/Template/CMakeFiles/ALL_BUILD.dir
+/Users/da_petcu21/Programare/Porkholt/Engine/CMakeFiles/Porkholt_iOS.dir
+/Users/da_petcu21/Programare/Porkholt/Examples/Template/CMakeFiles/ZERO_CHECK.dir

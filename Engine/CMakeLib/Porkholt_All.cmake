@@ -1,0 +1,6 @@
+if(NOT DEFINED ${PH_PLATFORM})
+	message("PH_PLATFORM is not defined. Defaulting to \"iOS\"")
+	set(PH_PLATFORM iOS)
+endif(NOT DEFINED ${PH_PLATFORM})
+add_subdirectory(${PH_ENGINE_PATH} ${PH_ENGINE_PATH})
+include("${PH_ENGINE_PATH}/CMakeLib/App_${PH_PLATFORM}")

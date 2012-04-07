@@ -15,7 +15,7 @@
 		C106E47F13DD5E2B007E6357 /* PHLSign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E47E13DD5E2B007E6357 /* PHLSign.cpp */; };
 		C106E48113DD76CC007E6357 /* PHLPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48013DD76CB007E6357 /* PHLPowerup.cpp */; };
 		C106E48513DD8314007E6357 /* PHLShieldPowerup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C106E48413DD8314007E6357 /* PHLShieldPowerup.cpp */; };
-		C12069CA14D732D3007DACEA /* libporkholt-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C120696A14D7163D007DACEA /* libporkholt-ios.a */; };
+		C1205C6115302ECE00CF44C0 /* libPorkholt_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1205C5215302B4100CF44C0 /* libPorkholt_iOS.a */; };
 		C12069CB14D73391007DACEA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		C12069CC14D733A9007DACEA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C8541471382D000FD6DF /* OpenAL.framework */; };
 		C12069D314D733DC007DACEA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B3C85014713816000FD6DF /* AVFoundation.framework */; };
@@ -30,9 +30,6 @@
 		C17D0F551322A31000BDB8EF /* PHLevelController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F541322A31000BDB8EF /* PHLevelController.cpp */; };
 		C17D0F581322AD7700BDB8EF /* PHWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17D0F571322AD7700BDB8EF /* PHWorld.cpp */; };
 		C19B4B2913D8D00F00C714FB /* PHDialogView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19B4B2813D8D00F00C714FB /* PHDialogView.cpp */; };
-		C19FC304148F4A6000EACE24 /* PHLuaConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19FC303148F4A6000EACE24 /* PHLuaConsole.cpp */; };
-		C19FC30A148F959E00EACE24 /* PHTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19FC309148F959E00EACE24 /* PHTCPServer.cpp */; };
-		C19FC30D148F976600EACE24 /* PHTCPConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C19FC30C148F976600EACE24 /* PHTCPConsole.cpp */; };
 		C1A035CE132E062300F0200C /* b2Body.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1A03582132E062300F0200C /* b2Body.cpp */; };
 		C1A035CF132E062300F0200C /* b2Body.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A03583132E062300F0200C /* b2Body.h */; };
 		C1A035D0132E062300F0200C /* b2ContactManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1A03584132E062300F0200C /* b2ContactManager.cpp */; };
@@ -137,26 +134,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C120696914D7163D007DACEA /* PBXContainerItemProxy */ = {
+		C1205C5115302B4100CF44C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C120696314D7163D007DACEA /* Porkholt.xcodeproj */;
+			containerPortal = C1205C4B15302B4000CF44C0 /* Porkholt_iOS.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = C137060F14D6C4ED002CA4CA;
-			remoteInfo = "Porkholt Engine iOS";
+			remoteGlobalIDString = 242E878DFE4C4874A5936833;
+			remoteInfo = Porkholt_iOS;
 		};
-		C120696B14D7163D007DACEA /* PBXContainerItemProxy */ = {
+		C1205C5F15302C1900CF44C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C120696314D7163D007DACEA /* Porkholt.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C1B5BD6F14D6EACA005483ED;
-			remoteInfo = "Porkholt Engine Mac OS";
-		};
-		C120697A14D717A3007DACEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C120696314D7163D007DACEA /* Porkholt.xcodeproj */;
+			containerPortal = C1205C4B15302B4000CF44C0 /* Porkholt_iOS.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C137060E14D6C4ED002CA4CA;
-			remoteInfo = "Porkholt Engine iOS";
+			remoteGlobalIDString = D2A74D32A55646DDA0F76075;
+			remoteInfo = Porkholt_iOS;
 		};
 		C1A03617132E070E00F0200C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -193,7 +183,7 @@
 		C11B488E14DA9B5C00431210 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = ../../Externals/lib/darwin/ios/liblua.a; sourceTree = "<group>"; };
 		C11B488F14DA9B5C00431210 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../Externals/lib/darwin/ios/libpng15.a; sourceTree = "<group>"; };
 		C11B489014DA9B5C00431210 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../Externals/lib/darwin/ios/libz.a; sourceTree = "<group>"; };
-		C120696314D7163D007DACEA /* Porkholt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Porkholt.xcodeproj; path = ../../Engine/Porkholt.xcodeproj; sourceTree = "<group>"; };
+		C1205C4B15302B4000CF44C0 /* Porkholt_iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Porkholt_iOS.xcodeproj; path = ../../Engine/Porkholt_iOS.xcodeproj; sourceTree = "<group>"; };
 		C13242691304A863001AEBFE /* rsrc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rsrc; sourceTree = "<group>"; };
 		C13664261337F972009B755B /* PHCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCaptureView.h; sourceTree = "<group>"; };
 		C13664271337F972009B755B /* PHCaptureView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHCaptureView.cpp; sourceTree = "<group>"; };
@@ -215,12 +205,6 @@
 		C17D0F571322AD7700BDB8EF /* PHWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHWorld.cpp; sourceTree = "<group>"; };
 		C19B4B2813D8D00F00C714FB /* PHDialogView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHDialogView.cpp; sourceTree = "<group>"; };
 		C19B4B2A13D8D05100C714FB /* PHDialogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDialogView.h; sourceTree = "<group>"; };
-		C19FC302148F4A5600EACE24 /* PHLuaConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLuaConsole.h; sourceTree = "<group>"; };
-		C19FC303148F4A6000EACE24 /* PHLuaConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHLuaConsole.cpp; sourceTree = "<group>"; };
-		C19FC308148F951B00EACE24 /* PHTCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTCPServer.h; sourceTree = "<group>"; };
-		C19FC309148F959E00EACE24 /* PHTCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTCPServer.cpp; sourceTree = "<group>"; };
-		C19FC30B148F975A00EACE24 /* PHTCPConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHTCPConsole.h; sourceTree = "<group>"; };
-		C19FC30C148F976600EACE24 /* PHTCPConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PHTCPConsole.cpp; sourceTree = "<group>"; };
 		C19FD3A613D9932A00871F8E /* PHDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHDialog.h; sourceTree = "<group>"; };
 		C1A034E9132DF62700F0200C /* libBox2D.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBox2D.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A03582132E062300F0200C /* b2Body.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Body.cpp; sourceTree = "<group>"; };
@@ -355,6 +339,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1205C6115302ECE00CF44C0 /* libPorkholt_iOS.a in Frameworks */,
 				C1C1BF1E14DACEDF00AC9076 /* liblua.a in Frameworks */,
 				C1C1BF1F14DACEDF00AC9076 /* libpng15.a in Frameworks */,
 				C1C1BF2014DACEDF00AC9076 /* libz.a in Frameworks */,
@@ -362,7 +347,6 @@
 				C12069D314D733DC007DACEA /* AVFoundation.framework in Frameworks */,
 				C12069CC14D733A9007DACEA /* OpenAL.framework in Frameworks */,
 				C12069CB14D73391007DACEA /* OpenGLES.framework in Frameworks */,
-				C12069CA14D732D3007DACEA /* libporkholt-ios.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
@@ -401,10 +385,9 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				C120696314D7163D007DACEA /* Porkholt.xcodeproj */,
+				C1205C4B15302B4000CF44C0 /* Porkholt_iOS.xcodeproj */,
 				C17D0F501322A18300BDB8EF /* LevelSystem */,
 				C1AF4FBB13A657BD00ED2ED7 /* UI */,
-				C19FC307148F944900EACE24 /* Network */,
 				080E96DDFE201D6D7F000001 /* Bindings */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				C1A034E4132DF60700F0200C /* Box2D */,
@@ -440,11 +423,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C120696414D7163D007DACEA /* Products */ = {
+		C1205C4C15302B4000CF44C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C120696A14D7163D007DACEA /* libporkholt-ios.a */,
-				C120696C14D7163D007DACEA /* libporkholt-osx.a */,
+				C1205C5215302B4100CF44C0 /* libPorkholt_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -527,19 +509,6 @@
 				C1B3C8051469B1FB000FD6DF /* PHLEggBomb.cpp */,
 			);
 			path = LevelSystem;
-			sourceTree = "<group>";
-		};
-		C19FC307148F944900EACE24 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				C19FC302148F4A5600EACE24 /* PHLuaConsole.h */,
-				C19FC303148F4A6000EACE24 /* PHLuaConsole.cpp */,
-				C19FC308148F951B00EACE24 /* PHTCPServer.h */,
-				C19FC309148F959E00EACE24 /* PHTCPServer.cpp */,
-				C19FC30B148F975A00EACE24 /* PHTCPConsole.h */,
-				C19FC30C148F976600EACE24 /* PHTCPConsole.cpp */,
-			);
-			path = Network;
 			sourceTree = "<group>";
 		};
 		C1A034E4132DF60700F0200C /* Box2D */ = {
@@ -759,7 +728,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				C120697B14D717A3007DACEA /* PBXTargetDependency */,
+				C1205C6015302C1900CF44C0 /* PBXTargetDependency */,
 				C1A03618132E070E00F0200C /* PBXTargetDependency */,
 				C1FF4DD513DC1DE7003B7673 /* PBXTargetDependency */,
 			);
@@ -808,8 +777,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C120696414D7163D007DACEA /* Products */;
-					ProjectRef = C120696314D7163D007DACEA /* Porkholt.xcodeproj */;
+					ProductGroup = C1205C4C15302B4000CF44C0 /* Products */;
+					ProjectRef = C1205C4B15302B4000CF44C0 /* Porkholt_iOS.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -822,18 +791,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C120696A14D7163D007DACEA /* libporkholt-ios.a */ = {
+		C1205C5215302B4100CF44C0 /* libPorkholt_iOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libporkholt-ios.a";
-			remoteRef = C120696914D7163D007DACEA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C120696C14D7163D007DACEA /* libporkholt-osx.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libporkholt-osx.a";
-			remoteRef = C120696B14D7163D007DACEA /* PBXContainerItemProxy */;
+			path = libPorkholt_iOS.a;
+			remoteRef = C1205C5115302B4100CF44C0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -894,9 +856,6 @@
 				C1748C63140042ED00FB2796 /* PHTitleScreen.cpp in Sources */,
 				C1B3C80314697CAE000FD6DF /* PHLBomberBird.cpp in Sources */,
 				C1B3C8061469B1FB000FD6DF /* PHLEggBomb.cpp in Sources */,
-				C19FC304148F4A6000EACE24 /* PHLuaConsole.cpp in Sources */,
-				C19FC30A148F959E00EACE24 /* PHTCPServer.cpp in Sources */,
-				C19FC30D148F976600EACE24 /* PHTCPConsole.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,10 +904,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C120697B14D717A3007DACEA /* PBXTargetDependency */ = {
+		C1205C6015302C1900CF44C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "Porkholt Engine iOS";
-			targetProxy = C120697A14D717A3007DACEA /* PBXContainerItemProxy */;
+			name = Porkholt_iOS;
+			targetProxy = C1205C5F15302C1900CF44C0 /* PBXContainerItemProxy */;
 		};
 		C1A03618132E070E00F0200C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1005,14 +964,19 @@
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../../Engine/**",
+					../../Engine/Geometry,
+					../../Engine/UI,
+					../../Engine/Bindings,
+					../../Engine/Core,
 					../../Externals/box2d/Box2D,
 					../../Externals/lua/src,
 					../../Externals/libpng,
+					../../Engine/Sound,
+					../../Engine/Network,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				LIBRARY_SEARCH_PATHS = ../../Externals/lib/darwin/ios;
@@ -1033,14 +997,19 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../../Engine/**",
+					../../Engine/Geometry,
+					../../Engine/UI,
+					../../Engine/Bindings,
+					../../Engine/Core,
 					../../Externals/box2d/Box2D,
 					../../Externals/lua/src,
 					../../Externals/libpng,
+					../../Engine/Sound,
+					../../Engine/Network,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				LIBRARY_SEARCH_PATHS = ../../Externals/lib/darwin/ios;
@@ -1088,14 +1057,19 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../../Engine/**",
+					../../Engine/Geometry,
+					../../Engine/UI,
+					../../Engine/Bindings,
+					../../Engine/Core,
 					../../Externals/box2d/Box2D,
 					../../Externals/lua/src,
 					../../Externals/libpng,
+					../../Engine/Sound,
+					../../Engine/Network,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				LIBRARY_SEARCH_PATHS = ../../Externals/lib/darwin/ios;
