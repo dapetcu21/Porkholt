@@ -47,7 +47,8 @@
 {
     NSMutableArray *sounds = [NSMutableArray array];
     FISound * model = nil;
-    for (NSUInteger i=0; i<voices; i++) {
+    NSUInteger i;
+    for ( i=0; i<voices; i++) {
         if (!model)
         {
             model = [self loadSoundNamed:soundName];

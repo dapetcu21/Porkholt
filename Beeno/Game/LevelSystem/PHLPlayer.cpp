@@ -150,7 +150,6 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
 {
     PHLObject::contactPostSolve(b, contact, impulse);
     touchesSomething = 1.0f;
-    static int count = 0;
     if (contacts.insert(contact).second)
     {
         ph_float a = PHTime::getTime();

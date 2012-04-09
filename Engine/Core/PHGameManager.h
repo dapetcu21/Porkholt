@@ -40,7 +40,7 @@ enum PHGLCapabilities
 class PHGameManagerInitParameters
 {
 public:
-    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc"), entryPoint(NULL), defaultFBO(0) {}
+    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc"), defaultFBO(0), entryPoint(NULL) {}
 
     ph_float screenWidth;
     ph_float screenHeight;

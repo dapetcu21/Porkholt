@@ -1,4 +1,4 @@
-set(SRCS
+set(PH_ENGINE_SRCS
   Core/PHAccelInterface.cpp
   Core/PHFontInitPool.cpp
   Core/PHLuaObject.cpp
@@ -66,16 +66,4 @@ set(SRCS
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
   )
 
-set(INCLUDES )
-
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/Core 
-  ${CMAKE_CURRENT_SOURCE_DIR}/Geometry
-  ${CMAKE_CURRENT_SOURCE_DIR}/Sound
-  ${CMAKE_CURRENT_SOURCE_DIR}/UI
-  ${CMAKE_CURRENT_SOURCE_DIR}/Network
-  ${PH_EXTERNALS}/lua/src
-  ${PH_EXTERNALS}/libpng
-  ${PH_EXTERNALS}/zlib
-  ${PH_EXTERNALS}/uremote/include
-  )
+include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
