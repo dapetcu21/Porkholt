@@ -28,7 +28,7 @@ PHView * PHGameController::loadView(const PHRect & frame)
     v->addSubview(gameView);
     
     backgroundView = new PHImageView();
-    backgroundView->setImage(_gameManager->imageNamed("background"));
+    backgroundView->setImage(gm->imageNamed("background"));
     backgroundView->setRepeatX(2);
     
     gameView->addSubview(backgroundView);
