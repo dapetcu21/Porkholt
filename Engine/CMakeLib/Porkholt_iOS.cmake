@@ -7,18 +7,18 @@ set(CMAKE_OSX_SYSROOT iphoneos)
 set(CMAKE_OSX_ARCHITECTURES "armv6 armv7")
 set(CMAKE_CXX_FLAGS_RELEASE "-Os")
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLib/Porkholt_Common.cmake)
+include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_Common.cmake)
 
 set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-  Bindings/iOS/EAGLView.mm
-  Bindings/iOS/PorkholtAppDelegate.mm
-  Bindings/iOS/PHStartGame.mm
-  Bindings/iOS/PorkholtViewController.mm
-  Bindings/iOS/PHTouchInterface.mm
-  Sound/PHMusicManager-iOS.mm
-  Sound/PHSound-iOS.mm
-  Sound/PHSoundManager-iOS.mm
-  Sound/PHSoundPool-iOS.cpp
+  ${PH_ENGINE_PATH}/Bindings/iOS/EAGLView.mm
+  ${PH_ENGINE_PATH}/Bindings/iOS/PorkholtAppDelegate.mm
+  ${PH_ENGINE_PATH}/Bindings/iOS/PHStartGame.mm
+  ${PH_ENGINE_PATH}/Bindings/iOS/PorkholtViewController.mm
+  ${PH_ENGINE_PATH}/Bindings/iOS/PHTouchInterface.mm
+  ${PH_ENGINE_PATH}/Sound/PHMusicManager-iOS.mm
+  ${PH_ENGINE_PATH}/Sound/PHSound-iOS.mm
+  ${PH_ENGINE_PATH}/Sound/PHSoundManager-iOS.mm
+  ${PH_ENGINE_PATH}/Sound/PHSoundPool-iOS.cpp
   ${PH_EXTERNALS}/finch/Finch/FIBuffer.m
   ${PH_EXTERNALS}/finch/Finch/FISound.m
   ${PH_EXTERNALS}/finch/Finch/FIErrorReporter.m

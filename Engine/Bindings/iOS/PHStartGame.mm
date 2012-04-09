@@ -23,7 +23,7 @@ int PHStartGame(int argc, char * argv[], int flags, void (*entryPoint)(PHGameMan
     PHStartGameEntryPoint = entryPoint;
     PHStartGameUD = ud;
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    int retVal = UIApplicationMain(argc, argv, nil, @"PorkholtAppDelegate");
+    int retVal = UIApplicationMain(argc, argv, nil, NSStringFromClass([PorkholtAppDelegate class]));
     [pool release];
     return retVal;
 }

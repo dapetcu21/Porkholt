@@ -1,5 +1,4 @@
-/Beeno/Level Designer/build
-/Engine/build
+build
 /Externals/log
 /Externals/lib
 *.pbxuser

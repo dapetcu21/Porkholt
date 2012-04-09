@@ -5,28 +5,55 @@ if [ ! -d "$1" ]; then
 	exit 1
 fi
 
-if [ ! -d "$2" ]; then
-	echo "\"$2\" does not exist"
+if [ ! -d "$4" ]; then
+	echo "\"$4\" does not exist"
 	exit 1
 fi
 
-ROOT_DIR="`cd \"$1\" 2>/dev/null && pwd`"
-SRC_DIR="`cd \"$2\" 2>/dev/null && pwd`"
-BUILD_ACTION=$3
-DEST_DIR="$ROOT_DIR/_/rsrc"
-EXTERNALS_DIR="`pwd`/Externals"
+DEST_DIR=$2
+mkdir -p "$DEST_DIR"
+touch -cm "$DEST_DIR"
 
+SRC_DIR="`cd \"$1\" 2>/dev/null && pwd`"
+DEST_DIR="`cd \"$2\" 2>/dev/null && pwd`"
+BUILD_ACTION=$3
+EXTERNALS_DIR="`cd \"$4\" 2>/dev/null && pwd`"
+
+#echo "SRC_DIR ${SRC_DIR}"
+#echo "DEST_DIR ${DEST_DIR}"
+#echo "BUILD_ACTION ${BUILD_ACTION}"
+#echo "EXTERNALS_DIR ${EXTERNALS_DIR}"
 
 #add your lua path here
 PATH=${PATH}:/opt/local/bin:/opt/local/sbin
 
 if [ "$BUILD_ACTION" = "clean" ]; then
-	rm -rf "$ROOT_DIR/_"
+	rm -rf "$DEST_DIR"
 	exit 0
 fi
 
-mkdir -p "$DEST_DIR"
-touch -cm "$DEST_DIR"
+cd "$DEST_DIR"
+nothd()
+{
+	AFILE=`echo "$1" | sed "s/.hd$//"`
+	if [[ -f $AFILE ]]; then
+		return 1
+	else
+		return 0
+	fi
+}
+find . | while read FILE
+do
+	if [[ -f "$FILE" ]] && [[ ! -f "$SRC_DIR/$FILE" ]] && nothd "$SRC_DIR/$FILE" ; then
+		rm "$FILE"
+	fi
+	if [[ -d "$FILE" ]] && [[ ! -d "$SRC_DIR/$FILE" ]]; then
+		rm -r "$FILE"
+	fi
+	if [[ -h "$FILE" ]] && [[ ! -h "$SRC_DIR/$FILE" ]]; then
+		rm "$FILE"
+	fi
+done
 
 cd "$SRC_DIR"
 
