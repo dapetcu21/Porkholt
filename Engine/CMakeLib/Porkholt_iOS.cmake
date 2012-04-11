@@ -6,6 +6,7 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(CMAKE_OSX_SYSROOT iphoneos)
 set(CMAKE_OSX_ARCHITECTURES "armv6 armv7")
 set(CMAKE_CXX_FLAGS_RELEASE "-Os")
+set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
 
 include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_Common.cmake)
 
@@ -29,6 +30,12 @@ set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
   ${PH_EXTERNALS}/finch/Decoder/FIPCMDecoder.m
   ${PH_EXTERNALS}/finch/Decoder/FISoundSample.m
   )
+set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+  ${PH_ENGINE_PATH}/Bindings/iOS/EAGLView.h
+  ${PH_ENGINE_PATH}/Bindings/iOS/PorkholtAppDelegate.h
+  ${PH_ENGINE_PATH}/Bindings/iOS/PorkholtViewController.h
+  ${PH_ENGINE_PATH}/Bindings/iOS/PHTouchInterface.h
+  )
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Bindings/iOS
   ${CMAKE_CURRENT_SOURCE_DIR}/Geometry/math
@@ -36,8 +43,9 @@ include_directories(
   ${PH_EXTERNALS}/finch/Decoder
   )
 
-add_library(Porkholt_iOS ${PH_ENGINE_SRCS})
+add_library(Porkholt_iOS ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
 set_target_properties(Porkholt_iOS PROPERTIES XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
 set_target_properties(Porkholt_iOS PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
 set_target_properties(Porkholt_iOS PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
 set_target_properties(Porkholt_iOS PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
+set_target_properties(Porkholt_iOS PROPERTIES XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c99")

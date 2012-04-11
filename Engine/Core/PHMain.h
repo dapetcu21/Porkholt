@@ -46,11 +46,13 @@ using namespace std;
 #ifdef __APPLE__
     #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
         #define PH_IPHONE_OS
+        #define PH_MOBILE
         #ifdef __i386__
             #define PH_SIMULATOR
         #endif
     #else
         #define PH_MAC_OS
+        #define PH_DESKTOP
     #endif
 	#define PH_DARWIN
 #endif

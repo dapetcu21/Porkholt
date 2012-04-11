@@ -33,7 +33,7 @@ ph_float PHImageAnimator::timeForFrameInSection(int fr, int sec)
     try {
         PHAnimatedImage::section * section = _image->sections.at(sec);
         PHAnimatedImage::frame & frame = section->frames.at(fr);
-        if (fr>=section->frames.size()-1)
+        if (fr>=int(section->frames.size())-1)
         {
             invocation.call(this);
             invocation.clear();
@@ -88,7 +88,7 @@ void PHImageAnimator::reset(const PHInvocation & inv)
 
 void PHImageAnimator::animateSection(int sect, const PHInvocation & inv)
 {
-    if (sect<0 || sect>=_image->sections.size())
+    if (sect<0 || sect>=(int)(_image->sections.size()))
     {
         section = -1;
         frame = -1;

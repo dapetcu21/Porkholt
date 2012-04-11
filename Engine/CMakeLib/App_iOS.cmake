@@ -4,14 +4,15 @@ set(CMAKE_OSX_ARCHITECTURES "armv6 armv7")
 set(CMAKE_EXE_LINKER_FLAGS
   "-ObjC -lPorkholt_iOS -llua -lz -lpng15 -framework AudioToolbox -framework AVFoundation -framework OpenAL -framework OpenGLES -framework Foundation -framework QuartzCore -framework UIKit"
   )
+set(CMAKE_CXX_FLAGS_RELEASE "-Os")
+set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
   
 link_directories(${PH_EXTERNALS}/lib/darwin/ios)
 link_directories(${Porkholt_iOS_BINARY_DIR})
 
 include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
-set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.porkholt.${PH_NAME}")
 
-add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} )
+add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} ${PH_HEADERS})
 add_dependencies(${PH_NAME} Porkholt_iOS)
 
 if(NOT DEFINED PH_IOS_CODE_SIGN_IDENTITY)
@@ -40,14 +41,22 @@ else (PH_IOS_TARGET_IPHONE)
   endif (PH_IOS_TARGET_IPAD)
 endif (PH_IOS_TARGET_IPHONE)
 
+if (NOT DEFINED PH_IOS_INFO_PLIST)
+	set(PH_IOS_INFO_PLIST "${PROJECT_SOURCE_DIR}/Info-iOS.plist")
+endif (NOT DEFINED PH_IOS_INFO_PLIST)
+if (NOT EXISTS ${PH_IOS_INFO_PLIST})
+	set(PH_IOS_INFO_PLIST "${PH_ENGINE_PATH}/CMakeLib/Info-iOS.plist")
+endif (NOT EXISTS ${PH_IOS_INFO_PLIST})
+
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ${PH_IOS_CODE_SIGN_IDENTITY})
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_INFOPLIST_FILE ${PROJECT_SOURCE_DIR}/Info-iOS.plist )
+set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_INFOPLIST_FILE ${PH_IOS_INFO_PLIST} )
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "${PH_IOS_DEPLOYMENT_TARGET}")
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "${PH_IOS_DEV_FAMILY}")
+set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c99")
 
 
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rsrc)

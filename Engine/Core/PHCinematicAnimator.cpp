@@ -9,7 +9,7 @@
 #include "PHCinematicAnimator.h"
 #include "PHCinematicActor.h"
 
-#define ANIMATOR_INIT next(NULL), scale(1,1), move(0,0), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), time(0), totalTime(0), function(LinearFunction)
+#define ANIMATOR_INIT next(NULL), scale(1,1), move(0,0), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), function(LinearFunction), time(0), totalTime(0)
 
 PHCinematicAnimator::PHCinematicAnimator() : PHGenericCinematicAnimator(), ANIMATOR_INIT
 {

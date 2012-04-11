@@ -13,7 +13,12 @@
 #include "PHGLVertexArrayObject.h"
 #include <assert.h>
 
-#define INIT inited(false), ambient(PHColor(0.1,0.1,0.1)), diffuse(PHWhiteColor), specular(PHWhiteColor), speculars(false), normal(false)
+#define INIT1 inited(false), speculars(false), normal(false), ambient(PHColor(0.1,0.1,0.1)), diffuse(PHWhiteColor), specular(PHWhiteColor)
+#ifdef PH_MOBILE
+#define INIT INIT1, cutoff(0.1)
+#else
+#define INIT INIT1, cutoff(0)
+#endif
 
 PHDeferredView::PHDeferredView() : PHView(), INIT 
 {
@@ -163,35 +168,35 @@ void PHDeferredView::composite()
             ph_float z_2 = z*z;
             if (z<=0) continue;
             ph_float it = p->intensity;
-//            static const ph_float alpha = 0.3f;
-//            static const ph_float beta = sqrt( 1/sqrt(alpha*alpha*alpha) - 1.0f );
-//            ph_float rad2D = z * beta;
-            static const ph_float L = 0.1f;
-            ph_float rad2D = sqrt(pow(z*it*it/L,2.0f/3.0f)-z_2);
-            
-            PHRect portion((pnt.x-rad2D)/v.width,(pnt.y-rad2D)/v.height,(rad2D*2)/v.width,(rad2D*2)/v.height);
-            
-            if (portion.x<0) 
-            { 
-                portion.width+=portion.x; 
-                portion.x = 0;
-            }
-            
-            if (portion.y<0) 
-            { 
-                portion.height+=portion.y;
-                portion.y = 0;
-            }
-            
-            if (portion.x+portion.width>1) 
-                portion.width = 1-portion.x;
-            if (portion.y+portion.height>1) 
-                portion.height = 1-portion.y;
-            
-            if (portion.width<=0 || portion.height<=0)
-                continue;
-            
-            (states->at(clipUniform) = portion).apply(shader);
+            if (cutoff)
+            {
+                ph_float rad2D = sqrt(pow(z*it*it/cutoff,2.0f/3.0f)-z_2);
+                
+                PHRect portion((pnt.x-rad2D)/v.width,(pnt.y-rad2D)/v.height,(rad2D*2)/v.width,(rad2D*2)/v.height);
+                
+                if (portion.x<0) 
+                { 
+                    portion.width+=portion.x; 
+                    portion.x = 0;
+                }
+                
+                if (portion.y<0) 
+                { 
+                    portion.height+=portion.y;
+                    portion.y = 0;
+                }
+                
+                if (portion.x+portion.width>1) 
+                    portion.width = 1-portion.x;
+                if (portion.y+portion.height>1) 
+                    portion.height = 1-portion.y;
+                
+                if (portion.width<=0 || portion.height<=0)
+                    continue;
+                
+                (states->at(clipUniform) = portion).apply(shader);
+            } else 
+                (states->at(clipUniform) = PHWholeRect).apply(shader);
             
             
             (states->at(lightPositionUniform) = p->position).apply(shader);

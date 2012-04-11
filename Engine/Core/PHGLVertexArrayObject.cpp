@@ -12,7 +12,7 @@
 
 #define MAX_VAO_ATTR 16
 
-PHGLVertexArrayObject::PHGLVertexArrayObject(PHGameManager * gameManager) : gm(gameManager), vao(0), bound(false), elementVBO(NULL), drawType(drawNone), editBind(false)
+PHGLVertexArrayObject::PHGLVertexArrayObject(PHGameManager * gameManager) : vao(0), bound(false), gm(gameManager), elementVBO(NULL), drawType(drawNone), editBind(false)
 {
     if (gm->PHGLGenVertexArrays)
         gm->PHGLGenVertexArrays(1, &vao);

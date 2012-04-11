@@ -6,6 +6,7 @@ set(PH_NAME "Pong")
 set(PH_SOURCES
   main.cpp
   )
+set(PH_IOS_TARGET_IPHONE "NO")
 set(PH_IOS_TARGET_IPAD "YES")
 
 include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_All.cmake)

@@ -16,7 +16,7 @@
 #include "PHGLVertexArrayObject.h"
 #include "PHGLVertexBufferObject.h"
 
-PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), texid(-1), thread(NULL)
+PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), thread(NULL), texid(-1)
 {
     fp = NULL;
     if (PHGameManager::isGloballyHD())
@@ -172,8 +172,8 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
     
     if (bit_depth != 8)
     {
-        int scale = (bit_depth>>3);
-        for (int i=0; i<size/scale; i++)
+        size_t scale = (bit_depth>>3);
+        for (size_t i=0; i<size/scale; i++)
             buffer[i] = buffer[i*scale];
     }
     

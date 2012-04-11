@@ -210,9 +210,9 @@ const vector<PHBezierPath::anchorPoint> & PHBezierPath::calculatedVertices()
     {
         cache = new vector<anchorPoint>;
         set<PHRange>::iterator j = curves.begin();
-        int i = 0;
+        unsigned int i = 0;
         PHRange rng;
-        int n = (int)points.size();
+        unsigned int n = (unsigned int)points.size();
         set<PHRange>::iterator e = curves.end();
         if (!curves.empty() && ((rng = *(--e)),rng.start+rng.length>n))
             i+=rng.start+rng.length-n-1;

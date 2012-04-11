@@ -57,7 +57,7 @@ private:
         uint8_t * buffer;
         size_t size;
         size_t rowsize;
-        int awidth,aheight;
+        size_t awidth,aheight;
         texture() : texid(-1), buffer(NULL) {};
     };
     

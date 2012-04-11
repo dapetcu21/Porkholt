@@ -68,7 +68,7 @@ void PHCurve::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, 
         for (i = nx = corners[k];((tag = anchors[i].tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
         {
             nx++;
-            if (nx>=n)
+            if ((size_t)nx>=n)
                 nx-=n;
             len+=(anchors[nx].point-anchors[i].point).length();
         }
@@ -76,7 +76,7 @@ void PHCurve::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, 
         for (i = nx = corners[k];((tag = anchors[i].tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
         {
             nx++;
-            if (nx>=n)
+            if ((size_t)nx>=n)
                 nx-=n;
             ph_float d = l/len;
             ph_float x,y;

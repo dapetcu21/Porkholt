@@ -36,7 +36,7 @@ protected:
     
 public:
 	PHView * getView() { return view; };
-	PHViewController() : navController(NULL),view(NULL),viewState(StateNotAppeared),rmNav(false) {};
+	PHViewController() : view(NULL), navController(NULL), viewState(StateNotAppeared), rmNav(false) {};
 	virtual ~PHViewController();
 	
 	void init(PHGameManager * gameManager);

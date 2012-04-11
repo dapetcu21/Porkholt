@@ -26,7 +26,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), spriteStates(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), openGLVertexAttribStates(0), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), rndMode(defaultRenderMode)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), _missingNormalSpriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
 }

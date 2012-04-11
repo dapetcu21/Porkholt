@@ -9,7 +9,7 @@
 #include "PHAnimator.h"
 #include "PHAnimatorPool.h"
 
-#define INIT pool(NULL), advanceManually(false), _tag(0)
+#define INIT advanceManually(false), pool(NULL), _tag(0)
 
 PHAnimator::PHAnimator() : INIT
 {

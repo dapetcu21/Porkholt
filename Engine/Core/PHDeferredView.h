@@ -45,6 +45,11 @@ protected:
     PHColor ambient, diffuse, specular;
     set<PHGLPointLight*> pointLights;
     
+    ph_float cutoff;
+    
+    void setCutoffIntensity(ph_float c) { cutoff = c; }
+    ph_float cutoffIntensity() { return cutoff; }
+    
 public:
     
     enum renderModes

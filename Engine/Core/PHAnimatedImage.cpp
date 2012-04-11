@@ -59,7 +59,7 @@ function default(name) \
     def = nametable[name] \
 end"
 
-PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gameManager) : PHImage(s,gameManager), thread(NULL), defaultSection(0), path(s)
+PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gameManager) : PHImage(s,gameManager), thread(NULL), path(s), defaultSection(0)
 {
     luaMutex->lock();
     if (!L)
@@ -185,10 +185,10 @@ void PHAnimatedImage::loadFromLua()
     
     nfrm = max+1;
     
-    for (int i=0; i<sections.size(); i++)
+    for (size_t i=0; i<sections.size(); i++)
     {
         section * sec = sections[i];
-        for (int i=0; i<sec->frames.size(); i++)
+        for (size_t i=0; i<sec->frames.size(); i++)
         {
             if (sec->frames[i].type == 2)
             {
@@ -321,14 +321,14 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
             continue;
         }
         
-        int nt = i/ipt;
+        size_t nt = i/ipt;
         if (textures.size()<=nt)
             textures.resize(nt+1);
         if (!textures[nt].buffer)
         {
-            int c = cols;
-            int r = rows;
-            if (nfrm-nt*ipt<ipt)
+            size_t c = cols;
+            size_t r = rows;
+            if (nfrm-nt*ipt<(size_t)ipt)
             {
                 int m = nfrm-nt*ipt;
                 r = m/cols;
@@ -339,7 +339,7 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
             }
             c*=_width;
             r*=_height;
-            int aw,ah;
+            size_t aw,ah;
             if (gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
             {
                 aw = c;
@@ -381,11 +381,11 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
     if (bdepth != 8)
     {
         int scale = (bdepth>>3);
-        for (int i=0; i<textures.size(); i++)
+        for (size_t i=0; i<textures.size(); i++)
         {
             uint8_t * buffer = textures[i].buffer;
             size_t size = textures[i].size/scale;
-            for (int j=0; j<size; j++)
+            for (size_t j=0; j<size; j++)
                 buffer[j] = buffer[j*scale];
         }
     }
@@ -417,7 +417,7 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
         format = GL_LUMINANCE_ALPHA;
     if (format != -1)
     {
-        for (int i=0; i<textures.size(); i++)
+        for (size_t i=0; i<textures.size(); i++)
             if (textures[i].buffer)
             {
                 bool aa = antialiasing;
@@ -425,7 +425,7 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
                 if (gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
                 {
                     bool pots = true;
-                    int s = textures[i].awidth;
+                    size_t s = textures[i].awidth;
                     while (s && !(s&1))
                         s>>=1;
                     if (s!=1)
@@ -460,7 +460,7 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
                 delete [] textures[i].buffer;
             }
     } else
-        for (int i=0; i<textures.size(); i++)
+        for (size_t i=0; i<textures.size(); i++)
             delete [] textures[i].buffer;
     
     loaded = true;
@@ -468,7 +468,7 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
 
 int PHAnimatedImage::sectionNo(const string & sectionName)
 {
-    for (int i=0; i<sections.size(); i++)
+    for (size_t i=0; i<sections.size(); i++)
         if (sections[i]->name == sectionName)
             return i;
     return -1;
@@ -477,7 +477,7 @@ int PHAnimatedImage::sectionNo(const string & sectionName)
 PHAnimatedImage::~PHAnimatedImage()
 {
     PHLuaDeleteHardRef(L, this);
-    for (int i=0; i<sections.size(); i++)
+    for (size_t i=0; i<sections.size(); i++)
         delete sections[i];
 }
 

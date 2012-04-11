@@ -24,7 +24,7 @@ struct PHRange
         return index%n;
     }
     
-    bool intersects(int index) const
+    bool intersects(unsigned int index) const
     {
         return (index>=start && index<start+length);
     }
@@ -34,27 +34,27 @@ struct PHRange
         return intersects(range.start) || intersects(range.end()-1) || range.intersects(start) || range.intersects(end()-1);
     }
     
-    bool intersectsCircularily(int index, int n) const
+    bool intersectsCircularily(unsigned int index, unsigned int n) const
     {
         if (intersects(n))
             return PHRange(start,n-start).intersects(index) || PHRange(0,wrap(end(),n)).intersects(index);
         return intersects(index);
     }
     
-    bool intersectsCircularily(const PHRange & range, int n) const
+    bool intersectsCircularily(const PHRange & range, unsigned int n) const
     {
         if (intersects(n))
             return PHRange(start,n-start).intersects(range) || PHRange(0,wrap(end(),n)).intersects(range);
         return intersects(range);
     }
     
-    PHRange & operator += (const int offset)
+    PHRange & operator += (unsigned int offset)
     {
         start+=offset;
         return *this;
     }
     
-    PHRange operator + (const int offset) const
+    PHRange operator + (unsigned int offset) const
     {
         return PHRange(start+offset,length);
     }

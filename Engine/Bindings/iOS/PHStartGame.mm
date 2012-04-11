@@ -17,7 +17,7 @@ int PHStartGameFlags = 0;
 void (*PHStartGameEntryPoint)(PHGameManager *) = NULL;
 void * PHStartGameUD = NULL;
 
-int PHStartGame(int argc, char * argv[], int flags, void (*entryPoint)(PHGameManager *), void * ud)
+int PHStartGame(int argc, char * argv[], unsigned int resX, unsigned int resY, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
     PHStartGameFlags = flags;
     PHStartGameEntryPoint = entryPoint;

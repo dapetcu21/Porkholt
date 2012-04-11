@@ -49,7 +49,7 @@ protected:
                     c = PHColor(0,0,1);
                     break;
             }
-            a[i].light = dv->addPointLight(a[i].pnt = PH3DPoint(rand()%1024,rand()%756,100+rand()%100),c,150.0f);
+            a[i].light = dv->addPointLight(a[i].pnt = PH3DPoint(rand()%int(frm.width),rand()%int(frm.height),100+rand()%100),c,150.0f);
             a[i].rot = (rand()/(ph_float)RAND_MAX)*M_PI*2;
             a[i].rad = 50+rand()%100;
             a[i].speed = ((rand()/(ph_float)RAND_MAX)-0.5)*8.0;
@@ -96,6 +96,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    return PHStartGame(argc, argv, PHStartGame_GLES2 /*| PHStartGame_30FPS */, &PHGameEntryPoint,NULL);
+    return PHStartGame(argc, argv, PHStartGame_GLES2 | PHStartGame_Resizable , &PHGameEntryPoint,NULL);
 }
  

@@ -1,7 +1,7 @@
-if(NOT DEFINED ${PH_PLATFORM})
+if(NOT DEFINED PH_PLATFORM)
 	message("PH_PLATFORM is not defined. Defaulting to \"iOS\"")
 	set(PH_PLATFORM iOS)
-endif(NOT DEFINED ${PH_PLATFORM})
+endif(NOT DEFINED PH_PLATFORM)
 
 if(NOT DEFINED PH_SAME_PROJECT)
   set(PH_SAME_PROJECT "NO")

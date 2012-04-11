@@ -81,7 +81,7 @@ do
 		mkdir -p "$(dirname "$DEST_DIR/$FILE")"
 		BASENAME="`basename "${FILE}"`"
 		EXTENSION="${BASENAME#*.}"
-		if    [[ -f "$FILE" ]] && ( [[ "$EXTENSION" == "png" ]] || [[ "$EXTENSION" == "png.nmap" ]] ); then
+		if    [[ -f "$FILE" ]] && [[ "$BUILD_ACTION" != "build-nodownscale" ]] &&( [[ "$EXTENSION" == "png" ]] || [[ "$EXTENSION" == "png.nmap" ]] ); then
 			downscalepng "$FILE" "$DEST_DIR/$FILE"
 		elif  [[ -f "$FILE" ]] && [[ "$EXTENSION" == "lua" ]]; then
 			compresslua "$FILE" "$DEST_DIR/$FILE"

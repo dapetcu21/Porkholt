@@ -12,7 +12,7 @@
 map < PHThread*, list<PHAnimatorPool*> > PHAnimatorPool::stacks;
 PHMutex * PHAnimatorPool::staticMutex = new PHMutex;
 
-PHAnimatorPool::PHAnimatorPool() : mutex(new PHMutex(true)), insideJob(false)
+PHAnimatorPool::PHAnimatorPool() : insideJob(false), mutex(new PHMutex(true))
 {
     
 }

@@ -43,7 +43,7 @@ public:
     
     GLfloat * vertexData(size_t & nvertices, const PHRect & texCoord);
     
-    PHBezierPath() : L(NULL), cache(NULL) {}
+    PHBezierPath() : cache(NULL), L(NULL) {}
     ~PHBezierPath();
     static PHBezierPath * nonUniqueFromLua(lua_State * L) { return fromLua(L,false); }
     static PHBezierPath * fromLua(lua_State * L) { return fromLua(L,true); }
