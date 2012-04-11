@@ -9,6 +9,11 @@ set(PH_SOURCES
   Classes/PHGameView.cpp
   Classes/PHPlayerView.cpp
   )
+set(PH_HEADERS
+  Classes/PHGameController.h
+  Classes/PHGameView.h
+  Classes/PHPlayerView.h
+  )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")
 

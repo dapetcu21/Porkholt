@@ -15,6 +15,13 @@ include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} ${PH_HEADERS})
 add_dependencies(${PH_NAME} Porkholt_iOS)
 
+if(PH_USE_BOX2D)
+  include("${PH_ENGINE_PATH}/CMakeLib/Box2D_iOS.cmake")
+  link_directories(${Box2D_iOS_BINARY_DIR})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lBox2D_iOS")
+  add_dependencies(${PH_NAME} Box2D_iOS)
+endif(PH_USE_BOX2D)
+
 if(NOT DEFINED PH_IOS_CODE_SIGN_IDENTITY)
   set(PH_IOS_CODE_SIGN_IDENTITY "iPhone Developer")
 endif(NOT DEFINED PH_IOS_CODE_SIGN_IDENTITY)

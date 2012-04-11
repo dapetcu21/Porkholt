@@ -14,6 +14,13 @@ include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} ${PH_HEADERS})
 add_dependencies(${PH_NAME} Porkholt_OSX)
 
+if(PH_USE_BOX2D)
+  include("${PH_ENGINE_PATH}/CMakeLib/Box2D_OSX.cmake")
+  link_directories(${Box2D_OSX_BINARY_DIR})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lBox2D_OSX")
+  add_dependencies(${PH_NAME} Box2D_OSX)
+endif(PH_USE_BOX2D)
+
 if(NOT DEFINED PH_OSX_DEPLOYMENT_TARGET)
   set(PH_OSX_DEPLOYMENT_TARGET "10.5")
 endif(NOT DEFINED PH_OSX_DEPLOYMENT_TARGET)
