@@ -19,7 +19,6 @@ set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
   ${PH_ENGINE_PATH}/Sound/PHMusicManager-iOS.mm
   ${PH_ENGINE_PATH}/Sound/PHSound-iOS.mm
   ${PH_ENGINE_PATH}/Sound/PHSoundManager-iOS.mm
-  ${PH_ENGINE_PATH}/Sound/PHSoundPool-iOS.cpp
   ${PH_EXTERNALS}/finch/Finch/FIBuffer.m
   ${PH_EXTERNALS}/finch/Finch/FISound.m
   ${PH_EXTERNALS}/finch/Finch/FIErrorReporter.m

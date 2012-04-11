@@ -20,6 +20,7 @@ class PHViewController;
 class PHNavigationController;
 class PHRemote;
 class PHEventHandler;
+class PHEventQueue;
 class PHSoundManager;
 class PHGLShaderProgram;
 class PHGLUniformStates;
@@ -67,6 +68,7 @@ private:
 	PHView * view;
 	PHNavigationController * viewController;
     PHEventHandler * evtHandler;
+    PHEventQueue * evtQueue;
     PHSoundManager * sndManager;
 	ph_float _screenWidth;
 	ph_float _screenHeight;
@@ -120,6 +122,12 @@ private:
     GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
     GLvoid (*PHGLGenVertexArrays)(GLsizei n, GLuint *);
     
+    vector<GLuint> deleteVBOs;
+    vector<GLuint> deleteVAOs;
+    void queueDeleteVBO(GLuint vbo) { deleteVBOs.push_back(vbo); }
+    void queueDeleteVAO(GLuint vao) { deleteVAOs.push_back(vao); }
+    void clearDeleteQueue();
+    
 public:
     PHGameManager();
     ~PHGameManager();
@@ -165,6 +173,7 @@ public:
     
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
+    PHEventQueue * eventQueue() { return evtQueue; }
     PHSoundManager * soundManager() { return sndManager; }
     
     enum interfaceType

@@ -8,6 +8,7 @@
 
 #include "PHPoofView.h"
 #include "PHImageAnimator.h"
+#include "PHEventQueue.h"
 
 
 PHImage * PHPoofView::poofImage(PHGameManager * man)
@@ -57,5 +58,5 @@ void PHPoofView::destroy(PHObject * sender, void * ud)
     if (ud)
         removeFromSuperview();
     else
-        PHThread::mainThread()->scheduleOnThread(PHInv(this, PHPoofView::destroy, (void*)1), false);
+        gm->eventQueue()->schedule(PHInv(this, PHPoofView::destroy, (void*)1), false);
 }

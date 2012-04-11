@@ -22,6 +22,7 @@
 #include "PHGLUniformStates.h"
 #include "PHGLVertexBufferObject.h"
 #include "PHGLVertexArrayObject.h"
+#include "PHEventQueue.h"
 #include <sstream>
 
 //#define PH_FORCE_FAKE_VAO
@@ -44,6 +45,8 @@ PHGameManager::~PHGameManager()
         _solidSquareVBO->release();
     if (evtHandler)
         evtHandler->release();
+    if (evtQueue)
+        evtQueue->release();
     if (sndManager)
         sndManager->release();
     if (spriteStates)
@@ -110,9 +113,8 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 #endif
 	
     evtHandler = new PHEventHandler(this);
-#ifdef PH_IPHONE_OS
+    evtQueue = new PHEventQueue();
     sndManager = new PHSoundManager(resPath + "/snd/fx");
-#endif
     
     loadCapabilities();
 	glDisable(GL_DEPTH_TEST);
@@ -219,6 +221,16 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 		viewController->_updateScene(timeElapsed);
     
 	view->render();
+    evtQueue->processQueue();
+    clearDeleteQueue();
+}
+
+void PHGameManager::clearDeleteQueue()
+{
+    glDeleteBuffers(deleteVBOs.size(), &(deleteVBOs[0]));
+    PHGLDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
+    deleteVBOs.clear();
+    deleteVAOs.clear();
 }
 
 void PHGameManager::setGLAttributeStates(uint32_t vertexAttrib)

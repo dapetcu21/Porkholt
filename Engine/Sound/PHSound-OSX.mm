@@ -8,24 +8,41 @@
 
 #include "PHSound.h"
 #include "PHSoundManager.h"
-#import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVFoundation.h>
-#import <OpenAL/al.h>
-#import <OpenAL/alc.h>
-#include "FISound.h"
+#import <AppKit/AppKit.h>
 #include "PHEventQueue.h"
 #include "PHTimer.h"
 #include "PHSoundPool.h"
 
-PHSound::PHSound(FISound * im, PHManager * man) : impl(im), manager(man)
+@interface PHCSound : NSObject<NSSoundDelegate>
+{
+	PHSound * phsound;
+}
+@property(nonatomic, assign) PHSound * phsound;
+-(void)sound:(NSSound *)sound didFinishPlaying:(BOOL)finishedPlaying;
+@end
+
+@implementation PHCSound
+@synthesize phsound;
+-(void)sound:(NSSound *)sound didFinishPlaying:(BOOL)finishedPlaying
+{
+	if (phsound)
+		phsound->fireCallback(NULL, NULL);
+}
+@end
+
+PHSound::PHSound(NSSound * im, PHSoundManager * man) : impl(im), manager(man)
 {
     [impl retain];
+    del = [[PHCSound alloc] init];
+	impl.delegate = del;
+    del.phsound = this;
 }
 
 void PHSound::play()
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [impl play];
+    inv.clear();
     [pool drain];
 }
 
@@ -52,18 +69,7 @@ void PHSound::resume()
 
 void PHSound::fireCallback(PHObject * sender, PHEventQueue * timerQueue)
 {
-    if (!impl.playing) 
-    {
-        inv.call();
-        return;
-    }
-    ph_float tm = (impl.duration-impl.time)*impl.pitch;
-    PHTimer * timer = new PHTimer;
-    timer->setTimeInterval(tm);
-    timer->setCallsBackOnInvalidate(true);
-    timer->setCallback(PHInv(this,PHSound::fireCallback,timerQueue));
-    timerQueue->scheduleTimer(timer,this);
-    timer->release();
+    inv.call();
 }
 
 void PHSound::playAndCallBack(const PHInvocation & invo, PHEventQueue * timerQueue)
@@ -72,7 +78,6 @@ void PHSound::playAndCallBack(const PHInvocation & invo, PHEventQueue * timerQue
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [impl play];
     [pool drain];
-    fireCallback(NULL,timerQueue);
 }
 
 void PHSound::addSoundPool(PHSoundPool * sp)
@@ -87,7 +92,7 @@ void PHSound::removeSoundPool(PHSoundPool * sp)
 
 bool PHSound::isPlaying()
 {
-    return impl.playing;
+    return impl.isPlaying;
 }
 
 float PHSound::duration()
@@ -97,38 +102,41 @@ float PHSound::duration()
 
 bool PHSound::isLooping()
 {
-    return impl.loop;
+    return impl.loops;
 }
 
 void PHSound::setLooping(bool l)
 {
-    impl.loop = l;
+    impl.loops = l;
 }
 
 float PHSound::gain()
 {
-    return impl.gain;
+    return impl.volume;
 }
 
 void PHSound::setGain(float g)
 {
-    impl.gain = g;
+    impl.volume = g;
 }
+
 
 float PHSound::pitch()
 {
-    return impl.pitch;
+//    return impl.pitch;
+    return 1;
 }
 
 void PHSound::setPitch(float p)
 {
-    impl.pitch = p;
+//    impl.pitch = p;
 }
+
 
 PHSound * PHSound::duplicate()
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init]; 
-    PHSound * s = new PHSound([impl duplicate],manager);
+    PHSound * s = new PHSound([[impl copy] autorelease],manager);
     [pool drain];
     return s;
 }
@@ -140,5 +148,6 @@ PHSound::~PHSound()
         (*i)->removeSound(this);
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     [impl release];
+    [del release];
     [pool drain];
 }

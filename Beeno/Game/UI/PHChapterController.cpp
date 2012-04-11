@@ -73,7 +73,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
 
 void PHChapterController::levelEnded(PHObject * sender, void *ud)
 {
-    int nr = (int)ud;
+    int nr = (size_t)ud;
     PHLevelController * lvl = (PHLevelController*)sender;
     bool ret = true;
     if (lvl->outcome()==PHLevelController::LevelWon)
@@ -92,7 +92,7 @@ void PHChapterController::levelEnded(PHObject * sender, void *ud)
 void PHChapterController::mouseUp(PHObject * sender, void * ud)
 {
     if (getViewState()!=StateAppeared) return;
-    loadLevel((int)ud, false);
+    loadLevel((size_t)ud, false);
 }
 
 void PHChapterController::backPressed(PHObject * sender, void *ud)

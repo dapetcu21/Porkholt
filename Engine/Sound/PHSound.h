@@ -15,8 +15,13 @@
 #if defined(PH_IPHONE_OS) && defined(__OBJC__)
 @class FISound;
 #define PHSoundImpl FISound
+#elif defined(PH_MAC_OS) && defined(__OBJC__)
+@class NSSound;
+@class PHCSound;
+#define PHSoundImpl NSSound
 #else
 #define PHSoundImpl void
+#define PHCSound void
 #endif
 
 
@@ -27,13 +32,14 @@ class PHSound : public PHObject
 {
 private:
     PHSoundImpl * impl;
+#ifdef PH_MAC_OS
+    PHCSound * del;
+#endif
     PHSoundManager * manager;
-    PHSound(PHSoundImpl * im);
+    PHSound(PHSoundImpl * im, PHSoundManager * man);
     PHInvocation inv;
     
     friend class PHSoundManager;
-    
-    void fireCallback(PHObject * sender, PHEventQueue * timerQueue);
     
     set<PHSoundPool*> soundPool;
     
@@ -62,6 +68,9 @@ public:
     void removeSoundPool(PHSoundPool * sp);
     
     ~PHSound();
+    
+public: //actually not-so-public
+    void fireCallback(PHObject * sender, PHEventQueue * timerQueue);
 };
 
 #endif

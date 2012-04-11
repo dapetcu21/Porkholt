@@ -11,12 +11,13 @@
 
 #include "PHMain.h"
 
-#ifdef PH_IPHONE_OS
-#ifdef __OBJC__
+#if defined(PH_IPHONE_OS) && defined(__OBJC__)
 @class AVAudioPlayer;
+#elif defined(PH_MAC_OS) && defined(__OBJC__)
+@class NSSound;
 #else
+#define NSSound void
 #define AVAudioPlayer void
-#endif
 #endif
 
 class PHMusicManager : public PHObject
@@ -44,14 +45,18 @@ public:
 private:
     bool paused;
     int pr;
-#ifdef PH_IPHONE_OS
+#if defined(PH_IPHONE_OS) || defined(PH_MAC_OS)
     struct args 
     {
         string name;
         ph_float time;
     };
     
+#ifdef PH_IPHONE_OS
     AVAudioPlayer * currentSound;
+#else
+    NSSound * currentSound;
+#endif
     PHMutex * m;
     void fadeThread(PHThread * sender, args * a);
     void pauseThread(PHThread * sender, void * ud);

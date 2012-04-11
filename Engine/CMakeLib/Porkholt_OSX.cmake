@@ -15,6 +15,9 @@ set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
   ${PH_ENGINE_PATH}/Bindings/OSX/PHGLView.mm
   ${PH_ENGINE_PATH}/Bindings/OSX/OpenGLTimer.mm
   ${PH_ENGINE_PATH}/Bindings/OSX/PHWindow.mm
+  ${PH_ENGINE_PATH}/Sound/PHSound-OSX.mm
+  ${PH_ENGINE_PATH}/Sound/PHSoundManager-OSX.mm
+  ${PH_ENGINE_PATH}/Sound/PHMusicManager-OSX.mm
   )
   
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}

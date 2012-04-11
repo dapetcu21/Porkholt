@@ -88,7 +88,10 @@ PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gameManager) : gm
 
 PHGLVertexBufferObject::~PHGLVertexBufferObject()
 {
-    glDeleteBuffers(1, &vbo);
+    if (PHThread::currentThread() == PHThread::mainThread())
+        glDeleteBuffers(1, &vbo);
+    else
+        gm->queueDeleteVBO(vbo);
 }
 
 void PHGLVertexBufferObject::bindTo(int target)

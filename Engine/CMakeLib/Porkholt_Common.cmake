@@ -64,6 +64,7 @@ set(PH_ENGINE_SRCS
   ${PH_EXTERNALS}/uremote/src/URCommon.cpp
   ${PH_EXTERNALS}/uremote/src/URField.cpp
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
+  ${PH_ENGINE_PATH}/Sound/PHSoundPool.cpp
   )
 
 set(PH_ENGINE_HEADERS

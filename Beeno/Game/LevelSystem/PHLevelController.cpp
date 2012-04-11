@@ -259,9 +259,9 @@ void PHLevelController::viewWillAppear()
 
 void PHLevelController::textViewControllerFinished(PHTextController * sender, void * ud)
 {
-    if ((int)ud==1)
+    if ((size_t)ud==1)
         sender->navigationController()->pushViewController(this, PHNavigationController::FadeToColor, true);
-    if ((int)ud==2)
+    if ((size_t)ud==2)
         ec_invocation.call(this);
     this->release();
 }
@@ -569,8 +569,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
-    gm->collectGarbageImages();
-    gm->collectGarbageFonts();
+    gm->eventQueue()->schedule(PHInvN(dynamic_cast<PHImageInitPool*>(gm), PHGameManager::collectGarbageImages), false);
+    gm->eventQueue()->schedule(PHInvN(dynamic_cast<PHFontInitPool*>(gm), PHGameManager::collectGarbageFonts), false);
     ready1 = true;
     resume();
 	mutex->unlock();

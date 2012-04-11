@@ -21,7 +21,12 @@ PHGLVertexArrayObject::PHGLVertexArrayObject(PHGameManager * gameManager) : vao(
 PHGLVertexArrayObject::~PHGLVertexArrayObject()
 {
     if (vao && gm->PHGLDeleteVertexArrays)
-        gm->PHGLDeleteVertexArrays(1, &vao);
+    {
+        if (PHThread::currentThread() == PHThread::mainThread())
+            gm->PHGLDeleteVertexArrays(1, &vao);
+        else
+            gm->queueDeleteVAO(vao);
+    }
     for (map<int, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
         delete i->second;
 }   
