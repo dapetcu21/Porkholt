@@ -24,11 +24,27 @@
 
 @implementation PHGLView
 
+-(void)makeCurrentAndRender
+{
+    [self makeCurrent];
+    [self render];
+    [PHGLView globalFrame];
+}
+
 -(void)loadWithPixelFormat:(NSOpenGLPixelFormat*)pf
 {
     if (gameManager) return;
     
-    [[OpenGLTimer retainedInstance] addView:self withPixelFormat:pf];
+    if (flags & PHStartGame_VSync)
+        [[OpenGLTimer retainedInstance] addView:self withPixelFormat:pf];
+    else
+    {
+        tm = [NSTimer scheduledTimerWithTimeInterval:0.0f 
+                                                        target:self
+                                                      selector:@selector(makeCurrentAndRender)
+                                                      userInfo:nil
+                                             repeats:YES];
+    }
     
     [[self openGLContext] makeCurrentContext];
     
@@ -94,8 +110,13 @@
 -(void)dealloc
 {
     gameManager->release();
-    [[OpenGLTimer sharedInstance] removeView:self];
-    [[OpenGLTimer sharedInstance] release];
+    if (flags & PHStartGame_VSync)
+    {
+        [[OpenGLTimer sharedInstance] removeView:self];
+        [[OpenGLTimer sharedInstance] release];
+    }
+    if (tm)
+        [tm invalidate];
     [res release];
     [super dealloc];
 }
@@ -114,9 +135,9 @@
     {
         lastTime = time;
         time = PHTime::getTime();
-        double elapsedTime = time-lastTime;
-        if (elapsedTime>1.5*frameInterval)
-            elapsedTime = 1.5*frameInterval;
+        double elapsedTime = (time-lastTime);
+        if (flags & PHStartGame_VSync)
+            elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
         gameManager->renderFrame(elapsedTime);
     }
     glFlush();

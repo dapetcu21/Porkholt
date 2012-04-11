@@ -20,7 +20,7 @@
 }
 
 -(void)addView:(PHGLView*)v withPixelFormat:(NSOpenGLPixelFormat*)pf;
--(void)removeView:(PHGLView*)v;
+-(BOOL)removeView:(PHGLView*)v;
 -(void)timerFired;
 
 +(OpenGLTimer*)retainedInstance;

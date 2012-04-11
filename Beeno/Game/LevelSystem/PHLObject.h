@@ -143,7 +143,7 @@ public:
 	
     virtual void updatePhysics();
     virtual void updatePosition();
-    virtual void updateView();
+    virtual void updateView(ph_float elapsed, ph_float interpolate);
     
     b2Body * getBody() { return body; }
     

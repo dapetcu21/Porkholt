@@ -817,7 +817,7 @@ void PHLObject::updateCinematics(ph_float elapsed)
 
 void PHLObject::updatePhysics()
 {
-    ph_float elapsed = 1.0f/gm->framesPerSecond();
+    ph_float elapsed = gm->frameInterval();
     PHPoint pp = pos;
     updatePatrol(elapsed);
     updateCinematics(elapsed);
@@ -887,12 +887,20 @@ void PHLObject::updatePosition()
     }
 }
 
-void PHLObject::updateView()
+void PHLObject::updateView(ph_float elapsed, ph_float interpolate)
 {
     if (view)
     {
-        view->setPosition(pos+viewSize+offset);
-        view->setRotation(rot);
+        ph_float rot_adj = 0;
+        PHPoint pos_adj(0,0);
+        if (body)
+        {
+            b2Vec2 v = body->GetLinearVelocity();
+            pos_adj = PHPoint(v.x * interpolate, v.y * interpolate);
+            rot_adj = body->GetAngularVelocity() * interpolate;
+        }
+        view->setPosition(pos+viewSize+offset+pos_adj);
+        view->setRotation(rot+rot_adj);
     }
 }
 
@@ -908,8 +916,7 @@ void PHLObject::limitVelocity()
 		return;
 	}
 	
-	int fps = gm->framesPerSecond();
-	ph_float period = 1.0f/fps;
+	ph_float period = gm->frameInterval();
 	
 	b2Vec2 v = body->GetLinearVelocity();
 	ph_float X,Y;

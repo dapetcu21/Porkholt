@@ -574,42 +574,50 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     ready1 = true;
     resume();
 	mutex->unlock();
-	
-	int fps = gm->framesPerSecond();
-	ph_float frameInterval = 1.0f/fps;
-	
+	ph_float frameInterval = 1.0f/gm->framesPerSecond();
+    ph_float nextFrame = PHTime::getTime();
+    ph_float time = nextFrame;
 	while (running)
 	{
+        ph_float lastTime = time;
         bool p = paused;
         if (!p)
         {
-            world->player->updateControls(q);
-            world->updatePhysics();
-            
-            if (fps<=40)
-                fWorld->Step(frameInterval, 10, 6);
-            else
-                fWorld->Step(frameInterval, 6, 3);
-            fWorld->ClearForces();
-            
-            scripingEngine->scriptingStep(frameInterval);
-            world->updatePositions();
-            world->updateTimers(frameInterval);
-            
-        }
+            int loops = 0;
+            while ( (time = PHTime::getTime()) > nextFrame && loops < 5)
+            {
+                world->player->updateControls(q);
+                world->updatePhysics();
+
+                if ((1/frameInterval)<=40)
+                    fWorld->Step(frameInterval, 10, 6);
+                else
+                    fWorld->Step(frameInterval, 6, 3);
+                fWorld->ClearForces();
+                
+                scripingEngine->scriptingStep(frameInterval);
+                world->updatePositions();
+                world->updateTimers(frameInterval);
+                nextFrame += frameInterval;
+                loops++;
+            }
+            if (time > nextFrame)
+                nextFrame = time;
+        } else
+            nextFrame = time = PHTime::getTime();
 #ifdef PH_SIMULATOR
         scripingEngine->executeConsole();
 #endif
         
+        ph_float interpolate = time + frameInterval - nextFrame;
         world->realTimeEventQueue()->updateTimers();
-        
         pSem2->wait();
         mutex->lock();
         if(!p)
         {
             animPool->pop();
-            animPool->advanceAnimation(frameInterval);
-            world->updateScene();
+            animPool->advanceAnimation(time-lastTime);
+            world->updateScene(time-lastTime, interpolate);
             animPool->push();
         }
         mutex->unlock();

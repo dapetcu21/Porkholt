@@ -121,20 +121,20 @@ void PHLNPC::loadView()
 }
 
 
-void PHLNPC::updateView()
+void PHLNPC::updateView(ph_float elapsed, ph_float interpolate)
 {
     if (hover)
     {
+        hoverAmmount = PHWarp(hoverAmmount+elapsed*2, M_PI*2);
         offset.y = sin(hoverAmmount)*0.1;
-        ph_float frameInterval = 1.0f/gm->framesPerSecond();
-        hoverAmmount = PHWarp(hoverAmmount+frameInterval*2, M_PI*2);
     }
-    PHLObject::updateView();
+    PHLObject::updateView(elapsed, interpolate);
     updateDialogPosition();
     if (questView)
     {
         ph_float width = questView->frame().width;
-        questView->setFrame(PHRect(pos.x+(flipped?(-questPoint.x-width):(questPoint.x)), pos.y+questPoint.y, width, questHeight));
+        PHPoint p = view?(pos - viewSize - offset):pos;
+        questView->setFrame(PHRect(p.x+(flipped?(-questPoint.x-width):(questPoint.x)), p.y+questPoint.y, width, questHeight));
         questView->setHorizontallyFlipped(flipped);
         questView->setScalingCenter(PHOriginPoint);
     }
@@ -157,7 +157,7 @@ void PHLNPC::updatePosition()
         ((PHTrailImageView*)bodyView)->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
     }
     b2Vec2 speed = body->GetLinearVelocity();
-    ph_float elapsed = 1.0f/gm->framesPerSecond();
+    ph_float elapsed = gm->frameInterval();
     if (aflip && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
     setIdle(abs(speed.x)<0.1);

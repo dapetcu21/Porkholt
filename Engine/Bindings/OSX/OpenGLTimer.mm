@@ -71,9 +71,11 @@ static CVReturn MyDisplayLinkCallback (
     [c release];
     [views addObject:v];
 }
--(void)removeView:(PHGLView*)v
+-(BOOL)removeView:(PHGLView*)v
 {
+    if (![views containsObject:v]) return NO;
     [views removeObject:v];
+    return YES;
 }
 
 +(OpenGLTimer*)retainedInstance

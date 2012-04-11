@@ -33,7 +33,7 @@ public:
 	virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
 	virtual void loadView();
 	
-	void updateCamera(PHPoint pnt);
+	void updateCamera(PHPoint pnt, ph_float elapsed);
     
     void setFollowsPlayer(bool f) { follow = f; }
     bool followsPlayer() { return follow; }

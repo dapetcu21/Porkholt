@@ -57,7 +57,7 @@ public:
     int trailLength() { return traillen; }
     
     virtual void updatePosition();
-    virtual void updateView();
+    virtual void updateView(ph_float elapsed, ph_float interpolate);
     virtual void loadView();
     virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
     static void registerLuaInterface(lua_State * L);

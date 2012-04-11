@@ -58,7 +58,7 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
-	int fps = gm->framesPerSecond();
+    ph_float el = gm->frameInterval();
 	
 	b2Vec2 frc;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
@@ -111,17 +111,17 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         totalJump.Normalize();
         if (totalJump.y>0.1 && normal.y>0)
         {
-            b2Vec2 imp(0,min<ph_float>(normal.y*2,10.0f/fps));
+            b2Vec2 imp(0,min<ph_float>(normal.y*2,10.0f*el));
             body->ApplyLinearImpulse(imp,center);
         }
     }
     normal.x = normal.y = 0;
     if (touchesSomething>0 && (touchesSomething<1 || !forceGap))
     {
-        jumpGauge+=touchesSomething * _forceGrowth/(ph_float)fps;
+        jumpGauge+=touchesSomething * _forceGrowth * el;
         if (jumpGauge > maxForce)
             jumpGauge = maxForce;
-        touchesSomething -= 1.0f/(ph_float)fps;
+        touchesSomething -= el;
     }
     _forceGauge = jumpGauge;
     if (forceUsed)
@@ -134,7 +134,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 void PHLPlayer::updatePosition()
 {
     PHLNPC::updatePosition();
-    ph_float interval = 1.0f/gm->framesPerSecond();
+    ph_float interval = gm->frameInterval();
     if (powerTime>0)
     {
         powerTime-=interval;
@@ -214,9 +214,9 @@ void PHLPlayer::activateShield()
     getWorld()->viewEventQueue()->schedule(PHInv(this, PHLPlayer::_activateShield,NULL),false);
 }
 
-void PHLPlayer::updateView()
+void PHLPlayer::updateView(ph_float elapsed, ph_float interpolate)
 {
-    PHLNPC::updateView();
+    PHLNPC::updateView(elapsed, interpolate);
     if (powerTime<0)
     {
         PHTrailImageView * iv = dynamic_cast<PHTrailImageView*>(bodyView);

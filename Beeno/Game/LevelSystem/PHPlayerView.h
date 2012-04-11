@@ -16,6 +16,7 @@ class PHPlayerView : public PHView
 private:
     int _designatedTag;
     ph_float lastDif;
+    ph_float lastTime;
 public:
     int designatedTag() { return _designatedTag; }
     void setDesignatedTag(int tag) { _designatedTag = tag; };
@@ -23,7 +24,7 @@ public:
     virtual void setRotation( ph_float rot);
     
 public:
-#define PHPLAYERVIEW_INIT _designatedTag(-1), lastDif(0)
+#define PHPLAYERVIEW_INIT _designatedTag(-1), lastDif(0), lastTime(0)
     PHPlayerView() : PHView(), PHPLAYERVIEW_INIT {};
 	PHPlayerView(const PHRect &frame) : PHView(frame), PHPLAYERVIEW_INIT {};
 };

@@ -34,16 +34,16 @@ void PHLCamera::loadView()
 {
 }
 
-void PHLCamera::updateCamera(PHPoint pnt)
+void PHLCamera::updateCamera(PHPoint pnt, ph_float elapsed)
 {
 	if (follow)
     {
         
-        int fps = gm->framesPerSecond();
+        ph_float el = elapsed;
         
         if (sstrict>0)
         {
-            sstrict-=1.0f/fps;
+            sstrict-=el;
             if (sstrict<=0)
                 strict = false;
         }
@@ -62,8 +62,8 @@ void PHLCamera::updateCamera(PHPoint pnt)
             else
                 pnt.y=pos.y;
         }
-        PHLowPassFilter(&pos.x, pnt.x, 1.0f/fps, 5.0f);
-        PHLowPassFilter(&pos.y, pnt.y, 1.0f/fps, 5.0f);
+        PHLowPassFilter(&pos.x, pnt.x, el, 5.0f);
+        PHLowPassFilter(&pos.y, pnt.y, el, 5.0f);
         setPosition(pos);
     }
     sz.setCenter(position());

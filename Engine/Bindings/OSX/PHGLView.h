@@ -16,6 +16,7 @@ class PHGameManager;
     NSString * res;
     void (*entryPoint)(PHGameManager *);
     int flags;
+    NSTimer * tm;
 }
 
 -(id)initWithFrame:(NSRect)frameRect resourcePath:(NSString *)res entryPoint:(void (*)(PHGameManager *))entryPoint flags:(int)flags;

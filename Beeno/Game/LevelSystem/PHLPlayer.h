@@ -55,7 +55,7 @@ public:
     ph_float attackDamage() { return damage; }
     
     virtual void updatePosition();
-    virtual void updateView();
+    virtual void updateView(ph_float elapsed, ph_float interpolate);
     
     static void registerLuaInterface(lua_State *L);
 private:

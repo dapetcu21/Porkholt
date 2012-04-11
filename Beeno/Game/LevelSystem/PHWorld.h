@@ -102,7 +102,7 @@ public:
     
     void updatePositions();
     void updatePhysics();
-	void updateScene();
+	void updateScene(ph_float elapsed, ph_float interpolate);
     void updateTimers(ph_float frameInterval);
     
     b2World * getPhysicsWorld() { return physicsWorld; }

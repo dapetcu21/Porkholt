@@ -19,11 +19,13 @@ void PHPlayerView::setRotation( ph_float rot)
         dif+=360;
     while (abs(dif-360)<abs(dif))
         dif-=360;
-    int fps = gm->framesPerSecond();
-    PHLowPassFilter(lastDif, dif, 1.0f/fps, 50.0f);
+    ph_float tm = PHTime::getTime();
+    ph_float llastDif = lastDif;
+    PHLowPassFilter(lastDif, dif, tm-lastTime, 50.0f);
+    lastTime = tm;
     for (list<PHView*>::iterator i = views.begin(); i!= views.end(); i++)
     {
         if ((*i)->tag() != _designatedTag) continue;
-        (*i)->setRotation((*i)->rotation()-lastDif);
+        (*i)->setRotation((*i)->rotation()-dif+lastDif-llastDif);
     }
 }

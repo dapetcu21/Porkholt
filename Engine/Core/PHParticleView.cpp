@@ -179,7 +179,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     vbo->setData(NULL, sizeof(GLfloat)*nrVertices*5, gm->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
     vbo->setSubData(buffer, 0, sizeof(GLfloat)*nrVertices*5);
     
-    cacheLeft -= (1.0f / gm->framesPerSecond());
+    cacheLeft -= gm->frameInterval();
     if (cacheLeft <=0)
     {
         cacheLeft = cacheTime;

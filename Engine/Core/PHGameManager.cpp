@@ -209,6 +209,7 @@ void PHGameManager::globalFrame(ph_float timeElapsed)
 
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
+    lastElapsed = timeElapsed;
     if (_defaultFBOf==0)
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     

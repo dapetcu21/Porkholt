@@ -213,7 +213,7 @@ void PHWorld::updatePhysics()
 
 void PHWorld::updatePositions()
 {
-    ph_float frameInterval = 1.0f/(gm->framesPerSecond());
+    ph_float frameInterval = gm->frameInterval();
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -225,17 +225,17 @@ void PHWorld::updatePositions()
 }
 
 
-void PHWorld::updateScene()
+void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
 {
     viewQueue->processQueue();
     updateDialogs();
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
-        obj->updateView();
+        obj->updateView(elapsed, interpolate);
     }
     //printObjects();
-    camera->updateCamera(player->position());
+    camera->updateCamera(player->position(), elapsed);
 	if (camera)
 	{
 		PHRect pos = camera->bounds();

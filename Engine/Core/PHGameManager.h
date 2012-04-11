@@ -78,6 +78,7 @@ private:
     bool loaded;
     static int globalHD;
     bool hd;
+    ph_float lastElapsed;
     string resPath;
     GLuint _defaultFBO,_defaultFBOf;
     int _maxVertexAttribs;
@@ -137,6 +138,7 @@ public:
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
     void setScreenSize(ph_float w, ph_float h);
 	int framesPerSecond() { return fps; }
+    ph_float frameInterval() { return 1.0f/fps; }
     ph_float dotsPerInch() { return dpi; }
     const string & resourcePath() { return resPath; }
     void setResourcePath(const string & r) { resPath = r; }
