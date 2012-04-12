@@ -144,6 +144,11 @@ extern void * PHStartGameUD;
     params.dpi = 160*scale;
     params.resourcePath = (string)([[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"rsrc"] UTF8String]);
     params.entryPoint = PHStartGameEntryPoint;
+    if (PHStartGameFlags & PHStartGame_ShowFPS)
+        gameManager->setShowsFPS(true);
+    if (PHStartGameFlags & PHStartGame_Remote)
+        gameManager->setUsesRemote(true);
+    gameManager->setFpsCapped(true);
     gameManager->setUserData(PHStartGameUD);
     gameManager->init(params);
     PHGameManagerSingleton = gameManager;
@@ -164,7 +169,10 @@ extern void * PHStartGameUD;
     
     ph_float elapsedTime;
     if (PHStartGameFlags & PHStartGame_frameAnimation)
+    {
         elapsedTime = 1.0f/gameManager->framesPerSecond();
+        gameManager->setFrameBegin(PHTime::getTime());
+    }
     else
     {
         static ph_float time = 0;
@@ -174,8 +182,8 @@ extern void * PHStartGameUD;
         lastTime = time;
         time = PHTime::getTime();
         elapsedTime = time-lastTime;
-        if (elapsedTime>1.5*frameInterval)
-            elapsedTime = 1.5*frameInterval;
+        elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
+        gameManager->setFrameBegin(time);
     }
     PHGameManager::globalFrame(elapsedTime);
     gameManager->renderFrame(elapsedTime);

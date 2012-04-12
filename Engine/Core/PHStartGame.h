@@ -20,7 +20,9 @@ enum PHStartGame_flags
     PHStartGame_30FPS = 1<<3,
     PHStartGame_FullScreen = 1<<4,
     PHStartGame_Resizable = 1<<5,
-    PHStartGame_VSync = 1<<6
+    PHStartGame_VSync = 1<<6,
+    PHStartGame_Remote = 1<<7,
+    PHStartGame_ShowFPS = 1<<8
 };
 
 int PHStartGame(int argc, char * argv[], unsigned int resolutionX, unsigned int resolutionY, int flags, void (*entryPoint)(PHGameManager *), void * ud);

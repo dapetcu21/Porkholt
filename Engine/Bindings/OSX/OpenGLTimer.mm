@@ -8,6 +8,7 @@
 
 #import "OpenGLTimer.h"
 #import "PHGLView.h"
+#import "PHTime.h"
 #import <CoreVideo/CoreVideo.h>
 
 static OpenGLTimer * OpenGLTimer_singleton = nil;
@@ -31,11 +32,15 @@ static CVReturn MyDisplayLinkCallback (
 
 -(void)timerFired
 {
-    [PHGLView globalFrame];
+    lastTime = time;
+    time = PHTime::getTime();
+    static const double frameInterval = 1.0f/60.0f;
+    double elapsedTime = round((time-lastTime)/frameInterval)*frameInterval;
+    [PHGLView globalFrame:elapsedTime];
     for (PHGLView * v in views)
     {
         [v makeCurrent];
-        [v render];
+        [v render:elapsedTime startTime:time];
     }
 }
 

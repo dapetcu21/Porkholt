@@ -33,6 +33,8 @@ public:
 		NUMFUNCTIONS
 	};
     
+    bool skipsFirstFrame() { return skipFirst; }
+    void setSkipsFirstFrame(bool s) { skipFirst = s; }
     void setScaling(const PHSize & sz) { scale = sz; }
     const PHSize & scaling() { return scale; }
     void setMovement(const PHSize & sz) { move = sz; }
@@ -74,6 +76,7 @@ private:
     ph_float customValue;
     int function;
     ph_float time,totalTime;
+    bool skipFirst;
     PHInvocation callback;
     
     ph_float f(ph_float time,int ftype);

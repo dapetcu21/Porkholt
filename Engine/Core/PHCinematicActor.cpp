@@ -160,6 +160,11 @@ void PHCinematicActor::animationTag(int tag)
     _cinematicAnimator->setTag(tag);
 }
 
+void PHCinematicActor::animationSkipFirstFrame()
+{
+    _cinematicAnimator->setSkipsFirstFrame(true);
+}
+
 void PHCinematicActor::animateCustomValue(ph_float val)
 {
     _cinematicAnimator->setCustomValueDelta(_cinematicAnimator->customValueDelta()+val);

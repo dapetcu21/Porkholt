@@ -56,7 +56,7 @@ PHSound * PHSoundManager::soundNamed(const string & name)
                 return NULL;
             return soundNamed("placeholder");
         }
-        PHSound * snd = new PHSound(sound);
+        PHSound * snd = new PHSound(sound, this);
         [sound release];
         sounds.insert(make_pair<string,PHSound*>(name,snd));
         return snd;

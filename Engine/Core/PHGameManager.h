@@ -26,6 +26,7 @@ class PHGLShaderProgram;
 class PHGLUniformStates;
 class PHGLVertexBufferObject;
 class PHGLVertexArrayObject;
+class PHTextView;
 
 enum PHGLCapabilities
 {
@@ -78,14 +79,20 @@ private:
     bool loaded;
     static int globalHD;
     bool hd;
-    ph_float lastElapsed;
+    ph_float lastElapsed, frameBeg;
     string resPath;
     GLuint _defaultFBO,_defaultFBOf;
     int _maxVertexAttribs;
     
-#ifdef PH_SIMULATOR
+    bool useRemote;
     PHRemote * remote;
-#endif
+    
+    bool showFPS;
+    int frames;
+    ph_float fpsLeft;
+    PHTextView * fpsView;
+    bool capped;
+    void renderFPS(ph_float timeElapsed);
     
     void (*entryPoint)(PHGameManager*);
     
@@ -139,6 +146,10 @@ public:
     void setScreenSize(ph_float w, ph_float h);
 	int framesPerSecond() { return fps; }
     ph_float frameInterval() { return 1.0f/fps; }
+    ph_float lastFrameElapsed() { return lastElapsed; }
+    ph_float frameBegin() { return frameBeg; }
+    ph_float elapsedSinceFrame() { return PHTime::getTime() - frameBeg; }
+    void setFrameBegin(ph_float f) { frameBeg = f; }
     ph_float dotsPerInch() { return dpi; }
     const string & resourcePath() { return resPath; }
     void setResourcePath(const string & r) { resPath = r; }
@@ -161,6 +172,12 @@ public:
     const string fontDirectory();
     const string shaderDirectory();
     const string musicNamed(const string & name);
+    bool usesRemote() { return useRemote; }
+    void setUsesRemote(bool ur) { useRemote = ur; }
+    bool showsFPS() { return showFPS; }
+    void setShowsFPS(bool fps) { showFPS = fps; }
+    bool fpsCapped() { return capped; }
+    void setFpsCapped(bool b) { capped = b; }
     
     void * userData() { return ud; }
     void setUserData(void * u) { ud = u; }

@@ -247,7 +247,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), directory(path), scripingEngine(NULL), ready1(false), ready2(false), _outcome(LevelRunning), menuView(NULL)
+PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), scripingEngine(NULL), menuView(NULL), directory(path), ready1(false), ready2(false), _outcome(LevelRunning)
 {
 }
 
@@ -584,7 +584,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         if (!p)
         {
             int loops = 0;
-            while ( (time = PHTime::getTime()) > nextFrame && loops < 5)
+            while ( ( (time = PHTime::getTime()) > nextFrame && loops < 5) || (gm->fpsCapped() && (!loops)) )
             {
                 world->player->updateControls(q);
                 world->updatePhysics();
@@ -605,11 +605,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
                 nextFrame = time;
         } else
             nextFrame = time = PHTime::getTime();
-#ifdef PH_SIMULATOR
+        
+#ifdef PH_SCRIPTING_CONSOLE
         scripingEngine->executeConsole();
 #endif
         
-        ph_float interpolate = time + frameInterval - nextFrame;
+       ph_float interpolate = (time + frameInterval - nextFrame);
         world->realTimeEventQueue()->updateTimers();
         pSem2->wait();
         mutex->lock();

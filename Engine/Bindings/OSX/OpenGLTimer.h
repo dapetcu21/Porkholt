@@ -17,6 +17,7 @@
     NSMutableSet * views;
     CVDisplayLinkRef displayLink;
     NSOpenGLContext * context;
+    double time, lastTime;
 }
 
 -(void)addView:(PHGLView*)v withPixelFormat:(NSOpenGLPixelFormat*)pf;

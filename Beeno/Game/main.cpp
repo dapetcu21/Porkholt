@@ -17,5 +17,14 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 int main(int argc, char *argv[]) {
-    return PHStartGame(argc, argv, PHStartGame_GLES1 | PHStartGame_GLES2, &PHGameEntryPoint, NULL);
+    return PHStartGame(argc, 
+                       argv, 
+                         PHStartGame_GLES1 
+                       | PHStartGame_GLES2
+#if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
+                       | PHStartGame_Remote
+                       | PHStartGame_ShowFPS
+#endif
+                       | PHStartGame_VSync
+                       , &PHGameEntryPoint, NULL);
 }

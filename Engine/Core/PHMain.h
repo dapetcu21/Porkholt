@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstdio>
 #include <string>
+#include <sstream>
 #include <climits>
 #include <cfloat>
 

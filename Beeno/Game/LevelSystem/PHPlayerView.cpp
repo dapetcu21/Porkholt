@@ -19,10 +19,9 @@ void PHPlayerView::setRotation( ph_float rot)
         dif+=360;
     while (abs(dif-360)<abs(dif))
         dif-=360;
-    ph_float tm = PHTime::getTime();
     ph_float llastDif = lastDif;
-    PHLowPassFilter(lastDif, dif, tm-lastTime, 50.0f);
-    lastTime = tm;
+    ph_float newDif = elapsed?((dif/elapsed)*0.01666):lastDif;
+    PHLowPassFilter(lastDif, newDif, elapsed, 50.0f);
     for (list<PHView*>::iterator i = views.begin(); i!= views.end(); i++)
     {
         if ((*i)->tag() != _designatedTag) continue;

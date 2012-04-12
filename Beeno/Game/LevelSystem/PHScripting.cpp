@@ -30,7 +30,7 @@
 #include "PHParticleView.h"
 #include "PHKeyframeAnimatorGroup.h"
 
-#ifdef PH_SIMULATOR
+#ifdef PH_SCRIPTING_CONSOLE
 #include "PHLuaConsole.h"
 #endif
 
@@ -58,14 +58,14 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
             PHLuaLoadFile(L, path);
     }
     
-#ifdef PH_SIMULATOR
+#ifdef PH_SCRIPTING_CONSOLE
     console = new PHLuaConsole(L);
 #endif
 }
 
 PHScripting::~PHScripting()
 {
-#ifdef PH_SIMULATOR
+#ifdef PH_SCRIPTING_CONSOLE
     console->release();
 #endif
     PHMessage::messageWithName("luaDestroy")->broadcast(this, L);
@@ -236,7 +236,7 @@ void PHScripting::scriptingStep(ph_float timeElapsed)
     
 }
 
-#ifdef PH_SIMULATOR
+#ifdef PH_SCRIPTING_CONSOLE
 void PHScripting::executeConsole()
 {
     console->execute();

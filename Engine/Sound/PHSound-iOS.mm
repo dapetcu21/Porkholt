@@ -17,7 +17,7 @@
 #include "PHTimer.h"
 #include "PHSoundPool.h"
 
-PHSound::PHSound(FISound * im, PHManager * man) : impl(im), manager(man)
+PHSound::PHSound(FISound * im, PHSoundManager * man) : impl(im), manager(man)
 {
     [impl retain];
 }

@@ -8,9 +8,7 @@
  */
 
 #include "PHGameManager.h"
-#ifdef PH_SIMULATOR
 #include "PHRemote.h"
-#endif
 #include "PHView.h"
 #include "PHFileManager.h"
 #include "PHImageAnimator.h"
@@ -23,11 +21,12 @@
 #include "PHGLVertexBufferObject.h"
 #include "PHGLVertexArrayObject.h"
 #include "PHEventQueue.h"
-#include <sstream>
+#include "PHTextView.h"
+#include "PHFont.h"
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), _missingNormalSpriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), _missingNormalSpriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
 }
@@ -37,6 +36,8 @@ PHGameManager::~PHGameManager()
 {
     if (view)
         view->release();
+    if (fpsView)
+        fpsView->release();
     if (viewController)
         viewController->release();
     if (_solidSquareVAO)
@@ -51,6 +52,8 @@ PHGameManager::~PHGameManager()
         sndManager->release();
     if (spriteStates)
         spriteStates->release();
+    if (remote)
+        delete remote;
     if (hd)
         --globalHD;
 }
@@ -107,10 +110,21 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     
 	PHThread::mainThread();
 
-#ifdef PH_SIMULATOR
-    remote = new PHRemote(this);
-    remote->start();
-#endif
+    if (useRemote)
+    {
+        try {
+            remote = new PHRemote(this);
+            remote->start();
+        } catch (string ex) {
+            PHLog("Remote Server: %s",ex.c_str());
+            if (remote)
+            {
+                delete remote;
+                remote = NULL;
+            }
+            useRemote = false;
+        }
+    }
 	
     evtHandler = new PHEventHandler(this);
     evtQueue = new PHEventQueue();
@@ -196,9 +210,28 @@ void PHGameManager::setScreenSize(ph_float w, ph_float h)
 
 void PHGameManager::processInput()
 {
-#ifdef PH_SIMULATOR
-    remote->processPendingPackets();
-#endif
+    if (useRemote)
+    {
+        if (!remote)
+        {
+            try {
+                remote = new PHRemote(this);
+                remote->start();
+            } catch (string ex) {
+                PHLog("Remote Server: %s",ex.c_str());
+                if (remote)
+                {
+                    delete remote;
+                    remote = NULL;
+                }
+                useRemote = false;
+            }
+        }
+        if (remote)
+        {
+            remote->processPendingPackets();
+        }
+    }
 }
 
 void PHGameManager::globalFrame(ph_float timeElapsed)
@@ -222,8 +255,38 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 		viewController->_updateScene(timeElapsed);
     
 	view->render();
+    if (showFPS)
+        renderFPS(timeElapsed);
+    
     evtQueue->processQueue();
     clearDeleteQueue();
+}
+
+void PHGameManager::renderFPS(ph_float timeElapsed)
+{
+    if (!fpsView)
+    {
+        fpsView = new PHTextView();
+        fpsView->setGameManager(this);
+        fpsView->setFont(fontNamed("Arial"));
+        fpsView->setFontSize(30.0f);
+        fpsView->setFontColor(PHColor(0.1f,0.9f,1.0f));
+        fpsView->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);
+        fpsLeft = 1.0f;
+        frames = 0;
+    }
+    fpsView->setFrame(view->frame());
+    frames++;
+    fpsLeft -= timeElapsed;
+    if (fpsLeft <=0)
+    {
+        stringstream s;
+        s<<frames<<" FPS";
+        fpsView->setText(s.str());
+        frames = 0;
+        fpsLeft += (int(-fpsLeft)+1);
+    }
+    fpsView->render();
 }
 
 void PHGameManager::clearDeleteQueue()
@@ -391,9 +454,6 @@ void PHGameManager::appQuits()
 	//This isn't guaranteed to be called
 	//Save all stuff in PHGameManager::appSuspended()
 	PHLog("appQuits");
-#ifdef PH_SIMULATOR
-    delete remote;
-#endif
 }
 
 void PHGameManager::memoryWarning()

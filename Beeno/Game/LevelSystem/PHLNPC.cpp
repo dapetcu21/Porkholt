@@ -128,6 +128,7 @@ void PHLNPC::updateView(ph_float elapsed, ph_float interpolate)
         hoverAmmount = PHWarp(hoverAmmount+elapsed*2, M_PI*2);
         offset.y = sin(hoverAmmount)*0.1;
     }
+    ((PHPlayerView*)view)->setElapsed(elapsed);
     PHLObject::updateView(elapsed, interpolate);
     updateDialogPosition();
     if (questView)

@@ -11,7 +11,8 @@
 
 #include "PHMain.h"
 
-#ifdef PH_SIMULATOR
+#if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG))
+#define PH_SCRIPTING_CONSOLE
 class PHLuaConsole;
 #endif
 
@@ -33,7 +34,7 @@ public:
     
     lua_State * luaState() { return L; }
     
-#ifdef PH_SIMULATOR
+#ifdef PH_SCRIPTING_CONSOLE
 public:
     void executeConsole();
 private:

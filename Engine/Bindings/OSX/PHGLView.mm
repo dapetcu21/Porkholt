@@ -27,8 +27,9 @@
 -(void)makeCurrentAndRender
 {
     [self makeCurrent];
-    [self render];
-    [PHGLView globalFrame];
+    double tim = [self elapsedTime];
+    [PHGLView globalFrame:tim];
+    [self render:tim startTime:time];
 }
 
 -(void)loadWithPixelFormat:(NSOpenGLPixelFormat*)pf
@@ -48,7 +49,7 @@
     
     [[self openGLContext] makeCurrentContext];
     
-    GLint swapInt = 1;
+    GLint swapInt = (flags & PHStartGame_VSync)?1:0;
     [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
     
     NSRect frame = [self bounds];
@@ -60,6 +61,12 @@
     initParams.fps = 60;
     initParams.resourcePath = string([res UTF8String]) + "/rsrc";
     initParams.entryPoint = entryPoint;
+    if (flags & PHStartGame_Remote)
+        gameManager->setUsesRemote(true);
+    if (flags & PHStartGame_ShowFPS)
+        gameManager->setShowsFPS(true);
+    if (flags & PHStartGame_VSync)
+        gameManager->setFpsCapped(true);
     gameManager->init(initParams);
 }
 
@@ -121,25 +128,31 @@
     [super dealloc];
 }
 
--(void)render
-{    
-    gameManager->processInput();
-    
-    static double time = 0;
-    static double lastTime = 0;
-    
+-(double)elapsedTime
+{
     double frameInterval = 1.0f/gameManager->framesPerSecond();
     if (flags & PHStartGame_frameAnimation)
-        gameManager->renderFrame(frameInterval);
-    else
-    {
-        lastTime = time;
-        time = PHTime::getTime();
-        double elapsedTime = (time-lastTime);
-        if (flags & PHStartGame_VSync)
-            elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
-        gameManager->renderFrame(elapsedTime);
-    }
+        return frameInterval;
+    lastTime = time;
+    time = PHTime::getTime();
+    double elapsedTime = (time-lastTime);
+    if (flags & PHStartGame_VSync)
+        return round(elapsedTime/frameInterval)*frameInterval;
+    return elapsedTime;
+}
+
+-(void)render
+{    
+    double tim = [self elapsedTime];
+    [self render:tim startTime:time];
+}
+
+-(void)render:(double)timeElapsed startTime:(double)start
+{
+    time = start;
+    gameManager->setFrameBegin(start);
+    gameManager->processInput();
+    gameManager->renderFrame(timeElapsed);
     glFlush();
 }
 
@@ -288,7 +301,12 @@ int PHEventHandler::modifierMask()
 
 +(void)globalFrame
 {
-    PHGameManager::globalFrame(1/60.0f);
+    [PHGLView globalFrame:1.0f/60.0f];
+}
+
++(void)globalFrame:(double)timeElapsed
+{
+    PHGameManager::globalFrame(timeElapsed);
 }
 
 @end

@@ -60,6 +60,7 @@ void PHNavigationController::startFadeAnimation()
         fc = f;
     fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
     fadeView->animateBgColor(fc);
+    fadeView->animationSkipFirstFrame();
     fadeView->animationTag(-4432);
     fadeView->animationCallback(PHInvN(this,PHNavigationController::middleFadeAnimation));
     fadeView->commitCinematicAnimation();
@@ -75,6 +76,7 @@ void PHNavigationController::middleFadeAnimation()
     
     fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
     fadeView->animateBgColor(PHClearColor);
+    fadeView->animationSkipFirstFrame();
     fadeView->animationTag(-4432);
     fadeView->animationCallback(PHInvN(this,PHNavigationController::endFadeAnimation));
     fadeView->commitCinematicAnimation();
@@ -123,15 +125,17 @@ void PHNavigationController::cancelAnimation()
 
 void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
 {
+    ph_float time = 0.5f;
 	if (lastVC)
 	{
 		PHView * lastV = lastVC->getView();
 		view->addSubview(lastV);
 		lastV->setPosition(PHPoint(0,0));
-        lastV->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
+        lastV->beginCinematicAnimation(time, PHCinematicAnimator::FadeOutFunction);
         lastV->animateMove(PHPoint(x,y));
         lastV->animationCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
         lastV->animationTag(-4432);
+        lastV->animationSkipFirstFrame();
         lastV->commitCinematicAnimation();
 	}
 	if (currentVC)
@@ -139,10 +143,11 @@ void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
 		PHView * currentV = currentVC->getView();
 		view->addSubview(currentV);
 		currentV->setPosition(PHPoint(-x, -y));
-        currentV->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+        currentV->beginCinematicAnimation(time, PHCinematicAnimator::FadeOutFunction);
         currentV->animateMove(PHPoint(x,y));
         currentV->animationTag(-4432);
         currentV->animationCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
+        currentV->animationSkipFirstFrame();
         currentV->commitCinematicAnimation();
 	}
 }
