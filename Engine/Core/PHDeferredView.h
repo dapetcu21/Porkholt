@@ -43,7 +43,7 @@ protected:
     bool speculars,normal;
     
     PHColor ambient, diffuse, specular;
-    set<PHGLPointLight*> pointLights;
+    set<PHGLLight*> pointLights;
     
     ph_float cutoff;
     
@@ -72,16 +72,16 @@ public:
     void addLight(PHGLLight * light);
     void removeLight(PHGLLight * light);
     
-    PHGLPointLight * addPointLight(const PHVector3 & pos, const PHColor & diffuse, const PHColor & spec, ph_float inten)
+    PHGLLight * addPointLight(const PHVector3 & pos, const PHColor & diffuse, const PHColor & spec, ph_float inten)
     {
-        PHGLPointLight * l = new PHGLPointLight(pos,diffuse,spec,inten);
+        PHGLLight * l = new PHGLLight(PHGLLight::pointLight,pos,diffuse,spec,inten);
         addLight(l);
         l->release();
         return l;
     }
-    PHGLPointLight * addPointLight(const PHVector3 & pos, const PHColor & diffuse, ph_float inten)
+    PHGLLight * addPointLight(const PHVector3 & pos, const PHColor & diffuse, ph_float inten)
     {
-        PHGLPointLight * l = new PHGLPointLight(pos,diffuse,inten);
+        PHGLLight * l = new PHGLLight(PHGLLight::pointLight,pos,diffuse,inten);
         addLight(l);
         l->release();
         return l;

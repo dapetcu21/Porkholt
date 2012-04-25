@@ -54,6 +54,7 @@ public:
     virtual void loadFromLua(lua_State * L);
     static void registerLuaInterface(lua_State * L);
     
+    static const string _luaClass;
 };
 
 

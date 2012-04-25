@@ -25,7 +25,7 @@ void PHTestView::draw()
         255,   0, 255, 255,
     };
 	
-    gm->setGLStates(PHGLVertexArray | PHGLColorArray);
+    gm->setGLStates(PHGLBlending | PHGLVertexArray | PHGLColorArray);
     gm->applyShader(gm->coloredNoTexSpriteShader());
     gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
     gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
@@ -40,9 +40,9 @@ void PHTestView::touchEvent(PHEvent * event)
 		PHPoint p[2];
 		p[0] = event->location();
 		p[1] = event->lastLocation();
-		if (superView)
+		if (_parent && _parent->isView())
 		{
-			superView->toMyCoordinates(p, 2);
+			superview()->toMyCoordinates(p, 2);
 		}
 		PHRect frame;
 		frame = this->frame();

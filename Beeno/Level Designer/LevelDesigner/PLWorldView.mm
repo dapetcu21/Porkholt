@@ -115,7 +115,7 @@ void PLWorldView::draw()
         dragRect.x+dragRect.width,  dragRect.y+dragRect.height
     };
 	
-    gm->setGLStates(PHGLVertexArray);
+    gm->setGLStates(PHGLBlending | PHGLVertexArray);
 	gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
     gm->setColor(PHColor(1,1,1,0.5));
     gm->applyShader(gm->solidColorShader());           

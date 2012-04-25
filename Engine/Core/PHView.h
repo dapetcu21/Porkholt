@@ -10,23 +10,16 @@
 #ifndef PHVIEW_H
 #define PHVIEW_H
 
-#include "PHMain.h"
+#include "PHDrawable.h"
 #include "PHCinematicActor.h"
 #include "PHCinematicAnimator.h"
 #include "PHEvent.h"
-#include "PHGameManager.h"
 
 class PHMutex;
 class PHAuxLayerView;
-class PHView : public PHObject, public PHCinematicActor
+class PHView : public PHDrawable, public PHCinematicActor
 {
 protected:
-    list<PHView*> views;
-    list<PHView*>::iterator currPos;
-    
-    PHGameManager * gm;
-    
-	PHView * superView;
 	PHRect _frame,_bounds;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
     bool fhoriz,fvert;
@@ -36,23 +29,22 @@ protected:
 	bool _optimize;
 	PHColor _backColor;
 	int effOrder;
-    int _tag;
-    PHMutex * mtx;
     
+	void drawBackground();
+public:
     virtual void auxRender();
 	virtual void render();
-	void drawBackground();
-	virtual void draw();
-	
+    
+private:
     PHMatrix effectCache;
     PHMatrix matrixCache;
     bool effectCached;
     bool matrixCached;
+public:
 	PHMatrix applyMatrices();
 	
 public:
-    virtual void touchEvent(PHEvent * touch);
-    virtual bool supportsRenderMode(int rm) { return rm == PHGameManager::defaultRenderMode; }
+    virtual void touchEvent(PHEvent * touch) {};
     PHMatrix loadMatrixTree(PHView * until);
 	
     enum Effects
@@ -75,7 +67,11 @@ public:
 	PHView();
 	PHView(const PHRect &frame);
     
-    const list<PHView*> & subViews() { return views; }
+    PHView * viewWithTag(int tag);
+    PHView * viewWithTagAfter(int tag, PHDrawable * after);
+    list<PHView*> * viewsWithTag(int tag); //this returns a new-allocated list
+    
+    PHView * superview() { if (_parent->isView()) return (PHView*)_parent; return NULL; };
 	
 	virtual void setFrame(const PHRect &frame);
 	void setPosition(const PHPoint &pos);
@@ -113,16 +109,7 @@ public:
 	bool userInput() { return _userInput; };
 	void setOptimizations(bool ui) { _optimize = ui; };
 	bool optimizations() { return _optimize; };
-	PHView * superview() { return superView; };
 	
-	void addSubview(PHView * view) { addSubviewBefore(view, NULL); }
-    void addSubviewBefore(PHView * view, PHView * before);
-	void removeFromSuperview();
-    void removeAllSubviews();
-	void bringToFront();
-    void sendToBack();
-    
-
 	PHPoint toMyCoordinates(const PHPoint & pnt, PHView * until);
 	void toMyCoordinates(PHPoint * pnt, int n, PHView * until);
 	PHPoint fromMyCoordinates(const PHPoint & pnt, PHView * until);
@@ -133,18 +120,12 @@ public:
 	PHPoint fromMyCoordinates(const PHPoint & pnt) { return fromMyCoordinates(pnt, NULL); }
 	void fromMyCoordinates(PHPoint * pnt, int n) { fromMyCoordinates(pnt, n, NULL); }
 	
-    void setTag(int tag) { _tag = tag; };
-    int tag() { return _tag; }
-    PHView * viewWithTag(int tag);
-    PHView * viewWithTagAfter(int tag, PHView * v);
-    list<PHView*> * viewsWithTag(int tag); //this returns a new-allocated list
-	
 	virtual ~PHView();
 	friend class PHGameManager;
 	friend class PHEventHandler;
 	
 private:
-    PHView * pointerDeepFirst(PHMatrix m, PHEvent * touch);
+    PHView * pointerDeepFirst(const PHMatrix & m, PHEvent * touch);
     
 //animation system
 protected:
@@ -168,23 +149,11 @@ protected:
 public:
     void bindToAuxLayer(PHAuxLayerView * layer, PHView * from);
     void setDontDrawToMain( bool val) { dontDrawOnMain = val; }
-//scripting
-protected:
-    set<lua_State*> luaStates;
-    string luaClass;
-public:
-    void getLuaHandle(lua_State * L);
+    
     static void registerLuaInterface(lua_State * L);
-public:
-    PHMutex * mutex() { if (!mtx) mtx = new PHMutex(true); return mtx; }
     
-public:
-    PHGameManager * gameManager() { return gm; }
-    void setGameManager(PHGameManager * gameManager);
-    
-protected:
-    virtual void attachedToGameManager() {};
-    
+private:
+    static const string _luaClass;
 };
 
 #endif

@@ -23,17 +23,23 @@
 #include "PHEventQueue.h"
 #include "PHTextView.h"
 #include "PHFont.h"
+#include "PHGLTexture.h"
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), _missingNormalSpriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), _missingNormalSpriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
+    memset(textures, 0, sizeof(textures));
 }
 
 
 PHGameManager::~PHGameManager()
 {
+    if (exitmsg)
+    {
+        exitmsg->broadcast(this, NULL);
+    }
     if (view)
         view->release();
     if (fpsView)
@@ -52,6 +58,8 @@ PHGameManager::~PHGameManager()
         sndManager->release();
     if (spriteStates)
         spriteStates->release();
+    if (lgth)
+        lgth->release();
     if (remote)
         delete remote;
     if (hd)
@@ -131,9 +139,15 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     sndManager = new PHSoundManager(resPath + "/snd/fx");
     
     loadCapabilities();
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    //glPolygonMode(GL_FRONT,GL_LINE); //wireframe
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (!useShaders())
     {
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -161,7 +175,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     viewController = new PHNavigationController();
 	viewController->init(this);
 	viewController->_viewWillAppear();
-	view->addSubview(viewController->getView());
+	view->addChild(viewController->getView());
 	viewController->_viewDidAppear();
     view->setGameManager(this);
     
@@ -247,7 +261,12 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+#ifdef PH_GL_ES
+    glClearDepthf(1.0);
+#else
+    glClearDepth(1.0);
+#endif
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
     setModelViewMatrix(PHIdentityMatrix);
     
@@ -386,12 +405,26 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
     int xr = states^openGLStates;
     openGLStates = states;
 
-    if (!useShaders() && (xr & PHGLTexture))
+    if (!useShaders() && (xr & PHGLTexture0))
     {
-        if (states & PHGLTexture)
+        if (states & PHGLTexture0)
             glEnable(GL_TEXTURE_2D);
         else
             glDisable(GL_TEXTURE_2D);
+    }
+    if (xr & PHGLZTesting)
+    {
+        if (states & PHGLZTesting)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
+    }
+    if (xr & PHGLBlending)
+    {
+        if (states & PHGLBlending)
+            glEnable(GL_BLEND);
+        else
+            glDisable(GL_BLEND);
     }
     
     if (vertexAttrib)
@@ -594,6 +627,7 @@ void PHGameManager::loadCapabilities()
             sstr<<"#define highp \n";
             sstr<<"#define mediump \n";
             sstr<<"#define lowp \n";
+            sstr<<"#define PH_GL_ES\n";
         }
         
         glslHeader = sstr.str();
@@ -779,4 +813,31 @@ void PHGameManager::buildSolidSquareVAO()
     vbo->unbind();
     _solidSquareVAO = vao;
     _solidSquareVBO = vbo;
+}
+
+void PHGameManager::setActiveTexture(int tmu)
+{
+    if (aTMU == tmu) return;
+    aTMU = tmu;
+    glActiveTexture(GL_TEXTURE0 + tmu);
+}
+
+void PHGameManager::bindTexture(PHGLTexture * tx)
+{
+    //if (textures[aTMU] == tx) return;
+    if (textures[aTMU])
+        textures[aTMU]->bound = false;
+    textures[aTMU] = tx;
+    if (tx)
+    {
+        tx->bound = true;
+        tx->_bind();
+    }
+}
+
+void PHGameManager::destroyTexture(PHGLTexture * tx)
+{
+    for (int i = 0; i < PHGameManager_maxTextures; i++)
+        if (textures[aTMU] == tx)
+            textures[aTMU] = NULL;
 }

@@ -97,7 +97,7 @@ void PLJointDot::draw()
     setDotColor(model.selected?PHColor(0,0,1):PHColor(1,0,0));
     if (!first && model.actor1)
     {
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         PHPoint p1 = boundsCenter();
         PHPoint p2 = toMyCoordinates(model.actor1->fromMyCoordinates(model.actor1->boundsCenter()));
         GLfloat v[] = { p1.x,p1.y, p2.x,p2.y };

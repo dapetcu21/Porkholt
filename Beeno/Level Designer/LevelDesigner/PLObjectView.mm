@@ -112,16 +112,16 @@ void PLObjectView::addJoint(PLJointDot * jointView)
     if (!jointView) return;
     joints.push_back(jointView);
     jointView->retain();
-    jointView->removeFromSuperview();
+    jointView->removeFromParent();
     if (((ObjectController*)[model owner]).showJoints)
-        addSubview(jointView);
+        addChild(jointView);
 }
 
 void PLObjectView::removeAllJoints()
 {
     for (vector<PLJointDot*>::iterator i = joints.begin(); i!=joints.end(); i++)
     {
-        (*i)->removeFromSuperview();
+        (*i)->removeFromParent();
         (*i)->release();
     }
     joints.clear();
@@ -136,7 +136,7 @@ void PLObjectView::reloadSubviews()
         if (obj.actor)
             (obj.actor)->retain();
     
-    removeAllSubviews();
+    removeAllChildren();
     if (((ObjectController*)[model owner]).showImages)
         for (PLImage * obj in [[model subentityModel] images])
         {
@@ -145,7 +145,7 @@ void PLObjectView::reloadSubviews()
                 obj.actor = new PLImageView(obj);
                 obj.actor->setController(this);
             }
-            addSubview(obj.actor);
+            addChild(obj.actor);
             obj.actor->modelChanged();
         }
     if (((ObjectController*)[model owner]).showFixtures)
@@ -157,14 +157,14 @@ void PLObjectView::reloadSubviews()
                 obj.actor->setController(this);
             } else
                 obj.actor->modelChanged();
-            addSubview(obj.actor);
+            addChild(obj.actor);
         }
 
     if (((ObjectController*)[model owner]).showMarkers)
-        addSubview(marker);
+        addChild(marker);
     if (((ObjectController*)[model owner]).showJoints)
         for (vector<PLJointDot*>::iterator i = joints.begin(); i!=joints.end(); i++)
-            addSubview(*i);
+            addChild(*i);
     
     for (PLImage * obj in [[model subentityModel] images])
         if (obj.actor)

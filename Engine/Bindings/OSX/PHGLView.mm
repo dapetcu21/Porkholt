@@ -70,9 +70,24 @@
     gameManager->init(initParams);
 }
 
++(NSOpenGLPixelFormat * )defaultPixelFormat
+{
+    static NSOpenGLPixelFormat * fmt = NULL;
+    if (!fmt)
+    {
+        GLuint attributes[] = {
+            NSOpenGLPFADoubleBuffer,
+            NSOpenGLPFADepthSize, 32,
+            0
+        };
+        
+        fmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute*) attributes];
+    }
+    return fmt;
+}
 -(void)load
 {
-    [self loadWithPixelFormat:[NSOpenGLView defaultPixelFormat]];
+    [self loadWithPixelFormat:[PHGLView defaultPixelFormat]];
 }
 
 
@@ -87,13 +102,14 @@
 
 -(id)initWithFrame:(NSRect)frameRect resourcePath:(NSString *)_res entryPoint:(void (*)(PHGameManager *))_entryPoint flags:(int)_flags
 {
-    self = [super initWithFrame:frameRect pixelFormat:[NSOpenGLView defaultPixelFormat]];
+    NSOpenGLPixelFormat * pf = [PHGLView defaultPixelFormat];
+    self = [super initWithFrame:frameRect pixelFormat:pf];
     if (self)
     {
         res = [_res copy];
         entryPoint = _entryPoint;
         flags = _flags;
-        [self load];
+        [self loadWithPixelFormat:pf];
     }
     return self;
 }
@@ -154,6 +170,7 @@
     gameManager->processInput();
     gameManager->renderFrame(timeElapsed);
     glFlush();
+    glSwapAPPLE();
 }
 
 -(void)reshape

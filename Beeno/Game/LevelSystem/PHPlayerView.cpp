@@ -22,9 +22,11 @@ void PHPlayerView::setRotation( ph_float rot)
     ph_float llastDif = lastDif;
     ph_float newDif = elapsed?((dif/elapsed)*0.01666):lastDif;
     PHLowPassFilter(lastDif, newDif, elapsed, 50.0f);
-    for (list<PHView*>::iterator i = views.begin(); i!= views.end(); i++)
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!= _children.end(); i++)
     {
         if ((*i)->tag() != _designatedTag) continue;
-        (*i)->setRotation((*i)->rotation()-dif+lastDif-llastDif);
+        PHView * v  = (*i)->toView();
+        if (!v) continue;
+        v->setRotation(v->rotation()-dif+lastDif-llastDif);
     }
 }

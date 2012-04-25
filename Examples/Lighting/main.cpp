@@ -68,10 +68,10 @@ protected:
         tv->setRepeatX(columns);
         tv->setRepeatY(rows);
         tv->setImage(img);
-        dv->addSubview(tv);
+        dv->addChild(tv);
         tv->release();
         
-        v->addSubview(dv);
+        v->addChild(dv);
         dv->release();
         
         return v;

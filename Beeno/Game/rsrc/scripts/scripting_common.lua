@@ -136,7 +136,7 @@ end
 -- function PHLObject:applyAngularImpulse(val) -- number
 -- function PHLObject:mass()
 -- function PHLObject:centerOfMass() --in object coordinates
--- function PHLObject:viewWithTag(tag)
+-- function PHLObject:childWithTag(tag)
 -- function PHLObject:poof()
 -- function PHLObject::isFlipped()
 -- function PHLObject::setFlipped(f)

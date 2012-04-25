@@ -28,6 +28,7 @@
 #include "PHColor.h"
 #include "PHRange.h"
 #include "PHMatrix.h"
+#include "PHQuaternion.h"
 
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
 bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2);

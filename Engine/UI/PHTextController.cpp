@@ -34,10 +34,10 @@ PHView * PHTextController::loadView(const PHRect & frame)
     textView->setText((*strings)[pos]);
     textView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
     textView->adjustFontSizeToFit(5);
-    view->addSubview(textView);
+    view->addChild(textView);
     textView->release();
     blackoutView = new PHView(fr);
-    view->addSubview(blackoutView);
+    view->addChild(blackoutView);
     blackoutView->release();
     return view;
 }

@@ -1,0 +1,32 @@
+//
+//  PHMesh.h
+//  Porkholt
+//
+//  Created by Marius Petcu on 4/13/12.
+//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
+//
+
+#ifndef PHMESH_H
+#define PHMESH_H
+
+#include "PHMain.h"
+
+class PHGLVertexArrayObject;
+
+class PHMesh : public PHObject
+{
+public:
+    enum lods
+    {
+        lowLOD = 0,
+        defaultLOD = 1,
+        highLOD = 2
+    };
+    
+    virtual PHGLVertexArrayObject * vaoForLevelOfDetail(int lod) = 0;
+    PHGLVertexArrayObject * vao() { return vaoForLevelOfDetail(defaultLOD); }
+    virtual int lodForDistance(ph_float dist) { return defaultLOD; }
+    virtual bool usesLevelsOfDetail() { return false; }
+};
+
+#endif

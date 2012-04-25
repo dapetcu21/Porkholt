@@ -47,7 +47,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             vv->setImage(gm->imageFromPath(oss1.str()));
             vv->setPressedImage(gm->imageFromPath(oss2.str()));
             vv->setUpCallback(PHInv(this, PHChapterController::mouseUp, (void*)(j*columns+i+1)));
-            view->addSubview(vv);
+            view->addChild(vv);
             vv->release();
         }
    
@@ -57,7 +57,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     dadoamne->setFontSize(25);
     dadoamne->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
     dadoamne->setFontColor(PHWhiteColor);
-    view->addSubview(dadoamne);
+    view->addChild(dadoamne);
     dadoamne->release();
     
     PHImage * img = gm->imageNamed("back");
@@ -66,7 +66,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     back->setImage(img);
     back->setPressedImage(gm->imageNamed("back_pressed"));
     back->setUpCallback(PHInv(this, PHChapterController::backPressed,NULL));
-    view->addSubview(back);
+    view->addChild(back);
     back->release();
     return view;
 }

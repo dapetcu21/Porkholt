@@ -60,9 +60,9 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     bl->setUpCallback(PHInv(this,PHTitleScreen::testPressed, NULL));
     bl->setUserInput(true);
     
-    v->addSubview(bg);
-    v->addSubview(bt);
-    v->addSubview(bl);
+    v->addChild(bg);
+    v->addChild(bt);
+    v->addChild(bl);
     bg->release();
     bt->release();
     

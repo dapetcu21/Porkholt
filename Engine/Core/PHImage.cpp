@@ -64,7 +64,7 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject 
     }
     
     vbo->bindTo(PHGLVBO::arrayBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*v.size(), &v[0], GL_DYNAMIC_DRAW);
+    vbo->setData(&v[0], sizeof(GLfloat)*v.size(), PHGLVBO::dynamicDraw);
     vao->bindToEdit();
     vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, 0, vbo);
     vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, sizeof(GLfloat)*2, vbo);

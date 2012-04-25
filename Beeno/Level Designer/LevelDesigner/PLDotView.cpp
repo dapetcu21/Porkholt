@@ -22,7 +22,7 @@ void PLDotView::draw()
         circleVertices[i*2+3] = cos(angle)*rad+center.y;
     }
     
-    gm->setGLStates(PHGLVertexArray);
+    gm->setGLStates(PHGLBlending | PHGLVertexArray);
     gm->setColor(color);
     gm->vertexPointer(2, GL_FLOAT, 0, circleVertices);
     gm->applyShader(gm->solidColorShader());

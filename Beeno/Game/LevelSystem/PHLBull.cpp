@@ -28,7 +28,7 @@ PHLBull::~PHLBull()
     getWorld()->modelEventQueue()->invalidateTimersWithUserdata(this);
     PHImageAnimator * animator;
     PHImageView * iv;
-    if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
+    if (faceView && ((iv=(PHImageView*)faceView->childWithTag(21))) && ((animator=iv->animator())))
         animator->pause();
 }
 
@@ -41,7 +41,7 @@ void PHLBull::attacked(PHObject * sender, void * ud)
 {
     PHImageAnimator * animator;
     PHImageView * iv;
-    if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
+    if (faceView && ((iv=(PHImageView*)faceView->childWithTag(21))) && ((animator=iv->animator())))
         animator->animateSection("relaxing");
     setBraked(true);
 }
@@ -79,7 +79,7 @@ void PHLBull::attack()
     
     PHImageAnimator * animator;
     PHImageView * iv;
-    if (faceView && ((iv=(PHImageView*)faceView->viewWithTag(21))) && ((animator=iv->animator())))
+    if (faceView && ((iv=(PHImageView*)faceView->childWithTag(21))) && ((animator=iv->animator())))
         animator->animateSection("charging",PHInv(this,PHLBull::reallyAttack,NULL));
     else
         reallyAttack(NULL,NULL);

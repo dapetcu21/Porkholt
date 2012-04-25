@@ -73,10 +73,7 @@ PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoint & pnt
 	y = pnt.x * m[1] + pnt.y * m[5] + /*0 * m[9] + 1 * */m[13];
 	w = pnt.x * m[3] + pnt.y * m[7] + /*0 * m[11]+ 1 * */m[15];        
 	
-	PHPoint npnt;
-	npnt.x = x/w;
-	npnt.y = y/w;
-	return npnt;
+	return PHPoint(x/w, y/w);
 }
 
 PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3DPoint & pnt)
@@ -87,11 +84,7 @@ PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3DPoint &
     z = pnt.x * m[2] + pnt.y * m[6] + /*0 * m[10] + 1 * */m[14];
 	w = pnt.x * m[3] + pnt.y * m[7] + /*0 * m[11]+ 1 * */m[15];        
 	
-	PH3DPoint npnt;
-	npnt.x = x/w;
-	npnt.y = y/w;
-    npnt.z = z/w;
-	return npnt;
+	return PH3DPoint(x/w, y/w, z/w);
 }
 
 const PHMatrix PHIdentityMatrix(1,0,0,0,

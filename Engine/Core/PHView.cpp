@@ -14,29 +14,22 @@
 #include "PHLua.h"
 #include "PHGLVertexArrayObject.h"
 
-#define PHVIEW_INITLIST superView(NULL), _bounds(PHRect(0, 0, -1, -1)),\
-						_rotation(0), _scaleX(1), _scaleY(1), effOrder(EffectOrderScaleRotateFlip),\
-						_backColor(PHClearColor), _alpha(1.0f), _userInput(false), _optimize(false), _tag(0), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true), fhoriz(false), fvert(false), luaClass("PHView"), mtx(NULL), gm(NULL), effectCached(false), matrixCached(false)
+const string PHView::_luaClass("PHView");
+
+#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _userInput(false), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true) 
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
+    luaClass = &_luaClass;
+    _isView = true;
 	setFrame(PHRect(0, 0, 0, 0));
 }
 
 PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
 {
-	setFrame(frame);
-}
-
-void PHView::setGameManager(PHGameManager * gameManager)
-{
-    if (gm == gameManager)
-        return;
-    gm = gameManager;
-    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
-        (*i)->setGameManager(gameManager);
-    if (gm)
-        attachedToGameManager();
+	luaClass = &_luaClass;
+    _isView = true;
+    setFrame(frame);
 }
 
 void PHView::setFrame(const PHRect &frame)
@@ -126,7 +119,7 @@ PHMatrix PHView::applyMatrices()
         effectCache;
     return matrixCache;
 }
-extern PHView * playerView;
+
 void PHView::render()
 {
     if (mtx) mtx->lock();
@@ -172,79 +165,19 @@ void PHView::render()
             drawBackground();
             draw();
         }
-        for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
+        for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
             (*i)->render();
 	}
     gm->setModelViewMatrix(om);
     if (mtx) mtx->unlock();
 }
 
-void PHView::addSubviewBefore(PHView * view, PHView * before)
-{
-	if (!view)
-		return;
-    if (mtx) mtx->lock();
-	view->retain();
-    view->setGameManager(gm);
-	view->removeFromSuperview();
-    list<PHView*>::iterator i = views.end();
-    if (before && before->superview() == this )
-        i = before->currPos;
-    view->currPos = views.insert(i, view);
-	view->superView = this;
-    if (mtx) mtx->unlock();
-}
-
-void PHView::removeFromSuperview()
-{
-	if (!superView) return;
-    PHMutex * m = superView->mtx;
-    if (m) m->lock();
-    if (mtx) mtx->lock();
-    superView->views.erase(currPos);
-	superView = NULL;
-    if (mtx) mtx->unlock();
-    if (m) m->unlock();
-	release();
-}
-
-void PHView::removeAllSubviews()
-{
-    list<PHView*>::iterator i, it;
-    for (i = views.begin(); (it = i),(it++),(i!=views.end()); i=it)
-        (*i)->removeFromSuperview();
-}
-
 PHView::~PHView()
 {
-	for (set<lua_State*>::iterator i = luaStates.begin(); i!=luaStates.end(); i++)
-        PHLuaDeleteWeakRef(*i, this);
     if (auxLayer)
         auxLayer->removeView(this);
     if (gm)
-        gm->eventHandler()->removeView(this);	
-    removeFromSuperview();
-    removeAllSubviews();
-    if (mtx) mtx->release();
-}
-
-void PHView::bringToFront()
-{
-	retain();
-	PHView * su = superView;
-	removeFromSuperview();
-	su->addSubview(this);
-	release();
-}
-
-void PHView::sendToBack()
-{
-	retain();
-	PHView * su = superView;
-	removeFromSuperview();
-    list<PHView*>::iterator i = views.begin();
-	su->addSubviewBefore(this, (i==views.end())?NULL:*i);
-	release();
+        gm->eventHandler()->removeView(this);
 }
 
 void PHView::drawBackground()
@@ -253,7 +186,7 @@ void PHView::drawBackground()
     if (gm->renderMode() != PHGameManager::defaultRenderMode)
         return;
 	
-    gm->setGLStates(PHGLVertexArray);
+    gm->setGLStates(PHGLBlending | PHGLVertexArray);
     gm->setColor(_backColor);
     PHMatrix old = gm->modelViewMatrix();
     gm->setModelViewMatrix(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
@@ -262,30 +195,23 @@ void PHView::drawBackground()
     gm->setModelViewMatrix(old);
     
 }
-		
-void PHView::draw()
-{	
-}
-
-void PHView::touchEvent(PHEvent * touch)
-{
-}
 
 //stuff
-PHView * PHView::pointerDeepFirst(PHMatrix m, PHEvent * touch)
+PHView * PHView::pointerDeepFirst(const PHMatrix & om, PHEvent * touch)
 {
 	if (!_userInput) return NULL;
-    m *= applyMatrices();
+    PHMatrix m = om * applyMatrices();
 	PHView * view = NULL;
-    for (list<PHView*>::reverse_iterator i = views.rbegin(); i!= views.rend(); i++)
-    {
-        PHView * v = (*i)->pointerDeepFirst(m, touch);
-        if (v)
+    for (list<PHDrawable*>::reverse_iterator i = _children.rbegin(); i!= _children.rend(); i++)
+        if ((*i)->isView())
         {
-            view = v;
-            break;
+            PHView * v = ((PHView*)(*i))->pointerDeepFirst(m, touch);
+            if (v)
+            {
+                view = v;
+                break;
+            }
         }
-    }
 	if (!view)
 	{
 		PHPoint pnt = m.untransformPoint(touch->location());
@@ -298,11 +224,36 @@ PHView * PHView::pointerDeepFirst(PHMatrix m, PHEvent * touch)
 	return view;
 }
 
+PHView * PHView::viewWithTag(int tag)
+{
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
+        if (((*i)->tag() == tag) && (*i)->isView())
+            return (PHView*)*i;
+    return NULL;
+}
+
+PHView * PHView::viewWithTagAfter(int tag, PHDrawable * v)
+{
+    do {
+        v = childWithTagAfter(tag, v);
+    } while (v && !(v->isView()));
+    return (PHView*)v;
+}
+
+list<PHView*> * PHView::viewsWithTag(int tag)
+{
+    list<PHView*> * l = new list<PHView*>;
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
+        if (((*i)->tag() == tag) && (*i)->isView())
+            l->push_back((PHView*)(*i));
+    return l;
+}
+
 //geometry
 PHMatrix PHView::loadMatrixTree(PHView * until)
 {
-	if (superView&&(superView!=until))
-        return (superView->loadMatrixTree(until)) * applyMatrices();
+	if (_parent && (_parent!=until) && (_parent->isView()))
+        return (((PHView*)_parent)->loadMatrixTree(until)) * applyMatrices();
     return applyMatrices();
 }
 
@@ -334,35 +285,6 @@ void PHView::fromMyCoordinates(PHPoint * pnt, int n, PHView * until)
 		pnt[i] = m.transformPoint(pnt[i]);
 }
 
-PHView * PHView::viewWithTag(int tag)
-{
-    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
-        if ((*i)->tag() == tag)
-            return *i;
-    return NULL;
-}
-
-PHView * PHView::viewWithTagAfter(int tag, PHView * v)
-{
-    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
-    {
-        if (*i == v) { v = NULL; continue; }
-        if (v) continue;
-        if ((*i)->tag() == tag)
-            return *i;
-    }
-    return NULL;
-}
-
-list<PHView*> * PHView::viewsWithTag(int tag)
-{
-    list<PHView*> * l = new list<PHView*>;
-    for (list<PHView*>::iterator i = views.begin(); i!=views.end(); i++)
-        if ((*i)->tag() == tag)
-            l->push_back(*i);
-    return l;
-}
-
 void PHView::bindToAuxLayer(PHAuxLayerView * layer, PHView * from)
 {
     if (auxLayer)
@@ -388,26 +310,6 @@ PHLuaBoolGetter(PHView, verticallyFlipped);
 PHLuaBoolSetter(PHView, setVerticallyFlipped);
 PHLuaRectGetter(PHView, frame);
 PHLuaRectSetter(PHView, setFrame);
-
-void PHView::getLuaHandle(lua_State * L)
-{
-    if (!L) return;
-    PHLuaGetWeakRef(L, this);
-    if (!lua_istable(L, -1))
-    {
-        lua_pop(L,1);
-        lua_getglobal(L, luaClass.c_str());
-        lua_getfield(L, -1, "new");
-        lua_pushvalue(L, -2);
-        PHLuaCall(L, 1, 1);
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, "ud");
-        lua_pushvalue(L, -1);
-        PHLuaSetWeakRef(L, this);
-        lua_remove(L, -2);
-        luaStates.insert(L);
-    }
-}
 
 void PHView::registerLuaInterface(lua_State * L)
 {

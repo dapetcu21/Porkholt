@@ -6,6 +6,7 @@ if (NOT DEFINED PH_ENGINE_HINCLUDED)
     ${PH_ENGINE_PATH}/Sound
     ${PH_ENGINE_PATH}/UI
     ${PH_ENGINE_PATH}/Network
+    ${PH_ENGINE_PATH}/3D
     ${PH_EXTERNALS}/lua/src
     ${PH_EXTERNALS}/libpng
     ${PH_EXTERNALS}/zlib

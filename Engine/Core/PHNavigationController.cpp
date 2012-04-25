@@ -53,10 +53,10 @@ void PHNavigationController::startFadeAnimation()
 	fadeView = new PHView(view->bounds());
     PHColor fc = _fadeColor;
     PHColor f;
-    if ((f = currentVC->fadeToColor())!=PHInvalidColor)
+    if (currentVC && ((f = currentVC->fadeToColor())!=PHInvalidColor))
         fc = f;
     else
-    if ((f = lastVC->fadeToColor())!=PHInvalidColor)
+    if (lastVC && ((f = lastVC->fadeToColor())!=PHInvalidColor))
         fc = f;
     fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
     fadeView->animateBgColor(fc);
@@ -64,7 +64,7 @@ void PHNavigationController::startFadeAnimation()
     fadeView->animationTag(-4432);
     fadeView->animationCallback(PHInvN(this,PHNavigationController::middleFadeAnimation));
     fadeView->commitCinematicAnimation();
-	view->addSubview(fadeView);
+	view->addChild(fadeView);
 }
 
 void PHNavigationController::middleFadeAnimation()
@@ -82,10 +82,10 @@ void PHNavigationController::middleFadeAnimation()
     fadeView->commitCinematicAnimation();
     
 	if (lastVC)
-		lastVC->getView()->removeFromSuperview();
+		lastVC->getView()->removeFromParent();
 	if (currentVC)
 	{
-		view->addSubview(currentVC->getView());
+		view->addChild(currentVC->getView());
 		view->setPosition(PHOriginPoint);
 	}
 	fadeView->bringToFront();
@@ -93,7 +93,7 @@ void PHNavigationController::middleFadeAnimation()
 
 void PHNavigationController::endFadeAnimation()
 {
-	fadeView->removeFromSuperview();
+	fadeView->removeFromParent();
     fadeView->release();
 	fadeView = NULL;
 	stopAnimating();
@@ -102,7 +102,7 @@ void PHNavigationController::endFadeAnimation()
 void PHNavigationController::endSlideAnimation(void * dmy)
 {
 	if (lastVC)
-		lastVC->getView()->removeFromSuperview();
+		lastVC->getView()->removeFromParent();
 	stopAnimating();
 }
 
@@ -111,13 +111,13 @@ void PHNavigationController::cancelAnimation()
 	if (animation!=NoAnim)
 	{
 		if (fadeView)
-			fadeView->removeFromSuperview();
+			fadeView->removeFromParent();
 		if (animation==FadeToColor && currentVC)
 		{
-			view->addSubview(currentVC->getView());
+			view->addChild(currentVC->getView());
 		}
 		if (lastVC)
-			lastVC->getView()->removeFromSuperview();
+			lastVC->getView()->removeFromParent();
         PHAnimatorPool::currentAnimatorPool()->removeAnimatorsWithTag(-4432);
 		stopAnimating();
 	}
@@ -129,7 +129,7 @@ void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
 	if (lastVC)
 	{
 		PHView * lastV = lastVC->getView();
-		view->addSubview(lastV);
+		view->addChild(lastV);
 		lastV->setPosition(PHPoint(0,0));
         lastV->beginCinematicAnimation(time, PHCinematicAnimator::FadeOutFunction);
         lastV->animateMove(PHPoint(x,y));
@@ -141,7 +141,7 @@ void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
 	if (currentVC)
 	{
 		PHView * currentV = currentVC->getView();
-		view->addSubview(currentV);
+		view->addChild(currentV);
 		currentV->setPosition(PHPoint(-x, -y));
         currentV->beginCinematicAnimation(time, PHCinematicAnimator::FadeOutFunction);
         currentV->animateMove(PHPoint(x,y));
@@ -169,9 +169,9 @@ void PHNavigationController::startAnimating()
 		case NoAnim:
 		{
 			if (lastVC)
-				lastVC->getView()->removeFromSuperview();
+				lastVC->getView()->removeFromParent();
 			if (currentVC)
-				view->addSubview(currentVC->getView());	
+				view->addChild(currentVC->getView());	
 			stopAnimating();
 			break;
 		}

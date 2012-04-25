@@ -32,7 +32,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
         c->setImage(gm->imageNamed(cloudP[i]));
         c->setTag(i+10);
         clouds.push_back(c);
-        v->addSubview(c);
+        v->addChild(c);
         c->release();
     }
     resetClouds(v);
@@ -40,7 +40,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     nav = new PHNavigationController();
     nav->init(gm,frame);
     nav->_viewWillAppear();
-    v->addSubview(nav->getView());
+    v->addChild(nav->getView());
     nav->_viewDidAppear();
     manageViewController(nav);
     

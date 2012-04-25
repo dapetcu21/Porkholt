@@ -464,7 +464,7 @@ void PHLObject::loadImages()
 	if (view)
 		for (list<Image>::iterator i = images.begin(); i!=images.end(); i++)
         {
-			view->addSubview(i->img);
+			view->addChild(i->img);
             i->img->release();
         }
 }
@@ -1199,7 +1199,7 @@ void PHLObject::_poof()
     }
     PHPoofView * v = new PHPoofView(poofRect+position(),PHPoofView::poof);
     v->setAnimatorPool(wrld->levelController()->animatorPool());
-    getWorld()->getWorldView()->addSubview(v);
+    getWorld()->getWorldView()->addChild(v);
     v->release();
     
     PHSound * s = gameManager()->soundManager()->soundNamed("poof")->duplicate();
@@ -1393,7 +1393,7 @@ static int PHLObject_applyImpulse(lua_State * L)
     return 0;
 }
 
-static int PHLObject_viewWithTag(lua_State * L)
+static int PHLObject_childWithTag(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     luaL_checknumber(L, 2);
@@ -1463,7 +1463,7 @@ void PHLObject::registerLuaInterface(lua_State * L)
     PHLuaAddMethod(PHLObject, mass);
     PHLuaAddMethod(PHLObject, centerOfMass);
     
-    PHLuaAddMethod(PHLObject, viewWithTag);
+    PHLuaAddMethod(PHLObject, childWithTag);
     
     PHLuaAddMethod(PHLObject, invalidateAllAnimations);
     PHLuaAddMethod(PHLObject, skipAllAnimations);

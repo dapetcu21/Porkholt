@@ -96,7 +96,13 @@ template <> struct _PH_STATIC_ASSERTION_FAILURE< true > {};
 template <> struct _PH_STATIC_ASSERTION_FAILURE< false > {};
 #define _PH_TOKENPASTE(x, y) x ## y
 #define PH_TOKENPASTE(x, y) _PH_TOKENPASTE(x, y)
-#define PH_STATIC_ASSERT(cond) enum { PH_TOKENPASTE(dummy,__LINE__) = sizeof(_PH_STATIC_ASSERTION_FAILURE< (bool)(cond) >) }
+#ifdef __COUNTER__
+#define PH_UNIQUE_TOKEN __COUNTER__
+#else
+#define PH_UNIQUE_TOKEN __LINE__
+#endif
+
+#define PH_STATIC_ASSERT(cond) enum { PH_TOKENPASTE(dummy,PH_UNIQUE_TOKEN) = sizeof(_PH_STATIC_ASSERTION_FAILURE< (bool)(cond) >) }
 
 struct lua_State; 
 

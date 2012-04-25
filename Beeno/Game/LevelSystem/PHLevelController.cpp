@@ -60,21 +60,21 @@ void PHLevelController::pauseWithMenu()
         rv = menuView->viewWithTag(66);
         if (rv)
         {
-            rb = (PHButtonView*)rv->viewWithTag(64);
-            qb = (PHButtonView*)rv->viewWithTag(65);
+            rb = (PHButtonView*)rv->childWithTag(64);
+            qb = (PHButtonView*)rv->childWithTag(65);
         }
     }
     else 
     {
         menuView = new PHView(fr);
-        view->addSubview(menuView);
+        view->addChild(menuView);
         menuView->setUserInput(true);
         menuView->release();
     }
     if (!rv)
     {
         rv = new PHView(fr);
-        menuView->addSubview(rv);
+        menuView->addChild(rv);
         rv->setUserInput(true);
         rv->setTag(66);
         rv->release();
@@ -85,7 +85,7 @@ void PHLevelController::pauseWithMenu()
         rb->setTag(64);
         rb->setImage(gm->imageNamed("play"));
         rb->setPressedImage(gm->imageNamed("play_pressed"));
-        rv->addSubview(rb);
+        rv->addChild(rb);
         rb->setUpCallback(PHInv(this, PHLevelController::resume, NULL));
         rb->release();
     }
@@ -95,7 +95,7 @@ void PHLevelController::pauseWithMenu()
         qb->setTag(65);
         qb->setImage(gm->imageNamed("quit"));
         qb->setPressedImage(gm->imageNamed("quit_pressed"));
-        rv->addSubview(qb);
+        rv->addChild(qb);
         qb->setUpCallback(PHInv(this, PHLevelController::returnToMenu, NULL));
         qb->release();
     }
@@ -138,8 +138,8 @@ void PHLevelController::dismissMenu()
     rv = menuView->viewWithTag(66);
     if (rv)
     {
-        rb = (PHButtonView*)rv->viewWithTag(64);
-        qb = (PHButtonView*)rv->viewWithTag(65);
+        rb = (PHButtonView*)rv->childWithTag(64);
+        qb = (PHButtonView*)rv->childWithTag(65);
     }
     
     bool cb = false;
@@ -192,7 +192,7 @@ void PHLevelController::menuDismissed(PHObject *, void *)
 {
     if (menuView)
     {
-        menuView->removeFromSuperview();
+        menuView->removeFromParent();
         menuView = NULL;
     }
 }
@@ -237,8 +237,8 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	world = new PHWorld(gm,PHRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
 	backgroundView->setImage(gm->imageFromPath(directory+"/bg.png"));
-	view->addSubview(backgroundView);
-	view->addSubview(world->getView());
+	view->addChild(backgroundView);
+	view->addChild(world->getView());
     animPool = new PHAnimatorPool;
 	thread = new PHThread;
 	thread->setFunction(PHInv(this, PHLevelController::auxThread, NULL));
@@ -424,7 +424,7 @@ PHLevelController::~PHLevelController()
 	if (world)
 	{
         ((PHCaptureView*)world->getView())->setSemaphores(NULL, NULL);
-		world->getView()->removeFromSuperview();
+		world->getView()->removeFromParent();
 		world->release();
 	}
     if (scripingEngine)
@@ -584,7 +584,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         if (!p)
         {
             int loops = 0;
-            while ( ( (time = PHTime::getTime()) > nextFrame && loops < 5) || (gm->fpsCapped() && (!loops)) )
+            while ( ( (time = PHTime::getTime()) > nextFrame && loops < 5) || (gm->fpsCapped() && (!loops) && (time + 2*frameInterval >= nextFrame))) 
             {
                 world->player->updateControls(q);
                 world->updatePhysics();
@@ -610,7 +610,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         scripingEngine->executeConsole();
 #endif
         
-       ph_float interpolate = (time + frameInterval - nextFrame);
+        ph_float interpolate = (time + frameInterval - nextFrame);
         world->realTimeEventQueue()->updateTimers();
         pSem2->wait();
         mutex->lock();

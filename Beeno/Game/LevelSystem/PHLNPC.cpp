@@ -43,17 +43,17 @@ PHLNPC::~PHLNPC()
 {
     if (faceView)
     {
-        faceView->removeFromSuperview();
+        faceView->removeFromParent();
         faceView->release();
     }
     if (dialogView)
     {
-        dialogView->removeFromSuperview();
+        dialogView->removeFromParent();
         dialogView->release();
     }
     if (questView)
     {
-        questView->removeFromSuperview();
+        questView->removeFromParent();
         questView->release();
     }
 }
@@ -92,23 +92,24 @@ void PHLNPC::loadView()
     view->setRotationalCenter(center);
     view->setFlipCenter(center);
 	loadImages();
-    bodyView = (PHImageView*)(view->viewWithTag(20));
-    list<PHView*> * l = view->viewsWithTag(21);
-    for(list<PHView*>::iterator i = l->begin(); i!=l->end(); i++)
+    bodyView = (PHImageView*)(view->childWithTag(20));
+    list<PHDrawable*> * l = view->childrenWithTag(21);
+    for(list<PHDrawable*>::iterator i = l->begin(); i!=l->end(); i++)
     {
-        PHView * v=*i;
+        PHView * v=(PHView*)*i;
         if (!v) break;
+		if (!v->isView()) break;
         if (!faceView)
         {
             faceView = new PHView(view->bounds());
             faceView->setRotationalCenter(center);
             faceView->setFlipCenter(center);
             faceView->setTag(-21);
-            view->addSubview(faceView);
+            view->addChild(faceView);
         }
         v->retain();
-        v->removeFromSuperview();
-        faceView->addSubview(v);
+        v->removeFromParent();
+        faceView->addChild(v);
         v->release();
     };
     delete l;
@@ -179,8 +180,8 @@ void PHLNPC::setIdle(bool i)
     _idle = i;
     if (!canBlink) return;
     if (!faceView) return;
-    const list<PHView*> & l = faceView->subViews();
-    list<PHView*>::const_iterator j;
+    const list<PHDrawable*> & l = faceView->children();
+    list<PHDrawable*>::const_iterator j;
     for (j = l.begin(); j!=l.end(); j++)
     {
         PHImageView * v= dynamic_cast<PHImageView*>(*j);
@@ -283,9 +284,9 @@ void PHLNPC::showDialog(PHDialog *dialog)
         dialogTextView->setFontSize(dialogFontSize);
         dialogTextView->setFontColor(PHBlackColor);
         dialogTextView->setAlignment(PHTextView::alignBottom | PHTextView::justifyLeft);
-        dialogView->addSubview(dialogTextView);
+        dialogView->addChild(dialogTextView);
         dialogTextView->release();
-        getWorld()->getWorldView()->addSubview(dialogView);
+        getWorld()->getWorldView()->addChild(dialogView);
     }
     dialogView->mutex()->lock();
     dialogView->removeCinematicAnimationsWithTag(dialogTag);
@@ -360,7 +361,7 @@ void PHLNPC::dismissDialog()
 
 void PHLNPC::_dialogDismissed(PHLObject * sender, void * ud)
 {
-    dialogView->removeFromSuperview();
+    dialogView->removeFromParent();
     dialogView->release();
     dialogView=NULL;
     setInternalShowsQuest2(true);
@@ -452,7 +453,7 @@ void PHLNPC::showQuest()
         questView->mutex();
         questView->setImage(qi);
         questView->setEffectOrder(PHView::EffectOrderRotateFlipScale);
-        getWorld()->getWorldView()->addSubview(questView);
+        getWorld()->getWorldView()->addChild(questView);
     }
     questView->mutex()->lock();
     questView->removeCinematicAnimationsWithTag(4867);
@@ -523,7 +524,7 @@ void PHLNPC::questHiddenItself(PHObject *sender, void *ud)
     }
     if (questView)
     {
-        questView->removeFromSuperview();
+        questView->removeFromParent();
         questView->release();
         questView = NULL;
     }

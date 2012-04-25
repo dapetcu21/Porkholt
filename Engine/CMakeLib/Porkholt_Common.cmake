@@ -42,15 +42,18 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/Core/PHTrailImageView.cpp
   ${PH_ENGINE_PATH}/Core/PHFileManager.cpp
   ${PH_ENGINE_PATH}/Core/PHLua.cpp
+  ${PH_ENGINE_PATH}/Core/PHDrawable.cpp
   ${PH_ENGINE_PATH}/Core/PHView.cpp
   ${PH_ENGINE_PATH}/Core/PHFont.cpp
   ${PH_ENGINE_PATH}/Core/PHViewController.cpp
+  ${PH_ENGINE_PATH}/Core/PHGLTexture.cpp
   ${PH_ENGINE_PATH}/Geometry/PHColor.cpp
   ${PH_ENGINE_PATH}/Geometry/PHMatrix.cpp
   ${PH_ENGINE_PATH}/Geometry/PHRange.cpp
   ${PH_ENGINE_PATH}/Geometry/PHGeometry.cpp
   ${PH_ENGINE_PATH}/Geometry/PHPoint.cpp
   ${PH_ENGINE_PATH}/Geometry/PHRect.cpp
+  ${PH_ENGINE_PATH}/Geometry/PHQuaternion.cpp
   ${PH_ENGINE_PATH}/UI/PHButtonView.cpp
   ${PH_ENGINE_PATH}/UI/PHTestViewController.cpp
   ${PH_ENGINE_PATH}/UI/PHTextControllerView.cpp
@@ -60,11 +63,16 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/Network/PHRemote.cpp
   ${PH_ENGINE_PATH}/Network/PHTCPConsole.cpp
   ${PH_ENGINE_PATH}/Network/PHTCPServer.cpp
+  ${PH_ENGINE_PATH}/Sound/PHSoundPool.cpp
+  ${PH_ENGINE_PATH}/3D/PHMesh.cpp
+  ${PH_ENGINE_PATH}/3D/PHSphereMesh.cpp
+  ${PH_ENGINE_PATH}/3D/PHBody.cpp
+  ${PH_ENGINE_PATH}/3D/PHMeshBody.cpp
+  ${PH_ENGINE_PATH}/3D/PHProjectionChanger.cpp
   ${PH_EXTERNALS}/uremote/src/URClient.cpp
   ${PH_EXTERNALS}/uremote/src/URCommon.cpp
   ${PH_EXTERNALS}/uremote/src/URField.cpp
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
-  ${PH_ENGINE_PATH}/Sound/PHSoundPool.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -120,16 +128,19 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/Core/PHImage.h
   ${PH_ENGINE_PATH}/Core/PHNormalImage.h
   ${PH_ENGINE_PATH}/Core/PHView.h
+  ${PH_ENGINE_PATH}/Core/PHDrawable.h
   ${PH_ENGINE_PATH}/Core/PHEventQueue.h
   ${PH_ENGINE_PATH}/Core/PHImageAnimator.h
   ${PH_ENGINE_PATH}/Core/PHObject.h
   ${PH_ENGINE_PATH}/Core/PHViewController.h
+  ${PH_ENGINE_PATH}/Core/PHGLTexture.h
   ${PH_ENGINE_PATH}/Geometry/PHColor.h
   ${PH_ENGINE_PATH}/Geometry/PHGeometry.h
   ${PH_ENGINE_PATH}/Geometry/PHMatrix.h
   ${PH_ENGINE_PATH}/Geometry/PHPoint.h
   ${PH_ENGINE_PATH}/Geometry/PHRange.h
   ${PH_ENGINE_PATH}/Geometry/PHRect.h
+  ${PH_ENGINE_PATH}/Geometry/PHQuaternion.h
   ${PH_ENGINE_PATH}/UI/PHButtonView.h
   ${PH_ENGINE_PATH}/UI/PHTestView.h
   ${PH_ENGINE_PATH}/UI/PHTestViewController.h
@@ -146,6 +157,12 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/Sound/PHSound.h
   ${PH_ENGINE_PATH}/Sound/PHSoundManager.h
   ${PH_ENGINE_PATH}/Sound/PHSoundPool.h
+  ${PH_ENGINE_PATH}/3D/PHMesh.h
+  ${PH_ENGINE_PATH}/3D/PHSphereMesh.h
+  ${PH_ENGINE_PATH}/3D/PHBody.h
+  ${PH_ENGINE_PATH}/3D/PHProjectionChanger.h
+  ${PH_ENGINE_PATH}/3D/PHMeshBody.h
+  ${PH_ENGINE_PATH}/3D/PHMaterial.h
   )
 
 include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)

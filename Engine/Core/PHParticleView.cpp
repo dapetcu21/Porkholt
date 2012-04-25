@@ -37,9 +37,11 @@ PHParticleView::PHParticleView(PHImage * image) : PHImageView(image), INIT
     init();
 }
 
+const string PHParticleView::_luaClass("PHParticleView");
+
 void PHParticleView::init()
 {
-    luaClass = "PHParticleView";
+    luaClass = &_luaClass;
     PHParticleAnimator * panim = new PHParticleAnimator;
     setParticleAnimator(panim);
     panim->release();
@@ -263,7 +265,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     vbo->unbind();
     delete [] buffer;   
     
-    gm->setGLStates(PHGLTexture);
+    gm->setGLStates(PHGLBlending | PHGLTexture0);
     gm->applyShader(gm->coloredSpriteShader());
     
     vao->bind();
@@ -314,11 +316,11 @@ void PHParticleView::render()
             _animator->bindCurrentFrameToTexture(0);
             bool fd = _animator->isFading();
             ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-            renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t*(1-rem));
+            renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(1-rem));
             if (fd)
             {
                 _animator->bindLastFrameToTexture(0);
-                renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t*rem);
+                renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(rem));
             }   
         }
         

@@ -231,7 +231,7 @@ void PLBezierView::modelChanged()
         for (size_t i=m; i<n; i++)
         {
             dots[i]->setDelegate(nil);
-            dots[i]->removeFromSuperview();
+            dots[i]->removeFromParent();
             dots[i]->release();
         }
         dots.resize(m);
@@ -241,7 +241,7 @@ void PLBezierView::modelChanged()
         for (size_t i=n; i<m; i++)
         {
             PLBezierDot * dv = new PLBezierDot(this);
-            addSubview(dv);
+            addChild(dv);
             dots.push_back(dv);
         }
     }

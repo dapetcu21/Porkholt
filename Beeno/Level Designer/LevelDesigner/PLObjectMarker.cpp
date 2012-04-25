@@ -51,7 +51,7 @@ void PLObjectMarker::draw()
         0,0,255,255
     };
 	
-    gm->setGLStates(PHGLVertexArray | PHGLColorArray);
+    gm->setGLStates(PHGLBlending | PHGLVertexArray | PHGLColorArray);
 	gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
 	gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
     gm->applyShader(gm->coloredNoTexSpriteShader());

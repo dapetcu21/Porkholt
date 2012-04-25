@@ -25,6 +25,9 @@
 #include "PHGLVertexBufferObject.h"
 #include "PHDeferredView.h"
 
+
+const string PHImageView::_luaClass("PHImageView");
+
 #define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL)
 
 bool PHImageView::supportsRenderMode(int rm)
@@ -34,17 +37,17 @@ bool PHImageView::supportsRenderMode(int rm)
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
 {
-    luaClass = "PHImageView";
+    luaClass = &_luaClass;
 }
 
 PHImageView::PHImageView(const PHRect &frame) : PHView(frame), PHIMAGEVIEW_INIT
 {
-    luaClass = "PHImageView";
+    luaClass = &_luaClass;
 }
 
 PHImageView::PHImageView(PHImage * image) : PHView(), PHIMAGEVIEW_INIT
 {
-    luaClass = "PHImageView";
+    luaClass = &_luaClass;
 	setImage(image);
 }
 
@@ -172,23 +175,9 @@ void PHImageView::rebuildCurvedVBO()
             curveVAO = new PHGLVertexArrayObject(gm);
         
         PHNormalImage * img = (PHNormalImage*)_image;
-        int _width = img->width();
-        int _height = img->height();
-        int actWidth = img->actualWidth();
-        int actHeight = img->actualHeight();
-        ph_float sX = ((ph_float)_width/(ph_float)actWidth)*repeatX();
-        ph_float sY = ((ph_float)_height/(ph_float)actHeight)*repeatY();
-        ph_float sx = 0.5f/actWidth;
-        ph_float sy = 0.5f/actHeight;
-        PHRect p = textureCoordinates();
-        p.width*=sX;
-        p.height*=sY;
-        p.x*=sX;
-        p.y*=sX;
-        p.x+=sx;
-        p.y+=sy;
-        p.width-=sx*2;
-        p.height-=sx*2;
+        PHRect p = img->textureCoordinates(textureCoordinates());
+        p.width*=repeatX();
+        p.height*=repeatY();
         
         curveVAO->bindToEdit();
         size_t nVertices;
@@ -262,7 +251,7 @@ void PHImageView::renderCurved()
     loadVBO();
     
     gm->setColor(tint);
-    gm->setGLStates(PHGLTexture);
+    gm->setGLStates(PHGLBlending | PHGLTexture0);
     ((PHNormalImage*)image())->bindToTexture(0);
     gm->applySpriteShader();
     
@@ -327,7 +316,7 @@ void PHImageView::renderStraight()
         if (_image->isNormal())
         {
             gm->setColor(tint);
-            gm->setGLStates(PHGLTexture);
+            gm->setGLStates(PHGLBlending | PHGLTexture0);
             ((PHNormalImage*)image())->bindToTexture(0);
             gm->applySpriteShader();
             straightVAO1->draw();
@@ -338,18 +327,18 @@ void PHImageView::renderStraight()
             PHColor t = tint.isValid()?tint:PHWhiteColor;
             ph_float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
             
-            gm->setGLStates(PHGLTexture);
+            gm->setGLStates(PHGLBlending | PHGLTexture0);
             
             if (straightVAO2)
             {
-                gm->setColor(t*rem);
+                gm->setColor(t.multipliedAlpha(rem));
                 _animator->bindLastFrameToTexture(0);
                 gm->applySpriteShader();
                 straightVAO1->bind();
                 straightVAO2->draw();
             }
             
-            gm->setColor(t*(1-rem));
+            gm->setColor(t.multipliedAlpha(1-rem));
             _animator->bindCurrentFrameToTexture(0);
             gm->applySpriteShader();
             straightVAO1->bind();

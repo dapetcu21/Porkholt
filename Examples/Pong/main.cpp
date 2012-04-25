@@ -115,13 +115,13 @@ protected:
         captureA->setUserInput(true);
         captureB->setUserInput(true);
         
-        view->addSubview(paddleA);
-        view->addSubview(paddleB);
-        view->addSubview(captureA);
-        view->addSubview(captureB);
-        view->addSubview(ball);
-        view->addSubview(scoreAV);
-        view->addSubview(scoreBV);
+        view->addChild(paddleA);
+        view->addChild(paddleB);
+        view->addChild(captureA);
+        view->addChild(captureB);
+        view->addChild(ball);
+        view->addChild(scoreAV);
+        view->addChild(scoreBV);
         clear();
         
         PHMessage::messageWithName("appResumed")->addListener(this, (PHCallback)&PHPongController::clear);

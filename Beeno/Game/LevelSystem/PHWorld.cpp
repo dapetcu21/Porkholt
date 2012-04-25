@@ -141,11 +141,11 @@ PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * c
 	worldView->setUserInput(true);
 	layerView = new PHView(bounds);
 	worldSize = size;
-	view->addSubview(layerView);
-	view->addSubview(worldView);
-    view->addSubview(heartView);
-	view->addSubview(jumpGaugeView);
-    view->addSubview(pauseButton);
+	view->addChild(layerView);
+	view->addChild(worldView);
+    view->addChild(heartView);
+	view->addChild(jumpGaugeView);
+    view->addChild(pauseButton);
     pauseButton->release();
 	b2Vec2 grav(0,-10);
 	physicsWorld = new b2World(grav,true);
@@ -159,37 +159,37 @@ PHWorld::~PHWorld()
     removeAllJoints();
 	if (worldView)
 	{
-		worldView->removeFromSuperview();
+		worldView->removeFromParent();
 		worldView->release();
 	}
     if (dimView)
     {
-        dimView->removeFromSuperview();
+        dimView->removeFromParent();
         dimView->release();
     }
     if (overlayView)
     {
-        overlayView->removeFromSuperview();
+        overlayView->removeFromParent();
         overlayView->release();
     }
 	if (jumpGaugeView)
 	{
-		jumpGaugeView->removeFromSuperview();
+		jumpGaugeView->removeFromParent();
 		jumpGaugeView->release();
 	}
     if (heartView)
     {
-        heartView->removeFromSuperview();
+        heartView->removeFromParent();
         heartView->release();
     }
 	if (layerView)
 	{
-		layerView->removeFromSuperview();
+		layerView->removeFromParent();
 		layerView->release();
 	}
 	if (view)
     {
-        view->removeFromSuperview();
+        view->removeFromParent();
 		view->release();
     }
 	delete physicsWorld;
@@ -305,13 +305,13 @@ void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * in
     if (insPos==0)
     {
         objects.push_back(obj);
-        worldView->addSubview(obj->getView());
+        worldView->addChild(obj->getView());
     }
     else
     if (insPos==1)
     {
         objects.insert(objects.begin(),obj);
-        worldView->addSubview(obj->getView());
+        worldView->addChild(obj->getView());
         obj->getView()->sendToBack();
     }
     else
@@ -333,7 +333,7 @@ void PHWorld::insertObjectAtPosition(PHLObject * obj, int insPos, PHLObject * in
             j++;
         PHView * v = (j==objects.end())?NULL:(*j)->getView();
         objects.insert(i,obj);
-        worldView->addSubviewBefore(obj->getView(), v);
+        worldView->addChildBefore(obj->getView(), v);
     }
 	obj->retain();
 	if (obj->getClass()=="PHLCamera")
@@ -355,7 +355,7 @@ void PHWorld::removeObject(PHLObject * obj)
 			objects.erase(i);
             PHView * v = obj->getView();
             if (v)
-                v->removeFromSuperview();
+                v->removeFromParent();
             obj->setDontRemoveFromWorld(true);
 			obj->release();
 			break;
@@ -372,7 +372,7 @@ void PHWorld::removeAllObjects()
         PHLObject * o = *i;
         PHView * v = o->getView();
         if (v)
-            v->removeFromSuperview();
+            v->removeFromParent();
         o->setDontRemoveFromWorld(true);
 		o->release();
 	}
@@ -408,7 +408,7 @@ PHWorld::layer * PHWorld::addLayer(ph_float scale)
 {
 	layer tmp;
 	tmp.container = new PHView(worldSize);
-	layerView->addSubview(tmp.container);
+	layerView->addChild(tmp.container);
 	tmp.container->release();
 	tmp.scale = scale;
 	layers.push_back(tmp);
@@ -417,7 +417,7 @@ PHWorld::layer * PHWorld::addLayer(ph_float scale)
 
 void PHWorld::addToLayer(layer * lyr, PHImageView * img)
 {
-	lyr->container->addSubview(img);
+	lyr->container->addChild(img);
 }
 
 #pragma mark -
@@ -498,7 +498,7 @@ void PHWorld::_fadeToColor(PHObject * sender, void * ud)
     if (!dimView)
     {
         dimView = new PHView(view->bounds());
-        view->addSubview(dimView);
+        view->addChild(dimView);
     }
     dimView->removeCinematicAnimationsWithTag(5072);
     dimView->setBackgroundColor(PHClearColor);
@@ -538,7 +538,7 @@ void PHWorld::_overlayDismissed(PHObject * obj, void * ud)
 {
     if (overlayView)
     {
-        overlayView->removeFromSuperview();
+        overlayView->removeFromParent();
         overlayView->release();
         overlayView = NULL;
     }
@@ -569,7 +569,7 @@ void PHWorld::overlayText(const string & s, ph_float duration)
         overlayView->setFrame(PHRect(0, (OVERLAYPOS-OVERLAYFONTSIZE/2)*bounds.height, bounds.width, OVERLAYFONTSIZE*bounds.height));
         overlayView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);
         overlayView->mutex();
-        view->addSubview(overlayView);
+        view->addChild(overlayView);
     }
     overlayView->mutex()->lock();
     overlayView->setFontColor(PHClearColor);
@@ -614,7 +614,7 @@ void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage,
     }
     PHPoofView * bm = new PHPoofView(PHRect(location.x-radius,location.y-radius,radius*2,radius*2),PHPoofView::boom);
     bm->setAnimatorPool(levelController()->animatorPool());
-    getWorldView()->addSubview(bm);
+    getWorldView()->addChild(bm);
     bm->release();
     PHSound * s = gm->soundManager()->soundNamed("boom")->duplicate();
     sndPool->addSound(s);

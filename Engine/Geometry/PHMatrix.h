@@ -45,9 +45,9 @@ public:
              GLfloat a12, GLfloat a13, GLfloat a14, GLfloat a15)
     {
         m[0]  = a0 ; m[1]  = a1 ; m[2]  = a2 ; m[3] =  a3 ;
-        m[4]  = a1 ; m[5]  = a5 ; m[6]  = a6 ; m[7] =  a7 ;
-        m[8]  = a1 ; m[9]  = a9 ; m[10] = a10; m[11] = a11;
-        m[12] = a1 ; m[13] = a13; m[14] = a14; m[15] = a15;
+        m[4]  = a4 ; m[5]  = a5 ; m[6]  = a6 ; m[7] =  a7 ;
+        m[8]  = a8 ; m[9]  = a9 ; m[10] = a10; m[11] = a11;
+        m[12] = a12 ; m[13] = a13; m[14] = a14; m[15] = a15;
     }
     
     static PHMatrix identity() { PHMatrix m; m.loadIdentity(); return m; }
@@ -153,6 +153,45 @@ public:
         m[14] = flipZ?o.z*2:0; m[15] = 1;
     }
     
+    static PHMatrix perspective(double fovy, double aspect, double zNear, double zFar) { PHMatrix m; m.loadPerspective(fovy, aspect, zNear, zFar); return m;}
+    void loadPerspective(double fovy, double aspect, double zNear, double zFar)
+    {
+        double f = 1/tan(fovy/2);
+        double nf = zNear - zFar;
+        m[ 0] = f/aspect; m[ 1] = 0; m[ 2] = 0; m[ 3] = 0;
+        m[ 4] = 0; m[ 5] = f; m[ 6] = 0; m[ 7] = 0;
+        m[ 8] = 0; m[ 9] = 0; m[10] = (zFar+zNear)/nf; m[11] = -1;
+        m[12] = 0; m[13] = 0; m[14] = (2*zFar*zNear)/nf; m[15] = 0;
+    }
+    
+    static PHMatrix frustum(double left,
+                            double right,
+                            double bottom,
+                            double top,
+                            double nearVal,
+                            double farVal)
+    { 
+        PHMatrix m;
+        m.loadFrustum(left, right, bottom, top, nearVal, farVal);
+        return m;
+    }
+    void loadFrustum(double left,
+                     double right,
+                     double bottom,
+                     double top,
+                     double nearVal,
+                     double farVal)
+    {
+        double rl = right - left;
+        double tb = top - bottom;
+        double fn = farVal - nearVal;
+        m[ 0] = (2*nearVal)/rl;  m[ 1] = 0;               m[ 2] = 0;                      m[ 3] = 0;
+        m[ 4] = 0;               m[ 5] = (2*nearVal)/tb;  m[ 6] = 0;                      m[ 7] = 0;
+        m[ 8] = (right+left)/rl; m[ 9] = (top+bottom)/tb; m[10] = -(farVal+nearVal)/fn;   m[11] = -1;
+        m[12] = 0;               m[13] = 0;               m[14] = -(2*farVal*nearVal)/fn; m[15] = 0;
+    }
+
+    
     void loadMatrix(const PHMatrix & mx)
     {
         loadMatrix(mx.m);
@@ -167,6 +206,14 @@ public:
     GLfloat * floats() { return m; } 
     
     PHMatrix & operator *= (const  PHMatrix & o) { (*this) = (*this) * o; return (*this); }
+    
+    PHMatrix transposed() const
+    {
+        return PHMatrix(m[0], m[4], m[8], m[12],
+                        m[1], m[5], m[9], m[13],
+                        m[2], m[6], m[10],m[14],
+                        m[3], m[7], m[11],m[15]);
+    }
     
     PHMatrix inverse() const
     {

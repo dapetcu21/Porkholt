@@ -25,14 +25,14 @@ PHView * PHGameController::loadView(const PHRect & frame)
     gameView = new PHGameView(frame);
     gameView->setUserInput(true);
     gameView->setBounds(PHRect(0,0,screenHeight*(frame.width/frame.height),screenHeight));
-    v->addSubview(gameView);
+    v->addChild(gameView);
     
     backgroundView = new PHImageView();
     backgroundView->setImage(gm->imageNamed("background"));
     backgroundView->setRepeatX(2);
     
-    gameView->addSubview(backgroundView);
-    gameView->addSubview(playerView = new PHPlayerView(playerRect));
+    gameView->addChild(backgroundView);
+    gameView->addChild(playerView = new PHPlayerView(playerRect));
     
     ph_float ratio = frame.height/screenHeight;
     PHGLPointLight * l = new PHGLPointLight(PHVector3(0,0,ratio), PHWhiteColor, ratio);

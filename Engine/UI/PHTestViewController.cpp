@@ -59,15 +59,15 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	
 	view3->setCenter(view2->boundsCenter());
 	view3->setUserInput(true);
-	view2->addSubview(view3);
+	view2->addChild(view3);
 	view3->release();
 	
 	view2->setUserInput(true);
-	view->addSubview(view2);
+	view->addChild(view2);
 	view2->release();
 	
 	view4->setUserInput(true);
-	view->addSubview(view4);
+	view->addChild(view4);
     
     vector<PHKeyframeAnimator::Keyframe> k;
     k.push_back(PHKeyframeAnimator::positionFrame(1.0f, PHPoint(200,150)));
@@ -124,8 +124,8 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 		button1->setUpCallback(PHInv(this, PHTestViewController::callback1, (void*)i));
 		button2->setUpCallback(PHInv(this, PHTestViewController::callback2, (void*)i));
 	
-		view->addSubview(button1);
-		view->addSubview(button2);
+		view->addChild(button1);
+		view->addChild(button2);
 	
 		button1->release();
 		button2->release();

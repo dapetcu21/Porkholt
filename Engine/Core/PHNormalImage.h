@@ -10,6 +10,7 @@
 #define PHNORMALIMAGE_H
 
 #include "PHImage.h"
+#include "PHGLTexture.h"
 
 class PHImageView;
 class PHGameManager;
@@ -18,18 +19,15 @@ class PHGLVertexArrayObject;
 class PHNormalImage : public PHImage
 {
 private:
-    int actHeight;
-	int actWidth;
-	bool antialiasing;
-	uint8_t bit_depth;
-	uint8_t color_type;
-	GLint format;
+    PHRect txc;
+    int fd;
+    bool antialiasing;
+    uint8_t * buffer;
+    size_t w,h,bw,bh,sz;
+    enum PHGLTexture::pixelFormat fmt;
     
     PHThread * thread;
-    uint8_t * buffer;
-    FILE * fp;
-    
-    unsigned int texid;
+    PHGLTexture2D * tex;
     
     virtual void _load() { loadToTexture(NULL,NULL); }
 public:
@@ -38,7 +36,10 @@ public:
     virtual ~PHNormalImage();
     
     void bindToTexture(int tx);
+    PHRect textureCoordinates() { return txc; }
     PHRect textureCoordinates(const PHRect & port);
+    
+    PHGLTexture2D * texture() { load(); return tex; }
     
     //immediate mode
     void renderInFrame(PHGameManager * gameManager, const PHRect & frm) { renderInFramePortionTint(gameManager,frm,PHWholeRect,PHInvalidColor); }
@@ -53,8 +54,6 @@ public:
     
     virtual bool isNormal() { return true; }
     
-    int actualWidth() { load(); return actWidth; }
-    int actualHeight() { load(); return actHeight; }
 };
 
 #endif

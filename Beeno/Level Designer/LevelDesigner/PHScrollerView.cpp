@@ -55,14 +55,14 @@ void PHScrollerView::setContentView(PHView * cv)
 {
     if (content)
     {
-        content->removeFromSuperview();
+        content->removeFromParent();
         content->release();
     }
     content = cv;
     if (content)
     {
         content->retain();
-        addSubview(content);
+        addChild(content);
         resetToOrigin();
     }
 }
@@ -92,7 +92,7 @@ void PHScrollerView::drawGrid(double gap, double width, const PHColor & color)
     
     if (!nv) return;
     
-    gm->setGLStates(PHGLVertexArray);
+    gm->setGLStates(PHGLBlending | PHGLVertexArray);
     gm->setColor(color);
     
     GLfloat * vertices = new GLfloat[nv*2];
@@ -202,7 +202,7 @@ void PHScrollerView::draw()
             p.x, p.y-0.15
         };
         
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         gm->setColor(PHColor(1,0,0,1));
         gm->vertexPointer(2, GL_FLOAT, 0, vertices);
         gm->applyShader(gm->solidColorShader());

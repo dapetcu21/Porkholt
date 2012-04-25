@@ -39,7 +39,7 @@ PLImageView::~PLImageView()
 {
     if (bezierView)
     {
-        bezierView->removeFromSuperview();
+        bezierView->removeFromParent();
         bezierView->release();
     }
     [model setActor:NULL];
@@ -86,7 +86,7 @@ void PLImageView::selectedChanged()
     {
         if (bezierView)
         {
-            bezierView->removeFromSuperview();
+            bezierView->removeFromParent();
             bezierView->release();
         }
         if (b)
@@ -94,7 +94,7 @@ void PLImageView::selectedChanged()
             [b setUndoManager:undoManager()];
             bezierView = new PLBezierView;
             bezierView->setModel(b);
-            addSubview(bezierView);
+            addChild(bezierView);
         } else
             bezierView = NULL; 
     }
@@ -361,7 +361,7 @@ void PLImageView::draw()
             0,0.3,
             1,0.3
         };
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         gm->vertexPointer(2, GL_FLOAT, 0, vertices);
         gm->setColor(PHColor(0.5,0.5,1));
         

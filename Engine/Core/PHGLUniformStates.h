@@ -27,6 +27,7 @@ class PHGLUniformStates : public PHObject
         float4Type,
         matrixType
     };
+public:
     struct uniform {
         int type;
         union
@@ -56,6 +57,20 @@ class PHGLUniformStates : public PHObject
         void setValue(const PHRect & p) { type = float4Type; floatValue[0] = p.x; floatValue[1] = p.y; floatValue[2] = p.width; floatValue[3] = p.height; }
         
         void setValue(const PHMatrix & m) { type = matrixType; memcpy(floatValue, m.floats(), sizeof(GLfloat)*16); }
+
+        uniform & set(GLint v) { setValue(v); return (*this); }
+        uniform & set(GLfloat v) { setValue(v); return (*this); }
+        uniform & set(GLint v0, GLint v1) { setValue(v0,v1); return (*this); }
+        uniform & set(GLfloat v0, GLfloat v1) { setValue(v0,v1); return (*this); }
+        uniform & set(GLint v0, GLint v1, GLint v2) { setValue(v0,v1,v2); return (*this); }
+        uniform & set(GLfloat v0, GLfloat v1, GLfloat v2) { setValue(v0,v1,v2); return (*this); }
+        uniform & set(GLint v0, GLint v1, GLint v2, GLint v3) { setValue(v0,v1,v2,v3); return (*this); }
+        uniform & set(GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) { setValue(v0,v1,v2,v3); return (*this); }
+        uniform & set(const PHVector2 & p) { setValue(p); return (*this); }
+        uniform & set(const PHVector3 & p) { setValue(p); return (*this); }
+        uniform & set(const PHColor & p) { setValue(p); return (*this); }
+        uniform & set(const PHRect & p) { setValue(p); return (*this); }
+        uniform & set(const PHMatrix & p) { setValue(p); return (*this); }
         
         uniform & operator = (GLint v) { setValue(v); return (*this); }
         uniform & operator = (GLfloat v) { setValue(v); return (*this); }

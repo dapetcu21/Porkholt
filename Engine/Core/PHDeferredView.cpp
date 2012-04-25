@@ -126,7 +126,7 @@ void PHDeferredView::composite()
     
     PHRect v = gm->screenBounds();
     
-    gm->setGLStates(PHGLTexture);
+    gm->setGLStates(PHGLBlending | PHGLTexture0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, colorTex);
     if (normal)
@@ -160,9 +160,9 @@ void PHDeferredView::composite()
         if (normal)
             states->at(normalMapUniform).apply(shader);
         
-        for (set<PHGLPointLight*>::iterator i = pointLights.begin(); i!= pointLights.end(); i++)
+        for (set<PHGLLight*>::iterator i = pointLights.begin(); i!= pointLights.end(); i++)
         {
-            PHGLPointLight * p =*i;
+            PHGLLight * p =*i;
             PH3DPoint pnt = p->position;
             ph_float z = pnt.z;
             ph_float z_2 = z*z;
@@ -213,22 +213,20 @@ void PHDeferredView::composite()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void PHDeferredView::addLight(PHGLLight * light)
+void PHDeferredView::addLight(PHGLLight * l)
 {
-    PHGLPointLight * pl = dynamic_cast<PHGLPointLight*>(light);
-    if (pl)
+    if (l->type == PHGLLight::pointLight)
     {
-        if (pointLights.insert(pl).second)
-            pl->retain();
+        if (pointLights.insert(l).second)
+            l->retain();
     }
 }
 
-void PHDeferredView::removeLight(PHGLLight * light)
+void PHDeferredView::removeLight(PHGLLight * l)
 {
-    PHGLPointLight * pl = dynamic_cast<PHGLPointLight*>(light);
-    if (pl)
+    if (l->type == PHGLLight::pointLight)
     {
-        if (pointLights.erase(pl))
-            pl->release();
+        if (pointLights.erase(l))
+            l->release();
     }
 }

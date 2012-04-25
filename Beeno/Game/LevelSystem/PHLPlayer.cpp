@@ -183,14 +183,14 @@ void PHLPlayer::_activateShield(PHObject * sender, void * ud)
 {
     if (shieldView)
     {
-        shieldView->removeFromSuperview();
+        shieldView->removeFromParent();
         shieldView->release();
     }
     PHRect r = view->bounds();
     if (bodyView)
         r = bodyView->frame();
     shieldView = new PHShieldView(r);
-    view->addSubview(shieldView);
+    view->addChild(shieldView);
 }
 
 void PHLPlayer::_deactivateShield(PHObject * sender, void * ud)

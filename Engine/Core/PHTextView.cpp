@@ -71,7 +71,7 @@ void PHTextView::draw()
     loadVBOs();
     if (!vao) return;
     
-    gm->setGLStates(PHGLTexture);
+    gm->setGLStates(PHGLBlending | PHGLTexture0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _font->textureID());
     gm->setColor(color);

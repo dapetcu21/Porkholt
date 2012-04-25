@@ -107,7 +107,7 @@ void PLFixtureView::changeBezier(PLBezier * cv, bool showView)
     {
         if (bezierView)
         {
-            bezierView->removeFromSuperview();
+            bezierView->removeFromParent();
             bezierView->release();
         }
         if (showView)
@@ -115,7 +115,7 @@ void PLFixtureView::changeBezier(PLBezier * cv, bool showView)
             [curve setUndoManager:undoManager()];
             bezierView = new PLBezierView;
             bezierView->setModel(curve);
-            addSubview(bezierView);
+            addChild(bezierView);
         } else
             bezierView = NULL;
     }
@@ -450,7 +450,7 @@ void PLFixtureView::draw()
             _bounds.x+_bounds.width,_bounds.y+_bounds.height
         };
         
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         gm->setColor(PHColor(0.18,0.24,0.92,0.3));
         gm->vertexPointer(2, GL_FLOAT, 0, vertices);
         gm->applyShader(gm->solidColorShader());
@@ -468,7 +468,7 @@ void PLFixtureView::draw()
         glBindBuffer(GL_ARRAY_BUFFER, arraysVBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexesVBO);
         
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         gm->setColor(PHColor(0.18,0.24,0.92,0.3));
         gm->vertexPointer(2, GL_FLOAT, 0, NULL);
         
@@ -502,7 +502,7 @@ void PLFixtureView::draw()
             1,0.3
         };
         gm->vertexPointer(2, GL_FLOAT, 0, markersVertices);
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         gm->setColor(PHColor(0.5,0.5,1));
         
         
@@ -531,7 +531,7 @@ void PLFixtureView::draw()
             circleVertices[i*2+3] = cos(angle)*rad+center.y;
         }
         
-        gm->setGLStates(PHGLVertexArray);
+        gm->setGLStates(PHGLBlending | PHGLVertexArray);
         gm->setColor(PHColor(0.18,0.24,0.92,0.3));
         gm->applyShader(gm->solidColorShader());
         gm->vertexPointer(2, GL_FLOAT, 0, circleVertices);

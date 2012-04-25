@@ -32,7 +32,7 @@ PHShieldView::PHShieldView(const PHRect & fr) : PHView(fr)
     r.width*=factor;
     r.height*=factor;
     imv->setFrame(r);
-    addSubview(imv);
+    addChild(imv);
     
     imv->setScaleX(1.0f/1024);
     imv->setScaleY(1.0f/1024);
@@ -51,6 +51,6 @@ void PHShieldView::dismiss()
 {
     imv->beginCinematicAnimation(0.5,PHCinematicAnimator::FadeInFunction);
     imv->animateScale(PHSize(1.0f/1024,1.0f/1024));
-    imv->animationCallback(PHInvN(this,PHView::removeFromSuperview));
+    imv->animationCallback(PHInvN(this,PHView::removeFromParent));
     imv->commitCinematicAnimation();
 }

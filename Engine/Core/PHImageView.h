@@ -118,6 +118,7 @@ public:
     static PHImageView * imageFromClass(const string & clss);
   
     static void registerLuaInterface(lua_State * L);
+    static const string _luaClass;
     
     static map<string,PHAllocator> * initMap;
 };

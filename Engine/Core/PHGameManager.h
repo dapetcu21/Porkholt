@@ -14,6 +14,8 @@
 #include "PHImageInitPool.h"
 #include "PHFontInitPool.h"
 #include "PHGLProgramInitPool.h"
+#include "PHMessage.h"
+#include "PHGLLight.h"
 
 class PHView;
 class PHViewController;
@@ -27,6 +29,7 @@ class PHGLUniformStates;
 class PHGLVertexBufferObject;
 class PHGLVertexArrayObject;
 class PHTextView;
+class PHGLTexture;
 
 enum PHGLCapabilities
 {
@@ -38,6 +41,8 @@ enum PHGLCapabilities
     PHGLCapabilityShaders,
     PHGLNumberCapabilities
 };
+
+#define PHGameManager_maxTextures 16
 
 class PHGameManagerInitParameters
 {
@@ -58,9 +63,11 @@ enum PHGLStates
     PHGLVertexArray = 1<<0,
     PHGLColorArray = 1<<1,
     PHGLTextureCoordArray = 1<<2,
-    PHGLTexture = 1<<3,
-    PHGLResetAllStates = 1<<4,
-    PHGLNormalArray = 1<<5
+    PHGLTexture0 = 1<<3,
+    PHGLZTesting = 1<<4,
+    PHGLResetAllStates = 1<<5,
+    PHGLNormalArray = 1<<6,
+    PHGLBlending = 1<<7
 };
 
 class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool
@@ -81,8 +88,6 @@ private:
     bool hd;
     ph_float lastElapsed, frameBeg;
     string resPath;
-    GLuint _defaultFBO,_defaultFBOf;
-    int _maxVertexAttribs;
     
     bool useRemote;
     PHRemote * remote;
@@ -101,40 +106,7 @@ private:
     
     void updateHD();
     
-    uint32_t openGLStates,openGLVertexAttribStates;
-    PHMatrix _modelView,_projection;
-    PHColor _currentColor;
-    set<string> extensions;
-    bool parsedExtensions;
-    int openGLVersionMajor,openGLVersionMinor,glslVersion;
-    string glslHeader;
-    bool openGLCaps[PHGLNumberCapabilities];
-    
-    list<PHGLShaderProgram*> spriteShaderStack;
-    PHGLUniformStates * spriteStates;
-    PHGLShaderProgram * _shader;
-    PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader, * _missingNormalSpriteShader;
-    int rndMode;
-    PHGLVertexBufferObject * boundVBOs[5];
-    PHGLVertexArrayObject * _boundVAO;
-    PHGLVertexArrayObject * _solidSquareVAO;
-    PHGLVertexBufferObject * _solidSquareVBO;
-
-        
-    
-    friend class PHGLVertexBufferObject;
-    friend class PHGLVertexArrayObject;
-    friend class PHGLShaderProgram;
-    
-    GLvoid (*PHGLBindVertexArray)(GLuint);
-    GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
-    GLvoid (*PHGLGenVertexArrays)(GLsizei n, GLuint *);
-    
-    vector<GLuint> deleteVBOs;
-    vector<GLuint> deleteVAOs;
-    void queueDeleteVBO(GLuint vbo) { deleteVBOs.push_back(vbo); }
-    void queueDeleteVAO(GLuint vao) { deleteVAOs.push_back(vao); }
-    void clearDeleteQueue();
+    PHMessage * exitmsg;
     
 public:
     PHGameManager();
@@ -158,7 +130,6 @@ public:
 	void appSuspended();
 	void appResumed();
     bool isHD() { return hd; }
-    GLuint defaultFBO() { if (_defaultFBOf==0) return _defaultFBO; return _defaultFBOf; }
     static bool isGloballyHD() { return globalHD > 0; }
     void _appResumed(PHObject * sender, void * ud);
     void _appSuspended(PHObject * sender, void * ud);
@@ -182,14 +153,6 @@ public:
     void * userData() { return ud; }
     void setUserData(void * u) { ud = u; }
     
-    enum renderModes
-    {
-        defaultRenderMode = 0
-    };
-    
-    void setRenderMode(int rm) { rndMode = rm; }
-    int renderMode() { return rndMode; }
-    
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
     PHEventQueue * eventQueue() { return evtQueue; }
@@ -205,6 +168,64 @@ public:
     
     PHNavigationController * navigationController() { return viewController; }
     PHView * rootView() { return view; }
+    
+    PHMessage * deallocMessage() { return exitmsg; }
+    
+//------ OpenGL stuff ------    
+private:
+    GLuint _defaultFBO,_defaultFBOf;
+    int _maxVertexAttribs;
+    
+    uint32_t openGLStates,openGLVertexAttribStates;
+    PHMatrix _modelView,_projection;
+    PHColor _currentColor;
+    set<string> extensions;
+    bool parsedExtensions;
+    int openGLVersionMajor,openGLVersionMinor,glslVersion;
+    string glslHeader;
+    bool openGLCaps[PHGLNumberCapabilities];
+    
+    list<PHGLShaderProgram*> spriteShaderStack;
+    PHGLUniformStates * spriteStates;
+    PHGLShaderProgram * _shader;
+    PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader, * _missingNormalSpriteShader;
+    int rndMode;
+    PHGLVertexBufferObject * boundVBOs[5];
+    PHGLVertexArrayObject * _boundVAO;
+    PHGLVertexArrayObject * _solidSquareVAO;
+    PHGLVertexBufferObject * _solidSquareVBO;
+    
+    
+    PHGLLight * lgth;
+    PHColor ambient;
+    
+    friend class PHGLVertexBufferObject;
+    friend class PHGLVertexArrayObject;
+    friend class PHGLShaderProgram;
+    
+    GLvoid (*PHGLBindVertexArray)(GLuint);
+    GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
+    GLvoid (*PHGLGenVertexArrays)(GLsizei n, GLuint *);
+    
+    vector<GLuint> deleteVBOs;
+    vector<GLuint> deleteVAOs;
+    void queueDeleteVBO(GLuint vbo) { deleteVBOs.push_back(vbo); }
+    void queueDeleteVAO(GLuint vao) { deleteVAOs.push_back(vao); }
+    void clearDeleteQueue();
+    
+    PHGLTexture * textures[PHGameManager_maxTextures];
+    int aTMU;
+    
+public:
+    
+    enum renderModes
+    {
+        defaultRenderMode = 0
+    };
+    
+    GLuint defaultFBO() { if (_defaultFBOf==0) return _defaultFBO; return _defaultFBOf; }
+    void setRenderMode(int rm) { rndMode = rm; }
+    int renderMode() { return rndMode; }
     
     int maxVertexAttribs() { return _maxVertexAttribs; }
     void setGLStates(uint32_t states) { setGLStates(states,0); }
@@ -306,6 +327,21 @@ public:
         else
             glColorPointer(size, type, stride, ptr);
     }
+    
+    PHGLLight * currentLight() { return lgth; }
+    void setCurrentLight(PHGLLight * l) {
+        if (l) l->retain();
+        if (lgth) lgth->release();
+        lgth = l;
+    }
+    PHColor ambientColor() { return ambient; }
+    void setAmbientColor(const PHColor & c) { ambient = c; }
+    
+    void setActiveTexture(int tmu);
+    int activeTexture() { return aTMU; }
+    void bindTexture(PHGLTexture * tx);
+    void destroyTexture(PHGLTexture * tx);
+    PHGLTexture * boundTexture() { return textures[aTMU]; }
 };
 
 #endif

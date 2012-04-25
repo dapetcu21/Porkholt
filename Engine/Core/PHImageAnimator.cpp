@@ -242,7 +242,7 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
         
         glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
         
-        int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture;
+        int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
         gm->setGLStates(states);
         if (gm->useShaders())
         {
@@ -252,7 +252,7 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
             glVertexPointer(2, GL_FLOAT, 0, squareVertices);
             glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
         }
-        gm->setColor(tt*(remaining/time));
+        gm->setColor(tt.multipliedAlpha(remaining/time));
         gm->applySpriteShader();
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
@@ -280,7 +280,7 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
 	
     glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
     
-    int states = PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture ;
+    int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
     gm->setGLStates(states);
     if (gm->useShaders())
     {

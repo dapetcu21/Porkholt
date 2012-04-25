@@ -41,15 +41,25 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
-    const PHColor & operator *= (ph_float d)
+    const PHColor & multiplyAlpha(ph_float d)
     {
         if (a>0) a*=d;
         return * this;
     }
-    PHColor operator * (ph_float d) const
+    PHColor multipliedAlpha(ph_float d) const
     {
         if (a<0) return *this;
         PHColor res(r,g,b,a*d);
+        return res;
+    }
+    const PHColor & operator *= (ph_float d)
+    {
+        a*=d; r*=d; g*=d; b*=d;
+        return * this;
+    }
+    PHColor operator * (ph_float d) const
+    {
+        PHColor res(r*d,g*d,b*d,a*d);
         return res;
     }
     const PHColor & operator *= (const PHColor & d)
@@ -62,10 +72,22 @@ struct PHColor
         PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
         return res;
     } 
+    const PHColor & operator += (const PHColor & d)
+    {
+        a+=d.a; r+=d.r; g+=d.g; b+=d.b;
+        return * this;
+    }
+    PHColor operator + (const PHColor & d) const
+    {
+        PHColor res(r+d.r,g+d.g,b+d.b,a+d.a);
+        return res;
+    } 
     PHColor(ph_float red, ph_float green, ph_float blue, ph_float alpha) : r(red), g(green), b(blue), a(alpha) {};
     PHColor(ph_float red, ph_float green, ph_float blue) : r(red), g(green), b(blue), a(1.0f) {};
     PHColor() {};
     bool isValid() { return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1); }
+    bool isNull() { return !(r || g || b || a); }
+    bool isBlack() { return !(r || g || b); }
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 } PH_PACKED_STRUCT;
@@ -95,7 +117,9 @@ extern const PHColor PHGrayColor;
 extern const PHColor PHWhiteColor;
 extern const PHColor PHInvalidColor;
 
-PH_STATIC_ASSERT(sizeof(PHVector4) == sizeof(ph_float)*4);
-PH_STATIC_ASSERT(sizeof(PH24BitColor) == 4);
+namespace PHColor_conditions {
+    PH_STATIC_ASSERT(sizeof(PHVector4) == sizeof(ph_float)*4);
+    PH_STATIC_ASSERT(sizeof(PH24BitColor) == 4);
+}
 
 #endif

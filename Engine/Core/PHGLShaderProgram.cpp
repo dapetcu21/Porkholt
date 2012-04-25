@@ -11,9 +11,27 @@
 #include "PHLua.h"
 #include "PHGameManager.h"
 
+PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gameManager, const string & path, const vector<string> & ops)
+{
+    init(gameManager, path, &ops);
+}
+
 PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, const string & path)
 {
+    init(gm, path, NULL);
+}
+
+void PHGLShaderProgram::init(PHGameManager * gm, const string & path, const vector<string> * ops)
+{
     lua_State * L = lua_open();
+    if (ops)
+    {
+        for (vector<string>::const_iterator i = ops->begin(); i!= ops->end(); i++)
+        {
+            lua_pushboolean(L, 1);
+            lua_setglobal(L, i->c_str());
+        }
+    }
     PHLuaLoadFile(L, path);
  
     int n = path.size();
@@ -36,10 +54,20 @@ PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, const string & path)
     PHLuaGetStringField(fshader, "fragmentShader");
     lua_pop(L, 1);
     
+    string * header = &(gm->glslHeader);
+    string s;
+    if (ops)
+    {
+        s = gm->glslHeader;
+        for (vector<string>::const_iterator i = ops->begin(); i!= ops->end(); i++)
+            s += "#define " + (*i) + "\n";
+        header = &s;
+    }
+    
     vShader = fShader = NULL;
     try {
-        vShader = new PHGLShader(gm->glslHeader, dir+vshader,PHGLShader::vertexShader);
-        fShader = new PHGLShader(gm->glslHeader, dir+fshader,PHGLShader::fragmentShader);
+        vShader = new PHGLShader(*header, dir+vshader,PHGLShader::vertexShader);
+        fShader = new PHGLShader(*header, dir+fshader,PHGLShader::fragmentShader);
     }
     catch (string ex)
     {

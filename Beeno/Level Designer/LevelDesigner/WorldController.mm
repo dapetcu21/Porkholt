@@ -85,7 +85,7 @@
         if (jnt.actor2)
             (jnt.actor2)->retain();
     }
-    worldView->removeAllSubviews();
+    worldView->removeAllChildren();
     for (PLObject * obj in [model objects])
     {
         if (!obj.actor)
@@ -94,7 +94,7 @@
             obj.actor->setController(self);
         }
         (obj.actor)->removeAllJoints();
-        worldView->addSubview(obj.actor);
+        worldView->addChild(obj.actor);
     }
     for (PLJoint * jnt in [model joints])
     {
@@ -108,7 +108,7 @@
         if (jnt.worldCoord)
         {
             if (((ObjectController*)jnt.owner).showJoints)
-                worldView->addSubview(jnt.actor1);
+                worldView->addChild(jnt.actor1);
         } else
             if (jnt.body1.actor)
                 (jnt.body1.actor)->addJoint(jnt.actor1);
@@ -124,7 +124,7 @@
             if (jnt.worldCoord)
             {
                 if (((ObjectController*)jnt.owner).showJoints)
-                    worldView->addSubview(jnt.actor2);
+                    worldView->addChild(jnt.actor2);
             } else
                 if (jnt.body2.actor)
                     (jnt.body2.actor)->addJoint(jnt.actor2);
