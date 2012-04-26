@@ -40,6 +40,9 @@ private:
     PHMatrix matrixCache;
     bool effectCached;
     bool matrixCached;
+    
+    bool autoresize;
+    int resizeMask;
 public:
 	PHMatrix applyMatrices();
 	
@@ -63,6 +66,19 @@ public:
         EffectOrderFlipScaleRotate = EffectFlip | EffectScale<<2 | EffectRotate<<4,
 		EffectOrderFlipRotateScale = EffectFlip | EffectRotate<<2 | EffectScale<<4
 	};
+    
+    enum ResizeMask
+    {
+        ResizeFixedLeft = 1<<0,
+        ResizeFixedRight = 1<<1,
+        ResizeFixedDown = 1<<2,
+        ResizeFixedUp = 1<<3,
+        ResizeFlexibleWidth = 1<<4,
+        ResizeFlexibleHeight = 1<<5,
+        ResizeStatic = ResizeFixedLeft | ResizeFixedDown,
+        ResizeFlexibleBorders = 0,
+        ResizeAll = ResizeFixedLeft | ResizeFixedRight | ResizeFixedDown | ResizeFixedUp | ResizeFlexibleWidth | ResizeFlexibleHeight
+    };
 	
 	PHView();
 	PHView(const PHRect &frame);
@@ -109,6 +125,11 @@ public:
 	bool userInput() { return _userInput; };
 	void setOptimizations(bool ui) { _optimize = ui; };
 	bool optimizations() { return _optimize; };
+    
+    void setAutoresizesSubviews(bool b) { autoresize = b; }
+    bool autoresizesSubviews() { return autoresize; }
+    int autoresizeMask() { return resizeMask; }
+    void setAutoresizeMask(int m) { resizeMask = m; }
 	
 	PHPoint toMyCoordinates(const PHPoint & pnt, PHView * until);
 	void toMyCoordinates(PHPoint * pnt, int n, PHView * until);
@@ -127,6 +148,8 @@ public:
 private:
     PHView * pointerDeepFirst(const PHMatrix & m, PHEvent * touch);
     
+    void resizeSubviews(const PHSize & delta);
+    void autoresizeMyself(const PHSize & delta);
 //animation system
 protected:
     void setCinematicPosition(const PHPoint & p) { setPosition(p); }

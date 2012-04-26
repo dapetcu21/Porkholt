@@ -16,7 +16,7 @@
 
 const string PHView::_luaClass("PHView");
 
-#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _userInput(false), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true) 
+#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _userInput(false), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -34,16 +34,85 @@ PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
 
 void PHView::setFrame(const PHRect &frame)
 {
-
+	_frame = frame;
 	if (_bounds.width != frame.width || _bounds.height != frame.height)
         setBounds(PHRect(0,0,frame.width,frame.height));
-	_frame = frame;
     matrixCached = false;
+}
+
+void PHView::resizeSubviews(const PHSize & delta)
+{
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!= _children.end(); i++)
+        if ((*i)->isView())
+            ((PHView*)(*i))->autoresizeMyself(delta);
+}
+
+inline static PHPoint doTheMaths(ph_float lw, ph_float mw, ph_float rw, bool l, bool m, bool r, ph_float delta)
+{
+    if ((!l && !m) || !delta)
+        return PHOriginPoint;
+    if (!l)
+    {
+        if (m && !r)
+        {
+            return PHPoint(0, delta);
+        }
+        if (m && r)
+        {
+            if (!(mw+rw))
+                return PHOriginPoint;
+            return PHPoint(0, delta * (mw/(mw+rw)));
+        }
+    }
+    // else 
+    {
+        if (!m && !r)
+            return PHPoint(delta, 0);
+        if (m && !r)
+        {
+            if (!(lw+mw))
+                return PHOriginPoint;
+            ph_float w = lw / (lw+mw);
+            return PHPoint(delta * w, delta * (1 - w));
+        }
+        if (r && !m)
+        {
+            if (!(lw+rw))
+                return PHOriginPoint;
+            ph_float w = lw / (lw+rw);
+            return PHPoint(delta * w, 0);
+        }
+        //if (r && m)
+        {
+            ph_float sum = lw + mw + rw;
+            if (!sum)
+                return PHOriginPoint;
+            return PHPoint(delta * (lw / sum), delta * (mw / sum));
+        }
+    }
+}
+
+void PHView::autoresizeMyself(const PHSize & delta)
+{
+    PHDrawable * p = parent();
+    if (!p || !p->isView()) return;
+    PHRect pb = ((PHView*)p)->bounds();
+    PHPoint dx = doTheMaths(_frame.x, _frame.width, pb.width - _frame.x - _frame.width,
+                        !(resizeMask & ResizeFixedLeft), (resizeMask & ResizeFlexibleWidth)!=0, !(resizeMask & ResizeFixedRight), delta.x);
+    PHPoint dy = doTheMaths(_frame.y, _frame.height, pb.height - _frame.y - _frame.height,
+                             !(resizeMask & ResizeFixedDown), (resizeMask & ResizeFlexibleHeight)!=0, !(resizeMask & ResizeFixedUp), delta.y);
+    if (dx.x || dx.y || dy.x || dy.y)
+        setFrame(PHRect(_frame.x + dx.x, _frame.y + dy.x, _frame.width + dx.y, _frame.height + dy.y));
 }
 
 void PHView::setBounds(const PHRect &bnd) 
 { 
-	_bounds = bnd; 
+    if (autoresize)
+    {
+        PHSize delta = bnd.size() - _bounds.size();
+        resizeSubviews(delta);
+    }
+    _bounds = bnd; 
 	_scalingCenter = _rotationalCenter = _flipCenter = boundsCenter();
     matrixCached = false;
 }

@@ -176,8 +176,8 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	viewController->init(this);
 	viewController->_viewWillAppear();
 	view->addChild(viewController->getView());
-	viewController->_viewDidAppear();
     view->setGameManager(this);
+    viewController->_viewDidAppear();
     
     entryPoint(this);
     
