@@ -28,8 +28,9 @@ public:
     
     string currentName;
     
-    void setBackgroundMusic(const string & name,ph_float fadeTime);
-    void setBackgroundMusic(const string & name) { setBackgroundMusic(name,2.0f); }
+    void setBackgroundMusic(const string & name,ph_float fadeTime, bool loops);
+    void setBackgroundMusic(const string & name,ph_float fadeTime) { setBackgroundMusic(name, fadeTime, true); }
+    void setBackgroundMusic(const string & name) { setBackgroundMusic(name, 2.0f, true); }
     
     PHMusicManager();
     
@@ -50,6 +51,7 @@ private:
     {
         string name;
         ph_float time;
+        bool loops;
     };
     
 #ifdef PH_IPHONE_OS

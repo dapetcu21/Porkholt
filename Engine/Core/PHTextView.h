@@ -57,6 +57,7 @@ public:
         justifyCenter = 3<<2
     };
     
+    void setBounds(const PHRect & b);
 	PHFont * font() { return _font; }
     void setFont(PHFont * font) { if (font) font->retain(); if (_font) _font->release(); _font = font; needsReload = true;}
     ph_float fontSize() { return size; }

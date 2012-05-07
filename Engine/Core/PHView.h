@@ -76,6 +76,7 @@ public:
         ResizeFlexibleWidth = 1<<4,
         ResizeFlexibleHeight = 1<<5,
         ResizeStatic = ResizeFixedLeft | ResizeFixedDown,
+        ResizeFlexibleAll = ResizeFlexibleWidth | ResizeFlexibleHeight,
         ResizeFlexibleBorders = 0,
         ResizeAll = ResizeFixedLeft | ResizeFixedRight | ResizeFixedDown | ResizeFixedUp | ResizeFlexibleWidth | ResizeFlexibleHeight
     };

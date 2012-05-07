@@ -54,26 +54,22 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     bt->setUpCallback(PHInv(this,PHTitleScreen::buttonPressed, NULL));
     bt->setUserInput(true);
     
-    PHButtonView * bl = new PHButtonView(PHRect(0,0,50,50));
-    bl->setImage(gm->imageNamed("placeholder"));
-    bl->setPressedImage(gm->imageNamed("placeholder"));
-    bl->setUpCallback(PHInv(this,PHTitleScreen::testPressed, NULL));
-    bl->setUserInput(true);
-    
     v->addChild(bg);
     v->addChild(bt);
-    v->addChild(bl);
     bg->release();
     bt->release();
     
     return v;
 }
 
-void PHTitleScreen::testPressed(PHObject * sender, void * ud)
+void PHTitleScreen::setBackButton(PHInvocation inv)
 {
-    PHTestViewController * vc = new PHTestViewController();
-	vc->init(gameManager());
-    navigationController()->pushViewController(vc);
+    PHButtonView * bl = new PHButtonView(PHRect(0,0,50,50));
+    bl->setImage(gm->imageNamed("back"));
+    bl->setPressedImage(gm->imageNamed("back"));
+    bl->setUpCallback(inv);
+    bl->setUserInput(true);
+    getView()->addChild(bl);
 }
 
 void PHTitleScreen::buttonPressed(PHObject * sender, void * ud)

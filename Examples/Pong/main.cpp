@@ -13,7 +13,7 @@
 #include <sstream>
 
 
-class PHCaptureView : public PHView
+class PHCapturePView : public PHView
 {
 protected:
     ph_float y;
@@ -34,7 +34,7 @@ protected:
             e = NULL;
     }
 public:
-    PHCaptureView() : e(NULL), has(false) {}
+    PHCapturePView() : e(NULL), has(false) {}
     ph_float getY() { return y; }
     bool hasY() { return has; }
     void reset() 
@@ -48,7 +48,7 @@ class PHPongController : public PHViewController
 {
 protected:
     PHView * paddleA, * paddleB;
-    PHCaptureView * captureA, * captureB;
+    PHCapturePView * captureA, * captureB;
     PHView * ball;
     PHVector2 velocity;
     PHView * rootView;
@@ -108,9 +108,9 @@ protected:
         ball = new PHView(PHRect(0,0,ballDiameter,ballDiameter));
         ball->setBackgroundColor(PHWhiteColor);
         
-        captureA = new PHCaptureView();
+        captureA = new PHCapturePView();
         captureA->setFrame(PHRect(frame.x,frame.y,frame.width/2,frame.height));
-        captureB = new PHCaptureView();
+        captureB = new PHCapturePView();
         captureB->setFrame(PHRect(frame.x+frame.width/2,frame.y,frame.width/2,frame.height));
         captureA->setUserInput(true);
         captureB->setUserInput(true);

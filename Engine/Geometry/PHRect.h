@@ -40,6 +40,18 @@ struct PHRect
     {
         return PHRect(x+o.x,y+o.y,width,height);
     }
+    PHRect & operator += (const PHRect & othr)
+    {
+        x+=othr.x;
+        y+=othr.y;
+        width+=othr.width;
+        height+=othr.height;
+        return *this;
+    }
+    PHRect operator + (const PHRect & o) const
+    {
+        return PHRect(x+o.x,y+o.y,width+o.width,height+o.height);
+    }
     PHRect & operator -= (const PHPoint & othr)
     {
         x-=othr.x;
@@ -49,6 +61,18 @@ struct PHRect
     PHRect operator - (const PHPoint & o) const
     {
         return PHRect(x-o.x,y-o.y,width,height);
+    }
+    PHRect & operator -= (const PHRect & othr)
+    {
+        x-=othr.x;
+        y-=othr.y;
+        width-=othr.width;
+        height-=othr.height;
+        return *this;
+    }
+    PHRect operator - (const PHRect & o) const
+    {
+        return PHRect(x-o.x,y-o.y,width-o.width,height-o.height);
     }
     const PHRect & operator *= (ph_float d)
     {

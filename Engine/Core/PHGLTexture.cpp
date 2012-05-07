@@ -125,7 +125,7 @@ void PHGLTexture::setMagFilter(enum aaFilter t)
 
 bool PHGLTexture::supportsNPOT(PHGameManager * gm)
 {
-    return !(gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT));
+    return (gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT));
 }
 
 static const GLenum internalFormat[] = {
@@ -134,19 +134,11 @@ static const GLenum internalFormat[] = {
 #else
     GL_LUMINANCE,
 #endif
-#ifdef GL_LUMINANCE8_ALPHA8
-    GL_LUMINANCE8_ALPHA8, 
-#else
     GL_LUMINANCE_ALPHA,
-#endif
 #ifdef GL_RGBA8
     GL_RGBA8, 
 #else
-#ifdef GL_RGBA8_OES
-    GL_RGBA8_OES,
-#else
     GL_RGBA,
-#endif
 #endif
 #ifdef GL_RGBA16
     GL_RGBA16,
@@ -156,11 +148,7 @@ static const GLenum internalFormat[] = {
 #ifdef GL_RGB8
     GL_RGB8, 
 #else
-#ifdef GL_RGB8_OES
-    GL_RGB8_OES,
-#else
     GL_RGB,
-#endif
 #endif
 #ifdef GL_RGB16
     GL_RGB16
@@ -212,20 +200,7 @@ PHRect PHGLTexture2D::loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw,
     bool rrepeat = true;
     if (gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
     {
-        bool pots = true;
-        int s = w;
-        while (s && !(s&1))
-            s>>=1;
-        if (s!=1)
-            pots = false;
-        if (pots)
-        {
-            s = h;
-            while (s && !(s&1))
-                s>>=1;
-            if (s!=1)
-                pots = false;
-        }
+        bool pots = ((w & ~(w ^ (w-1))) == 0) && ((h & ~(h ^ (h-1))) == 0);
         if (!pots)
         {
             aa = false;
@@ -233,11 +208,13 @@ PHRect PHGLTexture2D::loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw,
         }
     }
     
+    bind_begin;
     setWrapS(rrepeat?repeat:clampToEdge);
     setWrapT(rrepeat?repeat:clampToEdge);
     setMinFilter(aa?linearMipmapNearest:linear);
     setMagFilter(linear);
     setData(buf, bw, bh, fmt);
+    bind_end;
     
     if (rrepeat)
         return PHRect(1.0f/(bw*2), 

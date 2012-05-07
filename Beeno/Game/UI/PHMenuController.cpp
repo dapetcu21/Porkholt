@@ -44,7 +44,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     nav->_viewDidAppear();
     manageViewController(nav);
     
-    PHViewController * vc = new PHTitleScreen();
+    vc = new PHTitleScreen();
 	vc->init(gm,v->bounds());
 	nav->pushViewController(vc);
     vc->release();

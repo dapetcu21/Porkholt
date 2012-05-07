@@ -59,7 +59,7 @@ function default(name) \
     def = nametable[name] \
 end"
 
-PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gameManager) : PHImage(s,gameManager), thread(NULL), path(s), defaultSection(0)
+PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gameManager) : PHImage(s,gameManager), path(s), defaultSection(0), pload(false)
 {
     luaMutex->lock();
     if (!L)
@@ -86,9 +86,10 @@ PHAnimatedImage::PHAnimatedImage(const string & s, PHGameManager * gameManager) 
     cleanupLua();
     luaMutex->unlock();
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
-    thread = new PHThread;
+    PHThread * thread = new PHThread;
     thread->setFunction(PHInv(this, PHAnimatedImage::loadImages, NULL));
     thread->start();
+    thread->release();
 #else
     loadImages(NULL,NULL);
 #endif
@@ -220,9 +221,11 @@ void PHAnimatedImage::cleanupLua()
 
 void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
 {
+    loadMutex->lock();
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->lock();
 #endif
+    
     _width = _height = 0;
     int maxtexwidth = 1024;
     int maxtexheight = 1024;
@@ -390,20 +393,21 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
         }
     }
     
-    PHThread::mainThread()->executeOnThread(PHInv(this, PHAnimatedImage::loadTextures, NULL), false);
+    pload = true;
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->unlock();
 #endif
+    loadMutex->unlock();
+    
+    PHThread::mainThread()->executeOnThread(PHInv(this, PHAnimatedImage::loadTextures, NULL), false);
 }
 
 void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
 {
-    if (loaded) return;
-    
-    if (thread)
-    {
-        thread->join();
-        thread->release();
+    loadMutex->lock();
+    if (loaded) {
+        loadMutex->unlock();
+        return;
     }
     
     GLint format = -1;
@@ -464,6 +468,8 @@ void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)
             delete [] textures[i].buffer;
     
     loaded = true;
+    
+    loadMutex->unlock();
 }
 
 int PHAnimatedImage::sectionNo(const string & sectionName)

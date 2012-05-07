@@ -35,6 +35,8 @@ void PHTestView::draw()
 
 void PHTestView::touchEvent(PHEvent * event)
 {
+    if (event->type() == PHEvent::touchDown)
+        event->setHandled(true);
 	if (event->type() == PHEvent::touchMoved)
 	{
 		PHPoint p[2];

@@ -10,7 +10,7 @@ xcuserdata
 *.a
 *.dylib
 _
-.swp
+*.swp
 
 .DS_Store
 

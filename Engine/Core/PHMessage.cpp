@@ -60,7 +60,8 @@ void PHMessage::removeListener(PHObject * obj, PHCallback cb)
 }
 void PHMessage::broadcast(PHObject * sender, void * ud)
 {
-	for (list< pair<PHObject*,PHCallback> >::iterator i = objects.begin(); i!=objects.end(); i++)
+    list< pair<PHObject*,PHCallback> > obj = objects;
+	for (list< pair<PHObject*,PHCallback> >::iterator i = obj.begin(); i!=obj.end(); i++)
 	{
 		((i->first)->*(i->second))(sender,ud);
 	}

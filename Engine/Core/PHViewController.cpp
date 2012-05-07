@@ -15,6 +15,8 @@ PHView * PHViewController::loadView(const PHRect & frame)
 {
 	PHView * view = new PHView(frame);
 	view->setUserInput(true);
+    view->setAutoresizesSubviews(true);
+    view->setAutoresizeMask(PHView::ResizeAll);
 	return view;
 }
 

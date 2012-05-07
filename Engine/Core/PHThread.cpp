@@ -89,8 +89,7 @@ PHThread * PHThread::currentThread()
 }
 
 PHThread::~PHThread() 
-{ 
-	terminate(); 
+{
 	initMutex->release();
 	threads_mutex -> lock();
 	threads.erase(thread);

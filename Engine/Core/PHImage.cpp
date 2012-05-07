@@ -21,7 +21,7 @@
 PHMutex * PHImage::loadingMutex = new PHMutex;
 #endif
 
-PHImage::PHImage(const string & path, PHGameManager * gameManager) : loaded(false), gm(gameManager), _normalMap(NULL) { };
+PHImage::PHImage(const string & path, PHGameManager * gameManager) : loaded(false), gm(gameManager), _normalMap(NULL), loadMutex(new PHMutex(true)) { };
 
 void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adj)
 {

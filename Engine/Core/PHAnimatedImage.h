@@ -20,7 +20,6 @@ class PHAnimatedImage: public PHImage
 private:
     static lua_State * L;
     static PHMutex * luaMutex;
-    PHThread * thread;
     
     string path;
     
@@ -70,9 +69,11 @@ private:
     size_t buffersize;
     int cols,rows,ipt;
     
+    bool pload;
+    
     friend class PHImageAnimator;
     
-    virtual void _load() { loadImages(NULL,NULL); }
+    virtual void _load() { if(!pload) loadImages(NULL,NULL); loadTextures(NULL, NULL);  }
     
 public:
     PHAnimatedImage(const string & s, PHGameManager * gameManager);

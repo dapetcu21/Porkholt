@@ -26,8 +26,8 @@ public:
             pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&mutex, &attr);
     }
-	void lock() { pthread_mutex_lock(&mutex); };
-	void unlock() { pthread_mutex_unlock(&mutex); };
+	void lock() { /*printf("%x: lock\n", this);*/ pthread_mutex_lock(&mutex); };
+	void unlock() { /*printf("%x: unlock\n", this);*/ pthread_mutex_unlock(&mutex); };
 	~PHMutex() { pthread_mutex_destroy(&mutex); };
 };
 #endif

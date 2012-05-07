@@ -81,6 +81,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 int main(int argc, char *argv[]) {
-    return PHStartGame(argc, argv, PHStartGame_GLES2 | PHStartGame_Resizable | PHStartGame_VSync, &PHGameEntryPoint,NULL);
+    return PHStartGame(argc, argv, 960, 600, PHStartGame_GLES2 | PHStartGame_Resizable | PHStartGame_VSync | PHStartGame_FullScreen, &PHGameEntryPoint,NULL);
 }
  

@@ -138,6 +138,7 @@
 		C1B2419813D4C4EC005B60BF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = Home;
 			};
 			buildConfigurationList = C1B2419B13D4C4EC005B60BF /* Build configuration list for PBXProject "PHFontCreator" */;

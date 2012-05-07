@@ -15,7 +15,7 @@
 #include "PHGLVertexBufferObject.h"
 #include "PHGLTexture.h"
 
-PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), thread(NULL), tex(NULL)
+PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), tex(NULL), pload(false)
 {
     fd = -1;
     if (PHGameManager::isGloballyHD())
@@ -26,9 +26,10 @@ PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): 
 		throw string("Can't open file \"") + path + "\": " + strerror(errno);
     antialiasing = PHFileManager::fileExists(path+".aa");
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
-    thread = new PHThread;
+    PHThread * thread = new PHThread;
     thread->setFunction(PHInv(this,PHNormalImage::loadFromFile, NULL));
     thread->start();
+    thread->release();
 #else
     loadFromFile(this, NULL);
 #endif  
@@ -36,6 +37,7 @@ PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): 
 
 void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 {
+    loadMutex->lock();
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->lock();
 #endif
@@ -52,29 +54,34 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 #ifdef PHIMAGE_ORDERED_LOADING
         loadingMutex->unlock();
 #endif
+        loadMutex->unlock();
+        buffer = NULL;
         return;
     }
     
-    PHThread::mainThread()->executeOnThread(PHInv(this, PHNormalImage::loadToTexture, NULL), false);
+    pload = true;
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->unlock();
 #endif
+    loadMutex->unlock();
+    
+    PHThread::mainThread()->executeOnThread(PHInv(this, PHNormalImage::loadToTexture, NULL), false);
 }
 
 void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 {	
-    if (loaded) return;
-    
-    if (thread)
-    {
-        thread->join();
-        thread->release();
+    loadMutex->lock();
+    if (loaded) {
+        loadMutex->unlock();
+        return;
     }
     
     tex = new PHGLTexture2D(gm);
     txc = tex->loadFromData(buffer, w, h, bw, bh, fmt, antialiasing);
 	delete[] buffer;
     loaded = true;
+    
+    loadMutex->unlock();
 }
 
 PHNormalImage::~PHNormalImage()

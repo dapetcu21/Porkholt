@@ -26,10 +26,11 @@ private:
     size_t w,h,bw,bh,sz;
     enum PHGLTexture::pixelFormat fmt;
     
-    PHThread * thread;
     PHGLTexture2D * tex;
     
-    virtual void _load() { loadToTexture(NULL,NULL); }
+    bool pload;
+    
+    virtual void _load() { if(!pload) loadFromFile(NULL,NULL); loadToTexture(NULL, NULL);  }
 public:
     
     PHNormalImage(const string & path, PHGameManager * gameManager);

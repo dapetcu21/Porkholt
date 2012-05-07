@@ -257,6 +257,12 @@ void PHTextView::recalculatePositions()
     
 }
 
+void PHTextView::setBounds(const PHRect & b)
+{
+    PHView::setBounds(b);
+    needsReload = true;
+}
+
 void PHTextView::adjustFontSizeToFit(int precision)
 {
     ph_float st = 0;

@@ -39,6 +39,7 @@ protected:
     PHGameManager * gm;
     
     PHImage * _normalMap;
+    PHMutex * loadMutex;
     
     friend class PHImageView;
     friend class PHImageAnimator;
@@ -47,7 +48,7 @@ protected:
     static void buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adjustment);
     
 public:
-    void load() { if (!loaded) _load(); }
+    void load() { loadMutex->lock(); /*PHLog("loadMutex lock l");*/ if (!loaded) _load(); /*PHLog("loadMutex unlock l");*/ loadMutex->unlock(); }
 	int height() { load(); return _height; };
 	int width() { load(); return _width; };
 
@@ -56,8 +57,7 @@ public:
     
     PHImage * normalMap() { return _normalMap; } 
     
-    virtual ~PHImage() { if (_normalMap) _normalMap->release(); }
-    
+    virtual ~PHImage() { loadMutex->release(); if (_normalMap) _normalMap->release(); }
 };
 
 #endif

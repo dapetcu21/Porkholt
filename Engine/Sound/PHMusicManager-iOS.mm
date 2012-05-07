@@ -190,7 +190,7 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
     a->name = noMusic;
 #endif
     AVAudioPlayer * na = (a->name==noMusic)?nil:[[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:(a->name).c_str()]] error:nil];
-    [na setNumberOfLoops:-1];
+    [na setNumberOfLoops:a->loops?-1:1];
     [na prepareToPlay];
     ph_float tm = a->time;
     delete a;
@@ -246,7 +246,7 @@ void PHMusicManager::fadeThread(PHThread * sender, args * a)
     [ap drain];
 }
 
-void PHMusicManager::setBackgroundMusic(const string & name,ph_float fadeTime)
+void PHMusicManager::setBackgroundMusic(const string & name,ph_float fadeTime, bool loop)
 {
     if (name==currentName) return;
     currentName = name;
@@ -255,6 +255,7 @@ void PHMusicManager::setBackgroundMusic(const string & name,ph_float fadeTime)
     args * a = new args;
     a->name = name;
     a->time = fadeTime;
+    a->loops = loop;
     t->setFunction(PHInv(this,PHMusicManager::fadeThread,a));
     t->setAutoRelease(true);
     t->start();

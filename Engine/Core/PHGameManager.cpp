@@ -171,6 +171,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
     view->setGameManager(this);
 	view->setUserInput(true);
+    view->setAutoresizesSubviews(true);
     
     viewController = new PHNavigationController();
 	viewController->init(this);
@@ -261,7 +262,7 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-#ifdef PH_GL_ES
+#ifdef PH_MOBILE
     glClearDepthf(1.0);
 #else
     glClearDepth(1.0);
