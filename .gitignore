@@ -9,7 +9,10 @@ xcuserdata
 *.lo
 *.a
 *.dylib
+*.so
+*.so.*
 _
+*~
 *.swp
 
 .DS_Store
@@ -50,3 +53,7 @@ _
 /Externals/zlib/minigzipsh
 /Externals/zlib/zlib.pc
 /Externals/zlib/libz.*
+/Externals/libpng/pngtest-static
+/Externals/zlib/example64
+/Externals/zlib/minigzip64
+/Externals/zlib/ztest6485.c

@@ -14,7 +14,7 @@ compilelib() {
 		else
 			$BUILDSCRIPT > log/$LIBFILE.stdout.log 2> log/$LIBFILE.stderr.log
 		fi
-		if [ ! -f lib/darwin/osx/$LIBFILE ]
+		if [ ! -f lib/darwin/ios/$LIBFILE ]
 		then
 			echo "Could not compile $LIBNAME for iOS" 1>&2
 			exit 1 
