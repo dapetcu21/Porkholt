@@ -10,7 +10,7 @@
 #define PHIMAGE_H
 #include "PHMain.h"
 
-#define PHIMAGE_ASYNCHRONEOUS_LOADING
+//#define PHIMAGE_ASYNCHRONEOUS_LOADING
 #define PHIMAGE_ORDERED_LOADING
 
 class PHImage;

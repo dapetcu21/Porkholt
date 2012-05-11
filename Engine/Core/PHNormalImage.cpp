@@ -42,6 +42,15 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
     loadingMutex->lock();
 #endif
     
+    if (pload)
+    {
+        loadMutex->unlock();
+#ifdef PHIMAGE_ORDERED_LOADING
+        loadingMutex->unlock();
+#endif
+        return;
+    }
+    
     bool pot = !PHGLTexture::supportsNPOT(gm);
     
     try {
@@ -50,7 +59,8 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
         _height = h;
     } catch (string ex)
     {
-        PHLog(ex.c_str());
+        PHLog("%s", ex.c_str());
+        close(fd);
 #ifdef PHIMAGE_ORDERED_LOADING
         loadingMutex->unlock();
 #endif
@@ -58,8 +68,9 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
         buffer = NULL;
         return;
     }
-    
+    close(fd);
     pload = true;
+    
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->unlock();
 #endif

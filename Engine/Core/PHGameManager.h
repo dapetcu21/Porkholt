@@ -257,6 +257,7 @@ public:
     int openGlMinorVersion() { return openGLVersionMinor; }
     int openGLSLVersion() { return glslVersion; }
     bool hasCapability(int cap) { return openGLCaps[cap]; }
+    bool hasExtension(const string & ext);
     
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
     void pushSpriteShader(PHGLShaderProgram * p);

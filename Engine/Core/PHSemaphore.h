@@ -37,9 +37,9 @@ public:
 class PHSemaphore : public PHObject
 {
 private:
-	sem_t * sem;
+	sem_t sem;
 public:
-	PHSemaphore(int n) { sem_init(&sem,0,n); };
+	PHSemaphore(int n) { sem_init(&sem, 0, n); };
 	void wait() { sem_wait(&sem); };
 	void trywait() { sem_trywait(&sem); };
 	void signal() { sem_post(&sem); };

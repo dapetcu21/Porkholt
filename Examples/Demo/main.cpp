@@ -6,7 +6,7 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#import "PHStartGame.h"
+#include "PHStartGame.h"
 #include "PHViewController.h"
 #include "PHImage.h"
 #include "PHImageView.h"
@@ -1178,6 +1178,7 @@ void PHGameEntryPoint(PHGameManager * gm)
     gm->imageNamed("ball");
     gm->imageNamed("face");
     gm->imageNamed("sparta");
+    gm->imageNamed("earth");
     
     PHCapView * v = new PHCapView(gm->navigationController()->getView()->frame());
     v->setAutoresizesSubviews(true);

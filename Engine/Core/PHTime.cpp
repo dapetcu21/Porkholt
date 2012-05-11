@@ -8,22 +8,34 @@
  */
 
 #include "PHTime.h"
+#ifdef PH_DARWIN
 #include <mach/mach.h>
 #include <mach/mach_time.h>
+#endif
 #include <time.h>
+#include <sys/time.h>
 #include <errno.h>
 #include "PHMain.h"
 
 float PHTime::getTime()
 {
-	uint64_t tm = mach_absolute_time();
-	
-	static mach_timebase_info_data_t    sTimebaseInfo;
+#ifdef PH_DARWIN
+    uint64_t tm = mach_absolute_time();
+    
+    static mach_timebase_info_data_t    sTimebaseInfo;
     if ( sTimebaseInfo.denom == 0 ) {
         (void) mach_timebase_info(&sTimebaseInfo);
     }
-	
-	return tm * (float)(sTimebaseInfo.numer / sTimebaseInfo.denom / 1000000000.0f);
+    
+    return tm * (float)(sTimebaseInfo.numer / sTimebaseInfo.denom / 1000000000.0f);
+#else
+    static time_t is = 0;
+    struct timespec tv;
+    clock_gettime(CLOCK_REALTIME, &tv);     
+    if (is == 0)
+        is = tv.tv_sec;
+    return (tv.tv_sec - is) + tv.tv_nsec/1000000000.0f;
+#endif
 }
 
 void PHTime::sleep(float time)

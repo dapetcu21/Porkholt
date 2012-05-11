@@ -37,5 +37,6 @@ void PHResizeWindow(void * window, unsigned int resolutionX, unsigned int resolu
 void PHWindowSetFullScreen(void * window, bool fullScreen);
 void PHCloseWindow(void * window);
 void PHWindowSetTitle(void * window, const string & title);
+void PHWindowSetVSync(void * window, bool vsync);
 
 #endif

@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 if [ ! -d "$1" ]; then
 	echo "\"$1\" does not exist"
@@ -26,6 +26,9 @@ EXTERNALS_DIR="`cd \"$4\" 2>/dev/null && pwd`"
 
 #add your lua path here
 PATH=${PATH}:/opt/local/bin:/opt/local/sbin
+if which gm &> /dev/null; then
+    alias convert="gm convert"
+fi
 
 if [ "$BUILD_ACTION" = "clean" ]; then
 	rm -rf "$DEST_DIR"
@@ -61,7 +64,7 @@ compresslua()
 {
 	echo "Compressing lua script \"$1\""
 	cd "$EXTERNALS_DIR/LuaSrcDiet"
-	./LuaSrcDiet.lua "$SRC_DIR/$1" -o "$2" --maximum >> /dev/null
+	../lua/src/lua ./LuaSrcDiet.lua "$SRC_DIR/$1" -o "$2" --maximum >> /dev/null
 	cd - >> /dev/null
 }
 
@@ -70,9 +73,14 @@ downscalepng()
 	#todo
 	echo "Downscaling png file \"$1\""
 	CONVERT_FLAGS="-quality 5 -channel RGBA -depth 24 -colorspace RGB"
-	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 50% "png32:$2"
-	mv "$2" "${2}.hd"
-	convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 25% "png32:$2"
+	if [[ "$BUILD_ACTION" == "build-nodownscale" ]]
+	then
+	    convert "$SRC_DIR/$1" $CONVERT_FLAGS "png32:$2"
+	else
+	    convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 50% "png32:$2"
+	    mv "$2" "${2}.hd"
+	    convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 25% "png32:$2"
+    fi
 }
 
 find * \( -type f -or -type l \) | while read FILE
@@ -81,7 +89,7 @@ do
 		mkdir -p "$(dirname "$DEST_DIR/$FILE")"
 		BASENAME="`basename "${FILE}"`"
 		EXTENSION="${BASENAME#*.}"
-		if    [[ -f "$FILE" ]] && [[ "$BUILD_ACTION" != "build-nodownscale" ]] &&( [[ "$EXTENSION" == "png" ]] || [[ "$EXTENSION" == "png.nmap" ]] ); then
+		if    [[ -f "$FILE" ]] &&( [[ "$EXTENSION" == "png" ]] || [[ "$EXTENSION" == "png.nmap" ]] ); then
 			downscalepng "$FILE" "$DEST_DIR/$FILE"
 		elif  [[ -f "$FILE" ]] && [[ "$EXTENSION" == "lua" ]]; then
 			compresslua "$FILE" "$DEST_DIR/$FILE"
@@ -92,3 +100,5 @@ do
 		fi
 	fi
 done
+
+exit 0

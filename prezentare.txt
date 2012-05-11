@@ -1,4 +1,21 @@
-Porkholt Engine este o platformă completă de dezvoltare a aplicațiilor grafice 2D (suportul 3D este în dezvoltare), și în principal al jocurilor, targetat în special sistemelor mobile, dar nu numai. Engine-ul este ușor portabil pe orice platformă UNIX-like care suportă OpenGL. Deocamdată suportă iOS și Mac OS X și avem planuri de portare pentru Android, Meegoo și Linux (de fapt X11).
+Porkholt Engine este o platformă completă de dezvoltare a aplicațiilor grafice 2D (cu suport preliminar de 3D), și în principal al jocurilor, targetat în special sistemelor mobile, dar nu numai. Engine-ul este ușor portabil pe orice platformă UNIX-like care suportă OpenGL. Deocamdată suportă iOS, Mac OS X și Linux, dar avem planuri de portare pentru Android și Meegoo (de fapt X11).
 Porkholt este o soluție completă pentru UI, sunet, input, grafică și animație ce oferă un approach simplu, orientat pe obiecte, oricărui utilizator de C++ fără cunoștiințe de OpenGL sau grafică, dar în același timp se duce mai departe oferind interfețe low-level, dar ușor de folosit, cross-platform, pentru API-uri OpenGL și pentru shadere.
 Funcționează pe OpenGL 1.1 ES, 2.0 ES, 2.1 (desktop) și în curând și pe OpenGL 3/4 pe desktop.
 Cu acces la animații de toate felurile, scripting în Lua, particle effects, curbe, un sistem model-view-controller bazat pe eventuri, thread-safeness, sunet și build scripturi ce transformă project file-ul într-un fișier cmake cu 5 linii, Porkholt concurează cu engine-uri folosite pe scară largă în industria jocurilor mobile precum cocos2d.
+
+DRAWABLES
+Porkholt este bazat pe module numite "Drawables", entități responsabile cu desenarea propriului conținut, dar care acționează în același timp ca și containere pentru alte Drawables. Drawable-ul este liber să folosească API-urile low-level oferite de Porkholt pentru a se desena, dar, opțional, și pentru a folosi tehnici speciale în desenarea Drawables-urilor conținute.
+În așa fel, tehnici speciale de shading, gamma correction, umbre, camere, etc. pot fi dezvoltate independent și îmbinate precum cărămizile. 
+
+VIEWS
+View-urile, drawable-uri specializate, sunt unitatea structurală principală a desenării 2D cu Porkholt Engine. Ele, pe lângă faptul că se pot desena singure, au proprii parametrii poziționali (poziție, rotație, scalare, dimensiune, etc.) și pot primi eventuri de la mouse, touchscreen multitouch sau trackpad. Porkholt vine cu numeroase tipuri de view-uri pentru desenat imagini, efecte cu particule, butoane, text și nu numai.
+
+ANIMAȚII
+Porkholt vine cu un sistem unic de animații, aplicabil nu numai view-urilor, dar care poate fi folosit de orice obiect care implementează câteva metode simple.
+O mișcare poate fi animată din 3 linii de cod, iar cu doar câteva linii în plus se pot primi callback-uri, înlănțui animații, etc.
+De asemenea, Porkholt suportă animații keyframed interpolate (cadru cu cadru)
+
+VIEW CONTROLLERS
+Navigație, meniuri și management-ul jocului. Toate acestea se pot face folosind view controllere, obiecte ce au ca rol management-ul unui ecran. Acestea pot fi animate, tranziționate și puse într-o stivă.
+
+

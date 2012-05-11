@@ -6,7 +6,7 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#import "PHStartGame.h"
+#include "PHStartGame.h"
 #include "PHTestViewController.h"
 
 void PHGameEntryPoint(PHGameManager * gm)

@@ -6,7 +6,7 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#import "PHStartGame.h"
+#include "PHStartGame.h"
 #include "PHViewController.h"
 #include "PHDeferredView.h"
 #include "PHImageView.h"
@@ -20,7 +20,7 @@ protected:
 #define numLights 6
     
     struct {
-        PHGLPointLight * light;
+        PHGLLight * light;
         PH3DPoint pnt;
         ph_float rot;
         ph_float rad;
@@ -78,7 +78,7 @@ protected:
     }
     
     void updateScene(ph_float elapsed)
-    {
+    { 
         for (int i=0; i<numLights; i++)
         {
             a[i].rot += a[i].speed * elapsed;
@@ -96,6 +96,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    return PHStartGame(argc, argv, PHStartGame_GLES2 | PHStartGame_Resizable , &PHGameEntryPoint,NULL);
+    return PHStartGame(argc, argv, PHStartGame_GLES2 | PHStartGame_Resizable | PHStartGame_VSync , &PHGameEntryPoint,NULL);
 }
  

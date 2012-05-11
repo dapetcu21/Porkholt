@@ -13,11 +13,17 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <string>
 #include <sstream>
 #include <climits>
 #include <cfloat>
+#include <stdint.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
+#include <algorithm>
 #include <vector>
 #include <map>
 #include <list>
@@ -55,7 +61,12 @@ using namespace std;
         #define PH_MAC_OS
         #define PH_DESKTOP
     #endif
-	#define PH_DARWIN
+    #define PH_DARWIN
+#endif
+
+#ifdef __linux__
+    #define PH_LINUX
+    #define PH_DESKTOP
 #endif
 
 #if (__STDC_VERSION__ >= 199901L)
@@ -85,6 +96,12 @@ void * PHAlloc(void)
 #ifdef PH_MAC_OS
     #import <OpenGL/gl.h>
     #import <OpenGL/glext.h>
+#endif
+#ifdef PH_LINUX
+#define GL_GLEXT_PROTOTYPES
+    #include <GL/gl.h>
+    #include <GL/glext.h>
+    #include <GL/glut.h>
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)

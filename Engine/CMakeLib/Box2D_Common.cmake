@@ -1,4 +1,4 @@
-set(PH_B2D_PATH "${PH_EXTERNALS}/${PH_B2D_PATH}/Box2D/Box2D")
+set(PH_B2D_PATH "${PH_EXTERNALS}/${PH_B2D_PATH}/box2d/Box2D")
 set(PH_B2D_SRCS
   ${PH_B2D_PATH}/Box2D/Collision/b2BroadPhase.cpp
   ${PH_B2D_PATH}/Box2D/Collision/b2CollideCircle.cpp

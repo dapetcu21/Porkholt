@@ -11,6 +11,8 @@ xcuserdata
 *.dylib
 _
 *.swp
+*.so
+*.so.*
 
 .DS_Store
 
@@ -45,8 +47,13 @@ _
 /Externals/lua/src/lua
 /Externals/lua/src/luac
 /Externals/zlib/example
+/Externals/zlib/example64
 /Externals/zlib/examplesh
 /Externals/zlib/minigzip
+/Externals/zlib/minigzip64
 /Externals/zlib/minigzipsh
 /Externals/zlib/zlib.pc
 /Externals/zlib/libz.*
+/Externals/zlib/ztest6485.c
+/Externals/libpng/pngtest-static
+

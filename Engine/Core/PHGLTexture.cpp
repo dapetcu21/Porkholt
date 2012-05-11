@@ -11,6 +11,7 @@
 #define PNG_DEBUG 4
 #include <png.h>
 #include <errno.h>
+#include <arpa/inet.h>
 
 PHGLTexture::PHGLTexture(PHGameManager * gameManager) : tex(0), gm(gameManager), wS(repeat), wT(repeat), wR(repeat), min(linear), mag(linear), mipMap(false), bound(false)
 {

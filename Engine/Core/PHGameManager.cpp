@@ -311,8 +311,10 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
 
 void PHGameManager::clearDeleteQueue()
 {
-    glDeleteBuffers(deleteVBOs.size(), &(deleteVBOs[0]));
-    PHGLDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
+    if (!deleteVBOs.empty())
+        glDeleteBuffers(deleteVBOs.size(), &(deleteVBOs[0]));
+    if (!deleteVAOs.empty())
+        PHGLDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
     deleteVBOs.clear();
     deleteVAOs.clear();
 }
@@ -558,7 +560,8 @@ void PHGameManager::loadCapabilities()
 #ifdef GL_NUM_EXTENSIONS
         if (!es && openGLVersionMajor>=3)
         {
-            int n = (int)glGetInteger(GL_NUM_EXTENSIONS);
+            GLint n;
+            glGetIntegerv(GL_NUM_EXTENSIONS, &n);
             for (int i=0; i<n; i++)
                 extensions.insert(string((const char*)glGetStringi(GL_EXTENSIONS, i)));
         } else
@@ -579,13 +582,6 @@ void PHGameManager::loadCapabilities()
         }
         parsedExtensions = true;
         
-        string s;
-        for (set<string>::iterator i = extensions.begin(); i!=extensions.end(); i++)
-        {
-            s+=*i;
-            s+=" ";
-        }
-        
         glslVersion = 0;
         const char * glslvp = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
         const char * glslv = glslvp;
@@ -598,10 +594,18 @@ void PHGameManager::loadCapabilities()
         while (glslVersion && glslVersion<100)
             glslVersion *= 10;
         
+#ifdef PH_DEBUG
+        string s;
+        for (set<string>::iterator i = extensions.begin(); i!=extensions.end(); i++)
+        {
+            s+=*i;
+            s+=" ";
+        }
         
         PHLog("OpenGL Version: \"%s\" -> %s %d.%d",vers,es?"ES":"",openGLVersionMajor,openGLVersionMinor);
         PHLog("GLSL Version: \"%s\" -> %d",glslvp,glslVersion);
         PHLog("OpenGL Extensions: %s",s.c_str());
+#endif
         
         openGLCaps[PHGLCapabilityNPOT] = (openGLVersionMajor>=2 || extensions.count("OES_texture_npot") || extensions.count("GL_ARB_texture_non_power_of_two") || extensions.count("GL_IMG_texture_npot"));
         openGLCaps[PHGLCapabilityAppleLimitedNPOT] =
@@ -655,22 +659,22 @@ void PHGameManager::loadCapabilities()
         else
 #endif
         
-#ifdef GL_APPLE_vertex_array_object
-        if (extensions.count("GL_APPLE_vertex_array_object"))
-        {
-            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayAPPLE;
-            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysAPPLE;
-            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysAPPLE;
-        }
-        else
-#endif
+//#ifdef GL_APPLE_vertex_array_object
+//        if (extensions.count("GL_APPLE_vertex_array_object"))
+//        {
+//            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayAPPLE;
+//            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysAPPLE;
+//            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysAPPLE;
+//        }
+//        else
+//#endif
         
 #ifdef GL_ARB_vertex_array_object
         if (extensions.count("GL_ARB_vertex_array_object"))
         {
-            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayARB;
-            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysARB;
-            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysARB;
+            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArray;
+            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArrays;
+            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArrays;
         }
         else
 #endif
@@ -681,6 +685,11 @@ void PHGameManager::loadCapabilities()
             PHGLGenVertexArrays = NULL;
         }
     }
+}
+
+bool PHGameManager::hasExtension(const string & ext)
+{
+    return extensions.count(ext);
 }
 
 void PHGameManager::pushSpriteShader(PHGLShaderProgram * p) 
