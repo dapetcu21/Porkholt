@@ -1,0 +1,9 @@
+-I Engine/Core
+-I Engine/Geometry
+-I Engine/Bindings/Linux
+-I Engine/UI
+-I Engine/3D
+-I Externals/lua/src
+-I Externals/libpng
+-I Externals/zlib
+-I Externals/uremote/include
