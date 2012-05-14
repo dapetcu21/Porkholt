@@ -9,14 +9,16 @@ include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 
 add_executable(${PH_NAME} ${PH_SOURCES} ${PH_HEADERS})
 find_library(PH_OPENGL GL)
-find_library(PH_GLUT glut)
+find_library(PH_X11 X11)
 find_package(Threads REQUIRED)
+find_library(PH_XRANDR Xrandr)
 target_link_libraries(${PH_NAME} Porkholt_Linux
   ${PH_EXTERNALS}/lib/linux/liblua.a
   ${PH_EXTERNALS}/lib/linux/libpng15.a
   ${PH_EXTERNALS}/lib/linux/libz.a
-  ${PH_GLUT}
+  ${PH_X11}
   ${PH_OPENGL}
+  ${PH_XRANDR}
   ${CMAKE_THREAD_LIBS_INIT}
   )
 

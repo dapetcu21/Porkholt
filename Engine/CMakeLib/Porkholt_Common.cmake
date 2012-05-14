@@ -99,7 +99,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/Core/PHBezierPath.h
   ${PH_ENGINE_PATH}/Core/PHGLShader.h
   ${PH_ENGINE_PATH}/Core/PHLua.h
-  ${PH_ENGINE_PATH}/Core/PHStartGame.h
+  ${PH_ENGINE_PATH}/Core/PHWindowing.h
   ${PH_ENGINE_PATH}/Core/PHCinematicActor.h
   ${PH_ENGINE_PATH}/Core/PHGLShaderProgram.h
   ${PH_ENGINE_PATH}/Core/PHLuaObject.h

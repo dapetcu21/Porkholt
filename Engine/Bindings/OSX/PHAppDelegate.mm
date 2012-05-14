@@ -7,7 +7,12 @@
 //
 
 #import "PHAppDelegate.h"
-#include "PHStartGame.h"
+#include "PHWindowing.h"
+void * PHCreateWindow(const string & title, unsigned int resolutionX, unsigned int resolutionY, int flags, void (*entryPoint)(PHGameManager *), void * ud);
+void PHResizeWindow(void * window, unsigned int resolutionX, unsigned int resolutionY);
+void PHWindowSetFullScreen(void * window, bool fullScreen);
+void PHWindowSetTitle(void * window, const string & title);
+
 
 void * PHMainWindow = NULL;
 

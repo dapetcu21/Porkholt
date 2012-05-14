@@ -6,7 +6,7 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHStartGame.h"
+#include "PHWindowing.h"
 #include "PHTestView.h"
 #include "PHViewController.h"
 #include "PHMeshBody.h"
@@ -81,6 +81,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 int main(int argc, char *argv[]) {
-    return PHStartGame(argc, argv, 960, 600, PHStartGame_GLES2 | PHStartGame_Resizable | PHStartGame_VSync | PHStartGame_FullScreen, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWResizable | PHWVSync, &PHGameEntryPoint,NULL);
 }
  

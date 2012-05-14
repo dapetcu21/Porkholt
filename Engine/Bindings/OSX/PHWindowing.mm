@@ -10,14 +10,14 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-#import "PHStartGame.h"
+#import "PHWindowing.h"
 #import "PHAppDelegate.h"
 #import "PHGLView.h"
 #import "PHWindow.h"
 
-int PHStartGame(int argc, char * argv[], unsigned int resX, unsigned int resY, int flags, void (*entryPoint)(PHGameManager *), void * ud)
+int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
-    [[NSApplication sharedApplication] setDelegate:[[PHAppDelegate alloc] initWithResX: resX resY: resY flags: flags entryPoint:entryPoint ud:ud ]];
+    [[NSApplication sharedApplication] setDelegate:[[PHAppDelegate alloc] initWithResX: vm.width resY: vm.height flags: flags entryPoint:entryPoint ud:ud ]];
     [NSApp run];
     return 0;
 }

@@ -8,7 +8,7 @@ installed using your distro's package manager.
 
 For example:
 Debian / Ubuntu:
-  sudo apt-get install libreadline-dev cmake graphicsmagick mesa-common-dev freeglut3-dev libncurses-dev 
+  sudo apt-get install libreadline-dev cmake graphicsmagick mesa-common-dev libncurses-dev 
 OS X with Macports:
   sudo port install lua cmake ImageMagick
 

@@ -6,17 +6,17 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHStartGame.h"
+#include "PHWindowing.h"
 #include "PHTestViewController.h"
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHTestViewController * vc = new PHTestViewController();
-	vc->init(gm);
+	  vc->init(gm);
     gm->navigationController()->pushViewController(vc);
 }
 
 int main(int argc, char *argv[]) {
-    return PHStartGame(argc, argv, PHStartGame_GLES1 | PHStartGame_GLES2 | PHStartGame_Resizable | PHStartGame_FullScreen, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL);
 }
  

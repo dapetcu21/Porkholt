@@ -3,8 +3,8 @@ set(CMAKE_OSX_SYSROOT macosx)
 set(CMAKE_EXE_LINKER_FLAGS
   "-ObjC -lPorkholt_OSX -llua -lz -lpng15 -framework OpenGL -framework Foundation -framework CoreVideo -framework AppKit"
   )
-set(CMAKE_CXX_FLAGS_RELEASE "-Os")
-set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
   
 link_directories(${PH_EXTERNALS}/lib/darwin/osx)
 link_directories(${Porkholt_OSX_BINARY_DIR})

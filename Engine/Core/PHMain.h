@@ -101,7 +101,6 @@ void * PHAlloc(void)
 #define GL_GLEXT_PROTOTYPES
     #include <GL/gl.h>
     #include <GL/glext.h>
-    #include <GL/glut.h>
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)

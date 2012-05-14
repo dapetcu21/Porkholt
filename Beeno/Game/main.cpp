@@ -6,7 +6,7 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#import "PHStartGame.h"
+#include "PHWindowing.h"
 #include "PHMenuController.h"
 
 void PHGameEntryPoint(PHGameManager * gm)
@@ -17,14 +17,14 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 int main(int argc, char *argv[]) {
-    return PHStartGame(argc, 
-                       argv, 
-                         PHStartGame_GLES1 
-                       | PHStartGame_GLES2
+    return PHWMain(argc, 
+                   argv,
+                   PHWVideoMode(800, 600, 60, PHWVideoMode::FullscreenWindowed),
+                   PHWGLES1 
 #if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
-                       | PHStartGame_Remote
-                       | PHStartGame_ShowFPS
+                   | PHWRemote
+                   | PHWShowFPS
 #endif
-                       | PHStartGame_VSync
-                       , &PHGameEntryPoint, NULL);
+                   | PHWVSync
+                   , &PHGameEntryPoint, NULL);
 }

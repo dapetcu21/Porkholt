@@ -6,7 +6,7 @@
 //  Copyright 2010 Porkholt Labs!. All rights reserved.
 //
 
-#include "PHStartGame.h"
+#include "PHWindowing.h"
 #include "PHViewController.h"
 #include "PHView.h"
 #include "PHTextView.h"
@@ -248,6 +248,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    return PHStartGame(argc, argv, PHStartGame_GLES1 | PHStartGame_GLES2 | PHStartGame_frameAnimation | PHStartGame_VSync, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVideoMode(1024, 700, 60, PHWVideoMode::Windowed), PHWGLES1 | PHWFrameAnimation | PHWVSync, &PHGameEntryPoint,NULL);
 }
  

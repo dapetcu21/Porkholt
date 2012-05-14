@@ -117,6 +117,7 @@ public:
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
     void setScreenSize(ph_float w, ph_float h);
 	int framesPerSecond() { return fps; }
+    void setFramesPerSecond(int f) { fps = f; }
     ph_float frameInterval() { return 1.0f/fps; }
     ph_float lastFrameElapsed() { return lastElapsed; }
     ph_float frameBegin() { return frameBeg; }

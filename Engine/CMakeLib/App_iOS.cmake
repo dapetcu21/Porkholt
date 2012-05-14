@@ -4,8 +4,8 @@ set(CMAKE_OSX_ARCHITECTURES "armv6 armv7")
 set(CMAKE_EXE_LINKER_FLAGS
   "-ObjC -lPorkholt_iOS -llua -lz -lpng15 -framework AudioToolbox -framework AVFoundation -framework OpenAL -framework OpenGLES -framework Foundation -framework QuartzCore -framework UIKit"
   )
-set(CMAKE_CXX_FLAGS_RELEASE "-Os")
-set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
   
 link_directories(${PH_EXTERNALS}/lib/darwin/ios)
 link_directories(${Porkholt_iOS_BINARY_DIR})
