@@ -9,10 +9,11 @@ xcuserdata
 *.lo
 *.a
 *.dylib
-_
-*.swp
 *.so
 *.so.*
+_
+*~
+*.swp
 
 .DS_Store
 

@@ -3,7 +3,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
   
 link_directories(${PH_EXTERNALS}/lib/linux)
-link_directories(${Porkholt_OSX_BINARY_DIR})
 
 include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 
