@@ -46,7 +46,7 @@ inline int PHWMain(int argc, char * argv[], int flags, void (*entryPoint)(PHGame
 }
 
 void PHWSetVideoMode(const PHWVideoMode & vm);
-const PHWVideoMode & PHWGetVideoMode();
+PHWVideoMode PHWGetVideoMode();
 const vector<PHWVideoMode> & PHWSupportedModes();
 void PHWClose();
 void PHWSetTitle(const string & title);

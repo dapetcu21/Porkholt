@@ -82,6 +82,7 @@ private:
 	ph_float _screenHeight;
     ph_float dpi;
 	int fps;
+    ph_float lt;
 	bool suspended;
     bool loaded;
     static int globalHD;

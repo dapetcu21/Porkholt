@@ -30,7 +30,7 @@ private:
     
     bool pload;
     
-    virtual void _load() { PHLog("%x: _load", this); if(!pload) loadFromFile(NULL,NULL); loadToTexture(NULL, NULL); PHLog("%x: _load_", this);  }
+    virtual void _load() { if(!pload) loadFromFile(NULL,NULL); loadToTexture(NULL, NULL); }
 public:
     
     PHNormalImage(const string & path, PHGameManager * gameManager);

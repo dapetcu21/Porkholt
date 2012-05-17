@@ -111,6 +111,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     entryPoint = params.entryPoint;
     _defaultFBOf = params.defaultFBO;
     _defaultFBO = 0;
+    lt = PHTime::getTime();
 	setUserData(ud);
     
     hd = false;
@@ -275,8 +276,11 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 		viewController->_updateScene(timeElapsed);
     
 	view->render();
+    
+    ph_float tm = PHTime::getTime();
     if (showFPS)
-        renderFPS(timeElapsed);
+        renderFPS(tm - lt);
+    lt = tm;
     
     evtQueue->processQueue();
     clearDeleteQueue();

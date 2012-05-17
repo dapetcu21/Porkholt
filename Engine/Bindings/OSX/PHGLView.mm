@@ -10,8 +10,7 @@
 #import "PHGameManager.h"
 #import "PHEventHandler.h"
 #import "PHEvent.h"
-#import "OpenGLTimer.h"
-#import "PHStartGame.h"
+#import "PHWindowing.h"
 
 
 @interface NSEvent (PLDeviceDelta)
@@ -32,41 +31,48 @@
     [self render:tim startTime:time];
 }
 
+-(void)setVerticalSync:(BOOL)verticalSync
+{
+    if (verticalSync == vsync) return;
+    GLint swapInt = verticalSync?1:0;
+    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
+    gameManager->setFpsCapped(verticalSync);
+    vsync = verticalSync;
+}
+
+-(BOOL)verticalSync
+{
+    return vsync;
+}
+
 -(void)loadWithPixelFormat:(NSOpenGLPixelFormat*)pf
 {
     if (gameManager) return;
     
-    if (flags & PHStartGame_VSync)
-        [[OpenGLTimer retainedInstance] addView:self withPixelFormat:pf];
-    else
-    {
-        tm = [NSTimer scheduledTimerWithTimeInterval:0.0f 
-                                                        target:self
-                                                      selector:@selector(makeCurrentAndRender)
-                                                      userInfo:nil
-                                             repeats:YES];
-    }
-    
-    [[self openGLContext] makeCurrentContext];
-    
-    GLint swapInt = (flags & PHStartGame_VSync)?1:0;
-    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
+    tm = [NSTimer scheduledTimerWithTimeInterval:0.0f
+                                          target:self
+                                        selector:@selector(makeCurrentAndRender)
+                                        userInfo:nil
+                                         repeats:YES];
     
     NSRect frame = [self bounds];
     gameManager = new PHGameManager;
     gameManager->setUserData(self);
+    
+    vsync = !(flags & PHWVSync);
+    [self setVerticalSync:!vsync];
+    
     PHGameManagerInitParameters initParams;
     initParams.screenWidth = frame.size.width;
     initParams.screenHeight = frame.size.height;
     initParams.fps = 60;
     initParams.resourcePath = string([res UTF8String]) + "/rsrc";
     initParams.entryPoint = entryPoint;
-    if (flags & PHStartGame_Remote)
+    if (flags & PHWRemote)
         gameManager->setUsesRemote(true);
-    if (flags & PHStartGame_ShowFPS)
-        gameManager->setShowsFPS(true);
-    if (flags & PHStartGame_VSync)
-        gameManager->setFpsCapped(true);
+    if (flags & PHWShowFPS)
+        gameManager->setShowsFPS(true);    
+    [[self openGLContext] makeCurrentContext];
     gameManager->init(initParams);
 }
 
@@ -133,13 +139,6 @@
 -(void)dealloc
 {
     gameManager->release();
-    if (flags & PHStartGame_VSync)
-    {
-        [[OpenGLTimer sharedInstance] removeView:self];
-        [[OpenGLTimer sharedInstance] release];
-    }
-    if (tm)
-        [tm invalidate];
     [res release];
     [super dealloc];
 }
@@ -147,12 +146,12 @@
 -(double)elapsedTime
 {
     double frameInterval = 1.0f/gameManager->framesPerSecond();
-    if (flags & PHStartGame_frameAnimation)
+    if (flags & PHWFrameAnimation)
         return frameInterval;
     lastTime = time;
     time = PHTime::getTime();
     double elapsedTime = (time-lastTime);
-    if (flags & PHStartGame_VSync)
+    if (vsync)
         return round(elapsedTime/frameInterval)*frameInterval;
     return elapsedTime;
 }
@@ -177,6 +176,8 @@
 {
     [super reshape];
     NSRect frame = [self bounds];
+    if (manual)
+        frame.size = msize;
     if (gameManager)
         gameManager->setScreenSize(frame.size.width, frame.size.height);
     [self makeCurrent];
@@ -188,57 +189,66 @@
     [super update];
 }
 
+-(NSPoint)adjustPoint:(NSPoint)p
+{
+    if (!manual) return p;
+    NSRect b = self.bounds;
+    p.x *= msize.width / b.size.width;
+    p.y *= msize.height / b.size.height;
+    return p;
+}
+
 -(void)mouseDown:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchDown(PHPoint(p.x,p.y), (void*)1);
 }
 
 -(void)mouseDragged:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchMoved(PHPoint(p.x,p.y), (void*)1);
 }
 
 -(void)mouseUp:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchUp(PHPoint(p.x,p.y), (void*)1);
 }
 
 -(void)rightMouseDown:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchDown(PHPoint(p.x,p.y), (void*)2);
 }
 
 -(void)rightMouseDragged:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchMoved(PHPoint(p.x,p.y), (void*)2);
 }
 
 -(void)rightMouseUp:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchUp(PHPoint(p.x,p.y), (void*)2);
 }
 
 -(void)otherMouseDown:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchDown(PHPoint(p.x,p.y), (void*)([event buttonNumber]+1));
 }
 
 -(void)otherMouseDragged:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchMoved(PHPoint(p.x,p.y), (void*)([event buttonNumber]+1));
 }
 
 -(void)otherMouseUp:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->touchUp(PHPoint(p.x,p.y), (void*)([event buttonNumber]+1));
 }
 
@@ -260,19 +270,19 @@
         dx = [event deviceDeltaX];
         dy = [event deviceDeltaY];
     }
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->scrollWheel(PHPoint(p.x,p.y), PHPoint(dx,-dy), event);
 }
 
 -(void)magnifyWithEvent:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->pinchZoom(PHPoint(p.x,p.y), [event magnification], event);
 }
 
 - (void)rotateWithEvent:(NSEvent *)event
 {
-    NSPoint p = [self convertPoint:[event locationInWindow] fromView:nil];
+    NSPoint p = [self adjustPoint:[self convertPoint:[event locationInWindow] fromView:nil]];
     gameManager->eventHandler()->pinchRotate(PHPoint(p.x,p.y), -[event rotation], event);
 }
 
@@ -324,6 +334,27 @@ int PHEventHandler::modifierMask()
 +(void)globalFrame:(double)timeElapsed
 {
     PHGameManager::globalFrame(timeElapsed);
+}
+
+-(void)setManualSize:(NSSize)sz
+{
+    msize = sz;
+    manual = true;
+    GLint dim[2] = {sz.width, sz.height};
+    CGLContextObj ctx = (CGLContextObj)[self openGLContext].CGLContextObj;
+    CGLSetParameter(ctx, kCGLCPSurfaceBackingSize, dim);
+    CGLEnable(ctx, kCGLCESurfaceBackingSize);
+    [self reshape];
+}
+
+-(void)setAutomaticSize
+{
+    manual = false;
+    CGLContextObj ctx = (CGLContextObj)[self openGLContext].CGLContextObj;
+    GLint dim[2] = {self.bounds.size.width, self.bounds.size.height};
+    CGLSetParameter(ctx, kCGLCPSurfaceBackingSize, dim);
+    CGLDisable(ctx, kCGLCESurfaceBackingSize);
+    [self reshape];
 }
 
 @end

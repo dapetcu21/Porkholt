@@ -7,15 +7,17 @@
  *
  */
 
+#include "PHMain.h"
 #include "PHTime.h"
+
 #ifdef PH_DARWIN
-#include <mach/mach.h>
-#include <mach/mach_time.h>
+    #include <mach/mach.h>
+    #include <mach/mach_time.h>
 #endif
+
 #include <time.h>
 #include <sys/time.h>
 #include <errno.h>
-#include "PHMain.h"
 
 float PHTime::getTime()
 {

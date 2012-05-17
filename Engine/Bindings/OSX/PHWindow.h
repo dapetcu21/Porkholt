@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
 //
 
+#include "PHGameManager.h"
+#include "PHWindowing.h"
+#include "PHGLView.h"
 #import <AppKit/AppKit.h>
 
 #ifndef NSAppKitVersionNumber10_7 
@@ -17,9 +20,19 @@
     BOOL fullScreen;
     NSRect windowedFrame;
     NSUInteger windowedMask;
+    
+    BOOL resizable;
+    PHWVideoMode vm;
+    
+    PHGLView * view;
+    
+    NSString * title;
 }
 
--(void)toggleFullScreen:(id)sender;
--(void)setFullScreen:(BOOL)fs animated:(BOOL)anim;
+-(id)initWithVM:(const PHWVideoMode &) vm flags:(int)flags entryPoint:(void (*)(PHGameManager *))entryPoint ud:(void*)ud;
+
+@property(nonatomic, assign) PHWVideoMode videoMode;
+@property(nonatomic, assign) BOOL resizable;
+@property(nonatomic, readonly) PHGLView * view;
 
 @end

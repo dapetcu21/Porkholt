@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#include "PHWindowing.h"
 
 class PHGameManager;
 @interface PHAppDelegate : NSObject<NSApplicationDelegate, NSWindowDelegate>
@@ -17,10 +18,9 @@ class PHGameManager;
     int flags;
     void (*entryPoint)(PHGameManager *);
     void * ud;
-    unsigned int resX;
-    unsigned int resY;
+    PHWVideoMode vm;
 }
 
--(id)initWithResX:(unsigned int)resX resY:(unsigned int)resY flags:(int)flags entryPoint:(void (*)(PHGameManager *))entryPoint ud:(void*)ud;
+-(id)initWithVM:(const PHWVideoMode &) vm flags:(int)flags entryPoint:(void (*)(PHGameManager *))entryPoint ud:(void*)ud;
 
 @end

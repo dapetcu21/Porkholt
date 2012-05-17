@@ -164,6 +164,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 int main(int argc, char *argv[]) {
-    return PHWMain(argc, argv, PHWGLES1 | PHWVSync | PHWResizable, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), PHWGLES1 | PHWResizable | PHWShowFPS, &PHGameEntryPoint,NULL);
 }
  

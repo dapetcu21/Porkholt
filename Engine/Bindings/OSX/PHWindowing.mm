@@ -15,75 +15,99 @@
 #import "PHGLView.h"
 #import "PHWindow.h"
 
+extern PHWindow * PHWMainWindow;
+
 int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
-    [[NSApplication sharedApplication] setDelegate:[[PHAppDelegate alloc] initWithResX: vm.width resY: vm.height flags: flags entryPoint:entryPoint ud:ud ]];
+    [[NSApplication sharedApplication] setDelegate:[[PHAppDelegate alloc] initWithVM: vm flags: flags entryPoint:entryPoint ud:ud ]];
     [NSApp run];
     return 0;
 }
 
-void * PHCreateWindow(const string & title, unsigned int resolutionX, unsigned int resolutionY, int flags, void (*entryPoint)(PHGameManager *), void * ud)
+void PHWSetVideoMode(const PHWVideoMode & vm)
 {
-    NSRect r = [NSScreen mainScreen].frame;
-    NSUInteger mask;
-    r = NSMakeRect((r.size.width - resolutionX)/2,(r.size.height - resolutionY)/2, resolutionX, resolutionY);
-    mask = (((flags&PHStartGame_Resizable)?NSResizableWindowMask:0) | NSClosableWindowMask | NSTitledWindowMask);
-    PHWindow * window = [[PHWindow alloc] initWithContentRect:r styleMask:mask backing:NSBackingStoreBuffered defer:NO];
-    PHGLView * view = [[PHGLView alloc] initWithFrame:NSMakeRect(0,0,resolutionX, resolutionY) resourcePath:[[NSBundle mainBundle] resourcePath] entryPoint:entryPoint flags:flags];
-    [view setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-    [window.contentView addSubview:view];
-    [view release];
-    [window makeKeyAndOrderFront:nil];
-    if (flags & (PHStartGame_Resizable | PHStartGame_FullScreen))
+    PHWMainWindow.videoMode = vm;
+}
+
+PHWVideoMode PHWGetVideoMode()
+{
+    return PHWMainWindow.videoMode;
+}
+
+static const int resolutions[] = {
+    2880, 900,
+    2560, 1600,
+    2048, 1280,
+    2048, 1152,
+    1920, 1440,
+    1920, 1200,
+    1920, 1080,
+    1856, 1392,
+    1800, 1440,
+    1792, 1344,
+    1600, 900,
+    1600, 1200,
+    1440, 900,
+    1400, 1050,
+    1366, 768,
+    1280, 800,
+    1280, 720,
+    1280, 1024,
+    1152, 720,
+    1024, 768,
+    1024, 640,
+    1024, 576,
+    960, 540,
+    800, 480,
+    800, 600
+};
+
+const vector<PHWVideoMode> & PHWSupportedModes()
+{
+    static vector<PHWVideoMode> v;
+    static bool inited = false;
+    if (!inited)
     {
-        if (floor(NSAppKitVersionNumber)>=NSAppKitVersionNumber10_7)
-        {
-            [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-            if (flags & PHStartGame_FullScreen)
-                [window performSelector:@selector(toggleFullScreen:) withObject:nil afterDelay:0.0f];
-        } else {
-            if (flags & PHStartGame_FullScreen)
-                [window setFullScreen:YES animated:NO];
-        }
+        inited = true;
+        NSRect r = [[NSScreen mainScreen] frame];
+        
+        v.push_back(PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed));
+        v.push_back(PHWVideoMode(r.size.width, r.size.height, 60, PHWVideoMode::FullscreenWindowed));
+        v.push_back(PHWVideoMode(r.size.width, r.size.height, 60, PHWVideoMode::Fullscreen));
+        
+        for (int i=0; i<(sizeof(resolutions)/sizeof(int)); i+=2)
+            if ((resolutions[i] < r.size.width) && (resolutions[i+1] < r.size.height))
+                v.push_back(PHWVideoMode(resolutions[i], resolutions[i+1], 60, PHWVideoMode::Fullscreen));
     }
-    PHWindowSetTitle((void*)window, title);
-    return window;
+    return v;
 }
 
-void PHResizeWindow(void * window, unsigned int resolutionX, unsigned int resolutionY)
+void PHWClose()
 {
-    PHWindow * w = (PHWindow*)window;
-    NSRect r = [w contentRectForFrameRect:w.frame];
-    r.origin.x = r.origin.x - (resolutionX - r.size.width)/2;
-    r.origin.y = r.origin.y - (resolutionY - r.size.height)/2;
-    r.size.width = resolutionX;
-    r.size.height = resolutionY;
-    r = [w frameRectForContentRect:r];
-    [w setFrame:r display:YES animate:YES];
+    [PHWMainWindow close];
 }
 
-void PHWindowSetFullScreen(void * window, bool fullScreen)
+void PHWSetTitle(const string & title)
 {
-    PHWindow * w = (PHWindow*)window;
-    if (floor(NSAppKitVersionNumber)>=NSAppKitVersionNumber10_7)
-    {
-        bool fs = ((w.styleMask & NSFullScreenWindowMask) != 0);
-        if (fullScreen != fs)
-            [w toggleFullScreen:nil];
-    } else {
-        [w setFullScreen:fullScreen animated:YES];
-    }
+    PHWMainWindow.title = [NSString stringWithUTF8String:title.c_str()];
 }
 
-void PHWindowSetTitle(void * window, const string & title)
+void PHWSetVSync(bool vsync)
 {
-    PHWindow * w = (PHWindow*)window;
-    [w setTitle:[NSString stringWithUTF8String:title.c_str()]];
+    PHWMainWindow.view.verticalSync = vsync;
 }
 
-void PHCloseWindow(void * window)
+bool PHWGetVSync()
 {
-    PHWindow * w = (PHWindow*)window;
-    [w close];
-    [w release];
+    return PHWMainWindow.view.verticalSync;
+}
+
+void PHWSetResizable(bool r)
+{
+    PHWMainWindow.resizable = r;
+}
+
+bool PHWGetResizable()
+{
+    return PHWMainWindow.resizable;
 }

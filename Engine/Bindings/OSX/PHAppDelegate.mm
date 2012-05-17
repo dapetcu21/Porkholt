@@ -6,26 +6,22 @@
 //  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
 //
 
-#import "PHAppDelegate.h"
 #include "PHWindowing.h"
-void * PHCreateWindow(const string & title, unsigned int resolutionX, unsigned int resolutionY, int flags, void (*entryPoint)(PHGameManager *), void * ud);
-void PHResizeWindow(void * window, unsigned int resolutionX, unsigned int resolutionY);
-void PHWindowSetFullScreen(void * window, bool fullScreen);
-void PHWindowSetTitle(void * window, const string & title);
+#import "PHAppDelegate.h"
+#import "PHWindow.h"
 
-
-void * PHMainWindow = NULL;
+PHWindow * PHWMainWindow = NULL;
 
 @implementation PHAppDelegate
 
--(id)initWithResX:(unsigned int)_resX resY:(unsigned int)_resY flags:(int)_flags entryPoint:(void (*)(PHGameManager *))_entryPoint ud:(void*)_ud
+
+-(id)initWithVM:(const PHWVideoMode &) _vm flags:(int)_flags entryPoint:(void (*)(PHGameManager *))_entryPoint ud:(void*)_ud
 {
     if ((self = [super init]))
     {
         flags = _flags;
         ud = _ud;
-        resX = _resX;
-        resY = _resY;
+        vm = _vm;
         entryPoint = _entryPoint;
     }
     return self;
@@ -33,7 +29,7 @@ void * PHMainWindow = NULL;
 
 - (void)dealloc
 {
-    PHMainWindow = nil;
+    PHWMainWindow = nil;
     [super dealloc];
 }
 
@@ -49,7 +45,8 @@ void * PHMainWindow = NULL;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     NSString * title = [[[NSBundle mainBundle] infoDictionary]   objectForKey:@"CFBundleName"];
-    PHMainWindow = window = (NSWindow*)PHCreateWindow(string([title UTF8String]), resX, resY, flags, entryPoint, ud);
+    window = PHWMainWindow = [[PHWindow alloc] initWithVM:vm flags:flags entryPoint:entryPoint ud:ud];
+    window.title = title;
     window.delegate = self;
     
     NSMenu * mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];
@@ -63,15 +60,9 @@ void * PHMainWindow = NULL;
     [submenu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
 	[mainMenu setSubmenu:submenu forItem:item];
     
-    if (flags & (PHStartGame_Resizable | PHStartGame_FullScreen))
-    {
-        item = [mainMenu addItemWithTitle:@"View" action:NULL keyEquivalent:@""];
-        submenu = [[[NSMenu alloc] initWithTitle:@"View"] autorelease];   
-        [submenu addItemWithTitle:@"Full Screen" action:@selector(toggleFullScreen:) keyEquivalent:@"f"];
-        [mainMenu setSubmenu:submenu forItem:item];
-    }
-    
     [NSApp setMainMenu:mainMenu];
+    
+    [window makeKeyAndOrderFront:self];
 }
 
 @end

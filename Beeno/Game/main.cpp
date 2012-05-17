@@ -19,7 +19,7 @@ void PHGameEntryPoint(PHGameManager * gm)
 int main(int argc, char *argv[]) {
     return PHWMain(argc, 
                    argv,
-                   PHWVideoMode(800, 600, 60, PHWVideoMode::FullscreenWindowed),
+                   PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed),
                    PHWGLES1 
 #if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
                    | PHWRemote
