@@ -7,6 +7,7 @@
 //
 
 #import "PHWindow.h"
+#import <CoreVideo/CoreVideo.h>
 
 @implementation PHWindow
 
@@ -16,14 +17,20 @@
 {
     NSUInteger mask = stylemask((_vm.type == PHWVideoMode::Windowed),(flags & PHWResizable));
     
+    PHWVideoMode vmm = _vm;
+#ifndef PH_OSX_FAKERESOLUTION
+    if (vmm.type == PHWVideoMode::Fullscreen)
+        [PHWindow setResolution:vmm];
+#endif
+    
     NSRect r = [NSScreen mainScreen].frame;
     if (_vm.type == PHWVideoMode::Windowed)
-        r = NSMakeRect((r.size.width - _vm.width)/2,(r.size.height - _vm.height)/2, _vm.width, _vm.height);
+        r = NSMakeRect((r.size.width - vmm.width)/2,(r.size.height - vmm.height)/2, vmm.width, vmm.height);
     
     if (self = [super initWithContentRect:r styleMask:mask backing:NSBackingStoreBuffered defer:NO])
     {
-        vm = _vm;
-        if (_vm.type != PHWVideoMode::Windowed)
+        vm = vmm;
+        if (vm.type != PHWVideoMode::Windowed)
         {
             vm.width = r.size.width;
             vm.height = r.size.height;
@@ -40,11 +47,15 @@
         view = [[PHGLView alloc] initWithFrame:NSMakeRect(0,0,vm.width,vm.height) resourcePath:[[NSBundle mainBundle] resourcePath] entryPoint:entryPoint flags:flags];
         [view setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
         [self.contentView addSubview:view];
-        if (_vm.type == PHWVideoMode::Fullscreen)
+        if (vm.type == PHWVideoMode::Fullscreen)
         {
-            [self setLevel:NSMainMenuWindowLevel+1];
+#ifdef PH_OSX_FAKERESOLUTION
+            [self setLevel:NSMainMenuWindowLevel+2];
             [self setHidesOnDeactivate:YES];
-            [view setManualSize:NSMakeSize(_vm.width, _vm.height)];
+            [view setManualSize:NSMakeSize(vm.width, vm.height)];
+#else
+            [self setLevel:CGShieldingWindowLevel()];
+#endif
         }
     } 
     return self;
@@ -55,6 +66,12 @@
     view.gameManager->appQuits();
     [view release];
     [title release];
+#ifndef PH_OSX_FAKERESOLUTION
+    if (vm.type == PHWVideoMode::Fullscreen)
+        [PHWindow restoreResolution];
+#endif
+    [super dealloc];
+    
 }
 
 -(void)setTitle:(NSString*)t
@@ -68,13 +85,20 @@
 -(void)becomeKeyWindow
 {
     [super becomeKeyWindow];
+#ifndef PH_OSX_FAKERESOLUTION
+    if (vm.type == PHWVideoMode::Fullscreen)
+        [PHWindow undoRestoreResolution];
+#endif
     view.gameManager->appResumed();
 }
 
 -(void)resignKeyWindow
 {
-    [super resignKeyWindow];
     view.gameManager->appSuspended();
+#ifndef PH_OSX_FAKERESOLUTION
+    [PHWindow restoreResolution];
+#endif
+    [super resignKeyWindow];
 }
 
 -(BOOL)resizable
@@ -107,10 +131,19 @@
 -(void)setVideoMode:(PHWVideoMode)vdm
 {
     NSUInteger mask = stylemask((vdm.type == PHWVideoMode::Windowed),resizable);
-            
+    
+    vm = vdm;
+    
+#ifndef PH_OSX_FAKERESOLUTION
+    if (vm.type == PHWVideoMode::Fullscreen)
+        [PHWindow setResolution:vm];
+    else
+        [PHWindow restoreResolution];
+#endif
+    
     NSRect r = [NSScreen mainScreen].frame;
-    if (vdm.type == PHWVideoMode::Windowed)
-        r = NSMakeRect((r.size.width - vdm.width)/2,(r.size.height - vdm.height)/2, vdm.width, vdm.height);
+    if (vm.type == PHWVideoMode::Windowed)
+        r = NSMakeRect((r.size.width - vm.width)/2,(r.size.height - vm.height)/2, vm.width, vm.height);
 
     [self setStyleMask:mask];
     [super setTitle:title];
@@ -122,7 +155,8 @@
             NSApplicationPresentationAutoHideMenuBar
             | NSApplicationPresentationAutoHideDock];
     
-    if (vdm.type == PHWVideoMode::Fullscreen)
+#ifdef PH_OSX_FAKERESOLUTION
+    if (vm.type == PHWVideoMode::Fullscreen)
     {
         [self setLevel:NSMainMenuWindowLevel+1];
         [self setHidesOnDeactivate:YES];
@@ -132,9 +166,96 @@
         [self setLevel:NSNormalWindowLevel];
         [view setAutomaticSize];
     }
+#else
+    if (vm.type == PHWVideoMode::Fullscreen)
+        [self setLevel:CGShieldingWindowLevel()]; 
+    else
+        [self setLevel:NSNormalWindowLevel];
+#endif
+    
+    CVDisplayLinkRef displayLink = nil;
+	CVDisplayLinkCreateWithCGDisplay(kCGDirectMainDisplay, &displayLink);
+	CVTime tm = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(displayLink);
+    view.refreshRate = round(double(tm.timeScale)/tm.timeValue);
+	CVDisplayLinkRelease(displayLink);
     
     [self makeKeyAndOrderFront:self];
-    vm = vdm;
 }
+
+#ifndef PH_OSX_FAKERESOLUTION
+
+static CGDisplayModeRef PHCurrentMode = NULL;
+static CGDisplayModeRef PHOrigMode = NULL;
+
++(void)setResolution:(PHWVideoMode &)vm
+{
+    CGDirectDisplayID d = kCGDirectMainDisplay;
+    CFArrayRef modelist = CGDisplayCopyAllDisplayModes(d, NULL);
+    int count = CFArrayGetCount(modelist);
+    CGDisplayModeRef md = NULL;
+    int mdiff = 0x3f3f3f3f;
+    for (int i=0; i<count; i++)
+    {
+        CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(modelist, i);
+        long width = CGDisplayModeGetWidth(mode);
+        long height = CGDisplayModeGetHeight(mode);
+        double refresh = CGDisplayModeGetRefreshRate(mode);
+        CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
+        if (CFStringCompare(pixelEncoding,CFSTR(IO32BitDirectPixels),0)!=kCFCompareEqualTo)
+        {
+            CFRelease(pixelEncoding);
+            continue;
+        }
+        CFRelease(pixelEncoding);
+        int diff = abs(vm.width  - width) + abs(vm.height - height) + abs(vm.refresh - refresh);
+        if (diff<mdiff)
+        {
+            md = mode;
+            mdiff = diff;
+        }
+    }
+    CFRetain(md);
+    CFRelease(modelist);
+    if (PHCurrentMode)
+    {
+        CFRelease(PHCurrentMode);
+    } else {
+        if (PHOrigMode)
+            CFRelease(PHOrigMode);
+        PHOrigMode = CGDisplayCopyDisplayMode(d);
+    }
+    PHCurrentMode = md;
+    if (!CGDisplayIsCaptured(d))
+        CGDisplayCapture(d);
+    CGDisplaySetDisplayMode(d, md, NULL);
+}
+
++(void)restoreResolution
+{
+    if (!PHCurrentMode)
+        return;
+    CGDirectDisplayID d = kCGDirectMainDisplay;
+    CGDisplaySetDisplayMode(d, PHOrigMode, NULL);
+    if (CGDisplayIsCaptured(d))
+        CGDisplayRelease(d);
+    CFRelease(PHOrigMode);
+    PHOrigMode = PHCurrentMode;
+    PHCurrentMode = NULL;
+}
+
++(void)undoRestoreResolution
+{
+    CGDirectDisplayID d = kCGDirectMainDisplay;
+    if (PHCurrentMode)
+        return;
+    if (!PHOrigMode)
+        return;
+    PHCurrentMode = PHOrigMode;
+    PHOrigMode = CGDisplayCopyDisplayMode(d);
+    if (!CGDisplayIsCaptured(d))
+        CGDisplayCapture(d);
+    CGDisplaySetDisplayMode(d, PHCurrentMode, NULL);
+}
+#endif
 
 @end

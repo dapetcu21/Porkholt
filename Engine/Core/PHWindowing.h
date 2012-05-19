@@ -37,6 +37,15 @@ public:
     PHWVideoMode(const PHWVideoMode & o) : width(o.width), height(o.height), refresh(o.refresh), type(o.type) {}
     PHWVideoMode(enum windowType t) : width(800), height(600), refresh(60), type(t) {}
     PHWVideoMode(int w, int h, enum windowType t) : width(w), height(h), refresh(60), type(t) {}
+    
+    bool operator < (const PHWVideoMode & o) const
+    {
+        if (type != o.type)
+            return type < o.type;
+        if (width * height != o.width * o.height)
+            return width * height > o.width * o.height;
+        return refresh > o.refresh;
+    }
 };
 
 int PHWMain(int argc, char * argv[], const PHWVideoMode & vmode, int flags, void (*entryPoint)(PHGameManager *), void * ud);

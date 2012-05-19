@@ -11,7 +11,7 @@
 #import "PHEventHandler.h"
 #import "PHEvent.h"
 #import "PHWindowing.h"
-
+#import <CoreVideo/CoreVideo.h>
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
@@ -62,10 +62,16 @@
     vsync = !(flags & PHWVSync);
     [self setVerticalSync:!vsync];
     
+    CVDisplayLinkRef displayLink = nil;
+	CVDisplayLinkCreateWithCGDisplay(kCGDirectMainDisplay, &displayLink);
+	CVTime tm = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(displayLink);
+    double fps = round(double(tm.timeScale)/tm.timeValue);
+	CVDisplayLinkRelease(displayLink);
+    
     PHGameManagerInitParameters initParams;
     initParams.screenWidth = frame.size.width;
     initParams.screenHeight = frame.size.height;
-    initParams.fps = 60;
+    initParams.fps = fps;
     initParams.resourcePath = string([res UTF8String]) + "/rsrc";
     initParams.entryPoint = entryPoint;
     if (flags & PHWRemote)
@@ -336,25 +342,42 @@ int PHEventHandler::modifierMask()
     PHGameManager::globalFrame(timeElapsed);
 }
 
+-(void)rebuildContext
+{
+    NSOpenGLContext * ctx = [[NSOpenGLContext alloc] initWithFormat:[[self class] defaultPixelFormat] shareContext:self.openGLContext];
+    [self setOpenGLContext:ctx];
+    [ctx release];
+    [[self openGLContext] makeCurrentContext];
+}
+
 -(void)setManualSize:(NSSize)sz
 {
     msize = sz;
-    manual = true;
     GLint dim[2] = {sz.width, sz.height};
     CGLContextObj ctx = (CGLContextObj)[self openGLContext].CGLContextObj;
     CGLSetParameter(ctx, kCGLCPSurfaceBackingSize, dim);
     CGLEnable(ctx, kCGLCESurfaceBackingSize);
+    manual = true;
     [self reshape];
 }
 
 -(void)setAutomaticSize
 {
+    if (!manual) return;
     manual = false;
     CGLContextObj ctx = (CGLContextObj)[self openGLContext].CGLContextObj;
-    GLint dim[2] = {self.bounds.size.width, self.bounds.size.height};
-    CGLSetParameter(ctx, kCGLCPSurfaceBackingSize, dim);
     CGLDisable(ctx, kCGLCESurfaceBackingSize);
     [self reshape];
+}
+
+-(double)refreshRate
+{
+    return gameManager->framesPerSecond();
+}
+
+-(void)setRefreshRate:(double)refreshRate
+{
+    gameManager->setFramesPerSecond(refreshRate);
 }
 
 @end

@@ -14,13 +14,16 @@
 #import "PHAppDelegate.h"
 #import "PHGLView.h"
 #import "PHWindow.h"
+#import <CoreVideo/CoreVideo.h>
 
 extern PHWindow * PHWMainWindow;
 
 int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
-    [[NSApplication sharedApplication] setDelegate:[[PHAppDelegate alloc] initWithVM: vm flags: flags entryPoint:entryPoint ud:ud ]];
+    PHAppDelegate * del = [[PHAppDelegate alloc] initWithVM: vm flags: flags entryPoint:entryPoint ud:ud ];
+    [[NSApplication sharedApplication] setDelegate:del];
     [NSApp run];
+    [del release];
     return 0;
 }
 
@@ -34,34 +37,6 @@ PHWVideoMode PHWGetVideoMode()
     return PHWMainWindow.videoMode;
 }
 
-static const int resolutions[] = {
-    2880, 900,
-    2560, 1600,
-    2048, 1280,
-    2048, 1152,
-    1920, 1440,
-    1920, 1200,
-    1920, 1080,
-    1856, 1392,
-    1800, 1440,
-    1792, 1344,
-    1600, 900,
-    1600, 1200,
-    1440, 900,
-    1400, 1050,
-    1366, 768,
-    1280, 800,
-    1280, 720,
-    1280, 1024,
-    1152, 720,
-    1024, 768,
-    1024, 640,
-    1024, 576,
-    960, 540,
-    800, 480,
-    800, 600
-};
-
 const vector<PHWVideoMode> & PHWSupportedModes()
 {
     static vector<PHWVideoMode> v;
@@ -71,13 +46,44 @@ const vector<PHWVideoMode> & PHWSupportedModes()
         inited = true;
         NSRect r = [[NSScreen mainScreen] frame];
         
-        v.push_back(PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed));
-        v.push_back(PHWVideoMode(r.size.width, r.size.height, 60, PHWVideoMode::FullscreenWindowed));
-        v.push_back(PHWVideoMode(r.size.width, r.size.height, 60, PHWVideoMode::Fullscreen));
+        CVDisplayLinkRef displayLink = nil;
+        CVDisplayLinkCreateWithCGDisplay(kCGDirectMainDisplay, &displayLink);
+        CVTime tm = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(displayLink);
+        double grefresh = round(double(tm.timeScale)/tm.timeValue);
+        CVDisplayLinkRelease(displayLink);
         
-        for (int i=0; i<(sizeof(resolutions)/sizeof(int)); i+=2)
-            if ((resolutions[i] < r.size.width) && (resolutions[i+1] < r.size.height))
-                v.push_back(PHWVideoMode(resolutions[i], resolutions[i+1], 60, PHWVideoMode::Fullscreen));
+        v.push_back(PHWVideoMode(800, 600, grefresh, PHWVideoMode::Windowed));
+        v.push_back(PHWVideoMode(r.size.width, r.size.height, grefresh, PHWVideoMode::FullscreenWindowed));
+        
+        set<pair< pair<int, int>,double> > s;
+        
+        CGDirectDisplayID d = kCGDirectMainDisplay;
+        CFArrayRef modelist = CGDisplayCopyAllDisplayModes(d, NULL);
+        int count = CFArrayGetCount(modelist);
+        for (int i=0; i<count; i++)
+        {
+            CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(modelist, i);
+            long width = CGDisplayModeGetWidth(mode);
+            long height = CGDisplayModeGetHeight(mode);
+            double refresh = CGDisplayModeGetRefreshRate(mode);
+            
+            CFStringRef pixelEncoding = CGDisplayModeCopyPixelEncoding(mode);
+            if (CFStringCompare(pixelEncoding,CFSTR(IO32BitDirectPixels),0)!=kCFCompareEqualTo)
+            {
+                CFRelease(pixelEncoding);
+                continue;
+            }
+            CFRelease(pixelEncoding);
+            if (refresh == 0)
+                refresh = grefresh;
+            if (s.count(make_pair(make_pair(width, height),refresh)))
+                continue;
+            s.insert(make_pair(make_pair(width, height),refresh));
+            v.push_back(PHWVideoMode(width, height, refresh, PHWVideoMode::Fullscreen));
+        }
+        CFRelease(modelist);
+        
+        sort(v.begin(), v.end());
     }
     return v;
 }

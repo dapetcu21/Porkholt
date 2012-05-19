@@ -21,6 +21,7 @@ class PHButtonTextView : public PHTextView
     {
         if (evt->type() == PHEvent::touchDown)
         {
+            evt->setHandled(true);
             cb.call(this);
         }
     }
@@ -57,6 +58,7 @@ class PHModeTextView : public PHTextView
     {
         if (evt->type() == PHEvent::touchDown)
         {
+            evt->setHandled(true);
             PHLog("%s", text().c_str());
             PHWSetVideoMode(vm);
         }

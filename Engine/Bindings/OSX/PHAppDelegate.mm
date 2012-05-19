@@ -29,13 +29,20 @@ PHWindow * PHWMainWindow = NULL;
 
 - (void)dealloc
 {
-    PHWMainWindow = nil;
     [super dealloc];
+}
+
+- (void)quitApp:(id)sender
+{
+    PHWClose();
 }
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-    [NSApp terminate:self];
+    window.delegate = nil;
+    window = nil;
+    PHWMainWindow = nil;
+    [NSApp stop:self];
 }
 
 @interface NSApplication (NiblessAdditions)
@@ -57,7 +64,7 @@ PHWindow * PHWMainWindow = NULL;
     item = [mainMenu addItemWithTitle:@"Apple" action:NULL keyEquivalent:@""];
 	submenu = [[[NSMenu alloc] initWithTitle:@"Apple"] autorelease];
     [NSApp setAppleMenu:submenu];    
-    [submenu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
+    [submenu addItemWithTitle:@"Quit" action:@selector(quitApp:) keyEquivalent:@"q"];
 	[mainMenu setSubmenu:submenu forItem:item];
     
     [NSApp setMainMenu:mainMenu];

@@ -39,4 +39,5 @@ class PHGameManager;
 
 
 @property(nonatomic, assign) BOOL verticalSync;
+@property(nonatomic, assign) double refreshRate;
 @end
