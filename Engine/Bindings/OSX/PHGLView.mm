@@ -97,6 +97,23 @@
     }
     return fmt;
 }
+
++(NSOpenGLPixelFormat *)pixelFormatWithFlags:(int)flags
+{
+    GLuint attributes[10];
+    
+    int n = 0;
+    attributes[n++] = NSOpenGLPFADoubleBuffer;
+    if (flags & PHWDepthBuffer)
+    {
+        attributes[n++] = NSOpenGLPFADepthSize;
+        attributes[n++] = 32;
+    }
+    attributes[n++] = 0;
+    
+    return [[[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute*) attributes] autorelease];
+}
+
 -(void)load
 {
     [self loadWithPixelFormat:[PHGLView defaultPixelFormat]];
@@ -114,7 +131,7 @@
 
 -(id)initWithFrame:(NSRect)frameRect resourcePath:(NSString *)_res entryPoint:(void (*)(PHGameManager *))_entryPoint flags:(int)_flags
 {
-    NSOpenGLPixelFormat * pf = [PHGLView defaultPixelFormat];
+    NSOpenGLPixelFormat * pf = [PHGLView pixelFormatWithFlags:_flags];
     self = [super initWithFrame:frameRect pixelFormat:pf];
     if (self)
     {
@@ -340,14 +357,6 @@ int PHEventHandler::modifierMask()
 +(void)globalFrame:(double)timeElapsed
 {
     PHGameManager::globalFrame(timeElapsed);
-}
-
--(void)rebuildContext
-{
-    NSOpenGLContext * ctx = [[NSOpenGLContext alloc] initWithFormat:[[self class] defaultPixelFormat] shareContext:self.openGLContext];
-    [self setOpenGLContext:ctx];
-    [ctx release];
-    [[self openGLContext] makeCurrentContext];
 }
 
 -(void)setManualSize:(NSSize)sz

@@ -95,7 +95,9 @@ void PHWClose()
 
 void PHWSetTitle(const string & title)
 {
+    NSAutoreleasePool * ap = [[NSAutoreleasePool alloc] init];
     PHWMainWindow.title = [NSString stringWithUTF8String:title.c_str()];
+    [ap drain];
 }
 
 void PHWSetVSync(bool vsync)
