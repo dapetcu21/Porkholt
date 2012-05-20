@@ -75,8 +75,9 @@ downscalepng()
 	CONVERT_FLAGS="-quality 5 -channel RGBA -depth 24 -colorspace RGB"
 	if [[ "$BUILD_ACTION" == "build-nodownscale" ]]
 	then
-	    convert "$SRC_DIR/$1" $CONVERT_FLAGS "png32:$2"
-	else
+#	    convert "$SRC_DIR/$1" $CONVERT_FLAGS "png32:$2"
+      cp "${SRC_DIR}/$1" "$2"
+  else
 	    convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 50% "png32:$2"
 	    mv "$2" "${2}.hd"
 	    convert "$SRC_DIR/$1" $CONVERT_FLAGS -resize 25% "png32:$2"
