@@ -1191,9 +1191,10 @@ void PHGameEntryPoint(PHGameManager * gm)
 	vc->init(gm);
     gm->navigationController()->pushViewController(vc);
     vc->release();
+    
 }
 
 int main(int argc, char *argv[]) {
-    return PHWMain(argc, argv, PHWGLES1 | PHWResizable | PHWVSync | PHWRemote, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVideoMode(800,600,PHWVideoMode::FullscreenWindowed), PHWGLES1 | PHWResizable | PHWVSync | PHWRemote | PHWDepthBuffer, &PHGameEntryPoint,NULL);
 }
  

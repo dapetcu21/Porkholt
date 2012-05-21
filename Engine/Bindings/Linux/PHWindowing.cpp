@@ -66,7 +66,7 @@ void PHWRender()
     double elapsedTime;
     double time;
     if (flags & PHWFrameAnimation)
-        elapsedTime= frameInterval;
+        elapsedTime = frameInterval;
     else 
     {
         time = PHTime::getTime();
@@ -75,7 +75,6 @@ void PHWRender()
             elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
     }
     PHGameManager::globalFrame(elapsedTime);
-    gm->setFrameBegin(time);
     gm->processInput();
     gm->renderFrame(elapsedTime);
     PHWLastTime = time;

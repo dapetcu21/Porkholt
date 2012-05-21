@@ -28,7 +28,7 @@
     [self makeCurrent];
     double tim = [self elapsedTime];
     [PHGLView globalFrame:tim];
-    [self render:tim startTime:time];
+    [self render:tim];
 }
 
 -(void)setVerticalSync:(BOOL)verticalSync
@@ -64,8 +64,8 @@
     
     CVDisplayLinkRef displayLink = nil;
 	CVDisplayLinkCreateWithCGDisplay(kCGDirectMainDisplay, &displayLink);
-	CVTime tm = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(displayLink);
-    double fps = round(double(tm.timeScale)/tm.timeValue);
+	CVTime tmm = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(displayLink);
+    double fps = round(double(tmm.timeScale)/tmm.timeValue);
 	CVDisplayLinkRelease(displayLink);
     
     PHGameManagerInitParameters initParams;
@@ -108,6 +108,11 @@
     {
         attributes[n++] = NSOpenGLPFADepthSize;
         attributes[n++] = 32;
+    }
+    if (flags & PHWStencilBuffer)
+    {
+        attributes[n++] = NSOpenGLPFAStencilSize;
+        attributes[n++] = 8;
     }
     attributes[n++] = 0;
     
@@ -182,13 +187,11 @@
 -(void)render
 {    
     double tim = [self elapsedTime];
-    [self render:tim startTime:time];
+    [self render:tim];
 }
 
--(void)render:(double)timeElapsed startTime:(double)start
+-(void)render:(double)timeElapsed
 {
-    time = start;
-    gameManager->setFrameBegin(start);
     gameManager->processInput();
     gameManager->renderFrame(timeElapsed);
     glFlush();

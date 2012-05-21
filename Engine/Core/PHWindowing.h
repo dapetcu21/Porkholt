@@ -20,7 +20,8 @@ enum PHStartGame_flags
     PHWVSync = 1<<6,
     PHWRemote = 1<<7,
     PHWShowFPS = 1<<8,
-    PHWDepthBuffer = 1<<3
+    PHWDepthBuffer = 1<<3,
+    PHWStencilBuffer = 1<<4
 };
 
 class PHWVideoMode

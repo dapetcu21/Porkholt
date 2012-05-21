@@ -72,28 +72,34 @@ int PHXGetScreenSize(int &width, int &height, int &rate)
 
 void PHXCreateContext(const string & title, int & resX, int & resY, int & refresh, int fstype, int flags)
 {
-    Display * display = XOpenDisplay(0);
+	Display * display;
+	if (PHXDisplay)
+		display = PHXDisplay;
+	else
+    	display = XOpenDisplay(0);
  
     if ( !display )
         throw string("Failed to open X display");
  
-    int visual_attribs[] =
-    {
-        GLX_X_RENDERABLE    , True,
-        GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
-        GLX_RENDER_TYPE     , GLX_RGBA_BIT,
-        GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
-        GLX_RED_SIZE        , 8,
-        GLX_GREEN_SIZE      , 8,
-        GLX_BLUE_SIZE       , 8,
-        GLX_ALPHA_SIZE      , 8,
-        GLX_DEPTH_SIZE      , 24,
-        GLX_STENCIL_SIZE    , 8,
-        GLX_DOUBLEBUFFER    , True,
-        //GLX_SAMPLE_BUFFERS  , 1,
-        //GLX_SAMPLES         , 4,
-        None
-    };
+    int visual_attribs[32] =
+	int nr=0;
+	#define add(x) visual_attribs[nr++] = (x)
+	add(GLX_X_RENDERABLE);  add(True);
+	add(GLX_DRAWABLE_TYPE); add(GLX_WINDOW_BIT);
+	add(GLX_RENDER_TYPE);   add(GLX_RGBA_BIT);
+    add(GLX_X_VISUAL_TYPE); add(GLX_TRUE_COLOR);
+    add(GLX_RED_SIZE);      add(8);
+    add(GLX_GREEN_SIZE);    add(8);
+    add(GLX_BLUE_SIZE);     add(8);
+    add(GLX_ALPHA_SIZE);    add(8);
+	if (flags & PHWDepthBuffer)
+		{ add(GLX_DEPTH_SIZE);    add(32); }
+    if (flags & PHWStencilBuffer)
+		{ add(GLX_STENCIL_SIZE);  add(8); }
+    add(GLX_DOUBLEBUFFER);  add(True);
+	add(None);
+	#undef add
+	
  
     int glx_major, glx_minor;
  
@@ -432,6 +438,11 @@ const vector<PHWVideoMode> & PHXVideoModes()
     static vector<PHWVideoMode> v;
     if (init) return v;
     init = true;
+	
+	if (!PHXDisplay)
+		PHXDisplay = XOpenDisplay(0);
+    if (!PHXDisplay )
+        throw string("Failed to open X display");
 
     Display * dpy = PHXDisplay;
     Window root = XRootWindow(dpy, 0);

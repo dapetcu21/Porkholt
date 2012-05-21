@@ -120,10 +120,7 @@ public:
 	int framesPerSecond() { return fps; }
     void setFramesPerSecond(int f) { fps = f; }
     ph_float frameInterval() { return 1.0f/fps; }
-    ph_float lastFrameElapsed() { return lastElapsed; }
-    ph_float frameBegin() { return frameBeg; }
-    ph_float elapsedSinceFrame() { return PHTime::getTime() - frameBeg; }
-    void setFrameBegin(ph_float f) { frameBeg = f; }
+    ph_float elapsedTime() { return lastElapsed; }
     ph_float dotsPerInch() { return dpi; }
     const string & resourcePath() { return resPath; }
     void setResourcePath(const string & r) { resPath = r; }
