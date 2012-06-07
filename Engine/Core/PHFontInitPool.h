@@ -1,10 +1,4 @@
-//
-//  PHFontInitPool.h
-//  Porkholt
-//
-//  Created by Marius Petcu on 1/30/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHFONTINITPOOL_H
 #define PHFONTINITPOOL_H

@@ -1,10 +1,4 @@
-//
-//  PHGLTexture.h
-//  Porkholt
-//
-//  Created by Marius Petcu on 4/22/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHGLTEXTURE_H
 #define PHGLTEXTURE_H

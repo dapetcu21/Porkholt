@@ -1,10 +1,4 @@
-//
-//  PHStripeCurve.cpp
-//  Porkholt
-//
-//  Created by Marius Petcu on 2/17/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHStripeCurve.h"
 

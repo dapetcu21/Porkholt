@@ -1,10 +1,4 @@
-//
-//  PHScrollerView.h
-//  LevelDesigner
-//
-//  Created by Marius Petcu on 10/4/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHSCROLLERVIEW_H
 #define PHSCROLLERVIEW_H

@@ -1,10 +1,4 @@
-//
-//  PHFont.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 7/16/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHFONT_H
 #define PHFONT_H

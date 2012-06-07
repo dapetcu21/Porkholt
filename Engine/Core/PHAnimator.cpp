@@ -1,10 +1,4 @@
-//
-//  PHAnimator.cpp
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 11/22/11.
-//  Copyright (c) 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHAnimator.h"
 #include "PHAnimatorPool.h"

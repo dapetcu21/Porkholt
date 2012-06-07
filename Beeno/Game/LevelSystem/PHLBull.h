@@ -1,10 +1,4 @@
-//
-//  PHLBull.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 7/24/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHLBULL_H
 #define PHLBULL_H

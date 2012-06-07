@@ -1,11 +1,4 @@
-/*
- *  PHMain.h
- *  Porkholt
- *
- *  Created by Marius Petcu on 12/16/10.
- *  Copyright 2010 Porkholt Labs!. All rights reserved.
- *
- */
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHMAIN_H
 #define PHMAIN_H

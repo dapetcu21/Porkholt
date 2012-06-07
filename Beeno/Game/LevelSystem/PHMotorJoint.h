@@ -1,10 +1,4 @@
-//
-//  PHMotorJoint.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 5/13/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHMOTORJOINT_H
 #define PHMOTORJOINT_H

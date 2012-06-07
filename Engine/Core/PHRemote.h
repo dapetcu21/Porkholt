@@ -1,10 +1,4 @@
-//
-//  PHRemote.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 6/18/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHREMOTE_H
 #define PHREMOTE_H

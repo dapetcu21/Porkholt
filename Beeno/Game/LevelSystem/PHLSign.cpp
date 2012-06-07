@@ -1,10 +1,4 @@
-//
-//  PHLSign.cpp
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 7/25/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLSign.h"
 #include "PHLua.h"

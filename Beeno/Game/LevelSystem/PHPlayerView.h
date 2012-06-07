@@ -1,10 +1,4 @@
-//
-//  PHPlayerView.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 5/16/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHPLAYERVIEW_H
 #define PHPLAYERVIEW_H

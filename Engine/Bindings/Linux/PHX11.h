@@ -1,10 +1,4 @@
-//
-//  PHX11.h
-//  Porkholt
-//
-//  Created by Marius Petcu on 2/7/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHX11_H
 #define PHX11_H

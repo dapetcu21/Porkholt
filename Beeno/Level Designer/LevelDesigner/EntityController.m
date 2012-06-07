@@ -1,10 +1,4 @@
-//
-//  EntityController.m
-//  LevelDesigner
-//
-//  Created by Marius Petcu on 9/21/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #import "EntityController.h"
 #import "PLEntity.h"

@@ -1,10 +1,4 @@
-//
-//  PHLPlatform.cpp
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 5/24/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLPlatform.h"
 #include <Box2D/Box2D.h>

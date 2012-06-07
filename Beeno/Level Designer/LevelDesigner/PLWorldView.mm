@@ -1,10 +1,4 @@
-//
-//  PLWorldView.cpp
-//  LevelDesigner
-//
-//  Created by Marius Petcu on 10/7/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PLWorldView.h"
 #include "PHEvent.h"

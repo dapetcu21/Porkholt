@@ -1,11 +1,4 @@
-/*
- *  PHObject.h
- *  Porkholt
- *
- *  Created by Marius Petcu on 12/15/10.
- *  Copyright 2010 Porkholt Labs!. All rights reserved.
- *
- */
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHOBJECT_H
 #define PHOBJECT_H

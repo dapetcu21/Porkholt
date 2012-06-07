@@ -1,10 +1,4 @@
-//
-//  FIBuffer.h
-//  Finch
-//
-//  Created by Marius Petcu on 11/14/11.
-//  Copyright (c) 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 
 #ifdef __OBJC__

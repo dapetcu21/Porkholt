@@ -1,10 +1,4 @@
-//
-//  PHMeshBody.h
-//  3DDemo
-//
-//  Created by Marius Petcu on 4/14/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHMESHBODY_H
 #define PHMESHBODY_H

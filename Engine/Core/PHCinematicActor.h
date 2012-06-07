@@ -1,10 +1,4 @@
-//
-//  PHCinematicActor.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 1/8/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHCINEMATICACTOR_H
 #define PHCINEMATICACTOR_H

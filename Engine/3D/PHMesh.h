@@ -1,10 +1,4 @@
-//
-//  PHMesh.h
-//  Porkholt
-//
-//  Created by Marius Petcu on 4/13/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHMESH_H
 #define PHMESH_H

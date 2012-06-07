@@ -1,10 +1,4 @@
-//
-//  PHTCPServer.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 12/7/11.
-//  Copyright (c) 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHTCPSERVER_H
 #define PHTCPSERVER_H

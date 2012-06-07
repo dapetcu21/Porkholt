@@ -1,10 +1,4 @@
-//
-//  PHGLVertexBufferObject.h
-//  Porkholt
-//
-//  Created by Marius Petcu on 2/18/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHGLVERTEXBUFFEROBJECT_H
 #define PHGLVERTEXBUFFEROBJECT_H

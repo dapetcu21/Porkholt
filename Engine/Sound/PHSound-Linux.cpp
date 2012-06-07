@@ -1,10 +1,4 @@
-//
-//  PHSound.cpp
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 11/14/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHSound.h"
 #include "PHSoundManager.h"

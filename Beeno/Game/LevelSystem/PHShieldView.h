@@ -1,10 +1,4 @@
-//
-//  PHShieldView.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 7/29/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHSHIELDVIEW_H
 #define PHSHIELDVIEW_H

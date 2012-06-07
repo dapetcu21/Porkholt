@@ -1,10 +1,4 @@
-//
-//  PHLuaObject.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 1/19/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHLUAOBJECT_H
 #define PHLUAOBJECT_H

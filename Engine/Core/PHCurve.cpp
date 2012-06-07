@@ -1,10 +1,4 @@
-//
-//  PHCurve.cpp
-//  Porkholt
-//
-//  Created by Marius Petcu on 2/17/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 //  BEWARE!!! THIS IS THE UGLIEST FILE IN THIS WHOLE PROJECT
 
 #include "PHCurve.h"

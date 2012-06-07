@@ -1,10 +1,4 @@
-//
-//  PHMatrix.h
-//  Porkholt
-//
-//  Created by Marius Petcu on 2/1/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHMATRIX_H
 #define PHMATRIX_H

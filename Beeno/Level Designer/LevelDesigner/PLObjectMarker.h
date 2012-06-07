@@ -1,10 +1,4 @@
-//
-//  PLObjectMarker.h
-//  LevelDesigner
-//
-//  Created by Marius Petcu on 10/11/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PLOBJECTMARKER_H
 #define PLOBJECTMARKER_H

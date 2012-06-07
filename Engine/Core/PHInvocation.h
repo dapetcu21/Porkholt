@@ -1,10 +1,4 @@
-//
-//  PHInvocation.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 10/16/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHINVOCATION_H
 #define PHINVOCATION_H

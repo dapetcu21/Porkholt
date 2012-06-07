@@ -1,10 +1,4 @@
-//
-//  PHLGround.h
-//  Porkholt_iOS
-//
-//  Created by Marius Petcu on 7/25/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHLGROUND_H
 #define PHLGROUND_H

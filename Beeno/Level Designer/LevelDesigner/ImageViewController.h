@@ -1,10 +1,4 @@
-//
-//  ImageViewController.h
-//  LevelDesigner
-//
-//  Created by Marius Petcu on 10/6/11.
-//  Copyright 2011 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #import <Foundation/Foundation.h>
 

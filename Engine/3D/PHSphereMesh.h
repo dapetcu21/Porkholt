@@ -1,10 +1,4 @@
-//
-//  PHSphereMesh.h
-//  3DDemo
-//
-//  Created by Marius Petcu on 4/13/12.
-//  Copyright (c) 2012 Porkholt Labs!. All rights reserved.
-//
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHSPHEREMESH_H
 #define PHSPHEREMESH_H
