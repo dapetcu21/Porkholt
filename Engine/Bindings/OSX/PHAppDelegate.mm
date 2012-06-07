@@ -12,8 +12,11 @@
 
 PHWindow * PHWMainWindow = NULL;
 
-@implementation PHAppDelegate
+@interface NSApplication (NiblessAdditions)
+-(void) setAppleMenu:(NSMenu *)aMenu;
+@end
 
+@implementation PHAppDelegate
 
 -(id)initWithVM:(const PHWVideoMode &) _vm flags:(int)_flags entryPoint:(void (*)(PHGameManager *))_entryPoint ud:(void*)_ud
 {
@@ -44,10 +47,6 @@ PHWindow * PHWMainWindow = NULL;
     PHWMainWindow = nil;
     [NSApp stop:self];
 }
-
-@interface NSApplication (NiblessAdditions)
--(void) setAppleMenu:(NSMenu *)aMenu;
-@end
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {

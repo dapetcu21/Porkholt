@@ -49,11 +49,11 @@
 {
     if (gameManager) return;
     
-    tm = [NSTimer scheduledTimerWithTimeInterval:0.0f
-                                          target:self
-                                        selector:@selector(makeCurrentAndRender)
-                                        userInfo:nil
-                                         repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:0.0f
+                                                     target:self
+                                                   selector:@selector(makeCurrentAndRender)
+                                                   userInfo:nil
+                                                    repeats:YES];
     
     NSRect frame = [self bounds];
     gameManager = new PHGameManager;
@@ -166,6 +166,7 @@
 
 -(void)dealloc
 {
+    [timer invalidate];
     gameManager->release();
     [res release];
     [super dealloc];

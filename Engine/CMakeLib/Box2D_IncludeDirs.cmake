@@ -3,4 +3,4 @@ if (NOT DEFINED PH_B2D_HINCLUDED)
   include_directories(
     ${PH_B2D_PATH}
     )
-endif (NOT DEFINED PH_B2D_HINCLUDED)
+endif()

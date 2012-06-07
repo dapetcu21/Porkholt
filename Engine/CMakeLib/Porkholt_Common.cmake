@@ -47,6 +47,9 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/Core/PHFont.cpp
   ${PH_ENGINE_PATH}/Core/PHViewController.cpp
   ${PH_ENGINE_PATH}/Core/PHGLTexture.cpp
+  ${PH_ENGINE_PATH}/Core/PHInode.cpp
+  ${PH_ENGINE_PATH}/Core/PHRegularDirectory.cpp
+  ${PH_ENGINE_PATH}/Core/PHRegularFile.cpp
   ${PH_ENGINE_PATH}/Geometry/PHColor.cpp
   ${PH_ENGINE_PATH}/Geometry/PHMatrix.cpp
   ${PH_ENGINE_PATH}/Geometry/PHRange.cpp
@@ -134,6 +137,12 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/Core/PHObject.h
   ${PH_ENGINE_PATH}/Core/PHViewController.h
   ${PH_ENGINE_PATH}/Core/PHGLTexture.h
+  ${PH_ENGINE_PATH}/Core/PHInode.h
+  ${PH_ENGINE_PATH}/Core/PHStream.h
+  ${PH_ENGINE_PATH}/Core/PHFile.h
+  ${PH_ENGINE_PATH}/Core/PHDirectory.h
+  ${PH_ENGINE_PATH}/Core/PHRegularDirectory.h
+  ${PH_ENGINE_PATH}/Core/PHRegularFile.h
   ${PH_ENGINE_PATH}/Geometry/PHColor.h
   ${PH_ENGINE_PATH}/Geometry/PHGeometry.h
   ${PH_ENGINE_PATH}/Geometry/PHMatrix.h

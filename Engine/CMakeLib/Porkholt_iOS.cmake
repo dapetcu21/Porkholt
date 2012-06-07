@@ -1,6 +1,6 @@
 if(NOT PH_SAME_PROJECT)
   project(Porkholt_iOS)
-endif(NOT PH_SAME_PROJECT)
+endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(CMAKE_OSX_SYSROOT iphoneos)

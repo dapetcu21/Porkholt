@@ -12,4 +12,4 @@ if (NOT DEFINED PH_ENGINE_HINCLUDED)
     ${PH_EXTERNALS}/zlib
     ${PH_EXTERNALS}/uremote/include
     )
-endif (NOT DEFINED PH_ENGINE_HINCLUDED)
+endif()

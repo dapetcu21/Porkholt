@@ -24,14 +24,14 @@ target_link_libraries(${PH_NAME} Porkholt_Linux
 if(PH_USE_BOX2D)
   include("${PH_ENGINE_PATH}/CMakeLib/Box2D_Linux.cmake")
   target_link_libraries(${PH_NAME} Box2D_Linux)
-endif(PH_USE_BOX2D)
+endif()
 
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rsrc)
 set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/${PH_NAME}-rsrc)
 
 add_custom_target(
   PostProcess_Resources
-  COMMAND ${PH_ENGINE_PATH}/CMakeLib/postprocess.sh ${RES_SRC_DIR} ${RES_DEST_DIR} "build-nodownscale" ${PH_EXTERNALS}
+  COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} "build-nodownscale" ${PH_EXTERNALS}
   )
 add_dependencies(${PH_NAME} PostProcess_Resources)
 add_dependencies(PostProcess_Resources External_Libs)

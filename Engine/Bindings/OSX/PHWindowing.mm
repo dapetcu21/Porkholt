@@ -29,7 +29,7 @@ int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*
 
 void PHWSetVideoMode(const PHWVideoMode & vm)
 {
-    PHWMainWindow.videoMode = vm;
+	[PHWMainWindow setVideoMode:vm];
 }
 
 PHWVideoMode PHWGetVideoMode()

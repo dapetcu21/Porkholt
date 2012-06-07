@@ -1,9 +1,13 @@
 if(NOT PH_SAME_PROJECT)
   project(Porkholt_OSX)
-endif(NOT PH_SAME_PROJECT)
+endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
-set(CMAKE_OSX_SYSROOT macosx)
+if(CMAKE_GENERATOR STREQUAL "Xcode")
+	set(CMAKE_OSX_SYSROOT macosx)
+endif()
+
+set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
@@ -31,13 +35,12 @@ include_directories(
 
 add_library(Porkholt_OSX ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
 
-
 set_target_properties(Porkholt_OSX PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
 set_target_properties(Porkholt_OSX PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
 set_target_properties(Porkholt_OSX PROPERTIES XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c99")
 
-add_custom_command( TARGET Porkholt_OSX 
-	PRE_BUILD
+add_custom_target( External_Libs
 	COMMAND ${PH_EXTERNALS}/make_darwin.sh
 	WORKING_DIRECTORY ${PH_EXTERNALS}
 	)
+add_dependencies(Porkholt_OSX External_Libs)

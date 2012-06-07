@@ -111,7 +111,7 @@
     if (resizable == r) return;
     resizable = r;
     if (floor(NSAppKitVersionNumber)>=NSAppKitVersionNumber10_7)
-        [self setCollectionBehavior:r?NSWindowCollectionBehaviorFullScreenPrimary:NSWindowCollectionBehaviorDefault];
+        [self setCollectionBehavior:(r?((int)NSWindowCollectionBehaviorFullScreenPrimary):((int)NSWindowCollectionBehaviorDefault))];
     NSUInteger mask = stylemask((vm.type == PHWVideoMode::Windowed),r);
     [self setStyleMask:mask];
 }

@@ -1,11 +1,15 @@
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
-set(CMAKE_OSX_SYSROOT macosx)
+if(CMAKE_GENERATOR STREQUAL "Xcode")
+	set(CMAKE_OSX_SYSROOT macosx)
+endif()
 set(CMAKE_EXE_LINKER_FLAGS
   "-ObjC -lPorkholt_OSX -llua -lz -lpng15 -framework OpenGL -framework Foundation -framework CoreVideo -framework AppKit"
   )
+
+set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
-  
+    
 link_directories(${PH_EXTERNALS}/lib/darwin/osx)
 link_directories(${Porkholt_OSX_BINARY_DIR})
 
@@ -16,41 +20,72 @@ add_dependencies(${PH_NAME} Porkholt_OSX)
 
 if(PH_USE_BOX2D)
   include("${PH_ENGINE_PATH}/CMakeLib/Box2D_OSX.cmake")
-  link_directories(${Box2D_OSX_BINARY_DIR})
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lBox2D_OSX")
-  add_dependencies(${PH_NAME} Box2D_OSX)
-endif(PH_USE_BOX2D)
+  if(CMAKE_GENERATOR STREQUAL "Xcode")
+    link_directories(${Box2D_OSX_BINARY_DIR})
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lBox2D_OSX")
+    add_dependencies(${PH_NAME} Box2D_OSX)
+  else()
+    target_link_libraries(${PH_NAME} Box2D_Linux)
+  endif()
+endif()
 
 if(NOT DEFINED PH_OSX_DEPLOYMENT_TARGET)
-  set(PH_OSX_DEPLOYMENT_TARGET "10.5")
-endif(NOT DEFINED PH_OSX_DEPLOYMENT_TARGET)
+  set(PH_OSX_DEPLOYMENT_TARGET "10.6")
+endif()
 
 if (NOT DEFINED PH_OSX_INFO_PLIST)
 	set(PH_OSX_INFO_PLIST "${PROJECT_SOURCE_DIR}/Info-OSX.plist")
-endif (NOT DEFINED PH_OSX_INFO_PLIST)
+endif ()
 if (NOT EXISTS ${PH_OSX_INFO_PLIST})
 	set(PH_OSX_INFO_PLIST "${PH_ENGINE_PATH}/CMakeLib/Info-OSX.plist")
-endif (NOT EXISTS ${PH_OSX_INFO_PLIST})
+endif ()
+if (NOT DEFINED PH_MARKETING_VERSION)
+  set(PH_MARKETING_VERSION 1.0)
+endif()
+if (NOT DEFINED PH_BUILD_NUMBER)
+  set(PH_BUILD_NUMBER 1)
+endif()
+if (NOT DEFINED PH_NAME_IDENTIFIER)
+  execute_process(COMMAND bash -c "echo -n \"${PH_NAME}\" | tr -d \"\\ \" "
+                  OUTPUT_VARIABLE PH_NAME_IDENTIFIER)
+endif()
+if (NOT DEFINED PH_BUNDLE_ID)
+  if (NOT DEFINED PH_COMPANY_ID)
+    set(PH_COMPANY_ID com.mycompany)
+  endif()
+  set(PH_BUNDLE_ID ${PH_COMPANY_ID}.${PH_NAME_IDENTIFIER})
+endif()
+if (NOT DEFINED PH_COPYRIGHT)
+  set(PH_COPYRIGHT "Copyright © 2012 __MyCompanyName__. All rights reserved.")
+endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "${PH_OSX_DEPLOYMENT_TARGET}")
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_INFOPLIST_FILE ${PH_OSX_INFO_PLIST} )
+if(CMAKE_GENERATOR STREQUAL "Xcode")
+  set(PH_OSX_INFO_PLIST_OUT "${CMAKE_CURRENT_BINARY_DIR}/Info-OSX.plist")
+  configure_file(${PH_OSX_INFO_PLIST} ${PH_OSX_INFO_PLIST_OUT})
+  set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_INFOPLIST_FILE ${PH_OSX_INFO_PLIST_OUT} )
+else()
+  set_target_properties(${PH_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PH_OSX_INFO_PLIST})
+endif()
 set_target_properties(${PH_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c99")
 
-
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rsrc)
-set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/_OSX/rsrc)
 
-add_custom_command(
-  TARGET ${PH_NAME}
-  POST_BUILD
-  COMMAND ${PH_ENGINE_PATH}/CMakeLib/postprocess.sh ${RES_SRC_DIR} ${RES_DEST_DIR} "build-nodownscale" ${PH_EXTERNALS}
-  )
-
-set(APP_NAME \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME})
-add_custom_command(
-  TARGET ${PH_NAME}
-  POST_BUILD
-  COMMAND /bin/mkdir -p ${APP_NAME}/Contents/Resources && /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn ${RES_DEST_DIR} ${APP_NAME}/Contents/Resources
-  )
+if(CMAKE_GENERATOR STREQUAL "Xcode")
+  set(APP_NAME \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME})
+  add_custom_command(
+    TARGET ${PH_NAME}
+    POST_BUILD
+    COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/Contents/Resources/rsrc "build-nodownscale" ${PH_EXTERNALS}
+    )
+else()
+  set(APP_NAME "${CMAKE_CURRENT_BINARY_DIR}/${PH_NAME}.app")
+  add_custom_target(
+    PostProcess_Resources
+    COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/Contents/Resources/rsrc "build-nodownscale" ${PH_EXTERNALS}
+    )
+  add_dependencies(${PH_NAME} PostProcess_Resources)
+  add_dependencies(PostProcess_Resources External_Libs)  
+endif()
