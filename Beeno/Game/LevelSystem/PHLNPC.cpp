@@ -1,25 +1,25 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLNPC.h"
-#include "PHTrailImageView.h"
+#include <Porkholt/Core/PHTrailImageView.h>
 #include "PHPlayerView.h"
-#include "PHGameManager.h"
-#include "PHAuxLayerView.h"
+#include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHAuxLayerView.h>
 #include <Box2D/Box2D.h>
-#include "PHLua.h"
-#include "PHTextView.h"
+#include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHTextView.h>
 #include "PHLevelController.h"
 #include "PHWorld.h"
 #include "PHLCamera.h"
 #include "PHDialogView.h"
 #include "PHDialog.h"
 #include "PHLAnimation.h"
-#include "PHGameManager.h"
-#include "PHEventQueue.h"
-#include "PHAnimatedImage.h"
-#include "PHImage.h"
-#include "PHImageAnimator.h"
-#include "PHImageView.h"
+#include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatedImage.h>
+#include <Porkholt/Core/PHImage.h>
+#include <Porkholt/Core/PHImageAnimator.h>
+#include <Porkholt/Core/PHImageView.h>
 #include "PHLPlayer.h"
 
 #include <typeinfo>

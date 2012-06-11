@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include "PHLEggBomb.h"
 #include "PHWorld.h"
 

@@ -2,7 +2,7 @@
 
 #ifndef PHJOINT_H
 #define PHJOINT_H
-#include "PHMain.h"
+#include <Porkholt/Core/PHMain.h>
 
 class b2Joint;
 class PHWorld;

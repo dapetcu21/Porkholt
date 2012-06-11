@@ -1,11 +1,11 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHMenuController.h"
-#include "PHView.h"
-#include "PHNavigationController.h"
+#include <Porkholt/Core/PHView.h>
+#include <Porkholt/Core/PHNavigationController.h>
 #include "PHTitleScreen.h"
-#include "PHImageView.h"
-#include "PHMusicManager.h"
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Sound/PHMusicManager.h>
 
 static const ph_float cloudX[] = {0.0f,1.0f,0.3f};
 static const ph_float cloudY[] = {0.5f,0.7f,0.12f};

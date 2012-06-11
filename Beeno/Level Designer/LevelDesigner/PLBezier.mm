@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #import "PLBezier.h"
-#include "PHBezierPath.h"
+#include <Porkholt/Core/PHBezierPath.h>
 #import "EntityController.h"
 #include "PLBezierView.h"
 

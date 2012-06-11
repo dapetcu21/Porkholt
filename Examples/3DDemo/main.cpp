@@ -1,12 +1,12 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHWindowing.h"
-#include "PHTestView.h"
-#include "PHViewController.h"
-#include "PHMeshBody.h"
-#include "PHSphereMesh.h"
-#include "PHProjectionChanger.h"
-#include "PHNormalImage.h"
+#include <Porkholt/Core/PHWindowing.h>
+#include <Porkholt/UI/PHTestView.h>
+#include <Porkholt/Core/PHViewController.h>
+#include <Porkholt/3D/PHMeshBody.h>
+#include <Porkholt/3D/PHSphereMesh.h>
+#include <Porkholt/3D/PHProjectionChanger.h>
+#include <Porkholt/Core/PHNormalImage.h>
 
 class PH3DDemoViewController : public PHViewController
 {

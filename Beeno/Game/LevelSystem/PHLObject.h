@@ -3,8 +3,8 @@
 #ifndef PHLOBJECT_H
 #define PHLOBJECT_H
 
-#include "PHMain.h"
-#include "PHCinematicActor.h"
+#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHCinematicActor.h>
 
 class PHImageView;
 class PHJoint;

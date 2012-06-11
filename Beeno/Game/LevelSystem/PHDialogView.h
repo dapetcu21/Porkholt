@@ -3,7 +3,7 @@
 #ifndef PHDIALOGVIEW_H
 #define PHDIALOGVIEW_H
 
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 
 class PHLNPC;
 class PHDialogView : public PHImageView

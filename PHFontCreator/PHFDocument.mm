@@ -8,7 +8,7 @@
 
 #import "PHFDocument.h"
 #import "ImageView.h"
-#include "PHSerialization.h"
+#include <Porkholt/Core/PHSerialization.h>
 #include <string.h>
 
 @implementation PHFDocument

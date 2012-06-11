@@ -1,13 +1,13 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHChapterController.h"
-#include "PHImageView.h"
-#include "PHButtonView.h"
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/UI/PHButtonView.h>
 #include "PHLevelController.h"
-#include "PHNavigationController.h"
-#include "PHFileManager.h"
-#include "PHTextView.h"
-#include "PHFont.h"
+#include <Porkholt/Core/PHNavigationController.h>
+#include <Porkholt/IO/PHFileManager.h>
+#include <Porkholt/Core/PHTextView.h>
+#include <Porkholt/Core/PHFont.h>
 #include <sstream>
 
 #define SIZ_BK_WID 0.09

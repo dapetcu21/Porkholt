@@ -2,32 +2,32 @@
 
 #include "PHWorld.h"
 
-#include "PHTimer.h"
+#include <Porkholt/Core/PHTimer.h>
 #include "PHCaptureView.h"
 #include "PHGaugeView.h"
 #include "PHHeartView.h"
-#include "PHImage.h"
+#include <Porkholt/Core/PHImage.h>
 #include "PHLevelController.h"
 #include <Box2D/Box2D.h>
-#include "PHEventQueue.h"
+#include <Porkholt/Core/PHEventQueue.h>
 
 #include "PHLPlayer.h"
 #include "PHLNPC.h"
 #include "PHLMob.h"
 #include "PHLCamera.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 
 #include "PHDialog.h"
 #include "PHScripting.h"
 
-#include "PHTextView.h"
-#include "PHEventQueue.h"
-#include "PHButtonView.h"
+#include <Porkholt/Core/PHTextView.h>
+#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/UI/PHButtonView.h>
 #include "PHPoofView.h"
 
-#include "PHSoundManager.h"
+#include <Porkholt/Sound/PHSoundManager.h>
 #include "PHShieldView.h"
-#include "PHSoundPool.h"
+#include <Porkholt/Sound/PHSoundPool.h>
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)

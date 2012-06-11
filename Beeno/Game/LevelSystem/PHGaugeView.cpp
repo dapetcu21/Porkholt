@@ -1,10 +1,10 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHImage.h"
+#include <Porkholt/Core/PHImage.h>
 #include "PHGaugeView.h"
-#include "PHNormalImage.h"
-#include "PHAnimatedImage.h"
-#include "PHImageAnimator.h"
+#include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/Core/PHAnimatedImage.h>
+#include <Porkholt/Core/PHImageAnimator.h>
 
 void PHGaugeView::draw()
 {

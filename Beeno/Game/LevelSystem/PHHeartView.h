@@ -3,7 +3,7 @@
 #ifndef PHHEARTVIEW_H
 #define PHHEARTVIEW_H
 
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 
 #define PHHEARTVIEW_INIT heartNo(3), active(3), flipped(false), gap(0)
 

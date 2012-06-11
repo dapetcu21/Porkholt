@@ -3,7 +3,7 @@
 #ifndef PHMENUCONTROLLER_H
 #define PHMENUCONTROLLER_H
 
-#include "PHViewController.h"
+#include <Porkholt/Core/PHViewController.h>
 
 class PHImageView;
 class PHTitleScreen;

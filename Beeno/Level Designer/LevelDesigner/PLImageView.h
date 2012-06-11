@@ -3,7 +3,7 @@
 #ifndef PLIMAGEVIEW_H
 #define PLIMAGEVIEW_H
 
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 @class PLImage;
 class PLObjectView;
 class PLBezierView;

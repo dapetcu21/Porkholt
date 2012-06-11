@@ -2,25 +2,25 @@
 
 #include "PHLObject.h"
 
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 
-#include "PHEventQueue.h"
+#include <Porkholt/Core/PHEventQueue.h>
 #include "PHLAnimation.h"
 #include "PHLevelController.h"
-#include "PHKeyframeAnimator.h"
+#include <Porkholt/Core/PHKeyframeAnimator.h>
 
 #include "PHJoint.h"
 #include "PHWorld.h"
-#include "PHImageView.h"
-#include "PHBezierPath.h"
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHBezierPath.h>
 
-#include "PHImage.h"
+#include <Porkholt/Core/PHImage.h>
 #include "PHPoofView.h"
 
-#include "PHSoundManager.h"
-#include "PHSoundPool.h"
+#include <Porkholt/Sound/PHSoundManager.h>
+#include <Porkholt/Sound/PHSoundPool.h>
 
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include <Box2D/Box2D.h>
 
 map<string,PHAllocator> * PHLObject::initMap = NULL;

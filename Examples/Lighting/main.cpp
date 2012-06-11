@@ -1,10 +1,10 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHStartGame.h"
-#include "PHViewController.h"
-#include "PHDeferredView.h"
-#include "PHImageView.h"
-#include "PHImage.h"
+#include <Porkholt/Core/PHViewController.h>
+#include <Porkholt/Core/PHDeferredView.h>
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHImage.h>
 
 
 class PHIgorController : public PHViewController

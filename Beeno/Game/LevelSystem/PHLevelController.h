@@ -3,7 +3,7 @@
 #ifndef PHLEVELCONTROLLER_H
 #define PHLEVELCONTROLLER_H
 
-#include "PHViewController.h"
+#include <Porkholt/Core/PHViewController.h>
 
 class PHWorld;
 class PHButtonView;

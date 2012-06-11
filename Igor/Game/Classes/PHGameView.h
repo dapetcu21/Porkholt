@@ -3,7 +3,7 @@
 #ifndef PHGAMEVIEW_H
 #define PHGAMEVIEW_H
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 
 class PHGameView : public PHView
 {

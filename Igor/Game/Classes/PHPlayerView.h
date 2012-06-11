@@ -3,7 +3,7 @@
 #ifndef PHPLAYERVIEW_H
 #define PHPLAYERVIEW_H
 
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 
 class PHPlayerView : public PHImageView
 {

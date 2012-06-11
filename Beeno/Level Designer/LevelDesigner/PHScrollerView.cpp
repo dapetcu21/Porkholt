@@ -1,7 +1,7 @@
  /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHScrollerView.h"
-#include "PHEventHandler.h"
+#include <Porkholt/Core/PHEventHandler.h>
 
 #define SCROLLER_INIT content(NULL), scl(1), inscroll(PHOriginPoint), inertial(true)
 

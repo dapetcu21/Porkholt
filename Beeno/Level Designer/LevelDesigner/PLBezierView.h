@@ -4,7 +4,7 @@
 #define PLBEZIERVIEW_H
 
 #import "PLBezier.h"
-#include "PHTestView.h"
+#include <Porkholt/UI/PHTestView.h>
 
 class PLBezierDot;
 class PLBezierView : public PHView {

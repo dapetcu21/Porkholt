@@ -3,8 +3,8 @@
 #ifndef PLWORLDVIEW_H
 #define PLWORLDVIEW_H
 
-#include "PHView.h"
-#include "PHGeometry.h"
+#include <Porkholt/Core/PHView.h>
+#include <Porkholt/Geometry/PHGeometry.h>
 
 #ifdef __OBJC__
 @class WorldController;

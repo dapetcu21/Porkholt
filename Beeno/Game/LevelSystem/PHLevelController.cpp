@@ -1,27 +1,27 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHMain.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHGameManager.h>
 #include "PHLevelController.h"
 #include "PHWorld.h"
 #include "PHScripting.h"
-#include "PHImageView.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHLua.h>
 #include "PHCaptureView.h"
 #include <Box2D/Box2D.h>
-#include "PHFileManager.h"
-#include "PHFont.h"
-#include "PHTextController.h"
+#include <Porkholt/IO/PHFileManager.h>
+#include <Porkholt/Core/PHFont.h>
+#include <Porkholt/UI/PHTextController.h>
 #include "PHLPlayer.h"
 #include "PHLCamera.h"
 #include "PHPoofView.h"
 #include "PHShieldView.h"
-#include "PHAnimatorPool.h"
-#include "PHEventQueue.h"
-#include "PHButtonView.h"
-#include "PHMessage.h"
-#include "PHSoundPool.h"
-#include "PHMusicManager.h"
+#include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/UI/PHButtonView.h>
+#include <Porkholt/Core/PHMessage.h>
+#include <Porkholt/Sound/PHSoundPool.h>
+#include <Porkholt/Sound/PHMusicManager.h>
 
 #include <fstream>
 #include <sstream>

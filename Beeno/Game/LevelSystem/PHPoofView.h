@@ -3,7 +3,7 @@
 #ifndef PHPOOFVIEW_H
 #define PHPOOFVIEW_H
 
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 
 class PHPoofView : public PHImageView
 {

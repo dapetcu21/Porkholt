@@ -1,11 +1,11 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLPowerup.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include "PHWorld.h"
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 #include "PHLPlayer.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 
 PHL_REGISTEROBJECT(PHLPowerup)
 

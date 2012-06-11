@@ -2,7 +2,7 @@
 
 
 #include "PHPlayerView.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 
 void PHPlayerView::setRotation( ph_float rot)
 {

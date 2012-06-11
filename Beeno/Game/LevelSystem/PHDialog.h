@@ -3,8 +3,8 @@
 #ifndef PHDIALOG_H
 #define PHDIALOG_H
 
-#include "PHMain.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHLua.h>
 
 class PHDialog : public PHObject
 {

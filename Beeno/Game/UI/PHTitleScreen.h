@@ -3,7 +3,7 @@
 #ifndef PHTITLESCREEN_H
 #define PHTITLESCREEN_H
 
-#include "PHViewController.h"
+#include <Porkholt/Core/PHViewController.h>
 
 class PHTitleScreen : public PHViewController
 {

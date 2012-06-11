@@ -4,7 +4,7 @@
 #ifndef PHGAUGEVIEW_H
 #define PHGAUGEVIEW_H
 
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 
 class PHGaugeView : public PHImageView
 {

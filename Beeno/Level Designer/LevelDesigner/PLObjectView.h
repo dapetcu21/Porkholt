@@ -11,7 +11,7 @@
 #define WorldController void
 #endif
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 class PLObjectMarker;
 class PLJointDot;
 

@@ -1,14 +1,14 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLBull.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include "PHLAnimation.h"
-#include "PHTimer.h"
+#include <Porkholt/Core/PHTimer.h>
 #include "PHWorld.h"
 #include "PHLPlayer.h"
-#include "PHImageView.h"
-#include "PHImageAnimator.h"
-#include "PHEventQueue.h"
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHImageAnimator.h>
+#include <Porkholt/Core/PHEventQueue.h>
 
 PHL_REGISTEROBJECT(PHLBull)
 

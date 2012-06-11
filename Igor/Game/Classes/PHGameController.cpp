@@ -1,11 +1,11 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHGameController.h"
-#include "PHGLLight.h"
-#include "PHDeferredView.h"
+#include <Porkholt/Core/PHGLLight.h>
+#include <Porkholt/Core/PHDeferredView.h>
 #include "PHGameView.h"
 #include "PHPlayerView.h"
-#include "PHImageView.h"
+#include <Porkholt/Core/PHImageView.h>
 
 #define screenHeight 4.0f
 PHRect PHGameController::playerRect(-0.5,-0.5,1,1);

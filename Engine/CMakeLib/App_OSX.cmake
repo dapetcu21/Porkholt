@@ -25,7 +25,7 @@ if(PH_USE_BOX2D)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lBox2D_OSX")
     add_dependencies(${PH_NAME} Box2D_OSX)
   else()
-    target_link_libraries(${PH_NAME} Box2D_Linux)
+    target_link_libraries(${PH_NAME} Box2D_OSX)
   endif()
 endif()
 

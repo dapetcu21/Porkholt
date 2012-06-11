@@ -3,7 +3,7 @@
 #ifndef PHSCRIPTING_H
 #define PHSCRIPTING_H
 
-#include "PHMain.h"
+#include <Porkholt/Core/PHMain.h>
 
 #if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG))
 #define PH_SCRIPTING_CONSOLE

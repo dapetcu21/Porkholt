@@ -3,7 +3,7 @@
 #ifndef PHLANIMATION_H
 #define PHLANIMATION_H
 
-#include "PHMain.h"
+#include <Porkholt/Core/PHMain.h>
 
 class PHLAnimation : public PHObject
 {

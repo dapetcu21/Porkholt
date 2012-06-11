@@ -2,18 +2,18 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLPlayer.h"
-#include "PHAuxLayerView.h"
+#include <Porkholt/Core/PHAuxLayerView.h>
 #include "PHPlayerView.h"
 #include "PHWorld.h"
-#include "PHTrailImageView.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHTrailImageView.h>
+#include <Porkholt/Core/PHGameManager.h>
 #include <Box2D/Box2D.h>
-#include "PHMotion.h"
-#include "PHLua.h"
-#include "PHEventQueue.h"
+#include <Porkholt/Core/PHMotion.h>
+#include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHEventQueue.h>
 #include "PHShieldView.h"
 #include "PHLevelController.h"
-#include "PHTime.h"
+#include <Porkholt/Core/PHTime.h>
 
 PHL_REGISTEROBJECT(PHLPlayer)
 

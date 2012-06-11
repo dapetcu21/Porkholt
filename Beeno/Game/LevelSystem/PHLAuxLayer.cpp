@@ -1,8 +1,8 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLAuxLayer.h"
-#include "PHAuxLayerView.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHAuxLayerView.h>
+#include <Porkholt/Core/PHLua.h>
 
 PHL_REGISTEROBJECT(PHLAuxLayer)
 

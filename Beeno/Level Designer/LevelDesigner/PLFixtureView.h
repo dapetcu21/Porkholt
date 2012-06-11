@@ -3,7 +3,7 @@
 #ifndef PLFIXTUREVIEW
 #define PLFIXTUREVIEW
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 @class PLFixture;
 class PLObjectView;
 class PLBezierView;

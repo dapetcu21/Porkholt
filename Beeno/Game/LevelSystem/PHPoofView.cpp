@@ -1,8 +1,8 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHPoofView.h"
-#include "PHImageAnimator.h"
-#include "PHEventQueue.h"
+#include <Porkholt/Core/PHImageAnimator.h>
+#include <Porkholt/Core/PHEventQueue.h>
 
 
 PHImage * PHPoofView::poofImage(PHGameManager * man)

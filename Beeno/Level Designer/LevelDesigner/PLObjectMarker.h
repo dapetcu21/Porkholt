@@ -3,7 +3,7 @@
 #ifndef PLOBJECTMARKER_H
 #define PLOBJECTMARKER_H
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 
 class PLObjectMarker : public PHView
 {

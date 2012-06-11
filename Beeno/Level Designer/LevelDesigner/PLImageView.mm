@@ -3,7 +3,7 @@
 #include "PLImageView.h"
 #import "PLImage.h"
 #import "PLObjectView.h"
-#include "PHImage.h"
+#include <Porkholt/Core/PHImage.h>
 #import "SubentityController.h"
 #import "ObjectController.h"
 #import "PLObject.h"

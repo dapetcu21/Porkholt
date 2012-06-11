@@ -9,19 +9,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLib/Porkholt_Common.cmake)
 
 set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-  ${PH_ENGINE_PATH}/Bindings/Linux/PHWindowing.cpp
-  ${PH_ENGINE_PATH}/Bindings/Linux/PHX11.cpp
-  ${PH_ENGINE_PATH}/Sound/PHSound-Linux.cpp
-  ${PH_ENGINE_PATH}/Sound/PHSoundManager-Linux.cpp
-  ${PH_ENGINE_PATH}/Sound/PHMusicManager-Linux.cpp
+  ${PH_ENGINE_PATH}/src/Bindings/Linux/PHWindowing.cpp
+  ${PH_ENGINE_PATH}/src/Bindings/Linux/PHX11.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHSound-Linux.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHSoundManager-Linux.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHMusicManager-Linux.cpp
   )
   
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-  ${PH_ENGINE_PATH}/Bindings/Linux/PHX11.h
-  )
-
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/Bindings/Linux
+  ${PH_ENGINE_PATH}/src/Bindings/Linux/PHX11.h
   )
 
 add_library(Porkholt_Linux ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})

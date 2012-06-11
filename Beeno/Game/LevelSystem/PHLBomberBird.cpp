@@ -1,12 +1,12 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include "PHLBomberBird.h"
 #include "PHLCamera.h"
 #include "PHLPlayer.h"
 #include "PHWorld.h"
 #include "PHScripting.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 
 #include <Box2D/Box2D.h>
 

@@ -1,9 +1,9 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHScriptableTimer.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include "PHWorld.h"
-#include "PHEventQueue.h"
+#include <Porkholt/Core/PHEventQueue.h>
 
 PHScriptableTimer::PHScriptableTimer()
 {

@@ -2,7 +2,7 @@
 
 #include "PHLSensor.h"
 #include <Box2D/Box2D.h>
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 
 PHL_REGISTEROBJECT(PHLSensor)
 

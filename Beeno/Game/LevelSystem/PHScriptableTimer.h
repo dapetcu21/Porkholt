@@ -3,8 +3,8 @@
 #ifndef PHSCRIPTABLETIMER_H
 #define PHSCRIPTABLETIMER_H
 
-#include "PHTimer.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHTimer.h>
+#include <Porkholt/Core/PHLua.h>
 
 struct lua_State;
 

@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLSign.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include "PHDialog.h"
 
 #include <sstream>

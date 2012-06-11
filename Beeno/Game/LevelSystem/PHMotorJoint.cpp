@@ -3,7 +3,7 @@
 #include "PHMotorJoint.h"
 #include "PHWorld.h"
 #include <Box2D/Box2D.h>
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 
 
 PHMotorJoint::~PHMotorJoint() {}

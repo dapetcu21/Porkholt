@@ -1,8 +1,8 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHLCamera.h"
-#include "PHLua.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHGameManager.h>
 
 PHL_REGISTEROBJECT(PHLCamera)
 

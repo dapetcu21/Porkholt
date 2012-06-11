@@ -1,9 +1,9 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PLWorldView.h"
-#include "PHEvent.h"
+#include <Porkholt/Core/PHEvent.h>
 #include "WorldController.h"
-#include "PHEventHandler.h"
+#include <Porkholt/Core/PHEventHandler.h>
 #include "ObjectController.h"
 
 PLWorldView::PLWorldView() : dragRect(0,0,0,0), startPoint(0,0), rotating(false)

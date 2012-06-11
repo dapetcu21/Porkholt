@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHWindowing.h"
+#include <Porkholt/Core/PHWindowing.h>
 #include "PHMenuController.h"
 
 void PHGameEntryPoint(PHGameManager * gm)

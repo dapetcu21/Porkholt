@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHCaptureView.h"
-#include "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 
 void PHCaptureView::touchEvent(PHEvent * event)
 {

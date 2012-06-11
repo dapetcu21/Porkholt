@@ -2,8 +2,8 @@
 
 #include "PHScripting.h"
 #include "PHWorld.h"
-#include "PHLua.h"
-#include "PHFileManager.h"
+#include <Porkholt/Core/PHLua.h>
+#include <Porkholt/IO/PHFileManager.h>
 #include "PHScriptableTimer.h"
 #include "PHLObject.h"
 #include "PHLevelController.h"
@@ -11,21 +11,21 @@
 #include "PHLNPC.h"
 #include "PHLPlayer.h"
 #include "PHLCamera.h"
-#include "PHView.h"
-#include "PHImageView.h"
+#include <Porkholt/Core/PHView.h>
+#include <Porkholt/Core/PHImageView.h>
 #include "PHLMob.h"
 #include "PHLBull.h"
 #include "PHLSign.h"
 #include "PHLPowerup.h"
-#include "PHMessage.h"
+#include <Porkholt/Core/PHMessage.h>
 #include "PHLBomberBird.h"
 #include "PHLEggBomb.h"
-#include "PHParticleAnimator.h"
-#include "PHParticleView.h"
-#include "PHKeyframeAnimatorGroup.h"
+#include <Porkholt/Core/PHParticleAnimator.h>
+#include <Porkholt/Core/PHParticleView.h>
+#include <Porkholt/Core/PHKeyframeAnimatorGroup.h>
 
 #ifdef PH_SCRIPTING_CONSOLE
-#include "PHLuaConsole.h"
+#include <Porkholt/Network/PHLuaConsole.h>
 #endif
 
 PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)

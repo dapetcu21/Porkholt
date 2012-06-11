@@ -3,7 +3,7 @@
 #ifndef PHSCROLLERVIEW_H
 #define PHSCROLLERVIEW_H
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 
 class PHScrollerView : public PHView
 {

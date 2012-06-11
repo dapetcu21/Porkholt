@@ -3,7 +3,7 @@
 #ifndef PHWORLD_H
 #define PHWORLD_H
 
-#include "PHMain.h"
+#include <Porkholt/Core/PHMain.h>
 #include "PHLObject.h"
 #include "PHJoint.h"
 

@@ -3,7 +3,7 @@
 #ifndef PHCAPTUREVIEW_H
 #define PHCAPTUREVIEW_H
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 
 class PHMutex;
 class PHSemaphore;

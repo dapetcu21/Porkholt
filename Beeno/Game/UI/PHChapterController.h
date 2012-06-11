@@ -2,7 +2,7 @@
 
 #ifndef PHCHAPTERCONTROLLER_H
 
-#include "PHViewController.h"
+#include <Porkholt/Core/PHViewController.h>
 
 class PHImage;
 class PHChapterController : public PHViewController

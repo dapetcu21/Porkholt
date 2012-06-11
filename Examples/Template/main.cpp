@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHWindowing.h"
-#include "PHTestViewController.h"
+#include <Porkholt/Core/PHWindowing.h>
+#include <Porkholt/UI/PHTestViewController.h>
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    

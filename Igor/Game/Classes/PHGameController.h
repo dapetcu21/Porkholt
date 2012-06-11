@@ -3,7 +3,7 @@
 #ifndef PHGAMECONTROLLER_H
 #define PHGAMECONTROLLER_H
 
-#include "PHViewController.h"
+#include <Porkholt/Core/PHViewController.h>
 
 class PHView;
 class PHGLPointLight;

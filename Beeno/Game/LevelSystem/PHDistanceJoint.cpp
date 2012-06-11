@@ -2,7 +2,7 @@
 
 #include "PHDistanceJoint.h"
 #include "PHWorld.h"
-#include "PHLua.h"
+#include <Porkholt/Core/PHLua.h>
 #include <Box2D/Box2D.h>
 
 PHDistanceJoint::PHDistanceJoint(PHWorld * world) : PHJoint(world), freq(0), damp(0)

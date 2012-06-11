@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHHeartView.h"
-#include "PHImage.h"
+#include <Porkholt/Core/PHImage.h>
 
 
 void PHHeartView::draw()

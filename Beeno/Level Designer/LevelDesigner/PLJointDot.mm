@@ -3,7 +3,7 @@
 #import "PLJointDot.h"
 #import "PLJoint.h"
 #import "ObjectController.h"
-#include "PHEventHandler.h"
+#include <Porkholt/Core/PHEventHandler.h>
 
 void PLJointDot::setJoint(PLJoint * j) 
 {

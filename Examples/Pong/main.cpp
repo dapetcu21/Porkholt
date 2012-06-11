@@ -1,9 +1,9 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHWindowing.h"
-#include "PHViewController.h"
-#include "PHView.h"
-#include "PHTextView.h"
+#include <Porkholt/Core/PHWindowing.h>
+#include <Porkholt/Core/PHViewController.h>
+#include <Porkholt/Core/PHView.h>
+#include <Porkholt/Core/PHTextView.h>
 #include <sstream>
 
 

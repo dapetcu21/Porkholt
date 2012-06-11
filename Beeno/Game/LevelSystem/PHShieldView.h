@@ -3,7 +3,7 @@
 #ifndef PHSHIELDVIEW_H
 #define PHSHIELDVIEW_H
 
-#include "PHView.h"
+#include <Porkholt/Core/PHView.h>
 
 class PHImageView;
 class PHImage;

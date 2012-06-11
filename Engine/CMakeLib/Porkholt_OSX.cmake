@@ -14,23 +14,19 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLib/Porkholt_Common.cmake)
 
 set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHWindowing.mm
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHAppDelegate.mm
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHGLView.mm
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHWindow.mm
-  ${PH_ENGINE_PATH}/Sound/PHSound-OSX.mm
-  ${PH_ENGINE_PATH}/Sound/PHSoundManager-OSX.mm
-  ${PH_ENGINE_PATH}/Sound/PHMusicManager-OSX.mm
+  ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindowing.mm
+  ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
+  ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
+  ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
+  ${PH_ENGINE_PATH}/src/Sound/PHSound-OSX.mm
+  ${PH_ENGINE_PATH}/src/Sound/PHSoundManager-OSX.mm
+  ${PH_ENGINE_PATH}/src/Sound/PHMusicManager-OSX.mm
   )
   
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHAppDelegate.h
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHGLView.h
-  ${PH_ENGINE_PATH}/Bindings/OSX/PHWindow.h
-  )
-
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/Bindings/OSX
+  ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHAppDelegate.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHGLView.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHWindow.h
   )
 
 add_library(Porkholt_OSX ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})

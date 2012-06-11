@@ -1,13 +1,13 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHTitleScreen.h"
-#include "PHImageView.h"
-#include "PHImage.h"
-#include "PHButtonView.h"
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHImage.h>
+#include <Porkholt/UI/PHButtonView.h>
 #include "PHChapterController.h"
-#include "PHFileManager.h"
+#include <Porkholt/IO/PHFileManager.h>
 
-#include "PHTestViewController.h"
+#include <Porkholt/UI/PHTestViewController.h>
 
 #define POS_BG_Y 0.65
 #define BORDER_BG_LEFT 0.05
