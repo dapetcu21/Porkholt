@@ -8,6 +8,7 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), tex(NULL), pload(false)
 {
@@ -70,7 +71,7 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 #endif
     loadMutex->unlock();
     
-    PHThread::mainThread()->executeOnThread(PHInv(this, PHNormalImage::loadToTexture, NULL), false);
+    gm->animatorPool()->scheduleAction(PHInv(this, PHNormalImage::loadToTexture, NULL));
 }
 
 void PHNormalImage::loadToTexture(PHObject * sender, void * ud)

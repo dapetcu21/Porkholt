@@ -170,7 +170,12 @@ void PHKeyframeAnimator::playSection(int sec, const PHInvocation & callback, ph_
 
 void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
 {
-    if (!(playing && _actor && section>=0 && frame>=0))
+    if (!_actor)
+    {
+        setAnimatorPool(NULL);
+        return;
+    }
+    if (!(playing && section>=0 && frame>=0))
         return;
     
     vector<Keyframe> & v = sections[section].frames;

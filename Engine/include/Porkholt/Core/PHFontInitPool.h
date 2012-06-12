@@ -6,6 +6,7 @@
 #include <Porkholt/Core/PHMain.h>
 
 class PHFont;
+class PHGameManager;
 class PHFontInitPool
 {
 public:
@@ -13,6 +14,7 @@ public:
     PHFont * fontNamed(const string & name);
     void collectGarbageFonts();
     virtual const string fontDirectory();
+    virtual PHGameManager * gameManager() = 0;
 private:
     map<string,PHFont*> fonts;
 };

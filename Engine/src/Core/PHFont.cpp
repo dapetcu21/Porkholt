@@ -4,6 +4,8 @@
 #include <Porkholt/IO/PHFileManager.h>
 #include <Porkholt/Core/PHSerialization.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 #define uint16From(d) (*((uint16_t*)(d)))
 #define uint32From(d) (*((uint32_t*)(d)))
@@ -12,7 +14,7 @@
 #define uint32At(d,p) uint32From((d)+(p))
 #define uint64At(d,p) uint64From((d)+(p))
 
-PHFont::PHFont(const string & path) : loaded(false), texID(-1)
+PHFont::PHFont(PHGameManager * gameM, const string & path) : gm(gameM), loaded(false), tex(NULL), dataMutex(new PHMutex)
 {
     size_t len;
     uint8_t * d = data = PHFileManager::loadFile(path, len);
@@ -41,9 +43,11 @@ PHFont::PHFont(const string & path) : loaded(false), texID(-1)
         throw PHInvalidFileFormat;
     } 
     
+    dataMutex->lock();
     dataRetainCount--;
     if (!dataRetainCount)
         delete [] data;
+    dataMutex->unlock();
 }
 
 
@@ -96,29 +100,35 @@ bool PHFont::loadImage(uint8_t *d, size_t len)
     if (len<8+width*height) return false;
     imageData = d+8;
     dataRetainCount++;
-    PHThread::mainThread()->executeOnThread(PHInv(this, PHFont::loadToTexture, NULL), false);
+    gm->animatorPool()->scheduleAction(PHInv(this, PHFont::loadToTexture, NULL));
     return true;
 }
 
 void PHFont::loadToTexture(PHObject * sender, void * ud)
 {	
-    if (!imageData) return;
-    if (loaded) return;
+    dataMutex->lock();
+    if (!imageData | loaded)
+    {
+        dataMutex->unlock();
+        return;
+    }
     loaded = true;
     
-	glGenTextures(1,&texID);
-    glBindTexture(GL_TEXTURE_2D, texID);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, (int)width, (int)height, 0, 
-				 GL_ALPHA, GL_UNSIGNED_BYTE, imageData);	
-    
+    tex = new PHGLTexture2D(gm);
+    tex->bind(); 
+    tex->setWrapS(PHGLTexture::clampToEdge);
+    tex->setWrapT(PHGLTexture::clampToEdge);
+    tex->setMinFilter(PHGLTexture::linear);
+    tex->setMagFilter(PHGLTexture::linear);
+    tex->setData(imageData, width, height, PHGLTexture::A8);
     dataRetainCount--;
     if (dataRetainCount == 0)
         delete [] data;
+    dataMutex->unlock();
+}
+
+PHFont::~PHFont()
+{
+    dataMutex->release();
+    tex->release();
 }

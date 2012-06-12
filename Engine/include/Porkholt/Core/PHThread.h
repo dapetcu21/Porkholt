@@ -15,14 +15,9 @@ class PHThread : public PHObject
 private:
 	pthread_t thread;
 	PHMutex * initMutex;
-	PHEventQueue * eventQueue;
 	bool running,autorelease;
     PHInvocation invocation;
     
-public:
-	void executeOnThread(const PHInvocation & invocation,bool waitUntilDone);
-    void scheduleOnThread(const PHInvocation & invocation, bool waitUntilDone);
-	void processQueue();
 public:
 	void execute(); //DON'T USE THIS
 	

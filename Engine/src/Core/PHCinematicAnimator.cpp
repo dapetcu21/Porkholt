@@ -89,7 +89,10 @@ ph_float PHCinematicAnimator::f(ph_float time,int ftype)
 void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
 {
     if (!_actor)
+    {
+        setAnimatorPool(NULL);
         return;
+    }
     if (skipFirst)
     {
         skipFirst = false;

@@ -173,6 +173,8 @@
         return frameInterval;
     lastTime = time;
     time = PHTime::getTime();
+    if (lastTime == 0)
+        lastTime = time - frameInterval;
     double elapsedTime = (time-lastTime);
     if (vsync)
         return round(elapsedTime/frameInterval)*frameInterval;

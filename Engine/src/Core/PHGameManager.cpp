@@ -13,7 +13,6 @@
 #include <Porkholt/Core/PHGLUniformStates.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
-#include <Porkholt/Core/PHEventQueue.h>
 #include <Porkholt/Core/PHTextView.h>
 #include <Porkholt/Core/PHFont.h>
 #include <Porkholt/Core/PHGLTexture.h>
@@ -45,8 +44,8 @@ PHGameManager::~PHGameManager()
         _solidSquareVBO->release();
     if (evtHandler)
         evtHandler->release();
-    if (evtQueue)
-        evtQueue->release();
+    if (animPool)
+        animPool->release();
     if (sndManager)
         sndManager->release();
     if (spriteStates)
@@ -129,7 +128,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     }
 	
     evtHandler = new PHEventHandler(this);
-    evtQueue = new PHEventQueue();
+    animPool = new PHAnimatorPool();
     sndManager = new PHSoundManager(resPath + "/snd/fx");
     
     loadCapabilities();
@@ -246,7 +245,6 @@ void PHGameManager::processInput()
 void PHGameManager::globalFrame(ph_float timeElapsed)
 {
     PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
-    PHThread::mainThread()->processQueue();
 }
 
 void PHGameManager::renderFrame(ph_float timeElapsed)
@@ -267,6 +265,7 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     
 	if (viewController)  
 		viewController->_updateScene(timeElapsed);
+    animPool->advanceAnimation(timeElapsed);
     
 	view->render();
     
@@ -275,7 +274,6 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
         renderFPS(tm - lt);
     lt = tm;
     
-    evtQueue->processQueue();
     clearDeleteQueue();
 }
 
@@ -460,7 +458,8 @@ void PHGameManager::appSuspended()
 #ifdef PH_SIMULATOR
     remote->stop();
 #endif
-    PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appSuspended, NULL), false);
+    animPool->scheduleAction(PHInv(this,PHGameManager::_appSuspended, NULL));
+    
 }
 
 void PHGameManager::appResumed()
@@ -477,7 +476,7 @@ void PHGameManager::appResumed()
         PHLog("URemote: %s",err.c_str());
     }
 #endif
-    PHThread::mainThread()->executeOnThread(PHInv(this,PHGameManager::_appResumed, NULL), false);
+    animPool->scheduleAction(PHInv(this,PHGameManager::_appResumed, NULL));
 }
 
 

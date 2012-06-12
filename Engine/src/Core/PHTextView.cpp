@@ -3,6 +3,7 @@
 #include <Porkholt/Core/PHTextView.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
+#include <Porkholt/Core/PHGLTexture.h>
 
 #define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(NULL), arraysVBO(NULL), lineSpace(0.5), vbuffer(NULL), indices(NULL), vao(NULL)
 
@@ -66,8 +67,8 @@ void PHTextView::draw()
     if (!vao) return;
     
     gm->setGLStates(PHGLBlending | PHGLTexture0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, _font->textureID());
+    gm->setActiveTexture(0);
+    gm->bindTexture(_font->texture());
     gm->setColor(color);
     gm->applyShader(gm->textShader());
     vao->draw();

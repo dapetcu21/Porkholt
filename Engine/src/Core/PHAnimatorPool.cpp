@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHAnimator.h>
+#include <Porkholt/Core/PHTimer.h>
 
 map < PHThread*, list<PHAnimatorPool*> > PHAnimatorPool::stacks;
 PHMutex * PHAnimatorPool::staticMutex = new PHMutex;
@@ -17,6 +18,7 @@ PHAnimatorPool::~PHAnimatorPool()
     for (set<PHAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
     {
         (*i)->pool = NULL;
+        (*i)->releaseInPool();
     }
     mutex->unlock();
     mutex->release();
@@ -25,11 +27,19 @@ PHAnimatorPool::~PHAnimatorPool()
 void PHAnimatorPool::insertAnimator(PHAnimator * a)
 {
     mutex->lock();
+    a->retainInPool();
+    if (a->pool && a->pool != this)
+        a->pool->removeAnimator(a);
+    a->pool = this;
     if (!insideJob)
-        animators.insert(a);
+    {
+        if (!animators.insert(a).second)
+            a->releaseInPool();
+    }
     else
     {
-        insertQueue.insert(a);
+        if (!insertQueue.insert(a).second)
+            a->releaseInPool();
         deleteQueue.erase(a);
     }
     mutex->unlock();
@@ -38,12 +48,17 @@ void PHAnimatorPool::insertAnimator(PHAnimator * a)
 void PHAnimatorPool::removeAnimator(PHAnimator * a)
 {
     mutex->lock();
+    a->pool = NULL;
     if (!insideJob)
-        animators.erase(a);
+    {
+        if (animators.erase(a))
+            a->releaseInPool();
+    }
     else
     {
         deleteQueue.insert(a);
-        insertQueue.erase(a);
+        if (insertQueue.erase(a))
+            a->releaseInPool();
     }
     mutex->unlock();
 }
@@ -54,7 +69,14 @@ void PHAnimatorPool::removeAllAnimators()
     if (insideJob)
         deleteQueue.insert(animators.begin(),animators.end());
     else
+    {
+        for (set<PHAnimator*>::iterator i = animators.begin(); i!=animators.end(); i++)
+        {
+            (*i)->pool = NULL;
+            (*i)->releaseInPool();
+        }
         animators.clear();
+    }
     mutex->unlock();
 }
 
@@ -66,8 +88,12 @@ void PHAnimatorPool::removeAnimatorsWithTag(int d)
             deleteQueue.insert(*i);
     if (!insideJob)
     {
-        for (set<PHAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
-            animators.erase(*i);
+        for (set<PHAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++) 
+            if (animators.erase(*i))
+            {
+                (*i)->pool = NULL;
+                (*i)->releaseInPool();
+            }
         deleteQueue.clear();
     }
     mutex->unlock();
@@ -136,10 +162,20 @@ void PHAnimatorPool::advanceAnimation(ph_float elapsedTime)
             (*i)->advanceAnimation(elapsedTime);
     }
     for (set<PHAnimator*>::iterator i = deleteQueue.begin(); i!=deleteQueue.end(); i++)
-        animators.erase(*i);
+        if (animators.erase(*i))
+        {
+            (*i)->pool = NULL;
+            (*i)->releaseInPool();
+        }
     animators.insert(insertQueue.begin(),insertQueue.end());
     deleteQueue.clear();
     insertQueue.clear();
     insideJob = false;
     mutex->unlock();
 }
+
+void PHAnimatorPool::scheduleAction(const PHInvocation & inv, double time, bool repeat, bool waitForIt)
+{
+    PHTimer::scheduleAction(this, inv, time, repeat, waitForIt);
+}
+

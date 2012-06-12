@@ -3,7 +3,7 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
 	set(CMAKE_OSX_SYSROOT macosx)
 endif()
 set(CMAKE_EXE_LINKER_FLAGS
-  "-ObjC -lPorkholt_OSX -llua -lz -lpng15 -framework OpenGL -framework Foundation -framework CoreVideo -framework AppKit"
+  "-ObjC -llua -lz -lpng15 -framework OpenGL -framework Foundation -framework CoreVideo -framework AppKit"
   )
 
 set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
@@ -16,7 +16,12 @@ link_directories(${Porkholt_OSX_BINARY_DIR})
 include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 
 add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} ${PH_HEADERS})
-add_dependencies(${PH_NAME} Porkholt_OSX)
+if(CMAKE_GENERATOR STREQUAL "Xcode")
+    add_dependencies(${PH_NAME} Porkholt_OSX)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lPorkholt_OSX")
+else()
+    target_link_libraries(${PH_NAME} Porkholt_OSX)
+endif()
 
 if(PH_USE_BOX2D)
   include("${PH_ENGINE_PATH}/CMakeLib/Box2D_OSX.cmake")

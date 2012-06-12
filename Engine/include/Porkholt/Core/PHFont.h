@@ -5,6 +5,9 @@
 
 #include <Porkholt/Core/PHMain.h>
 
+class PHGameManager;
+class PHGLTexture2D;
+
 class PHFont : public PHObject
 {
 public:
@@ -20,10 +23,12 @@ public:
     ph_float prerenderPointSize() { return pntSize; }
     
 protected:
-	PHFont(const string & path);
+	PHFont(PHGameManager * gameManager, const string & path);
+    ~PHFont();
     friend class PHFontInitPool;
     
-    unsigned int texID;
+    PHGameManager *gm;
+    PHGLTexture2D * tex;
     map<char,glyph> glyphs;
     
     bool loadGlyphs(uint8_t * d, size_t len);
@@ -35,7 +40,8 @@ protected:
     uint8_t * data;
     uint8_t * imageData;
     int dataRetainCount;
-    
+    PHMutex * dataMutex;
+
     size_t width,height;
     
     bool loaded;
@@ -44,7 +50,7 @@ protected:
     void correctTextureCoordinates();
     
 public:
-    unsigned int textureID() { if (!loaded) loadToTexture(this,NULL); return texID; }
+    PHGLTexture2D * texture() { if (!loaded) loadToTexture(this,NULL); return tex; }
     const glyph & glyphForCharacter(char c) { return glyphs[c]; }
 };
 

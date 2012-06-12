@@ -15,7 +15,6 @@ class PHViewController;
 class PHNavigationController;
 class PHRemote;
 class PHEventHandler;
-class PHEventQueue;
 class PHSoundManager;
 class PHGLShaderProgram;
 class PHGLUniformStates;
@@ -23,6 +22,7 @@ class PHGLVertexBufferObject;
 class PHGLVertexArrayObject;
 class PHTextView;
 class PHGLTexture;
+class PHAnimatorPool;
 
 enum PHGLCapabilities
 {
@@ -69,7 +69,7 @@ private:
 	PHView * view;
 	PHNavigationController * viewController;
     PHEventHandler * evtHandler;
-    PHEventQueue * evtQueue;
+    PHAnimatorPool * animPool;
     PHSoundManager * sndManager;
 	ph_float _screenWidth;
 	ph_float _screenHeight;
@@ -147,7 +147,7 @@ public:
     
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
-    PHEventQueue * eventQueue() { return evtQueue; }
+    PHAnimatorPool * animatorPool() { return animPool; }
     PHSoundManager * soundManager() { return sndManager; }
     
     enum interfaceType

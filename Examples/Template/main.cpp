@@ -6,8 +6,9 @@
 void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHTestViewController * vc = new PHTestViewController();
-	  vc->init(gm);
+    vc->init(gm);
     gm->navigationController()->pushViewController(vc);
+    vc->release();
 }
 
 int main(int argc, char *argv[]) {

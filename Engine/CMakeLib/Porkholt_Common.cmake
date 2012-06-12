@@ -37,7 +37,6 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHEventHandler.cpp
   ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTimer.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHEventQueue.cpp
   ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimatorGroup.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTrailImageView.cpp
   ${PH_ENGINE_PATH}/src/IO/PHFileManager.cpp
@@ -132,7 +131,6 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHNormalImage.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHView.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawable.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEventQueue.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHImageAnimator.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHObject.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewController.h

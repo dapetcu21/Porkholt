@@ -8,11 +8,16 @@
 class PHAnimatorPool;
 class PHAnimator : public PHObject {
 protected:
-    bool advanceManually;
+    bool advanceManually, retained;
     PHAnimatorPool * pool;
     int _tag;
     
     friend class PHAnimatorPool;
+    
+    int poolc;
+    void retainInPool();
+    void releaseInPool();
+
 public:
     PHAnimator();
     PHAnimator(PHAnimatorPool * pool);
@@ -23,6 +28,9 @@ public:
     void setAdvanceManually(bool s) { advanceManually = s; }
     void setAnimatorPool(PHAnimatorPool * p);
     PHAnimatorPool * animatorPool() { return pool; }
+    
+    bool retainedInThePool() { return retained; }
+    void setRetainedInThePool(bool r);
     
     void setTag(int tg) { _tag = tg; }
     int tag() { return _tag; }

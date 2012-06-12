@@ -3,7 +3,6 @@
 #include <Porkholt/Sound/PHSound.h>
 #include <Porkholt/Sound/PHSoundManager.h>
 #import <AppKit/AppKit.h>
-#include <Porkholt/Core/PHEventQueue.h>
 #include <Porkholt/Core/PHTimer.h>
 #include <Porkholt/Sound/PHSoundPool.h>
 

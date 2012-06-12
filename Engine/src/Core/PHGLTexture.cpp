@@ -124,6 +124,11 @@ bool PHGLTexture::supportsNPOT(PHGameManager * gm)
 }
 
 static const GLenum internalFormat[] = {
+#ifdef GL_ALPHA8 
+    GL_ALPHA8,
+#else
+    GL_ALPHA,
+#endif
 #ifdef GL_LUMINANCE8
     GL_LUMINANCE8, 
 #else
@@ -151,8 +156,8 @@ static const GLenum internalFormat[] = {
     GL_RGB
 #endif
 };
-static const GLenum format[]  = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGBA, GL_RGBA, GL_RGB, GL_RGB};
-static const GLenum type[] = {GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT};
+static const GLenum format[]  = {GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGBA, GL_RGBA, GL_RGB, GL_RGB};
+static const GLenum type[] = {GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT};
 
 void PHGLTexture::updateMipMap()
 {

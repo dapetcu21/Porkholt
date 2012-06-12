@@ -15,7 +15,7 @@ PHFont* PHFontInitPool::fontFromPath(const string & path)
 	if (i==fonts.end())
 	{
 		try {
-            fnt = new PHFont(path);
+            fnt = new PHFont(gameManager(), path);
 		} catch (string ex)
 		{
 			PHLog(ex);

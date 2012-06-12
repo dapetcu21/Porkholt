@@ -40,6 +40,7 @@ public:
     
     enum pixelFormat
     {
+        A8,
         L8,
         LA8,
         RGBA8,

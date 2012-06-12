@@ -5,6 +5,7 @@
 #include <Porkholt/IO/PHFileManager.h>
 #include <Porkholt/Core/PHImageAnimator.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 #define PNG_DEBUG 4
 #include <png.h>
@@ -393,7 +394,7 @@ void PHAnimatedImage::loadImages(PHObject *sender, void *ud)
 #endif
     loadMutex->unlock();
     
-    PHThread::mainThread()->executeOnThread(PHInv(this, PHAnimatedImage::loadTextures, NULL), false);
+    gm->animatorPool()->scheduleAction(PHInv(this, PHAnimatedImage::loadTextures, NULL));
 }
 
 void PHAnimatedImage::loadTextures(PHObject *sender, void *ud)

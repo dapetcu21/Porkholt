@@ -11,11 +11,7 @@ void PHTestViewController::callback1(PHObject * sender, void * ud)
 {
 	if (navController)
     {
-#ifdef __x86_64__
-        int anim = (int)(long long int)ud;
-#else
-        int anim = (int)ud;
-#endif
+        int anim = (int)(size_t)ud;
 		navController->popViewController(anim);
     }
 }
@@ -26,11 +22,7 @@ void PHTestViewController::callback2(PHObject * sender, void * ud)
 	vc->init(gm);
 	if (navController)
     {
-#ifdef __x86_64__
-        int anim = (int)(long long int)ud;
-#else
-        int anim = (int)ud;
-#endif
+        int anim = (int)(size_t)ud;
 		navController->pushViewController(vc,anim);
     }
 	vc->release();

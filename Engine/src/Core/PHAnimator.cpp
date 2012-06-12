@@ -3,7 +3,7 @@
 #include <Porkholt/Core/PHAnimator.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 
-#define INIT advanceManually(false), pool(NULL), _tag(0)
+#define INIT advanceManually(false), retained(false), pool(NULL), _tag(0), poolc(0)
 
 PHAnimator::PHAnimator() : INIT
 {
@@ -28,4 +28,30 @@ void PHAnimator::setAnimatorPool(PHAnimatorPool * p)
     pool = p;
     if (pool)
         pool->insertAnimator(this);
+}
+
+void PHAnimator::setRetainedInThePool(bool r)
+{
+    if (retained == r) return;
+    retained = r;
+    if (r)
+        for (int i = 0; i<poolc; i++)
+            retain();
+    else
+        for (int i = 0; i<poolc; i++)
+            release();
+}
+
+void PHAnimator::retainInPool()
+{
+    poolc++;
+    if (retained)
+        retain();
+}
+
+void PHAnimator::releaseInPool()
+{
+    poolc--;
+    if (retained)
+        release();
 }

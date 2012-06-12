@@ -1,38 +1,73 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #ifndef PHTIMER_H
-#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAnimator.h>
 
-class PHTimer : public PHObject
+class PHTimer : public PHAnimator 
 {
 private:
     bool valid;
     bool repeat;
-    ph_float time;
-    ph_float timeleft;
-    ph_float lastupd;
+    ph_float time, dur;
     bool cboninvalidate;
     PHInvocation invocation;
+    PHSemaphore * sem;
+    bool sigm;
+
+    virtual void _invalidate();
+
 public:
-    PHTimer() : valid(true), repeat(false), time(0), timeleft(0), cboninvalidate(false) {}
-    ~PHTimer() { invalidate(); }
+    PHTimer();
+    PHTimer(double duration);
+    PHTimer(double duration, bool repeat);
     
-    void timePassed(ph_float timeElapsed);
-    void setTimeInterval(ph_float tm) { time = tm; timeleft = tm; }
-    ph_float timeInterval() { return time; }
-    void setTimeLeft(ph_float tm) { timeleft = tm; }
-    ph_float timeLeft() { return timeleft; }
+    ~PHTimer();
+    
+    void advanceAnimation(ph_float timeElapsed);
+
+    void setDuration(ph_float tm) { dur = time = tm; }
+    ph_float duration() { return dur; }
+    void setTimeLeft(ph_float tm) { time = tm; }
+    ph_float timeLeft() { return time; }
     bool repeats() { return repeat; }
     void setRepeats(bool rpt) { repeat = rpt; }
-    void setLastUpdatedAt(ph_float u) { lastupd = u; }
-    ph_float lastUpdatedAt() { return lastupd; }
     bool callsBackOnInvalidate() { return cboninvalidate; }
     void setCallsBackOnInvalidate(bool b) { cboninvalidate = b; }
+
+    void setSemaphore(PHSemaphore * semaphore) 
+    { 
+        if (semaphore) semaphore->retain(); 
+        if (sem) sem->release(); 
+        sem = semaphore; 
+    }
+    PHSemaphore * semaphore() { return sem; }
+    void setSignalMoreThanOnce(bool sm) { sigm = sm; }
+    bool signalMoreThanOnce() { return sigm; }
+    void signalSemaphore();
     
     void setCallback(const PHInvocation & inv) { invocation = inv; }
     bool isValid() { return valid; } 
-    void invalidate() { if (cboninvalidate&&valid) timerFired(); valid = false; }
+    void invalidate() { if (valid) { if (cboninvalidate) timerFired(); _invalidate(); } }
     
+    //waitForIt means that scheduleAction should block until the
+    //invocation is performed and should only be used from 
+    //another thread than the one on which the animator pool 
+    //is running to avoid a deadlock
+    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time, bool repeat, bool waitForIt);
+    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time, bool repeat) {
+        scheduleAction(pool, inv, time, repeat, false);
+    }
+    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time) {
+        scheduleAction(pool, inv, time, false, false);
+    }
+    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv) {
+        scheduleAction(pool, inv, 0, false, false);
+    }
+    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, bool waitForIt) {
+        scheduleAction(pool, inv, 0, false, waitForIt);
+    }
+
+public:
     virtual void timerFired();
 };
 

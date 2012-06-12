@@ -1,7 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHThread.h>
-#include <Porkholt/Core/PHEventQueue.h>
 #include <pthread.h>
 
 map<pthread_t,PHThread*> PHThread::threads;
@@ -27,7 +26,7 @@ void PHThread::execute()
         release();
 }
 
-#define PHTHREAD_INILIST running(false), eventQueue(new PHEventQueue), autorelease(false)
+#define PHTHREAD_INILIST running(false), autorelease(false)
 
 PHThread::PHThread() : PHTHREAD_INILIST
 {
@@ -87,7 +86,6 @@ PHThread::~PHThread()
 	threads_mutex -> lock();
 	threads.erase(thread);
 	threads_mutex -> unlock();
-    eventQueue->release();
 };
 
 PHThread * PHThread::mainThread()
@@ -102,22 +100,4 @@ bool PHThread::isMainThread()
 	return (pthread_self()==main->thread);
 }
 
-void PHThread::executeOnThread(const PHInvocation & invocation,bool waitUntilDone)
-{
-	if (pthread_self()==thread)
-	{
-		invocation.call(this);
-		return;
-	}
-    eventQueue->schedule(invocation,waitUntilDone);
-}
 
-void PHThread::scheduleOnThread(const PHInvocation & invocation, bool waitUntilDone)
-{
-    eventQueue->schedule(invocation,waitUntilDone);
-}
-
-void PHThread::processQueue()
-{
-    eventQueue->processQueue();
-}
