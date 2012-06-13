@@ -129,6 +129,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	
     evtHandler = new PHEventHandler(this);
     animPool = new PHAnimatorPool();
+    animPoolMutex = new PHMutex();
     sndManager = new PHSoundManager(resPath + "/snd/fx");
     
     loadCapabilities();
@@ -841,4 +842,54 @@ void PHGameManager::destroyTexture(PHGLTexture * tx)
     for (int i = 0; i < PHGameManager_maxTextures; i++)
         if (textures[aTMU] == tx)
             textures[aTMU] = NULL;
+}
+
+PHAnimatorPool * PHGameManager::animatorPool()
+{
+    animPoolMutex->lock();
+    map < PHThread*, list<PHAnimatorPool*> >::iterator it = animPoolStacks.find(PHThread::currentThread());
+    if ((it!=animPoolStacks.end()) && (!it->second.empty()))
+    {
+        PHAnimatorPool * ap = it->second.back();
+        animPoolMutex->unlock();
+        return ap;
+    }
+    animPoolMutex->unlock();
+    return animPool;
+}
+
+void PHGameManager::pushAnimatorPool(PHAnimatorPool * pool)
+{
+    animPoolMutex->lock();
+    PHThread * ct = PHThread::currentThread();
+    map < PHThread*, list<PHAnimatorPool*> >::iterator it = animPoolStacks.find(ct);
+    pool->retain();
+    if (it == animPoolStacks.end())
+    {
+        list<PHAnimatorPool*> l;
+        l.push_back(pool);
+        animPoolStacks.insert(make_pair(ct, l));
+    } else {
+        it->second.push_back(pool);
+    }
+    animPoolMutex->unlock();
+}
+
+void PHGameManager::popAnimatorPool()
+{
+    animPoolMutex->lock();
+    PHThread * ct = PHThread::currentThread();
+    map < PHThread*, list<PHAnimatorPool*> >::iterator it = animPoolStacks.find(ct);
+    if (it != animPoolStacks.end())
+    {
+        list<PHAnimatorPool*> & l = it->second;
+        if (!l.empty())
+        {
+            l.back()->release();
+            l.pop_back();
+        }
+        if (l.empty())
+            animPoolStacks.erase(it);
+    }
+    animPoolMutex->unlock();
 }

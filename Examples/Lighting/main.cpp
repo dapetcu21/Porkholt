@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "PHStartGame.h"
+#include <Porkholt/Core/PHWindowing.h>
 #include <Porkholt/Core/PHViewController.h>
 #include <Porkholt/Core/PHDeferredView.h>
 #include <Porkholt/Core/PHImageView.h>
@@ -90,6 +90,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    return PHStartGame(argc, argv, PHStartGame_GLES2 | PHStartGame_Resizable | PHStartGame_VSync , &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVSync , &PHGameEntryPoint,NULL);
 }
  

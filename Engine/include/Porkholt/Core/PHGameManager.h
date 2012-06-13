@@ -101,6 +101,9 @@ private:
     void updateHD();
     
     PHMessage * exitmsg;
+
+    map < PHThread*, list<PHAnimatorPool*> > animPoolStacks;
+    PHMutex * animPoolMutex;
     
 public:
     PHGameManager();
@@ -146,8 +149,14 @@ public:
     
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
-    PHAnimatorPool * animatorPool() { return animPool; }
+    PHAnimatorPool * mainAnimatorPool() { return animPool; }
     PHSoundManager * soundManager() { return sndManager; }
+
+    //NOTE: There is one stack per thread
+    PHAnimatorPool * animatorPool();
+    void pushAnimatorPool(PHAnimatorPool * pool);
+    void popAnimatorPool();
+
     
     enum interfaceType
     {
