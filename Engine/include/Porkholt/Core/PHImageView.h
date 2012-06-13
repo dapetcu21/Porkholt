@@ -66,6 +66,8 @@ protected:
     }
     
     bool _normalMapping;
+
+    virtual void attachedToGameManager();
     
 public:
     PHAnimatorPool * animatorPool() { return pool; }

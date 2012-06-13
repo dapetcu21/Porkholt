@@ -21,7 +21,6 @@
 {
     [self makeCurrent];
     double tim = [self elapsedTime];
-    [PHGLView globalFrame:tim];
     [self render:tim];
 }
 
@@ -347,16 +346,6 @@ int PHEventHandler::modifierMask()
     if (nsmask & NSControlKeyMask)
         mask |= controlModifier;
     return mask;
-}
-
-+(void)globalFrame
-{
-    [PHGLView globalFrame:1.0f/60.0f];
-}
-
-+(void)globalFrame:(double)timeElapsed
-{
-    PHGameManager::globalFrame(timeElapsed);
 }
 
 -(void)setManualSize:(NSSize)sz

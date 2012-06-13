@@ -2,11 +2,14 @@
 
 #include <Porkholt/Core/PHCinematicActor.h>
 #include <Porkholt/Core/PHCinematicAnimator.h>
+#include <Porkholt/Core/PHGameManager.h>
 
 void PHCinematicActor::addCinematicAnimation(PHGenericCinematicAnimator * anim)
 {
     if (!anim) return;
     _cinematicMutex->lock();
+    if (_gm && !(anim->animatorPool()))
+        anim->setAnimatorPool(_gm->animatorPool());
     if (_cinematicAnimators.insert(anim).second)
         anim->retain();
     anim->setActor(this);
@@ -62,7 +65,7 @@ PHColor PHCinematicActor::cinematicCustomColor() { return PHInvalidColor; }
 void PHCinematicActor::setCinematicCustomValue(ph_float) {}
 ph_float PHCinematicActor::cinematicCustomValue() { return 0; }
 
-PHCinematicActor::PHCinematicActor() : _cinematicAnimator(NULL) , _rootAnimator(NULL), _cinematicMutex(new PHMutex) {};
+PHCinematicActor::PHCinematicActor() : _cinematicAnimator(NULL) , _rootAnimator(NULL), _cinematicMutex(new PHMutex), _gm(NULL) {};
 PHCinematicActor::~PHCinematicActor()
 {
     dropCinematicAnimation();
@@ -162,4 +165,12 @@ void PHCinematicActor::animationSkipFirstFrame()
 void PHCinematicActor::animateCustomValue(ph_float val)
 {
     _cinematicAnimator->setCustomValueDelta(_cinematicAnimator->customValueDelta()+val);
+}
+
+void PHCinematicActor::actorAttachedToGameManager(PHGameManager * gameman)
+{
+    _gm = gameman;
+    for (set<PHGenericCinematicAnimator *>::iterator i = _cinematicAnimators.begin(); i!=_cinematicAnimators.end(); i++)
+        if (!((*i)->animatorPool()))
+            (*i)->setAnimatorPool(_gm->animatorPool());
 }

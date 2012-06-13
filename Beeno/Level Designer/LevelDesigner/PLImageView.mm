@@ -26,6 +26,7 @@ PLImageView::PLImageView(PLImage * _model) : model(_model), moving(false), rotat
 
 void PLImageView::attachedToGameManager()
 {
+    PHImageView::attachedToGameManager();
     modelChanged();
 }
 

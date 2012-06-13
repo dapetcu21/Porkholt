@@ -27,8 +27,6 @@ class PHGameManager;
 -(void)render;
 -(void)render:(double)timeElapsed;
 -(void)makeCurrent;
-+(void)globalFrame;
-+(void)globalFrame:(double)timeElapsed;
 -(double)elapsedTime;
 
 

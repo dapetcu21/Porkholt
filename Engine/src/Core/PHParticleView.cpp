@@ -15,7 +15,7 @@
 
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
-#define INIT particlePool(PHAnimatorPool::currentAnimatorPool()), particleAnim(NULL), particleM(new PHMutex), vao(NULL), vbo(NULL), indexVBO(NULL), maxN(0), cacheTime(15), cacheLeft(15)
+#define INIT particlePool(NULL), particleAnim(NULL), particleM(new PHMutex), vao(NULL), vbo(NULL), indexVBO(NULL), maxN(0), cacheTime(15), cacheLeft(15)
 
 PHParticleView::PHParticleView() : PHImageView(), INIT 
 {
@@ -321,4 +321,11 @@ void PHParticleView::render()
         gm->setModelViewMatrix(om);
     }
     delete particles;
+}
+
+void PHParticleView::attachedToGameManager()
+{
+    PHImageView::attachedToGameManager();
+    if (!pool)
+        setParticleAnimatorPool(gm->animatorPool());
 }

@@ -361,6 +361,12 @@ void PHView::auxRender()
     render();
 }
 
+void PHView::attachedToGameManager()
+{
+    PHDrawable::attachedToGameManager();
+    actorAttachedToGameManager(gm);
+}
+
 #pragma mark -
 #pragma Scripting
 

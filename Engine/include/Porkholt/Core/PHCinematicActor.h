@@ -7,6 +7,8 @@
 
 class PHCinematicAnimator;
 class PHGenericCinematicAnimator;
+class PHGameManager;
+
 class PHCinematicActor
 {
 public:
@@ -22,6 +24,7 @@ public:
     virtual PHColor cinematicCustomColor();
     virtual void setCinematicCustomValue(ph_float);
     virtual ph_float cinematicCustomValue();
+
     
 protected:
     
@@ -29,6 +32,7 @@ protected:
     set<PHGenericCinematicAnimator *> _cinematicAnimators;
     friend class PHGenericCinematicAnimator;
     PHMutex * _cinematicMutex;
+    PHGameManager * _gm;
     
 public:
     void addCinematicAnimation(PHGenericCinematicAnimator * anim);
@@ -54,8 +58,13 @@ public:
     void animationSkipFirstFrame();
     void animationTag(int tag);
     
+   
     PHCinematicActor();
     ~PHCinematicActor();
+    
+protected:
+    void actorAttachedToGameManager(PHGameManager * gm);
+ 
 };
 
 #endif

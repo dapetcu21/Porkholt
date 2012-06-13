@@ -21,7 +21,7 @@
 
 const string PHImageView::_luaClass("PHImageView");
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(PHAnimatorPool::currentAnimatorPool()), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL)
 
 bool PHImageView::supportsRenderMode(int rm)
 {
@@ -368,6 +368,13 @@ void PHImageView::draw()
     }
 }
 
+void PHImageView::attachedToGameManager()
+{
+    PHView::attachedToGameManager();
+    if (!pool)
+        setAnimatorPool(gm->animatorPool());
+}
+
 void PHImageView::loadFromLua(lua_State *L)
 {
     if (lua_istable(L, -1))
@@ -442,7 +449,7 @@ void PHImageView::loadFromLua(lua_State *L)
 
 PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, const string & root)
 {
-    return imageFromLua(L, man, root, PHAnimatorPool::currentAnimatorPool());
+    return imageFromLua(L, man, root, man->animatorPool());
 }
 
 PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, const string & root, PHAnimatorPool * pool)
@@ -471,8 +478,8 @@ PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, cons
             PHLuaGetStringField(clss, "class");
             
             img = PHImageView::imageFromClass(clss);
-            img->setGameManager(man);
             img->setAnimatorPool(pool);
+            img->setGameManager(man);
             img->setImage(man->imageFromPath(filename));
             img->setOptimizations(true);
             img->loadFromLua(L);

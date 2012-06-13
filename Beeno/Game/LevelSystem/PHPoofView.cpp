@@ -25,6 +25,7 @@ PHPoofView::PHPoofView(int image) : PHImageView(), img(image)
 
 void PHPoofView::attachedToGameManager()
 {
+    PHImageView::attachedToGameManager();
     if (image()) return;
     mutex();
     PHImage * imag = NULL;

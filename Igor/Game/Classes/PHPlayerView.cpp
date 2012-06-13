@@ -4,6 +4,7 @@
 
 void PHPlayerView::attachedToGameManager()
 {
+    PHImageView::attachedToGameManager();
     if (!image())
         setImage(gm->imageNamed("player"));
 }

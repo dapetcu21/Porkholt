@@ -27,6 +27,8 @@ private:
     
     ph_float cacheTime;
     ph_float cacheLeft;
+
+    void attachedToGameManager();
     
 public:
     PHParticleView();

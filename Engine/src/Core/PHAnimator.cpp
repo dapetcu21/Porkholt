@@ -7,7 +7,6 @@
 
 PHAnimator::PHAnimator() : INIT
 {
-    setAnimatorPool(PHAnimatorPool::currentAnimatorPool());
 }
 
 PHAnimator::PHAnimator(PHAnimatorPool * pool) : INIT

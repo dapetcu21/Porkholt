@@ -1,5 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+
 #ifndef PHANIMATORPOOL_H
 #define PHANIMATORPOOL_H
 
@@ -13,8 +14,6 @@ private:
     bool insideJob;
     PHMutex * mutex;
     
-    static map < PHThread*, list<PHAnimatorPool*> > stacks;
-    static PHMutex * staticMutex;
 public:
     PHAnimatorPool();
     ~PHAnimatorPool();
@@ -26,14 +25,7 @@ public:
     void removeAnimatorsWithTag(int d);
     void advanceAnimation(ph_float elapsed);
     
-    void push();
-    void pop() { popPool(); }
-    static void popPool();
     
-    static PHAnimatorPool * mainAnimatorPool();
-    static PHAnimatorPool * currentAnimatorPool();
-
-
     //waitForIt means that scheduleAction should block until the
     //invocation is performed and should only be used from 
     //another thread than the one on which the animator pool 

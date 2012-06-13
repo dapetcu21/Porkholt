@@ -111,7 +111,7 @@ void PHNavigationController::cancelAnimation()
 		}
 		if (lastVC)
 			lastVC->getView()->removeFromParent();
-        PHAnimatorPool::currentAnimatorPool()->removeAnimatorsWithTag(-4432);
+        gm->animatorPool()->removeAnimatorsWithTag(-4432);
 		stopAnimating();
 	}
 }

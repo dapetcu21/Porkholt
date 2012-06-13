@@ -118,7 +118,6 @@ public:
     const string & resourcePath() { return resPath; }
     void setResourcePath(const string & r) { resPath = r; }
 	void renderFrame(ph_float timeElapsed);
-    static void globalFrame(ph_float timeElapsed);
 	void appSuspended();
 	void appResumed();
     bool isHD() { return hd; }

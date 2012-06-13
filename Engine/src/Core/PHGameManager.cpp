@@ -242,11 +242,6 @@ void PHGameManager::processInput()
     }
 }
 
-void PHGameManager::globalFrame(ph_float timeElapsed)
-{
-    PHAnimatorPool::mainAnimatorPool()->advanceAnimation(timeElapsed);
-}
-
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     lastElapsed = timeElapsed;

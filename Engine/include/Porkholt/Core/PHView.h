@@ -155,8 +155,11 @@ protected:
     void setCinematicBgColor(const PHColor & c) { setBackgroundColor(c); }
     PHColor cinematicBgColor() { return backgroundColor(); }
 
+    virtual void attachedToGameManager();
+
 //auxiliar view binding
 protected:
+
     PHAuxLayerView * auxLayer;
     PHView * auxSuperview;
     bool drawingOnAuxLayer;
