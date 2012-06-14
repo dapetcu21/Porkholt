@@ -826,7 +826,7 @@ void PHGameManager::setActiveTexture(int tmu)
 
 void PHGameManager::bindTexture(PHGLTexture * tx)
 {
-    //if (textures[aTMU] == tx) return;
+    if (textures[aTMU] == tx) return;
     if (textures[aTMU])
         textures[aTMU]->bound = false;
     textures[aTMU] = tx;

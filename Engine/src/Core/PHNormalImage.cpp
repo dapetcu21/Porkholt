@@ -105,6 +105,7 @@ void PHNormalImage::bindToTexture(int tx)
 
 PHRect PHNormalImage::textureCoordinates(const PHRect & port)
 {
+    load();
     return PHRect(txc.x + txc.width*port.x,
                   txc.y + txc.height*port.y,
                   txc.width * port.width,

@@ -8,6 +8,13 @@ string PHInvalidFileFormat("Invalid File Format");
 string PHSysCallError("System Call Error");
 string PHLuaError("Lua Error");
 
+void PHGLCheckError_()
+{
+    GLenum e = glGetError(); 
+    if (e!=GL_NO_ERROR) 
+        PHLog("OpenGL error %x in "__FILE__":%d", __LINE__ , int(e));   
+}
+
 void PHLog(const char * str, ...)
 {
 	va_list al;

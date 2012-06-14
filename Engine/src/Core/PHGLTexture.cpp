@@ -178,7 +178,9 @@ void PHGLTexture1D::setData(uint8_t * data, size_t width, enum pixelFormat f)
 {
     bind_begin;
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGLClearError();
     glTexImage1D(target, 0, internalFormat[f], width, 0, format[f], type[f], data);
+    PHGLCheckError();
     w = width;
     bind_end;
 }
@@ -189,7 +191,9 @@ void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pix
 {
     bind_begin;
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGLClearError();
     glTexImage2D(target, 0, internalFormat[f], width, height, 0, format[f], type[f], data);
+    PHGLCheckError();
     w = width;
     h = height;
     bind_end;
@@ -257,7 +261,9 @@ void PHGLTexture3D::setData(uint8_t *data, size_t width, size_t height, size_t d
 {
     bind_begin;
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGLClearError();
     glTexImage3D(target, 0, internalFormat[f], width, height, depth, 0, format[f], type[f], data);
+    PHGLCheckError();
     w = width;
     h = height;
     d = depth;
@@ -278,7 +284,9 @@ void PHGLTextureCubeMap::setData(uint8_t *data, size_t width, size_t height, enu
         GL_TEXTURE_CUBE_MAP_POSITIVE_Z
     };
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGLClearError();
     glTexImage2D(faces[face], 0, internalFormat[f], width, height, 0, format[f], type[f], data);
+    PHGLCheckError();
     bind_end;
 }
 #endif

@@ -6,6 +6,17 @@
 
 void PHLog(const char * str, ...);
 void PHLog(const string & str, ...);
+void PHGLCheckError_();
+
+inline void PHNop() {};
+
+#ifdef PH_DEBUG
+#define PHGLCheckError PHGLCheckError_
+#define PHGLClearError glGetError
+#else
+#define PHGLCheckError PHNop
+#define PHGLClearError PHNop
+#endif
 
 extern string PHIOError;
 extern string PHInvalidFileFormat;

@@ -96,6 +96,7 @@ public:
     uniform & at(const string & name) { return (*this)[name]; }
     uniform & at(int index) { return (*this)[index]; }
     
+    void dump();
     void erase(const uniform & u);
     uniform & insert(const string & name, int index);
     

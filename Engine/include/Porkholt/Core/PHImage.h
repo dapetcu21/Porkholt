@@ -26,7 +26,7 @@ protected:
 	int _height;
     int _width;
     
-    bool loaded;
+    volatile bool loaded;
     virtual void _load() = 0;
     
     PHGameManager * gm;
@@ -41,7 +41,7 @@ protected:
     static void buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord, const PHPoint & adjustment);
     
 public:
-    void load() { loadMutex->lock(); /*PHLog("loadMutex lock l");*/ if (!loaded) _load(); /*PHLog("loadMutex unlock l");*/ loadMutex->unlock(); }
+    void load() { if (!loaded) { loadMutex->lock(); if (!loaded) _load(); loadMutex->unlock(); } }
 	int height() { load(); return _height; };
 	int width() { load(); return _width; };
 

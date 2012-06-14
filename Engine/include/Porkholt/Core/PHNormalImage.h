@@ -31,7 +31,7 @@ public:
     virtual ~PHNormalImage();
     
     void bindToTexture(int tx);
-    PHRect textureCoordinates() { return txc; }
+    PHRect textureCoordinates() { load(); return txc; }
     PHRect textureCoordinates(const PHRect & port);
     
     PHGLTexture2D * texture() { load(); return tex; }

@@ -7,6 +7,7 @@
 #include <Porkholt/3D/PHSphereMesh.h>
 #include <Porkholt/3D/PHProjectionChanger.h>
 #include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/Core/PHImageView.h>
 
 class PH3DDemoViewController : public PHViewController
 {
@@ -17,6 +18,9 @@ protected:
     PHView * loadView(const PHRect & r)
     {
         PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
+        PHView * v = new PHView(r);
+        v->addChild(container);
+        container->release();
 
         body = new PHMeshBody();
         body->setMesh(PHSphereMesh::sphere(gm));
@@ -24,9 +28,20 @@ protected:
         PHMaterial * mat = new PHMaterial(PHWhiteColor, PHWhiteColor,10.0f);
         body->setMaterial(mat);
         mat->release();
-        body->setImage(gm->imageNamed("earth"));
+        PHNormalImage * img = (PHNormalImage*)gm->imageNamed("earth");
+        body->setImage(img);
         container->addChild(body);
+
+        PHImageView * iv = new PHImageView(PHRect(0,0,200,100));
+        iv->setImage(img);
+        v->addChild(iv);
+        iv->release();
         
+        iv = new PHImageView(PHRect(200,0,200,100));
+        iv->setImage(img->normalMap());
+        v->addChild(iv);
+        iv->release();
+
         lbody = new PHMeshBody();
         lbody->setMesh(PHSphereMesh::sphere(gm));
         lbody->setScale(PH3DSize(0.2,0.2,0.2));
@@ -34,10 +49,6 @@ protected:
         lbody->setMaterial(mat);
         mat->release();
         container->addChild(lbody);
-        
-        PHView * v = new PHView(r);
-        v->addChild(container);
-        container->release();
         
         PHGLLight * l = new PHGLLight(PHGLLight::pointLight, PH3DOriginPoint, 2);
         gm->setCurrentLight(l);

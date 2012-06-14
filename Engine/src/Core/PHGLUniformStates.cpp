@@ -53,6 +53,49 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader)
     };
 }
 
+void PHGLUniformStates::dump()
+{
+    map<string,uniform*>::iterator i;
+    PHLog("Uniform %x:", int(size_t(this)));
+    for (i = stringMap.begin(); i!=stringMap.end(); i++)
+    {
+        const string & name = i->first;
+        uniform * u = i->second;
+        switch  (u->type)
+        {
+            case float3Type:
+                PHLog("%s = vec3(%f, %f, %f)",name.c_str(), u->floatValue[0], u->floatValue[1], u->floatValue[2]);
+                break;
+            case float4Type:
+                PHLog("%s = vec4(%f, %f, %f %f)",name.c_str(), u->floatValue[0], u->floatValue[1], u->floatValue[2], u->floatValue[3]);
+                break;
+            case matrixType:
+                PHLog("%s = mat4",name.c_str());
+                break;
+            case floatType:
+                PHLog("%s = %f",name.c_str(), u->floatValue[0]);
+                break;
+            case float2Type:
+                PHLog("%s = vec2(%f, %f)",name.c_str(), u->floatValue[0], u->floatValue[1]);
+                break;
+            case intType:
+                PHLog("%s = %d",name.c_str(), u->intValue[0]);
+                break;
+            case int3Type:
+                PHLog("%s = vec3i(%d, %d, %d)",name.c_str(), u->intValue[0], u->intValue[1], u->intValue[2]);
+                break;
+            case int4Type:
+                PHLog("%s = vec4i(%d, %d, %d, %d)",name.c_str(), u->intValue[0], u->intValue[1], u->intValue[2], u->intValue[3]);
+                break;
+            case int2Type:
+                PHLog("%s = vec2i(%d, %d)",name.c_str(), u->intValue[0], u->floatValue[1]);
+                break;
+        };
+
+    }
+}
+
+
 PHGLUniformStates::uniform & PHGLUniformStates::_insert(const string &name, int index)
 {
     map<int,uniform*>::iterator i = intMap.find(index);

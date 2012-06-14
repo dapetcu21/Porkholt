@@ -101,7 +101,6 @@ void PHMeshBody::draw()
     bool isAmbient = !hasSpec && !hasDiff;
     PHGLShaderProgram * shader = frontShaderFor(gm, true, isAmbient? PHGLLight::ambientLight : l->type, tex!=NULL, nmap!=NULL, hasSpec);
     gm->setGLStates(PHGLZTesting);
-    gm->applyShader(shader);
     modelViewMatrixU = gm->modelViewMatrix();
     projectionMatrixU = gm->projectionMatrix();
     if (lvalid)
@@ -124,6 +123,7 @@ void PHMeshBody::draw()
         nmap->bind(1);
         normalMapRU = PHVector4(nmap_r.x, nmap_r.y, nmap_r.width, nmap_r.height);
     }
+    gm->useShader(shader);
     uniforms->apply(shader);
     _mesh->vao()->draw();
 }
