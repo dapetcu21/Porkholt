@@ -31,6 +31,14 @@ public:
 	
     bool autoRelease() { return autorelease; }
     void setAutoRelease(bool b) { autorelease = b; }
+
+    static void detachThread(const PHInvocation & inv)
+    {
+        PHThread * t = new PHThread;
+        t->setFunction(inv);
+        t->start();
+        t->release();
+    }
     
 private:
 	PHThread(pthread_t);

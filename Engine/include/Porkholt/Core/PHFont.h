@@ -7,6 +7,7 @@
 
 class PHGameManager;
 class PHGLTexture2D;
+class PHFile;
 
 class PHFont : public PHObject
 {
@@ -23,7 +24,7 @@ public:
     ph_float prerenderPointSize() { return pntSize; }
     
 protected:
-	PHFont(PHGameManager * gameManager, const string & path);
+	PHFont(PHGameManager * gameManager, PHFile * file);
     ~PHFont();
     friend class PHFontInitPool;
     

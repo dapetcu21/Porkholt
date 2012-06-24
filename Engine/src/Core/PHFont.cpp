@@ -6,6 +6,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/IO/PHFile.h>
 
 #define uint16From(d) (*((uint16_t*)(d)))
 #define uint32From(d) (*((uint32_t*)(d)))
@@ -14,10 +15,10 @@
 #define uint32At(d,p) uint32From((d)+(p))
 #define uint64At(d,p) uint64From((d)+(p))
 
-PHFont::PHFont(PHGameManager * gameM, const string & path) : gm(gameM), loaded(false), tex(NULL), dataMutex(new PHMutex)
+PHFont::PHFont(PHGameManager * gameM, PHFile * file) : gm(gameM), loaded(false), tex(NULL), dataMutex(new PHMutex)
 {
     size_t len;
-    uint8_t * d = data = PHFileManager::loadFile(path, len);
+    uint8_t * d = data = file->loadToBuffer(len);
     dataRetainCount = 1;
     bool failed = false;
     

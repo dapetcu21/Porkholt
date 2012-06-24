@@ -2,14 +2,11 @@
 
 #include <Porkholt/Core/PHGLProgramInitPool.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHFile.h>
 
 map<string,int> PHGLProgramInitPool::mapping;
 int PHGLProgramInitPool::nr = 0;
-
-const string PHGLProgramInitPool::shaderDirectory()
-{
-    return "./rsrc/shaders/";
-}
 
 PHGLShaderProgram* PHGLProgramInitPool::shaderProgramNamed(const string & name)
 {
@@ -26,11 +23,16 @@ PHGLShaderProgram* PHGLProgramInitPool::shaderProgramNamed(const string & name)
             ops.push_back(name.substr(beg+1, s-beg-1));
         }
         string shn = name.substr(0, name.find('[', 0));
+        PHFile * file = NULL;
 		try {
-            shd = new PHGLShaderProgram(gameManager(), shaderDirectory() + shn + ".lua", ops);
+            file = shaderDirectory()->fileAtPath(shn + ".lua");
+            shd = new PHGLShaderProgram(gameManager(), shaderDirectory(), file, ops);
+            file->release();
 		} catch (string ex)
 		{
-			PHLog(ex);
+            if (file)
+                file->release();
+			PHLog("Could not load shader \"%s\": %s",name.c_str(), ex.c_str());
 			return NULL;
 		}
 		shaders[name] = shd;

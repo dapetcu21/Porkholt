@@ -9,6 +9,8 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
+#include <Porkholt/Core/PHTextureAtlas.h>
+#include <Porkholt/Core/PHGLTexture.h>
 
 #define INIT _image(img), running(true)
 
@@ -140,55 +142,15 @@ void PHImageAnimator::advanceAnimation(ph_float elapsedTime)
 
 PHRect PHImageAnimator::currentFrameTextureCoordinates(const PHRect & port)
 {
-    int actWidth,actHeight, _width, _height;
-    ph_float xc,yc,xC,yC;
-    
-    int nt,p,r,c;
-    
-    nt = realframe/_image->ipt;
-    p = realframe-nt*_image->ipt;
-    r = p/_image->cols;
-    c = p%_image->cols;
-    
-    actWidth = _image->textures[nt].awidth;
-    actHeight = _image->textures[nt].aheight;
-    _width = _image->_width;
-    _height = _image->_height;
-    
-    xc = 0.5f/actWidth;
-    yc = 0.5f/actHeight;
-    xC = (ph_float)_width/actWidth;
-    yC = (ph_float)_height/actHeight;
-
-    return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
+    return _image->atlas()->textureCoordinates(realframe);
 }
 
 PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
 {
-    int actWidth,actHeight, _width, _height;
-    ph_float xc,yc,xC,yC;
-    
-    int nt,p,r,c;
-    
-    nt = lastframe/_image->ipt;
-    p = lastframe-nt*_image->ipt;
-    r = p/_image->cols;
-    c = p%_image->cols;
-    
-    actWidth = _image->textures[nt].awidth;
-    actHeight = _image->textures[nt].aheight;
-    _width = _image->_width;
-    _height = _image->_height;
-    
-    xc = 0.5f/actWidth;
-    yc = 0.5f/actHeight;
-    xC = (ph_float)_width/actWidth;
-    yC = (ph_float)_height/actHeight;
-    
-    return PHRect(xC*(port.x+c)+xc,yC*(port.y+port.height+r)-yc,xC*port.width-2*xc,-yC*port.height+2*yc);
+    return _image->atlas()->textureCoordinates(lastframe);
 }
 
-void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect & frm,const PHRect & port,const PHColor & tint)
+/*void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
     if (realframe<0) return;
     
@@ -291,19 +253,15 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
     gm->setColor(tt);
     gm->applySpriteShader();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
+}*/
 
 void PHImageAnimator::bindCurrentFrameToTexture(int tx)
 {
-    int nt = realframe/_image->ipt;
-    glActiveTexture(GL_TEXTURE0+tx);
-    glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+    _image->atlas()->texture(realframe)->bind(tx);
 }
 void PHImageAnimator::bindLastFrameToTexture(int tx)
 {
-    int nt = lastframe/_image->ipt;
-    glActiveTexture(GL_TEXTURE0+tx);
-    glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+    _image->atlas()->texture(lastframe)->bind(tx);
 }
 
 void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject * & vao1, PHGLVertexBufferObject * & vbo1, PHGLVertexArrayObject * & vao2, PHGLVertexBufferObject * & vbo2)
@@ -327,47 +285,13 @@ void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject
         vao2 = NULL;
     }
 
-    PHPoint repeat = PHPoint(imageView->repeatX(),imageView->repeatY());
-    PHRect port = imageView->textureCoordinates();
-    
-    int actWidth,actHeight, _width, _height;
-    ph_float xc,yc,xC,yC;
-    
-    int nt,p,r,c;
-    
-    nt = realframe/_image->ipt;
-    p = realframe-nt*_image->ipt;
-    r = p/_image->cols;
-    c = p%_image->cols;
-    
-    actWidth = _image->textures[nt].awidth;
-    actHeight = _image->textures[nt].aheight;
-    _width = _image->_width;
-    _height = _image->_height;
-    xc = 0.5f/actWidth;
-    yc = 0.5f/actHeight;
-    xC = (ph_float)_width/actWidth;
-    yC = (ph_float)_height/actHeight;
+    PHPoint repeat(imageView->repeatX(), imageView->repeatY());
+    PHRect port(imageView->textureCoordinates());
 
-    
-    PHImage::buildImageVAO(vao1, vbo1, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
+    PHImage::buildImageVAO(vao1, vbo1, repeat, port, _image->atlas()->textureCoordinates(realframe), PHOriginPoint);
     
     if (fade)
     {
-        nt = lastframe/_image->ipt;
-        p = lastframe-nt*_image->ipt;
-        r = p/_image->cols;
-        c = p%_image->cols;
-        
-        actWidth = _image->textures[nt].awidth;
-        actHeight = _image->textures[nt].aheight;
-        _width = _image->_width;
-        _height = _image->_height;
-        xc = 0.5f/actWidth;
-        yc = 0.5f/actHeight;
-        xC = (ph_float)_width/actWidth;
-        yC = (ph_float)_height/actHeight;
-
-        PHImage::buildImageVAO(vao2, vbo2, repeat, port, PHRect(xC*c,yC*r,xC,yC), PHPoint(xc,yc));
+        PHImage::buildImageVAO(vao2, vbo2, repeat, port, _image->atlas()->textureCoordinates(lastframe), PHOriginPoint);
     }
 }

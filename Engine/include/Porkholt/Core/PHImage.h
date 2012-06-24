@@ -3,7 +3,7 @@
 #define PHIMAGE_H
 #include <Porkholt/Core/PHMain.h>
 
-//#define PHIMAGE_ASYNCHRONEOUS_LOADING
+#define PHIMAGE_ASYNCHRONEOUS_LOADING
 #define PHIMAGE_ORDERED_LOADING
 
 class PHImage;
@@ -21,7 +21,7 @@ public:
 #endif
 	
 protected:
-	PHImage(const string & path, PHGameManager * gameManager);
+	PHImage(PHGameManager * gameManager);
 	
 	int _height;
     int _width;
@@ -49,6 +49,14 @@ public:
     virtual bool isAnimated() { return false; };
     
     PHImage * normalMap() { return _normalMap; } 
+    void setNormalMap(PHImage * n)
+    {
+        if (n)
+            n->retain();
+        if (_normalMap)
+            _normalMap->release();
+        _normalMap = n;
+    }
     
     virtual ~PHImage() { loadMutex->release(); if (_normalMap) _normalMap->release(); }
 };

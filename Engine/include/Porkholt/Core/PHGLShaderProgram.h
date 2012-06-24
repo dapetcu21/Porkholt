@@ -7,6 +7,8 @@
 
 class PHGLShader;
 class PHGameManager;
+class PHFile;
+class PHDirectory;
 
 class PHGLShaderProgram : public PHObject
 {
@@ -14,10 +16,10 @@ protected:
     GLint identifier;
     PHGLShader * vShader, * fShader;
     
-    void init(PHGameManager * gm, const string & path, const vector<string> * ops);
+    void init(PHGameManager * gm, PHDirectory * shdDir, PHFile * file, const vector<string> * ops);
 public:
-    PHGLShaderProgram(PHGameManager * gameManager, const string & path);
-    PHGLShaderProgram(PHGameManager * gameManager, const string & path, const vector<string> & ops);
+    PHGLShaderProgram(PHGameManager * gameManager, PHDirectory * shdDir, PHFile * file);
+    PHGLShaderProgram(PHGameManager * gameManager, PHDirectory * shdDir, PHFile * file, const vector<string> & ops);
     PHGLShader * vertexShader() { return vShader; }
     PHGLShader * fragmentShader() { return fShader; }
     bool validate();

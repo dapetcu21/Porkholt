@@ -12,7 +12,9 @@ extern "C"
 #include <lualib.h>
 }
 
+class PHFile;
 bool PHLuaLoadFile(lua_State * L, string fname);
+bool PHLuaLoadFile(lua_State * L, PHFile * file);
 bool PHLuaLoadString(lua_State * L, string s);
 bool PHLuaLoadString(lua_State * L, const char * s);
 bool PHLuaCall(lua_State * L,int inargs, int outargs);

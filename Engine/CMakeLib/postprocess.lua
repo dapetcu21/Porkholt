@@ -72,13 +72,7 @@ function file_base(f)
 end
 
 function file_extension(f)
-  local pos = string.find(f, "%.")
-  local ext
-  if pos then
-    ext = string.sub(f, pos+1)
-  else
-    ext = ""
-  end
+  local pos1, pos2, ext = string.find(f, "%.([^%.][^%.]-)$")
   return ext
 end
 
@@ -103,28 +97,89 @@ end
 function downscale_png(srcd, dstd, f, stp, name)
   name = name or f
   if (downscale_hd) then
+    local fhd = string.gsub(f, ".png$", ".hd.png");
     local fm = file_modif(srcd.."/"..f)
     local dm = file_modif(dstd.."/"..f)
-    local dmh= file_modif(dstd.."/"..f..".hd")
+    local dmh= file_modif(dstd.."/"..fhd)
     if ((fm > dm) or (fm > dmh)) then
         if (stp == 'l') then
           print('Symlinking image "'..name..'"')
           local fl = io.popen('readlink "'..srcd.."/"..f..'"')
           local link = fl:lines()()
           fl:close()
+          local lihd = string.gsub(link, ".png$", ".hd.png");
           local cmd = 'cd "'..dstd..'"'
-          cmd = cmd..' && ln -sf "'..link..'"    "'..dstd.."/"..f..'"'
-          cmd = cmd..' && ln -sf "'..link..'.hd" "'..dstd.."/"..f..'.hd"'
+          cmd = cmd..' && ln -sf "'..link..'" "'..dstd.."/"..f..'"'
+          cmd = cmd..' && ln -sf "'..lihd..'" "'..dstd.."/"..fhd..'"'
           os.execute(cmd)
         else
           print('Downscaling image "'..name..'"')
       	  local flags="-quality 5 -channel RGBA -depth 24 -colorspace RGB"
       	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 50% "png32:'..dstd.."/"..f..'"')
-      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 25% "png32:'..dstd.."/"..f..'.hd"')
+      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 25% "png32:'..dstd.."/"..fhd..'"')
   	    end
     end
   else
     copy_file(srcd.."/"..f, dstd.."/"..f, name)
+  end
+end
+
+function create_map(files, dst, hd)
+  local scriptline = 'touch "'..dst..'"'
+  os.execute(scriptline)
+  return ''
+end
+
+function animation_dir(src, dst, prefix)
+  prefix = prefix or ""
+  dir_make(dst)
+  local mapm = file_modif(dst..'/'..'map.png')
+  if (downscale_hd) then
+    local map = file_modif(dst..'/'..'map.hd.png')
+    if map < mapm then
+        mapm = map
+    end
+  end
+
+  local dl = dir_list(dst)
+  for f,tp in pairs(dl) do
+    if not ((tp == "f") and ((f == "map.png") or (f == "info.lua") or ((f == "map.hd.png") and downscale_hd))) then
+      print('Removing file "'..prefix..f..'"')
+      file_rm(dst.."/"..f)
+    end
+  end
+
+  local mapfl = ""
+  local rebuild = false
+
+  local fl = dir_list(src)
+  for f,tp in pairs(fl) do
+    if ((file_extension(f) == "png") and (tp=='f')) then
+      rebuild = rebuild or (file_modif(src..'/'..f) > mapm)
+      mapfl = mapfl.." "..src..'/'..f
+    end
+  end
+
+  if rebuild then
+    print('Creating atlas image "'..prefix..'map.png"')
+    local s = create_map(mapfl, dst..'/map.png', false)
+    if (downscale_hd) then
+        s = s..create_map(mapfl, dst..'/map.hd.png', true)
+    end
+    local file, err = io.open(src..'/info.lua', 'r')
+    if (file) then
+      s = s..file:read("*a")
+      file:close()
+      local of, erro = io.open(dst..'/info.lua', 'w')
+      if (of) then
+        of:write(s)
+        of:close()
+      else
+        print(erro)
+      end
+    else
+      print(err)
+    end
   end
 end
 
@@ -144,11 +199,7 @@ function crawl_dir(src, dst, prefix)
     local ff = f;
     local ext = file_extension(f)
     if (downscale_hd) then
-      if (ext == "png.hd") then
-        ff = file_base(f)..".png"
-      elseif (ext == "png.nmap.hd") then
-        ff = file_base(f)..".png.nmap"
-      end
+      ff = string.gsub(ff, ".hd.png$", ".png");
     end
     if (tp ~= sl[ff]) then
       print('Removing file "'..prefix..f..'"')
@@ -159,9 +210,13 @@ function crawl_dir(src, dst, prefix)
   for f,tp in pairs(sl) do
     local ext = file_extension(f)
     if (tp == "d") then
-      crawl_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
+      if (ext == "png") then
+        animation_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
+      else
+        crawl_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
+      end
     elseif ((tp == "f") or (tp == "l")) then
-      if ((ext == "png") or (ext == "png.nmap")) then
+      if (ext == "png") then
         downscale_png(src, dst, f, tp, prefix..f)
       elseif (ext == "lua") then
         if (tp == "l") then

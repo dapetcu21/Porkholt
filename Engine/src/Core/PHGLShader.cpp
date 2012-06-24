@@ -1,12 +1,34 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHGLShader.h>
-#include <Porkholt/IO/PHFileManager.h>
+#include <Porkholt/IO/PHFile.h>
 
-PHGLShader::PHGLShader(const string & header, const string & path, int type)
+PHGLShader::PHGLShader(const string & header, const string & data, int type)
 {
-    size_t size;
-    const GLchar * data = (const GLchar*)PHFileManager::loadFile(path, size);
+    loadWithData(header, (const uint8_t *)&(data[0]), data.size(), type);
+}
+
+PHGLShader::PHGLShader(const string & header, PHFile * file, int type)
+{
+    size_t s = 0;
+    uint8_t * d = file->loadToBuffer(s);
+    try {
+    loadWithData(header, d, s, type);
+    } catch (string ex) {
+        delete[] d;
+        throw ex;
+    }
+    delete[] d;
+}
+
+PHGLShader::PHGLShader(const string & header, const uint8_t * d, size_t size, int type)
+{
+    loadWithData(header, d, size, type);
+}
+    
+void PHGLShader::loadWithData(const string & header, const uint8_t * d, size_t size, int type)
+{
+    const GLchar * data = (const GLchar*)d;
     GLint t;
     switch (type) {
         case vertexShader:
@@ -24,7 +46,6 @@ PHGLShader::PHGLShader(const string & header, const string & path, int type)
     GLint sizes[2] = { header.length(), size };
     glShaderSource(identifier, 2, strings, sizes);
     glCompileShader(identifier);
-    delete [] data;
     
 #ifdef PH_DEBUG
     GLint logLength;
@@ -43,7 +64,7 @@ PHGLShader::PHGLShader(const string & header, const string & path, int type)
     if (status == GL_FALSE)
     {
         glDeleteShader(identifier);
-        throw "OpenGL Shader compilation failed: " + path;
+        throw "OpenGL Shader compilation failed";
     }
 }
 

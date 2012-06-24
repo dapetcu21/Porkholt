@@ -128,6 +128,7 @@ struct lua_State;
 #endif
 #endif
 
+#include <Porkholt/Core/PHUtilities.h>
 #include <Porkholt/Core/PHInvocation.h>
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/Core/PHObject.h>

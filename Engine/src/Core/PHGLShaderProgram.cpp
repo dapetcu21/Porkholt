@@ -4,18 +4,20 @@
 #include <Porkholt/Core/PHGLShader.h>
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHFile.h>
 
-PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gameManager, const string & path, const vector<string> & ops)
+PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gameManager, PHDirectory * shdDir, PHFile * file, const vector<string> & ops)
 {
-    init(gameManager, path, &ops);
+    init(gameManager, shdDir, file, &ops);
 }
 
-PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, const string & path)
+PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, PHDirectory * shdDir, PHFile * file)
 {
-    init(gm, path, NULL);
+    init(gm, shdDir, file, NULL);
 }
 
-void PHGLShaderProgram::init(PHGameManager * gm, const string & path, const vector<string> * ops)
+void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * file, const vector<string> * ops)
 {
     lua_State * L = lua_open();
     if (ops)
@@ -26,20 +28,10 @@ void PHGLShaderProgram::init(PHGameManager * gm, const string & path, const vect
             lua_setglobal(L, i->c_str());
         }
     }
-    PHLuaLoadFile(L, path);
+    PHLuaLoadFile(L, file);
  
-    int n = path.size();
-    int i,j;
-    for (i = n-1; i>=0; i--)
-        if (path[i]=='/')
-            break;
-    i++;
-    for (j=i; j<n; j++)
-        if (path[j]=='.')
-            break;
-    
-    string dir = path.substr(0,i);
-    string pname = path.substr(i,j-i);
+    string nm = file->name();
+    string pname = file->basename();
     string vshader = pname+".vsh";
     string fshader = pname+".fsh";
     
@@ -59,9 +51,15 @@ void PHGLShaderProgram::init(PHGameManager * gm, const string & path, const vect
     }
     
     vShader = fShader = NULL;
+    PHFile * vfile = NULL;
+    PHFile * ffile = NULL;
     try {
-        vShader = new PHGLShader(*header, dir+vshader,PHGLShader::vertexShader);
-        fShader = new PHGLShader(*header, dir+fshader,PHGLShader::fragmentShader);
+        vfile = shdDir->fileAtPath(vshader); 
+        ffile = shdDir->fileAtPath(fshader); 
+        vShader = new PHGLShader(*header, vfile, PHGLShader::vertexShader);
+        fShader = new PHGLShader(*header, ffile, PHGLShader::fragmentShader);
+        vfile->release();
+        ffile->release();
     }
     catch (string ex)
     {
@@ -69,6 +67,10 @@ void PHGLShaderProgram::init(PHGameManager * gm, const string & path, const vect
             vShader->release();
         if (fShader)
             fShader->release();
+        if (vfile)
+            vfile->release();
+        if (ffile)
+            ffile->release();
         lua_close(L);
         throw ex;
     }
@@ -114,19 +116,19 @@ void PHGLShaderProgram::init(PHGameManager * gm, const string & path, const vect
     if (status == GL_FALSE)
     {
         glDeleteProgram(identifier);
-        throw "OpenGL Shader program linking failed: " + path;
+        throw "OpenGL Shader program linking failed: " + nm;
     }
 
 #ifdef PH_DEBUG
     if (!validate())
     {
         glDeleteProgram(identifier);
-        throw "OpenGL Shader program validation failed: " + path;
+        throw "OpenGL Shader program validation failed: " + nm;
     }
 #endif
     
 #ifdef PH_DEBUG
-    PHLog("Shader program \"%s\" compiled and linked",pname.c_str());
+    PHLog("Shader program \"%s\" compiled and linked", pname.c_str());
 #endif
 }
 

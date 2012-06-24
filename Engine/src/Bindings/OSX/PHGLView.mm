@@ -6,6 +6,7 @@
 #import <Porkholt/Core/PHEvent.h>
 #import <Porkholt/Core/PHWindowing.h>
 #import <CoreVideo/CoreVideo.h>
+#import <Porkholt/IO/PHDirectory.h>
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
@@ -65,7 +66,9 @@
     initParams.screenWidth = frame.size.width;
     initParams.screenHeight = frame.size.height;
     initParams.fps = fps;
-    initParams.resourcePath = string([res UTF8String]) + "/rsrc";
+    PHDirectory * dir = PHInode::directoryAtFSPath(string([res UTF8String]) + "/rsrc");
+    initParams.setResourceDirectory(dir);
+    dir->release();
     initParams.entryPoint = entryPoint;
     if (flags & PHWRemote)
         gameManager->setUsesRemote(true);

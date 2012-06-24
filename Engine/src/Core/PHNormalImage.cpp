@@ -9,22 +9,21 @@
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/IO/PHFile.h>
 
-PHNormalImage::PHNormalImage(const string & path, PHGameManager * gameManager): PHImage(path,gameManager), tex(NULL), pload(false)
+PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord) : PHImage(texture->gameManager()), txc(textureCoord), tex(texture), pload(true)
 {
-    fd = -1;
-    if (PHGameManager::isGloballyHD())
-        fd = open((path+".hd").c_str(), O_RDONLY);
-    if (fd<0)
-        fd = open(path.c_str(), O_RDONLY);
-	if (fd<0)
-		throw string("Can't open file \"") + path + "\": " + strerror(errno);
-    antialiasing = PHFileManager::fileExists(path+".aa");
+    tex->retain();
+    loaded = true;
+}
+
+PHNormalImage::PHNormalImage(PHGameManager * gameManager, PHFile * file, bool aa): PHImage(gameManager), tex(NULL), pload(false)
+{
+    fd = file;
+    fd->retain();
+    antialiasing = aa;
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
-    PHThread * thread = new PHThread;
-    thread->setFunction(PHInv(this,PHNormalImage::loadFromFile, NULL));
-    thread->start();
-    thread->release();
+    PHThread::detachThread(PHInv(this,PHNormalImage::loadFromFile, NULL));
 #else
     loadFromFile(this, NULL);
 #endif  
@@ -49,13 +48,14 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
     bool pot = !PHGLTexture::supportsNPOT(gm);
     
     try {
-        buffer = PHGLTexture::dataFromFileDescriptor(fd, w, h, bw, bh, pot, sz, fmt);
+        buffer = PHGLTexture::dataFromFile(fd, w, h, bw, bh, pot, sz, fmt);
         _width  = w;
         _height = h;
     } catch (string ex)
     {
         PHLog("%s", ex.c_str());
-        close(fd);
+        fd->release();
+        fd = NULL;
 #ifdef PHIMAGE_ORDERED_LOADING
         loadingMutex->unlock();
 #endif
@@ -63,7 +63,8 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
         buffer = NULL;
         return;
     }
-    close(fd);
+    fd->release();
+    fd = NULL;
     pload = true;
     
 #ifdef PHIMAGE_ORDERED_LOADING
@@ -71,7 +72,7 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 #endif
     loadMutex->unlock();
     
-    gm->animatorPool()->scheduleAction(PHInv(this, PHNormalImage::loadToTexture, NULL));
+    gm->mainAnimatorPool()->scheduleAction(PHInv(this, PHNormalImage::loadToTexture, NULL));
 }
 
 void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
@@ -92,6 +93,8 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
 
 PHNormalImage::~PHNormalImage()
 {
+    if (fd)
+        fd->release();
     if (tex)
         tex->release();
 }

@@ -1,6 +1,8 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHLua.h>
+#include <Porkholt/IO/PHFile.h>
+#include <Porkholt/IO/PHDirectory.h>
 
 void PHLuaSetIncludePath(lua_State * L, string path)
 {
@@ -96,6 +98,27 @@ void * PHLuaThisPointer(lua_State * L)
 bool PHLuaLoadFile(lua_State * L, string fname)
 {
     int error = luaL_loadfile(L, fname.c_str()) || lua_pcall(L,0,0,0);
+    if (error)
+    {
+        PHLog("Lua: %s",lua_tostring(L,-1));
+        lua_pop(L, 1);
+        return false;
+    }
+    return true;
+}
+
+bool PHLuaLoadFile(lua_State * L, PHFile * file)
+{
+    uint8_t * buf;
+    size_t sz;
+    try {
+        buf = file->loadToBuffer(sz);
+    } catch(string e) {
+        PHLog(e);
+        return false;
+    }
+    int error = luaL_loadbuffer(L, (const char*)buf, sz, file->name().c_str()) || lua_pcall(L,0,0,0);
+    delete[] buf;
     if (error)
     {
         PHLog("Lua: %s",lua_tostring(L,-1));

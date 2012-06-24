@@ -6,6 +6,8 @@
 
 class PHStream: public PHInode
 {
+protected:
+    int coflags;
 public:
     enum openflags {
         Read =   1<<0,
@@ -13,10 +15,16 @@ public:
         Create = 1<<2,
         Append = 1<<3
     };
-    virtual void open(int flags) = 0;
+    PHStream(const string & p) : PHInode(p), coflags(0) {};
+
+    virtual void open(int flags) { coflags = flags; } 
+    int currentOpenFlags() { return coflags; }
+    bool openedForReading() { return (coflags & Read)!=0; }
+    bool openedForWriting() { return (coflags & Write)!=0; }
+    bool opened() { return coflags!=0; }
     virtual size_t read(uint8_t * buf, size_t size) = 0;
     virtual size_t write(const uint8_t * buf, size_t size) = 0;
-    virtual void close() = 0;
+    virtual void close() { coflags = 0; }
     
     bool isStream() { return true; }
 };

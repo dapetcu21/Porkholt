@@ -6,6 +6,7 @@
 #include <Porkholt/Core/PHMain.h>
 
 class PHGameManager;
+class PHStream;
 
 class PHGLTexture : public PHObject
 {
@@ -90,9 +91,11 @@ public:
     void updateMipMap();
     
     static uint8_t * dataFromFile(const string & file, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format);
-    static uint8_t * dataFromFileDescriptor(int fd, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format);
+    static uint8_t * dataFromFile(PHStream * fd, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format);
     
     static bool supportsNPOT(PHGameManager * gm);
+
+    PHGameManager * gameManager() { return gm; }
 };
 
 #ifdef GL_TEXTURE_1D
@@ -126,8 +129,8 @@ public:
     PHRect loadFromFile(const string & fname, bool antialiasing);
     PHRect loadFromFile(const string & fname) { return loadFromFile(fname, false); };
     
-    PHRect loadFromFileDescriptor(int fd, bool antialiasing);
-    PHRect loadFromFileDescriptor(int fd) { return loadFromFileDescriptor(fd, false); };
+    PHRect loadFromFile(PHStream * fd, bool antialiasing);
+    PHRect loadFromFile(PHStream * fd) { return loadFromFile(fd, false); };
     
     PHRect loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw, size_t bh, enum pixelFormat fmt, bool aa);
 };

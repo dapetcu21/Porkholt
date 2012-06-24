@@ -5,66 +5,69 @@
 #include <Porkholt/IO/PHFileManager.h>
 #include <Porkholt/Core/PHAnimatedImage.h>
 #include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHFile.h>
 
-PHImage * PHImageInitPool::imageFromPath(const string & path)
+PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir)
+{
+    PHImage * img = NULL;
+    PHInode * file = NULL;
+    bool aa = dir->itemExists(name + ".png.aa");
+    try {
+        file = dir->itemAtPath(name + hdsuf + ".png");
+        img = PHImageInitPool::imageFromFile(file, aa);
+        file->release();
+    } catch (...)
+    {
+        if (file)
+            file ->release();
+        try {
+            file = dir->itemAtPath(name + ".png");
+            img = PHImageInitPool::imageFromFile(file, aa);
+            file->release();
+        } catch (string ex)
+        {
+            if (file)
+                file->release();
+            PHLog("Could not load image \"%s\": %s", name.c_str(), ex.c_str());
+            img = PHImageInitPool::imageNamed("placeholder");
+        }
+    }
+    return img;
+}
+
+PHImage * PHImageInitPool::imageFromFile(PHInode * file, bool aa)
 {
 	PHImage * img;
-	map<string,PHImage*>::iterator i = images.find(path);
+    PHHashedString path(file->path());
+	map<PHHashedString, PHImage*>::iterator i = images.find(path);
 	if (i==images.end())
 	{
         PHGameManager * gm = gameManager();
-		try {
-            string nmpath = path + ".nmap";
-            PHImage * nmap = NULL;
-            try {
-                if (PHFileManager::isDirectory(nmpath))
-                    nmap = new PHAnimatedImage(nmpath,gm);
-                else
-                    nmap = new PHNormalImage(nmpath,gm);
-            } catch (...) {};
-            
-            if (PHFileManager::isDirectory(path))
-                img = new PHAnimatedImage(path,gm);
-            else
-                img = new PHNormalImage(path,gm);
-            
-            img->_normalMap = nmap;
-            
-		} catch (string ex)
-		{
-			PHLog(ex);
-            if (imageExists("placeholder"))
-                return imageNamed("placeholder");
-            else
-                return NULL;
-		}
-		images[path] = img;
+        if (file->isDirectory())    
+            img = new PHAnimatedImage(gm, (PHDirectory*)file);
+        else if (file->isFile())
+            img = new PHNormalImage(gm, (PHFile*)file, aa);
+		if (img) 
+            images[path] = img;
+        else 
+            throw string("Not a file or directory");
 	} else {
 		img = i->second;
 	}
 	return img;
 }
 
-const string PHImageInitPool::imageDirectory()
-{
-    return "./rsrc/img/";
-}
-
 bool PHImageInitPool::imageExists(const string & name)
 {
-    string path = imageDirectory()+name+".png";
-    return PHFileManager::fileExists(path);
-}
-
-PHImage * PHImageInitPool::imageNamed(const string & string)
-{
-	return PHImageInitPool::imageFromPath(imageDirectory()+string+".png");
+    return  imageDirectory()->itemExists(name + hdsuf + ".png") || 
+            imageDirectory()->itemExists(name + ".png");
 }
 
 void PHImageInitPool::collectGarbageImages()
 {
-	map<string,PHImage*>::iterator i;
-	map<string,PHImage*> tmp;
+	map<PHHashedString,PHImage*>::iterator i;
+	map<PHHashedString,PHImage*> tmp;
 	for (i = images.begin(); i!=images.end(); i++)
 	{
 		if ((i->second)->referenceCount()>=2)
@@ -77,7 +80,7 @@ void PHImageInitPool::collectGarbageImages()
 
 void PHImageInitPool::loadAllImages()
 {
-    map<string,PHImage*>::iterator i;
+    map<PHHashedString, PHImage*>::iterator i;
     for (i = images.begin(); i!=images.end(); i++)
         i->second->load();
 }

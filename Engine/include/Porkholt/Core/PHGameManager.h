@@ -23,6 +23,7 @@ class PHGLVertexArrayObject;
 class PHTextView;
 class PHGLTexture;
 class PHAnimatorPool;
+class PHDirectory;
 
 enum PHGLCapabilities
 {
@@ -40,15 +41,20 @@ enum PHGLCapabilities
 class PHGameManagerInitParameters
 {
 public:
-    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), resourcePath("./rsrc"), defaultFBO(0), entryPoint(NULL) {}
+    PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), defaultFBO(0), entryPoint(NULL), resourceDir(NULL) {}
 
     ph_float screenWidth;
     ph_float screenHeight;
     int fps;
     ph_float dpi;
-    string resourcePath;
     GLuint defaultFBO;
     void (*entryPoint)(PHGameManager *);
+private:
+    PHDirectory * resourceDir;
+
+public:
+    PHDirectory * resourceDirectory() const { return resourceDir; }
+    void setResourceDirectory(PHDirectory * r);
 };
 
 enum PHGLStates
@@ -71,6 +77,11 @@ private:
     PHEventHandler * evtHandler;
     PHAnimatorPool * animPool;
     PHSoundManager * sndManager;
+    PHDirectory * rsrcDir;
+    PHDirectory * shdDir;
+    PHDirectory * imgDir;
+    PHDirectory * fntDir;
+
 	ph_float _screenWidth;
 	ph_float _screenHeight;
     ph_float dpi;
@@ -118,8 +129,6 @@ public:
     ph_float frameInterval() { return 1.0f/fps; }
     ph_float elapsedTime() { return lastElapsed; }
     ph_float dotsPerInch() { return dpi; }
-    const string & resourcePath() { return resPath; }
-    void setResourcePath(const string & r) { resPath = r; }
 	void renderFrame(ph_float timeElapsed);
 	void appSuspended();
 	void appResumed();
@@ -132,10 +141,13 @@ public:
 	PHView * mainView() { return view; };
     void setMainView(PHView * v);
 	void remove(void * ud);
-    const string imageDirectory();
+
     PHGameManager * gameManager() { return this; }
-    const string fontDirectory();
-    const string shaderDirectory();
+    PHDirectory * resourceDirectory() { return rsrcDir; }
+    PHDirectory * fontDirectory() { if (fntDir) return fntDir; throw string("no font directory"); }
+    PHDirectory * imageDirectory() { if (imgDir) return imgDir; throw string("no image directory"); }
+    PHDirectory * shaderDirectory() { if (shdDir) return shdDir; throw string("no shader directory"); }
+
     const string musicNamed(const string & name);
     bool usesRemote() { return useRemote; }
     void setUsesRemote(bool ur) { useRemote = ur; }

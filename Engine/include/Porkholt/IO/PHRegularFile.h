@@ -7,7 +7,6 @@
 class PHRegularFile : public PHFile
 {
 protected:
-    string path;
     int fd;
     PHRegularFile(const string & dpath, int dummy);
     friend class PHInode;

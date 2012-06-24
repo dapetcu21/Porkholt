@@ -2,17 +2,23 @@
 
 #ifndef PHREGULARDIRECTORY_H
 #define PHREGULARDIRECTORY_H
-#include <Porkholt/IO/PHInode.h>
+#include <Porkholt/IO/PHDirectory.h>
 
-class PHRegularDirectory: public PHInode
+class PHRegularDirectory: public PHDirectory
 {
-    string path;
     PHRegularDirectory(const string & dpath, int dummy);
     friend class PHInode;
+
 public:
     PHRegularDirectory(const string & dpath);
     ~PHRegularDirectory();
     PHInode * itemAtPath(const string & s);
+    PHFile * fileAtPath(const string & s);
+    PHDirectory * directoryAtPath(const string & s);
+
+    bool itemExists(const string & path);
+    bool fileExists(const string & path);
+    bool directoryExists(const string & path);
 };
 
 #endif

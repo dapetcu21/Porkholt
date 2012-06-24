@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/IO/PHFile.h>
 #define PNG_DEBUG 4
 #include <png.h>
 #include <errno.h>
@@ -231,11 +232,11 @@ PHRect PHGLTexture2D::loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw,
                       h/ph_float(bh));
 }
 
-PHRect PHGLTexture2D::loadFromFileDescriptor(int fd, bool antialiasing)
+PHRect PHGLTexture2D::loadFromFile(PHStream * fd, bool antialiasing)
 {
     size_t size, width, height, bufW, bufH;
     enum pixelFormat format;
-    uint8_t * b = dataFromFileDescriptor(fd, width, height, bufW, bufH, !supportsNPOT(gm), size, format);
+    uint8_t * b = dataFromFile(fd, width, height, bufW, bufH, !supportsNPOT(gm), size, format);
     
     PHRect r = loadFromData(b, width, height, bufW, bufH, format, antialiasing);
     
@@ -293,29 +294,31 @@ void PHGLTextureCubeMap::setData(uint8_t *data, size_t width, size_t height, enu
 
 uint8_t * PHGLTexture::dataFromFile(const string & fname, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format)
 {
-    int fd = open(fname.c_str(), O_RDONLY);
-    if (fd<0)
-        throw string("Can't open file: ") + strerror(errno);
+    PHStream * fd = NULL;
+    fd = PHInode::fileAtFSPath(fname);
     uint8_t * r;
     try {
-        r = dataFromFileDescriptor(fd, width, height, bufWidth, bufHeight, powerOfTwo, size, format);
+        r = dataFromFile(fd, width, height, bufWidth, bufHeight, powerOfTwo, size, format);
     } catch (string ex) {
-        close(fd);
+        fd->release();
         throw ex;
     }
-    close(fd);
+    fd->release();
     return r;
 }
 
 static void PHPNGReadData(png_structp png_ptr, png_bytep outBytes,
                           png_size_t byteCountToRead)
 {
-    int fd = int(size_t((void*)(png_get_io_ptr(png_ptr))));
-    if (read(fd, outBytes, byteCountToRead)<0)
-        png_error(png_ptr, strerror(errno));
+    PHFile * fd = (PHFile*)(void*)(png_get_io_ptr(png_ptr));
+    try {
+        fd->read(outBytes, byteCountToRead);
+    } catch (string ex) {
+        png_error(png_ptr, ex.c_str());
+    }
 }
 
-uint8_t * PHGLTexture::dataFromFileDescriptor(int fd, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format)
+uint8_t * PHGLTexture::dataFromFile(PHStream * fd, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format)
 {
     uint8_t * buffer = NULL;
     
@@ -329,7 +332,9 @@ uint8_t * PHGLTexture::dataFromFileDescriptor(int fd, size_t & width, size_t & h
     
 	uint8_t header[8];
 	
-    read(fd, header, 8);
+    if (!fd->openedForReading())
+        fd->open(PHStream::Read);
+    fd->read(header, 8);
 	if (png_sig_cmp(header, 0, 8))
 	{
         throw string("Not a PNG file");

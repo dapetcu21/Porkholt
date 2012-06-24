@@ -3,7 +3,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHRemote.h>
 #include <Porkholt/Core/PHView.h>
-#include <Porkholt/IO/PHFileManager.h>
+#include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/Core/PHImageAnimator.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHNavigationController.h>
@@ -52,6 +52,14 @@ PHGameManager::~PHGameManager()
         spriteStates->release();
     if (lgth)
         lgth->release();
+    if (rsrcDir)
+        rsrcDir->release();
+    if (fntDir)
+        fntDir->release();
+    if (shdDir)
+        shdDir->release();
+    if (imgDir)
+        imgDir->release();
     if (remote)
         delete remote;
     if (hd)
@@ -91,12 +99,21 @@ void PHGameManager::updateHD()
     hd = newhd;
 }
 
+void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
+{
+    if (resourceDir)
+        resourceDir->release();
+    if (r)
+        r->retain();
+    resourceDir = r;
+}
+
+
 void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
 	fps = params.fps;
 	_screenWidth = params.screenWidth;
 	_screenHeight = params.screenHeight;
-    resPath = params.resourcePath;
     dpi = params.dpi;
 	suspended = 0;
     loaded = true;
@@ -130,6 +147,22 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     evtHandler = new PHEventHandler(this);
     animPool = new PHAnimatorPool();
     animPoolMutex = new PHMutex();
+    rsrcDir = params.resourceDirectory();
+    if (!rsrcDir)
+        rsrcDir = PHInode::directoryAtFSPath("./rsrc");
+    else
+        rsrcDir->retain();
+    shdDir = rsrcDir->directoryAtPath("shaders");
+    try {
+        imgDir = rsrcDir->directoryAtPath("img");
+    } catch(...) {
+        imgDir = NULL; 
+    }
+    try {
+        fntDir = rsrcDir->directoryAtPath("fnt");
+    } catch (...) {
+        fntDir = NULL;
+    }
     sndManager = new PHSoundManager(resPath + "/snd/fx");
     
     loadCapabilities();
@@ -494,26 +527,6 @@ int PHGameManager::interfaceType()
     if (isGloballyHD())        
         return interfaceHD;
     return interfaceSD;
-}
-
-const string PHGameManager::imageDirectory()
-{
-    return resourcePath() + "/img/";
-}
-
-const string PHGameManager::fontDirectory()
-{
-    return resourcePath() + "/fnt/";
-}
-
-const string PHGameManager::musicNamed(const string & name)
-{
-    return resourcePath() + "/snd/music/"+name+".mp3";
-}
-
-const string PHGameManager::shaderDirectory()
-{
-    return resourcePath() + "/shaders/";
 }
 
 void PHGameManager::loadCapabilities()

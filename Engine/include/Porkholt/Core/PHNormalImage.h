@@ -10,11 +10,14 @@ class PHImageView;
 class PHGameManager;
 class PHGLVertexBufferObject;
 class PHGLVertexArrayObject;
+class PHFile;
+
 class PHNormalImage : public PHImage
 {
 private:
     PHRect txc;
-    int fd;
+
+    PHFile * fd;
     bool antialiasing;
     uint8_t * buffer;
     size_t w,h,bw,bh,sz;
@@ -27,7 +30,8 @@ private:
     virtual void _load() { if(!pload) loadFromFile(NULL,NULL); loadToTexture(NULL, NULL); }
 public:
     
-    PHNormalImage(const string & path, PHGameManager * gameManager);
+    PHNormalImage(PHGameManager * gameManager, PHFile * file, bool antialiasing);
+    PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord);
     virtual ~PHNormalImage();
     
     void bindToTexture(int tx);

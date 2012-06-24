@@ -5,15 +5,15 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-PHRegularFile::PHRegularFile(const string & dpath, int dummy) : path(dpath), fd(-1)
+PHRegularFile::PHRegularFile(const string & dpath, int dummy) : PHFile(dpath), fd(-1)
 {
     init();
 }
 
-PHRegularFile::PHRegularFile(const string & dpath) : path(dpath), fd(-1)
+PHRegularFile::PHRegularFile(const string & dpath) : PHFile(dpath), fd(-1)
 {
     struct stat result;
-    if (stat(path.c_str(), &result) != 0)
+    if (stat(_path.c_str(), &result) != 0)
         throw string(strerror(errno));
     if (!(result.st_mode & S_IFREG))
         throw string("not a file");
@@ -26,19 +26,29 @@ void PHRegularFile::init()
 
 void PHRegularFile::open(int flags)
 {
+    if (fd >= 0)
+    {
+        ::close(fd);
+        fd = -1;
+    }
     int oflags = (flags & PHStream::Read) ? ((flags & PHStream::Write) ? O_RDWR : O_RDONLY) : ((flags & PHStream::Write) ? O_WRONLY : 0);
     if (flags & PHStream::Create)
         oflags |= O_CREAT;
     if (flags & PHStream::Append)
         oflags |= O_APPEND;
-    if ((fd = ::open(path.c_str(), oflags)) != 0)
+    if ((fd = ::open(_path.c_str(), oflags)) < 0)
         throw string(strerror(errno));
+    PHFile::open(flags);
 }
 
 void PHRegularFile::close()
 {
     if (fd >= 0)
+    {
         ::close(fd);
+        fd = -1;
+    }
+    PHStream::close();
 }
 
 size_t PHRegularFile::read(uint8_t * buf, size_t size)
@@ -91,7 +101,7 @@ void PHRegularFile::setPointer(size_t p)
 size_t PHRegularFile::size()
 {
     struct stat r;
-    if (fstat(fd, &r) != 0)
+    if (((fd>=0)?fstat(fd, &r):stat(_path.c_str(), &r)) != 0)
         throw string(strerror(errno));
     return size_t(r.st_size);
 }

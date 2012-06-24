@@ -6,13 +6,14 @@
 #include <Porkholt/Core/PHMain.h>
 
 class PHGLShaderProgram;
+class PHDirectory;
 class PHGameManager;
 
 class PHGLProgramInitPool
 {
 public:
     PHGLShaderProgram * shaderProgramNamed(const string & name);
-    virtual const string shaderDirectory();
+    virtual PHDirectory * shaderDirectory() = 0;
     ~PHGLProgramInitPool();
     virtual PHGameManager * gameManager() = 0;
     

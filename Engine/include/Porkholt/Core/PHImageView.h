@@ -10,6 +10,7 @@ class PHImage;
 class PHImageAnimator;
 class PHAnimatorPool;
 class PHCurve;
+class PHDirectory;
 
 #define PH_REGISTERIMAGEVIEW(clss) PH_REGISTERCLASS(PHImageView::initMap, #clss, clss)
 
@@ -108,8 +109,8 @@ public:
     void setShape(PHCurve * bp);
     
     virtual void loadFromLua(lua_State * L);
-    static PHImageView * imageFromLua(lua_State * L, PHGameManager * man, const string & rootPath);
-    static PHImageView * imageFromLua(lua_State * L, PHGameManager * man, const string & root, PHAnimatorPool * pool);
+    static PHImageView * imageFromLua(lua_State * L, PHGameManager * man, PHDirectory * rootDir);
+    static PHImageView * imageFromLua(lua_State * L, PHGameManager * man, PHDirectory * rootDir, PHAnimatorPool * pool);
     static PHImageView * imageFromClass(const string & clss);
   
     static void registerLuaInterface(lua_State * L);

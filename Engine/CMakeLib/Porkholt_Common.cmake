@@ -39,6 +39,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHTimer.cpp
   ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimatorGroup.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTrailImageView.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHTextureAtlas.cpp
   ${PH_ENGINE_PATH}/src/IO/PHFileManager.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLua.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawable.cpp
@@ -46,6 +47,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHFont.cpp
   ${PH_ENGINE_PATH}/src/Core/PHViewController.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLTexture.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHUtilities.cpp
   ${PH_ENGINE_PATH}/src/IO/PHInode.cpp
   ${PH_ENGINE_PATH}/src/IO/PHRegularDirectory.cpp
   ${PH_ENGINE_PATH}/src/IO/PHRegularFile.cpp
@@ -135,6 +137,8 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHObject.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewController.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLTexture.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHUtilities.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTextureAtlas.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHInode.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHStream.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHFile.h

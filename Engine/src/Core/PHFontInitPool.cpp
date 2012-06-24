@@ -2,35 +2,36 @@
 
 #include <Porkholt/Core/PHFontInitPool.h>
 #include <Porkholt/Core/PHFont.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHFile.h>
 
-const string PHFontInitPool::fontDirectory()
+PHFont* PHFontInitPool::fontFromFile(PHFile * file)
 {
-    return "./rsrc/fnt/";
-}
-
-PHFont* PHFontInitPool::fontFromPath(const string & path)
-{
-    PHFont * fnt;
-	map<string,PHFont*>::iterator i = fonts.find(path);
-	if (i==fonts.end())
-	{
-		try {
-            fnt = new PHFont(gameManager(), path);
-		} catch (string ex)
-		{
-			PHLog(ex);
-			return NULL;
-		}
-		fonts[path] = fnt;
-	} else {
-		fnt = i->second;
-	}
-	return fnt;
+    return new PHFont(gameManager(), file);
 }
 
 PHFont* PHFontInitPool::fontNamed(const string & name)
 {
-    return PHFontInitPool::fontFromPath(fontDirectory()+name+".phf");
+    PHFont * fnt;
+    map<string,PHFont*>::iterator i = fonts.find(name);
+    if (i==fonts.end())
+    {
+        PHFile * file = NULL;
+        try {
+            file = fontDirectory()->fileAtPath(name+".phf");
+            fnt = PHFontInitPool::fontFromFile(file);
+            file->release();
+        } catch (string ex)
+        {
+            if (file)
+                file->release();
+            PHLog(ex);
+            return NULL;
+        }
+        fonts[name] = fnt;
+    } else
+        fnt = i->second;
+    return fnt;
 }
 
 void PHFontInitPool::collectGarbageFonts()

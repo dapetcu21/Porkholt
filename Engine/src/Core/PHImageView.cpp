@@ -447,30 +447,23 @@ void PHImageView::loadFromLua(lua_State *L)
     }
 }
 
-PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, const string & root)
+PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, PHDirectory * rootDir)
 {
-    return imageFromLua(L, man, root, man->animatorPool());
+    return imageFromLua(L, man, rootDir, man->animatorPool());
 }
 
-PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, const string & root, PHAnimatorPool * pool)
+PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, PHDirectory * root, PHAnimatorPool * pool)
 {
     PHImageView * img = NULL;
     if (lua_istable(L, -1))
     {
         bool isV = true;
-        string filename = root + "/"; 
         string fn;
         lua_pushstring(L, "filename");
         lua_gettable(L, -2);
         if ((isV = lua_isstring(L, -1)))
             fn = lua_tostring(L, -1);
         lua_pop(L, 1);
-        
-        if (fn[0]=='/')
-        {
-            filename = man->resourcePath() + "/img";
-        }
-        filename = filename + fn;
         
         if (isV)
         {
@@ -480,7 +473,12 @@ PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, cons
             img = PHImageView::imageFromClass(clss);
             img->setAnimatorPool(pool);
             img->setGameManager(man);
-            img->setImage(man->imageFromPath(filename));
+            PHImage * im = NULL;
+            if (fn[0] == '/')
+                im = man->imageNamed(fn.substr(1), root);
+            else
+                im = man->imageNamed(fn);
+            img->setImage(im);
             img->setOptimizations(true);
             img->loadFromLua(L);
         }
@@ -556,7 +554,7 @@ static int PHImageView_setImage(lua_State * L)
     if (s.find('/')==s.npos)
         img = v->gameManager()->imageNamed(s);
     else
-        img = v->gameManager()->imageFromPath(s);
+        img = v->gameManager()->imageNamed(s, v->gameManager()->resourceDirectory());
     v->setImage(img);
     return 0;
 }

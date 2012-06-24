@@ -8,14 +8,14 @@
 class PHImageAnimator;
 class PHAnimatorPool;
 class PHGameManager;
+class PHTextureAtlas;
+class PHDirectory;
 
 class PHAnimatedImage: public PHImage
 {
 private:
     static lua_State * L;
     static PHMutex * luaMutex;
-    
-    string path;
     
     void loadFromLua();
     void cleanupLua();
@@ -43,42 +43,22 @@ private:
     
     vector<PHAnimatedImage::section *> sections;
     int defaultSection;
-    
-    struct texture
-    {
-        unsigned int texid;
-        uint8_t * buffer;
-        size_t size;
-        size_t rowsize;
-        size_t awidth,aheight;
-        texture() : texid(-1), buffer(NULL) {};
-    };
-    
-    vector<PHAnimatedImage::texture> textures;
-    int nfrm;
-    
-    
-    bool antialiasing;
-    uint8_t clr,bdepth;
-    size_t buffersize;
-    int cols,rows,ipt;
-    
-    bool pload;
+    PHTextureAtlas * atl;
     
     friend class PHImageAnimator;
     
-    virtual void _load() { if(!pload) loadImages(NULL,NULL); loadTextures(NULL, NULL);  }
+    virtual void _load();
     
 public:
-    PHAnimatedImage(const string & s, PHGameManager * gameManager);
+    PHAnimatedImage(PHGameManager * gameManager, PHDirectory * dir);
     virtual ~PHAnimatedImage();
     
     virtual bool isAnimated() { return true; }
     
-    void loadImages(PHObject * sender, void * ud);
-    void loadTextures(PHObject * sender, void * ud);
-    
     int sectionNo(const string & sectionName);
+
+    PHTextureAtlas * atlas() { return atl; }
+    void setAtlas(PHTextureAtlas * a);
     
     PHImageAnimator * newAnimator();
     PHImageAnimator * newAnimator(PHAnimatorPool * p);

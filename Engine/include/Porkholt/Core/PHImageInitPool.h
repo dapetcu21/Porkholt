@@ -7,18 +7,27 @@
 
 class PHImage;
 class PHGameManager;
+class PHInode;
+class PHDirectory;
+
 class PHImageInitPool
 {
+private:
+    string hdsuf;
+    map<PHHashedString, PHImage*> images;
 public:
-    PHImage * imageFromPath(const string & path);
+    virtual PHDirectory * imageDirectory() = 0;
+    PHImage * imageFromFile(PHInode * file, bool antialiasing);
+    PHImage * imageNamed(const string & name, PHDirectory * dir);
+	PHImage * imageNamed(const string & name) { return imageNamed(name, imageDirectory()); }
+    
     bool imageExists(const string & name);
-	PHImage * imageNamed(const string & name);
     void loadAllImages();
 	void collectGarbageImages();
-    virtual const string imageDirectory();
     virtual PHGameManager * gameManager() = 0;
-private:
-    map<string,PHImage*> images;
+
+    const string & platformSuffix() { return hdsuf; }
+    void setPlatformSuffix(const string & s) { hdsuf = s; }
 };
 
 #endif
