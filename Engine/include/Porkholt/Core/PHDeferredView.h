@@ -8,10 +8,12 @@
 
 class PHShaderProgram;
 class PHGLUniformStates;
+class PHGLFramebuffer;
+
 class PHDeferredView : public PHView
 {
 protected:
-    GLuint colorFBO,normalFBO,colorRB,normalRB,colorTex,normalTex;
+    PHGLFramebuffer * colorFBO, * normalFBO;
     bool inited;
     
     void init();

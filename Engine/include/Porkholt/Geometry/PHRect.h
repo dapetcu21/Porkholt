@@ -24,6 +24,14 @@ struct PHRect
     
     PHPoint corner(int index) const { return PHPoint(x+((index&1)?width:0),y+((index&2)?height:0)); }
     
+    PHRect portionOf(const PHRect & o) const
+    {
+        return PHRect(  o.x + o.width * x, 
+                        o.y + o.height * y,
+                        o.x + o.width * width, 
+                        o.y + o.height * height);
+    }
+
     PHRect & operator += (const PHPoint & othr)
     {
         x+=othr.x;

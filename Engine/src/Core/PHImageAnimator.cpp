@@ -150,7 +150,7 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
     return _image->atlas()->textureCoordinates(lastframe);
 }
 
-/*void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect & frm,const PHRect & port,const PHColor & tint)
+void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
     if (realframe<0) return;
     
@@ -163,40 +163,21 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
         frm.x+frm.width,frm.y+frm.height,
     };
 
-    int actWidth,actHeight, _width, _height;
-    ph_float xc,yc,xC,yC;
-    
-    int nt,p,r,c;
     PHColor tt = tint;
     if (tt==PHInvalidColor)
         tt = PHWhiteColor;
     
-    glActiveTexture(GL_TEXTURE0);
-    
     if (fade)
     {
-        nt = lastframe/_image->ipt;
-        p = lastframe-nt*_image->ipt;
-        r = p/_image->cols;
-        c = p%_image->cols;
-        
-        actWidth = _image->textures[nt].awidth;
-        actHeight = _image->textures[nt].aheight;
-        _width = _image->_width;
-        _height = _image->_height;
-        xc = 0.5f/actWidth;
-        yc = 0.5f/actHeight;
-        xC = (ph_float)_width/actWidth;
-        yC = (ph_float)_height/actHeight;
-        
+        PHRect r = port.portionOf(_image->atlas()->textureCoordinates(lastframe));
         const GLfloat squareTexCoords2[] = {
-            xC*(port.x+c)+xc				, yC*(port.y+port.height+r)-yc,
-            xC*(port.x+port.width+c)-xc     , yC*(port.y+port.height+r)-yc,
-            xC*(port.x+c)+xc				, yC*(port.y+r)+yc,
-            xC*(port.x+port.width+c)-xc     , yC*(port.y+r)+yc
+            r.x             , r.y + r.height,
+            r.x + r.width   , r.y + r.height,
+            r.x             , r.y,
+            r.x + r.width   , r.y
         };
         
-        glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+        _image->atlas()->texture(lastframe)->bind(0);
         
         int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
         gm->setGLStates(states);
@@ -212,29 +193,18 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
         gm->applySpriteShader();
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
-    
-    nt = realframe/_image->ipt;
-    p = realframe-nt*_image->ipt;
-    r = p/_image->cols;
-    c = p%_image->cols;
-    
-    actWidth = _image->textures[nt].awidth;
-    actHeight = _image->textures[nt].aheight;
-    _width = _image->_width;
-    _height = _image->_height;
-    xc = 0.5f/actWidth;
-    yc = 0.5f/actHeight;
-    xC = (ph_float)_width/actWidth;
-	yC = (ph_float)_height/actHeight;
 	
+    PHRect r = port.portionOf(_image->atlas()->textureCoordinates(realframe));
 	const GLfloat squareTexCoords[] = {
-        xC*(port.x+c)+xc				, yC*(port.y+port.height+r)-yc,
-		xC*(port.x+port.width+c)-xc     , yC*(port.y+port.height+r)-yc,
-		xC*(port.x+c)+xc				, yC*(port.y+r)+yc,
-		xC*(port.x+port.width+c)-xc     , yC*(port.y+r)+yc
-    };
+            r.x             , r.y + r.height,
+            r.x + r.width   , r.y + r.height,
+            r.x             , r.y,
+            r.x + r.width   , r.y
+        };
+        
+
 	
-    glBindTexture(GL_TEXTURE_2D, _image->textures[nt].texid);
+    _image->atlas()->texture(realframe)->bind(0);
     
     int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
     gm->setGLStates(states);
@@ -253,7 +223,7 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
     gm->setColor(tt);
     gm->applySpriteShader();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}*/
+}
 
 void PHImageAnimator::bindCurrentFrameToTexture(int tx)
 {
@@ -288,10 +258,10 @@ void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject
     PHPoint repeat(imageView->repeatX(), imageView->repeatY());
     PHRect port(imageView->textureCoordinates());
 
-    PHImage::buildImageVAO(vao1, vbo1, repeat, port, _image->atlas()->textureCoordinates(realframe), PHOriginPoint);
+    PHImage::buildImageVAO(vao1, vbo1, repeat, port, _image->atlas()->textureCoordinates(realframe));
     
     if (fade)
     {
-        PHImage::buildImageVAO(vao2, vbo2, repeat, port, _image->atlas()->textureCoordinates(lastframe), PHOriginPoint);
+        PHImage::buildImageVAO(vao2, vbo2, repeat, port, _image->atlas()->textureCoordinates(lastframe));
     }
 }

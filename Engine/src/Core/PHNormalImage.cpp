@@ -161,7 +161,6 @@ void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * 
                            vbo,
                            PHPoint(imageView->repeatX(),imageView->repeatY()),
                            imageView->textureCoordinates(),
-                           txc,
-                           PHOriginPoint
+                           txc
                            );
 }

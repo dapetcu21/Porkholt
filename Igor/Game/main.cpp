@@ -1,17 +1,22 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#import "PHStartGame.h"
+#include <Porkholt/Core/PHWindowing.h>
 #include "PHGameController.h"
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHGameController * vc = new PHGameController();
-	vc->init(gm);
+    vc->init(gm);
     gm->navigationController()->pushViewController(vc);
 }
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    return PHStartGame(argc, argv, PHStartGame_GLES2 /*| PHStartGame_30FPS */, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVSync
+#if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
+                   | PHWRemote
+                   | PHWShowFPS
+#endif
+                   , &PHGameEntryPoint, NULL);
 }
  

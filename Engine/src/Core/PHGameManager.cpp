@@ -16,10 +16,11 @@
 #include <Porkholt/Core/PHTextView.h>
 #include <Porkholt/Core/PHFont.h>
 #include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHGLFramebuffer.h>
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), _coloredSpriteShader(NULL), _noTexSpriteShader(NULL), _coloredNoTexSpriteShader(NULL), _textShader(NULL), _missingNormalSpriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -62,8 +63,6 @@ PHGameManager::~PHGameManager()
         imgDir->release();
     if (remote)
         delete remote;
-    if (hd)
-        --globalHD;
 }
 
 void PHGameManager::setMainView(PHView * v)
@@ -82,21 +81,6 @@ void PHGameManager::setMainView(PHView * v)
     setProjection(); 
     if (view)
         view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
-}
-
-int PHGameManager::globalHD = 0;
-
-void PHGameManager::updateHD()
-{
-    ph_float x = _screenWidth;
-    ph_float y = _screenHeight;
-    ph_float diagsq = x*x+y*y;
-    bool newhd = (diagsq > 500000);
-    if (newhd && !hd)
-        ++globalHD;
-    if (!newhd && hd)
-        --globalHD;
-    hd = newhd;
 }
 
 void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
@@ -118,13 +102,11 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	suspended = 0;
     loaded = true;
     entryPoint = params.entryPoint;
-    _defaultFBOf = params.defaultFBO;
-    _defaultFBO = 0;
+    _defaultFBO = params.defaultFBO;
+    if (_defaultFBO == 0)
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     lt = PHTime::getTime();
 	setUserData(ud);
-    
-    hd = false;
-    updateHD();
     
 	PHThread::mainThread();
 
@@ -163,7 +145,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     } catch (...) {
         fntDir = NULL;
     }
-    sndManager = new PHSoundManager(resPath + "/snd/fx");
+    sndManager = new PHSoundManager(rsrcDir->path() + "/snd/fx");
     
     loadCapabilities();
     glDisable(GL_DEPTH_TEST);
@@ -184,11 +166,6 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     if (useShaders())
     {
         pushSpriteShader(_spriteShader = shaderProgramNamed("sprites"));
-        _coloredSpriteShader = shaderProgramNamed("color_sprites");
-        _noTexSpriteShader = shaderProgramNamed("notex_sprites");
-        _coloredNoTexSpriteShader = shaderProgramNamed("color_notex_sprites");
-        _textShader = shaderProgramNamed("text");
-        _missingNormalSpriteShader = shaderProgramNamed("missingnormals_sprites");
         spriteStates = new PHGLUniformStates;
         spriteStates->insert("modelViewProjectionMatrix", modelViewSpriteUniform);
         spriteStates->insert("color", colorSpriteUniform);
@@ -244,7 +221,6 @@ void PHGameManager::setScreenSize(ph_float w, ph_float h)
 {
     _screenWidth = w;
     _screenHeight = h;
-    updateHD();
     setProjection(); 
     if (view)
         view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
@@ -279,9 +255,6 @@ void PHGameManager::processInput()
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     lastElapsed = timeElapsed;
-    if (_defaultFBOf==0)
-        glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
-    
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 #ifdef PH_MOBILE
     glClearDepthf(1.0);
@@ -520,13 +493,6 @@ void PHGameManager::appQuits()
 void PHGameManager::memoryWarning()
 {
 	PHLog("memoryWarning");
-}
-
-int PHGameManager::interfaceType()
-{
-    if (isGloballyHD())        
-        return interfaceHD;
-    return interfaceSD;
 }
 
 void PHGameManager::loadCapabilities()
@@ -850,6 +816,16 @@ void PHGameManager::bindTexture(PHGLTexture * tx)
     }
 }
 
+void PHGameManager::bindFramebuffer(PHGLFramebuffer * fbo)
+{
+    if (_boundFBO == fbo) return;
+   _boundFBO = fbo;
+   if (fbo)
+       glBindFramebuffer(GL_FRAMEBUFFER, fbo->id);
+   else
+       glBindFramebuffer(GL_FRAMEBUFFER, _defaultFBO);
+}
+
 void PHGameManager::destroyTexture(PHGLTexture * tx)
 {
     for (int i = 0; i < PHGameManager_maxTextures; i++)
@@ -905,4 +881,15 @@ void PHGameManager::popAnimatorPool()
             animPoolStacks.erase(it);
     }
     animPoolMutex->unlock();
+}
+
+int PHGameManager::colorAttachmentCount()
+{
+    if (!clat)
+    {
+        GLint v;
+        glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &v);
+        clat = v;
+    }
+    return clat;
 }

@@ -58,6 +58,8 @@ void PHTextView::loadVBOs()
     indices = NULL;
 }
 
+char text_shader[] = "text";
+
 void PHTextView::draw()
 {
     if (!_font) return;
@@ -70,7 +72,7 @@ void PHTextView::draw()
     gm->setActiveTexture(0);
     gm->bindTexture(_font->texture());
     gm->setColor(color);
-    gm->applyShader(gm->textShader());
+    gm->applyShader(gm->shaderProgramNamed<text_shader>());
     vao->draw();
 }
 

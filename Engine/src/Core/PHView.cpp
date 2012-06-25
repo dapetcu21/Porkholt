@@ -242,6 +242,8 @@ PHView::~PHView()
         gm->eventHandler()->removeView(this);
 }
 
+char notex_sprites [] = "notex_sprites";
+
 void PHView::drawBackground()
 {
 	if (_backColor.a <= 0) return;
@@ -252,7 +254,7 @@ void PHView::drawBackground()
     gm->setColor(_backColor);
     PHMatrix old = gm->modelViewMatrix();
     gm->setModelViewMatrix(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
-    gm->applyShader(gm->solidColorShader());
+    gm->applyShader(gm->shaderProgramNamed<notex_sprites>());
     gm->solidSquareVAO()->draw();
     gm->setModelViewMatrix(old);
     

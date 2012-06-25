@@ -124,7 +124,7 @@ bool PHGLTexture::supportsNPOT(PHGameManager * gm)
     return (gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT));
 }
 
-static const GLenum internalFormat[] = {
+const GLenum PHGLInternalFormats[] = {
 #ifdef GL_ALPHA8 
     GL_ALPHA8,
 #else
@@ -157,8 +157,8 @@ static const GLenum internalFormat[] = {
     GL_RGB
 #endif
 };
-static const GLenum format[]  = {GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGBA, GL_RGBA, GL_RGB, GL_RGB};
-static const GLenum type[] = {GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT};
+const GLenum PHGLFormats[]  = {GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGBA, GL_RGBA, GL_RGB, GL_RGB};
+const GLenum PHGLTypes[] = {GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT};
 
 void PHGLTexture::updateMipMap()
 {
@@ -180,7 +180,7 @@ void PHGLTexture1D::setData(uint8_t * data, size_t width, enum pixelFormat f)
     bind_begin;
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage1D(target, 0, internalFormat[f], width, 0, format[f], type[f], data);
+    glTexImage1D(target, 0, PHGLInternalFormats[f], width, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
     bind_end;
@@ -193,7 +193,7 @@ void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pix
     bind_begin;
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage2D(target, 0, internalFormat[f], width, height, 0, format[f], type[f], data);
+    glTexImage2D(target, 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
     h = height;
@@ -263,7 +263,7 @@ void PHGLTexture3D::setData(uint8_t *data, size_t width, size_t height, size_t d
     bind_begin;
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage3D(target, 0, internalFormat[f], width, height, depth, 0, format[f], type[f], data);
+    glTexImage3D(target, 0, PHGLInternalFormats[f], width, height, depth, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
     h = height;
@@ -286,7 +286,7 @@ void PHGLTextureCubeMap::setData(uint8_t *data, size_t width, size_t height, enu
     };
     glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage2D(faces[face], 0, internalFormat[f], width, height, 0, format[f], type[f], data);
+    glTexImage2D(faces[face], 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     bind_end;
 }

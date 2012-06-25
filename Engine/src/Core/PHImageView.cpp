@@ -131,6 +131,8 @@ PHImageView::~PHImageView()
 		_image->release();
 }
 
+char missingnormals_sprites[] = "missingnormals_sprites";
+
 void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd, const PHColor & clr)
 {
     if (!_image) return;
@@ -141,7 +143,7 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
         if (_normalMapping && (img->normalMap()))
             _image = img->normalMap();
         else
-            gm->pushSpriteShader(gm->missingNormalSpriteShader());
+            gm->pushSpriteShader(gm->shaderProgramNamed<missingnormals_sprites>());
     }
 
     if (_image->isNormal())
@@ -353,7 +355,7 @@ void PHImageView::draw()
         if (_normalMapping && (img->normalMap()))
             _image = img->normalMap();
         else
-            gm->pushSpriteShader(gm->missingNormalSpriteShader());
+            gm->pushSpriteShader(gm->shaderProgramNamed<missingnormals_sprites>());
     }
     if (curve)
         renderCurved();

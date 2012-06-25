@@ -5,6 +5,8 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
+#include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHGLFramebuffer.h>
 #include <assert.h>
 
 #define INIT1 inited(false), speculars(false), normal(false), ambient(PHColor(0.1,0.1,0.1)), diffuse(PHWhiteColor), specular(PHWhiteColor)
@@ -47,47 +49,37 @@ void PHDeferredView::attachedToGameManager()
     states->insert("clip",clipUniform);
     states->insert("scale",scaleUniform);
     
-    glGenFramebuffers(1, &colorFBO);
-    glBindFramebuffer(GL_FRAMEBUFFER, colorFBO);
-    glGenTextures(1, &colorTex);
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, r.width, r.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
-    assert(glCheckFramebufferStatus(GL_FRAMEBUFFER)==GL_FRAMEBUFFER_COMPLETE);
-    
+    colorFBO = new PHGLFramebuffer(gm);
+    PHGLTexture2D * tex = new PHGLTexture2D(gm);
+    tex->setWrapS(PHGLTexture::clampToEdge);
+    tex->setWrapT(PHGLTexture::clampToEdge);
+    tex->setMinFilter(PHGLTexture::nearest);
+    tex->setMagFilter(PHGLTexture::nearest);
+    tex->setData(NULL, r.width, r.height, PHGLTexture::RGBA8);
+    colorFBO->attachColor(tex, 0);
+    tex->release();
+
     if (normal)
     {
-        glGenFramebuffers(1, &normalFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, normalFBO);
-        glGenTextures(1, &normalTex);
-        glBindTexture(GL_TEXTURE_2D, normalTex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, r.width, r.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, normalTex, 0);
-        assert(glCheckFramebufferStatus(GL_FRAMEBUFFER)==GL_FRAMEBUFFER_COMPLETE);
+        normalFBO = new PHGLFramebuffer(gm);
+        tex = new PHGLTexture2D(gm);
+        tex->setWrapS(PHGLTexture::clampToEdge);
+        tex->setWrapT(PHGLTexture::clampToEdge);
+        tex->setMinFilter(PHGLTexture::nearest);
+        tex->setMagFilter(PHGLTexture::nearest);
+        tex->setData(NULL, r.width, r.height, PHGLTexture::RGBA8);
+        normalFBO->attachColor(tex, 0);
+        tex->release();
     }
-        
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 PHDeferredView::~PHDeferredView()
 {
     if (inited)
     {
-        glDeleteTextures(1, &colorTex);
-        glDeleteFramebuffers(1, &colorFBO);
+        colorFBO->release();
         if (normal)
-        {
-            glDeleteTextures(1, &normalTex);
-            glDeleteFramebuffers(1, &normalFBO);
-        }
+            normalFBO->release();
         
         states->release();
     }
@@ -97,14 +89,14 @@ void PHDeferredView::render()
 {
     if (inited)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, colorFBO);
+        colorFBO->bind();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
     }
     PHView::render();
     if (inited && normal)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, normalFBO);
+        normalFBO->bind();
         glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         gm->setRenderMode(normalMapRenderMode);
@@ -117,18 +109,14 @@ void PHDeferredView::render()
 void PHDeferredView::composite()
 {
     if (!inited) return;
-    glBindFramebuffer(GL_FRAMEBUFFER, gm->defaultFBO());
+    gm->bindFramebuffer(NULL);
     
     PHRect v = gm->screenBounds();
     
     gm->setGLStates(PHGLBlending | PHGLTexture0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, colorTex);
+    static_cast<PHGLTexture2D*>(colorFBO->colorAttachment(0))->bind(0);
     if (normal)
-    {
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, normalTex);
-    }
+        static_cast<PHGLTexture2D*>(normalFBO->colorAttachment(0))->bind(1);
     
 	glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
     PHGLVertexArrayObject * vao = gm->solidSquareVAO();

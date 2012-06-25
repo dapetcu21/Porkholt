@@ -11,8 +11,6 @@
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHDeferredView.h>
 
-#include <vector> 
-
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
 #define INIT particlePool(NULL), particleAnim(NULL), particleM(new PHMutex), vao(NULL), vbo(NULL), indexVBO(NULL), maxN(0), cacheTime(15), cacheLeft(15)
@@ -122,6 +120,8 @@ void PHParticleView::registerLuaInterface(lua_State * L)
     }
     lua_pop(L, -1);
 }
+
+char color_sprites[] = "color_sprites";
 
 void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PHColor & tint)
 {
@@ -260,7 +260,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     delete [] buffer;   
     
     gm->setGLStates(PHGLBlending | PHGLTexture0);
-    gm->applyShader(gm->coloredSpriteShader());
+    gm->applyShader(gm->shaderProgramNamed<color_sprites>());
     
     vao->bind();
     glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);

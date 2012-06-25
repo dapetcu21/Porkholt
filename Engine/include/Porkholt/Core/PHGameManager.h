@@ -10,20 +10,21 @@
 #include <Porkholt/Core/PHMessage.h>
 #include <Porkholt/Core/PHGLLight.h>
 
-class PHView;
-class PHViewController;
-class PHNavigationController;
-class PHRemote;
-class PHEventHandler;
-class PHSoundManager;
-class PHGLShaderProgram;
-class PHGLUniformStates;
-class PHGLVertexBufferObject;
-class PHGLVertexArrayObject;
-class PHTextView;
-class PHGLTexture;
 class PHAnimatorPool;
 class PHDirectory;
+class PHEventHandler;
+class PHGLFramebuffer;
+class PHGLShaderProgram;
+class PHGLTexture;
+class PHGLUniformStates;
+class PHGLVertexArrayObject;
+class PHGLVertexBufferObject;
+class PHNavigationController;
+class PHRemote;
+class PHSoundManager;
+class PHTextView;
+class PHView;
+class PHViewController;
 
 enum PHGLCapabilities
 {
@@ -89,10 +90,7 @@ private:
     ph_float lt;
 	bool suspended;
     bool loaded;
-    static int globalHD;
-    bool hd;
     ph_float lastElapsed, frameBeg;
-    string resPath;
     
     bool useRemote;
     PHRemote * remote;
@@ -109,8 +107,6 @@ private:
     void setProjection();
     void * ud;
     
-    void updateHD();
-    
     PHMessage * exitmsg;
 
     map < PHThread*, list<PHAnimatorPool*> > animPoolStacks;
@@ -120,6 +116,7 @@ public:
     PHGameManager();
     ~PHGameManager();
     void init(const PHGameManagerInitParameters & params);
+
 	ph_float screenWidth() { return _screenWidth; };
 	ph_float screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
@@ -132,15 +129,12 @@ public:
 	void renderFrame(ph_float timeElapsed);
 	void appSuspended();
 	void appResumed();
-    bool isHD() { return hd; }
-    static bool isGloballyHD() { return globalHD > 0; }
     void _appResumed(PHObject * sender, void * ud);
     void _appSuspended(PHObject * sender, void * ud);
 	void appQuits();
 	void memoryWarning();
 	PHView * mainView() { return view; };
     void setMainView(PHView * v);
-	void remove(void * ud);
 
     PHGameManager * gameManager() { return this; }
     PHDirectory * resourceDirectory() { return rsrcDir; }
@@ -168,15 +162,6 @@ public:
     PHAnimatorPool * animatorPool();
     void pushAnimatorPool(PHAnimatorPool * pool);
     void popAnimatorPool();
-
-    
-    enum interfaceType
-    {
-        interfaceSD = 0,
-        interfaceHD,
-        numInterfaceTypes
-    };
-    static int interfaceType();
     
     PHNavigationController * navigationController() { return viewController; }
     PHView * rootView() { return view; }
@@ -185,7 +170,7 @@ public:
     
 //------ OpenGL stuff ------    
 private:
-    GLuint _defaultFBO,_defaultFBOf;
+    GLuint _defaultFBO;
     int _maxVertexAttribs;
     
     uint32_t openGLStates,openGLVertexAttribStates;
@@ -200,12 +185,13 @@ private:
     list<PHGLShaderProgram*> spriteShaderStack;
     PHGLUniformStates * spriteStates;
     PHGLShaderProgram * _shader;
-    PHGLShaderProgram * _spriteShader, * _coloredSpriteShader, * _noTexSpriteShader, * _coloredNoTexSpriteShader, * _textShader, * _missingNormalSpriteShader;
+    PHGLShaderProgram * _spriteShader;
     int rndMode;
     PHGLVertexBufferObject * boundVBOs[5];
     PHGLVertexArrayObject * _boundVAO;
     PHGLVertexArrayObject * _solidSquareVAO;
     PHGLVertexBufferObject * _solidSquareVBO;
+    PHGLFramebuffer * _boundFBO;
     
     
     PHGLLight * lgth;
@@ -214,10 +200,12 @@ private:
     friend class PHGLVertexBufferObject;
     friend class PHGLVertexArrayObject;
     friend class PHGLShaderProgram;
+    friend class PHGLFramebuffer;
     
     GLvoid (*PHGLBindVertexArray)(GLuint);
     GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
     GLvoid (*PHGLGenVertexArrays)(GLsizei n, GLuint *);
+    void loadExtensionCompat();
     
     vector<GLuint> deleteVBOs;
     vector<GLuint> deleteVAOs;
@@ -227,6 +215,7 @@ private:
     
     PHGLTexture * textures[PHGameManager_maxTextures];
     int aTMU;
+    int clat;
     
 public:
     
@@ -235,7 +224,7 @@ public:
         defaultRenderMode = 0
     };
     
-    GLuint defaultFBO() { if (_defaultFBOf==0) return _defaultFBO; return _defaultFBOf; }
+    GLuint defaultFBO() { return _defaultFBO; }
     void setRenderMode(int rm) { rndMode = rm; }
     int renderMode() { return rndMode; }
     
@@ -278,11 +267,6 @@ public:
     void buildSolidSquareVAO();
     
     PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
-    PHGLShaderProgram * coloredSpriteShader() { return _coloredSpriteShader; }
-    PHGLShaderProgram * solidColorShader() { return _noTexSpriteShader; }
-    PHGLShaderProgram * coloredNoTexSpriteShader() { return _coloredNoTexSpriteShader; }
-    PHGLShaderProgram * textShader() { return _textShader; }
-    PHGLShaderProgram * missingNormalSpriteShader() { return _missingNormalSpriteShader; }
     
     enum
     {
@@ -303,6 +287,9 @@ public:
     void bindVAO(PHGLVertexArrayObject * vao);
     PHGLVertexBufferObject * boundVBO(int target) { return boundVBOs[target]; }
     PHGLVertexArrayObject * boundVAO() { return _boundVAO; }
+
+    void bindFramebuffer(PHGLFramebuffer * fbo);
+    PHGLFramebuffer * boundFramebuffer() { return _boundFBO; }
     
     
 #define PHIMAGEATTRIBUTE_POS 0
@@ -355,6 +342,8 @@ public:
     void bindTexture(PHGLTexture * tx);
     void destroyTexture(PHGLTexture * tx);
     PHGLTexture * boundTexture() { return textures[aTMU]; }
+
+    int colorAttachmentCount();
 };
 
 #endif

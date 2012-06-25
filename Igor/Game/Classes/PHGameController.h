@@ -6,7 +6,7 @@
 #include <Porkholt/Core/PHViewController.h>
 
 class PHView;
-class PHGLPointLight;
+class PHGLLight;
 class PHDeferredView;
 class PHGameView;
 class PHPlayerView;
@@ -25,7 +25,7 @@ protected:
     void updateScene(ph_float elapsedTime);
     ~PHGameController();
     
-    map<PHView*,PHGLPointLight*> lights;
+    map<PHView*,PHGLLight*> lights;
     
     
     static PHRect playerRect;
@@ -37,7 +37,7 @@ protected:
     void syncLights();
     
 public:
-    void attachLightToView(PHGLPointLight * l, PHView * v);
+    void attachLightToView(PHGLLight * l, PHView * v);
     void detachLightFromView(PHView * v);
     
     void reset();

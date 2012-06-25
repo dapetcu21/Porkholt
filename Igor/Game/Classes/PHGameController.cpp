@@ -14,7 +14,7 @@ PHView * PHGameController::loadView(const PHRect & frame)
 {
     PHDeferredView * v = defferedView = new PHDeferredView(frame);
     defferedView->setUserInput(true);
-    defferedView->setAmbientColor(PHColor(0.5f,0.5f,0.5f));
+    defferedView->setAmbientColor(PHColor(0.7f,0.7f,0.7f));
     v->retain();
     gameView = new PHGameView(frame);
     gameView->setUserInput(true);
@@ -29,7 +29,7 @@ PHView * PHGameController::loadView(const PHRect & frame)
     gameView->addChild(playerView = new PHPlayerView(playerRect));
     
     ph_float ratio = frame.height/screenHeight;
-    PHGLPointLight * l = new PHGLPointLight(PHVector3(0,0,ratio), PHWhiteColor, ratio);
+    PHGLLight * l = new PHGLLight(PHGLLight::pointLight, PHVector3(0,0,ratio), PHWhiteColor, ratio);
     attachLightToView(l, playerView);
     l->release();
     
@@ -40,10 +40,10 @@ PHView * PHGameController::loadView(const PHRect & frame)
 
 PHGameController::~PHGameController()
 {
-    for (map<PHView*,PHGLPointLight*>::iterator i = lights.begin(); i!=lights.end(); i++)
+    for (map<PHView*,PHGLLight*>::iterator i = lights.begin(); i!=lights.end(); i++)
     {
         PHView * v = i->first;
-        PHGLPointLight * l = i->second;
+        PHGLLight * l = i->second;
         defferedView->removeLight(l);
         v->release();
         l->release();
@@ -56,10 +56,10 @@ PHGameController::~PHGameController()
 void PHGameController::syncLights()
 {
     list<PHView*> deleteList;
-    for (map<PHView*,PHGLPointLight*>::iterator i = lights.begin(); i!=lights.end(); i++)
+    for (map<PHView*,PHGLLight*>::iterator i = lights.begin(); i!=lights.end(); i++)
     {
         PHView * v = i->first;
-        PHGLPointLight * l = i->second;
+        PHGLLight * l = i->second;
         if (!(v->superview()))
         {
             defferedView->removeLight(l);
@@ -76,7 +76,7 @@ void PHGameController::syncLights()
 
 void PHGameController::detachLightFromView(PHView * v)
 {
-    map<PHView*,PHGLPointLight*>::iterator i = lights.find(v);
+    map<PHView*,PHGLLight*>::iterator i = lights.find(v);
     if (i == lights.end()) return;
     defferedView->removeLight(i->second);
     i->second->release();
@@ -111,9 +111,9 @@ void PHGameController::generateGround()
     }
 }
 
-void PHGameController::attachLightToView(PHGLPointLight * l, PHView * v)
+void PHGameController::attachLightToView(PHGLLight * l, PHView * v)
 {
-    map<PHView*,PHGLPointLight*>::iterator i = lights.find(v);
+    map<PHView*,PHGLLight*>::iterator i = lights.find(v);
     if (i != lights.end()) 
     {
         l->retain();
@@ -125,7 +125,7 @@ void PHGameController::attachLightToView(PHGLPointLight * l, PHView * v)
         l->retain();
         v->retain();
         defferedView->addLight(l);
-        lights.insert(make_pair<PHView*,PHGLPointLight*>(v, l));
+        lights.insert(make_pair(v, l));
     }
 }
 

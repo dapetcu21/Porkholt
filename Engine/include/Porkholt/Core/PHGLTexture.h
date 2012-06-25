@@ -3,16 +3,17 @@
 #ifndef PHGLTEXTURE_H
 #define PHGLTEXTURE_H
 
-#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHGLFBOAttachment.h>
 
 class PHGameManager;
 class PHStream;
 
-class PHGLTexture : public PHObject
+class PHGLTexture : public PHGLFBOAttachment
 {
 protected:
     GLuint tex;
     PHGameManager * gm;
+    friend class PHGLFramebuffer;
     
 public:
     GLuint name() { return tex; }
@@ -38,19 +39,7 @@ public:
         linearMipmapNearest,
         linearMipmapLinear
     };
-    
-    enum pixelFormat
-    {
-        A8,
-        L8,
-        LA8,
-        RGBA8,
-        RGBA16,
-        RGB8,
-        RGB16,
-        InvalidFormat
-    };
-    
+       
 private:
     enum wrapType wS, wT, wR;
     enum aaFilter min, mag;
