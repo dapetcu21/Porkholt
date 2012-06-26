@@ -23,7 +23,7 @@ endif()
 if(PH_SAME_PROJECT)
   include("${PH_ENGINE_PATH}/CMakeLib/Porkholt_${PH_PLATFORM}.cmake")
 else()
-  add_subdirectory(${PH_ENGINE_PATH} ${PH_ENGINE_PATH}/build)
+  add_subdirectory(${PH_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/engine-build)
 endif()
 
 include("${PH_ENGINE_PATH}/CMakeLib/App_${PH_PLATFORM}.cmake")

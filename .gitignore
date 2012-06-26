@@ -1,5 +1,5 @@
 /copyright_template.txt
-build
+build*
 /Externals/log
 /Externals/lib
 *.pbxuser
