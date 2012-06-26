@@ -5,7 +5,7 @@
 
 #import "PorkholtAppDelegate.h"
 #import "PorkholtViewController.h"
-#import "PHGameManager.h"
+#import <Porkholt/Core/PHGameManager.h>
 
 @implementation PorkholtAppDelegate
 

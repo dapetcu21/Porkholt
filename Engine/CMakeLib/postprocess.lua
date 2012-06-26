@@ -115,8 +115,8 @@ function downscale_png(srcd, dstd, f, stp, name)
         else
           print('Downscaling image "'..name..'"')
       	  local flags="-quality 5 -channel RGBA -depth 24 -colorspace RGB"
-      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 50% "png32:'..dstd.."/"..f..'"')
-      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 25% "png32:'..dstd.."/"..fhd..'"')
+      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 25% "png32:'..dstd.."/"..f..'"')
+      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 50% "png32:'..dstd.."/"..fhd..'"')
   	    end
     end
   else

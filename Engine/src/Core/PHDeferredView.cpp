@@ -90,15 +90,15 @@ void PHDeferredView::render()
     if (inited)
     {
         colorFBO->bind();
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        gm->setClearColor(PHClearColor);
+        gm->clearBuffers(PHGameManager::colorBuffers);
     }
     PHView::render();
     if (inited && normal)
     {
         normalFBO->bind();
-        glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        gm->setClearColor(PHColor(0.5f, 0.5f, 1.0f, 1.0f));
+        gm->clearBuffers(PHGameManager::colorBuffers);
         gm->setRenderMode(normalMapRenderMode);
         PHView::render();
         gm->setRenderMode(PHGameManager::defaultRenderMode);

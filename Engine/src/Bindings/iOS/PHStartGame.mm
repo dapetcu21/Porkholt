@@ -4,18 +4,18 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#include "PHStartGame.h"
+#include <Porkholt/Core/PHWindowing.h>
 #include "PorkholtAppDelegate.h"
 
-int PHStartGameFlags = 0;
-void (*PHStartGameEntryPoint)(PHGameManager *) = NULL;
-void * PHStartGameUD = NULL;
+int PHWFlags = 0;
+void (*PHWEntryPoint)(PHGameManager *) = NULL;
+void * PHWUD = NULL;
 
-int PHStartGame(int argc, char * argv[], unsigned int resX, unsigned int resY, int flags, void (*entryPoint)(PHGameManager *), void * ud)
+int PHWMain(int argc, char * argv[], const PHWVideoMode & vmode, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
-    PHStartGameFlags = flags;
-    PHStartGameEntryPoint = entryPoint;
-    PHStartGameUD = ud;
+    PHWFlags = flags;
+    PHWEntryPoint = entryPoint;
+    PHWUD = ud;
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     int retVal = UIApplicationMain(argc, argv, nil, NSStringFromClass([PorkholtAppDelegate class]));
     [pool release];

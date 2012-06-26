@@ -18,9 +18,6 @@ set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
   ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
   ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
   ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
-  ${PH_ENGINE_PATH}/src/Sound/PHSound-OSX.mm
-  ${PH_ENGINE_PATH}/src/Sound/PHSoundManager-OSX.mm
-  ${PH_ENGINE_PATH}/src/Sound/PHMusicManager-OSX.mm
   )
   
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}

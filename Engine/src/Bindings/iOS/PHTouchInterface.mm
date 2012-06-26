@@ -4,7 +4,7 @@
 #import <UIKit/UIKit.h>
 
 #import "PHTouchInterface.h"
-#import "PHAccelInterface.h"
+#import <Porkholt/Core/PHAccelInterface.h>
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/Core/PHGameManager.h>
 #import "PorkholtViewController.h"

@@ -21,7 +21,6 @@ class PHGLVertexArrayObject;
 class PHGLVertexBufferObject;
 class PHNavigationController;
 class PHRemote;
-class PHSoundManager;
 class PHTextView;
 class PHView;
 class PHViewController;
@@ -77,7 +76,6 @@ private:
 	PHNavigationController * viewController;
     PHEventHandler * evtHandler;
     PHAnimatorPool * animPool;
-    PHSoundManager * sndManager;
     PHDirectory * rsrcDir;
     PHDirectory * shdDir;
     PHDirectory * imgDir;
@@ -156,7 +154,6 @@ public:
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
     PHAnimatorPool * mainAnimatorPool() { return animPool; }
-    PHSoundManager * soundManager() { return sndManager; }
 
     //NOTE: There is one stack per thread
     PHAnimatorPool * animatorPool();
@@ -201,11 +198,7 @@ private:
     friend class PHGLVertexArrayObject;
     friend class PHGLShaderProgram;
     friend class PHGLFramebuffer;
-    
-    GLvoid (*PHGLBindVertexArray)(GLuint);
-    GLvoid (*PHGLDeleteVertexArrays)(GLsizei, const GLuint *);
-    GLvoid (*PHGLGenVertexArrays)(GLsizei n, GLuint *);
-    void loadExtensionCompat();
+    friend class PHGLRenderBuffer;
     
     vector<GLuint> deleteVBOs;
     vector<GLuint> deleteVAOs;
@@ -216,6 +209,8 @@ private:
     PHGLTexture * textures[PHGameManager_maxTextures];
     int aTMU;
     int clat;
+    
+    #include <Porkholt/Core/PHGLExtCompat.h>
     
 public:
     
@@ -255,7 +250,7 @@ public:
     bool isGLES() { return openGLCaps[PHGLCapabilityOpenGLES]; }
     bool useShaders() { return openGLCaps[PHGLCapabilityShaders]; }
     int openGLMajorVersion() { return openGLVersionMajor; }
-    int openGlMinorVersion() { return openGLVersionMinor; }
+    int openGLMinorVersion() { return openGLVersionMinor; }
     int openGLSLVersion() { return glslVersion; }
     bool hasCapability(int cap) { return openGLCaps[cap]; }
     bool hasExtension(const string & ext);

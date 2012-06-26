@@ -8,7 +8,6 @@
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHNavigationController.h>
 #include <Porkholt/Core/PHEventHandler.h>
-#include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
 #include <Porkholt/Core/PHGLUniformStates.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
@@ -47,8 +46,6 @@ PHGameManager::~PHGameManager()
         evtHandler->release();
     if (animPool)
         animPool->release();
-    if (sndManager)
-        sndManager->release();
     if (spriteStates)
         spriteStates->release();
     if (lgth)
@@ -145,7 +142,6 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     } catch (...) {
         fntDir = NULL;
     }
-    sndManager = new PHSoundManager(rsrcDir->path() + "/snd/fx");
     
     loadCapabilities();
     glDisable(GL_DEPTH_TEST);
@@ -255,13 +251,9 @@ void PHGameManager::processInput()
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     lastElapsed = timeElapsed;
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-#ifdef PH_MOBILE
-    glClearDepthf(1.0);
-#else
-    glClearDepth(1.0);
-#endif
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    setClearColor(PHBlackColor);
+    setDepthClearValue(1.0);
+    clearBuffers(PHGameManager::colorBuffers || PHGameManager::depthBuffer);
 		
     setModelViewMatrix(PHIdentityMatrix);
     
@@ -311,7 +303,7 @@ void PHGameManager::clearDeleteQueue()
     if (!deleteVBOs.empty())
         glDeleteBuffers(deleteVBOs.size(), &(deleteVBOs[0]));
     if (!deleteVAOs.empty())
-        PHGLDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
+        glDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
     deleteVBOs.clear();
     deleteVAOs.clear();
 }
@@ -608,53 +600,7 @@ void PHGameManager::loadCapabilities()
         
         glslHeader = sstr.str();
         
-        
-#ifndef PH_FORCE_FAKE_VAO
-#ifdef GL_VERSION_3_0
-        if (openGLVersionMajor >= 3 && !es)
-        {
-            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArray;
-            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArrays;
-            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArrays;
-        }
-        else
-#endif
-        
-#ifdef GL_OES_vertex_array_object
-        if (extensions.count("GL_OES_vertex_array_object"))
-        {
-            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayOES;
-            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysOES;
-            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysOES;
-        }
-        else
-#endif
-        
-//#ifdef GL_APPLE_vertex_array_object
-//        if (extensions.count("GL_APPLE_vertex_array_object"))
-//        {
-//            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArrayAPPLE;
-//            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArraysAPPLE;
-//            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArraysAPPLE;
-//        }
-//        else
-//#endif
-        
-#ifdef GL_ARB_vertex_array_object
-        if (extensions.count("GL_ARB_vertex_array_object"))
-        {
-            PHGLBindVertexArray = (GLvoid (*)(GLuint))&glBindVertexArray;
-            PHGLDeleteVertexArrays = (GLvoid (*)(GLsizei,const GLuint*))&glDeleteVertexArrays;
-            PHGLGenVertexArrays = (GLvoid (*)(GLsizei,GLuint*))&glGenVertexArrays;
-        }
-        else
-#endif
-#endif
-        {
-            PHGLBindVertexArray = NULL;
-            PHGLDeleteVertexArrays = NULL;
-            PHGLGenVertexArrays = NULL;
-        }
+        loadExtensionCompat();
     }
 }
 
@@ -762,8 +708,8 @@ void PHGameManager::bindVAO(PHGLVertexArrayObject * vao)
         if (boundVBOs[PHGLVBO::elementArrayBuffer])
             boundVBOs[PHGLVBO::elementArrayBuffer]->bound = PHGLVBO::elementArrayBuffer;
     
-    if (PHGLBindVertexArray)
-        PHGLBindVertexArray(vao?(vao->vao):0);
+    if (glBindVertexArray)
+        glBindVertexArray(vao?(vao->vao):0);
     else
     {
         if (vao)
@@ -881,15 +827,4 @@ void PHGameManager::popAnimatorPool()
             animPoolStacks.erase(it);
     }
     animPoolMutex->unlock();
-}
-
-int PHGameManager::colorAttachmentCount()
-{
-    if (!clat)
-    {
-        GLint v;
-        glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &v);
-        clat = v;
-    }
-    return clat;
 }

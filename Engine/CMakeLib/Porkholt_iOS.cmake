@@ -16,18 +16,6 @@ set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
   ${PH_ENGINE_PATH}/src/Bindings/iOS/PHStartGame.mm
   ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.mm
   ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.mm
-  ${PH_ENGINE_PATH}/src/Sound/PHMusicManager-iOS.mm
-  ${PH_ENGINE_PATH}/src/Sound/PHSound-iOS.mm
-  ${PH_ENGINE_PATH}/src/Sound/PHSoundManager-iOS.mm
-  ${PH_EXTERNALS}/finch/Finch/FIBuffer.m
-  ${PH_EXTERNALS}/finch/Finch/FISound.m
-  ${PH_EXTERNALS}/finch/Finch/FIErrorReporter.m
-  ${PH_EXTERNALS}/finch/Finch/FILogger.m
-  ${PH_EXTERNALS}/finch/Finch/FISoundEngine.m
-  ${PH_EXTERNALS}/finch/Finch/FIFactory.m
-  ${PH_EXTERNALS}/finch/Finch/FIRevolverSound.m
-  ${PH_EXTERNALS}/finch/Decoder/FIPCMDecoder.m
-  ${PH_EXTERNALS}/finch/Decoder/FISoundSample.m
   )
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
   ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.h
@@ -37,8 +25,6 @@ set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
   )
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Geometry/math
-  ${PH_EXTERNALS}/finch/Finch
-  ${PH_EXTERNALS}/finch/Decoder
   )
 
 add_library(Porkholt_iOS ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})

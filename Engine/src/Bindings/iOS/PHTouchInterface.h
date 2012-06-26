@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #import <UIKit/UIKit.h>
-#import "PHMain.h"
+#import <Porkholt/Core/PHMain.h>
 
 struct TouchTask
 {

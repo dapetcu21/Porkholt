@@ -49,6 +49,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHUtilities.cpp
   ${PH_ENGINE_PATH}/src/Core/PHView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHViewController.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHGLExtCompat.cpp
   ${PH_ENGINE_PATH}/src/Geometry/PHColor.cpp
   ${PH_ENGINE_PATH}/src/Geometry/PHGeometry.cpp
   ${PH_ENGINE_PATH}/src/Geometry/PHMatrix.cpp
@@ -64,7 +65,6 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Network/PHRemote.cpp
   ${PH_ENGINE_PATH}/src/Network/PHTCPConsole.cpp
   ${PH_ENGINE_PATH}/src/Network/PHTCPServer.cpp
-  ${PH_ENGINE_PATH}/src/Sound/PHSoundPool.cpp
   ${PH_ENGINE_PATH}/src/UI/PHButtonView.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTestView.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTestViewController.cpp
@@ -143,6 +143,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHView.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewController.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHWindowing.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLExtCompat.h
   ${PH_ENGINE_PATH}/include/Porkholt/Geometry/PHColor.h
   ${PH_ENGINE_PATH}/include/Porkholt/Geometry/PHGeometry.h
   ${PH_ENGINE_PATH}/include/Porkholt/Geometry/PHMatrix.h
@@ -160,14 +161,6 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Network/PHLuaConsole.h
   ${PH_ENGINE_PATH}/include/Porkholt/Network/PHTCPConsole.h
   ${PH_ENGINE_PATH}/include/Porkholt/Network/PHTCPServer.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHMusicManager.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHMusicManager.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSound.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSound.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundManager.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundManager.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundPool.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundPool.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHButtonView.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTestView.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTestViewController.h

@@ -7,27 +7,23 @@
 #import <mach/mach.h>
 #import <mach/mach_time.h>
 #import "PorkholtViewController.h"
-#import "PHGameManager.h"
+#include <Porkholt/Core/PHGameManager.h>
 #import "PHTouchInterface.h"
-#import "PHMain.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <Porkholt/IO/PHDirectory.h>
 #import "EAGLView.h"
 
 PHGameManager * PHGameManagerSingleton;
 
-#include "PHStartGame.h"
+#include <Porkholt/Core/PHWindowing.h>
 
-extern int PHStartGameFlags;
-extern void (*PHStartGameEntryPoint)(PHGameManager *);
-extern void * PHStartGameUD;
+extern int PHWFlags;
+extern void (*PHWEntryPoint)(PHGameManager *);
+extern void * PHWUD;
 
 @interface PorkholtViewController ()
 @property (nonatomic, retain) EAGLContext *context;
-/*- (BOOL)loadShaders;
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
-- (BOOL)linkProgram:(GLuint)prog;
-- (BOOL)validateProgram:(GLuint)prog;*/
 @end 
 
 @implementation PorkholtViewController
@@ -50,8 +46,6 @@ extern void * PHStartGameUD;
 #ifdef PH_SIMULATOR
     return true;
 #endif
-    if (PHStartGameFlags & PHStartGame_30FPS)
-        return true;
 	NSString * platform = [self platform];
 	PHLog("Running on %s",[platform UTF8String]);
 	if ([platform isEqual:@"iPhone1,1"]|| //iPhone 1G
@@ -136,14 +130,18 @@ extern void * PHStartGameUD;
     params.screenWidth = s.bounds.size.height*scale;
     params.fps = FPS;
     params.dpi = 160*scale;
-    params.resourcePath = (string)([[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"rsrc"] UTF8String]);
-    params.entryPoint = PHStartGameEntryPoint;
-    if (PHStartGameFlags & PHStartGame_ShowFPS)
+    PHDirectory * dir = PHInode::directoryAtFSPath((string)([[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"rsrc"] UTF8String]));
+    params.setResourceDirectory(dir);
+    dir->release();
+    params.entryPoint = PHWEntryPoint;
+    if (PHWFlags & PHWShowFPS)
         gameManager->setShowsFPS(true);
-    if (PHStartGameFlags & PHStartGame_Remote)
+    if (PHWFlags & PHWRemote)
         gameManager->setUsesRemote(true);
+    if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
+        gameManager->setPlatformSuffix(".hd");
     gameManager->setFpsCapped(true);
-    gameManager->setUserData(PHStartGameUD);
+    gameManager->setUserData(PHWUD);
     gameManager->init(params);
     PHGameManagerSingleton = gameManager;
     
@@ -162,24 +160,23 @@ extern void * PHStartGameUD;
     [v setFramebuffer];
     
     ph_float elapsedTime;
-    if (PHStartGameFlags & PHStartGame_frameAnimation)
+    if (PHWFlags & PHWFrameAnimation)
     {
         elapsedTime = 1.0f/gameManager->framesPerSecond();
-        gameManager->setFrameBegin(PHTime::getTime());
     }
     else
     {
         static ph_float time = 0;
-        static ph_float lastTime = 0;
+        static ph_float lastTime;
         
         ph_float frameInterval = 1.0f/gameManager->framesPerSecond();
         lastTime = time;
         time = PHTime::getTime();
+        if (lastTime == 0)
+            lastTime = time - frameInterval;
         elapsedTime = time-lastTime;
         elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
-        gameManager->setFrameBegin(time);
     }
-    PHGameManager::globalFrame(elapsedTime);
     gameManager->renderFrame(elapsedTime);
     
     if (![v presentFramebuffer])

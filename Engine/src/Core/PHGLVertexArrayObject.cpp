@@ -8,16 +8,16 @@
 
 PHGLVertexArrayObject::PHGLVertexArrayObject(PHGameManager * gameManager) : vao(0), bound(false), gm(gameManager), elementVBO(NULL), drawType(drawNone), editBind(false)
 {
-    if (gm->PHGLGenVertexArrays)
-        gm->PHGLGenVertexArrays(1, &vao);
+    if (gm->glGenVertexArrays)
+        gm->glGenVertexArrays(1, &vao);
 }
 
 PHGLVertexArrayObject::~PHGLVertexArrayObject()
 {
-    if (vao && gm->PHGLDeleteVertexArrays)
+    if (vao && gm->glDeleteVertexArrays)
     {
         if (PHThread::currentThread() == PHThread::mainThread())
-            gm->PHGLDeleteVertexArrays(1, &vao);
+            gm->glDeleteVertexArrays(1, &vao);
         else
             gm->queueDeleteVAO(vao);
     }

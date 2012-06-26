@@ -6,8 +6,8 @@
 
 #import "EAGLView.h"
 
-extern int PHStartGameFlags;
-#include "PHStartGame.h"
+extern int PHWFlags;
+#include <Porkholt/Core/PHWindowing.h>
 
 @interface EAGLView (PrivateMethods)
 - (void)createFramebuffer;
@@ -56,9 +56,9 @@ extern int PHStartGameFlags;
 - (void)initMain
 {
 	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = (PHStartGameFlags & PHStartGame_GLES2)?[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]:nil;
+	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
-    if (!aContext && (PHStartGameFlags & PHStartGame_GLES1))
+    if (!aContext && (PHWFlags & PHWGLES1))
         aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     
     if (!aContext)
@@ -74,9 +74,9 @@ extern int PHStartGameFlags;
 - (void) initSecondary
 {
 	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = (PHStartGameFlags & PHStartGame_GLES2)?[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]:nil;
+	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
-    if (!aContext && (PHStartGameFlags & PHStartGame_GLES1))
+    if (!aContext && (PHWFlags & PHWGLES1))
         aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     
     if (!aContext)
