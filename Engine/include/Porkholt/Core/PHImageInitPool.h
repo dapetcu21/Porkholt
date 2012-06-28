@@ -18,10 +18,13 @@ private:
 public:
     virtual PHDirectory * imageDirectory() = 0;
     PHImage * imageFromFile(PHInode * file, bool antialiasing);
-    PHImage * imageNamed(const string & name, PHDirectory * dir);
-	PHImage * imageNamed(const string & name) { return imageNamed(name, imageDirectory()); }
+    PHImage * imageNamed(const string & name, PHDirectory * dir, bool normalMap);
+	PHImage * imageNamed(const string & name, bool normalMap) { return imageNamed(name, imageDirectory(), normalMap); }
+    PHImage * imageNamed(const string & name, PHDirectory * dir) { return imageNamed(name, dir, false); }
+    PHImage * imageNamed(const string & name) { return imageNamed(name, imageDirectory(), false); }
     
-    bool imageExists(const string & name);
+    bool imageExists(const string & name, PHDirectory * dir);
+    bool imageExists(const string & name) { return imageExists(name, imageDirectory()); }
     void loadAllImages();
 	void collectGarbageImages();
     virtual PHGameManager * gameManager() = 0;

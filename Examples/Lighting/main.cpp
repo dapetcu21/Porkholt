@@ -52,7 +52,7 @@ protected:
         dv->setAmbientColor(PHColor(0.1,0.1,0.1,1.0));
         dv->setNormalMapping(true);
         
-        PHImage * img = gm->imageNamed("igor");
+        PHImage * img = gm->imageNamed("igor", true);
         ph_float height = img->height()/2;
         ph_float width = img->width()/2;
         

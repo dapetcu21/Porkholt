@@ -8,7 +8,7 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 
-PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir)
+PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir, bool nmap)
 {
     PHImage * img = NULL;
     PHInode * file = NULL;
@@ -32,6 +32,12 @@ PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir)
             PHLog("Could not load image \"%s\": %s", name.c_str(), ex.c_str());
             img = PHImageInitPool::imageNamed("placeholder");
         }
+    }
+    if (nmap)
+    {
+        string nm = name + ".nmap";
+        if (imageExists(nm, dir))
+            img->setNormalMap(imageNamed(nm, dir, false));
     }
     return img;
 }
@@ -58,10 +64,10 @@ PHImage * PHImageInitPool::imageFromFile(PHInode * file, bool aa)
 	return img;
 }
 
-bool PHImageInitPool::imageExists(const string & name)
+bool PHImageInitPool::imageExists(const string & name, PHDirectory * dir)
 {
-    return  imageDirectory()->itemExists(name + hdsuf + ".png") || 
-            imageDirectory()->itemExists(name + ".png");
+    return  dir->itemExists(name + hdsuf + ".png") || 
+            dir->itemExists(name + ".png");
 }
 
 void PHImageInitPool::collectGarbageImages()
