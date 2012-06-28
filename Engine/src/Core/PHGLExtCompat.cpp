@@ -142,9 +142,9 @@ void PHGameManager::loadExtensionCompat()
     }
     
     if (es)
-        set(glClearDepth, glClearDepthf);
+        setf(glClearDepth, glClearDepthf);
     else
-        set(glClearDepth, glClearDepth);
+        setf(glClearDepth, glClearDepth);
 }
 
 #ifndef GL_MAX_COLOR_ATTACHMENTS
