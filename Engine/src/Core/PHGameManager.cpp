@@ -16,6 +16,7 @@
 #include <Porkholt/Core/PHFont.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHGLFramebuffer.h>
+#include <Porkholt/Sound/PHSoundManager.h>
 
 //#define PH_FORCE_FAKE_VAO
 
@@ -58,6 +59,8 @@ PHGameManager::~PHGameManager()
         shdDir->release();
     if (imgDir)
         imgDir->release();
+    if (sndMan)
+        sndMan->release();
     if (remote)
         delete remote;
 }
@@ -141,6 +144,17 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         fntDir = rsrcDir->directoryAtPath("fnt");
     } catch (...) {
         fntDir = NULL;
+    }
+    PHDirectory * sndDir = NULL;
+    try {
+        sndDir = rsrcDir->directoryAtPath("snd");
+        sndMan = new PHSoundManager(sndDir);
+        sndDir->release();
+        sndDir = NULL;
+    } catch (...)
+    {
+        if (sndDir)
+            sndDir->release();
     }
     
     loadCapabilities();

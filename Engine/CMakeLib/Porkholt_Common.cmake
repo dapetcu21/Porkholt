@@ -75,6 +75,10 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/3D/PHMeshBody.cpp
   ${PH_ENGINE_PATH}/src/3D/PHProjectionChanger.cpp
   ${PH_ENGINE_PATH}/src/3D/PHSphereMesh.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHAudioBuffer.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHRawDecoder.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHSound.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHSoundManager.cpp
   ${PH_EXTERNALS}/uremote/src/URClient.cpp
   ${PH_EXTERNALS}/uremote/src/URCommon.cpp
   ${PH_EXTERNALS}/uremote/src/URField.cpp
@@ -166,6 +170,12 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTestViewController.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextController.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextControllerView.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHAudioBuffer.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHRawDecoder.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHDecoder.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSound.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundManager.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHOpenAL.h
   ${PH_ENGINE_PATH}/include/Porkholt/3D/PHBody.h
   ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMaterial.h
   ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMesh.h

@@ -24,6 +24,7 @@ class PHRemote;
 class PHTextView;
 class PHView;
 class PHViewController;
+class PHSoundManager;
 
 enum PHGLCapabilities
 {
@@ -76,6 +77,7 @@ private:
 	PHNavigationController * viewController;
     PHEventHandler * evtHandler;
     PHAnimatorPool * animPool;
+    PHSoundManager * sndMan;
     PHDirectory * rsrcDir;
     PHDirectory * shdDir;
     PHDirectory * imgDir;
@@ -154,6 +156,7 @@ public:
     void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
     PHAnimatorPool * mainAnimatorPool() { return animPool; }
+    PHSoundManager * soundManager() { return sndMan; } 
 
     //NOTE: There is one stack per thread
     PHAnimatorPool * animatorPool();

@@ -26,8 +26,6 @@
 using namespace std;
 
 #ifdef _MSC_VER
-
-    #define PH_CCALL __cdecl
     #pragma section(".CRT$XCU",read)
     #define PH_INITIALIZER(f) \
     static void __cdecl f(void); \
@@ -35,12 +33,9 @@ using namespace std;
     static void __cdecl f(void)
 
 #elif defined(__GNUC__)
-
-    #define PH_CCALL
     #define PH_INITIALIZER(f) \
     static void f(void) __attribute__((constructor)); \
     static void f(void)
-
 #endif
 
 #ifdef __APPLE__
@@ -62,6 +57,10 @@ using namespace std;
     #define PH_DESKTOP
 #endif
 
+#if !defined(PH_MOBILE) && !defined(PH_DESKTOP)
+    #define PH_DESKTOP
+#endif
+
 #if (__STDC_VERSION__ >= 199901L)
     #define PH_RESTRICT restrict
 #else
@@ -80,18 +79,16 @@ void * PHAlloc(void)
 //map<string,PHAllocator> * list;
 #define PH_REGISTERCLASS(list,name,clss) PH_INITIALIZER( PHRegister_ ## clss ) { if (!list) list = new map<string,PHAllocator>; list->insert(make_pair<string,void * (*)(void)>(name,PHAlloc<clss>)); }
 
-#ifdef PH_IPHONE_OS
+#if defined(PH_IPHONE_OS)
 	#import <OpenGLES/ES1/gl.h>
 	#import <OpenGLES/ES1/glext.h>
     #import <OpenGLES/ES2/gl.h>
     #import <OpenGLES/ES2/glext.h>
-#endif
-#ifdef PH_MAC_OS
+#elif defined(PH_MAC_OS)
     #import <OpenGL/gl.h>
     #import <OpenGL/glext.h>
-#endif
-#ifdef PH_LINUX
-#define GL_GLEXT_PROTOTYPES
+#else
+    #define GL_GLEXT_PROTOTYPES
     #include <GL/gl.h>
     #include <GL/glext.h>
 #endif
