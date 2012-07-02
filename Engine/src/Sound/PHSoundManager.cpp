@@ -13,20 +13,20 @@ map<string, PHAllocator> * PHSoundManager::extensions = NULL;
 PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir)
 {
     sndDir->retain();
-    device = alcOpenDevice(NULL);
+    device = (void*)alcOpenDevice(NULL);
     if (device)
     {
-        context = alcCreateContext(device, NULL); 
+        context = (void*)alcCreateContext((ALCdevice*)device, NULL); 
     }
 }
 
 PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
 {
-    PHHashedString n(dir->path + "/" + name);
+    PHHashedString n(dir->path() + "/" + name);
     map<PHHashedString, PHSound *>::iterator it = sounds.find(n);
     if (it == sounds.end())
     {
-        for (map<string, PHAllocator>::iterator i = extension->begin(); i!=extensions->end(); i++)
+        for (map<string, PHAllocator>::iterator i = extensions->begin(); i!=extensions->end(); i++)
         {
             string enm = name + "." + i->first;
             if (dir->fileExists(enm))
@@ -36,7 +36,7 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
                 try {
                     decoder = (PHDecoder*)(i->second)();
                     file = dir->fileAtPath(enm);
-                    decoder->setFile(file);
+                    decoder->loadFromFile(file);
                     file->release();
                     file = NULL;
                 } catch (...) {
@@ -55,7 +55,7 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
                 return snd;
             }
         }
-        throw string("No match found for") + name;
+        throw string("No match found for ") + name;
     }
     return it->second;
 }
@@ -66,8 +66,8 @@ PHSoundManager::~PHSoundManager()
     if (context)
     {
        alcMakeContextCurrent(NULL);
-       alcDestroyContext(context);
+       alcDestroyContext((ALCcontext*)context);
     }
     if (device)
-        alcCloseDevice(device);
+        alcCloseDevice((ALCdevice*)device);
 }

@@ -1,5 +1,8 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#ifndef PHSOUND_H
+#define PHSOUND_H
+
 #include <Porkholt/Core/PHMain.h>
 
 class PHAudioBuffer;
@@ -57,3 +60,5 @@ public:
     void setLooping(bool l);
 
 };
+
+#endif

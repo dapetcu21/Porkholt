@@ -9,7 +9,7 @@ set(CMAKE_EXE_LINKER_FLAGS
 set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
-    
+
 link_directories(${PH_EXTERNALS}/lib/darwin/osx)
 link_directories(${Porkholt_OSX_BINARY_DIR})
 
@@ -22,6 +22,10 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
 else()
     target_link_libraries(${PH_NAME} Porkholt_OSX)
 endif()
+
+find_package(OpenAL REQUIRED)
+include_directories(${OPENAL_INCLUDE_DIR})
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OPENAL_LIBRARY}/OpenAL")
 
 if(PH_USE_BOX2D)
   include("${PH_ENGINE_PATH}/CMakeLib/Box2D_OSX.cmake")
