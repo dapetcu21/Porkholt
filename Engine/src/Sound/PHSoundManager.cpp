@@ -48,7 +48,7 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
                 }
                 PHAudioBuffer * buf = new PHAudioBuffer(decoder);
                 decoder->release();
-                PHSound * snd = new PHSound;
+                PHSound * snd = new PHSound(this);
                 snd->setBuffer(buf);
                 buf->release();
                 sounds.insert(make_pair(n, snd));

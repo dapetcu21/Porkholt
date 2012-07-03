@@ -33,6 +33,7 @@ public:
 
     virtual size_t length() = 0; //in samples
     virtual size_t chunkLength() { if (st) return length(); return (200<<10)/chan/formatSampleLength(); }
+    virtual bool prepareChunk(size_t firstSample, size_t length) = 0;
     virtual uint8_t * dataForSampleRange(size_t firstSample, size_t length) = 0;
     virtual void releaseData(uint8_t * data) { delete[] data; }
 

@@ -3,15 +3,31 @@
 #ifndef PHSOUND_H
 #define PHSOUND_H
 
-#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Sound/PHOpenAL.h>
 
 class PHAudioBuffer;
+class PHSoundManager;
 
 class PHSound : public PHObject
 {
 private:
+    ALuint id;
     PHAudioBuffer * buf;
+    PHSoundManager * man;
+    bool st;
+    int stack_begin;
+    list<ALuint> stack;
+    size_t seekv;
+    bool schseek;
+    bool playing;
+    void clearBuffer();
+    void unqueue(size_t size);
 public:
+    PHSound(PHSoundManager * man);
+    ~PHSound();
+
+    void update();
+
     void setBuffer(PHAudioBuffer * buf);
     PHAudioBuffer * buffer() { return buf; }
 

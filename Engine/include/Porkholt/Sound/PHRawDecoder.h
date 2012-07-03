@@ -16,6 +16,7 @@ public:
     PHRawDecoder(uint8_t * buffer, size_t length, size_t frequency, int channels, enum bformat format);
     ~PHRawDecoder();
 
+    bool prepareChunk(size_t firstSample, size_t length) { return true; }
     uint8_t * dataForSampleRange(size_t firstSample, size_t length) { count++; return buf+firstSample*channels()*formatSampleLength(); }
     void releaseData(uint8_t * data) { if (!--count) delete[] buf; }
     void releaseStorage() { releaseData(NULL); }

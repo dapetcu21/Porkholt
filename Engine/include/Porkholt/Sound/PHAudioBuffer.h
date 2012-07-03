@@ -19,10 +19,12 @@ private:
     void releaseBuffer(size_t index);
 
     ALuint dequeueNewBuffer();
+    bool prepareBuffer(size_t index);
     ALuint bufferForPart(size_t index);
     void throwAwayTrash();
 
     size_t bufferCount() { return n; };
+    size_t bufferLength();
     size_t sampleCount();
     size_t frequency();
 

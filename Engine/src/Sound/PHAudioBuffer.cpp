@@ -10,8 +10,8 @@ PHAudioBuffer::PHAudioBuffer(PHDecoder * dec) : decoder(dec)
     rcb.resize(n);
     if (n==1) 
     {
-        bufferForPart(0);
-        decoder->releaseStorage();
+        if (decoder->prepareChunk(0, decoder->length()))
+            bufferForPart(0);
     }
 }
 
@@ -38,8 +38,22 @@ size_t PHAudioBuffer::frequency()
     return decoder->frequency();
 }
 
+size_t PHAudioBuffer::bufferLength()
+{
+    return decoder->chunkLength();
+}
+
+bool PHAudioBuffer::prepareBuffer(size_t index)
+{
+    if (buffers[index]) return true;
+    size_t chunk = decoder->chunkLength();
+    size_t offset = index * chunk;
+    return decoder->prepareChunk(offset, min(chunk, decoder->length() - offset));
+}
+
 void PHAudioBuffer::releaseBuffer(size_t index)
 {
+    if (n==1) return;
     if (!(--rcb[index]))
     {
         trash.push_back(buffers[index]);
@@ -62,11 +76,17 @@ ALuint PHAudioBuffer::dequeueNewBuffer()
 
 ALuint PHAudioBuffer::bufferForPart(size_t index)
 {
-    ALuint b = dequeueNewBuffer();
-    fillBuffer(b, index * decoder->chunkLength());
-    buffers[index] = b;
-    rcb[index] = 1;
-    return b;
+    if (!buffers[index])
+    {
+        ALuint b = dequeueNewBuffer();
+        fillBuffer(b, index * decoder->chunkLength());
+        buffers[index] = b;
+        rcb[index] = 0;
+        if (n==1)
+            decoder->releaseStorage();
+    }
+    rcb[index]++;
+    return buffers[index];
 }
 
 void PHAudioBuffer::throwAwayTrash()

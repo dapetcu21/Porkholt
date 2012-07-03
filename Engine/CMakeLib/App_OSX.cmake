@@ -3,7 +3,7 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
 	set(CMAKE_OSX_SYSROOT macosx)
 endif()
 set(CMAKE_EXE_LINKER_FLAGS
-  "-ObjC -llua -lz -lpng15 -framework OpenGL -framework Foundation -framework CoreVideo -framework AppKit"
+  "-ObjC -llua -lz -lpng15 -lopenal -framework OpenGL -framework Foundation -framework CoreVideo -framework AppKit"
   )
 
 set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
@@ -22,10 +22,6 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
 else()
     target_link_libraries(${PH_NAME} Porkholt_OSX)
 endif()
-
-find_package(OpenAL REQUIRED)
-include_directories(${OPENAL_INCLUDE_DIR})
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OPENAL_LIBRARY}/OpenAL")
 
 if(PH_USE_BOX2D)
   include("${PH_ENGINE_PATH}/CMakeLib/Box2D_OSX.cmake")
@@ -89,6 +85,11 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
     POST_BUILD
     COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/Contents/Resources/rsrc "build-nodownscale" ${PH_EXTERNALS}
     )
+  add_custom_command(
+    TARGET ${PH_NAME}
+    POST_BUILD
+    COMMAND ${PH_ENGINE_PATH}/CMakeLib/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
+    )
 else()
   set(APP_NAME "${CMAKE_CURRENT_BINARY_DIR}/${PH_NAME}.app")
   add_custom_target(
@@ -97,4 +98,11 @@ else()
     )
   add_dependencies(${PH_NAME} PostProcess_Resources)
   add_dependencies(PostProcess_Resources External_Libs)  
+  add_custom_target(
+    Copy_Libraries
+    COMMAND ${PH_ENGINE_PATH}/CMakeLib/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
+    )
+  add_dependencies(${PH_NAME} Copy_Libraries)
+  add_dependencies(Copy_Libraries External_Libs)  
+
 endif()
