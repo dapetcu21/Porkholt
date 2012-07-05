@@ -128,8 +128,10 @@ void PHSound::clearBuffer()
 void PHSound::setBuffer(PHAudioBuffer * buff)
 {
     clearBuffer();
-    buff->retain();
-    buf->release();
+    if (buff)
+        buff->retain();
+    if (buf)
+        buf->release();
     buf = buff;
     st = (buf->bufferCount() == 1);
     buf->prepareBuffer(0);

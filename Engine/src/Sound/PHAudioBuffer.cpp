@@ -13,6 +13,7 @@ PHAudioBuffer::PHAudioBuffer(PHDecoder * dec) : decoder(dec)
         if (decoder->prepareChunk(0, decoder->length()))
             bufferForPart(0);
     }
+    decoder->retain();
 }
 
 void PHAudioBuffer::fillBuffer(ALuint b, size_t offset)
@@ -102,4 +103,5 @@ PHAudioBuffer::~PHAudioBuffer()
 {
     trash.insert(trash.end(), buffers.begin(), buffers.end());
     throwAwayTrash();
+    decoder->release();
 }
