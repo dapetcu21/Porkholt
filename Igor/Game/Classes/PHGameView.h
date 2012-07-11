@@ -23,6 +23,8 @@ public:
     bool touchesRight() { return t2!=NULL; }
     const PHPoint & leftTouch() { return p1; }
     const PHPoint & rightTouch() { return p2; }
+    void setLeftTouch(const PHPoint & p) { p1 = p; }
+    void setRightTouch(const PHPoint & p) { p2 = p; }
 };
 
 #endif

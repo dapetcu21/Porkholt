@@ -19,6 +19,8 @@ PHView * PHGameController::loadView(const PHRect & frame)
     gameView = new PHGameView(frame);
     gameView->setUserInput(true);
     gameView->setBounds(PHRect(0,0,screenHeight*(frame.width/frame.height),screenHeight));
+    gameView->setLeftTouch(PHPoint(0, screenHeight/2));
+    gameView->setRightTouch(PHPoint(gameView->bounds().width, screenHeight/2));
     v->addChild(gameView);
     
     backgroundView = new PHImageView();
@@ -87,6 +89,7 @@ void PHGameController::detachLightFromView(PHView * v)
 void PHGameController::reset()
 {
     playerPos = PHPoint(1.0f,2.0f);
+    gameView->setLeftTouch(playerPos);
     noise[0].clear();
     noise[1].clear();
     noise[2].clear();
@@ -131,7 +134,11 @@ void PHGameController::attachLightToView(PHGLLight * l, PHView * v)
 
 void PHGameController::updateScene(ph_float elapsedTime)
 {
-    playerPos.y += (gameView->touchesLeft()?1:-1)*elapsedTime*1.5f;
+    //if (gameView->touchesLeft())
+    {
+        PHPoint pnt = gameView->leftTouch();
+        PHLowPassFilter(playerPos.y, pnt.y, elapsedTime, 5.0f);
+    }
     playerView->setPosition(playerPos+playerRect.origin());
     
     ph_float max = gameView->bounds().width;

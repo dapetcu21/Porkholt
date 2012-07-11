@@ -4,8 +4,8 @@
 
 #define INIT t1(NULL), t2(NULL)
 
-PHGameView::PHGameView() : INIT {}
-PHGameView::PHGameView(const PHRect & f) : PHView(f), INIT {};
+PHGameView::PHGameView() : INIT, p1(0,0), p2(0,0) {}
+PHGameView::PHGameView(const PHRect & f) : PHView(f), INIT, p1(0,f.height/2), p2(0,f.height/2) {};
 
 void PHGameView::touchEvent(PHEvent *evt)
 {
