@@ -18,6 +18,8 @@ public:
     int channels() { return chan; }
     size_t frequency() { return freq; }
 
+    PHDecoder() : st(false) {}
+
     enum bformat {
         U8,
         U16,

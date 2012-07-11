@@ -3,40 +3,209 @@
 #include <Porkholt/Core/PHWindowing.h>
 #include <Porkholt/Core/PHViewController.h>
 #include <Porkholt/Sound/PHSound.h>
+#include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Sound/PHRawDecoder.h>
 #include <Porkholt/Sound/PHAudioBuffer.h>
+#include <Porkholt/UI/PHButtonView.h>
+
+class PHSliderView : public PHView
+{
+    class knob : public PHView
+    {
+    public:
+        PHSliderView * v;
+        knob(PHSliderView * sv) : v(sv), PHView(PHRect(0, 0, 10, 10))
+        {
+            setBackgroundColor(PHWhiteColor);
+        }
+    };
+    knob * k;
+public:
+    ph_float _pos;
+
+    PHSliderView(const PHRect & frame) : PHView(frame)
+    {
+        k = new knob(this);
+        addChild(k);
+        setUserInput(true);
+        setBackgroundColor(PHBlackColor);
+        setPosition(0);
+    }
+
+    void setPosition(ph_float pos)
+    {
+        _pos = pos;
+        PHRect b(bounds());
+        PHPoint p(b.x + b.width * pos, b.y + b.height/2);
+        k->setCenter(p);
+    }
+
+    void layoutSubviews(const PHRect & oldBounds)
+    {
+        setPosition(_pos);
+    }
+
+    virtual void submitPosition(ph_float pos)
+    {
+    }
+
+    void touchEvent(PHEvent * evt)
+    {
+        if (evt->type() == PHEvent::touchDown)
+        {
+            PHPoint p = toMyCoordinates(evt->location());
+            ph_float pos = (p.x - bounds().x) / bounds().width;
+            setPosition(pos);
+            submitPosition(pos);
+            evt->setHandled(true);
+        }
+    }
+
+    ~PHSliderView()
+    {
+        k->release();
+    }
+};
+
+class PHSeekSlider : public PHSliderView
+{
+    PHSound * snd;
+
+public:
+
+    PHSeekSlider(const PHRect & frame, PHSound * sound) : PHSliderView(frame), snd(sound) {
+        snd->retain();
+    }
+
+    void submitPosition(ph_float pos)
+    {
+        snd->seek(pos * snd->duration());
+    }
+
+    void update()
+    {
+        setPosition(snd->playPosition() / snd->duration());
+    }
+
+    ~PHSeekSlider()
+    {
+        snd->release();
+    }
+};
+
+class PHCheckbox : public PHView
+{
+public:
+    bool state;
+    PHInvocation inv;
+
+    void setState()
+    {
+        setBackgroundColor(state?PHWhiteColor:PHBlackColor);
+    }
+
+    PHCheckbox(const PHRect & r) : PHView(r), state(false)
+    {
+        setUserInput(true);
+        setState();
+    }
+    
+    PHCheckbox() : PHView(), state(false)
+    {
+        setUserInput(true);
+        setState();
+    }
+
+    void touchEvent(PHEvent * event)
+    {
+        if (event->type() == PHEvent::touchDown)
+        {
+            event->setHandled(true);
+            state = ! state;
+            setState();
+            PHInvocation invo = inv;
+            inv.call((PHObject*)state);
+            inv = invo;
+        }
+    }
+};
 
 class PHPlayerController : public PHViewController
 {
     PHSound * snd;
-
-    void loadSound()
-    {
-        uint8_t * b = new uint8_t[441000];
-        for (int i=0; i<441000; i++)
-        {
-            ph_float v = sin(M_PI*(ph_float(i)/100)) * (sin(M_PI*(ph_float(i)/44100))+1)/2;
-            b[i] = uint8_t(v*127 + 127);
-        }
-
-        PHRawDecoder * dec = new PHRawDecoder(b, 441000, 44100, 1, PHDecoder::U8);
-        PHAudioBuffer * buf = new PHAudioBuffer(dec);
-        dec->release();
-        snd = new PHSound(gm->soundManager());
-        snd->setBuffer(buf);
-        buf->release();
-    }
+    PHSeekSlider * slider;
 
     ~PHPlayerController()
     {
+        slider->release();
         snd->release();
     }
+
+#define buttonborder 10
+#define buttonsize 30
+#define sliderhb 30
+#define sliderh 10
+#define sliderb 30
 
     PHView * playerView(const PHRect & frame)
     {
         PHView * pv = new PHView(frame);
         pv->setUserInput(true);
+        pv->setAutoresizesSubviews(true);
         pv->setBackgroundColor(PHColor(1.0, 1.0, 1.0, 0.3));
+
+        PHView * buttoncontainer = new PHView(PHRect(0, 0, buttonsize*3+buttonborder*2, buttonsize));
+        buttoncontainer->setUserInput(true);
+        buttoncontainer->setCenter(pv->boundsCenter() - PHPoint(0,sliderhb / 2));
+
+        PHButtonView * playb = new PHButtonView(PHRect(0, 0, buttonsize, buttonsize));
+        PHButtonView * pauseb = new PHButtonView(PHRect(buttonsize+buttonborder, 0, buttonsize, buttonsize));
+        PHButtonView * stopb = new PHButtonView(PHRect((buttonsize+buttonborder)*2, 0, buttonsize, buttonsize));
+
+        PHImage * img;
+    
+        img = gm->imageNamed("play");
+        playb->setPressedImage(img);
+        playb->setImage(img);
+    
+        img = gm->imageNamed("pause");
+        pauseb->setPressedImage(img);
+        pauseb->setImage(img);
+     
+        img = gm->imageNamed("stop");
+        stopb->setPressedImage(img);
+        stopb->setImage(img);       
+
+        playb->setDownCallback(PHInv(snd, PHSound::play, NULL));
+        pauseb->setDownCallback(PHInv(snd, PHSound::pause, NULL));
+        stopb->setDownCallback(PHInv(snd, PHSound::stop, NULL));
+        
+        buttoncontainer->addChild(playb);
+        buttoncontainer->addChild(pauseb);
+        buttoncontainer->addChild(stopb);
+
+        playb->release();
+        pauseb->release();
+        stopb->release();
+
+#define nochk 3
+        PHCheckbox ** c = new PHCheckbox* [nochk];
+        for (int i=0; i<nochk; i++)
+        {
+            c[i] = new PHCheckbox(PHRect((buttonborder*(i+1)+buttonsize*i), buttonborder, buttonsize, buttonsize));
+            pv->addChild(c[i]);
+            c[i]->release();
+        }
+
+        c[0]->inv = PHInv(snd, PHSound::setLooping, NULL);
+
+        pv->addChild(buttoncontainer);
+        buttoncontainer->release();
+
+        PHRect b = pv->bounds();
+        slider = new PHSeekSlider(PHRect(sliderb, b.height - sliderhb, b.width - 2*sliderb, sliderh), snd);
+        pv->addChild(slider);
+
         return pv;
     }
 
@@ -48,8 +217,10 @@ class PHPlayerController : public PHViewController
         PHView * v = new PHView(frame);
         v->setUserInput(true);
         v->setAutoresizeMask(PHView::ResizeAll);
+        v->setAutoresizesSubviews(true);
 
-        loadSound();
+        snd = gm->soundManager()->soundNamed("music");
+        snd->retain();
 
         PHRect pvfr = v->bounds();
         pvfr.x += playerborder;
@@ -62,6 +233,12 @@ class PHPlayerController : public PHViewController
         pv->release();
 
         return v;
+    }
+
+    void updateScene(ph_float elapsed)
+    {
+        snd->update();
+        slider->update();
     }
 };
 

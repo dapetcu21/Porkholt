@@ -11,16 +11,61 @@
 #ifdef __BIG_ENDIAN__
 #define htonll(x) (x)
 #else
-#ifdef __GNUC__
-#define htonll __builtin_bswap64
-#elif _MSC_VER
-#define htonll _byteswap_uint64
-#else
-inline uint64_t htonll(uint64_t x)
+#define htonll(x) PHByteSwap64(x)
+#endif
+
+#if defined(__GNUC__)
+#define PHByteSwap64(x) __builtin_bswap64(x)
+#define PHByteSwap32(x) __builtin_bswap32(x)
+inline uint16_t PHByteSwap16(uint16_t x)
 {
-    return htonl(x>>32) | ((uint64_t)htonl(x&0xFFFFFFFF)<<32);
+    return (x>>8) | (x<<8);
+}
+#elif defined(_MSC_VER)
+#define PHByteSwap64(x) _byteswap_uint64(x)
+#define PHByteSwap32(x) _byteswap_ulong(x)
+#define PHByteSwap16(x) _byteswap_ushort(x)
+#else
+inline uint64_t PHByteSwap64(uint64_t x)
+{
+    return ((x<<56) | 
+           ((x<<40) & 0xff000000000000ULL) |
+           ((x<<24) & 0xff0000000000ULL) |
+           ((x<<8)  & 0xff00000000ULL) |
+           ((x>>8)  & 0xff000000ULL) |
+           ((x>>24) & 0xff0000ULL) |
+           ((x>>40) & 0xff00ULL) |
+            (x>>56));
+}
+
+inline uint32_t PHByteSwap32(uint32_t x)
+{
+    return ((x<<24) |
+           ((x<<8) & 0xff0000U) |
+           ((x>>8) & 0xff00U) |
+            (x>>24));
+}
+
+inline uint16_t PHByteSwap16(uint16_t x)
+{
+    return (x>>8) | (x<<8);
 }
 #endif
+
+#ifdef __BIG_ENDIAN__
+    #define PHBEToH16(x) (x)
+    #define PHBEToH32(x) (x)
+    #define PHBEToH64(x) (x)
+    #define PHLEToH16(x) PHByteSwap16(x)
+    #define PHLEToH32(x) PHByteSwap32(x)
+    #define PHLEToH64(x) PHByteSwap64(x)
+#else
+    #define PHLEToH16(x) (x)
+    #define PHLEToH32(x) (x)
+    #define PHLEToH64(x) (x)
+    #define PHBEToH16(x) PHByteSwap16(x)
+    #define PHBEToH32(x) PHByteSwap32(x)
+    #define PHBEToH64(x) PHByteSwap64(x)
 #endif
 
 #define ntohll htonll

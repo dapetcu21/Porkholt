@@ -4,7 +4,7 @@
 #include <Porkholt/Sound/PHAudioBuffer.h>
 #include <Porkholt/Sound/PHSoundManager.h>
 
-PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false)
+PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false)
 {
     alGenSources(1, &id); 
 }
@@ -17,14 +17,21 @@ PHSound::~PHSound()
     alDeleteSources(1, &id);
 }
 
+void PHSound::songEnded()
+{
+    PHLog("song ended");
+}
+
 void PHSound::unqueue(size_t size)
 {
     if (!size) return;
+    PHLog("unqueue %d", int(size));
     ALuint * v = new ALuint[size];
     for (size_t i = 0; i<size; i++)
     {
         v[i] = stack.front();
         stack.pop_front();
+        buf->releaseBuffer(stack_begin + i);
     }
     stack_begin += size;
     alSourceUnqueueBuffers(id, size, v);
@@ -46,14 +53,15 @@ void PHSound::update()
                     alSourcef(id, AL_SAMPLE_OFFSET, seekv);
                     schseek = false;
                 }
-                if (playing)
-                    alSourcePlay(id);
+                stack.push_back(b);
             }
-        } else
+        } else {
             if (schseek)
             {
                 alSourcef(id, AL_SAMPLE_OFFSET, seekv);
+                schseek = false;
             }
+        }
     } else {
         size_t chunk = buf->bufferLength();
         if (schseek)
@@ -61,54 +69,84 @@ void PHSound::update()
             size_t seekb = seekv / chunk;
             if (seekb>=stack_begin && seekb<stack_begin+stack.size())
             {
-                alSourcef(id, AL_SAMPLE_OFFSET, seekv - seekb * chunk);
+                alSourcef(id, AL_SAMPLE_OFFSET, seekv - stack_begin * chunk);
                 schseek = false;
             }
-            else
-                unqueue(stack.size());
         }
         ALint off;
         if (schseek)
-            off = seekv / chunk;
+            off = seekv;
         else 
+        {
             alGetSourcei(id, AL_SAMPLE_OFFSET, &off);
+            off += stack_begin * chunk;
+        }
         size_t crrb = off / chunk;
         if (crrb>=stack_begin && crrb<stack_begin+stack.size())
         {
             unqueue(crrb-stack_begin);
-            if ((crrb != buf->bufferCount()+1) && (crrb = stack_begin+stack.size()-1))
+            if ((crrb != buf->bufferCount()-1) && (crrb == stack_begin+stack.size()-1))
             {
                 if (buf->prepareBuffer(crrb+1))
                 {
                     ALuint b = buf->bufferForPart(crrb+1);
                     alSourceQueueBuffers(id, 1, &b);
+                    PHLog("ham");
                     stack.push_back(b);
                 }
             }
         } else {
+            PHLog("stop");
             alSourceStop(id);
+            schplaying = true;
             unqueue(stack.size());
             if (buf->prepareBuffer(crrb))
             {
                 ALuint b = buf->bufferForPart(crrb);
                 alSourceQueueBuffers(id, 1, &b);
+                PHLog("ham");
                 stack.push_back(b);
                 stack_begin = crrb;
 
                 if (schseek)
-                {
+                { 
                     alSourcef(id, AL_SAMPLE_OFFSET, seekv - stack_begin * chunk);
                     schseek = false;
                 }
             }
         }
+    }
+    buf->throwAwayTrash();
 
-        if (playing)
+    if (!stack.empty())
+    {
+        ALint state;
+        alGetSourcei(id, AL_SOURCE_STATE, &state);
+        if (schplaying)
         {
-            ALint state;
-            alGetSourcei(id, AL_SOURCE_STATE, &state);
-            if (state != AL_PLAYING)
-                alSourcePlay(id);
+            if (playing)
+            {
+                if (state != AL_PLAYING)
+                {
+                    alSourcePlay(id);
+                    state = AL_PLAYING;
+                }
+            } else {
+                if (state == AL_PLAYING)
+                {
+                    alSourcePause(id);
+                    state = AL_PAUSED;
+                }
+            }
+            schplaying = false;
+        }
+        if (playing && (state == AL_STOPPED))
+        {
+            songEnded();
+            bool p = playing;
+            stop();
+            if (p && loop)
+                play();
         }
     }
 }
@@ -139,15 +177,17 @@ void PHSound::setBuffer(PHAudioBuffer * buff)
 
 void PHSound::play()
 {
-    if (playing) return;
+    if (isPlaying()) return;
     playing = true;
+    schplaying = true;
     update();
 }
 
 void PHSound::pause()
 {
-    if (!playing) return;
     playing = false;
+    schplaying = false;
+    if (!isPlaying()) return;
     alSourcePause(id);
 }
 
@@ -159,9 +199,12 @@ void PHSound::stop()
 
 bool PHSound::isPlaying()
 {
-    return playing;
+    if (schplaying)
+        return playing;
+    ALint state;
+    alGetSourcei(id, AL_SOURCE_STATE, &state);
+    return (state == AL_PLAYING);
 }
-
 
 ph_float PHSound::duration()
 {
@@ -171,6 +214,12 @@ ph_float PHSound::duration()
 
 ph_float PHSound::playPosition()
 {
+    ALint state;
+    alGetSourcei(id, AL_SOURCE_STATE, &state);
+    if ((state == AL_STOPPED) || schseek)
+    {
+        return ph_float(seekv) / buf->frequency();
+    }
     ALfloat v;
     alGetSourcef(id, AL_SEC_OFFSET, &v);
     return ph_float(v)+stack_begin*buf->bufferLength()/ph_float(buf->frequency());
@@ -179,7 +228,7 @@ ph_float PHSound::playPosition()
 void PHSound::seek(ph_float pos)
 {
     schseek = true;
-    seekv = pos;
+    seekv = pos*buf->frequency();
     update();
 }
 
@@ -358,14 +407,12 @@ void PHSound::setRelativePositions(bool r)
 
 bool PHSound::looping()
 {
-    ALint v;
-    alGetSourcei(id, AL_LOOPING, &v);
-    return (v == AL_TRUE);
+    return loop;
 }
 
 void PHSound::setLooping(bool l)
 {
-   alSourcei(id, AL_LOOPING, l?AL_TRUE:AL_FALSE);
+    loop = l;
 }
 
 

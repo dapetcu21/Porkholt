@@ -142,7 +142,7 @@ public:
 private:
     PHView * pointerDeepFirst(const PHMatrix & m, PHEvent * touch);
     
-    void resizeSubviews(const PHSize & delta);
+    virtual void layoutSubviews(const PHSize & oldBounds);
     void autoresizeMyself(const PHSize & delta);
 //animation system
 protected:

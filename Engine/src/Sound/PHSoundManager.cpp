@@ -7,17 +7,48 @@
 #include <Porkholt/Sound/PHDecoder.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
+#include <Porkholt/Sound/PHWAVDecoder.h>
 
 map<string, PHAllocator> * PHSoundManager::extensions = NULL;
+bool PHSoundManager::plugLoaded = false;
+
+void PHSoundManager::loadPlugins()
+{
+    if (plugLoaded) return;
+    plugLoaded = true;
+
+    registerPlugin("wav", PHAlloc<PHWAVDecoder>);
+    registerPlugin("wave", PHAlloc<PHWAVDecoder>);
+}
+
+void PHSoundManager::registerPlugin(const string & ext, PHAllocator a)
+{
+    if (!extensions)
+        extensions = new map<string, PHAllocator>;
+
+    extensions->insert(make_pair<string, PHAllocator>(ext, a));
+}
 
 PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir)
 {
     sndDir->retain();
+#ifdef PH_DEBUG
+    const char * s = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+    PHLog("Available OpenAL devices:");
+    while (s && s[0])
+    {
+        PHLog("\"%s\"", s);
+        s += strlen(s)+1;
+    }
+#endif
     device = (void*)alcOpenDevice(NULL);
     if (device)
     {
         context = (void*)alcCreateContext((ALCdevice*)device, NULL); 
+        if (context)
+            alcMakeContextCurrent((ALCcontext*)context);
     }
+    loadPlugins();
 }
 
 PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
@@ -26,6 +57,12 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
     map<PHHashedString, PHSound *>::iterator it = sounds.find(n);
     if (it == sounds.end())
     {
+        if (!extensions || extensions->empty())
+        {
+            string err("No decoder plugins loaded");
+            PHLog(err);
+            throw err;
+        }
         for (map<string, PHAllocator>::iterator i = extensions->begin(); i!=extensions->end(); i++)
         {
             string enm = name + "." + i->first;
@@ -39,7 +76,8 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
                     decoder->loadFromFile(file);
                     file->release();
                     file = NULL;
-                } catch (...) {
+                } catch (string ex) {
+                    PHLog("Can't load \"%s\": %s",enm.c_str(), ex.c_str());
                     if (file)
                         file->release();
                     if (decoder)

@@ -20,8 +20,11 @@ private:
     size_t seekv;
     bool schseek;
     bool playing;
+    bool loop;
+    bool schplaying;
     void clearBuffer();
     void unqueue(size_t size);
+    void songEnded();
 public:
     PHSound(PHSoundManager * man);
     ~PHSound();

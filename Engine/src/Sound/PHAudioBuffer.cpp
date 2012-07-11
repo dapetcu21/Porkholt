@@ -20,6 +20,7 @@ void PHAudioBuffer::fillBuffer(ALuint b, size_t offset)
 {
     ALenum format;
     static const ALenum fmts [][PHDecoder::noFormats] = {
+        {0, 0},
         {AL_FORMAT_MONO8, AL_FORMAT_MONO16}, 
         {AL_FORMAT_STEREO8, AL_FORMAT_STEREO16}
         };
@@ -55,8 +56,10 @@ bool PHAudioBuffer::prepareBuffer(size_t index)
 void PHAudioBuffer::releaseBuffer(size_t index)
 {
     if (n==1) return;
+    PHLog("release for part: %d", (int)index);
     if (!(--rcb[index]))
     {
+        PHLog("delete for part: %d", (int)index);
         trash.push_back(buffers[index]);
         buffers[index] = 0;
     }
@@ -87,6 +90,7 @@ ALuint PHAudioBuffer::bufferForPart(size_t index)
             decoder->releaseStorage();
     }
     rcb[index]++;
+    PHLog("buffer for part: %d", (int)index);
     return buffers[index];
 }
 

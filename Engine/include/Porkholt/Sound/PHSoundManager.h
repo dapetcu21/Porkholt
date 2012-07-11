@@ -16,8 +16,9 @@ protected:
     void * device;
     void * context;
     map<PHHashedString, PHSound*> sounds;
-    
-    static map<string, PHAllocator> * extensions;
+    static bool plugLoaded;
+    static void loadPlugins();
+
 public:
     PHSoundManager(PHDirectory * dir);
     ~PHSoundManager();
@@ -27,8 +28,10 @@ public:
 
     void collectGarbageSounds();
 
+    static map<string, PHAllocator> * extensions;
+    static void registerPlugin(const string & extension, PHAllocator a);
 };
 
-#define PHSOUND_REGISTER_DECODER (extension, clss) PH_REGISTERCLASS(PHSoundManager::extensions, extension, clss)
+#define PHSOUND_REGISTER_DECODER(extension, clss) PH_REGISTERCLASS(PHSoundManager::extensions, extension, clss)
 
 #endif

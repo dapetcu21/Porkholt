@@ -76,9 +76,6 @@ void * PHAlloc(void)
     return (void*) new T;
 }
 
-//map<string,PHAllocator> * list;
-#define PH_REGISTERCLASS(list,name,clss) PH_INITIALIZER( PHRegister_ ## clss ) { if (!list) list = new map<string,PHAllocator>; list->insert(make_pair<string,void * (*)(void)>(name,PHAlloc<clss>)); }
-
 #if defined(PH_IPHONE_OS)
 	#import <OpenGLES/ES1/gl.h>
 	#import <OpenGLES/ES1/glext.h>
@@ -109,6 +106,9 @@ template <> struct _PH_STATIC_ASSERTION_FAILURE< false > {};
 #endif
 
 #define PH_STATIC_ASSERT(cond) enum { PH_TOKENPASTE(dummy,PH_UNIQUE_TOKEN) = sizeof(_PH_STATIC_ASSERTION_FAILURE< (bool)(cond) >) }
+
+//map<string,PHAllocator> * list;
+#define PH_REGISTERCLASS(list,name,clss) PH_INITIALIZER( PH_TOKENPASTE(PH_TOKENPASTE(PHRegister_, clss), PH_UNIQUE_TOKEN)) { if (!list) list = new map<string,PHAllocator>; list->insert(make_pair<string,void * (*)(void)>(name,PHAlloc<clss>)); }
 
 struct lua_State; 
 
