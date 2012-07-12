@@ -3,13 +3,13 @@
 #ifndef PHSOUNDMANAGER_H
 #define PHSOUNDMANAGER_H
 
-#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAnimator.h>
 
 class PHDirectory;
 class PHSound;
 class PHFile;
 
-class PHSoundManager : public PHObject
+class PHSoundManager : public PHAnimator
 {
 protected:
     PHDirectory * sndDir;
@@ -18,6 +18,12 @@ protected:
     map<PHHashedString, PHSound*> sounds;
     static bool plugLoaded;
     static void loadPlugins();
+    
+    set<PHSound*> allsounds;
+    void addSound(PHSound * snd);
+    void removeSound(PHSound * snd);
+    
+    friend class PHSound;
 
 public:
     PHSoundManager(PHDirectory * dir);
@@ -30,6 +36,8 @@ public:
 
     static map<string, PHAllocator> * extensions;
     static void registerPlugin(const string & extension, PHAllocator a);
+
+    void advanceAnimation(ph_float elapsed);
 };
 
 #define PHSOUND_REGISTER_DECODER(extension, clss) PH_REGISTERCLASS(PHSoundManager::extensions, extension, clss)

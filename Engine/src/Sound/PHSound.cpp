@@ -7,6 +7,19 @@
 PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false)
 {
     alGenSources(1, &id); 
+    man->addSound(this);
+}
+
+void PHSound::setCallback(const PHInvocation & invo)
+{
+    inv = invo;
+}
+
+PHSound * PHSound::copy()
+{
+    PHSound * snd = new PHSound(man);
+    snd->setBuffer(buf);
+    return snd;
 }
 
 PHSound::~PHSound()
@@ -15,17 +28,17 @@ PHSound::~PHSound()
     if (buf)
         buf->release();
     alDeleteSources(1, &id);
+    man->removeSound(this);
 }
 
 void PHSound::songEnded()
 {
-    PHLog("song ended");
+    inv.call(this);
 }
 
 void PHSound::unqueue(size_t size)
 {
     if (!size) return;
-    PHLog("unqueue %d", int(size));
     ALuint * v = new ALuint[size];
     for (size_t i = 0; i<size; i++)
     {
@@ -91,12 +104,10 @@ void PHSound::update()
                 {
                     ALuint b = buf->bufferForPart(crrb+1);
                     alSourceQueueBuffers(id, 1, &b);
-                    PHLog("ham");
                     stack.push_back(b);
                 }
             }
         } else {
-            PHLog("stop");
             alSourceStop(id);
             schplaying = true;
             unqueue(stack.size());
@@ -104,7 +115,6 @@ void PHSound::update()
             {
                 ALuint b = buf->bufferForPart(crrb);
                 alSourceQueueBuffers(id, 1, &b);
-                PHLog("ham");
                 stack.push_back(b);
                 stack_begin = crrb;
 
@@ -142,11 +152,13 @@ void PHSound::update()
         }
         if (playing && (state == AL_STOPPED))
         {
+            retain();
             songEnded();
             bool p = playing;
             stop();
             if (p && loop)
                 play();
+            release();
         }
     }
 }

@@ -12,6 +12,26 @@
 map<string, PHAllocator> * PHSoundManager::extensions = NULL;
 bool PHSoundManager::plugLoaded = false;
 
+void PHSoundManager::addSound(PHSound * snd)
+{
+    allsounds.insert(snd);
+}
+
+void PHSoundManager::removeSound(PHSound * snd)
+{
+    allsounds.erase(snd);
+}
+
+void PHSoundManager::advanceAnimation(ph_float elapsed)
+{
+    set<PHSound*>::iterator i,n;
+    for (n = i = allsounds.begin(); i!= allsounds.end(); i=n)
+    {
+        n++;
+        (*i)->update();
+    }
+}
+
 void PHSoundManager::loadPlugins()
 {
     if (plugLoaded) return;

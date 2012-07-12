@@ -25,6 +25,9 @@ private:
     void clearBuffer();
     void unqueue(size_t size);
     void songEnded();
+
+    PHInvocation inv;
+
 public:
     PHSound(PHSoundManager * man);
     ~PHSound();
@@ -42,6 +45,20 @@ public:
     ph_float duration();
     ph_float playPosition();
     void seek(ph_float pos);
+    
+    bool looping();
+    void setLooping(bool l);
+    
+    void setCallback(const PHInvocation & invo);
+
+    PHSound * copy();
+    PHSound * detachAndPlay()
+    {
+        PHSound * snd = copy();
+        snd->setCallback(PHInv(snd, PHSound::release, NULL));
+        snd->play();
+        return snd;
+    }
 
     ph_float pitch();
     ph_float gain();
@@ -75,9 +92,6 @@ public:
 
     bool relativePositions();
     void setRelativePositions(bool r);
-    bool looping();
-    void setLooping(bool l);
-
-};
+    };
 
 #endif

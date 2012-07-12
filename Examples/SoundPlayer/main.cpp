@@ -198,6 +198,7 @@ class PHPlayerController : public PHViewController
         }
 
         c[0]->inv = PHInv(snd, PHSound::setLooping, NULL);
+        c[1]->inv = PHInv(snd, PHSound::detachAndPlay, NULL);
 
         pv->addChild(buttoncontainer);
         buttoncontainer->release();
@@ -237,7 +238,6 @@ class PHPlayerController : public PHViewController
 
     void updateScene(ph_float elapsed)
     {
-        snd->update();
         slider->update();
     }
 };

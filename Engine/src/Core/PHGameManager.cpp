@@ -149,6 +149,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     try {
         sndDir = rsrcDir->directoryAtPath("snd");
         sndMan = new PHSoundManager(sndDir);
+        animPool->addAnimator(sndMan);
         sndDir->release();
         sndDir = NULL;
     } catch (...)
