@@ -20,9 +20,12 @@ protected:
     static void loadPlugins();
     
     set<PHSound*> allsounds;
+    set<PHSound*> deletelist;
+    set<PHSound*> insertlist;
+    bool inside;
     void addSound(PHSound * snd);
     void removeSound(PHSound * snd);
-    
+
     friend class PHSound;
 
 public:

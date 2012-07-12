@@ -24,6 +24,11 @@ protected:
     virtual void _loadData(uint8_t * data, size_t firstSample, size_t length) = 0;
     virtual void _releaseFileHandle() = 0;
 
+    PHThread * thread;
+    PHSemaphore * sem;
+
+    void threadFunc();
+
 public:
     void loadFromFile(PHFile * file);
 

@@ -14,22 +14,43 @@ bool PHSoundManager::plugLoaded = false;
 
 void PHSoundManager::addSound(PHSound * snd)
 {
-    allsounds.insert(snd);
+    if (!inside)
+        allsounds.insert(snd);
+    else
+    {
+        insertlist.insert(snd);
+        deletelist.erase(snd);
+    }
 }
 
 void PHSoundManager::removeSound(PHSound * snd)
 {
-    allsounds.erase(snd);
+    if (!inside)
+        allsounds.erase(snd);
+    else
+    {
+        deletelist.insert(snd);
+        insertlist.erase(snd);
+    }
 }
 
 void PHSoundManager::advanceAnimation(ph_float elapsed)
 {
-    set<PHSound*>::iterator i,n;
-    for (n = i = allsounds.begin(); i!= allsounds.end(); i=n)
+    inside = true;
+    set<PHSound*>::iterator i;
+    for (i = allsounds.begin(); i!= allsounds.end(); i++)
     {
-        n++;
-        (*i)->update();
+        PHSound * s = *i;
+        if (deletelist.count(s))
+            continue;
+        s->update();
     }
+    for (i = deletelist.begin(); i!= deletelist.end(); i++)
+        allsounds.erase(*i);
+    allsounds.insert(insertlist.begin(), insertlist.end());
+    deletelist.clear();
+    insertlist.clear();
+    inside = false;
 }
 
 void PHSoundManager::loadPlugins()
@@ -49,7 +70,7 @@ void PHSoundManager::registerPlugin(const string & ext, PHAllocator a)
     extensions->insert(make_pair<string, PHAllocator>(ext, a));
 }
 
-PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir)
+PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir), inside(false)
 {
     sndDir->retain();
 #ifdef PH_DEBUG

@@ -2,13 +2,25 @@
 
 #include <Porkholt/Sound/PHAsyncDecoder.h>
 #include <Porkholt/IO/PHFile.h>
+#include <Porkholt/Core/PHThread.h>
 
 void PHAsyncDecoder::loadFromFile(PHFile * f)
 {
     file = f;
     f->retain();
-    //start the thread
     _loadHeader();
+    running = true;
+    thread = new PHThread;
+    thread->setFunction(PHInv(this, PHAsyncDecoder::threadFunc, NULL));
+    thread->start();
+}
+
+void PHAsyncDecoder::threadFunc()
+{
+    do {
+        processQueue();
+        sem->wait();
+    } while (running);
 }
 
 void PHAsyncDecoder::releaseData(uint8_t * data)
@@ -29,8 +41,9 @@ void PHAsyncDecoder::releaseStorage()
     running = false;
     mutex->unlock();
 
+    sem->signal();
+    thread->join();
     _releaseFileHandle();
-    //Wait for thread here
     taskQueue.clear();
     for(map<pair<size_t,size_t>, uint8_t* >::iterator i = tasks.begin(); i != tasks.end(); i++)
     {
@@ -75,8 +88,7 @@ bool PHAsyncDecoder::prepareChunk(size_t firstSample, size_t length)
         taskQueue.push_back(p);
         tasks.insert(make_pair(p, (uint8_t*)NULL));
         mutex->unlock();
-        //do this on another thread
-        processQueue();
+        sem->signal();
         return false;
     }
     bool r = (i->second != NULL);
@@ -98,11 +110,12 @@ uint8_t * PHAsyncDecoder::dataForSampleRange(size_t firstSample, size_t length)
     return r;
 }
 
-PHAsyncDecoder::PHAsyncDecoder() : mutex(new PHMutex)
+PHAsyncDecoder::PHAsyncDecoder() : mutex(new PHMutex), sem(new PHSemaphore(0))
 {
 }
 
 PHAsyncDecoder::~PHAsyncDecoder()
 {
     releaseStorage();
+    sem->release();
 }
