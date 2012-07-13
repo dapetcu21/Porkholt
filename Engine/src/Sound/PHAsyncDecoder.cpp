@@ -31,7 +31,6 @@ void PHAsyncDecoder::releaseData(uint8_t * data)
     tasks.erase(make_pair(firstSample, length));
     mutex->unlock();
     delete[] (data - sizeof(size_t)*2);
-    PHLog("delete %d %d", int(firstSample), int(length));
 }
 
 void PHAsyncDecoder::releaseStorage()
@@ -50,7 +49,6 @@ void PHAsyncDecoder::releaseStorage()
         if (i->second)
         {
             delete[] (i->second - sizeof(size_t)*2);
-            PHLog("delete %d %d", int(i->first.first), int(i->first.second));
         }
     }
     tasks.clear();
@@ -67,7 +65,6 @@ void PHAsyncDecoder::processQueue()
         taskQueue.pop_front();
         mutex->unlock();
         uint8_t * data = new uint8_t[p.second * formatSampleLength() * channels() + 2*sizeof(size_t)];
-        PHLog("new %d %d", int(p.first), int(p.second));
         size_t * d = (size_t*)data;
         d[0] = p.first;
         d[1] = p.second;

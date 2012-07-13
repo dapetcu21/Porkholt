@@ -19,11 +19,9 @@ void * PHGameManager::glFunctionAddress(const char * s)
     {
         if ((h = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL)) == NULL)
             return NULL;
-        PHLog("%llx", (long long unsigned)(size_t)h);
         f = dlsym(h, "glXGetProcAddress");
         if (!f)
             f = dlsym(h, "glXGetProcAddressARB");
-        PHLog("%llx", (long long unsigned)(size_t)f);
     }
     if (f)
         return ((void*(*)(const GLubyte*))f)((const GLubyte*)s);
