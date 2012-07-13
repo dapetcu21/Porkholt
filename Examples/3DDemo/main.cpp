@@ -28,7 +28,7 @@ protected:
         PHMaterial * mat = new PHMaterial(PHWhiteColor, PHWhiteColor,10.0f);
         body->setMaterial(mat);
         mat->release();
-        PHNormalImage * img = (PHNormalImage*)gm->imageNamed("earth");
+        PHNormalImage * img = (PHNormalImage*)gm->imageNamed("earth", true);
         body->setImage(img);
         container->addChild(body);
 

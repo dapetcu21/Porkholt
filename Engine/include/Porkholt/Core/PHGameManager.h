@@ -67,7 +67,8 @@ enum PHGLStates
     PHGLZTesting = 1<<4,
     PHGLResetAllStates = 1<<5,
     PHGLNormalArray = 1<<6,
-    PHGLBlending = 1<<7
+    PHGLBlending = 1<<7,
+    PHGLBackFaceCulling = 1<<8
 };
 
 class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool

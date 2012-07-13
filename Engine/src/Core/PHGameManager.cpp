@@ -164,7 +164,6 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     glDepthFunc(GL_LEQUAL);
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     //glPolygonMode(GL_FRONT,GL_LINE); //wireframe
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -267,8 +266,12 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     lastElapsed = timeElapsed;
     setClearColor(PHBlackColor);
-    setDepthClearValue(1.0);
-    clearBuffers(PHGameManager::colorBuffers || PHGameManager::depthBuffer);
+    setDepthClearValue(1.0f);
+
+   // glClearDepth(1.0);
+   // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    clearBuffers(PHGameManager::colorBuffers | PHGameManager::depthBuffer);
 		
     setModelViewMatrix(PHIdentityMatrix);
     
@@ -425,6 +428,13 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
             glEnable(GL_DEPTH_TEST);
         else
             glDisable(GL_DEPTH_TEST);
+    }
+    if (xr & PHGLBackFaceCulling)
+    {
+        if (states & PHGLBackFaceCulling)
+            glEnable(GL_CULL_FACE);
+        else
+            glDisable(GL_CULL_FACE);
     }
     if (xr & PHGLBlending)
     {

@@ -100,7 +100,7 @@ void PHMeshBody::draw()
     bool hasDiff = !(!lvalid || mat->diffuse.isBlack() || l->diffuse.isBlack());
     bool isAmbient = !hasSpec && !hasDiff;
     PHGLShaderProgram * shader = frontShaderFor(gm, true, isAmbient? PHGLLight::ambientLight : l->type, tex!=NULL, nmap!=NULL, hasSpec);
-    gm->setGLStates(PHGLZTesting);
+    gm->setGLStates(PHGLBackFaceCulling | PHGLZTesting);
     modelViewMatrixU = gm->modelViewMatrix();
     projectionMatrixU = gm->projectionMatrix();
     if (lvalid)
