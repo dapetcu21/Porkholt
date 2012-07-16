@@ -4,7 +4,7 @@
 #include <Porkholt/Sound/PHAudioBuffer.h>
 #include <Porkholt/Sound/PHSoundManager.h>
 
-PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false)
+PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false), seekv(0), initial(true)
 {
     alGenSources(1, &id); 
     man->addSound(this);
@@ -33,6 +33,7 @@ PHSound::~PHSound()
 
 void PHSound::songEnded()
 {
+    PHLog("songEnded");
     inv.call(this);
 }
 
@@ -40,15 +41,45 @@ void PHSound::unqueue(size_t size)
 {
     if (!size) return;
     ALuint * v = new ALuint[size];
-    for (size_t i = 0; i<size; i++)
+    size_t * b = new size_t[size];
+    size_t n = buf->bufferCount();
+    for (size_t i = 0; i<size; i++, ( ((++stack_begin) == n)?(stack_begin=0):0 ))
     {
         v[i] = stack.front();
         stack.pop_front();
-        buf->releaseBuffer(stack_begin + i);
+        b[i] = stack_begin;
     }
-    stack_begin += size;
+
+    ALint processed;
+    alGetSourcei(id, AL_BUFFERS_PROCESSED, &processed);
+    if (processed != size)
+    {
+        PHLog("Something odd here. processed (%d) != size (%d)", int(processed), int(size));
+    }
+
+    ALenum err = alGetError();
     alSourceUnqueueBuffers(id, size, v);
+    if ((err = alGetError()) != AL_NO_ERROR)
+    {
+        PHLog("Could not unqueue buffers. Odd: %s", alGetString(err));
+    }
+    
+    for(size_t i = 0; i<size; i++)
+    {
+        buf->releaseBuffer(b[i]);
+        PHLog("release %d", b[i]);
+    }
+
     delete [] v;
+    delete [] b;
+}
+
+static inline bool _instack(size_t s, size_t n, size_t a, size_t b)
+{
+    if (b>n)
+        return (s>=a || s<b-n);
+    else
+        return (s>=a && s<b);
 }
 
 void PHSound::update()
@@ -77,46 +108,56 @@ void PHSound::update()
         }
     } else {
         size_t chunk = buf->bufferLength();
+        size_t n = buf->bufferCount();
+#define instack(x) _instack(x, n, stack_begin, stack_begin+stack.size())
         if (schseek)
         {
             size_t seekb = seekv / chunk;
-            if (seekb>=stack_begin && seekb<stack_begin+stack.size())
+
+            if (instack(seekb))
             {
-                alSourcef(id, AL_SAMPLE_OFFSET, seekv - stack_begin * chunk);
+                ssize_t s = ssize_t(seekv) - stack_begin * chunk;
+                if (s<0)
+                    s += buf->sampleCount();
+                alSourcef(id, AL_SAMPLE_OFFSET, s);
                 schseek = false;
             }
         }
-        ALint off;
-        if (schseek)
-            off = seekv;
-        else 
-        {
-            alGetSourcei(id, AL_SAMPLE_OFFSET, &off);
-            off += stack_begin * chunk;
-        }
+
+        size_t off = playPositionSample(); 
         size_t crrb = off / chunk;
-        if (crrb>=stack_begin && crrb<stack_begin+stack.size())
+
+        if (instack(crrb))
         {
-            unqueue(crrb-stack_begin);
-            if ((crrb != buf->bufferCount()-1) && (crrb == stack_begin+stack.size()-1))
+            ssize_t s = ssize_t(crrb) - stack_begin;
+            if (s<0)
+                s+=n;
+            unqueue(s);
+            if (( loop || (crrb != buf->n-1) ) && (crrb == stack_begin+stack.size()-1))
             {
-                if (buf->prepareBuffer(crrb+1))
+                size_t nb = crrb+1;
+                if (nb == n)
+                    nb = 0;
+                if (buf->prepareBuffer(nb) && !initial)
                 {
-                    ALuint b = buf->bufferForPart(crrb+1);
+                    ALuint b = buf->bufferForPart(nb);
                     alSourceQueueBuffers(id, 1, &b);
                     stack.push_back(b);
+                    PHLog("buffer %d (+1)", nb);
                 }
             }
         } else {
             alSourceStop(id);
-            schplaying = true;
+            if (!schplaying && (off != 0))
+                schplaying = true;
             unqueue(stack.size());
-            if (buf->prepareBuffer(crrb))
+            if (buf->prepareBuffer(crrb) && !initial)
             {
                 ALuint b = buf->bufferForPart(crrb);
                 alSourceQueueBuffers(id, 1, &b);
                 stack.push_back(b);
                 stack_begin = crrb;
+                PHLog("buffer %d", crrb);
 
                 if (schseek)
                 { 
@@ -192,6 +233,7 @@ void PHSound::play()
     if (isPlaying()) return;
     playing = true;
     schplaying = true;
+    initial = false;
     update();
 }
 
@@ -224,17 +266,43 @@ ph_float PHSound::duration()
     return buf->sampleCount()/ph_float(buf->frequency());
 }
 
+size_t PHSound::playPositionSample(ALenum state)
+{
+    if (schseek)
+        return seekv;
+    if (state == -1)
+        alGetSourcei(id, AL_SOURCE_STATE, &state);
+    if (state == AL_INITIAL)
+        return seekv;
+    if (state == AL_STOPPED)
+    {
+        if (playing)
+        {
+            if (schplaying)
+                return stack_begin * buf->bufferLength();
+            size_t n = buf->bufferCount();
+            size_t i = stack_begin + stack.size();
+            while(i >= n)
+                i-= n;
+            return i * buf->bufferLength();
+        } else 
+            return seekv;
+    }
+    if (schseek || (alGetSourcei(id, AL_SOURCE_STATE, &state), ((state == AL_INITIAL) || (state == AL_INITIAL))))
+        return seekv;
+    ALint v;
+    alGetSourcei(id, AL_SAMPLE_OFFSET, &v);
+    size_t chk = buf->bufferLength();
+    size_t off = v + stack_begin * chk;
+    size_t n = buf->sampleCount();
+    if (off >= n)
+        off -= n;
+    return off;
+}
+
 ph_float PHSound::playPosition()
 {
-    ALint state;
-    alGetSourcei(id, AL_SOURCE_STATE, &state);
-    if ((state == AL_STOPPED) || schseek)
-    {
-        return ph_float(seekv) / buf->frequency();
-    }
-    ALfloat v;
-    alGetSourcef(id, AL_SEC_OFFSET, &v);
-    return ph_float(v)+stack_begin*buf->bufferLength()/ph_float(buf->frequency());
+       return playPositionSample()/ph_float(buf->frequency());
 }
 
 void PHSound::seek(ph_float pos)
@@ -424,6 +492,8 @@ bool PHSound::looping()
 
 void PHSound::setLooping(bool l)
 {
+    if (st)
+        alSourcei(id, AL_LOOPING, l?AL_TRUE:AL_FALSE);
     loop = l;
 }
 

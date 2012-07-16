@@ -22,6 +22,8 @@ private:
     bool playing;
     bool loop;
     bool schplaying;
+    bool initial;
+
     void clearBuffer();
     void unqueue(size_t size);
     void songEnded();
@@ -44,6 +46,8 @@ public:
 
     ph_float duration();
     ph_float playPosition();
+    size_t playPositionSample(ALenum state);
+    size_t playPositionSample() { return playPositionSample(-1); }
     void seek(ph_float pos);
     
     bool looping();

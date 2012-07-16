@@ -70,7 +70,11 @@ void PHAsyncDecoder::processQueue()
         d[1] = p.second;
         _loadData(data + sizeof(size_t)*2, p.first, p.second);
         mutex->lock();
-        tasks[p] = data + sizeof(size_t)*2;
+        map<pair<size_t,size_t>, uint8_t* >::iterator i = tasks.find(p); 
+        if (i != tasks.end())
+            i->second = data + sizeof(size_t)*2;
+        else
+            delete[] data;
     }
     mutex->unlock();
 }
@@ -79,6 +83,18 @@ bool PHAsyncDecoder::prepareChunk(size_t firstSample, size_t length)
 {
     mutex->lock();
     pair<size_t,size_t> p = make_pair(firstSample, length);
+    if (last != p && (p.first!=size_t(-1)))
+    {
+        map<pair<size_t,size_t>, uint8_t* >::iterator i = tasks.find(last);
+        if (i!=tasks.end())
+        {
+            uint8_t * d = i->second;
+            if (d)
+                delete[] (d - sizeof(size_t)*2);
+            tasks.erase(i);
+        }
+        last = p;
+    }
     map<pair<size_t,size_t>, uint8_t* >::iterator i = tasks.find(p);
     if (i == tasks.end())
     {
@@ -107,7 +123,7 @@ uint8_t * PHAsyncDecoder::dataForSampleRange(size_t firstSample, size_t length)
     return r;
 }
 
-PHAsyncDecoder::PHAsyncDecoder() : mutex(new PHMutex), sem(new PHSemaphore(0))
+PHAsyncDecoder::PHAsyncDecoder() : mutex(new PHMutex(true)), sem(new PHSemaphore(0)), last(-1, -1)
 {
 }
 

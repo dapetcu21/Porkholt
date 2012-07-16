@@ -13,6 +13,8 @@ protected:
     size_t len;
     bool running;
 
+    pair<size_t,size_t> last;
+
     PHMutex * mutex;
     
     list<pair<size_t,size_t> > taskQueue;
