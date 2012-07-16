@@ -243,6 +243,7 @@ void PHSound::pause()
     schplaying = false;
     if (!isPlaying()) return;
     alSourcePause(id);
+    seekv = playPositionSample();
 }
 
 void PHSound::stop()
