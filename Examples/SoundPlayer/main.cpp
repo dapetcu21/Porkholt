@@ -222,6 +222,7 @@ class PHPlayerController : public PHViewController
 
         snd = gm->soundManager()->soundNamed("music");
         snd->retain();
+        pos = 0;
 
         PHRect pvfr = v->bounds();
         pvfr.x += playerborder;
@@ -236,9 +237,13 @@ class PHPlayerController : public PHViewController
         return v;
     }
 
+    ph_float pos;
+
     void updateScene(ph_float elapsed)
     {
         slider->update();
+        pos+=elapsed;
+        //snd->setPosition(PHVector3(sin(pos)*10, cos(pos)*10, 0));
     }
 };
 

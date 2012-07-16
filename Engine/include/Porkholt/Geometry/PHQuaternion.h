@@ -88,13 +88,13 @@ struct PHQuaternion
 		z=axis.z*s;
 	};
     PHQuaternion() {};
-	PHVector3 vector() { return PHVector3(x,y,z); }
-	PHVector3 rotationAxis() { ph_float scale = sqrt(x*x + y*y + z*z); return PHVector3(x/scale, y/scale, z/scale); }
-	ph_float length() { return sqrt(r*r + x*x + y*y + z*z); }
-	ph_float squaredLength() { return r*r + x*x + y*y + z*z; }
-	ph_float rotationAngle() { return 2 * acos(r / length()); }
+	PHVector3 vector() const { return PHVector3(x,y,z); }
+	PHVector3 rotationAxis() const { ph_float scale = sqrt(x*x + y*y + z*z); return PHVector3(x/scale, y/scale, z/scale); }
+	ph_float length() const { return sqrt(r*r + x*x + y*y + z*z); }
+	ph_float squaredLength() const { return r*r + x*x + y*y + z*z; }
+	ph_float rotationAngle() const { return 2 * acos(r / length()); }
 	void normalize() { (*this) /= length(); }
-	PHQuaternion normalized() { return (*this) / length(); }
+	PHQuaternion normalized() const { return (*this) / length(); }
     static PHQuaternion fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 	static PHQuaternion rotation(ph_float alpha, ph_float x, ph_float y, ph_float z)
@@ -102,7 +102,7 @@ struct PHQuaternion
 		ph_float s = sin(alpha/2);
 		return PHQuaternion(cos(alpha/2), x*s, y*s, z*s);
 	}
-	PHMatrix rotationMatrix();
+	PHMatrix rotationMatrix(); //use normalize() first
 } PH_PACKED_STRUCT;
 
 #ifdef PH_PACKED_STRUCT_PRAGMA

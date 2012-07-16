@@ -41,6 +41,36 @@ public:
     static void registerPlugin(const string & extension, PHAllocator a);
 
     void advanceAnimation(ph_float elapsed);
+
+    void setGain(ph_float gain);
+    ph_float gain();
+    void setPositiion(const PHVector3 & p);
+    PHVector3 position();
+    void setVelocity(const PHVector3 & p);
+    PHVector3 velocity();
+    void setOrientation(const PHQuaternion & p);
+    void setOrientation(const PHVector3 & at, const PHVector3 & up);
+    pair<PHVector3, PHVector3> orientation();
+
+    ph_float dopplerFactor();
+    void setDopplerFactor(ph_float v);
+    ph_float speedOfSound();
+    void setSpeedOfSound(ph_float v);
+
+    enum distModel
+    {
+        inverseDistance,
+        inverseDistanceClamped,
+        linearDistance,
+        linearDistanceClamped,
+        exponentDistance,
+        exponentDistanceClamped,
+        none,
+        NUMDISTMODELS
+    };
+
+    enum distModel distanceModel();
+    void setDistanceModel(enum distModel model);
 };
 
 #define PHSOUND_REGISTER_DECODER(extension, clss) PH_REGISTERCLASS(PHSoundManager::extensions, extension, clss)

@@ -150,3 +150,107 @@ PHSoundManager::~PHSoundManager()
     if (device)
         alcCloseDevice((ALCdevice*)device);
 }
+
+void PHSoundManager::setGain(ph_float gain)
+{
+    alListenerf(AL_GAIN, ALfloat(gain));  
+}
+
+ph_float PHSoundManager::gain()
+{
+    ALfloat v;
+    alGetListenerf(AL_GAIN, &v);
+    return ph_float(v);
+}
+
+void PHSoundManager::setPositiion(const PHVector3 & p)
+{
+    alListener3f(AL_POSITION, ALfloat(p.x), ALfloat(p.y), ALfloat(p.z));
+}
+
+PHVector3 PHSoundManager::position()
+{
+    ALfloat v[3];
+    alGetListenerfv(AL_POSITION, v);
+    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
+}
+
+void PHSoundManager::setVelocity(const PHVector3 & p)
+{
+    alListener3f(AL_VELOCITY, ALfloat(p.x), ALfloat(p.y), ALfloat(p.z));
+}
+
+PHVector3 PHSoundManager::velocity()
+{
+    ALfloat v[3];
+    alGetListenerfv(AL_VELOCITY, v);
+    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
+}
+
+void PHSoundManager::setOrientation(const PHQuaternion & p)
+{
+    PHMatrix m = p.normalized().rotationMatrix();
+    setOrientation(m.transformPoint(PH3DPoint(0,0,-1)),
+                   m.transformPoint(PH3DPoint(0,1,0))); 
+}
+
+void PHSoundManager::setOrientation(const PHVector3 & at, const PHVector3 & up)
+{
+    ALfloat v[6] = { at.x, at.y, at.z, up.x, up.y, up.z };
+    alListenerfv(AL_ORIENTATION, v);
+}
+
+pair<PHVector3, PHVector3> PHSoundManager::orientation()
+{
+    ALfloat v[6];
+    alGetListenerfv(AL_ORIENTATION, v);
+    return make_pair(PHVector3(v[0], v[1], v[2]), PHVector3(v[3], v[4], v[5]));
+}
+
+ph_float PHSoundManager::dopplerFactor()
+{
+    return alGetFloat(AL_DOPPLER_FACTOR);
+}
+
+void PHSoundManager::setDopplerFactor(ph_float v)
+{
+    alDopplerFactor(ALfloat(v));
+}
+
+ph_float PHSoundManager::speedOfSound()
+{
+    return alGetFloat(AL_SPEED_OF_SOUND);
+}
+
+void PHSoundManager::setSpeedOfSound(ph_float v)
+{
+    alSpeedOfSound(v);
+}
+
+enum PHSoundManager::distModel PHSoundManager::distanceModel()
+{
+    ALenum m = alGetInteger(AL_DISTANCE_MODEL);
+    switch (m)
+    {
+        case AL_INVERSE_DISTANCE:
+            return inverseDistance;
+        case AL_INVERSE_DISTANCE_CLAMPED:
+            return inverseDistanceClamped;
+        case AL_LINEAR_DISTANCE:
+            return linearDistance;
+        case AL_LINEAR_DISTANCE_CLAMPED:
+            return linearDistanceClamped;
+        case AL_EXPONENT_DISTANCE:
+            return exponentDistance;
+        case AL_EXPONENT_DISTANCE_CLAMPED:
+            return exponentDistanceClamped;
+        default:
+            return none;
+    }
+}
+void PHSoundManager::setDistanceModel(enum distModel model)
+{
+    static const ALenum v[] = {AL_INVERSE_DISTANCE, AL_INVERSE_DISTANCE_CLAMPED, AL_LINEAR_DISTANCE, AL_LINEAR_DISTANCE_CLAMPED, AL_EXPONENT_DISTANCE, AL_EXPONENT_DISTANCE_CLAMPED, AL_NONE};
+    alDistanceModel(v[int(model)]);
+}
+
