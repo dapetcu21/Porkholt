@@ -11,9 +11,9 @@ typedef void (PHObject::*PHCallback) (PHObject * sender, void * ud);
 
 #define PHInvN(target,callback) PHInvocation((PHObject*)(target),(PHCallback)&callback)
 
-#define PHInvBound(target,callback,userdata) PHInvocation((PHObject*)(target),(PHCallback)&callback,(void*)userdata, true)
+#define PHInvBind(target,callback,userdata) PHInvocation((PHObject*)(target),(PHCallback)&callback,(void*)userdata, true)
 
-#define PHInvBoundN(target,callback) PHInvocation((PHObject*)(target),(PHCallback)&callback, NULL, true)
+#define PHInvBindN(target,callback) PHInvocation((PHObject*)(target),(PHCallback)&callback, NULL, true)
 
 
 class PHInvocation {
