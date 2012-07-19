@@ -13,10 +13,13 @@
 
 #define DEBUG_ZOMBIES
 
+class PHInvocation;
+
 class PHObject
 {
 private:
     int _refcount;
+    void * inv;
 public:
 	PHObject(): _refcount(1) {};
 	PHOBJECT_PREFIX PHObject * retain() { _refcount++; return this;};
@@ -39,7 +42,12 @@ public:
         }
         return this; 
     };
-	virtual ~PHObject() {}
+
+    void clearInvocations();
+    void bindInvocation(PHInvocation * inv);
+    void unbindInvocation(PHInvocation * inv);
+
+	virtual ~PHObject() { if (inv) clearInvocations(); }
 	int referenceCount() { return _refcount; };
 };
 

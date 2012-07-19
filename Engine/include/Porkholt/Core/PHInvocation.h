@@ -3,7 +3,7 @@
 #ifndef PHINVOCATION_H
 #define PHINVOCATION_H
 
-class PHObject;
+#include <Porkholt/Core/PHObject.h>
 
 typedef void (PHObject::*PHCallback) (PHObject * sender, void * ud);
 
@@ -11,16 +11,37 @@ typedef void (PHObject::*PHCallback) (PHObject * sender, void * ud);
 
 #define PHInvN(target,callback) PHInvocation((PHObject*)(target),(PHCallback)&callback)
 
+#define PHInvBound(target,callback,userdata) PHInvocation((PHObject*)(target),(PHCallback)&callback,(void*)userdata, true)
+
+#define PHInvBoundN(target,callback) PHInvocation((PHObject*)(target),(PHCallback)&callback, NULL, true)
+
+
 class PHInvocation {
 public:
     PHObject * target;
     PHCallback callback;
     void * userdata;
+    bool bound;
     
-    PHInvocation(PHObject * _target, PHCallback _callback, void * _userdata) : target(_target), callback(_callback), userdata(_userdata) {}
-    PHInvocation(PHObject * _target, PHCallback _callback) : target(_target), callback(_callback), userdata(NULL) {}
-    PHInvocation() : target(NULL), callback(NULL), userdata(NULL) {}
-    PHInvocation(const PHInvocation & o) : target(o.target), callback(o.callback), userdata(o.userdata) {}
+    PHInvocation(PHObject * _target, PHCallback _callback, void * _userdata, bool _bound) : target(_target), callback(_callback), userdata(_userdata), bound(_bound) 
+    {
+        if (bound && target)
+            target->bindInvocation(this);
+    }
+    PHInvocation(PHObject * _target, PHCallback _callback, void * _userdata) : target(_target), callback(_callback), userdata(_userdata), bound(false) {}
+    PHInvocation(PHObject * _target, PHCallback _callback) : target(_target), callback(_callback), userdata(NULL), bound(false) {}
+    PHInvocation() : target(NULL), callback(NULL), userdata(NULL), bound(false) {}
+    PHInvocation(const PHInvocation & o) : target(o.target), callback(o.callback), userdata(o.userdata), bound(o.bound)
+    {
+        if (bound && target)
+            target->bindInvocation(this);
+    }
+
+    ~PHInvocation()
+    {
+        if (bound && target)
+            target->unbindInvocation(this);
+    }
     
     bool valid() const
     {

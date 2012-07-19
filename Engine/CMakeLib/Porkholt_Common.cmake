@@ -1,4 +1,5 @@
 set(PH_ENGINE_SRCS
+  ${PH_ENGINE_PATH}/src/Core/PHObject.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAccelInterface.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimatedImage.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimator.cpp
