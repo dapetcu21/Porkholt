@@ -7,6 +7,7 @@
 
 class PHAudioBuffer;
 class PHSoundManager;
+class PHSoundPool;
 
 class PHSound : public PHObject
 {
@@ -30,7 +31,12 @@ private:
 
     PHInvocation inv;
 
+    set<PHSoundPool*> soundPool;
+
 public:
+    void addSoundPool(PHSoundPool * sp);
+    void removeSoundPool(PHSoundPool * sp);
+    
     PHSound(PHSoundManager * man);
     ~PHSound();
 

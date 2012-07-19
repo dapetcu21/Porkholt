@@ -3,6 +3,7 @@
 #include <Porkholt/Sound/PHSound.h>
 #include <Porkholt/Sound/PHAudioBuffer.h>
 #include <Porkholt/Sound/PHSoundManager.h>
+#include <Porkholt/Sound/PHSoundPool.h>
 
 PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false), seekv(0), initial(true)
 {
@@ -29,12 +30,25 @@ PHSound::~PHSound()
         buf->release();
     alDeleteSources(1, &id);
     man->removeSound(this);
+    set<PHSoundPool*> sp = soundPool;
+    for (set<PHSoundPool*>::iterator i = sp.begin(); i != sp.end(); i++)
+        (*i)->removeSound(this);
 }
 
 void PHSound::songEnded()
 {
     PHLog("songEnded");
     inv.call(this);
+}
+
+void PHSound::addSoundPool(PHSoundPool * sp)
+{
+    soundPool.insert(sp);
+}
+
+void PHSound::removeSoundPool(PHSoundPool * sp)
+{
+    soundPool.erase(sp);
 }
 
 void PHSound::unqueue(size_t size)

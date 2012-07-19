@@ -80,6 +80,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Sound/PHRawDecoder.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHSound.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHSoundManager.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHSoundPool.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHAsyncDecoder.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHWAVDecoder.cpp
   ${PH_EXTERNALS}/uremote/src/URClient.cpp
@@ -177,6 +178,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHRawDecoder.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHDecoder.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSound.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundPool.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundManager.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHOpenAL.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHAsyncDecoder.h
