@@ -5,7 +5,7 @@
 #include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Sound/PHSoundPool.h>
 
-PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false), seekv(0), initial(true)
+PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false), seekv(0), initial(true), _tag(0)
 {
     alGenSources(1, &id); 
     man->addSound(this);

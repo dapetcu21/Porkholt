@@ -29,11 +29,16 @@ private:
     void unqueue(size_t size);
     void songEnded();
 
+    size_t _tag;
+
     PHInvocation inv;
 
     set<PHSoundPool*> soundPool;
 
 public:
+    size_t tag() { return _tag; }
+    void setTag(size_t t) { _tag = t; }
+
     void addSoundPool(PHSoundPool * sp);
     void removeSoundPool(PHSoundPool * sp);
     
