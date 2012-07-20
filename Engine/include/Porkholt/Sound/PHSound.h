@@ -50,6 +50,9 @@ public:
     void stop();
     bool isPlaying();
 
+    void playFading();
+    void pauseFading();
+
     ph_float duration();
     ph_float playPosition();
     size_t playPositionSample(ALenum state);
@@ -62,14 +65,20 @@ public:
     void setCallback(const PHInvocation & invo);
 
     PHSound * copy();
+    
+    void playAndRelease()
+    {
+        setCallback(PHInv(this, PHSound::release, NULL));
+        play();
+    }
+
     PHSound * detachAndPlay()
     {
         PHSound * snd = copy();
-        snd->setCallback(PHInv(snd, PHSound::release, NULL));
-        snd->play();
+        snd->playAndRelease();
         return snd;
     }
-
+    
     ph_float pitch();
     ph_float gain();
     ph_float minGain();

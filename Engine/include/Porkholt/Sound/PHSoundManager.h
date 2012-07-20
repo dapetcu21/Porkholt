@@ -26,6 +26,8 @@ protected:
     void addSound(PHSound * snd);
     void removeSound(PHSound * snd);
 
+    PHSound * music;
+
     friend class PHSound;
 
 public:
@@ -41,6 +43,9 @@ public:
     static void registerPlugin(const string & extension, PHAllocator a);
 
     void advanceAnimation(ph_float elapsed);
+
+    PHSound * backgroundMusic() { return music; }
+    void setBackgroundMusic(PHSound * music);
 
     void setGain(ph_float gain);
     ph_float gain();

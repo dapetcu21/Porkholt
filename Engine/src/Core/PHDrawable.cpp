@@ -99,7 +99,7 @@ void PHDrawable::sendToBack()
 	release();
 }
 
-PHDrawable * PHDrawable::childWithTag(int tag)
+PHDrawable * PHDrawable::childWithTag(size_t tag)
 {
     for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
         if ((*i)->tag() == tag)
@@ -107,7 +107,7 @@ PHDrawable * PHDrawable::childWithTag(int tag)
     return NULL;
 }
 
-PHDrawable * PHDrawable::childWithTagAfter(int tag, PHDrawable * v)
+PHDrawable * PHDrawable::childWithTagAfter(size_t tag, PHDrawable * v)
 {
     if (v && (v->_parent != this)) v = NULL;
     list<PHDrawable*>::iterator i = v?(v->currPos):_children.begin();
@@ -118,7 +118,7 @@ PHDrawable * PHDrawable::childWithTagAfter(int tag, PHDrawable * v)
     return NULL;
 }
 
-list<PHDrawable*> * PHDrawable::childrenWithTag(int tag)
+list<PHDrawable*> * PHDrawable::childrenWithTag(size_t tag)
 {
     list<PHDrawable*> * l = new list<PHDrawable*>;
     for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)

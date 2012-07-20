@@ -18,7 +18,7 @@ protected:
     PHGameManager * gm;
     
 	PHDrawable * _parent;
-    int _tag;
+    size_t _tag;
     PHMutex * mtx;
     
 	virtual void draw() {}
@@ -38,12 +38,12 @@ public:
 	void bringToFront();
     void sendToBack();
     
-    void setTag(int tag) { _tag = tag; };
-    int tag() { return _tag; }
+    void setTag(size_t tag) { _tag = tag; };
+    size_t tag() { return _tag; }
 
-    PHDrawable * childWithTag(int tag);
-    PHDrawable * childWithTagAfter(int tag, PHDrawable * after);
-    list<PHDrawable*> * childrenWithTag(int tag); //this returns a new-allocated list
+    PHDrawable * childWithTag(size_t tag);
+    PHDrawable * childWithTagAfter(size_t tag, PHDrawable * after);
+    list<PHDrawable*> * childrenWithTag(size_t tag); //this returns a new-allocated list
 	
     PHDrawable();
 	virtual ~PHDrawable();

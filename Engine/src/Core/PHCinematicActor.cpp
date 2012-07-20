@@ -38,7 +38,7 @@ void PHCinematicActor::removeAllCinematicAnimations()
     _cinematicMutex->unlock();
 }
 
-void PHCinematicActor::removeCinematicAnimationsWithTag(int tag)
+void PHCinematicActor::removeCinematicAnimationsWithTag(size_t tag)
 {
     list<PHGenericCinematicAnimator*> delList;
     _cinematicMutex->lock();
@@ -152,7 +152,7 @@ void PHCinematicActor::animationCallback(const PHInvocation & inv)
     _cinematicAnimator->setCallback(inv);
 }
 
-void PHCinematicActor::animationTag(int tag)
+void PHCinematicActor::animationTag(size_t tag)
 {
     _cinematicAnimator->setTag(tag);
 }

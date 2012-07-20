@@ -38,7 +38,7 @@ public:
     void addCinematicAnimation(PHGenericCinematicAnimator * anim);
     void removeCinematicAnimation(PHGenericCinematicAnimator * anim);
     void removeAllCinematicAnimations();
-    void removeCinematicAnimationsWithTag(int tag);
+    void removeCinematicAnimationsWithTag(size_t tag);
     
     PHCinematicAnimator * cinematicAnimator() { return _cinematicAnimator; }
     void beginCinematicAnimation(ph_float duration);
@@ -56,7 +56,7 @@ public:
     void animateCustomValue(ph_float val);
     void animationCallback(const PHInvocation & inv);
     void animationSkipFirstFrame();
-    void animationTag(int tag);
+    void animationTag(size_t tag);
     
    
     PHCinematicActor();

@@ -11,7 +11,7 @@ class PHLuaCallback;
 class PHKeyframeAnimatorGroup : public PHObject, public PHLuaObject
 {
 private:
-    int filter;
+    size_t filter;
     bool filterEnabled;
     
     set<PHKeyframeAnimator*> keyframeAnimators;
@@ -38,7 +38,7 @@ public:
     void pause();
     void resume();
     
-    void setFilterTag(int tag) { filter = tag; filterEnabled = true; }
+    void setFilterTag(size_t tag) { filter = tag; filterEnabled = true; }
     void clearFilterTag() { filterEnabled = false; }
     
 private:

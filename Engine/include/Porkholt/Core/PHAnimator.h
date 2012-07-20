@@ -10,7 +10,7 @@ class PHAnimator : public PHObject {
 protected:
     bool advanceManually, retained;
     PHAnimatorPool * pool;
-    int _tag;
+    size_t _tag;
     
     friend class PHAnimatorPool;
     
@@ -32,8 +32,8 @@ public:
     bool retainedInThePool() { return retained; }
     void setRetainedInThePool(bool r);
     
-    void setTag(int tg) { _tag = tg; }
-    int tag() { return _tag; }
+    void setTag(size_t tg) { _tag = tg; }
+    size_t tag() { return _tag; }
 };
 
 #endif

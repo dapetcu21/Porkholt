@@ -12,6 +12,23 @@
 map<string, PHAllocator> * PHSoundManager::extensions = NULL;
 bool PHSoundManager::plugLoaded = false;
 
+void PHSoundManager::setBackgroundMusic(PHSound * m)
+{
+    if (m == music) return;
+    if (music)
+    {
+        music->pauseFading();
+        music->release();
+    }
+    music = m;
+    if (music)
+    {
+        music->retain();
+        music->stop();
+        music->playFading();
+    }
+}
+
 void PHSoundManager::addSound(PHSound * snd)
 {
     if (!inside)
