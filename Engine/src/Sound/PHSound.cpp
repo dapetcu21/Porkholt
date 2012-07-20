@@ -16,6 +16,17 @@ void PHSound::setCallback(const PHInvocation & invo)
     inv = invo;
 }
 
+void PHSound::playFading()
+{
+    play();
+}
+
+void PHSound::pauseFading()
+{
+    //this retains
+    pause();
+}
+
 PHSound * PHSound::copy()
 {
     PHSound * snd = new PHSound(man);
