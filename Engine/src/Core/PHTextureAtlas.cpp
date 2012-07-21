@@ -12,7 +12,7 @@
 lua_State * PHTextureAtlas::staticL = NULL;
 PHMutex * PHTextureAtlas::luaMutex = new PHMutex;
 
-#define INIT gm(gameManager), loaded(false), ploaded(false), _textures(NULL), _texCoords(NULL)
+#define INIT gm(gameManager), loaded(false), ploaded(false), _textures(NULL), _texCoords(NULL), mutex(new PHMutex)
 
 PHTextureAtlas::PHTextureAtlas(PHGameManager * gameManager, PHDirectory * dir) : INIT
 {
@@ -98,6 +98,7 @@ struct PHTextureAtlas::loadStruct
 void PHTextureAtlas::loadFromDir(PHDirectory * dir, lua_State * L)
 {
     lua_getglobal(L, "textureMaps");
+    ls = NULL;
     if (lua_istable(L, -1))
     {
         ls = new PHTextureAtlas::loadStruct;
@@ -120,6 +121,9 @@ void PHTextureAtlas::loadFromDir(PHDirectory * dir, lua_State * L)
             lua_pop(L, 1);
         }
     }
+
+    if (!ls)
+        throw string("Nothing. There's nothing in this atlas. No texture. Nothing");
 
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
     PHThread::detachThread(PHInv(this, PHTextureAtlas::asyncLoad, NULL));
@@ -184,4 +188,5 @@ PHTextureAtlas::~PHTextureAtlas()
         delete [] _texCoords;
     if (ls)
         delete ls;
+    mutex->release();
 }

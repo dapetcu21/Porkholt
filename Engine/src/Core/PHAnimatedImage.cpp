@@ -87,6 +87,7 @@ PHAnimatedImage::PHAnimatedImage(PHGameManager * gameManager, PHDirectory * dir)
         atl = new PHTextureAtlas(gameManager, dir, L);
     } catch (string ex)
     {
+        PHLog("meow");
         cleanupLua();
         luaMutex->unlock();
         throw ex;
