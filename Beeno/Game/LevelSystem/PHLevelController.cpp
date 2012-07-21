@@ -460,8 +460,6 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
     PHSound * snd = gm->soundManager()->soundNamed("backtrack", directory);
     gm->soundManager()->setBackgroundMusic(snd);
-    if (snd)
-        snd->release();
     
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);

@@ -51,9 +51,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
 void PHMenuController::viewWillAppear()
 {
     resetClouds(getView());
-    PHSound * snd = gm->soundManager()->soundNamed("title");
-    gm->soundManager()->setBackgroundMusic(snd);
-    snd->release();
+    gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("title"));
 }
 
 void PHMenuController::resetClouds(PHView * v)

@@ -6,27 +6,27 @@ local width = 6
 local rep = 10
 local posy = 0.8
 local swatch_height = 10
-layerAddImage(lyr,"/hills_back.png",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
-layerAddImage(lyr,"/hills_back_swatch.png",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_back",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_back_swatch",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
 ar = 1600.0/256.0
 addLayer(lyr);
 lyr = { scale = 0.4 }
 posy = 0.75
-layerAddImage(lyr,"/hills_middle.png",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
-layerAddImage(lyr,"/hills_middle_swatch.png",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_middle",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_middle_swatch",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
 addLayer(lyr);
 ar = 1600.0/203.0
 lyr = { scale = 0.8 }
 posy = 0.6
-layerAddImage(lyr,"/hills_front.png",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
-layerAddImage(lyr,"/hills_front_swatch.png",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_front",-width*3/lyr.scale,posy/lyr.scale,width*rep/lyr.scale,width/ar/lyr.scale, { repeatX = rep });
+layerAddImage(lyr,"/hills_front_swatch",-width*3/lyr.scale,(posy-swatch_height)/lyr.scale,width*rep/lyr.scale,swatch_height/lyr.scale, { repeatX = rep });
 addLayer(lyr);
 
 lyr = { scale = 0.2; }
 scl = 1/lyr.scale;
 for i=-2,3 do
 	ci = math.random(5);
-	layerAddImage(lyr,"/cloud"..ci..".png",i*5*scl+(math.random()%2-1)*scl,3*scl+(math.random()%2-1)*scl,362/480*3*scl,156/480*3*scl);
+	layerAddImage(lyr,"/cloud"..ci.."",i*5*scl+(math.random()%2-1)*scl,3*scl+(math.random()%2-1)*scl,362/480*3*scl,156/480*3*scl);
 end
 addLayer(lyr);
 
@@ -36,7 +36,7 @@ function ()
 	local obj = objectWithClass("PHLObject");
 	obj.physics.dynamic = true;
 	objectAddCircle(obj,0.15,{ friction = 0.3; density = 1 });
-	objectAddImage(obj,"/wood_log.png",-0.15,-0.15,0.3,0.3);
+	objectAddImage(obj,"/wood_log",-0.15,-0.15,0.3,0.3);
 	return addObject(obj);
 end
 );
@@ -93,7 +93,7 @@ obj.keyframeAnimations = {
 }
 
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
-objectAddImage(obj,"/platform.png",-1,-0.15,2,0.3,{
+objectAddImage(obj,"/platform",-1,-0.15,2,0.3,{
 })
 platforma0=addObject(obj);
 
@@ -110,7 +110,7 @@ addJoint(joint);
 obj = objectWithClass("PHLPlatform");
 obj.pos = point(11,2.5);
 objectAddBox(obj,posBox,-0.15,boxW,0.3)
-objectAddImage(obj,"/platform.png",-1,-0.15,2,0.3)
+objectAddImage(obj,"/platform",-1,-0.15,2,0.3)
 platforma1 = addObject(obj);
 
 --platforma1->pod
@@ -125,8 +125,8 @@ addJoint(joint);
 --fireworks
 obj = objectWithClass("PHLObject")
 obj.pos = point(4,0.4716)
-objectAddImage(obj,[[tree.png]],-2.062651,-0.102099,4.529824,3.595760)
-objectAddImage(obj,"leaf.png",0,0,1,1,{ class = "PHParticleView", particleAnimator = { 
+objectAddImage(obj,[[tree]],-2.062651,-0.102099,4.529824,3.595760)
+objectAddImage(obj,"leaf",0,0,1,1,{ class = "PHParticleView", particleAnimator = { 
 	particlesPerSecond = 10,
 	generationArea = rect(-0.842723,1.011111,2.272513,1.5),
 	velocity = vector(0.3,-0.6),
