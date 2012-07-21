@@ -8,7 +8,7 @@
 #include "PHLPlayer.h"
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHImageAnimator.h>
-#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 PHL_REGISTEROBJECT(PHLBull)
 
@@ -19,7 +19,6 @@ PHLBull::PHLBull() : PHLMob(), attackRange(3.5f), attackVelocity(5.0f), attackDu
 
 PHLBull::~PHLBull()
 {
-    getWorld()->modelEventQueue()->invalidateTimersWithUserdata(this);
     PHImageAnimator * animator;
     PHImageView * iv;
     if (faceView && ((iv=(PHImageView*)faceView->childWithTag(21))) && ((animator=iv->animator())))
@@ -45,7 +44,7 @@ void PHLBull::reallyAttack(PHObject * sender, void * ud)
     PHPoint v = PHPoint(attackVelocity*(isFlipped()?-1:1), 0);
     
     setBraked(false);
-    
+
     PHLAnimation * anim = new PHLAnimation;
     anim->setVelocity(v,mass()*20);
     anim->setTime(attackDuration);
@@ -54,17 +53,9 @@ void PHLBull::reallyAttack(PHObject * sender, void * ud)
     addAnimation(anim);
     anim->release();
     
-    PHTimer * timer = new PHTimer;
-    timer->setTimeInterval(attackDuration+cooldownDuration);
-    timer->setCallback(PHInv(this, PHLBull::cooldownEnded, NULL));
-    getWorld()->modelEventQueue()->scheduleTimer(timer, this);
-    timer->release();
-    
-    timer = new PHTimer;
-    timer->setTimeInterval(unrageTime);
-    timer->setCallback(PHInv(this, PHLBull::attacked, NULL));
-    getWorld()->modelEventQueue()->scheduleTimer(timer, this);
-    timer->release();
+    getWorld()->modelEventQueue()->scheduleAction(PHInvBind(this, PHLBull::cooldownEnded, NULL), attackDuration+cooldownDuration);
+
+    getWorld()->modelEventQueue()->scheduleAction(PHInvBind(this, PHLBull::attacked, NULL), unrageTime);
 }
 
 void PHLBull::attack()

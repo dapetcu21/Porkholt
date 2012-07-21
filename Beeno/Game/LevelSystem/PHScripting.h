@@ -12,6 +12,7 @@ class PHLuaConsole;
 
 class PHWorld;
 struct lua_State;
+class PHDirectory;
 
 class PHScripting : public PHObject
 {
@@ -19,7 +20,7 @@ private:
     PHWorld * world;
     lua_State * L;
 public:
-    PHScripting(PHWorld * world,string level_dir);
+    PHScripting(PHWorld * world, PHDirectory * level_dir);
     virtual ~PHScripting();
     void scriptingStep(ph_float timeElapsed);
     void loadWorld();

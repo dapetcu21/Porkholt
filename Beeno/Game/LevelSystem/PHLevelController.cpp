@@ -17,13 +17,14 @@
 #include "PHPoofView.h"
 #include "PHShieldView.h"
 #include <Porkholt/Core/PHAnimatorPool.h>
-#include <Porkholt/Core/PHEventQueue.h>
 #include <Porkholt/UI/PHButtonView.h>
 #include <Porkholt/Core/PHMessage.h>
 #include <Porkholt/Sound/PHSoundPool.h>
-#include <Porkholt/Sound/PHMusicManager.h>
+#include <Porkholt/Sound/PHSoundManager.h>
+#include <Porkholt/Sound/PHSound.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHFile.h>
 
-#include <fstream>
 #include <sstream>
 
 void PHLevelController::appSuspended()
@@ -201,7 +202,10 @@ void PHLevelController::pause()
 	if (paused) return;
 	paused = true;
     world->soundPool()->pause();
-    PHMusicManager::singleton()->pauseRecursive();
+    PHSoundManager * sm = gm->soundManager();
+    PHSound * snd = sm->backgroundMusic();
+    if (snd && (snd->tag() == size_t(this)))
+        snd->pause();
 }
 
 void PHLevelController::resume()
@@ -211,7 +215,10 @@ void PHLevelController::resume()
     if (!ready1 || !ready2) return;
 	paused = false;
     world->soundPool()->resume();
-    PHMusicManager::singleton()->playRecursive();
+    PHSoundManager * sm = gm->soundManager();
+    PHSound * snd = sm->backgroundMusic();
+    if (snd && (snd->tag() == size_t(this)))
+        snd->playFading();
     dismissMenu();
 }
 
@@ -229,7 +236,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	paused = true;
 	world = new PHWorld(gm,PHRect(0, 0, 1000, 1000),this);
 	backgroundView = new PHImageView(frame);
-	backgroundView->setImage(gm->imageFromPath(directory+"/bg.png"));
+	backgroundView->setImage(gm->imageNamed("bg", directory));
 	view->addChild(backgroundView);
 	view->addChild(world->getView());
     animPool = new PHAnimatorPool;
@@ -240,8 +247,9 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(string path) : PHViewController(), world(NULL), scripingEngine(NULL), menuView(NULL), directory(path), ready1(false), ready2(false), _outcome(LevelRunning)
+PHLevelController::PHLevelController(PHDirectory * dir) : PHViewController(), world(NULL), scripingEngine(NULL), menuView(NULL), directory(dir), ready1(false), ready2(false), _outcome(LevelRunning)
 {
+    dir->retain();
 }
 
 void PHLevelController::viewWillAppear()
@@ -264,13 +272,7 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
     vector<string> * v = NULL;
     if (_outcome == LevelWon)
     {
-        ifstream file((directory+"/outro.txt").c_str());
-        v = new vector<string>;
-        while (file.good())
-        {
-            v->push_back(string());
-            getline(file,v->back(),'|');
-        };
+        v = parseFile("outro.txt");
         if (v->empty())
         {
             delete v;
@@ -306,7 +308,7 @@ void PHLevelController::endLevelWithOutcome(int outcome){
     if (_outcome != LevelRunning) return;
     PHLog("endLevel");
     _outcome = outcome;
-    world->viewEventQueue()->schedule(PHInv(this, PHLevelController::_endLevelWithOutcome, NULL), false);
+    world->viewEventQueue()->scheduleAction(PHInvBind(this, PHLevelController::_endLevelWithOutcome, NULL));
 }
 
 class curtainData : public PHLObject
@@ -375,18 +377,33 @@ void PHLevelController::curtainText(const string & s, lua_State * L)
     curtainData * cd = new curtainData;
     cd->v = v;
     cd->setLuaCallback(L);
-    world->viewEventQueue()->schedule(PHInv(this,  PHLevelController::_curtainText, cd), false);
+    world->viewEventQueue()->scheduleAction(PHInvBind(this,  PHLevelController::_curtainText, cd));
+}
+
+vector<string> * PHLevelController::parseFile(const string & name)
+{
+    try {
+        PHFile * file = directory->fileAtPath(name);
+        vector<string> * v = new vector<string>;
+        char * b = (char*)file->loadToBuffer();
+        file->release();
+        char * s = b, * str;
+        while (str = strtok(s, "|"))
+        {
+            s = NULL;
+            v->push_back(string(str));
+        }
+        delete[] b;
+        return v;
+    } catch (string ex)
+    {
+        return NULL;
+    }
 }
 
 PHViewController * PHLevelController::mainViewController()
 {
-    ifstream file((directory+"/intro.txt").c_str());
-    vector<string> * v = new vector<string>;
-    while (file.good())
-    {
-        v->push_back(string());
-        getline(file,v->back(),'|');
-    };
+    vector<string> * v = parseFile("intro.txt"); 
     if (v->empty())
     {
         delete v;
@@ -430,6 +447,7 @@ PHLevelController::~PHLevelController()
     animPool->release();
 	PHMessage::messageWithName("appSuspended")->removeListener(this);
 	PHMessage::messageWithName("appResumed")->removeListener(this);
+    directory->release();
 }
 
 void PHLevelController::auxThread(PHThread * sender, void * ud)
@@ -438,18 +456,20 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	b2World * fWorld = world->physicsWorld;
 	mutex->unlock();
 	
-    animPool->push();
+    gm->pushAnimatorPool(animPool);
     
-    PHMusicManager::singleton()->setBackgroundMusic(directory+"/backtrack.mp3");
+    PHSound * snd = gm->soundManager()->soundNamed("backtrack", directory);
+    gm->soundManager()->setBackgroundMusic(snd);
+    if (snd)
+        snd->release();
     
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
-	string resourcePath = gm->resourcePath();
-    
-	PHLuaSetIncludePath(L, directory+"/?.lua;"+resourcePath+"/scripts/?.lua");
+    //TO DO: Get rid of paths. Paths are evil
+	PHLuaSetIncludePath(L, directory->path()+"/?.lua;"+gm->resourceDirectory()->path()+"/scripts/?.lua");
 	
-    PHLuaLoadFile(L,directory+"/init.lua");
+    PHLuaLoadFile(L, directory, "init.lua");
 	
 	lua_getglobal(L,"layers");
 	
@@ -554,7 +574,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     PHMessage::messageWithName("luaDestroy")->broadcast(this, L);
 	lua_close(L);
     
-    scripingEngine = new PHScripting(world,directory);
+    scripingEngine = new PHScripting(world, directory);
 	
 	mutex->lock();
     
@@ -562,8 +582,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     
 	list<PHPoint> * q = &world->eventQueue;
     world->player->setMutex(((PHCaptureView*)world->view)->getMutex());
-    gm->eventQueue()->schedule(PHInvN(dynamic_cast<PHImageInitPool*>(gm), PHGameManager::collectGarbageImages), false);
-    gm->eventQueue()->schedule(PHInvN(dynamic_cast<PHFontInitPool*>(gm), PHGameManager::collectGarbageFonts), false);
+    gm->mainAnimatorPool()->scheduleAction(PHInvN(dynamic_cast<PHImageInitPool*>(gm), PHGameManager::collectGarbageImages));
+    gm->mainAnimatorPool()->scheduleAction(PHInvN(dynamic_cast<PHFontInitPool*>(gm), PHGameManager::collectGarbageFonts));
     ready1 = true;
     resume();
 	mutex->unlock();
@@ -604,19 +624,19 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 #endif
         
         ph_float interpolate = (time + frameInterval - nextFrame);
-        world->realTimeEventQueue()->updateTimers();
+        world->realTimeEventQueue()->advanceAnimation(time - lastTime);
         pSem2->wait();
         mutex->lock();
         if(!p)
         {
-            animPool->pop();
+            gm->popAnimatorPool();
             animPool->advanceAnimation(time-lastTime);
             world->updateScene(time-lastTime, interpolate);
-            animPool->push();
+            gm->pushAnimatorPool(animPool);
         }
         mutex->unlock();
         pSem1->signal();
 	}
     
-    animPool->pop();
+    gm->popAnimatorPool();
 }

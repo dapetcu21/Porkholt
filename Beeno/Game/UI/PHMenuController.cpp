@@ -5,7 +5,8 @@
 #include <Porkholt/Core/PHNavigationController.h>
 #include "PHTitleScreen.h"
 #include <Porkholt/Core/PHImageView.h>
-#include <Porkholt/Sound/PHMusicManager.h>
+#include <Porkholt/Sound/PHSoundManager.h>
+#include <Porkholt/Sound/PHSound.h>
 
 static const ph_float cloudX[] = {0.0f,1.0f,0.3f};
 static const ph_float cloudY[] = {0.5f,0.7f,0.12f};
@@ -50,7 +51,9 @@ PHView * PHMenuController::loadView(const PHRect & frame)
 void PHMenuController::viewWillAppear()
 {
     resetClouds(getView());
-    PHMusicManager::singleton()->setBackgroundMusic(gm->musicNamed("title"));
+    PHSound * snd = gm->soundManager()->soundNamed("title");
+    gm->soundManager()->setBackgroundMusic(snd);
+    snd->release();
 }
 
 void PHMenuController::resetClouds(PHView * v)

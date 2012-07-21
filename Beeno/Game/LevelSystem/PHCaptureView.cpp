@@ -2,6 +2,7 @@
 
 #include "PHCaptureView.h"
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 void PHCaptureView::touchEvent(PHEvent * event)
 {
@@ -44,7 +45,8 @@ void PHCaptureView::render()
 	
 	if (mutex)
 		mutex->lock();
-    PHThread::mainThread()->processQueue();
+    gm->animatorPool()->advanceAnimation(0);
+    //PHThread::mainThread()->processQueue();
 	PHView::render();
 	if (mutex)
 		mutex->unlock();

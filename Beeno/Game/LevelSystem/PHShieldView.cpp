@@ -6,7 +6,7 @@
 
 void PHShieldView::attachedToGameManager()
 {
-    PHImageView::attachedToGameManager();
+    PHView::attachedToGameManager();
     if (!imv->image())
         imv->setImage(shieldImage(gm));
 }

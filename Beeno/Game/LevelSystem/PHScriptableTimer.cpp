@@ -3,7 +3,7 @@
 #include "PHScriptableTimer.h"
 #include <Porkholt/Core/PHLua.h>
 #include "PHWorld.h"
-#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 PHScriptableTimer::PHScriptableTimer()
 {
@@ -46,7 +46,7 @@ static int PHTimer_schedule(lua_State *L)
     
     lua_getfield(L, 1, "time");
     if (lua_isnumber(L,-1))
-        timer->setTimeInterval(lua_tonumber(L,-1));
+        timer->setDuration(lua_tonumber(L,-1));
     lua_pop(L,1);
 
     lua_getfield(L, 1, "willrepeat");
@@ -63,7 +63,7 @@ static int PHTimer_schedule(lua_State *L)
     lua_getglobal(L, "PHWorld");
     lua_pushstring(L, "ud");
     lua_gettable(L,-2);
-    ((PHWorld*)lua_touserdata(L, -1))->modelEventQueue()->scheduleTimer(timer);
+    ((PHWorld*)lua_touserdata(L, -1))->modelEventQueue()->addAnimator(timer);
     lua_pop(L, 2);
     
     timer->release();

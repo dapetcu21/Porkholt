@@ -23,23 +23,25 @@
 #include <Porkholt/Core/PHParticleAnimator.h>
 #include <Porkholt/Core/PHParticleView.h>
 #include <Porkholt/Core/PHKeyframeAnimatorGroup.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHFile.h>
 
 #ifdef PH_SCRIPTING_CONSOLE
 #include <Porkholt/Network/PHLuaConsole.h>
 #endif
 
-PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
+PHScripting::PHScripting(PHWorld * _world, PHDirectory * level_dir) : world(_world)
 {
     L = lua_open();
 	luaL_openlibs(L);
     
-	string resourcePath = _world->gameManager()->resourcePath();
-	
     world->setScripting(this);
     
-	PHLuaSetIncludePath(L, level_dir+"/?.lua;"+resourcePath+"/scripts/?.lua");
+    PHDirectory * resDir = _world->gameManager()->resourceDirectory();
+
+	PHLuaSetIncludePath(L, level_dir->path()+"/?.lua;"+resDir->path()+"/scripts/?.lua");
     
-    if (PHLuaLoadFile(L, resourcePath+"/scripts/scripting_common.lua"))
+    if (PHLuaLoadFile(L, resDir, "scripts/scripting_common.lua"))
     {
         loadWorld();
         for (vector<PHLObject*>::iterator i = world->objects.begin(); i!=world->objects.end(); i++)
@@ -47,9 +49,8 @@ PHScripting::PHScripting(PHWorld * _world,string level_dir) : world(_world)
             PHLObject * obj = *i;
             obj->scriptingInit(L);
         }
-        string path = level_dir+"/scripting.lua";
-        if (PHFileManager::fileExists(path))
-            PHLuaLoadFile(L, path);
+        if (level_dir->fileExists("scripting.lua"))
+            PHLuaLoadFile(L, level_dir, "scripting.lua");
     }
     
 #ifdef PH_SCRIPTING_CONSOLE
@@ -142,8 +143,6 @@ static int PHWorld_overlayText(lua_State * L)
     return 0;
 }
 
-PHLuaStringGetter(PHWorld, resourcePath);
-
 static int PHWorld_win(lua_State * L)
 {
     PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
@@ -199,7 +198,6 @@ void PHScripting::loadWorld()
     PHLuaAddMethod_(PHWorld, dismissFading);
     PHLuaAddMethod(PHWorld, overlayText);
     PHLuaAddMethod_(PHWorld, curtainText);
-    PHLuaAddMethod(PHWorld, resourcePath);
     PHLuaAddMethod(PHWorld, win);
     PHLuaAddMethod(PHWorld, die);
     PHLuaAddMethod(PHWorld, boom);

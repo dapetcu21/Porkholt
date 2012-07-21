@@ -8,6 +8,8 @@
 #include <Porkholt/IO/PHFileManager.h>
 #include <Porkholt/Core/PHTextView.h>
 #include <Porkholt/Core/PHFont.h>
+#include <Porkholt/IO/PHFile.h>
+#include <Porkholt/IO/PHDirectory.h>
 #include <sstream>
 
 #define SIZ_BK_WID 0.09
@@ -16,6 +18,11 @@
 
 PHView * PHChapterController::loadView(const PHRect & frame)
 {
+    if (gm->imageExists("bg", path))
+        bg = gm->imageNamed("bg", path);
+    else
+        bg = NULL;
+    
     PHImageView * view = new PHImageView(frame);
     view->setImage(bg);
     view->setUserInput(true);
@@ -32,14 +39,14 @@ PHView * PHChapterController::loadView(const PHRect & frame)
         for (int j=0; j<rows; j++)
         {
             ostringstream oss1,oss2,oss;
-            oss<<path<<"/lvl"<<j*columns+i+1;
-            oss1<<path<<"/lvl"<<j*columns+i+1<<"/thumb.png";
-            oss2<<path<<"/lvl"<<j*columns+i+1<<"/thumb_pressed.png";
-            if (!PHFileManager::isDirectory(oss.str())) continue;
+            oss <<"lvl"<<j*columns+i+1;
+            oss1<<"lvl"<<j*columns+i+1<<"/thumb";
+            oss2<<"lvl"<<j*columns+i+1<<"/thumb_pressed";
+            if (!(path->directoryExists(oss.str()))) continue;
             PHRect frame = PHRect(leftBorder+horisSpacing*i, lowerBorder+vertSpacing*(rows-j-1), levelSize, levelSize);
             PHButtonView * vv = new PHButtonView(frame);
-            vv->setImage(gm->imageFromPath(oss1.str()));
-            vv->setPressedImage(gm->imageFromPath(oss2.str()));
+            vv->setImage(gm->imageNamed(oss1.str(), path));
+            vv->setPressedImage(gm->imageNamed(oss2.str(), path));
             vv->setUpCallback(PHInv(this, PHChapterController::mouseUp, (void*)(j*columns+i+1)));
             view->addChild(vv);
             vv->release();
@@ -73,8 +80,8 @@ void PHChapterController::levelEnded(PHObject * sender, void *ud)
     if (lvl->outcome()==PHLevelController::LevelWon)
     {
         ostringstream oss;
-        oss<<path<<"/lvl"<<nr+1;
-        ret = !PHFileManager::isDirectory(oss.str());
+        oss<<"lvl"<<nr+1;
+        ret = path->directoryExists(oss.str());
     }
     if (ret)
     {
@@ -98,8 +105,8 @@ void PHChapterController::backPressed(PHObject * sender, void *ud)
 void PHChapterController::loadLevel(int nr,bool replace)
 {
     ostringstream oss;
-    oss<<path<<"/lvl"<<nr;
-    PHLevelController * lvlvc = new PHLevelController(oss.str());
+    oss<<"lvl"<<nr;
+    PHLevelController * lvlvc = new PHLevelController(path->directoryAtPath(oss.str()));
     lvlvc->init(gm);
     lvlvc->setEndLevelCallback(PHInv(this, PHChapterController::levelEnded, (void*)nr));
     PHViewController * vc = lvlvc->mainViewController();
@@ -109,17 +116,14 @@ void PHChapterController::loadLevel(int nr,bool replace)
 
 }
 
-PHChapterController::PHChapterController(const string & _path) : path(_path)
+PHChapterController::PHChapterController(PHDirectory * _path) : path(_path)
 {
-    if (PHFileManager::fileExists(path+"/bg.png"))
-        bg = gm->imageFromPath(path+"/bg.png");
-    else
-        bg = NULL;
-    
+    path->retain();
 }
 
 PHChapterController::~PHChapterController()
 {
+    path->release();
     if (bg)
         bg->release();
 }

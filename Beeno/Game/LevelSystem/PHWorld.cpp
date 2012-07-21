@@ -9,7 +9,7 @@
 #include <Porkholt/Core/PHImage.h>
 #include "PHLevelController.h"
 #include <Box2D/Box2D.h>
-#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 #include "PHLPlayer.h"
 #include "PHLNPC.h"
@@ -21,13 +21,13 @@
 #include "PHScripting.h"
 
 #include <Porkholt/Core/PHTextView.h>
-#include <Porkholt/Core/PHEventQueue.h>
 #include <Porkholt/UI/PHButtonView.h>
 #include "PHPoofView.h"
 
 #include <Porkholt/Sound/PHSoundManager.h>
 #include "PHShieldView.h"
 #include <Porkholt/Sound/PHSoundPool.h>
+#include <Porkholt/Sound/PHSound.h>
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
@@ -105,7 +105,7 @@ public:
     }
 };
 
-PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHEventQueue), viewQueue(new PHEventQueue), realQueue(new PHEventQueue), sndPool(new PHSoundPool),  currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), gm(mgr)
+PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * cntr) : view(NULL), camera(NULL), player(NULL), controller(cntr), contactFilter(NULL), contactListener(NULL), modelQueue(new PHAnimatorPool), viewQueue(new PHAnimatorPool), realQueue(new PHAnimatorPool), sndPool(new PHSoundPool),  currentDialog(NULL), dialogInitiator(NULL), dimView(NULL), overlayView(NULL), gm(mgr)
 {
 	PHRect bounds = gm->screenBounds();
 	view = new PHCaptureView(bounds);
@@ -214,13 +214,13 @@ void PHWorld::updatePositions()
         obj->limitVelocity();
         obj->commitAnimations(frameInterval);
     }
-    modelQueue->processQueue();
+    modelQueue->advanceAnimation(0);
 }
 
 
 void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
 {
-    viewQueue->processQueue();
+    viewQueue->advanceAnimation(elapsed);
     updateDialogs();
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
@@ -282,7 +282,7 @@ void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
 
 void PHWorld::updateTimers(ph_float frameInterval)
 {
-    modelQueue->updateTimers(frameInterval);
+    modelQueue->advanceAnimation(frameInterval);
 }
 
 void PHWorld::addObject(PHLObject * obj)
@@ -476,7 +476,7 @@ void PHWorld::addDialog(PHDialog* d)
 
 void PHWorld::fadedToColor(PHObject * obj, void * ud)
 {
-    viewQueue->schedule(PHInv(this,PHWorld::_fadedToColor,ud),false);
+    viewQueue->scheduleAction(PHInvBind(this,PHWorld::_fadedToColor,ud));
 }
 
 
@@ -509,7 +509,7 @@ void PHWorld::fadeToColor(const PHColor & color, void * ud)
         return;
     }
     dimColor = color;
-    viewQueue->schedule(PHInv(this,PHWorld::_fadeToColor,ud),false);
+    viewQueue->scheduleAction(PHInvBind(this,PHWorld::_fadeToColor,ud));
 }
 
 void PHWorld::_dismissFading(PHObject * sender, void * ud)
@@ -524,7 +524,7 @@ void PHWorld::_dismissFading(PHObject * sender, void * ud)
 
 void PHWorld::dismissFading(void * ud)
 {
-    viewQueue->schedule(PHInv(this,PHWorld::_dismissFading,ud),false);
+    viewQueue->scheduleAction(PHInvBind(this,PHWorld::_dismissFading,ud));
 }
 
 void PHWorld::_overlayDismissed(PHObject * obj, void * ud)
@@ -572,10 +572,10 @@ void PHWorld::overlayText(const string & s, ph_float duration)
     overlayView->commitCinematicAnimation();
     
     PHTimer * timer = new PHTimer;
-    timer->setTimeInterval(duration-0.5);
+    timer->setDuration(duration-0.5);
     timer->setRepeats(false);
     timer->setCallback(PHInv(this, PHWorld::dismissOverlayText, NULL));
-    modelQueue->scheduleTimer(timer);
+    modelQueue->addAnimator(timer);
     timer->release();
     overlayView->mutex()->unlock();
 }
@@ -609,14 +609,14 @@ void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage,
     bm->setAnimatorPool(levelController()->animatorPool());
     getWorldView()->addChild(bm);
     bm->release();
-    PHSound * s = gm->soundManager()->soundNamed("boom")->duplicate();
+    PHSound * s = gm->soundManager()->soundNamed("boom")->copy();
     sndPool->addSound(s);
-    s->playAndRelease(realQueue);
+    s->playAndRelease();
 }
 
-const string & PHWorld::resourcePath()
+PHDirectory * PHWorld::resourceDirectory()
 {
-    return levelController()->bundlePath();
+    return levelController()->bundleDirectory();
 }
 
 #define retainImage(fname) { PHImage * i = gm->imageNamed(fname); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }

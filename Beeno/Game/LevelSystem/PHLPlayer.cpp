@@ -10,7 +10,7 @@
 #include <Box2D/Box2D.h>
 #include <Porkholt/Core/PHMotion.h>
 #include <Porkholt/Core/PHLua.h>
-#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 #include "PHShieldView.h"
 #include "PHLevelController.h"
 #include <Porkholt/Core/PHTime.h>
@@ -197,14 +197,14 @@ void PHLPlayer::deactivateShield()
 {
     if (!shield) return;
     shield = false;
-    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLPlayer::_deactivateShield,NULL),false);
+    getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLPlayer::_deactivateShield,NULL));
 }
 
 void PHLPlayer::activateShield()
 {
     if (shield) return;
     shield = true;
-    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLPlayer::_activateShield,NULL),false);
+    getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLPlayer::_activateShield,NULL));
 }
 
 void PHLPlayer::updateView(ph_float elapsed, ph_float interpolate)
@@ -248,7 +248,7 @@ void PHLPlayer::activatePower()
     {
         setMaximumForce(maximumForce()*2);
         setForceGrowth(forceGrowth()*2);
-        getWorld()->viewEventQueue()->schedule(PHInv(this, PHLPlayer::_activatePower, NULL), false);
+        getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLPlayer::_activatePower, NULL));
     }
 }
 
@@ -257,7 +257,7 @@ void PHLPlayer::deactivatePower()
     powerTime = -1;
     setMaximumForce(maximumForce()/2);
     setForceGrowth(forceGrowth()/2);
-    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLPlayer::_deactivatePower, NULL), false);
+    getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLPlayer::_deactivatePower, NULL));
 }
 
 void PHLPlayer::die()

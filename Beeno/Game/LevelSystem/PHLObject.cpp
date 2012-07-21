@@ -4,7 +4,6 @@
 
 #include <Porkholt/Core/PHGameManager.h>
 
-#include <Porkholt/Core/PHEventQueue.h>
 #include "PHLAnimation.h"
 #include "PHLevelController.h"
 #include <Porkholt/Core/PHKeyframeAnimator.h>
@@ -19,9 +18,13 @@
 
 #include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Sound/PHSoundPool.h>
+#include <Porkholt/Sound/PHSound.h>
 
 #include <Porkholt/Core/PHLua.h>
 #include <Box2D/Box2D.h>
+
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 map<string,PHAllocator> * PHLObject::initMap = NULL;
 
@@ -348,7 +351,7 @@ bool PHLObject::customizeFixture(lua_State * L, b2FixtureDef & fixtureDef)
 void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController * lvlc)
 {
 	world = _world;
-    const string & root = lvlc->bundlePath();
+    PHDirectory * root = lvlc->bundleDirectory();
     gm = lvlc->gameManager();
     
     hasScripting = false;
@@ -417,7 +420,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
 			lua_gettable(L, -2);
             
             Image img;
-            PHImageView * image = PHImageView::imageFromLua(L,gm,root,lvlc->animatorPool());    
+            PHImageView * image = PHImageView::imageFromLua(L, gm, root, lvlc->animatorPool());    
             if (image)
             {
                 img.img = image;
@@ -987,7 +990,7 @@ void PHLObject::defferedLoading(PHWorld * _wrld, int insertPos, PHLObject * insO
     dliobj = insObj;
     dlworld = _wrld;
     wrld = _wrld;
-    wrld->viewEventQueue()->schedule(PHInv(this, PHLObject::_defferedLoading, NULL), false);
+    wrld->viewEventQueue()->scheduleAction(PHInvBind(this, PHLObject::_defferedLoading, NULL));
     retain();
 }
 
@@ -1153,7 +1156,7 @@ void PHLObject::commitAnimations(ph_float el)
 
 void PHLObject::destroy()
 {
-    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLObject::_destroy, NULL), false);
+    getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLObject::_destroy, NULL));
 }
 
 void PHLObject::_destroy()
@@ -1163,7 +1166,7 @@ void PHLObject::_destroy()
 
 void PHLObject::poof()
 {
-    getWorld()->viewEventQueue()->schedule(PHInv(this, PHLObject::_poof, NULL), false);
+    getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLObject::_poof, NULL));
 }
 
 void PHLObject::_poof()
@@ -1195,9 +1198,9 @@ void PHLObject::_poof()
     getWorld()->getWorldView()->addChild(v);
     v->release();
     
-    PHSound * s = gameManager()->soundManager()->soundNamed("poof")->duplicate();
+    PHSound * s = gameManager()->soundManager()->soundNamed("poof")->copy();
     getWorld()->soundPool()->addSound(s);
-    s->playAndRelease(getWorld()->realTimeEventQueue());
+    s->playAndRelease();
     
     destroy();
 }

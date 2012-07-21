@@ -5,10 +5,12 @@
 #include <Porkholt/Core/PHViewController.h>
 
 class PHImage;
+class PHDirectory;
+
 class PHChapterController : public PHViewController
 {
 private:
-    string path;
+    PHDirectory * path;
     PHImage * bg;
 protected:
     virtual PHView * loadView(const PHRect & frame);
@@ -17,7 +19,7 @@ protected:
     void backPressed(PHObject * sender, void *ud);
     void loadLevel(int nr,bool replace);
 public:
-    PHChapterController(const string & path);
+    PHChapterController(PHDirectory * path);
     virtual ~PHChapterController();
 };
 

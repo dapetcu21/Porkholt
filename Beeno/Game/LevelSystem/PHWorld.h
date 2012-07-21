@@ -16,7 +16,7 @@ class b2ContactFilter;
 class b2ContactListener;
 class PHTimer;
 class PHLevelController;
-class PHEventQueue;
+class PHAnimatorPool;
 class PHLNPC;
 class PHDialog;
 class PHScripting;
@@ -26,6 +26,7 @@ class PHGameManager;
 class PHImage;
 class PHSound;
 class PHSoundPool;
+class PHDirectory;
 
 class PHWorld : public PHObject 
 {
@@ -33,9 +34,9 @@ private:
 	PHCaptureView * view;
 	PHView * worldView;
 	PHView * layerView;
-    PHEventQueue * modelQueue; 
-    PHEventQueue * viewQueue;
-    PHEventQueue * realQueue;
+    PHAnimatorPool * modelQueue; 
+    PHAnimatorPool * viewQueue;
+    PHAnimatorPool * realQueue;
     PHSoundPool * sndPool;
 	
 	PHLevelController * controller;
@@ -101,9 +102,9 @@ public:
     b2World * getPhysicsWorld() { return physicsWorld; }
         
     PHLevelController * levelController() { return controller; }
-    PHEventQueue * viewEventQueue() { return viewQueue; }
-    PHEventQueue * modelEventQueue() { return modelQueue; }
-    PHEventQueue * realTimeEventQueue() { return realQueue; }
+    PHAnimatorPool * viewEventQueue() { return viewQueue; }
+    PHAnimatorPool * modelEventQueue() { return modelQueue; }
+    PHAnimatorPool * realTimeEventQueue() { return realQueue; }
     PHSoundPool * soundPool() { return sndPool; }
     
     PHLCamera * getCamera() { return camera; }
@@ -127,8 +128,7 @@ public:
     
     void boom(const PHPoint & location, ph_float magnitude, ph_float damage, ph_float radius);
     
-    const string & resourcePath();
-    
+    PHDirectory * resourceDirectory();
     //void printObjects();
     
 private:

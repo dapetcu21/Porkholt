@@ -15,7 +15,7 @@
 #include "PHDialog.h"
 #include "PHLAnimation.h"
 #include <Porkholt/Core/PHGameManager.h>
-#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHAnimatedImage.h>
 #include <Porkholt/Core/PHImage.h>
 #include <Porkholt/Core/PHImageAnimator.h>
@@ -302,7 +302,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
 
 void PHLNPC::dialogViewFired(PHDialogView * dv)
 {
-    getWorld()->modelEventQueue()->schedule(PHInv(this, PHLNPC::_dialogViewFired, dv), false);
+    getWorld()->modelEventQueue()->scheduleAction(PHInvBind(this, PHLNPC::_dialogViewFired, dv));
 }
 
 void PHLNPC::_dialogViewFired(PHObject * sender, PHDialogView * dv)
@@ -347,7 +347,7 @@ void PHLNPC::dismissDialog()
     dv->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
     static const ph_float scale = 1024;
     dv->animateScale(PHSize(1/scale,1/scale));
-    dv->animationCallback(PHInvN(this, PHLNPC::_dialogDismissed));
+    dv->animationCallback(PHInvBindN(this, PHLNPC::_dialogDismissed));
     dv->animationTag(dialogTag);
     dv->commitCinematicAnimation();
     dv->mutex()->unlock();
@@ -386,7 +386,7 @@ void PHLNPC::swapDialog(PHDialog *dialog)
     dialogTextView->removeCinematicAnimationsWithTag(dialogTag);
     dialogTextView->beginCinematicAnimation(0.2f,PHCinematicAnimator::FadeOutFunction);
     dialogTextView->animateCustomColor(PHClearColor);
-    dialogTextView->animationCallback(PHInvN(this, PHLNPC::_dialogSwapBegin));
+    dialogTextView->animationCallback(PHInvBindN(this, PHLNPC::_dialogSwapBegin));
     dialogTextView->animationTag(dialogTag);
     dialogTextView->commitCinematicAnimation();
     dialogView->mutex()->unlock();
@@ -422,7 +422,7 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     dv->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInOutFunction);
     dv->animateScale(PHSize(width/owidth,height/oheight));
     dv->animationTag(dialogTag);
-    dv->animationCallback(PHInvN(this, PHLNPC::_dialogSwapEnd));
+    dv->animationCallback(PHInvBindN(this, PHLNPC::_dialogSwapEnd));
     dv->commitCinematicAnimation();
     
     dtv->beginCinematicAnimation(0.2f, PHCinematicAnimator::FadeInFunction);
@@ -466,7 +466,7 @@ void PHLNPC::showQuest()
     questView->beginCinematicAnimation(0.5f,PHCinematicAnimator::BounceFunction);
     questView->animateScale(PHSize(scale,scale));
     questView->animationTag(4867);
-    questView->animationCallback(PHInvN(this,PHLNPC::questShowedUp));
+    questView->animationCallback(PHInvBindN(this,PHLNPC::questShowedUp));
     questView->commitCinematicAnimation();
     questView->mutex()->unlock();
 }
@@ -502,7 +502,7 @@ void PHLNPC::hideQuest()
     questView->beginCinematicAnimation(0.3f,PHCinematicAnimator::FadeOutFunction);
     questView->animateScale(PHSize(1/scale,1/scale));
     questView->animationTag(4867);
-    questView->animationCallback(PHInvN(this, PHLNPC::questHiddenItself));
+    questView->animationCallback(PHInvBindN(this, PHLNPC::questHiddenItself));
     questView->commitCinematicAnimation();
     questView->mutex()->unlock();
 
@@ -666,7 +666,7 @@ void PHLNPC::animateHurtInvuln()
     if (hInvulnFadeColor == PHInvalidColor) return;
     if (!bodyView) return;
     
-    getWorld()->viewEventQueue()->schedule(PHInv(this,PHLNPC::_animateHurtInvuln,NULL),false);
+    getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this,PHLNPC::_animateHurtInvuln,NULL));
 }
 
 #pragma mark -

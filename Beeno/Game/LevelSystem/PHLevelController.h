@@ -12,10 +12,12 @@ class PHScripting;
 class PHTextController;
 class PHImage;
 class PHAnimatorPool;
+class PHDirectory;
 
 class PHLevelController : public PHViewController
 {
 protected:
+    vector<string> * parseFile(const string & name);
 	virtual PHView * loadView(const PHRect & frame);
 	PHWorld * world;
     PHScripting * scripingEngine;
@@ -26,7 +28,7 @@ protected:
     PHView * menuView;
 	volatile bool running;
 	bool paused;
-	string directory;
+	PHDirectory * directory;
 	
 	friend class PHWorld;
     
@@ -71,7 +73,7 @@ public:
 	
 	void auxThread(PHThread * sender, void * ud);
 	
-	PHLevelController(string path);
+	PHLevelController(PHDirectory * path);
 	
 	~PHLevelController();
 	
@@ -80,7 +82,7 @@ public:
 	void appSuspended();
 	void appResumed();
     
-    const string & bundlePath() { return directory; }
+    PHDirectory *  bundleDirectory() { return directory; }
     
     PHViewController * mainViewController();
 	

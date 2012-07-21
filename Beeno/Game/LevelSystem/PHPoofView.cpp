@@ -2,7 +2,7 @@
 
 #include "PHPoofView.h"
 #include <Porkholt/Core/PHImageAnimator.h>
-#include <Porkholt/Core/PHEventQueue.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 
 PHImage * PHPoofView::poofImage(PHGameManager * man)
@@ -53,5 +53,5 @@ void PHPoofView::destroy(PHObject * sender, void * ud)
     if (ud)
         removeFromParent();
     else
-        gm->eventQueue()->schedule(PHInv(this, PHPoofView::destroy, (void*)1), false);
+        gm->mainAnimatorPool()->scheduleAction(PHInv(this, PHPoofView::destroy, (void*)1), false);
 }

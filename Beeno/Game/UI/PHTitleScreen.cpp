@@ -5,8 +5,7 @@
 #include <Porkholt/Core/PHImage.h>
 #include <Porkholt/UI/PHButtonView.h>
 #include "PHChapterController.h"
-#include <Porkholt/IO/PHFileManager.h>
-
+#include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/UI/PHTestViewController.h>
 
 #define POS_BG_Y 0.65
@@ -68,7 +67,7 @@ void PHTitleScreen::setBackButton(PHInvocation inv)
 
 void PHTitleScreen::buttonPressed(PHObject * sender, void * ud)
 {
-    PHViewController * vc = new PHChapterController(gm->resourcePath()+"/levels/current");
+    PHViewController * vc = new PHChapterController(gm->resourceDirectory()->directoryAtPath("levels/current"));
 	vc->init(gm);
     gm->loadAllImages();
     navigationController()->pushViewController(vc,PHNavigationController::SlideLeft);
