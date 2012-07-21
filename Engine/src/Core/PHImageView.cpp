@@ -477,9 +477,9 @@ PHImageView * PHImageView::imageFromLua(lua_State * L, PHGameManager * man, PHDi
             img->setGameManager(man);
             PHImage * im = NULL;
             if (fn[0] == '/')
-                im = man->imageNamed(fn.substr(1), root);
+                im = man->imageNamed(fn.substr(1));
             else
-                im = man->imageNamed(fn);
+                im = man->imageNamed(fn, root);
             img->setImage(im);
             img->setOptimizations(true);
             img->loadFromLua(L);

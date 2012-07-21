@@ -107,6 +107,19 @@ bool PHLuaLoadFile(lua_State * L, string fname)
     return true;
 }
 
+bool PHLuaLoadFile(lua_State * L, PHDirectory * dir, const string & fname)
+{
+    PHFile * file = dir->fileAtPath(fname);
+    if (!file)
+    {
+        PHLog("File doesn't exist: \"%s\"", fname);
+        return false;
+    }
+    bool r = PHLuaLoadFile(L, file);
+    file->release();
+    return r;
+}
+
 bool PHLuaLoadFile(lua_State * L, PHFile * file)
 {
     uint8_t * buf;

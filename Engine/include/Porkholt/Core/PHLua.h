@@ -13,8 +13,10 @@ extern "C"
 }
 
 class PHFile;
-bool PHLuaLoadFile(lua_State * L, string fname);
+class PHDirectory;
+
 bool PHLuaLoadFile(lua_State * L, PHFile * file);
+bool PHLuaLoadFile(lua_State * L, PHDirectory * dir, const string & fname);
 bool PHLuaLoadString(lua_State * L, string s);
 bool PHLuaLoadString(lua_State * L, const char * s);
 bool PHLuaCall(lua_State * L,int inargs, int outargs);

@@ -21,10 +21,11 @@ protected:
     map<pair<size_t,size_t>, uint8_t* > tasks;
 
     void processQueue();
+    void _releaseStorage(bool inDestructor);
 
     virtual void _loadHeader() = 0;
     virtual void _loadData(uint8_t * data, size_t firstSample, size_t length) = 0;
-    virtual void _releaseFileHandle() = 0;
+    virtual void _releaseFileHandle() {};
 
     PHThread * thread;
     PHSemaphore * sem;

@@ -21,7 +21,7 @@ private:
     int _refcount;
     void * inv;
 public:
-	PHObject(): _refcount(1) {};
+	PHObject(): _refcount(1), inv(NULL) {};
 	PHOBJECT_PREFIX PHObject * retain() { _refcount++; return this;};
 	PHOBJECT_PREFIX PHObject * release() 
     { 

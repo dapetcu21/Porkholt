@@ -87,7 +87,7 @@ void PHSoundManager::registerPlugin(const string & ext, PHAllocator a)
     extensions->insert(make_pair<string, PHAllocator>(ext, a));
 }
 
-PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir), inside(false)
+PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir), inside(false), music(NULL)
 {
     sndDir->retain();
 #ifdef PH_DEBUG
@@ -151,7 +151,7 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
                 return snd;
             }
         }
-        throw string("No match found for ") + name;
+        return NULL;
     }
     return it->second;
 }

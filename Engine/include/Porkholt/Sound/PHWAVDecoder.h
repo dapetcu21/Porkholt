@@ -11,7 +11,6 @@ protected:
     size_t doff;
 
     void _loadHeader();
-    void _releaseFileHandle();
     void _loadData(uint8_t * data, size_t firstSample, size_t length);
 };
 

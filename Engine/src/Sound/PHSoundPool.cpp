@@ -6,8 +6,35 @@
 #define mapmethod(meth) void PHSoundPool::meth() { for (set<PHSound*>::iterator i = sounds.begin(); i != sounds.end(); i++) (*i)->meth(); }
 #define mapsetter(meth,type) void PHSoundPool::meth(type x) { for (set<PHSound*>::iterator i = sounds.begin(); i != sounds.end(); i++) (*i)->meth(x); }
 
-mapmethod(play)
-mapmethod(pause)
+void PHSoundPool::play()
+{
+    paused.clear();
+    for (set<PHSound*>::iterator i = sounds.begin(); i != sounds.end(); i++)
+    {
+        (*i)->play();
+    }
+}
+
+void PHSoundPool::pause()
+{
+    for (set<PHSound*>::iterator i = sounds.begin(); i != sounds.end(); i++)
+    {
+        PHSound * s = *i;
+        if (s->isPlaying())
+        {
+            s->pause();
+            paused.insert(s);
+        }
+    }
+}
+
+void PHSoundPool::resume()
+{
+    for (set<PHSound*>::iterator i = paused.begin(); i != paused.end(); i++)
+        (*i)->play();
+    paused.clear();
+}
+
 mapmethod(stop)
 mapsetter(setLooping,bool)
 mapsetter(setGain,float)
@@ -25,6 +52,7 @@ void PHSoundPool::removeSound(PHSound * snd)
     if (!snd) return;
     if (sounds.erase(snd))
         snd->removeSoundPool(this);
+    paused.erase(snd);
 }
 
 PHSoundPool::~PHSoundPool()

@@ -35,6 +35,11 @@ void PHAsyncDecoder::releaseData(uint8_t * data)
 
 void PHAsyncDecoder::releaseStorage()
 {
+    return _releaseStorage(false);
+}
+
+void PHAsyncDecoder::_releaseStorage(bool indestructor)
+{
     if (!file) return;
     mutex->lock();
     running = false;
@@ -42,7 +47,9 @@ void PHAsyncDecoder::releaseStorage()
 
     sem->signal();
     thread->join();
-    _releaseFileHandle();
+    if (!indestructor)
+        _releaseFileHandle();
+    file->close();
     taskQueue.clear();
     for(map<pair<size_t,size_t>, uint8_t* >::iterator i = tasks.begin(); i != tasks.end(); i++)
     {
@@ -129,6 +136,6 @@ PHAsyncDecoder::PHAsyncDecoder() : mutex(new PHMutex(true)), sem(new PHSemaphore
 
 PHAsyncDecoder::~PHAsyncDecoder()
 {
-    releaseStorage();
+    _releaseStorage(true);
     sem->release();
 }

@@ -18,6 +18,7 @@ public:
     void play();
     void stop();
     void pause();
+    void resume();
     
     void setLooping(bool l);
     void setGain(float g);

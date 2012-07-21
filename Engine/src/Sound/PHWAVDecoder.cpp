@@ -73,11 +73,6 @@ void PHWAVDecoder::_loadHeader()
     len = dlen / formatSampleLength() / chan;
 }
 
-void PHWAVDecoder::_releaseFileHandle()
-{
-    file->close();
-}
-
 void PHWAVDecoder::_loadData(uint8_t * data, size_t start, size_t len)
 {
     size_t bps = formatSampleLength() * chan;

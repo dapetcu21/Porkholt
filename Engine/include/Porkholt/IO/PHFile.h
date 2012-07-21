@@ -20,7 +20,8 @@ public:
     uint8_t * loadToBuffer(size_t & sz)
     {
         sz = size();
-        uint8_t * buf = new uint8_t[sz];
+        uint8_t * buf = new uint8_t[sz+1];
+        buf[sz] = 0;
         try {
         open(Read);
         read(buf, sz);
@@ -31,6 +32,29 @@ public:
             throw ex;
         }
         return buf;
+    }
+
+    uint8_t * loadToBuffer()
+    {
+        size_t sz;
+        return loadToBuffer(sz);
+    }
+
+    string loadToString()
+    {
+        size_t sz;
+        uint8_t * buf = loadToBuffer(sz);
+        string s((char*)buf, sz);
+        delete[] buf;
+        return s;
+    }
+
+    void loadToString(string & s)
+    {
+        size_t sz;
+        uint8_t * buf = loadToBuffer(sz);
+        s.assign((char*)buf, sz);
+        delete[] buf;
     }
 };
 
