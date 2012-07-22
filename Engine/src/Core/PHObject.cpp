@@ -21,6 +21,9 @@ void PHObject::clearInvocations()
 {
     set<PHInvocation*> * s = (set<PHInvocation*> *)inv;
     for (set<PHInvocation*>::iterator i = s->begin(); i!= s->end(); i++)
+    {
+        (*i)->bound = false;
         (*i)->clear();
+    }
     delete s;
 }

@@ -37,6 +37,19 @@ public:
             target->bindInvocation(this);
     }
 
+    PHInvocation & operator = (const PHInvocation & o)
+    {
+        if (bound && target)
+            target->unbindInvocation(this);
+        target = o.target;
+        callback = o.callback;
+        userdata = o.userdata;
+        bound = o.bound;
+        if (bound && target)
+            target->bindInvocation(this);
+        return *this;
+    }
+
     ~PHInvocation()
     {
         if (bound && target)
@@ -50,6 +63,9 @@ public:
     
     void clear()
     {
+        if (bound && target)
+            target->unbindInvocation(this);
+        bound = false;
         target = NULL;
         callback = NULL;
         userdata = NULL;
