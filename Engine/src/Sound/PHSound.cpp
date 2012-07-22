@@ -48,7 +48,6 @@ PHSound::~PHSound()
 
 void PHSound::songEnded()
 {
-    PHLog("songEnded");
     inv.call(this);
 }
 
@@ -92,7 +91,6 @@ void PHSound::unqueue(size_t size)
     for(size_t i = 0; i<size; i++)
     {
         buf->releaseBuffer(b[i]);
-        PHLog("release %d", b[i]);
     }
 
     delete [] v;
@@ -168,7 +166,6 @@ void PHSound::update()
                     ALuint b = buf->bufferForPart(nb);
                     alSourceQueueBuffers(id, 1, &b);
                     stack.push_back(b);
-                    PHLog("buffer %d (+1)", nb);
                 }
             }
         } else {
@@ -182,7 +179,6 @@ void PHSound::update()
                 alSourceQueueBuffers(id, 1, &b);
                 stack.push_back(b);
                 stack_begin = crrb;
-                PHLog("buffer %d", crrb);
 
                 if (schseek)
                 { 
