@@ -404,7 +404,7 @@ vector<string> * PHLevelController::parseFile(const string & name)
 PHViewController * PHLevelController::mainViewController()
 {
     vector<string> * v = parseFile("intro.txt"); 
-    if (v->empty())
+    if (!v || (v->empty()))
     {
         delete v;
         this->retain();
