@@ -47,7 +47,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
             PHButtonView * vv = new PHButtonView(frame);
             vv->setImage(gm->imageNamed(oss1.str(), path));
             vv->setPressedImage(gm->imageNamed(oss2.str(), path));
-            vv->setUpCallback(PHInv(this, PHChapterController::mouseUp, (void*)(j*columns+i+1)));
+            vv->setUpCallback(PHInv(this, PHChapterController::mouseUp, (void*)(size_t)(j*columns+i+1)));
             view->addChild(vv);
             vv->release();
         }
@@ -108,7 +108,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
     oss<<"lvl"<<nr;
     PHLevelController * lvlvc = new PHLevelController(path->directoryAtPath(oss.str()));
     lvlvc->init(gm);
-    lvlvc->setEndLevelCallback(PHInv(this, PHChapterController::levelEnded, (void*)nr));
+    lvlvc->setEndLevelCallback(PHInv(this, PHChapterController::levelEnded, (void*)(size_t)nr));
     PHViewController * vc = lvlvc->mainViewController();
     navController->navigationController()->pushViewController(vc,PHNavigationController::FadeToColor,replace);
     vc->release();

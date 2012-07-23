@@ -106,8 +106,8 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 		button2->setPressedImage(gm->imageNamed("stop"));
 		button2->setImage(gm->imageNamed("start"));
 	
-		button1->setUpCallback(PHInv(this, PHTestViewController::callback1, (void*)i));
-		button2->setUpCallback(PHInv(this, PHTestViewController::callback2, (void*)i));
+		button1->setUpCallback(PHInv(this, PHTestViewController::callback1, (void*)(size_t)i));
+		button2->setUpCallback(PHInv(this, PHTestViewController::callback2, (void*)(size_t)i));
 	
 		view->addChild(button1);
 		view->addChild(button2);

@@ -37,7 +37,7 @@ void PHPoofView::attachedToGameManager()
             imag = boomImage(gm);
             break;
         default:
-            img = NULL;
+            imag = NULL;
             break;
     }
     setImage(imag);

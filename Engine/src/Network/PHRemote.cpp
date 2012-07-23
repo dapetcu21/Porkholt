@@ -29,7 +29,7 @@ void PHRemote::recievedPacket(uint8_t signature, const URField * const * fields,
         {
             uint8_t tag = fields[i]->tag();
             if (tag==0x02)
-                id = (void*)fields[i]->asInt32();
+                id = (void*)(size_t)fields[i]->asInt32();
             if (tag==0x03)
                 state = fields[i]->asInt8();
             if (tag==0x04)
