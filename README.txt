@@ -26,10 +26,10 @@ files, at least remove CMakeCache from build
 3) cd into it
 4) Generate the project files with cmake
   cmake .. -DPH_PLATFORM=platform
-"platform" can be any of Linux, OSX, iOS or Android
+"platform" can be any of X11, OSX, iOS or Android
 NOTE: if compiling for iOS you need to use the XCode generator
   Ex: cmake .. -G Xcode -DPH_PLATFORM=iOS
-PH_PLATFORM defaults to "Linux" on Linux and to "OSX" on OS X
+PH_PLATFORM defaults to "X11" on Linux and FreeBSD
 
 5) Use the generated project files to build the project (this depends on your
 generator of choice)

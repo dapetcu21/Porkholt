@@ -11,21 +11,21 @@ find_library(PH_OPENGL GL)
 find_library(PH_X11 X11)
 find_package(Threads REQUIRED)
 find_library(PH_XRANDR Xrandr)
-find_library(PH_OAL openal)
-target_link_libraries(${PH_NAME} Porkholt_Linux
+find_library(PH_OPENAL openal)
+target_link_libraries(${PH_NAME} Porkholt_X11
   ${PH_EXTERNALS}/lib/linux/liblua.a
   ${PH_EXTERNALS}/lib/linux/libpng15.a
   ${PH_EXTERNALS}/lib/linux/libz.a
   ${PH_X11}
   ${PH_OPENGL}
   ${PH_XRANDR}
-  ${PH_OAL}
+  ${PH_OPENAL}
   ${CMAKE_THREAD_LIBS_INIT}
   )
 
 if(PH_USE_BOX2D)
-  include("${PH_ENGINE_PATH}/CMakeLib/Box2D_Linux.cmake")
-  target_link_libraries(${PH_NAME} Box2D_Linux)
+  include("${PH_ENGINE_PATH}/CMakeLib/Box2D.cmake")
+  target_link_libraries(${PH_NAME} Box2D)
 endif()
 
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rsrc)
