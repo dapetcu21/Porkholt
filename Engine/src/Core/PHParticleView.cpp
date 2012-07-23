@@ -326,6 +326,6 @@ void PHParticleView::render()
 void PHParticleView::attachedToGameManager()
 {
     PHImageView::attachedToGameManager();
-    if (!pool)
+    if (!particlePool)
         setParticleAnimatorPool(gm->animatorPool());
 }

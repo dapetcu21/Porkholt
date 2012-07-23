@@ -165,6 +165,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glCullFace(GL_BACK);
+    glDisable(GL_CULL_FACE);
     //glPolygonMode(GL_FRONT,GL_LINE); //wireframe
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (!useShaders())
