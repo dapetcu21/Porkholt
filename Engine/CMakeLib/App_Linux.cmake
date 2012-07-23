@@ -11,6 +11,7 @@ find_library(PH_OPENGL GL)
 find_library(PH_X11 X11)
 find_package(Threads REQUIRED)
 find_library(PH_XRANDR Xrandr)
+find_library(PH_OAL openal)
 target_link_libraries(${PH_NAME} Porkholt_Linux
   ${PH_EXTERNALS}/lib/linux/liblua.a
   ${PH_EXTERNALS}/lib/linux/libpng15.a
@@ -18,6 +19,7 @@ target_link_libraries(${PH_NAME} Porkholt_Linux
   ${PH_X11}
   ${PH_OPENGL}
   ${PH_XRANDR}
+  ${PH_OAL}
   ${CMAKE_THREAD_LIBS_INIT}
   )
 

@@ -11,9 +11,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLib/Porkholt_Common.cmake)
 set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
   ${PH_ENGINE_PATH}/src/Bindings/Linux/PHWindowing.cpp
   ${PH_ENGINE_PATH}/src/Bindings/Linux/PHX11.cpp
-  ${PH_ENGINE_PATH}/src/Sound/PHSound-Linux.cpp
-  ${PH_ENGINE_PATH}/src/Sound/PHSoundManager-Linux.cpp
-  ${PH_ENGINE_PATH}/src/Sound/PHMusicManager-Linux.cpp
   )
   
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}

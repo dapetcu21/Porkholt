@@ -5,6 +5,7 @@
 #include "PHX11.h"
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHEventHandler.h>
+#include <Porkholt/IO/PHDirectory.h>
 #include <GL/glx.h>
 
 static bool PHNamesInitialized = false;
@@ -68,7 +69,6 @@ void PHWRender()
         if (flags & PHWVSync)
             elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
     }
-    PHGameManager::globalFrame(elapsedTime);
     gm->processInput();
     gm->renderFrame(elapsedTime);
     PHWLastTime = time;
@@ -94,7 +94,9 @@ void * PHWCreateWindow(const string & title, const PHWVideoMode & vm, int flags,
     init.screenWidth = resolutionX;
     init.screenHeight = resolutionY;
     init.fps = rr;
-    init.resourcePath = PHResourcePath;
+    PHDirectory * dir = PHInode::directoryAtFSPath(PHResourcePath.c_str());
+    init.setResourceDirectory(dir);
+    dir->release();
     init.entryPoint = entryPoint;
     if (flags & PHWRemote)
         gm->setUsesRemote(true);
@@ -157,7 +159,7 @@ void PHWSetVideoMode(const PHWVideoMode & vm)
     PHWCurrentVideoMode = vm;
 }
 
-const PHWVideoMode & PHWGetVideoMode()
+PHWVideoMode PHWGetVideoMode()
 {
     PHWCurrentVideoMode.width = PHWGameManager->screenWidth();
     PHWCurrentVideoMode.height = PHWGameManager->screenHeight();

@@ -81,7 +81,7 @@ void PHXCreateContext(const string & title, int & resX, int & resY, int & refres
     if ( !display )
         throw string("Failed to open X display");
  
-    int visual_attribs[32] =
+    int visual_attribs[32];
 	int nr=0;
 	#define add(x) visual_attribs[nr++] = (x)
 	add(GLX_X_RENDERABLE);  add(True);

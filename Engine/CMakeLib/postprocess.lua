@@ -8,6 +8,17 @@ if (action == 'clean') then
   return 0
 end
 
+function check_versions()
+    local file = io.popen("/usr/bin/stat --version")
+    local ver = file:read("*a")
+    file:close()
+    if string.find(ver,"GNU") then
+        gnu_stat = true
+    end
+end
+
+check_versions()
+
 modif_cache = {}
 function dir_list(dir)
   local file = io.popen("/bin/ls -1AF "..'"'..dir..'"' )
@@ -24,10 +35,20 @@ function dir_list(dir)
       files[line] = "f"
     end
   end
-  file:close();
-  local s = '/usr/bin/stat -f "%m" '
+  file:close()
+  local s
+  if gnu_stat then
+      s = '/usr/bin/stat --format="%Y" '
+  else
+      s = '/usr/bin/stat -f "%m" '
+  end
+  local b
   for line,t in pairs(files) do
+    b = true
     s = s..'"'..dir.."/"..line..'" '
+  end
+  if not b then
+      return files
   end
   local file = io.popen(s)
   local ln = file:lines()
