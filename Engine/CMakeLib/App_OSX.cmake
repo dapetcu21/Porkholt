@@ -1,3 +1,5 @@
+include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if(CMAKE_GENERATOR STREQUAL "Xcode")
 	set(CMAKE_OSX_SYSROOT macosx)
@@ -12,8 +14,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 link_directories(${PH_EXTERNALS}/lib/darwin/osx)
 link_directories(${Porkholt_OSX_BINARY_DIR})
-
-include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 
 add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} ${PH_HEADERS})
 if(CMAKE_GENERATOR STREQUAL "Xcode")

@@ -8,14 +8,12 @@
 
 cd libpng
 
-LIBFILE=libpng
-
-LIBPATH_static=$LIBFILE.a
-LIBNAME_static=`basename $LIBPATH_static`
+LIBPATH_static=.libs/libpng15.a
 LIBINSTALL_static=libpng15.a
 
-make -f scripts/makefile.linux clean
-make -f scripts/makefile.linux 
+./configure
+make clean
+make
 
 mkdir -p ../lib/linux
 cp $LIBPATH_static ../lib/linux/$LIBINSTALL_static

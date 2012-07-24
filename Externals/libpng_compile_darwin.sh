@@ -8,14 +8,11 @@
 
 cd libpng
 
-LIBFILE=libpng
-
 MACSDK=SDKs/MacOSX10.6.sdk
 IOSSDK=SDKs/iPhoneOS5.0.sdk
 SIMSDK=SDKs/iPhoneSimulator5.0.sdk
 
-LIBPATH_static=$LIBFILE.a
-LIBNAME_static=`basename $LIBPATH_static`
+LIBPATH_static=.libs/libpng15.a
 LIBINSTALL_static=libpng15.a
 
 mkdir -p lnsout
@@ -27,13 +24,15 @@ SDKROOT=$DEVROOT/$IOSSDK
 CC=$DEVROOT/usr/bin/cc
 
 CFLAGS="-arch armv6 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
-make -f scripts/makefile.darwin clean
-make -f scripts/makefile.darwin CC="$CC $CFLAGS"
+./configure CC="$CC" CFLAGS="$CFLAGS"
+make clean
+make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
 
 CFLAGS="-arch armv7 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
-make -f scripts/makefile.darwin clean
-make -f scripts/makefile.darwin CC="$CC $CFLAGS"
+./configure CC="$CC" CFLAGS="$CFLAGS"
+make clean
+make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
 
 #-------------------------------
@@ -43,8 +42,9 @@ SDKROOT=$DEVROOT/$SIMSDK
 CC=$DEVROOT/usr/bin/cc
 
 CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
-make -f scripts/makefile.darwin clean
-make -f scripts/makefile.darwin CC="$CC $CFLAGS"
+./configure CC="$CC" CFLAGS="$CFLAGS"
+make clean
+make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim
  
 #-------------------------------
@@ -54,13 +54,15 @@ SDKROOT=$DEVROOT/$MACSDK
 CC="cc"
 
 CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make -f scripts/makefile.darwin clean
-make -f scripts/makefile.darwin CC="$CC $CFLAGS"
+./configure CC="$CC" CFLAGS="$CFLAGS"
+make clean
+make
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386
 
 CFLAGS="-arch x86_64 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make -f scripts/makefile.darwin clean
-make -f scripts/makefile.darwin CC="$CC $CFLAGS"
+./configure CC="$CC" CFLAGS="$CFLAGS"
+make clean
+make
 cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
 
 #-------------------------------

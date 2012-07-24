@@ -9,7 +9,7 @@ if (action == 'clean') then
 end
 
 function check_versions()
-    local file = io.popen("/usr/bin/stat --version")
+    local file = io.popen("/usr/bin/stat --version 2>/dev/null")
     local ver = file:read("*a")
     file:close()
     if string.find(ver,"GNU") then

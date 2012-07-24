@@ -14,7 +14,7 @@
 #define htonll(x) PHByteSwap64(x)
 #endif
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 3)
 #define PHByteSwap64(x) __builtin_bswap64(x)
 #define PHByteSwap32(x) __builtin_bswap32(x)
 inline uint16_t PHByteSwap16(uint16_t x)

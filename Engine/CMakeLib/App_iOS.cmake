@@ -1,3 +1,5 @@
+include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(CMAKE_OSX_SYSROOT iphoneos)
 set(CMAKE_OSX_ARCHITECTURES "armv6 armv7")
@@ -9,8 +11,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
   
 link_directories(${PH_EXTERNALS}/lib/darwin/ios)
 link_directories(${Porkholt_iOS_BINARY_DIR})
-
-include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
 
 add_executable(${PH_NAME} MACOSX_BUNDLE ${PH_SOURCES} ${PH_HEADERS})
 add_dependencies(${PH_NAME} Porkholt_iOS)

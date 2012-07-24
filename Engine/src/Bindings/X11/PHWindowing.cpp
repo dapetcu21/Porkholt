@@ -15,6 +15,8 @@ static string PHAppName;
 static int PHWFlags;
 static PHGameManager * PHWGameManager;
 static double PHWLastTime;
+static int PHWArgc;
+static char ** PHWArgv;
 
 void PHWInitNames()
 {
@@ -24,6 +26,14 @@ void PHWInitNames()
         char buf[BUFFERSIZE];
         ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf)-1);
  
+        if ((len == -1) && (PHWArgc>0))
+        {
+            len = strlen(PHWArgv[0]);
+            if (len + 6 <= BUFFERSIZE)
+                memcpy(buf, PHWArgv[0], len);
+            else
+                len = -1;
+        }
         if (len != -1) 
         {
             buf[len] = '\0';
@@ -44,6 +54,8 @@ void * PHWCreateWindow(const string & title, const PHWVideoMode & vm, int flags,
 int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
     PHWFlags = flags;
+    PHWArgc = argc;
+    PHWArgv = argv;
     PHWInitNames();
     PHWCreateWindow(PHAppName, vm, flags, entryPoint, ud);
     PHWLastTime = PHTime::getTime();

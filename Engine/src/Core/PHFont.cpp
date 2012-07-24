@@ -102,7 +102,7 @@ bool PHFont::loadImage(uint8_t *d, size_t len)
     if (len<8+width*height) return false;
     imageData = d+8;
     dataRetainCount++;
-    gm->animatorPool()->scheduleAction(PHInv(this, PHFont::loadToTexture, NULL));
+    gm->mainAnimatorPool()->scheduleAction(PHInv(this, PHFont::loadToTexture, NULL));
     return true;
 }
 

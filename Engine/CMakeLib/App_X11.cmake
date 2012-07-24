@@ -1,23 +1,28 @@
+include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
   
-link_directories(${PH_EXTERNALS}/lib/linux)
-
-include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
+link_directories(${PH_EXTERNALS}/lib/${PH_LIBS})
 
 add_executable(${PH_NAME} ${PH_SOURCES} ${PH_HEADERS})
 find_library(PH_OPENGL GL)
 find_library(PH_X11 X11)
 find_package(Threads REQUIRED)
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
+if (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    include_directories(/usr/local/include)
+endif()
 find_library(PH_XRANDR Xrandr)
 find_library(PH_OPENAL openal)
 target_link_libraries(${PH_NAME} Porkholt_X11
-  ${PH_EXTERNALS}/lib/linux/liblua.a
-  ${PH_EXTERNALS}/lib/linux/libpng15.a
-  ${PH_EXTERNALS}/lib/linux/libz.a
+  ${PH_EXTERNALS}/lib/${PH_LIBS}/liblua.a
+  ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
+  ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
   ${PH_X11}
-  ${PH_OPENGL}
+  ${OPENGL_LIBRARIES}
   ${PH_XRANDR}
   ${PH_OPENAL}
   ${CMAKE_THREAD_LIBS_INIT}

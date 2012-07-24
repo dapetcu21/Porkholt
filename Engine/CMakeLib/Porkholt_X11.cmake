@@ -16,10 +16,9 @@ set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
 set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
   ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.h
   )
-
 add_library(Porkholt_X11 ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
 add_custom_target( External_Libs
-	COMMAND ${PH_EXTERNALS}/make_linux.sh
+	COMMAND ${PH_EXTERNALS}/make.sh
 	WORKING_DIRECTORY ${PH_EXTERNALS}
 	)
 add_dependencies(Porkholt_X11 External_Libs)
