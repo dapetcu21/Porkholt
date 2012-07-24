@@ -9,7 +9,7 @@ LIBNAME_static=`basename $LIBPATH_static`
 LIBINSTALL_static=$LIBNAME_static
 
 make distclean
-./configure
+CFLAGS="-fPIC" ./configure
 make
 
 mkdir -p ../lib/freebsd

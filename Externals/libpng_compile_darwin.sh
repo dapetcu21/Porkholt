@@ -23,14 +23,16 @@ DEVROOT=/Developer/Platforms/iPhoneOS.platform/Developer
 SDKROOT=$DEVROOT/$IOSSDK
 CC=$DEVROOT/usr/bin/cc
 
+export LDFLAGS="-L../darwin/ios"
+
 CFLAGS="-arch armv6 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
-./configure CC="$CC" CFLAGS="$CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
 make clean
 make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
 
 CFLAGS="-arch armv7 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
-./configure CC="$CC" CFLAGS="$CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
 make clean
 make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
@@ -42,7 +44,7 @@ SDKROOT=$DEVROOT/$SIMSDK
 CC=$DEVROOT/usr/bin/cc
 
 CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
-./configure CC="$CC" CFLAGS="$CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
 make clean
 make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim
@@ -53,14 +55,16 @@ DEVROOT=/Developer
 SDKROOT=$DEVROOT/$MACSDK
 CC="cc"
 
+export LDFLAGS="-L../darwin/osx"
+
 CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-./configure CC="$CC" CFLAGS="$CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
 make clean
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386
 
 CFLAGS="-arch x86_64 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-./configure CC="$CC" CFLAGS="$CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
 make clean
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
@@ -74,4 +78,7 @@ mkdir -p ../lib/darwin/ios
 mkdir -p ../lib/darwin/osx
 cp lnsout/$LIBNAME_static.ios ../lib/darwin/ios/$LIBINSTALL_static
 cp lnsout/$LIBNAME_static.osx ../lib/darwin/osx/$LIBINSTALL_static
+
+unset LDFLAGS
+
 cd ..

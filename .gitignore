@@ -24,6 +24,8 @@ _
 /Externals/libpng/Makefile
 /Externals/libpng/config.h
 /Externals/libpng/config.log
+/Externals/libpng/libpng.vers
+/Externals/libpng/scripts/vers.out
 /Externals/libpng/config.status
 /Externals/libpng/libpng-config
 /Externals/libpng/libpng.pc

@@ -11,7 +11,7 @@ cd libpng
 LIBPATH_static=.libs/libpng15.a
 LIBINSTALL_static=libpng15.a
 
-./configure
+LDFLAGS="-L../lib/freebsd" CFLAGS="-I../zlib" ./configure
 make clean
 make
 
