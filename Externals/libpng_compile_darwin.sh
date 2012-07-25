@@ -14,6 +14,7 @@ SIMSDK=SDKs/iPhoneSimulator5.0.sdk
 
 LIBPATH_static=.libs/libpng15.a
 LIBINSTALL_static=libpng15.a
+LIBNAME_static=libpng15.a
 
 mkdir -p lnsout
 
@@ -23,16 +24,16 @@ DEVROOT=/Developer/Platforms/iPhoneOS.platform/Developer
 SDKROOT=$DEVROOT/$IOSSDK
 CC=$DEVROOT/usr/bin/cc
 
-export LDFLAGS="-L../darwin/ios"
+export LDFLAGS="-L../lib/darwin/ios"
 
 CFLAGS="-arch armv6 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
-./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS" --host=armv6-apple-darwin 
 make clean
 make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
 
 CFLAGS="-arch armv7 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
-./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
+./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS" --host=armv7-apple-darwin
 make clean
 make 
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
@@ -55,7 +56,7 @@ DEVROOT=/Developer
 SDKROOT=$DEVROOT/$MACSDK
 CC="cc"
 
-export LDFLAGS="-L../darwin/osx"
+export LDFLAGS="-L../lib/darwin/osx"
 
 CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
 ./configure CC="$CC" CFLAGS="-I../zlib $CFLAGS"
