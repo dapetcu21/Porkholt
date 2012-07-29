@@ -86,16 +86,17 @@ void PHXCreateContext(const string & title, int & resX, int & resY, int & refres
 	#define add(x) visual_attribs[nr++] = (x)
 	add(GLX_X_RENDERABLE);  add(True);
 	add(GLX_DRAWABLE_TYPE); add(GLX_WINDOW_BIT);
-	add(GLX_RENDER_TYPE);   add(GLX_RGBA_BIT);
     add(GLX_X_VISUAL_TYPE); add(GLX_TRUE_COLOR);
+	add(GLX_RENDER_TYPE);   add(GLX_RGBA_BIT);
     add(GLX_RED_SIZE);      add(8);
     add(GLX_GREEN_SIZE);    add(8);
     add(GLX_BLUE_SIZE);     add(8);
     add(GLX_ALPHA_SIZE);    add(8);
-	if (flags & PHWDepthBuffer)
-		{ add(GLX_DEPTH_SIZE);    add(32); }
     if (flags & PHWStencilBuffer)
 		{ add(GLX_STENCIL_SIZE);  add(8); }
+    int depth = 0;
+	if (flags & PHWDepthBuffer)
+		{ add(GLX_DEPTH_SIZE);    add(32); depth = nr-1; }
     add(GLX_DOUBLEBUFFER);  add(True);
 	add(None);
 	#undef add
@@ -116,8 +117,17 @@ void PHXCreateContext(const string & title, int & resX, int & resY, int & refres
                                         visual_attribs, &fbcount );
     if ( !fbc )
     {
-        XCloseDisplay(display);
-        throw string("Failed to retrieve a framebuffer config");
+        while (!fbc && depth && visual_attribs[depth])
+        {
+            visual_attribs[depth] -= 8;
+            fbc = glXChooseFBConfig( display, DefaultScreen( display ), 
+                                            visual_attribs, &fbcount );
+        }
+        if (!fbc)
+        {
+            XCloseDisplay(display);
+            throw string("Failed to retrieve a framebuffer config");
+        }
     }
   
     int best_fbc = -1, worst_fbc = -1, best_num_samp = -1, worst_num_samp = 999;
