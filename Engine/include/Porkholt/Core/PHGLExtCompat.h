@@ -35,7 +35,7 @@ PHGLEXTDefine(GLvoid,    glBlitFramebuffer, GLint, GLint, GLint, GLint, GLint, G
 
 PHGLEXTDefine(GLvoid,    glGenerateMipmap, GLenum);
 
-PHGLEXTDefine(GLvoid,    glClearDepth, GLclampd);
+PHGLEXTDefine(GLvoid,    glClearDepth, GLfloat);
 
 
 

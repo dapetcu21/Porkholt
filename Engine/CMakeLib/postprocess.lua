@@ -146,8 +146,38 @@ function downscale_png(srcd, dstd, f, stp, name)
   end
 end
 
+function layout_images(width, scale, src, ins, dst)
+  local w = 0
+  local h = 0
+  local x = 0
+  local y = 0
+  local s = ''
+  local exec = ''
+
+  for i = 0, ins.n - 1 do
+    local f = ins[i]
+    local xx = f.w * scale
+    local yy = f.h * scale
+    if (x + xx > width) then
+      y = h
+      x = 0
+    end
+    if (w < x + xx) then
+      w = x + xx
+    end
+    if (h < y + yy) then
+      h = y + yy 
+    end
+    s = s .. '{ x = ' .. tostring(x) .. ', y = ' .. tostring(y) .. ', width = ' .. tostring(xx) .. ', height = ' .. tostring(yy) .. ' }, '
+    exec = exec .. '"' .. src .. '/' .. f.fname .. '" -geometry '..tostring(xx)..'x'..tostring(yy)..'+'..tostring(x)..'+'..tostring(y)..' -composite '
+    x = x + xx
+  end
+  exec = 'convert -size '..tostring(w)..'x'..tostring(h)..' xc:white -alpha transparent -quality 5 -channel RGBA -depth 24 -colorspace RGB ' .. exec .. '"png32:'.. dst ..'"'
+
+  return s, exec, w, h
+end
+
 function create_map(files, src, dst, hd)
-  local s = "textureMaps = {\n"
   local i = 0
   local of = {}
   local ins = {}
@@ -160,40 +190,32 @@ function create_map(files, src, dst, hd)
     ins[i] = { fname = fn, w = x, h = y }
     i = i + 1
   end
-
-  i = 0;
-  local f
-
-  while true do
-    f = ins[i]
-    if not f then
-        break
-    end
-    local srcf = src..'/'..f.fname
-    local dstf = dst..'/'..f.fname
-    if downscale_hd then
-      local scriptline = 'convert "'..srcf..'" '..flags
-      if hd then
-        scriptline = scriptline .. ' -resize 50%'
-      else
-        scriptline = scriptline .. ' -resize 25%'
-      end
-      scriptline = scriptline .. ' "png32:'..dstf..'"'
-      os.execute(scriptline)
+  ins.n = i;
+  
+  local max, scale
+  if downscale_hd then
+    if hd then
+      max = 2048
+      scale = 0.5
     else
-      copy_file(srcf, dstf)
+      max = 1024
+      scale = 0.25
     end
-    s = s .. '  { fname = "'..f.fname..'", \n'
-    s = s .. '    { x = 0, y = 0, width = '..tostring(f.w)..', height = '..tostring(f.h)..' }\n'
-    s = s .. '  },\n'
-    i = i + 1
+  else
+    max = 4096
+    scale = 1
   end
-  s = s .. '}\n' 
+
+  local s, cmd, w, h = layout_images(max, scale, src, ins, dst..'/map.png')
+
+  s = 'textureMaps = {\n  { fname = "map.png", ' .. s .. ' }\n}\n'
+  os.execute(cmd)
+
   return s, of
 end
 
 
-function animation_dir(src, dst, prefix)
+function animation_dir(src, dst, prefix, hd)
   prefix = prefix or ""
   dir_make(dst)
 
@@ -220,7 +242,7 @@ function animation_dir(src, dst, prefix)
 
   if (smod > dmod) then
     print('Creating animation atlas "'..prefix..'"')
-    local s, valid_files = create_map(fl, src, dst)
+    local s, valid_files = create_map(fl, src, dst, hd)
     local file, err = io.open(src..'/info.lua', 'r')
     if (file) then
       s = s..file:read("*a")
@@ -252,7 +274,16 @@ function animation_dir(src, dst, prefix)
       end
     end
   end
+end
 
+function anim_dir(src, dst, prefix)
+  if (downscale_hd) then
+    local fhd = string.gsub(dst, ".png$", ".hd.png")
+    animation_dir(src, dst, prefix, false)
+    animation_dir(src, fhd, prefix, true)
+  else
+    animation_dir(src, dst, prefix)
+  end
 end
 
 function crawl_dir(src, dst, prefix)
@@ -283,7 +314,7 @@ function crawl_dir(src, dst, prefix)
     local ext = file_extension(f)
     if (tp == "d") then
       if (ext == "png") then
-        animation_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
+        anim_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
       else
         crawl_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
       end
