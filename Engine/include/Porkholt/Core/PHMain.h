@@ -42,6 +42,7 @@ using namespace std;
     #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
         #define PH_IPHONE_OS
         #define PH_MOBILE
+        #define PH_GLES
         #ifdef __i386__
             #define PH_SIMULATOR
         #endif

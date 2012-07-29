@@ -104,8 +104,8 @@ function Initializers.PHLPlayer(obj)
 	obj.automaticFlipping = true
 	obj.canBlink = true
 	objectAddCircle(obj,0.25,{restitution = 0.5}) --0.5 restitution is the exact value for which the jumping system can't be exploited
-	objectAddImage(obj,"/ball.png",-0.25,-0.25,0.5,0.5,{tag=20, class="PHTrailImageView"})
-    objectAddImage(obj,"/face.png",-0.25,-0.25,0.5,0.5,{tag=21})
+	objectAddImage(obj,"/ball",-0.25,-0.25,0.5,0.5,{tag=20, class="PHTrailImageView"})
+    objectAddImage(obj,"/face",-0.25,-0.25,0.5,0.5,{tag=21})
 end
 function Initializers.PHLSensor(obj)
 	Initializers.PHLObject(obj)
@@ -132,8 +132,8 @@ function Initializers.PHLBull(obj,scale)
 	local bw = 1
 	local bh = 0.636172
 	local hbw = 0.1
-	objectAddImage(obj,"/bull_body.png", x*scale, y*scale, w*scale, h*scale, {tag = 20 })
-	objectAddImage(obj,"/bull_eye.png", x*scale, y*scale, w*scale, h*scale, {tag = 21 } )
+	objectAddImage(obj,"/bull_body", x*scale, y*scale, w*scale, h*scale, {tag = 20 })
+	objectAddImage(obj,"/bull_eye", x*scale, y*scale, w*scale, h*scale, {tag = 21 } )
 	objectAddBox(obj,(bw/2-hbw)*scale,-bh/2*scale,hbw*scale,bh*scale)
 	objectAddBox(obj,-bw/2*scale,-bh/2*scale,(bw-hbw)*scale,bh*scale)
 end
@@ -145,7 +145,7 @@ function Initializers.PHLSign(obj)
 	obj.overHead = point(0.25,0.25)
 	obj.questPoint = point(0.25,0.25)
 	obj.physics.dynamic = false
-	objectAddImage(obj,"/sign.png",-0.35,-0.35,0.7,0.7)
+	objectAddImage(obj,"/sign",-0.35,-0.35,0.7,0.7)
 end
 function Initializers.PHLPowerup(obj)
 	Initializers.PHLSensor(obj)
@@ -154,22 +154,22 @@ function Initializers.PHLLevelEnd(obj)
 	Initializers.PHLSensor(obj)
 	local h = 4.0
 	local w = h*0.75
-	objectAddImage(obj,"/sunshaft.png", -w/2,-0.5, w, h)
+	objectAddImage(obj,"/sunshaft", -w/2,-0.5, w, h)
 	objectAddBox(obj,-0.25,-0.25,0.5,0.5)
 end
 function Initializers.PHLShieldPowerup(obj)
 	Initializers.PHLPowerup(obj)
-	objectAddImage(obj,"/blue_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40 })
+	objectAddImage(obj,"/blue_bottle", -0.15,-0.3,0.3,0.6, { tag = 40 })
 	objectAddBox(obj, -0.15,-0.3,0.3,0.6)
 end
 function Initializers.PHLHPPowerup(obj)
 	Initializers.PHLPowerup(obj)
-	objectAddImage(obj,"/red_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40 })
+	objectAddImage(obj,"/red_bottle", -0.15,-0.3,0.3,0.6, { tag = 40 })
 	objectAddBox(obj, -0.15,-0.3,0.3,0.6)
 end
 function Initializers.PHLPowerPowerup(obj)
 	Initializers.PHLPowerup(obj)
-	objectAddImage(obj,"/green_bottle.png", -0.15,-0.3,0.3,0.6, { tag = 40 })
+	objectAddImage(obj,"/green_bottle", -0.15,-0.3,0.3,0.6, { tag = 40 })
 	objectAddBox(obj, -0.15,-0.3,0.3,0.6)
 end
 function Initializers.PHLBigBull(obj)
@@ -184,8 +184,8 @@ function Initializers.PHLBomberBird(obj)
 	local bws = rect(20,0,186,193)
 	local scale = 1/bds.x
 	obj.bounds = rect(-bds.x/2*scale,-bds.y/2*scale,bds.x*scale,bds.y*scale)
-	objectAddImage(obj,"/bird_body.png", -bds.x/2*scale,-bds.y/2*scale,bds.x*scale,bds.y*scale)
-	objectAddImage(obj,"/bird_wing.png", (bws.x-bds.x/2)*scale,(bws.y-bds.y)/2*scale,bws.width*scale,bws.height*scale)
+	objectAddImage(obj,"/bird_body", -bds.x/2*scale,-bds.y/2*scale,bds.x*scale,bds.y*scale)
+	objectAddImage(obj,"/bird_wing", (bws.x-bds.x/2)*scale,(bws.y-bds.y)/2*scale,bws.width*scale,bws.height*scale)
 end
 function Initializers.PHLEggBomb(obj)
 	Initializers.PHLSensor(obj)
@@ -196,7 +196,7 @@ function Initializers.PHLEggBomb(obj)
 	local ar = 167/211
 	local h = 0.6
 	local box = rect(-h*ar/2,-0.4,h*ar,h)
-	objectAddImage(obj,"/egg_bomb.png", box.x,box.y,box.width,box.height)
+	objectAddImage(obj,"/egg_bomb", box.x,box.y,box.width,box.height)
 	objectAddBox(obj, box.x,box.y,box.width,box.height)
 end
 
