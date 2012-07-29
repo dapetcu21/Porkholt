@@ -11,7 +11,8 @@
 #include <Porkholt/Core/PHParticleView.h>
 #include <Porkholt/Core/PHParticleAnimator.h>
 #include <Porkholt/Core/PHBezierPath.h>
-#include <Porkholt/Sound/PHMusicManager.h>
+#include <Porkholt/Sound/PHSound.h>
+#include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/3D/PHMeshBody.h>
 #include <Porkholt/3D/PHSphereMesh.h>
 #include <Porkholt/3D/PHProjectionChanger.h>
@@ -442,7 +443,7 @@ protected:
         switch (count) {
             case 0:
             {
-                PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed("earth"));
+                PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed("earth", true));
                 if (img)
                     body->setTexture(img->texture(), img->textureCoordinates());
                 body->material()->diffuse = PHWhiteColor;
@@ -450,7 +451,7 @@ protected:
             }
             case 1:
             {
-                PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed("earth")->normalMap());
+                PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed("earth", true)->normalMap());
                 if (img)
                     body->setNormalMap(img->texture(), img->textureCoordinates());
                 return;
@@ -1115,7 +1116,7 @@ protected:
     {
         if (count == 0)
         {
-            PHMusicManager::singleton()->setBackgroundMusic(gm->musicNamed("cfox"), 2.0f, false);
+            gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("cfox"));
             PHView * v = getView();
             PHImage * img = gm->imageNamed("porkholt_labs");
             PHRect rr(0, 0, img->width(), img->height());

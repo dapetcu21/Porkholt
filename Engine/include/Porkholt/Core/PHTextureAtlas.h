@@ -14,7 +14,7 @@ class PHTextureAtlas : public PHObject
 protected:
     struct loadStruct;
     PHGLTexture2D ** _textures;
-    PHRect * _texCoords;
+    PHRect * _texCoords, * _bounds;
     PHGameManager * gm;
     int n;
     volatile bool loaded;
@@ -34,6 +34,7 @@ public:
 
     PHRect textureCoordinates(int index) { load(); return _texCoords[index]; }
     PHGLTexture2D * texture(int index) { load(); return _textures[index]; }
+    PHRect bounds(int index) { load(); return _bounds[index]; }
     int count() { return n; }
 
     ~PHTextureAtlas();

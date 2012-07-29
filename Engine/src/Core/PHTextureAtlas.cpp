@@ -12,7 +12,7 @@
 lua_State * PHTextureAtlas::staticL = NULL;
 PHMutex * PHTextureAtlas::luaMutex = new PHMutex;
 
-#define INIT gm(gameManager), loaded(false), ploaded(false), _textures(NULL), _texCoords(NULL), mutex(new PHMutex)
+#define INIT gm(gameManager), loaded(false), ploaded(false), _textures(NULL), _texCoords(NULL), _bounds(NULL), mutex(new PHMutex)
 
 PHTextureAtlas::PHTextureAtlas(PHGameManager * gameManager, PHDirectory * dir) : INIT
 {
@@ -83,8 +83,10 @@ struct PHTextureAtlas::loadStruct
         bool aa;
         PHRect rect;
         PHGLTexture::pixelFormat fmt;
-        ~params() {
-            delete[] data;
+        params() : data(NULL) {}
+        ~params() { 
+            if (data)
+                delete[] data;
         }
     };
     vector<params> mp;
@@ -105,21 +107,29 @@ void PHTextureAtlas::loadFromDir(PHDirectory * dir, lua_State * L)
         ls->dir = dir;
         dir->retain();
         int o = -1;
-        lua_pushnil(L);
-        while (lua_next(L,-2) != 0) 
-        {
-            if (lua_istable(L, -1) && lua_isstring(L, -2))
+        PHLuaForEach(-1)
+            if (lua_istable(L, -1))
             {
+                lua_getfield(L, -1, "fname");
+                string fn;
+                if (lua_isstring(L, -1))
+                {
+                    fn = lua_tostring(L, -1);
+                    lua_pop(L, 1);
+                }
+                else
+                {
+                    lua_pop(L, 1);
+                    continue;
+                }
                 o++;
-                string fn = lua_tostring(L, -2);
                 ls->maps.push_back(fn);
                 PHLuaForEach(-1)
                     if (lua_istable(L, -1))
                         ls->imgs.push_back(make_pair(o, PHRect::fromLua(L, -1)));
                 PHLuaForEach_
             }
-            lua_pop(L, 1);
-        }
+        PHLuaForEach_
     }
 
     if (!ls)
@@ -158,17 +168,23 @@ void PHTextureAtlas::loadInVRAM()
     for (vector<PHTextureAtlas::loadStruct::params>::iterator i = ls->mp.begin(); i != ls->mp.end(); i++)
     {
         PHGLTexture2D * tx = new PHGLTexture2D(gm);
-        i->rect = tx->loadFromData(i->data, i->w, i->h, i->bw, i->bh, i->fmt, i->aa);
+        tx->setWrapS(PHGLTexture::clampToEdge);
+        tx->setWrapT(PHGLTexture::clampToEdge);
+        tx->setMinFilter(PHGLTexture::linear);
+        tx->setMagFilter(PHGLTexture::linear);
+        tx->setData(i->data, i->bw, i->bh, i->fmt);
         v.push_back(tx);
     }
 
     int j = 0;
     _textures = new PHGLTexture2D * [n];
     _texCoords = new PHRect[n];
+    _bounds = new PHRect[n];
     for(vector< pair< int, PHRect > >::iterator i = ls->imgs.begin(); i != ls->imgs.end(); i++, j++)
     {
         PHTextureAtlas::loadStruct::params & p = ls->mp[i->first];
-        _texCoords[j] = PHRect(i->second.x / (p.w-1), i->second.y / (p.h-1), i->second.width / (p.w-1), i->second.height / (p.h-1)) * p.rect;
+        _bounds[j] = i->second;
+        _texCoords[j] = PHRect(i->second.x / p.bw, i->second.y / p.bh, i->second.width / p.bw, i->second.height / p.bh);
         _textures[j] = v[i->first];
         v[i->first]->retain();
     }
@@ -186,6 +202,8 @@ PHTextureAtlas::~PHTextureAtlas()
         delete [] _textures;
     if (_texCoords)
         delete [] _texCoords;
+    if (_bounds)
+        delete [] _bounds;
     if (ls)
         delete ls;
     mutex->release();

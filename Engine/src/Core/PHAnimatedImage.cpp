@@ -247,6 +247,9 @@ void PHAnimatedImage::_load()
 {
     if (atl)
         atl->load();
+    PHRect r = atl->bounds(0);
+    _width = int(r.width);
+    _height = int(r.height);
     loaded = true; 
 }
 
