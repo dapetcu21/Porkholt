@@ -81,7 +81,7 @@ void PHChapterController::levelEnded(PHObject * sender, void *ud)
     {
         ostringstream oss;
         oss<<"lvl"<<nr+1;
-        ret = path->directoryExists(oss.str());
+        ret = !path->directoryExists(oss.str());
     }
     if (ret)
     {

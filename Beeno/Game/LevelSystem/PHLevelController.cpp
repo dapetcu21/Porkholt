@@ -224,8 +224,10 @@ void PHLevelController::resume()
 
 PHView * PHLevelController::loadView(const PHRect & frame)
 {
+#if !(defined(PH_DEBUG) && defined(PH_DESKTOP))
 	PHMessage::messageWithName("appSuspended")->addListener(this,(PHCallback)&PHLevelController::appSuspended);
 	PHMessage::messageWithName("appResumed")->addListener(this,(PHCallback)&PHLevelController::appResumed);
+#endif
 	
 	PHView * view = new PHView(frame);
 	view->setUserInput(true);
@@ -273,7 +275,7 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
     if (_outcome == LevelWon)
     {
         v = parseFile("outro.txt");
-        if (v->empty())
+        if (!v || (v->empty()))
         {
             delete v;
             v = NULL;
