@@ -1,6 +1,8 @@
-Porkholt Engine este o platformă completă de dezvoltare a aplicațiilor grafice 2D (cu suport preliminar de 3D), și în principal al jocurilor, targetat în special sistemelor mobile, dar nu numai. Engine-ul este ușor portabil pe orice platformă UNIX-like care suportă OpenGL. Deocamdată suportă iOS, Mac OS X și Linux, dar avem planuri de portare pentru Android și Meegoo (de fapt X11).
+Porkholt SDK is a cross-platform graphics engine and application development platform targeted towards both desktop and mobile platforms (iOS, OS X, Linux, FreeBSD, Android support planned)
+
+Porkholt Engine este o platformă completă de dezvoltare a aplicațiilor grafice 2D (cu suport preliminar de 3D), și în principal al jocurilor, targetat în special sistemelor mobile, dar nu numai. Engine-ul este ușor portabil pe orice platformă UNIX-like care suportă OpenGL. Deocamdată suportă iOS, Mac OS X, Linux și FreeBSD dar avem planuri de portare pentru Android.
 Porkholt este o soluție completă pentru UI, sunet, input, grafică și animație ce oferă un approach simplu, orientat pe obiecte, oricărui utilizator de C++ fără cunoștiințe de OpenGL sau grafică, dar în același timp se duce mai departe oferind interfețe low-level, dar ușor de folosit, cross-platform, pentru API-uri OpenGL și pentru shadere.
-Funcționează pe OpenGL 1.1 ES, 2.0 ES, 2.1 (desktop) și în curând și pe OpenGL 3/4 pe desktop.
+Funcționează pe OpenGL 1.1 ES, 2.0 ES, 2.1 (desktop), OpenGL 3.x (desktop).
 Cu acces la animații de toate felurile, scripting în Lua, particle effects, curbe, un sistem model-view-controller bazat pe eventuri, thread-safeness, sunet și build scripturi ce transformă project file-ul într-un fișier cmake cu 5 linii, Porkholt concurează cu engine-uri folosite pe scară largă în industria jocurilor mobile precum cocos2d.
 
 DRAWABLES
@@ -18,4 +20,5 @@ De asemenea, Porkholt suportă animații keyframed interpolate (cadru cu cadru)
 VIEW CONTROLLERS
 Navigație, meniuri și management-ul jocului. Toate acestea se pot face folosind view controllere, obiecte ce au ca rol management-ul unui ecran. Acestea pot fi animate, tranziționate și puse într-o stivă.
 
-
+SUNET
+Porkholt are un sistem de sunet bazat pe OpenAL ce suportă poziționare 3D a sunetelor, încărcare și buffering asincrone și un sistem de pluginuri de decodoare ce permite adăugarea suportului pentru mai multe formate doar scriind o clasă cu 4 funcții

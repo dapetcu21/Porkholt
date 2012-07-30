@@ -663,15 +663,15 @@ class PHPlayerController : public PHSlide
 
         PHImage * img;
     
-        img = gm->imageNamed("play");
+        img = gm->imageNamed("playp");
         playb->setPressedImage(img);
         playb->setImage(img);
     
-        img = gm->imageNamed("pause");
+        img = gm->imageNamed("pausep");
         pauseb->setPressedImage(img);
         pauseb->setImage(img);
      
-        img = gm->imageNamed("stop");
+        img = gm->imageNamed("stopp");
         stopb->setPressedImage(img);
         stopb->setImage(img);       
 
@@ -1243,6 +1243,7 @@ public:
     {
         PHSlide * vc = new PHPorkholt2();
         vc->init(gm);
+        gm->soundManager()->setBackgroundMusic(NULL);
         gm->navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
     }
