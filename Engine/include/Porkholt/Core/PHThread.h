@@ -36,8 +36,8 @@ public:
     {
         PHThread * t = new PHThread;
         t->setFunction(inv);
+        t->setAutoRelease(true);
         t->start();
-        t->release();
     }
     
 private:
