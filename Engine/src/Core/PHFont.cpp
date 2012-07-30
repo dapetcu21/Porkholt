@@ -28,8 +28,11 @@ PHFont::PHFont(PHGameManager * gameM, PHFile * file) : gm(gameM), loaded(false),
     {
         size_t txc = PHDecode(uint32At(d, 4));
         size_t img;
-
+#ifdef PH_DESKTOP
+        if (true)
+#else
         if (gm->platformSuffix().size())
+#endif
             img = PHDecode(uint32At(d, 12));
         else
             img = PHDecode(uint32At(d, 8));

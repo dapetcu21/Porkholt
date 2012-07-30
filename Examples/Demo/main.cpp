@@ -745,12 +745,32 @@ class PHPlayerController : public PHSlide
         //snd->setPosition(PHVector3(sin(pos)*10, cos(pos)*10, 0));
     }
 
+    ph_float tb;
     void screenTapped(int count)
     {
-        PHViewController * vc = new PHOneMoreThing();
-        vc->init(gm);
-        navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
-        vc->release();
+        switch(count)
+        {
+            case 0:
+                tb = addTitle("Sound System", titleheader);
+                return;
+            case 1:
+                tb = addBullet("- OpenAL: 3D Sound", tb + 2*spacing);
+                return;
+            case 2:
+                tb = addBullet("- Asynchronous buffering", tb + spacing);
+                return;
+            case 3:
+                tb = addBullet("- Decoder plugin system", tb + spacing);
+                return;
+            case 4:
+            {
+                PHViewController * vc = new PHOneMoreThing();
+                vc->init(gm);
+                navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+                vc->release();
+                return;
+            }
+        }
     }
 };
 
@@ -1149,7 +1169,7 @@ class PHPorkholtHighLevel : public PHSlide
             case 2:
                 tb = addBullet("- Drawables", tb + spacing);
                 return;
-            case 5:
+            case 3:
             {
                 PHSlide * vc = new PHPorkholtViews;
                 vc->init(gm);
@@ -1219,7 +1239,7 @@ class PHPorkholt2 : public PHSlide
                 tb = addBullet("- Easy to use", tb + spacing);
                 return;
             case 3:
-                tb = addBullet("- Cross Platform", tb + spacing);
+                tb = addBullet("- Cross-platform", tb + spacing);
                 return;
             case 4:
                 tb = addBullet("- Advanced", tb + spacing);
