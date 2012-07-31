@@ -17,11 +17,20 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHDeferredView.h>
-
+#include <Porkholt/Core/PHGLShaderProgram.h>
 
 const string PHImageView::_luaClass("PHImageView");
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL), shad(NULL)
+
+void PHImageView::setShader(PHGLShaderProgram *sh)
+{
+    if (sh)
+        sh->retain();
+    if (shad)
+        shad->release();
+    shad = sh;
+}
 
 bool PHImageView::supportsRenderMode(int rm)
 {
@@ -348,7 +357,8 @@ void PHImageView::renderStraight()
 void PHImageView::draw()
 {
     if (!_image) return;
-    bool nrm =  (gm->renderMode() == PHDeferredView::normalMapRenderMode);
+    bool nrm = (gm->renderMode() == PHDeferredView::normalMapRenderMode);
+    bool sh = (shad!=NULL) && !nrm;
     PHImage * img = _image;
     if (nrm)
     {
@@ -357,6 +367,8 @@ void PHImageView::draw()
         else
             gm->pushSpriteShader(gm->shaderProgramNamed<missingnormals_sprites>());
     }
+    if (sh)
+        gm->pushSpriteShader(shad);
     if (curve)
         renderCurved();
     else
@@ -368,6 +380,8 @@ void PHImageView::draw()
         else
             gm->popSpriteShader();
     }
+    if (sh)
+        gm->popSpriteShader();
 }
 
 void PHImageView::attachedToGameManager()

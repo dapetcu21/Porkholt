@@ -4,7 +4,9 @@
 #include <Porkholt/UI/PHTestViewController.h>
 #include <Porkholt/UI/PHButtonView.h>
 #include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHImageAnimator.h>
 #include <Porkholt/Core/PHTextView.h>
+#include <Porkholt/Core/PHEvent.h>
 #include <sstream>
 
 static const int width = 100;
@@ -24,6 +26,22 @@ class PHMathrisViewController : public PHViewController
     int lane;
 
     ph_float speed;
+
+    void setLane(int l) { if ((l>=0) && (l<cols)) shift(l - lane); }
+
+    class PHLaneView : public PHView
+    {
+    public:
+        PHMathrisViewController * c;
+        void touchEvent(PHEvent * evt)
+        {
+            if (evt->type() == PHEvent::touchDown)
+            {
+                evt->setHandled(true);
+                c->setLane(toMyCoordinates(evt->location()).x/width);
+            }
+        }
+    };
 
     PHView * loadView(const PHRect & r)
     {
@@ -74,7 +92,10 @@ class PHMathrisViewController : public PHViewController
         PHRect rr = c->bounds();
         rr.y += height;
         rr.height -= height;
-        pv = new PHView(rr);
+        pv = new PHLaneView();
+        pv->setFrame(rr);
+        pv->setUserInput(true);
+        ((PHLaneView*)pv)->c = this;
         c->addChild(pv);
 
         lines --;
@@ -86,6 +107,29 @@ class PHMathrisViewController : public PHViewController
         return v;
     }
 
+    void removeBrick(int lane, int c)
+    {
+        int n = vec[lane].size();
+        PHView * v = img[lane][c];
+        for (int i = c+1; i<n; i++)
+        {
+            vec[lane][i-1] = vec[lane][i];
+            img[lane][i-1] = img[lane][i];
+            PHImageView * v = img[lane][i];
+            v->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+            v->animateMove(PHPoint(0, -height));
+            v->commitCinematicAnimation();
+        }
+        vec[lane].pop_back();
+        img[lane].pop_back();
+        
+        PHImageView * iv = new PHImageView(v->frame());
+        iv->setImage(gm->imageNamed("boom"));
+        iv->animator()->animateSection("poof", PHInv(iv, PHView::removeFromParent, NULL));
+        pv->addChild(iv);
+        iv->release();
+        v->removeFromParent();
+    }
 
     void updateScene(ph_float elapsed)
     {
@@ -95,8 +139,13 @@ class PHMathrisViewController : public PHViewController
             num = rand()%10+1;
             block = new PHImageView(PHRect(width * lane, height * lines, width, height)); 
             block->setImage(gm->imageNamed("brick"));
-            static const PHColor clrs[] = { PHColor(0,0,1), PHColor(1,0,0) };
-            block->setTintColor(clrs[rand()%(sizeof(clrs)/sizeof(PHColor))]);
+            PHColor clr(rand()%(255-50)+50,
+                        rand()%(255-50)+50,
+                        rand()%(255-50)+50,
+                        255);
+            clr *= 1/255.0f;
+            block->setTintColor(clr);
+            block->setShader(gm->shaderProgramNamed("rares_shader"));
             PHTextView * tv = new PHTextView(block->bounds());
             tv->setFont(gm->fontNamed("Helvetica"));
             tv->setFontColor(PHWhiteColor);
@@ -124,7 +173,7 @@ class PHMathrisViewController : public PHViewController
             pv->addChild(block);
         }
         PHRect r = block->frame();
-        r.y -= elapsed * (dn?(speed*2):speed);
+        r.y -= elapsed * (dn?(speed*3):speed);
         ph_float l = vec[lane].size() * height;
         bool b = false;
         if (r.y<=l)
@@ -139,14 +188,20 @@ class PHMathrisViewController : public PHViewController
         {
             block->release();
             block = NULL;
-            if ((vec[lane].size()>=2) && (num == vec[lane][vec[lane].size()-2]))
-            {
-                PHView * v;
-                v = img[lane].back(); v->removeFromParent(); img[lane].pop_back();
-                v = img[lane].back(); v->removeFromParent(); img[lane].pop_back();
-                vec[lane].pop_back();
-                vec[lane].pop_back();
-            }
+            int curp = vec[lane].size()-1;
+            bool dd, dl, dr;
+            dd = ((vec[lane].size()>=2) && (num == vec[lane][curp-1]));
+            dl = ((lane>0) && (vec[lane-1].size()>curp) && (vec[lane-1][curp] == num));
+            dr = ((lane<cols-1) && (vec[lane+1].size()>curp) && (vec[lane+1][curp] == num));
+            if (dd || dl || dr)
+                removeBrick(lane, curp);
+            if (dd)
+                removeBrick(lane, curp-1);
+            if (dl)
+                removeBrick(lane-1, curp);
+            if (dr)
+                removeBrick(lane+1, curp);
+
             if (vec[lane].size() >= lines)
             {
                 for (int i = 0; i<cols; i++)
@@ -170,8 +225,25 @@ class PHMathrisViewController : public PHViewController
         int ln = lane + off;
         if (ln<0 || ln>=cols)
             return;
-        if (r.y >= vec[ln].size() * height)
+        if (off>0)
+        {   
+            for (int i = lane+1; i<=lane+off; i++)
+                if (r.y < vec[i].size() * height)
+                {
+                    ln = i-1;
+                    break;
+                }
+        } else {
+            for (int i = lane-1; i>=lane+off; i--)
+                if (r.y < vec[i].size() * height)
+                {
+                    ln = i+1;
+                    break;
+                }            
+        }
+        if (ln != lane)
         {
+            off = ln - lane;
             lane = ln;
             block->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
             block->animateMove(PHVector2(off * width, 0));

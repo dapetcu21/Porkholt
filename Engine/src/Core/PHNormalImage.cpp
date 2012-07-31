@@ -20,6 +20,8 @@ PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord)
 PHNormalImage::PHNormalImage(PHGameManager * gameManager, PHFile * file, bool aa): PHImage(gameManager), tex(NULL), pload(false)
 {
     fd = file;
+    if (!fd)
+        throw string("The fuck?");
     fd->retain();
     antialiasing = aa;
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
@@ -31,6 +33,8 @@ PHNormalImage::PHNormalImage(PHGameManager * gameManager, PHFile * file, bool aa
 
 void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 {
+    if (!fd) return;
+
     loadMutex->lock();
 #ifdef PHIMAGE_ORDERED_LOADING
     loadingMutex->lock();

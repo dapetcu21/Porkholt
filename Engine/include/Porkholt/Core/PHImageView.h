@@ -11,6 +11,7 @@ class PHImageAnimator;
 class PHAnimatorPool;
 class PHCurve;
 class PHDirectory;
+class PHGLShaderProgram;
 
 #define PH_REGISTERIMAGEVIEW(clss) PH_REGISTERCLASS(PHImageView::initMap, #clss, clss)
 
@@ -70,7 +71,12 @@ protected:
 
     virtual void attachedToGameManager();
     
+    PHGLShaderProgram * shad;
+    
 public:
+    PHGLShaderProgram * shader() { return shad; }
+    void setShader(PHGLShaderProgram * shad);
+    
     PHAnimatorPool * animatorPool() { return pool; }
     void setAnimatorPool(PHAnimatorPool * p);
 	PHImage * image() { return _image; };
