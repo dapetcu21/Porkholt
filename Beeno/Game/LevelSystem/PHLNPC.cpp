@@ -110,7 +110,7 @@ void PHLNPC::loadView()
     if (staticFace) 
         ((PHPlayerView*)view)->setDesignatedTag(-21);
     if ((trailPossible = (dynamic_cast<PHTrailImageView*>(bodyView)!=NULL)))
-        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2/(60/gm->framesPerSecond()));
+        ((PHTrailImageView*)bodyView)->setSnapshotInterval(2.0f/(60.0f/gm->framesPerSecond()));
     view->setGameManager(gm);
 	view->setRotation(rot);
 }
