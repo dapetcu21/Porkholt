@@ -7,6 +7,8 @@
 #include <Porkholt/Core/PHImageAnimator.h>
 #include <Porkholt/Core/PHTextView.h>
 #include <Porkholt/Core/PHEvent.h>
+#include <Porkholt/Sound/PHSoundManager.h>
+#include <Porkholt/Sound/PHSound.h>
 #include <sstream>
 
 static const int width = 100;
@@ -17,12 +19,14 @@ class PHMathrisViewController : public PHViewController
     int lines, cols;
     int num;
     bool dn;
+    int score;
 
     vector< vector<int> > vec;
     vector< vector<PHImageView*> > img;
     PHView * pv;
 
     PHImageView * block;
+    PHTextView * text;
     int lane;
 
     ph_float speed;
@@ -42,6 +46,8 @@ class PHMathrisViewController : public PHViewController
             }
         }
     };
+
+    PHSound * snd;
 
     PHView * loadView(const PHRect & r)
     {
@@ -98,13 +104,32 @@ class PHMathrisViewController : public PHViewController
         ((PHLaneView*)pv)->c = this;
         c->addChild(pv);
 
+        text = new PHTextView(v->bounds());
+        text->setFont(gm->fontNamed("Helvetica"));
+        text->setFontColor(PHWhiteColor);
+        text->setAlignment(PHTextView::justifyLeft | PHTextView::alignTop);
+        text->setFontSize(40);
+        text->setText("0");
+        v->addChild(text);
+        text->release();
+
+        snd = gm->soundManager()->soundNamed("explosion");
+
         lines --;
         
         block = NULL;
+        score = 0;
         speed = 200;
         dn = false;
 
         return v;
+    }
+
+    void updateScore()
+    {
+        ostringstream oss;
+        oss<<score;
+        text->setText(oss.str());
     }
 
     void removeBrick(int lane, int c)
@@ -126,9 +151,13 @@ class PHMathrisViewController : public PHViewController
         PHImageView * iv = new PHImageView(v->frame());
         iv->setImage(gm->imageNamed("boom"));
         iv->animator()->animateSection("poof", PHInv(iv, PHView::removeFromParent, NULL));
+        if (!snd->isPlaying())
+            snd->play();
         pv->addChild(iv);
         iv->release();
         v->removeFromParent();
+        score += 50;
+        updateScore();
     }
 
     void updateScene(ph_float elapsed)
@@ -282,6 +311,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    return PHWMain(argc, argv, PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVideoMode(800,600,PHWVideoMode::Windowed), PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL);
 }
  
