@@ -40,7 +40,7 @@ public:
         linearMipmapLinear
     };
        
-private:
+protected:
     enum wrapType wS, wT, wR;
     enum aaFilter min, mag;
     bool mipMap;
@@ -51,7 +51,6 @@ private:
     void _bind();
     static GLenum openGLEnumFromWrapType(enum wrapType t);
     static GLenum openGLEnumFromAAFilter(enum aaFilter t);
-protected:
     GLenum target;
     
 public:
@@ -70,7 +69,7 @@ public:
     enum wrapType swapR() { return wR; }
     void setWrapR(enum wrapType t);
 #endif
-    
+
     void setMinFilter(enum aaFilter t);
     void setMagFilter(enum aaFilter t);
     enum aaFilter minFilter() { return min; }
@@ -115,11 +114,8 @@ public:
     void setData(uint8_t * data, size_t width, size_t height, enum pixelFormat format);
     size_t width() { return w; }
     size_t height() { return h; }
-    PHRect loadFromFile(const string & fname, bool antialiasing);
-    PHRect loadFromFile(const string & fname) { return loadFromFile(fname, false); };
-    
-    PHRect loadFromFile(PHStream * fd, bool antialiasing);
-    PHRect loadFromFile(PHStream * fd) { return loadFromFile(fd, false); };
+    PHRect loadFromFile(const string & fname, bool antialiasing = false);
+    PHRect loadFromFile(PHStream * fd, bool antialiasing = false);
     
     PHRect loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw, size_t bh, enum pixelFormat fmt, bool aa);
 };

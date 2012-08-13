@@ -45,15 +45,23 @@ PHGLEXTDefine(GLvoid,    glClearDepth, GLclampd);
 
 void loadExtensionCompat();
 
+PHColor ccolor;
+float cdepth;
+int cstencil;
+
 public:
 void * glFunctionAddress(const char * s);
 void setClearColor(const PHColor & c);
 void setDepthClearValue(float val);
 void setStencilClearValue(int val);
+const PHColor & clearColor() { return ccolor; }
+float depthClearValue() { return cdepth; }
+int stencilClearValue() { return cstencil; }
+
 enum {
     colorBuffers = 1<<0,
-    depthBuffer = 1<<2,
-    stencilBuffer = 1<<3
+    depthBuffer = 1<<1,
+    stencilBuffer = 1<<2
 };
 void clearBuffers(int mask);
 void clearColorBuffers() { clearBuffers(colorBuffers); }

@@ -42,6 +42,7 @@ public:
         }
         return this; 
     };
+    void autorelease();
 
     void clearInvocations();
     void bindInvocation(PHInvocation * inv);

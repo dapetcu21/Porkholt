@@ -17,6 +17,11 @@ void PHObject::unbindInvocation(PHInvocation * invo)
     s->erase(invo);
 }
 
+void PHObject::autorelease()
+{
+    PHAutoreleasePool::autorelease(this);
+}
+
 void PHObject::clearInvocations()
 {
     set<PHInvocation*> * s = (set<PHInvocation*> *)inv;

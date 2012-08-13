@@ -15,6 +15,7 @@ PHGLFramebuffer::PHGLFramebuffer(PHGameManager * gam) : gm(gam), dth(NULL), stc(
 
 PHGLFramebuffer::~PHGLFramebuffer()
 {
+    gm->glDeleteFramebuffers(1, &id);
     for (int i = 0; i<nclr; i++)
         if (clr[i])
             clr[i]->release();
@@ -30,10 +31,10 @@ void PHGLFramebuffer::attachColor(PHGLFBOAttachment * a, int index)
     if (a == clr[index]) return;
     if (a)
         a->retain();
+    attachToTarget(a, GL_COLOR_ATTACHMENT0 + index);
     if (clr[index])
         clr[index]->release();
     clr[index] = a;
-    attachToTarget(a, GL_COLOR_ATTACHMENT0 + index);
 }
 
 void PHGLFramebuffer::attachDepth(PHGLFBOAttachment * a)
@@ -41,10 +42,15 @@ void PHGLFramebuffer::attachDepth(PHGLFBOAttachment * a)
     if (a == dth) return;
     if (a)
         a->retain();
+    enum PHGLFBOAttachment::pixelFormat f = a->format();
+    if (f == PHGLFBOAttachment::Depth24Stencil8 ||
+        f == PHGLFBOAttachment::Depth32fStencil8)
+        attachToTarget(a, GL_DEPTH_STENCIL_ATTACHMENT);
+    else
+        attachToTarget(a, GL_DEPTH_ATTACHMENT);
     if (dth)
         dth->release();
     dth = a;
-    attachToTarget(a, GL_DEPTH_ATTACHMENT);
 }
 
 void PHGLFramebuffer::attachStencil(PHGLFBOAttachment * a)
@@ -52,10 +58,10 @@ void PHGLFramebuffer::attachStencil(PHGLFBOAttachment * a)
     if (a == stc) return;
     if (a)
         a->retain();
+    attachToTarget(a, GL_STENCIL_ATTACHMENT);
     if (stc)
         stc->release();
     stc = a;
-    attachToTarget(a, GL_STENCIL_ATTACHMENT);
 }
 
 void PHGLFramebuffer::attachToTarget(PHGLFBOAttachment * a, GLenum t)
@@ -73,13 +79,19 @@ void PHGLFramebuffer::attachToTarget(PHGLFBOAttachment * a, GLenum t)
             if (rb)
                gm->glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, rb->id);
         }
-    }
+    } else 
+        gm->glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, 0);
     gm->bindFramebuffer(f);
 }
 
 void PHGLFramebuffer::bind()
 {
     gm->bindFramebuffer(this);
+}
+
+void PHGLFramebuffer::unbind()
+{
+    gm->bindFramebuffer(NULL);
 }
 
 bool PHGLFramebuffer::isComplete()

@@ -124,42 +124,6 @@ bool PHGLTexture::supportsNPOT(PHGameManager * gm)
     return (gm->hasCapability(PHGLCapabilityNPOT) || gm->hasCapability(PHGLCapabilityAppleLimitedNPOT));
 }
 
-const GLenum PHGLInternalFormats[] = {
-#ifdef GL_ALPHA8 
-    GL_ALPHA8,
-#else
-    GL_ALPHA,
-#endif
-#ifdef GL_LUMINANCE8
-    GL_LUMINANCE8, 
-#else
-    GL_LUMINANCE,
-#endif
-    GL_LUMINANCE_ALPHA,
-#ifdef GL_RGBA8
-    GL_RGBA8, 
-#else
-    GL_RGBA,
-#endif
-#ifdef GL_RGBA16
-    GL_RGBA16,
-#else
-    GL_RGBA,
-#endif
-#ifdef GL_RGB8
-    GL_RGB8, 
-#else
-    GL_RGB,
-#endif
-#ifdef GL_RGB16
-    GL_RGB16
-#else
-    GL_RGB
-#endif
-};
-const GLenum PHGLFormats[]  = {GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGBA, GL_RGBA, GL_RGB, GL_RGB};
-const GLenum PHGLTypes[] = {GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT};
-
 void PHGLTexture::updateMipMap()
 {
     mipMap = (
@@ -183,6 +147,7 @@ void PHGLTexture1D::setData(uint8_t * data, size_t width, enum pixelFormat f)
     glTexImage1D(target, 0, PHGLInternalFormats[f], width, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
+    pfmt = f;
     bind_end;
 }
 #endif
@@ -197,6 +162,7 @@ void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pix
     PHGLCheckError();
     w = width;
     h = height;
+    pfmt = f;
     bind_end;
 }
 
@@ -268,6 +234,7 @@ void PHGLTexture3D::setData(uint8_t *data, size_t width, size_t height, size_t d
     w = width;
     h = height;
     d = depth;
+    pfmt = f;
     bind_end;
 }
 #endif

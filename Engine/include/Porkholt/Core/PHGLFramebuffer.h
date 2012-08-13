@@ -25,15 +25,16 @@ public:
     PHGLFramebuffer(PHGameManager * gameManager);
     ~PHGLFramebuffer();
 
-    PHGLFBOAttachment * colorAttachment(int index) { return clr[index]; }
+    PHGLFBOAttachment * colorAttachment(int index = 0) { return clr[index]; }
     PHGLFBOAttachment * depthAttachment() { return dth; }
     PHGLFBOAttachment * stencilAttachment() { return stc; }
     
     void attachColor(PHGLFBOAttachment * a, int index);
     void attachDepth(PHGLFBOAttachment * a);
     void attachStencil(PHGLFBOAttachment * a);
-
+    
     void bind();
+    void unbind();
     bool isComplete();
 };
 

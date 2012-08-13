@@ -24,6 +24,7 @@ protected:
 	virtual void draw() {}
 public:
     virtual void render();
+    void renderChildren();
     
     virtual bool supportsRenderMode(int rm) { return rm == PHGameManager::defaultRenderMode; }
     

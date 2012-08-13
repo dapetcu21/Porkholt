@@ -226,8 +226,7 @@ void PHView::render()
             drawBackground();
             draw();
         }
-        for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
-            (*i)->render();
+        renderChildren();
 	}
     gm->setModelViewMatrix(om);
     if (mtx) mtx->unlock();

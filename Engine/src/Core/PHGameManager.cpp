@@ -20,7 +20,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -265,6 +265,8 @@ void PHGameManager::processInput()
 
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
+    PHAutoreleasePool pool;
+
     lastElapsed = timeElapsed;
     setClearColor(PHBlackColor);
     setDepthClearValue(1.0f);

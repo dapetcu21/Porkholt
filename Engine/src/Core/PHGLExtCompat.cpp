@@ -166,17 +166,23 @@ int PHGameManager::colorAttachmentCount()
 
 void PHGameManager::setClearColor(const PHColor & c)
 {
+    if (ccolor == c) return;
     glClearColor(c.r, c.g, c.b, c.a);
+    ccolor = c;
 }
 
 void PHGameManager::setDepthClearValue(float val)
 {
+    if (cdepth == val) return;
     glClearDepth(val);
+    cdepth = val;
 }
 
 void PHGameManager::setStencilClearValue(int val)
 {
+    if (cstencil == val)
     glClearStencil(val);
+    cstencil = val;
 }
 
 void PHGameManager::clearBuffers(int m)

@@ -130,6 +130,7 @@ struct lua_State;
 #include <Porkholt/Core/PHInvocation.h>
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/Core/PHObject.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHMessage.h>
 #include <Porkholt/Geometry/PHGeometry.h>
 #include <Porkholt/Core/PHErrors.h>

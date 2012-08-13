@@ -17,17 +17,24 @@ void PHDrawable::setGameManager(PHGameManager * gameManager)
     if (gm == gameManager)
         return;
     gm = gameManager;
-    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
-        (*i)->setGameManager(gameManager);
     if (gm)
+    {
+        for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
+            (*i)->setGameManager(gameManager);
         attachedToGameManager();
+    }
+}
+
+void PHDrawable::renderChildren()
+{
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
+        (*i)->render();
 }
 
 void PHDrawable::render()
 {
     draw();
-    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end(); i++)
-        (*i)->render();
+    renderChildren();
 }
 
 
@@ -37,7 +44,8 @@ void PHDrawable::addChildBefore(PHDrawable * drawable, PHDrawable * before)
 		return;
     if (mtx) mtx->lock();
 	drawable->retain();
-    drawable->setGameManager(gm);
+    if (gm)
+        drawable->setGameManager(gm);
 	drawable->removeFromParent();
     list<PHDrawable*>::iterator i = _children.end();
     if (before && before->parent() == this )

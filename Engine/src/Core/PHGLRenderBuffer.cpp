@@ -3,15 +3,19 @@
 #include <Porkholt/Core/PHGLRenderBuffer.h>
 #include <Porkholt/Core/PHGameManager.h>
 
-PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt)
+#define INIT w(width), h(height)
+
+PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt) : INIT
 {
+    pfmt = fmt;
     gm->glGenRenderbuffers(1, &id);
     gm->glBindRenderbuffer(GL_RENDERBUFFER, id);
     gm->glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
 }
 
-PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples)
+PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples) : INIT
 {
+    pfmt = fmt;
     gm->glGenRenderbuffers(1, &id);
     gm->glBindRenderbuffer(GL_RENDERBUFFER, id);
     if (gm->glRenderbufferStorageMultisample)
