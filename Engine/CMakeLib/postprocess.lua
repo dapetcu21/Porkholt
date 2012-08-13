@@ -136,9 +136,8 @@ function downscale_png(srcd, dstd, f, stp, name)
           os.execute(cmd)
         else
           print('Downscaling image "'..name..'"')
-      	  local flags="-quality 5 -channel RGBA -depth 24 -colorspace RGB"
-      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 25% "png32:'..dstd.."/"..f..'"')
-      	  os.execute('convert "'..srcd.."/"..f..'" '..flags..' -resize 50% "png32:'..dstd.."/"..fhd..'"')
+      	  os.execute('gm convert "'..srcd.."/"..f..'" -resize 25% "png32:'..dstd.."/"..f..'"')
+      	  os.execute('gm convert "'..srcd.."/"..f..'" -resize 50% "png32:'..dstd.."/"..fhd..'"')
   	    end
     end
   else
@@ -169,10 +168,10 @@ function layout_images(width, scale, src, ins, dst)
       h = y + yy 
     end
     s = s .. '{ x = ' .. tostring(x) .. ', y = ' .. tostring(y) .. ', width = ' .. tostring(xx) .. ', height = ' .. tostring(yy) .. ' }, '
-    exec = exec .. '"' .. src .. '/' .. f.fname .. '" -geometry '..tostring(xx)..'x'..tostring(yy)..'+'..tostring(x)..'+'..tostring(y)..' -composite '
+    exec = exec .. "-draw 'image Copy "..tostring(x)..','..tostring(y)..' '..tostring(xx)..','..tostring(yy)..' "' .. src .. '/' .. f.fname .. '"\' '
     x = x + xx
   end
-  exec = 'convert -size '..tostring(w)..'x'..tostring(h)..' xc:white -alpha transparent -quality 5 -channel RGBA -depth 24 -colorspace RGB ' .. exec .. '"png32:'.. dst ..'"'
+  exec = 'gm convert -size '..tostring(w)..'x'..tostring(h)..' xc:transparent ' .. exec .. '"png32:'.. dst ..'"'
 
   return s, exec, w, h
 end
@@ -183,7 +182,8 @@ function create_map(files, src, dst, hd)
   local ins = {}
   while files[tostring(i)..'.png'] == 'f' do
     local fn = tostring(i)..'.png'
-    local f = io.popen('identify -format "%[fx:w] %[fx:h]" "'..src..'/'..fn..'"')
+    local exec = 'gm identify -format "%w %h" "'..src..'/'..fn..'"';
+    local f = io.popen(exec)
     local x = f:read("*n")
     local y = f:read("*n")
     f:close()
