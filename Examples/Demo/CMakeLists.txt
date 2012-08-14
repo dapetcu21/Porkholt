@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(Demo)
 
 set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
+set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/CMakeLib")
 set(PH_NAME "Demo")
 set(PH_BEENO "${PH_ENGINE_PATH}/../Beeno/Game")
 
@@ -97,4 +98,6 @@ include_directories(${PH_BEENO}
   ${PH_BEENO}/UI
   ${PH_BEENO}/LevelSystem)
 
-include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_All.cmake)
+include(Porkholt)
+include(cotire)
+cotire(Demo)

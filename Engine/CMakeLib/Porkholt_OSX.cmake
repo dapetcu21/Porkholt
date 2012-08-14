@@ -1,3 +1,4 @@
+
 if(NOT PH_SAME_PROJECT)
   project(Porkholt_OSX)
 endif()
@@ -37,3 +38,6 @@ add_custom_target( External_Libs
 	WORKING_DIRECTORY ${PH_EXTERNALS}
 	)
 add_dependencies(Porkholt_OSX External_Libs)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLib/cotire.cmake)
+cotire(Porkholt_OSX)
