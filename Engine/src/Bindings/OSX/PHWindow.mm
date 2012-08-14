@@ -57,7 +57,8 @@
 
 -(void)dealloc
 {
-    view.gameManager->appQuits();
+    if (view.gameManager)
+        view.gameManager->appQuits();
     [view release];
     [title release];
 #ifndef PH_OSX_FAKERESOLUTION
@@ -83,12 +84,14 @@
     if (vm.type == PHWVideoMode::Fullscreen)
         [PHWindow undoRestoreResolution];
 #endif
-    view.gameManager->appResumed();
+    if (view.gameManager)
+        view.gameManager->appResumed();
 }
 
 -(void)resignKeyWindow
 {
-    view.gameManager->appSuspended();
+    if (view.gameManager)
+        view.gameManager->appSuspended();
 #ifndef PH_OSX_FAKERESOLUTION
     [PHWindow restoreResolution];
 #endif

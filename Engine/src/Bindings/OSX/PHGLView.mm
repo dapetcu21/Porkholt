@@ -39,7 +39,7 @@
     return vsync;
 }
 
--(void)loadWithPixelFormat:(NSOpenGLPixelFormat*)pf
+-(void)load
 {
     if (gameManager) return;
     
@@ -115,12 +115,6 @@
     return [[[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute*) attributes] autorelease];
 }
 
--(void)load
-{
-    [self loadWithPixelFormat:[PHGLView defaultPixelFormat]];
-}
-
-
 -(void)makeCurrent
 {
     NSOpenGLContext* context = [self openGLContext];
@@ -139,9 +133,14 @@
         res = [_res copy];
         entryPoint = _entryPoint;
         flags = _flags;
-        [self loadWithPixelFormat:pf];
     }
     return self;
+}
+
+-(void)drawRect:(NSRect)dirty
+{
+    if (!gameManager)
+        [self load];
 }
 
 -(BOOL) isOpaque {
@@ -149,14 +148,8 @@
     return YES;
 }
 
--(void)awakeFromNib
-{
-    [self load];
-}
-
 -(PHGameManager*)gameManager
 {
-    [self load];
     return gameManager;
 }
 
@@ -204,9 +197,11 @@
     if (manual)
         frame.size = msize;
     if (gameManager)
+    {
         gameManager->setScreenSize(frame.size.width, frame.size.height);
-    [self makeCurrent];
-    [self render];
+        [self makeCurrent];
+        [self render];
+    }
 }
 
 -(void)update
