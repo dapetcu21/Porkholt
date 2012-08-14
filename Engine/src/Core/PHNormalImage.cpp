@@ -133,10 +133,10 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
     PHRect r = textureCoordinates(port);
 	
 	const GLfloat squareTexCoords[] = {
-        r.x				, r.y + r.height,
-        r.x + r.width   , r.y + r.height,
 		r.x				, r.y,
-		r.x + r.width	, r.y
+		r.x + r.width	, r.y,
+        r.x				, r.y + r.height,
+        r.x + r.width   , r.y + r.height
     };
     
     int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;

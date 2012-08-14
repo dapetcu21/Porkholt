@@ -138,6 +138,7 @@ objectAddImage(obj,"leaf",0,0,1,1,{ class = "PHParticleView", particleAnimator =
 	initialColor = rgba(1,1,1,1), 
 	finalColor = rgba(1,1,1,0.5),
     rotatesWithVelocity = true,
+    rotationOffset = 180,
 	particleLifetime = 2
 	} })
 

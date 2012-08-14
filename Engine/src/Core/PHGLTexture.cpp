@@ -375,7 +375,7 @@ uint8_t * PHGLTexture::dataFromFile(PHStream * fd, size_t & width, size_t & heig
     buffer = new uint8_t[size];
 	for (size_t i=0; i<height; i++)
 	{
-		memcpy(buffer+i*actrowsize, row_pointers[i],rowsize);
+		memcpy(buffer+(height-i-1)*actrowsize, row_pointers[i],rowsize);
 		delete[] row_pointers[i];
 	}
 	delete[] row_pointers;

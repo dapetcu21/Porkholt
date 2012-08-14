@@ -38,7 +38,7 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject 
             PHRect rc = PHRect(lx-floor(lx),ly-floor(ly),x-ceil(x)+1,y-ceil(y)+1);
             
             v.push_back((lx-r.x)/r.width); v.push_back((ly-r.y)/r.height);
-            v.push_back(texCoord.x+rc.x    *texCoord.width); v.push_back(texCoord.y+rc.height*texCoord.height);
+            v.push_back(texCoord.x+rc.x    *texCoord.width); v.push_back(texCoord.y+rc.y     *texCoord.height);
             if (first)
             {
                 first = true;
@@ -47,13 +47,13 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject 
             }
             
             v.push_back(( x-r.x)/r.width); v.push_back((ly-r.y)/r.height);
-            v.push_back(texCoord.x+rc.width*texCoord.width); v.push_back(texCoord.y+rc.height*texCoord.height);
+            v.push_back(texCoord.x+rc.width*texCoord.width); v.push_back(texCoord.y+rc.y     *texCoord.height);
             
             v.push_back((lx-r.x)/r.width); v.push_back(( y-r.y)/r.height);
-            v.push_back(texCoord.x+rc.x    *texCoord.width); v.push_back(texCoord.y+rc.y     *texCoord.height);
+            v.push_back(texCoord.x+rc.x    *texCoord.width); v.push_back(texCoord.y+rc.height*texCoord.height);
             
             v.push_back(( x-r.x)/r.width); v.push_back(( y-r.y)/r.height);
-            v.push_back(texCoord.x+rc.width*texCoord.width); v.push_back(texCoord.y+rc.y     *texCoord.height);
+            v.push_back(texCoord.x+rc.width*texCoord.width); v.push_back(texCoord.y+rc.height*texCoord.height);
         }
     }
     

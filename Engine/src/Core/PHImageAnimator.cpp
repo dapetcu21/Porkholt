@@ -171,10 +171,10 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
     {
         PHRect r = port.portionOf(_image->atlas()->textureCoordinates(lastframe));
         const GLfloat squareTexCoords2[] = {
+            r.x             , r.y,
+            r.x + r.width   , r.y,
             r.x             , r.y + r.height,
             r.x + r.width   , r.y + r.height,
-            r.x             , r.y,
-            r.x + r.width   , r.y
         };
         
         _image->atlas()->texture(lastframe)->bind(0);
@@ -196,10 +196,10 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
 	
     PHRect r = port.portionOf(_image->atlas()->textureCoordinates(realframe));
 	const GLfloat squareTexCoords[] = {
-            r.x             , r.y + r.height,
-            r.x + r.width   , r.y + r.height,
             r.x             , r.y,
-            r.x + r.width   , r.y
+            r.x + r.width   , r.y,
+            r.x             , r.y + r.height,
+            r.x + r.width   , r.y + r.height
         };
         
 

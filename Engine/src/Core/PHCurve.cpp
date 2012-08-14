@@ -76,24 +76,24 @@ void PHCurve::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, 
             ph_float x,y;
             switch (k+1) {
                 case 1:
-                    y = 1;
+                    y = 0;
                     x = d;
                     break;
                 case 2:
                     x = 1;
-                    y = 1-d;
+                    y = d;
                     break;
                 case 3:
                     x = 1-d;
-                    y = 0;
+                    y = 1;
                     break;
                 case 4:
                     x = 0;
-                    y = d;
+                    y = 1-d;
                     break;
                 default:
                     x = 0;
-                    y = 1;
+                    y = 0;
                     break;
             }
             x = p.x+p.width*x;
