@@ -3,6 +3,7 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHThread.h>
 
 #define MAX_VAO_ATTR 16
 

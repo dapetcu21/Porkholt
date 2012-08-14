@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHTimer.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/Core/PHSemaphore.h>
 
 PHTimer::PHTimer() : valid(true), repeat(false), time(0), dur(0), cboninvalidate(false), sem(NULL), sigm(false) { setRetainedInThePool(true); } 
 PHTimer::PHTimer(double duration) : valid(true), repeat(false), time(duration), dur(duration), cboninvalidate(false), sem(NULL), sigm(false) { setRetainedInThePool(true); } 
@@ -13,6 +14,13 @@ PHTimer::~PHTimer()
     setSemaphore(NULL);
 }
 
+void PHTimer::setSemaphore(PHSemaphore * semaphore) 
+{ 
+    if (semaphore) semaphore->retain(); 
+    if (sem) sem->release(); 
+    sem = semaphore; 
+}
+ 
 void PHTimer::advanceAnimation(ph_float timeElapsed)
 {
     time -= timeElapsed;

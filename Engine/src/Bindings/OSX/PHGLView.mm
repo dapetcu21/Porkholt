@@ -7,6 +7,7 @@
 #import <Porkholt/Core/PHWindowing.h>
 #import <CoreVideo/CoreVideo.h>
 #import <Porkholt/IO/PHDirectory.h>
+#import <Porkholt/Core/PHTime.h>
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;

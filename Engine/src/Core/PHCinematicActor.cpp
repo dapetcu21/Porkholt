@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHCinematicActor.h>
 #include <Porkholt/Core/PHCinematicAnimator.h>
+#include <Porkholt/Core/PHMutex.h>
 #include <Porkholt/Core/PHGameManager.h>
 
 void PHCinematicActor::addCinematicAnimation(PHGenericCinematicAnimator * anim)

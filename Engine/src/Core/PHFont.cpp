@@ -7,6 +7,7 @@
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/IO/PHFile.h>
+#include <Porkholt/Core/PHMutex.h>
 
 #define uint16From(d) (*((uint16_t*)(d)))
 #define uint32From(d) (*((uint32_t*)(d)))

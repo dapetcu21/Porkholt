@@ -78,13 +78,13 @@ void * PHAlloc(void)
 }
 
 #if defined(PH_IPHONE_OS)
-	#import <OpenGLES/ES1/gl.h>
-	#import <OpenGLES/ES1/glext.h>
-    #import <OpenGLES/ES2/gl.h>
-    #import <OpenGLES/ES2/glext.h>
+	#include <OpenGLES/ES1/gl.h>
+	#include <OpenGLES/ES1/glext.h>
+    #include <OpenGLES/ES2/gl.h>
+    #include <OpenGLES/ES2/glext.h>
 #elif defined(PH_MAC_OS)
-    #import <OpenGL/gl.h>
-    #import <OpenGL/glext.h>
+    #include <OpenGL/gl.h>
+    #include <OpenGL/glext.h>
 #else
     #define GL_GLEXT_PROTOTYPES
     #include <GL/gl.h>
@@ -128,15 +128,12 @@ struct lua_State;
 
 #include <Porkholt/Core/PHUtilities.h>
 #include <Porkholt/Core/PHInvocation.h>
-#include <Porkholt/Core/PHTime.h>
 #include <Porkholt/Core/PHObject.h>
-#include <Porkholt/Core/PHAutoreleasePool.h>
-#include <Porkholt/Core/PHMessage.h>
 #include <Porkholt/Geometry/PHGeometry.h>
 #include <Porkholt/Core/PHErrors.h>
 
-#include <Porkholt/Core/PHThread.h>
-#include <Porkholt/Core/PHMutex.h>
-#include <Porkholt/Core/PHSemaphore.h>
+class PHThread;
+class PHMutex;
+class PHSemaphore;
 
 #endif

@@ -17,6 +17,9 @@
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHGLFramebuffer.h>
 #include <Porkholt/Sound/PHSoundManager.h>
+#include <Porkholt/Core/PHThreading.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
+#include <Porkholt/Core/PHTime.h>
 
 //#define PH_FORCE_FAKE_VAO
 

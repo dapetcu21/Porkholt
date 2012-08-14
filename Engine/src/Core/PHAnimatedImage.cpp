@@ -9,6 +9,7 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Core/PHTextureAtlas.h>
+#include <Porkholt/Core/PHThreading.h>
 
 #define PNG_DEBUG 4
 #include <png.h>

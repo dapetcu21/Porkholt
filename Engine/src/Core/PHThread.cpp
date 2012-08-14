@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include <Porkholt/Core/PHThread.h>
+#include <Porkholt/Core/PHThreading.h>
 #include <pthread.h>
 
 map<pthread_t,PHThread*> PHThread::threads;

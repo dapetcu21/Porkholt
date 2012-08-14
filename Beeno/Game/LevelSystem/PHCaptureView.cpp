@@ -3,6 +3,18 @@
 #include "PHCaptureView.h"
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/Core/PHThreading.h>
+
+void PHCaptureView::setMutex(PHMutex * m) 
+{ 
+    if (m) 
+        m->retain(); 
+    if (mutex)
+        mutex->release(); 
+    mutex = m; 
+}
+
+PHCaptureView::~PHCaptureView() { if(mutex) mutex->release(); }
 
 void PHCaptureView::touchEvent(PHEvent * event)
 {

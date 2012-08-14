@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHParticleAnimator.h>
 #include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHMessage.h>
 
 PHParticleAnimator * PHParticleAnimator::fromLua(lua_State *L, bool unique)
 {

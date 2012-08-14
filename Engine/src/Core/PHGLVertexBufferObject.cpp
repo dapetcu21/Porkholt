@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHThread.h>
 
 GLenum PHGLVertexBufferObject::targets[] = {        
     0,

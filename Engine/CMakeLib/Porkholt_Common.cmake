@@ -150,6 +150,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTextureAtlas.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTextureCanvas.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHThread.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHThreading.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTime.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTimer.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTrailImageView.h

@@ -2,10 +2,18 @@
 
 #include <Porkholt/Core/PHDrawable.h>
 #include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHMutex.h>
 
 const string PHDrawable::_luaClass("PHDrawable");
 
 #define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false)
+
+PHMutex * PHDrawable::mutex() 
+{ 
+    if (!mtx) 
+        mtx = new PHMutex(true); 
+    return mtx;
+}
 
 PHDrawable::PHDrawable() : PH_DRAWABLE_INIT_LIST
 {

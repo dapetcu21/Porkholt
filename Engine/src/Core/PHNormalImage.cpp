@@ -10,6 +10,7 @@
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/IO/PHFile.h>
+#include <Porkholt/Core/PHThreading.h>
 
 PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord) : PHImage(texture->gameManager()), txc(textureCoord), tex(texture), pload(true)
 {

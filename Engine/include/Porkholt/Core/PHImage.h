@@ -41,7 +41,7 @@ protected:
     static void buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord);
     
 public:
-    void load() { if (!loaded) { loadMutex->lock(); if (!loaded) _load(); loadMutex->unlock(); } }
+    void load(); 
 	int height() { load(); return _height; };
 	int width() { load(); return _width; };
 
@@ -58,7 +58,7 @@ public:
         _normalMap = n;
     }
     
-    virtual ~PHImage() { loadMutex->release(); if (_normalMap) _normalMap->release(); }
+    virtual ~PHImage(); 
 };
 
 #endif

@@ -59,8 +59,7 @@ public:
     void getLuaHandle(lua_State * L);
     static void registerLuaInterface(lua_State * L);
 public:
-    PHMutex * mutex() { if (!mtx) mtx = new PHMutex(true); return mtx; }
-    
+    PHMutex * mutex(); 
 public:
     PHGameManager * gameManager() { return gm; }
     void setGameManager(PHGameManager * gameManager);

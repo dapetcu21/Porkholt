@@ -3,6 +3,7 @@
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHAnimator.h>
 #include <Porkholt/Core/PHTimer.h>
+#include <Porkholt/Core/PHMutex.h>
 
 PHAnimatorPool::PHAnimatorPool() : insideJob(false), mutex(new PHMutex(true))
 {

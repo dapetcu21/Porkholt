@@ -34,12 +34,7 @@ public:
     bool callsBackOnInvalidate() { return cboninvalidate; }
     void setCallsBackOnInvalidate(bool b) { cboninvalidate = b; }
 
-    void setSemaphore(PHSemaphore * semaphore) 
-    { 
-        if (semaphore) semaphore->retain(); 
-        if (sem) sem->release(); 
-        sem = semaphore; 
-    }
+    void setSemaphore(PHSemaphore * semaphore); 
     PHSemaphore * semaphore() { return sem; }
     void setSignalMoreThanOnce(bool sm) { sigm = sm; }
     bool signalMoreThanOnce() { return sigm; }

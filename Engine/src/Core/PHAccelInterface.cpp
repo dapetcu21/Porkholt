@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHMain.h>
 #include <Porkholt/Core/PHAccelInterface.h>
+#include <Porkholt/Core/PHThreading.h>
 
 PHAcceleration PHAccelInterface::acc = { 0, 0, 0 };
 PHMutex * PHAccelInterface::mutex = NULL;

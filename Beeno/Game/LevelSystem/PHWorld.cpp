@@ -28,6 +28,7 @@
 #include "PHShieldView.h"
 #include <Porkholt/Sound/PHSoundPool.h>
 #include <Porkholt/Sound/PHSound.h>
+#include <Porkholt/Core/PHMutex.h>
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)

@@ -11,6 +11,7 @@
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHTextureAtlas.h>
 #include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHMutex.h>
 
 #define INIT _image(img), running(true)
 

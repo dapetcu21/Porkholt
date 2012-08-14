@@ -38,7 +38,7 @@ public:
     virtual void contactPostSolve(bool b,b2Contact* contact, const b2ContactImpulse* impulse);
     virtual void contactEnd(bool b,b2Contact* contact);
     
-    void setMutex(PHMutex * m) { if (m) m->retain(); if (mutex) mutex->release(); mutex = m; }
+    void setMutex(PHMutex * m);
     
     void setUserInput(bool ui) { userInp = ui; }
     bool userInput() { return userInp; }

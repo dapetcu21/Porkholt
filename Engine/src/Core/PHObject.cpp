@@ -1,6 +1,7 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 
 void PHObject::bindInvocation(PHInvocation * invo)
 {

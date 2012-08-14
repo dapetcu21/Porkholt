@@ -9,6 +9,7 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHThreading.h>
 
 #ifdef PHIMAGE_ORDERED_LOADING
 PHMutex * PHImage::loadingMutex = new PHMutex;
@@ -65,4 +66,22 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject 
     vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, (v.size()/4));
     vao->unbind();
     vbo->unbind();
+}
+
+void PHImage::load() 
+{ 
+    if (!loaded) 
+    {
+        loadMutex->lock(); 
+        if (!loaded) 
+            _load(); 
+        loadMutex->unlock(); 
+    }
+}
+
+PHImage::~PHImage() 
+{ 
+    loadMutex->release(); 
+    if (_normalMap) 
+        _normalMap->release(); 
 }

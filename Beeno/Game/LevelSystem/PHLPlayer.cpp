@@ -14,6 +14,7 @@
 #include "PHShieldView.h"
 #include "PHLevelController.h"
 #include <Porkholt/Core/PHTime.h>
+#include <Porkholt/Core/PHMutex.h>
 
 PHL_REGISTEROBJECT(PHLPlayer)
 
@@ -27,6 +28,15 @@ PHLPlayer::~PHLPlayer()
 {
     if (mutex)
         mutex->release();
+}
+
+void PHLPlayer::setMutex(PHMutex * m)
+{ 
+    if (m)
+        m->retain(); 
+    if (mutex) 
+        mutex->release();
+    mutex = m; 
 }
 
 void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc)

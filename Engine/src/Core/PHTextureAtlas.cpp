@@ -8,6 +8,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHThreading.h>
 
 lua_State * PHTextureAtlas::staticL = NULL;
 PHMutex * PHTextureAtlas::luaMutex = new PHMutex;

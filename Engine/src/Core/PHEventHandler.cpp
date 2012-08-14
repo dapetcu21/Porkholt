@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHEvent.h>
 #include <Porkholt/Core/PHView.h>
+#include <Porkholt/Core/PHTime.h>
 
 PHEvent * PHEventHandler::touchForUserData(void * ud, map<void*,PHEvent*>::iterator & i)
 {

@@ -4,6 +4,7 @@
 #define PHPARTICLEANIMATOR_H
 
 #include <Porkholt/Core/PHAnimator.h>
+#include <Porkholt/Core/PHMutex.h>
 
 #define getter(type,name,prop) type name() { mutex->lock(); type r(prop); mutex->unlock(); return r; }
 #define setter(type,name,prop) void name(type v) { mutex->lock(); prop = v; mutex->unlock(); }

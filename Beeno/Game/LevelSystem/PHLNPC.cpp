@@ -21,6 +21,7 @@
 #include <Porkholt/Core/PHImageAnimator.h>
 #include <Porkholt/Core/PHImageView.h>
 #include "PHLPlayer.h"
+#include <Porkholt/Core/PHMutex.h>
 
 #include <typeinfo>
 

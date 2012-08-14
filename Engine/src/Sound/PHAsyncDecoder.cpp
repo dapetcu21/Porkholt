@@ -2,7 +2,7 @@
 
 #include <Porkholt/Sound/PHAsyncDecoder.h>
 #include <Porkholt/IO/PHFile.h>
-#include <Porkholt/Core/PHThread.h>
+#include <Porkholt/Core/PHThreading.h>
 
 void PHAsyncDecoder::loadFromFile(PHFile * f)
 {

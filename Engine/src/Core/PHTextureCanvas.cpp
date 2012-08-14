@@ -5,6 +5,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHGLRenderbuffer.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 
 PHTextureCanvas::PHTextureCanvas(PHGameManager * _gm) : fbo(NULL), changed(true), dit(false),  dfmt(PHGLFBOAttachment::None), dtex(NULL), ow(-1), oh(-1), w(0), h(0), fs(true), cmask(PHGameManager::colorBuffers | PHGameManager::stencilBuffer | PHGameManager::depthBuffer), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
 {

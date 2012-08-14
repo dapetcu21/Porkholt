@@ -6,6 +6,7 @@
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
+#include <Porkholt/Core/PHMutex.h>
 
 const string PHView::_luaClass("PHView");
 

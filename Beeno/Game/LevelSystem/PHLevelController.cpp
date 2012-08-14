@@ -24,6 +24,8 @@
 #include <Porkholt/Sound/PHSound.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
+#include <Porkholt/Core/PHThreading.h>
+#include <Porkholt/Core/PHTime.h>
 
 #include <sstream>
 
@@ -390,7 +392,7 @@ vector<string> * PHLevelController::parseFile(const string & name)
         char * b = (char*)file->loadToBuffer();
         file->release();
         char * s = b, * str;
-        while (str = strtok(s, "|"))
+        while ((str = strtok(s, "|")))
         {
             s = NULL;
             v->push_back(string(str));

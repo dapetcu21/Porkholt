@@ -1,6 +1,8 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
+#include <Porkholt/Core/PHThreading.h>
 
 map<PHThread*, list<PHAutoreleasePool*> > PHAutoreleasePool::pools;
 PHMutex * PHAutoreleasePool::mutex = new PHMutex();
