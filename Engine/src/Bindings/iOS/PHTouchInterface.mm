@@ -7,6 +7,7 @@
 #import <Porkholt/Core/PHAccelInterface.h>
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHMutex.h>
 #import "PorkholtViewController.h"
 
 PHTouchInterface * PHTouchInterfaceSingleton = NULL;

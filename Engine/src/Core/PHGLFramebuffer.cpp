@@ -37,6 +37,14 @@ void PHGLFramebuffer::attachColor(PHGLFBOAttachment * a, int index)
     clr[index] = a;
 }
 
+#ifndef GL_DEPTH_STENCIL_ATTACHMENT
+#ifdef GL_DEPTH_STENCIL_ATTACHMENT_OES
+#define GL_DEPTH_STENCIL_ATTACHMENT GL_DEPTH_STENCIL_ATTACHMENT_OES
+#else
+#define GL_DEPTH_STENCIL_ATTACHMENT GL_DEPTH_ATTACHMENT
+#endif
+#endif
+
 void PHGLFramebuffer::attachDepth(PHGLFBOAttachment * a)
 {
     if (a == dth) return;

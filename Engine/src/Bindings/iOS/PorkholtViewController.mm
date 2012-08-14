@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/Core/PHTime.h>
 #import "EAGLView.h"
 
 PHGameManager * PHGameManagerSingleton;
