@@ -3,7 +3,8 @@ project(Beeno)
 
 set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
 set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/CMakeLib")
-set(PH_NAME "Beeno")
+include(Porkholt)
+set(PH_NAME "Beeno Reloaded")
 set(PH_SOURCES
   main.cpp
   LevelSystem/PHCaptureView.cpp
@@ -92,4 +93,4 @@ include_directories(UI LevelSystem)
 set(PH_IOS_TARGET_IPAD "YES")
 set(PH_USE_BOX2D "YES")
 
-include(Porkholt)
+porkholt(Beeno ${PH_SOURCES} ${PH_HEADERS})

@@ -112,5 +112,3 @@ else()
     add_dependencies(Porkholt External_Libs)
 endif()
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLib/cotire.cmake)
-cotire(Porkholt)
