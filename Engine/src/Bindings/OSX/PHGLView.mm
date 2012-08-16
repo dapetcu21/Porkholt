@@ -141,7 +141,10 @@
 -(void)drawRect:(NSRect)dirty
 {
     if (!gameManager)
+    {
         [self load];
+        [self render];
+    }
 }
 
 -(BOOL) isOpaque {
