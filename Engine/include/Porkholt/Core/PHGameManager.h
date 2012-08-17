@@ -202,7 +202,7 @@ private:
     friend class PHGLVertexArrayObject;
     friend class PHGLShaderProgram;
     friend class PHGLFramebuffer;
-    friend class PHGLRenderBuffer;
+    friend class PHGLRenderbuffer;
     
     vector<GLuint> deleteVBOs;
     vector<GLuint> deleteVAOs;

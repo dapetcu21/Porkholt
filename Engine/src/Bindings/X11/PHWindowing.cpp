@@ -5,6 +5,7 @@
 #include "PHX11.h"
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHEventHandler.h>
+#include <Porkholt/Core/PHTime.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <GL/glx.h>
 

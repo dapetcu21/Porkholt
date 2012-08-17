@@ -3,7 +3,7 @@
 #include <Porkholt/Core/PHGLFramebuffer.h>
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHGLTexture.h>
-#include <Porkholt/Core/PHGLRenderBuffer.h>
+#include <Porkholt/Core/PHGLRenderbuffer.h>
 
 PHGLFramebuffer::PHGLFramebuffer(PHGameManager * gam) : gm(gam), dth(NULL), stc(NULL)
 {
@@ -83,7 +83,7 @@ void PHGLFramebuffer::attachToTarget(PHGLFBOAttachment * a, GLenum t)
             gm->glFramebufferTexture2D(GL_FRAMEBUFFER, t, tex->target, tex->tex, 0);
         else
         {
-            PHGLRenderBuffer * rb = dynamic_cast<PHGLRenderBuffer*>(a);
+            PHGLRenderbuffer * rb = dynamic_cast<PHGLRenderbuffer*>(a);
             if (rb)
                gm->glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, rb->id);
         }

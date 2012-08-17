@@ -111,10 +111,10 @@ PHGLFBOAttachment * PHTextureCanvas::rebuildAttachment(PHGLFBOAttachment * f, en
             t->setData(NULL, w, h, fmt);
         return t;
     } else {
-        PHGLRenderBuffer * r = dynamic_cast<PHGLRenderBuffer*>(f);
+        PHGLRenderbuffer * r = dynamic_cast<PHGLRenderbuffer*>(f);
         if (!r || r->format() != fmt || r->width() != w || r->height() != h)
         {
-            r = new PHGLRenderBuffer(gm, w, h, fmt);
+            r = new PHGLRenderbuffer(gm, w, h, fmt);
             r->autorelease();
         } 
         if (*cache)

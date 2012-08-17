@@ -20,7 +20,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHGLFBOAttachment.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLFramebuffer.cpp   
   ${PH_ENGINE_PATH}/src/Core/PHGLProgramInitPool.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHGLRenderBuffer.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHGLRenderbuffer.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLShader.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLShaderProgram.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLTexture.cpp
@@ -115,7 +115,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLFramebuffer.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLLight.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLProgramInitPool.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLRenderBuffer.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLRenderbuffer.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLShader.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLShaderProgram.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLTexture.h

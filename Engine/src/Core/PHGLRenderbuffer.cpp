@@ -1,11 +1,11 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include <Porkholt/Core/PHGLRenderBuffer.h>
+#include <Porkholt/Core/PHGLRenderbuffer.h>
 #include <Porkholt/Core/PHGameManager.h>
 
 #define INIT w(width), h(height)
 
-PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt) : INIT
+PHGLRenderbuffer::PHGLRenderbuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt) : INIT
 {
     pfmt = fmt;
     gm->glGenRenderbuffers(1, &id);
@@ -13,7 +13,7 @@ PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, en
     gm->glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
 }
 
-PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples) : INIT
+PHGLRenderbuffer::PHGLRenderbuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples) : INIT
 {
     pfmt = fmt;
     gm->glGenRenderbuffers(1, &id);
@@ -24,7 +24,7 @@ PHGLRenderBuffer::PHGLRenderBuffer(PHGameManager * gm, int width, int height, en
         gm->glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
 }
 
-PHGLRenderBuffer::~PHGLRenderBuffer()
+PHGLRenderbuffer::~PHGLRenderbuffer()
 {
     glDeleteRenderbuffers(1, &id);
 }

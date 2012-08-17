@@ -1,6 +1,6 @@
 function(porkholt PH_APP_TARGET)
-    list(REMOVE_AT ARGV 0)
   set(PH_SOURCES ${ARGV})
+  list(REMOVE_AT PH_SOURCES 0)
   if(NOT DEFINED PH_NAME OR NOT PH_NAME)
     set(PH_NAME ${PH_APP_TARGET})
   endif()
@@ -48,13 +48,27 @@ function(porkholt PH_APP_TARGET)
     add_executable(${PH_APP_TARGET} ${PH_SOURCES})
   endif()
 
+
+  function(to_list_spaces _LIST_NAME OUTPUT_VAR)
+    set(NEW_LIST_SPACE)
+    foreach(ITEM ${${_LIST_NAME}})
+      set(NEW_LIST_SPACE "${NEW_LIST_SPACE} ${ITEM}")
+    endforeach()
+    string(STRIP ${NEW_LIST_SPACE} NEW_LIST_SPACE)
+    set(${OUTPUT_VAR} "${NEW_LIST_SPACE}" PARENT_SCOPE)
+  endfunction()
+
   set(CMAKE_CONFIGURATION_TYPES Debug Release PARENT_SCOPE)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os" PARENT_SCOPE)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG" PARENT_SCOPE)
 
   find_library(PH_OPENGL GL)
   if(PH_PLATFORM STREQUAL "X11")
-    find_library(PH_X11 X11)
+    find_package(X11 REQUIRED)
+    include_directories(${X11_INCLUDE_DIR})
+#    to_list_spaces(X11_LIBRARIES X11_LIBS)
+#    set_target_properties(${PH_APP_TARGET} PROPERTIES LINK_FLAGS "${X11_LIBS}")
+#    link_directories(/usr/lib/x86_64-linux-gnu)
     find_library(PH_XRANDR Xrandr)
   endif()
   if(NOT CMAKE_GENERATOR STREQUAL "Xcode")
@@ -71,9 +85,9 @@ function(porkholt PH_APP_TARGET)
     ${PH_EXTERNALS}/lib/${PH_LIBS}/liblua.a
     ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
     ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
-    ${PH_X11}
-    ${OPENGL_LIBRARIES}
+    ${X11_LIBRARIES}
     ${PH_XRANDR}
+    ${OPENGL_LIBRARIES}
     ${PH_OPENAL}
     ${CMAKE_THREAD_LIBS_INIT}
     )

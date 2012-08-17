@@ -7,7 +7,7 @@
 
 class PHGameManager;
 
-class PHGLRenderBuffer : public PHGLFBOAttachment
+class PHGLRenderbuffer : public PHGLFBOAttachment
 {
 protected:
     GLuint id;
@@ -15,9 +15,9 @@ protected:
 
     friend class PHGLFramebuffer;
 public:
-    PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt);
-    PHGLRenderBuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples);
-    ~PHGLRenderBuffer();
+    PHGLRenderbuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt);
+    PHGLRenderbuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples);
+    ~PHGLRenderbuffer();
     
     int width() { return w; }
     int height() { return h; }
