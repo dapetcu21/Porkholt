@@ -81,7 +81,7 @@ function(porkholt PH_APP_TARGET)
   else()
     find_library(PH_OPENAL openal)
   endif()
-  target_link_libraries(${PH_APP_TARGET}
+  target_link_libraries(${PH_APP_TARGET} Porkholt
     ${PH_EXTERNALS}/lib/${PH_LIBS}/liblua.a
     ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
     ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
@@ -91,7 +91,6 @@ function(porkholt PH_APP_TARGET)
     ${PH_OPENAL}
     ${CMAKE_THREAD_LIBS_INIT}
     )
-  target_link_libraries(${PH_APP_TARGET} Porkholt)
 
   if(PH_USE_BOX2D)
     include("${PH_ENGINE_PATH}/CMakeLib/Box2D.cmake")
