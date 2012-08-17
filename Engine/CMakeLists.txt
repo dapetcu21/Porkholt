@@ -25,6 +25,7 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
         set(CMAKE_OSX_SYSROOT macosx)
     elseif(PH_PLATFORM STREQUAL "iOS")
         set(CMAKE_OSX_SYSROOT iphoneos)
+        set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
     endif()
 endif()
 

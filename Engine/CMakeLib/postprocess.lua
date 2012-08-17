@@ -15,6 +15,11 @@ function check_versions()
     if string.find(ver,"GNU") then
         gnu_stat = true
     end
+    file = io.popen("which gm")
+    gm_exe = file:read("*a")
+    if (string.len(gm_exe) == 0) then
+        gm_exe = "/opt/local/bin/gm" --For OS X With MacPorts
+    end
 end
 
 check_versions()
@@ -136,8 +141,8 @@ function downscale_png(srcd, dstd, f, stp, name)
           os.execute(cmd)
         else
           print('Downscaling image "'..name..'"')
-      	  os.execute('gm convert "'..srcd.."/"..f..'" -resize 25% "png32:'..dstd.."/"..f..'"')
-      	  os.execute('gm convert "'..srcd.."/"..f..'" -resize 50% "png32:'..dstd.."/"..fhd..'"')
+      	  os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 25% "png32:'..dstd.."/"..f..'"')
+      	  os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 50% "png32:'..dstd.."/"..fhd..'"')
   	    end
     end
   else
@@ -171,7 +176,7 @@ function layout_images(width, scale, src, ins, dst)
     exec = exec .. "-draw 'image Copy "..tostring(x)..','..tostring(y)..' '..tostring(xx)..','..tostring(yy)..' "' .. src .. '/' .. f.fname .. '"\' '
     x = x + xx
   end
-  exec = 'gm convert -size '..tostring(w)..'x'..tostring(h)..' xc:transparent ' .. exec .. '"png32:'.. dst ..'"'
+  exec = gm_exe..' convert -size '..tostring(w)..'x'..tostring(h)..' xc:transparent ' .. exec .. '"png32:'.. dst ..'"'
 
   return s, exec, w, h
 end
@@ -182,7 +187,7 @@ function create_map(files, src, dst, hd)
   local ins = {}
   while files[tostring(i)..'.png'] == 'f' do
     local fn = tostring(i)..'.png'
-    local exec = 'gm identify -format "%w %h" "'..src..'/'..fn..'"';
+    local exec = gm_exe..' identify -format "%w %h" "'..src..'/'..fn..'"';
     local f = io.popen(exec)
     local x = f:read("*n")
     local y = f:read("*n")
