@@ -17,4 +17,4 @@ set(PH_HEADERS
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")
 
-include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_All.cmake)
+include(${PH_ENGINE_PATH}/scripts/Porkholt_All.cmake)

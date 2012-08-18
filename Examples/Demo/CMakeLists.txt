@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(Demo)
 
 set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
-set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/CMakeLib")
+set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/scripts")
 set(PH_NAME "Demo")
 set(PH_BEENO "${PH_ENGINE_PATH}/../Beeno/Game")
 
