@@ -47,8 +47,7 @@ set(PH_SOURCES
   ${PH_BEENO}/UI/PHChapterController.cpp
   ${PH_BEENO}/UI/PHMenuController.cpp
   ${PH_BEENO}/UI/PHTitleScreen.cpp
-  )
-set(PH_HEADERS
+
   ${PH_BEENO}/LevelSystem/PHCaptureView.h
   ${PH_BEENO}/LevelSystem/PHDialog.h
   ${PH_BEENO}/LevelSystem/PHDialogView.h
@@ -99,5 +98,4 @@ include_directories(${PH_BEENO}
   ${PH_BEENO}/LevelSystem)
 
 include(Porkholt)
-include(cotire)
-cotire(Demo)
+porkholt(Demo ${PH_SOURCES})

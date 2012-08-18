@@ -3,10 +3,8 @@ project(PostEffects)
 
 set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
 set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/CMakeLib")
-set(PH_NAME "PostEffects")
-set(PH_SOURCES
-  main.cpp
-  )
+include(Porkholt)
+set(PH_NAME "Post-processing effects")
 set(PH_IOS_TARGET_IPAD "YES")
 
-include(Porkholt)
+porkholt(PostEffects main.cpp)

@@ -17,7 +17,12 @@ function check_versions()
     end
     file = io.popen("which gm")
     gm_exe = file:read("*a")
-    if (string.len(gm_exe) == 0) then
+    local n = string.len(gm_exe)
+    if (string.sub(gm_exe, -1) == "\n") then
+        gm_exe = string.sub(gm_exe, 1, -2)
+        n = n - 1
+    end
+    if (n == 0) then
         gm_exe = "/opt/local/bin/gm" --For OS X With MacPorts
     end
 end
@@ -188,6 +193,7 @@ function create_map(files, src, dst, hd)
   while files[tostring(i)..'.png'] == 'f' do
     local fn = tostring(i)..'.png'
     local exec = gm_exe..' identify -format "%w %h" "'..src..'/'..fn..'"';
+    print(exec)
     local f = io.popen(exec)
     local x = f:read("*n")
     local y = f:read("*n")
