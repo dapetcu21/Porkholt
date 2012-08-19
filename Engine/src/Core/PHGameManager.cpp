@@ -1,5 +1,6 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#include <Porkholt/Core/PHGLUniformStates.h> //this must go before PHGameManager.h for uniformtrick to work
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHRemote.h>
 #include <Porkholt/Core/PHView.h>
@@ -9,7 +10,6 @@
 #include <Porkholt/Core/PHNavigationController.h>
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
-#include <Porkholt/Core/PHGLUniformStates.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHTextView.h>
@@ -181,9 +181,9 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     {
         pushSpriteShader(_spriteShader = shaderProgramNamed("sprites"));
         spriteStates = new PHGLUniformStates;
-        spriteStates->insert("modelViewProjectionMatrix", modelViewSpriteUniform);
-        spriteStates->insert("color", colorSpriteUniform);
-        spriteStates->insert("texture",textureSpriteUniform) = 0;
+        modelViewSpriteUniform = &spriteStates->at("modelViewProjectionMatrix");
+        colorSpriteUniform = &spriteStates->at("color");
+        textureSpriteUniform = &spriteStates->at("texture");
     }
     
     view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
@@ -660,7 +660,7 @@ void PHGameManager::reapplyMatrixUniform()
     if (!openGLCaps[PHGLCapabilityShaders]) return;
     PHGLShaderProgram * shader = spriteShader();
     if (!shader) return;
-    (spriteStates->at(modelViewSpriteUniform) = _projection * _modelView).apply(shader);
+    modelViewSpriteUniform->set(_projection * _modelView).apply(shader);
 }
 
 void PHGameManager::reapplyColorUniform()
@@ -668,7 +668,7 @@ void PHGameManager::reapplyColorUniform()
     if (!openGLCaps[PHGLCapabilityShaders]) return;
     PHGLShaderProgram * shader = spriteShader();
     if (!shader) return;
-    (spriteStates->at(colorSpriteUniform) = _currentColor).apply(shader);
+    colorSpriteUniform->set(_currentColor).apply(shader);
 }
 
 void PHGameManager::applyShader(PHGLShaderProgram * shader)
@@ -676,8 +676,8 @@ void PHGameManager::applyShader(PHGLShaderProgram * shader)
     if (useShaders())
     {
         if (!shader) return;
-        (*spriteStates)[modelViewSpriteUniform] = _projection * _modelView;
-        (*spriteStates)[colorSpriteUniform] = _currentColor;
+        *modelViewSpriteUniform = _projection * _modelView;
+        *colorSpriteUniform = _currentColor;
         useShader(shader);
         spriteStates->apply(shader);
     }

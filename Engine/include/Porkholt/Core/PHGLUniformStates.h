@@ -32,7 +32,6 @@ public:
         
         map<PHGLShaderProgram*,int> shaders;
         string name;
-        int index;
         int active;
         
         void setValue(GLint v) { type = intType; intValue[0] = v; }
@@ -80,25 +79,17 @@ public:
     
 protected:
     map<string,uniform*> stringMap;
-    map<int,uniform*> intMap;
-    int autogen;
-    
-    uniform & _insert(const string & name, int index);
-    
 public:
     
     PHGLUniformStates();
     ~PHGLUniformStates();
     
     uniform & operator[] (const string & name);
-    uniform & operator[] (int index);
     
     uniform & at(const string & name) { return (*this)[name]; }
-    uniform & at(int index) { return (*this)[index]; }
     
     void dump();
     void erase(const uniform & u);
-    uniform & insert(const string & name, int index);
     
     void apply(PHGLShaderProgram * shader);
 };

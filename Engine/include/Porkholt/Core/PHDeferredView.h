@@ -10,6 +10,13 @@ class PHShaderProgram;
 class PHGLUniformStates;
 class PHGLFramebuffer;
 
+#undef uniformtrick
+#ifdef PHGLUNIFORMSTATES_H
+#define uniformtrick PHGLUniformStates::uniform
+#else
+#define uniformtrick void
+#endif
+
 class PHDeferredView : public PHView
 {
 protected:
@@ -25,16 +32,16 @@ protected:
     PHGLShaderProgram * ambientShader, * diffusePointShader, * specularPointShader, * diffuseNormalPointShader, * specularNormalPointShader;
     PHGLUniformStates * states;
     
-    enum shaderUniforms
-    {
-        diffuseColorUniform = 10,
-        specularColorUniform = 11,
-        lightPositionUniform = 12,
-        lightIntensityUniform = 13,
-        clipUniform = 14,
-        scaleUniform = 16,
-        normalMapUniform = 17
-    };
+    uniformtrick * diffuseColorUniform;
+    uniformtrick * specularColorUniform;
+    uniformtrick * lightPositionUniform;
+    uniformtrick * lightIntensityUniform;
+    uniformtrick * clipUniform;
+    uniformtrick * scaleUniform;
+    uniformtrick * normalMapUniform;
+    uniformtrick * matrixUniform;
+    uniformtrick * colorUniform;
+    uniformtrick * textureUniform;
     
     bool speculars,normal;
     

@@ -26,6 +26,13 @@ class PHView;
 class PHViewController;
 class PHSoundManager;
 
+#undef uniformtrick
+#ifdef PHGLUNIFORMSTATES_H
+#define uniformtrick PHGLUniformStates::uniform
+#else
+#define uniformtrick void
+#endif
+
 enum PHGLCapabilities
 {
     PHGLCapabilityNPOT = 0,
@@ -185,6 +192,9 @@ private:
     
     list<PHGLShaderProgram*> spriteShaderStack;
     PHGLUniformStates * spriteStates;
+    uniformtrick * modelViewSpriteUniform;
+    uniformtrick * colorSpriteUniform;
+    uniformtrick * textureSpriteUniform;
     PHGLShaderProgram * _shader;
     PHGLShaderProgram * _spriteShader;
     int rndMode;
@@ -270,13 +280,6 @@ public:
     
     PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
     
-    enum
-    {
-        modelViewSpriteUniform = 0,
-        colorSpriteUniform,
-        textureSpriteUniform
-    };
-    
     PHGLUniformStates * spriteUniformStates() { return spriteStates; }
     void applySpriteShader();
     void applyShader(PHGLShaderProgram * shader);
@@ -289,7 +292,6 @@ public:
     void bindVAO(PHGLVertexArrayObject * vao);
     PHGLVertexBufferObject * boundVBO(int target) { return boundVBOs[target]; }
     PHGLVertexArrayObject * boundVAO() { return _boundVAO; }
-
     void bindFramebuffer(PHGLFramebuffer * fbo);
     PHGLFramebuffer * boundFramebuffer() { return _boundFBO; }
     

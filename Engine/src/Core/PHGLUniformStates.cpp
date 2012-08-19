@@ -112,33 +112,9 @@ void PHGLUniformStates::dump()
     }
 }
 
-
-PHGLUniformStates::uniform & PHGLUniformStates::_insert(const string &name, int index)
-{
-    map<int,uniform*>::iterator i = intMap.find(index);
-    if (i != intMap.end())
-        erase(*(i->second));
-    uniform * u = new uniform;
-    u->name = name;
-    u->index = index;
-    u->type = nullType;
-    u->active = true;
-    intMap.insert(make_pair<int,uniform*>(index, u));
-    stringMap.insert(make_pair<string,uniform*>(name,u));
-    return *u;
-}
-
-PHGLUniformStates::uniform & PHGLUniformStates::insert(const string &name, int index)
-{
-    map<string,uniform*>::iterator i = stringMap.find(name);
-    if (i != stringMap.end())
-        erase(*(i->second));
-    return _insert(name,index);
-}
-
 void PHGLUniformStates::apply(PHGLShaderProgram * shader)
 {
-    for (map<int,uniform*>::iterator i = intMap.begin(); i!=intMap.end(); i++)
+    for (map<string,uniform*>::iterator i = stringMap.begin(); i!=stringMap.end(); i++)
         i->second->apply(shader);
 }
 
@@ -147,24 +123,24 @@ PHGLUniformStates::uniform & PHGLUniformStates::operator[] (const string & name)
     map<string,uniform*>::iterator i = stringMap.find(name);
     if (i != stringMap.end())
         return *(i->second);
-    return _insert(name, autogen--);
-}
 
-PHGLUniformStates::uniform & PHGLUniformStates::operator[] (int index)
-{
-    return *(intMap[index]);
+    uniform * u = new uniform;
+    u->name = name;
+    u->type = nullType;
+    u->active = true;
+    stringMap.insert(make_pair<string,uniform*>(name,u));
+    return *u;
 }
 
 void PHGLUniformStates::erase(const PHGLUniformStates::uniform & u)
 {
-    intMap.erase(u.index);
     stringMap.erase(u.name);
     delete &u;
 }
 
-PHGLUniformStates::PHGLUniformStates() : autogen(-1) {};
+PHGLUniformStates::PHGLUniformStates() {};
 PHGLUniformStates::~PHGLUniformStates()
 {
-    for (map<int,uniform*>::iterator i = intMap.begin(); i!=intMap.end(); i++)
+    for (map<string,uniform*>::iterator i = stringMap.begin(); i!=stringMap.end(); i++)
         delete i->second;
 }

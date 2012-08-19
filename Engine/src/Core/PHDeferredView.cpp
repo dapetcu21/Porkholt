@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#include <Porkholt/Core/PHGLUniformStates.h> //must be before PHDeferredView.h
 #include <Porkholt/Core/PHDeferredView.h>
-#include <Porkholt/Core/PHGLUniformStates.h>
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
@@ -38,16 +38,16 @@ void PHDeferredView::attachedToGameManager()
     states = new PHGLUniformStates;
     PHRect r = gm->screenBounds();
     
-    states->insert("modelViewProjectionMatrix", PHGameManager::modelViewSpriteUniform);
-    states->insert("color", PHGameManager::colorSpriteUniform);
-    states->insert("texture",PHGameManager::textureSpriteUniform) = 0;
-    states->insert("normalMap",normalMapUniform) = 1;
-    states->insert("diffuseColor",diffuseColorUniform);
-    states->insert("specularColor",specularColorUniform);
-    states->insert("lightPosition",lightPositionUniform);
-    states->insert("lightIntensity",lightIntensityUniform);
-    states->insert("clip",clipUniform);
-    states->insert("scale",scaleUniform);
+    matrixUniform = &states->at("modelViewProjectionMatrix");
+    colorUniform = &states->at("color");
+    textureUniform = &states->at("texture");
+    normalMapUniform = &states->at("normalMap");
+    diffuseColorUniform = &states->at("diffuseColor");
+    specularColorUniform = &states->at("specularColor");
+    lightPositionUniform = &states->at("lightPosition");
+    lightIntensityUniform = &states->at("lightIntensity");
+    clipUniform = &states->at("clip");
+    scaleUniform = &states->at("scale");
     
     colorFBO = new PHGLFramebuffer(gm);
     PHGLTexture2D * tex = new PHGLTexture2D(gm);
@@ -127,21 +127,21 @@ void PHDeferredView::composite()
     if (ambient!=PHBlackColor)
     {
         gm->useShader(ambientShader);
-        (states->at(PHGameManager::modelViewSpriteUniform) = gm->projectionMatrix()).apply(ambientShader);
-        states->at(PHGameManager::textureSpriteUniform).apply(ambientShader);
-        (states->at(PHGameManager::colorSpriteUniform) = ambient).apply(ambientShader);
-        (states->at(scaleUniform) = scale).apply(ambientShader);
+        matrixUniform->set(gm->projectionMatrix()).apply(ambientShader);
+        textureUniform->apply(ambientShader);
+        colorUniform->set(ambient).apply(ambientShader);
+        scaleUniform->set(scale).apply(ambientShader);
         vao->draw();
     }
     if (!pointLights.empty())
     {
         PHGLShaderProgram * shader = speculars?(normal?specularNormalPointShader:specularPointShader):(normal?diffuseNormalPointShader:diffusePointShader);
         gm->useShader(shader);
-        (states->at(PHGameManager::modelViewSpriteUniform) = gm->projectionMatrix()).apply(shader);
-        states->at(PHGameManager::textureSpriteUniform).apply(shader);
-        (states->at(scaleUniform) = scale).apply(shader);
+        matrixUniform->set(gm->projectionMatrix()).apply(shader);
+        textureUniform->apply(shader);
+        scaleUniform->set(scale).apply(shader);
         if (normal)
-            states->at(normalMapUniform).apply(shader);
+            normalMapUniform->apply(shader);
         
         for (set<PHGLLight*>::iterator i = pointLights.begin(); i!= pointLights.end(); i++)
         {
@@ -177,16 +177,15 @@ void PHDeferredView::composite()
                 if (portion.width<=0 || portion.height<=0)
                     continue;
                 
-                (states->at(clipUniform) = portion).apply(shader);
+                clipUniform->set(portion).apply(shader);
             } else 
-                (states->at(clipUniform) = PHWholeRect).apply(shader);
+                clipUniform->set(PHWholeRect).apply(shader);
             
-            
-            (states->at(lightPositionUniform) = p->position).apply(shader);
-            (states->at(lightIntensityUniform) = (normal?(it*it):(z*it*it))).apply(shader);
-            (states->at(diffuseColorUniform) = (p->diffuse * diffuse)).apply(shader);
+            lightPositionUniform->set(p->position).apply(shader);
+            lightIntensityUniform->set(normal?(it*it):(z*it*it)).apply(shader);
+            diffuseColorUniform->set(p->diffuse * diffuse).apply(shader);
             if (speculars)
-                (states->at(specularColorUniform) = (p->specular * specular)).apply(shader);
+                specularColorUniform->set(p->specular * specular).apply(shader);
             
             vao->draw();
         }
