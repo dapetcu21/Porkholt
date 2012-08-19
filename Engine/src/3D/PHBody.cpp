@@ -79,6 +79,7 @@ void PHBody::render()
 {
     PHMatrix o = gm->modelViewMatrix();
     gm->setModelViewMatrix(o * applyMatrices());
-    PHDrawable::render();
+    draw();
+    renderChildren();
     gm->setModelViewMatrix(o);
 }

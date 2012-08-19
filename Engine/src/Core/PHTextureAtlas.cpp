@@ -25,6 +25,8 @@ PHTextureAtlas::PHTextureAtlas(PHGameManager * gameManager, PHDirectory * dir) :
         PHLuaSeedRandom(staticL);
     }
     try {
+        if (!PHLuaLoadFile(staticL, dir, "init.lua"))
+            throw string("Can't load init.lua");
         loadFromDir(dir, staticL);
     } catch (string ex) {
         luaMutex->unlock();

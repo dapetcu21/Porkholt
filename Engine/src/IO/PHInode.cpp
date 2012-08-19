@@ -15,6 +15,7 @@ PHInode * PHInode::itemAtFSPath(const string & p)
         return new PHRegularDirectory(p, false);
     if (results.st_mode & S_IFREG)
         return new PHRegularFile(p, false);
+    throw string("not a file or directory");
 }
 
 PHFile * PHInode::fileAtFSPath(const string & p)

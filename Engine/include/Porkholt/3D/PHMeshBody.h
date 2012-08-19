@@ -7,7 +7,7 @@
 #include <Porkholt/3D/PHMesh.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
 #include <Porkholt/Core/PHGLUniformStates.h>
-#include <Porkholt/3D/PHMaterial.h>
+#include <Porkholt/Core/PHMaterial.h>
 
 class PHImage;
 class PHNormalImage;
@@ -17,37 +17,17 @@ class PHMeshBody : public PHBody
 {
 private:
     PHMesh * _mesh;
-    PHGLUniformStates * uniforms;
-    PHGLUniformStates::uniform & modelViewMatrixU, & projectionMatrixU, & diffuseColorU, & specularColorU, &lightPositionU, & ambientColorU, & shininessU, & textureU, & normalMapU, & textureRU, & normalMapRU, & normalMatrixU;
     PHMaterial * mat;
     
-    PHGLTexture2D * tex, * nmap;
-    PHRect tex_r, nmap_r;
 public:
-    PHMesh * mesh() { return _mesh; }
-    void setMesh(PHMesh * m);
-    
     PHMeshBody();
     ~PHMeshBody();
-    
+ 
+    PHMesh * mesh() { return _mesh; }
+    void setMesh(PHMesh * m);
+   
     void setMaterial(PHMaterial * m);
     PHMaterial * material() { return mat; }
-    
-    void setImage(PHNormalImage * img);
-    void setImage(PHImage * img);
-    
-    void setTexture(PHGLTexture2D * tx);
-    void setTextureRegion(const PHRect & r) { tex_r = r; }
-    void setTexture(PHGLTexture2D * tx, const PHRect & region) { setTexture(tx); setTextureRegion(region); }
-    
-    void setNormalMap(PHGLTexture2D * tx);
-    void setNormalMapRegion(const PHRect & r) { nmap_r = r; }
-    void setNormalMap(PHGLTexture2D * tx, const PHRect & region) { setNormalMap(tx); setNormalMapRegion(region); }
-    
-    PHGLTexture2D * normalMap() { return nmap; }
-    PHGLTexture2D * texture() { return tex; }
-    PHRect normalMapRegion() { return nmap_r; }
-    PHRect textureRegion() { return tex_r; }
 protected:
     void draw();
 };

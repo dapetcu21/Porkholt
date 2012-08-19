@@ -67,10 +67,27 @@ void PHGLUniformStates::dump()
                 PHLog("%s = vec3(%f, %f, %f)",name.c_str(), u->floatValue[0], u->floatValue[1], u->floatValue[2]);
                 break;
             case float4Type:
-                PHLog("%s = vec4(%f, %f, %f %f)",name.c_str(), u->floatValue[0], u->floatValue[1], u->floatValue[2], u->floatValue[3]);
+                PHLog("%s = vec4(%f, %f, %f, %f)",name.c_str(), u->floatValue[0], u->floatValue[1], u->floatValue[2], u->floatValue[3]);
                 break;
             case matrixType:
-                PHLog("%s = mat4",name.c_str());
+                PHLog("%s = mat4(\n  %f, %f, %f, %f,\n  %f, %f, %f, %f,\n  %f, %f, %f, %f,\n  %f, %f, %f, %f )",name.c_str(),
+                    u->floatValue[0],
+                    u->floatValue[1],
+                    u->floatValue[2],
+                    u->floatValue[3],
+                    u->floatValue[4],
+                    u->floatValue[5],
+                    u->floatValue[6],
+                    u->floatValue[7],
+                    u->floatValue[8],
+                    u->floatValue[9],
+                    u->floatValue[10],
+                    u->floatValue[11],
+                    u->floatValue[12],
+                    u->floatValue[13],
+                    u->floatValue[14],
+                    u->floatValue[15]
+                );
                 break;
             case floatType:
                 PHLog("%s = %f",name.c_str(), u->floatValue[0]);

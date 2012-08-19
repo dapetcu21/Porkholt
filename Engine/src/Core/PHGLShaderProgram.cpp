@@ -19,6 +19,7 @@ PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, PHDirectory * shdDir, P
 
 void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * file, const vector<string> * ops)
 {
+    this->gm = gm;
     lua_State * L = lua_open();
     if (ops)
     {
@@ -149,4 +150,9 @@ bool PHGLShaderProgram::validate()
     GLint status;
     glGetProgramiv(identifier, GL_VALIDATE_STATUS, &status);
     return (status==GL_TRUE);
+}
+
+void PHGLShaderProgram::use()
+{ 
+    gm->useShader(this); 
 }

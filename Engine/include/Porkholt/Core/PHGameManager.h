@@ -249,7 +249,10 @@ public:
             }
         }
     }
-    const PHColor & color();
+    const PHColor & color()
+    {
+        return _currentColor;
+    }
     void loadCapabilities();
     bool isGLES() { return openGLCaps[PHGLCapabilityOpenGLES]; }
     bool useShaders() { return openGLCaps[PHGLCapabilityShaders]; }

@@ -11,12 +11,24 @@
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHTextureCanvas.h>
 
+#include <Porkholt/IO/PHFile.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/Core/PHLuaMaterial.h>
+
 class PH3DDemoViewController : public PHViewController
 {
 protected:
     PHMeshBody * lbody, *body;
     ph_float time;
     
+    PHMaterial * materialNamed(const string & s)
+    {
+        PHFile * f = gm->resourceDirectory()->fileAtPath("materials/"+s+".lua");
+        PHMaterial * m = new PHLuaMaterial(gm, f);
+        f->release();
+        return m;
+    }
+
     PHView * loadView(const PHRect & r)
     {
         PHView * v = new PHView(r);
@@ -26,10 +38,11 @@ protected:
         canvas->setColorFormat(PHGLFBOAttachment::RGBA8);
         canvas->setDepthFormat(PHGLFBOAttachment::Depth16);
 
+        gm->setColor(PHWhiteColor);
+
         PHGLTexture2D * tex = canvas->colorTexture();
         PHImage * timg = new PHNormalImage(tex, PHWholeRect);
         PHImageView * tiv = new PHImageView(v->bounds());
-        tiv->setVerticallyFlipped(true);
         v->addChild(tiv);
         tiv->setImage(timg);
         tiv->release();
@@ -43,13 +56,12 @@ protected:
         body = new PHMeshBody();
         body->setMesh(PHSphereMesh::sphere(gm));
         body->setPosition(PH3DPoint(0,0,-5));
-        PHMaterial * mat = new PHMaterial(PHWhiteColor, PHWhiteColor,10.0f);
+        PHMaterial * mat = materialNamed("chestie_albastra");
         body->setMaterial(mat);
         mat->release();
-        PHNormalImage * img = (PHNormalImage*)gm->imageNamed("earth", true);
-        body->setImage(img);
         container->addChild(body);
 
+        PHImage * img = gm->imageNamed("earth", true);
         PHImageView * iv = new PHImageView(PHRect(0,0,200,100));
         iv->setImage(img);
         v->addChild(iv);
@@ -63,7 +75,7 @@ protected:
         lbody = new PHMeshBody();
         lbody->setMesh(PHSphereMesh::sphere(gm));
         lbody->setScale(PH3DSize(0.2,0.2,0.2));
-        mat = new PHMaterial(PHClearColor, PHClearColor, 0, PHWhiteColor);
+        mat = materialNamed("chestie_alba"); 
         lbody->setMaterial(mat);
         mat->release();
         container->addChild(lbody);

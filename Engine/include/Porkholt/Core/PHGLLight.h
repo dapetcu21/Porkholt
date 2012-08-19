@@ -9,7 +9,7 @@ class PHGLLight : public PHObject
 {
 public:
     enum lightType {
-        ambientLight,
+        ambientLight = 1,
         pointLight,
         directionalLight
     } type;

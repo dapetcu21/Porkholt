@@ -76,4 +76,4 @@ set(PH_B2D_HEADERS
   ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WeldJoint.h
   )
 
-include(${PH_ENGINE_PATH}/CMakeLib/Box2D_IncludeDirs.cmake)
+include(${PH_ENGINE_PATH}/scripts/Box2D_IncludeDirs.cmake)

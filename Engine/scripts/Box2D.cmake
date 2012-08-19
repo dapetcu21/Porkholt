@@ -1,14 +1,9 @@
-include(${PH_ENGINE_PATH}/CMakeLib/Box2D_Common.cmake)
+include(${PH_ENGINE_PATH}/scripts/Box2D_Common.cmake)
 
 add_library(Box2D ${PH_B2D_SRCS} ${PH_B2D_HEADERS})
 set_target_properties(Box2D PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-set_target_properties(Box2D PROPERTIES XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c99")
 
 if (PH_PLATFORM STREQUAL "iOS")
-    set_target_properties(Box2D PROPERTIES XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
     set_target_properties(Box2D PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
 endif()
 
-set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -g")

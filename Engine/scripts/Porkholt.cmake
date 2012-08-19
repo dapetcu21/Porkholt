@@ -25,7 +25,7 @@ function(porkholt PH_APP_TARGET)
   endif()
 
   add_subdirectory(${PH_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/engine-build)
-  include(${PH_ENGINE_PATH}/CMakeLib/Porkholt_IncludeDirs.cmake)
+  include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
 
   if(CMAKE_GENERATOR STREQUAL "Xcode")
       if(PH_PLATFORM STREQUAL "OSX")
@@ -86,7 +86,7 @@ function(porkholt PH_APP_TARGET)
     )
 
   if(PH_USE_BOX2D)
-    include("${PH_ENGINE_PATH}/CMakeLib/Box2D.cmake")
+    include("${PH_ENGINE_PATH}/scripts/Box2D.cmake")
     target_link_libraries(${PH_APP_TARGET} Box2D)
   endif()
 
@@ -147,7 +147,7 @@ function(porkholt PH_APP_TARGET)
       set(PH_IOS_INFO_PLIST "${PROJECT_SOURCE_DIR}/Info-iOS.plist")
     endif()
     if (NOT EXISTS ${PH_IOS_INFO_PLIST})
-      set(PH_IOS_INFO_PLIST "${PH_ENGINE_PATH}/CMakeLib/Info-iOS.plist")
+      set(PH_IOS_INFO_PLIST "${PH_ENGINE_PATH}/scripts/Info-iOS.plist")
     endif()
 
     if (CMAKE_GENERATOR STREQUAL "Xcode")
@@ -175,7 +175,7 @@ function(porkholt PH_APP_TARGET)
     	set(PH_OSX_INFO_PLIST "${PROJECT_SOURCE_DIR}/Info-OSX.plist")
     endif ()
     if (NOT EXISTS ${PH_OSX_INFO_PLIST})
-    	set(PH_OSX_INFO_PLIST "${PH_ENGINE_PATH}/CMakeLib/Info-OSX.plist")
+    	set(PH_OSX_INFO_PLIST "${PH_ENGINE_PATH}/scripts/Info-OSX.plist")
     endif ()
 
     if(CMAKE_GENERATOR STREQUAL "Xcode")
@@ -203,27 +203,27 @@ function(porkholt PH_APP_TARGET)
       add_custom_command(
         TARGET ${PH_APP_TARGET}
         POST_BUILD
-        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_BUILD_TYPE} ${PH_EXTERNALS}
+        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_BUILD_TYPE} ${PH_EXTERNALS}
         )
       if (PH_PLATFORM STREQUAL "OSX")
         add_custom_command(
           TARGET ${PH_APP_TARGET}
           POST_BUILD
-          COMMAND ${PH_ENGINE_PATH}/CMakeLib/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
+          COMMAND ${PH_ENGINE_PATH}/scripts/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
           )
       endif()
     else()
       set(APP_NAME "${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app")
       add_custom_target(
         PostProcess_Resources
-        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_BUILD_TYPE} ${PH_EXTERNALS}
+        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_BUILD_TYPE} ${PH_EXTERNALS}
         )
       add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
       add_dependencies(PostProcess_Resources External_Libs)  
       if (PH_PLATFORM STREQUAL "OSX")
         add_custom_target(
           Copy_Libraries
-          COMMAND ${PH_ENGINE_PATH}/CMakeLib/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
+          COMMAND ${PH_ENGINE_PATH}/scripts/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
           )
         add_dependencies(${PH_APP_TARGET} Copy_Libraries)
         add_dependencies(Copy_Libraries External_Libs)  
@@ -233,7 +233,7 @@ function(porkholt PH_APP_TARGET)
     set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}-rsrc)
     add_custom_target(
       PostProcess_Resources
-      COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/CMakeLib/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} "build-nodownscale" ${PH_EXTERNALS}
+      COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} "build-nodownscale" ${PH_EXTERNALS}
       )
     add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
     add_dependencies(PostProcess_Resources External_Libs)

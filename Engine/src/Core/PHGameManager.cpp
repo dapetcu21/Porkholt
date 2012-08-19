@@ -693,7 +693,7 @@ void PHGameManager::useShader(PHGLShaderProgram * prog)
     if (_shader==prog)
         return;
     _shader = prog;
-    prog->use();
+    prog->_use();
 }
 
 void PHGameManager::bindVBO(PHGLVertexBufferObject * vbo, int location)

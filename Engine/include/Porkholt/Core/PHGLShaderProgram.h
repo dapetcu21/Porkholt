@@ -15,8 +15,13 @@ class PHGLShaderProgram : public PHObject
 protected:
     GLint identifier;
     PHGLShader * vShader, * fShader;
+    PHGameManager * gm;
     
     void init(PHGameManager * gm, PHDirectory * shdDir, PHFile * file, const vector<string> * ops);
+
+    void _use() { glUseProgram(identifier); }
+
+    friend class PHGameManager;
 public:
     PHGLShaderProgram(PHGameManager * gameManager, PHDirectory * shdDir, PHFile * file);
     PHGLShaderProgram(PHGameManager * gameManager, PHDirectory * shdDir, PHFile * file, const vector<string> & ops);
@@ -24,7 +29,8 @@ public:
     PHGLShader * fragmentShader() { return fShader; }
     bool validate();
     GLint programID() { return identifier; }
-    void use() { glUseProgram(identifier); }
+    
+    void use();
 };
 
 #endif
