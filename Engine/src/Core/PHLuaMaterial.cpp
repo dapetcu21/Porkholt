@@ -6,6 +6,7 @@
 #include <Porkholt/Core/PHGLShaderProgram.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLLight.h>
+#include <Porkholt/Core/PHNormalImage.h>
 #include <limits.h>
 
 lua_State * PHLuaMaterial::sL = NULL;
@@ -81,7 +82,9 @@ void PHLuaMaterial::loadFromLua(lua_State * L)
                                 v.readFromLua(L);
                                 if(!v.applyUniform(u) && lua_isstring(L, -1))
                                 {
-                                    //texture stuff here
+                                    PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed(lua_tostring(L, -1)));
+                                    if (img)
+                                        *u = img;
                                 }
                             }
                         }
@@ -618,8 +621,9 @@ void PHLuaMaterial::renderVAO(PHGLVertexArrayObject * vao, PHGLUniformStates * u
         r.vars[i].solve(gm);
 
     r.shader->use();
-    r.uniforms->apply(r.shader);
+    int c = 0;
+    r.uniforms->apply(r.shader, &c);
     if (us)
-        us->apply(r.shader);
+        us->apply(r.shader, &c);
     vao->draw();
 }

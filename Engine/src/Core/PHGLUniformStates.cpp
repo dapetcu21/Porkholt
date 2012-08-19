@@ -2,6 +2,9 @@
 
 #include <Porkholt/Core/PHGLUniformStates.h>
 #include <Porkholt/Core/PHGLShaderProgram.h>
+#include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/Core/PHGameManager.h>
 
 GLint PHGLUniformStates::uniform::location(PHGLShaderProgram * shader)
 {
@@ -16,7 +19,7 @@ GLint PHGLUniformStates::uniform::location(PHGLShaderProgram * shader)
     return loc;
 }
 
-void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader)
+void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader, int * tc)
 {
     if (!active) return;
     GLint loc = location(shader);
@@ -38,6 +41,25 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader)
     case float2Type:
         glUniform2f(loc, floatValue[0], floatValue[1]);
         break;
+    case imageType:
+    {
+        if (img)
+        {
+            int c = tc?((*tc)++):0;
+            img->texture()->bind(c);
+            glUniform1i(loc, c);
+        }
+        break;
+    }
+    case textureType:
+    {
+        if (tex)
+        {
+            int c = tc?((*tc)++):0;
+            tex->bind(c);
+            glUniform1i(loc, c);
+        }
+    }
     case intType:
         glUniform1i(loc, intValue[0]);
         break;
@@ -107,15 +129,24 @@ void PHGLUniformStates::dump()
             case int2Type:
                 PHLog("%s = vec2i(%d, %d)",name.c_str(), u->intValue[0], u->floatValue[1]);
                 break;
+            case textureType:
+                PHLog("%s = texture", name.c_str());
+                break;
+            case imageType:
+                PHLog("%s = image", name.c_str());
+                break;
         };
 
     }
 }
 
-void PHGLUniformStates::apply(PHGLShaderProgram * shader)
+void PHGLUniformStates::apply(PHGLShaderProgram * shader, int * tmuCount)
 {
+    int t = 0;
+    if (!tmuCount)
+        tmuCount = &t;
     for (map<string,uniform*>::iterator i = stringMap.begin(); i!=stringMap.end(); i++)
-        i->second->apply(shader);
+        i->second->apply(shader, tmuCount);
 }
 
 PHGLUniformStates::uniform & PHGLUniformStates::operator[] (const string & name)
@@ -143,4 +174,34 @@ PHGLUniformStates::~PHGLUniformStates()
 {
     for (map<string,uniform*>::iterator i = stringMap.begin(); i!=stringMap.end(); i++)
         delete i->second;
+}
+
+void PHGLUniformStates::uniform::setValue(PHNormalImage * i)
+{
+    if (i)
+        i->retain();
+    clear();
+    type = imageType;
+    img = i; 
+}
+
+void PHGLUniformStates::uniform::setValue(PHGLTexture2D * t)
+{
+    if (t)
+        t->retain();
+    clear();
+    type = textureType;
+    tex = t;
+}
+
+void PHGLUniformStates::uniform::clear()
+{
+    if (tex && ((type == textureType) || (type == imageType)))
+        tex->release();
+    type = nullType;
+}
+
+PHGLUniformStates::uniform::~uniform()
+{
+    clear();
 }

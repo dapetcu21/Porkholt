@@ -31,6 +31,7 @@ public:
     GLint programID() { return identifier; }
     
     void use();
+    PHGameManager * gameManager() { return gm; }
 };
 
 #endif

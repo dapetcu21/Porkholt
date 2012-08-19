@@ -71,7 +71,7 @@ void PHSphereMesh::setResolutionForLOD(int lod, int latitude, int longitude)
             buf[k++] = y * zr1; 
             //--
             buf[k++] = lngf;
-            buf[k++] = 1.0f - lat1f;
+            buf[k++] = lat1f;
             //---
             buf[k++] = x * zr0; 
             buf[k++] = z0;
@@ -82,7 +82,7 @@ void PHSphereMesh::setResolutionForLOD(int lod, int latitude, int longitude)
             buf[k++] = y * zr0; 
             //--
             buf[k++] = lngf;
-            buf[k++] = 1.0f - lat0f;
+            buf[k++] = lat0f;
         }        
     }
     vaos[lod] = new PHGLVertexArrayObject(gm);

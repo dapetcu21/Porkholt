@@ -6,6 +6,9 @@
 #include <Porkholt/Core/PHMain.h>
 
 class PHGLShaderProgram;
+class PHNormalImage;
+class PHGLTexture2D;
+
 class PHGLUniformStates : public PHObject
 {
     //TODO: array support
@@ -19,7 +22,9 @@ class PHGLUniformStates : public PHObject
         float3Type,
         int4Type,
         float4Type,
-        matrixType
+        matrixType,
+        imageType,
+        textureType
     };
 public:
     struct uniform {
@@ -28,6 +33,8 @@ public:
         {
             GLint intValue[4];
             GLfloat floatValue[16];
+            PHNormalImage * img;
+            PHGLTexture2D * tex;
         };
         
         map<PHGLShaderProgram*,int> shaders;
@@ -51,6 +58,12 @@ public:
         
         void setValue(const PHMatrix & m) { type = matrixType; memcpy(floatValue, m.floats(), sizeof(GLfloat)*16); }
 
+        //WARNING: these two require clear() before re-setting to any of the above
+        void setValue(PHNormalImage * img);
+        void setValue(PHGLTexture2D * tex);
+
+        void clear();
+
         uniform & set(GLint v) { setValue(v); return (*this); }
         uniform & set(GLfloat v) { setValue(v); return (*this); }
         uniform & set(GLint v0, GLint v1) { setValue(v0,v1); return (*this); }
@@ -64,6 +77,9 @@ public:
         uniform & set(const PHColor & p) { setValue(p); return (*this); }
         uniform & set(const PHRect & p) { setValue(p); return (*this); }
         uniform & set(const PHMatrix & p) { setValue(p); return (*this); }
+        uniform & set(PHNormalImage * img) { setValue(img); return (*this); }
+        uniform & set(PHGLTexture2D * tex) { setValue(tex); return (*this); }
+        
         
         uniform & operator = (GLint v) { setValue(v); return (*this); }
         uniform & operator = (GLfloat v) { setValue(v); return (*this); }
@@ -72,8 +88,12 @@ public:
         uniform & operator = (const PHColor & p) { setValue(p); return (*this); }
         uniform & operator = (const PHRect & p) { setValue(p); return (*this); }
         uniform & operator = (const PHMatrix & p) { setValue(p); return (*this); }
+        uniform & operator = (PHNormalImage * img) { setValue(img); return (*this); }
+        uniform & operator = (PHGLTexture2D * tex) { setValue(tex); return (*this); }
         
-        void apply(PHGLShaderProgram * shader);
+        ~uniform();
+
+        void apply(PHGLShaderProgram * shader, int * tmuCount = NULL);
         GLint location(PHGLShaderProgram * shader);
     };
     
@@ -91,7 +111,7 @@ public:
     void dump();
     void erase(const uniform & u);
     
-    void apply(PHGLShaderProgram * shader);
+    void apply(PHGLShaderProgram * shader, int * tmuCount = NULL);
 };
 
 #endif
