@@ -4,7 +4,7 @@
 #include <Porkholt/Core/PHGLUniformStates.h>
 #include <Porkholt/Core/PHGameManager.h>
 
-PHPostProcess::PHPostProcess(PHGameManager * gm) : PHTextureCanvas(gm), mat(NULL), us(new PHGLUniformStates), resMat(false)
+PHPostProcess::PHPostProcess(PHGameManager * gm) : PHTextureCanvas(gm), mat(NULL), us(new PHGLUniformStates), resMat(false), efen(true)
 {
 }
 
@@ -27,6 +27,11 @@ void PHPostProcess::setMaterial(PHMaterial * m)
 
 void PHPostProcess::render()
 {
+    if (!efen)
+    {
+        renderChildren();
+        return;
+    }
     PHTextureCanvas::render();
     if (resMat)
     {

@@ -12,7 +12,7 @@
 lua_State * PHLuaMaterial::sL = NULL;
 PHMutex * PHLuaMaterial::luaMutex = new PHMutex;
 
-static const char * luaEnvironmentInit = "";
+#include "PHLuaMaterial.lua.h"
 
 void PHLuaMaterial::loadFromLua(lua_State * L)
 {
@@ -579,7 +579,7 @@ void PHLuaMaterial::initEnvironment(lua_State * L)
         lua_setfield(L, -2, op_names[i]);
     }
     lua_pop(L, 2);
-    PHLuaLoadFile(L, gm->resourceDirectory(), "materials/common.lua");
+    PHLuaLoadString(L, luaEnvironmentInit);
     
     lua_newtable(L);
     lua_pushvalue(L, -1);

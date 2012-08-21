@@ -13,7 +13,7 @@ class PHPostProcess : public PHTextureCanvas
     protected:
         PHMaterial * mat;
         PHGLUniformStates * us;
-        bool resMat;
+        bool resMat, efen;
 
         void render();
         void draw();
@@ -22,6 +22,8 @@ class PHPostProcess : public PHTextureCanvas
         void setMaterial(PHMaterial * mat);
         bool resetsMatrices() { return resMat; }
         void setResetsMatrices(bool b) { resMat = b; }
+        bool effectEnabled() { return efen; }
+        void setEffectEnabled(bool ef) { efen = ef; }
         PHGLUniformStates * additionalUniforms() { return us; }
 
         PHPostProcess(PHGameManager * gm);

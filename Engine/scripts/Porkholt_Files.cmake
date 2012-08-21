@@ -91,6 +91,7 @@ set(PH_ENGINE_SRCS
   ${PH_EXTERNALS}/uremote/src/URField.cpp
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.lua.h
   ${PH_ENGINE_PATH}/src/Core/PHPostProcess.cpp
   )
 

@@ -51,6 +51,9 @@ protected:
         canvas->additionalUniforms()->at("cellmap").setValue(cell_map);
         cell_map->release();
 
+        canvas->setEffectEnabled(false);
+        
+
         PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
         canvas->addChild(container);
         //v->addChild(container);
@@ -120,6 +123,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 int main(int argc, char *argv[]) {
-    return PHWMain(argc, argv, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), PHWResizable | PHWVSync, &PHGameEntryPoint,NULL);
+    return PHWMain(argc, argv, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), PHWResizable | PHWVSync | PHWDepthBuffer, &PHGameEntryPoint,NULL);
 }
  
