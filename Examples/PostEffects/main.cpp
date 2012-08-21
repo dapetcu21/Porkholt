@@ -21,14 +21,6 @@ protected:
     PHMeshBody * lbody, *body;
     ph_float time;
     
-    PHMaterial * materialNamed(const string & s)
-    {
-        PHFile * f = gm->resourceDirectory()->fileAtPath("materials/"+s+".lua");
-        PHMaterial * m = new PHLuaMaterial(gm, f);
-        f->release();
-        return m;
-    }
-
     PHView * loadView(const PHRect & r)
     {
         PHView * v = new PHView(r);
@@ -37,7 +29,7 @@ protected:
         v->addChild(canvas);
         canvas->setColorFormat(PHGLFBOAttachment::RGBA8);
         canvas->setDepthFormat(PHGLFBOAttachment::Depth16);
-        canvas->setMaterial(materialNamed("cell_shading"));
+        canvas->setMaterial(gm->materialNamed("cell_shading"));
         canvas->additionalUniforms()->at("texture").setValue(canvas->colorTexture());       
         PHGLTexture1D * cell_map = new PHGLTexture1D(gm);
         #define cells 5
@@ -56,16 +48,13 @@ protected:
 
         PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
         canvas->addChild(container);
-        //v->addChild(container);
         canvas->release();
         container->release();
 
         body = new PHMeshBody();
         body->setMesh(PHSphereMesh::sphere(gm));
         body->setPosition(PH3DPoint(0,0,-5));
-        PHMaterial * mat = materialNamed("chestie_albastra");
-        body->setMaterial(mat);
-        mat->release();
+        body->setMaterial(gm->materialNamed("chestie_albastra"));
         container->addChild(body);
 
         PHImage * img = gm->imageNamed("earth", true);
@@ -82,9 +71,7 @@ protected:
         lbody = new PHMeshBody();
         lbody->setMesh(PHSphereMesh::sphere(gm));
         lbody->setScale(PH3DSize(0.2,0.2,0.2));
-        mat = materialNamed("chestie_alba"); 
-        lbody->setMaterial(mat);
-        mat->release();
+        lbody->setMaterial(gm->materialNamed("chestie_alba"));
         container->addChild(lbody);
         
         PHGLLight * l = new PHGLLight(PHGLLight::pointLight, PH3DOriginPoint, 2);

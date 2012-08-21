@@ -64,6 +64,8 @@ PHGameManager::~PHGameManager()
         fntDir->release();
     if (shdDir)
         shdDir->release();
+    if (matDir)
+        matDir->release();
     if (imgDir)
         imgDir->release();
     if (sndMan)
@@ -142,6 +144,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     else
         rsrcDir->retain();
     shdDir = rsrcDir->directoryAtPath("shaders");
+    matDir = rsrcDir->directoryAtPath("materials");
     try {
         imgDir = rsrcDir->directoryAtPath("img");
     } catch(...) {

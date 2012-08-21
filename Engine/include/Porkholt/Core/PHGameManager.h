@@ -7,6 +7,7 @@
 #include <Porkholt/Core/PHImageInitPool.h>
 #include <Porkholt/Core/PHFontInitPool.h>
 #include <Porkholt/Core/PHGLProgramInitPool.h>
+#include <Porkholt/Core/PHMaterialInitPool.h>
 #include <Porkholt/Core/PHMessage.h>
 #include <Porkholt/Core/PHGLLight.h>
 
@@ -78,7 +79,7 @@ enum PHGLStates
     PHGLBackFaceCulling = 1<<8
 };
 
-class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool
+class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool
 {
 private:
 	PHView * view;
@@ -88,6 +89,7 @@ private:
     PHSoundManager * sndMan;
     PHDirectory * rsrcDir;
     PHDirectory * shdDir;
+    PHDirectory * matDir;
     PHDirectory * imgDir;
     PHDirectory * fntDir;
 
@@ -149,6 +151,7 @@ public:
     PHDirectory * fontDirectory() { if (fntDir) return fntDir; throw string("no font directory"); }
     PHDirectory * imageDirectory() { if (imgDir) return imgDir; throw string("no image directory"); }
     PHDirectory * shaderDirectory() { if (shdDir) return shdDir; throw string("no shader directory"); }
+    PHDirectory * materialDirectory() { if (matDir) return matDir; throw string("no material directory"); }
 
     const string musicNamed(const string & name);
     bool usesRemote() { return useRemote; }

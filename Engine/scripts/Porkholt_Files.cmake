@@ -93,6 +93,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.lua.h
   ${PH_ENGINE_PATH}/src/Core/PHPostProcess.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHMaterialInitPool.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -200,6 +201,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMaterial.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHLuaMaterial.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHPostProcess.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMaterialInitPool.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
