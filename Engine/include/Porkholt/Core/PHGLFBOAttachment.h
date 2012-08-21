@@ -19,6 +19,8 @@ public:
         Depth32fStencil8,
         A8,
         L8,
+        R8,
+        RG8,
         LA8,
         RGBA8,
         RGBA16,

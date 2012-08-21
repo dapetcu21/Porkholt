@@ -66,7 +66,7 @@ public:
     void setDepthClearValue(float val) { cdepth = val; }
     void setStencilClearValue(int val) { cstencil = val; }
 
-    void render();
+    virtual void render();
 };
 
 #endif

@@ -7,7 +7,7 @@
 
 class PHGLShaderProgram;
 class PHNormalImage;
-class PHGLTexture2D;
+class PHGLTexture;
 
 class PHGLUniformStates : public PHObject
 {
@@ -34,7 +34,7 @@ public:
             GLint intValue[4];
             GLfloat floatValue[16];
             PHNormalImage * img;
-            PHGLTexture2D * tex;
+            PHGLTexture * tex;
         };
         
         map<PHGLShaderProgram*,int> shaders;
@@ -60,7 +60,7 @@ public:
 
         //WARNING: these two require clear() before re-setting to any of the above
         void setValue(PHNormalImage * img);
-        void setValue(PHGLTexture2D * tex);
+        void setValue(PHGLTexture * tex);
 
         void clear();
 
@@ -78,7 +78,7 @@ public:
         uniform & set(const PHRect & p) { setValue(p); return (*this); }
         uniform & set(const PHMatrix & p) { setValue(p); return (*this); }
         uniform & set(PHNormalImage * img) { setValue(img); return (*this); }
-        uniform & set(PHGLTexture2D * tex) { setValue(tex); return (*this); }
+        uniform & set(PHGLTexture * tex) { setValue(tex); return (*this); }
         
         
         uniform & operator = (GLint v) { setValue(v); return (*this); }
@@ -89,7 +89,7 @@ public:
         uniform & operator = (const PHRect & p) { setValue(p); return (*this); }
         uniform & operator = (const PHMatrix & p) { setValue(p); return (*this); }
         uniform & operator = (PHNormalImage * img) { setValue(img); return (*this); }
-        uniform & operator = (PHGLTexture2D * tex) { setValue(tex); return (*this); }
+        uniform & operator = (PHGLTexture * tex) { setValue(tex); return (*this); }
         
         ~uniform();
 

@@ -9,7 +9,7 @@
 #include <Porkholt/Core/PHNormalImage.h>
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHGLTexture.h>
-#include <Porkholt/Core/PHTextureCanvas.h>
+#include <Porkholt/Core/PHPostProcess.h>
 
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/IO/PHDirectory.h>
@@ -33,23 +33,27 @@ protected:
     {
         PHView * v = new PHView(r);
         
-        PHTextureCanvas * canvas = new PHTextureCanvas(gm);
+        PHPostProcess * canvas = new PHPostProcess(gm);
         v->addChild(canvas);
         canvas->setColorFormat(PHGLFBOAttachment::RGBA8);
         canvas->setDepthFormat(PHGLFBOAttachment::Depth16);
-
-        gm->setColor(PHWhiteColor);
-
-        PHGLTexture2D * tex = canvas->colorTexture();
-        PHImage * timg = new PHNormalImage(tex, PHWholeRect);
-        PHImageView * tiv = new PHImageView(v->bounds());
-        v->addChild(tiv);
-        tiv->setImage(timg);
-        tiv->release();
-        timg->release();
+        canvas->setMaterial(materialNamed("cell_shading"));
+        canvas->additionalUniforms()->at("texture").setValue(canvas->colorTexture());       
+        PHGLTexture1D * cell_map = new PHGLTexture1D(gm);
+        #define cells 5
+        uint8_t b[cells];
+        for (int i = 0; i<cells; i++)
+            b[i] = i * (1.0f/(cells-1)) * 255;
+        cell_map->setData(b, cells, PHGLTexture::R8);
+        cell_map->setWrapS(PHGLTexture::clampToEdge);
+        cell_map->setMinFilter(PHGLTexture::nearest);
+        cell_map->setMagFilter(PHGLTexture::nearest);
+        canvas->additionalUniforms()->at("cellmap").setValue(cell_map);
+        cell_map->release();
 
         PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
         canvas->addChild(container);
+        //v->addChild(container);
         canvas->release();
         container->release();
 

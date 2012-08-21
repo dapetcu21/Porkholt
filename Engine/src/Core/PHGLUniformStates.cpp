@@ -59,6 +59,7 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader, int * tc)
             tex->bind(c);
             glUniform1i(loc, c);
         }
+        break;
     }
     case intType:
         glUniform1i(loc, intValue[0]);
@@ -185,7 +186,7 @@ void PHGLUniformStates::uniform::setValue(PHNormalImage * i)
     img = i; 
 }
 
-void PHGLUniformStates::uniform::setValue(PHGLTexture2D * t)
+void PHGLUniformStates::uniform::setValue(PHGLTexture * t)
 {
     if (t)
         t->retain();

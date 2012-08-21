@@ -1,12 +1,25 @@
+emissive = vec4(0.0, 0.0, 0.0, 0.0)
+diffuse = vec4(1.0, 1.0, 1.0, 1.0)
+specular = vec4(1.0, 1.0, 1.0, 1.0)
+shininess = 10
+
 material = {
     [0] = {
-        shader = "sprites",
+        shader = "front_pixel_shading[point_light][texture][normal_map][specular]",
         uniforms = {
-            modelViewProjectionMatrix = { stack = {
-                { var = 1 }, { var = 0 }, { op = 22 }, n=3
-            } },
-            color = { stack = { { var = 2 }, n=1 } },
-            texture = "earth"
+            modelViewMatrix = vars.modelViewMatrix,
+            projectionMatrix = vars.projectionMatrix,
+            normalMatrix = vars.modelViewMatrix.inverse.transposed,
+            ambientColor = emissive + vars.ambientColor * diffuse,
+            shininess = shininess,
+            diffuseColor = diffuse * vars.lightDiffuse * vars.lightIntensity,
+            specularColor = specular * vars.lightSpecular * vars.lightIntensity,
+            lightPosition = vars.lightPosition;
+            tex = "earth",
+            nMap = "earth.nmap",
+            texR = vec4(0, 0, 1, 1),
+            nMapR = vec4(0, 0, 1, 1),
         }
     }
 }
+

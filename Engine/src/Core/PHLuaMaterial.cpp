@@ -12,6 +12,8 @@
 lua_State * PHLuaMaterial::sL = NULL;
 PHMutex * PHLuaMaterial::luaMutex = new PHMutex;
 
+static const char * luaEnvironmentInit = "";
+
 void PHLuaMaterial::loadFromLua(lua_State * L)
 {
     lua_getglobal(L, "material");
@@ -177,10 +179,6 @@ PHLuaMaterial::PHLuaMaterial(PHGameManager * _gm, PHFile * file) : gm(_gm)
     luaMutex->unlock();
 }
 
-void PHLuaMaterial::initEnvironment(lua_State * L)
-{
-}
-
 size_t PHLuaMaterial::calculateMem(lua_State * L, size_t & ss, size_t & ms)
 {
     int n;
@@ -224,14 +222,39 @@ enum e_vars
 {
     modelView,
     projection,
-    color
+    color,
+    lIntensity,
+    lPos,
+    lSpec,
+    lDiff,
+    ambientColor
+};
+
+const char * e_names[] = {
+    "modelViewMatrix",
+    "projectionMatrix",
+    "currentColor",
+    "lightIntensity",
+    "lightPosition",
+    "lightSpecular",
+    "lightDiffuse",
+    "ambientColor"
 };
 
 const int e_type[] = {
     PHLuaMaterial::renderer::solver::value::vMatrix,
     PHLuaMaterial::renderer::solver::value::vMatrix,
-    PHLuaMaterial::renderer::solver::value::vVec4
+    PHLuaMaterial::renderer::solver::value::vVec4,
+    PHLuaMaterial::renderer::solver::value::vFloat,
+    PHLuaMaterial::renderer::solver::value::vVec3,
+    PHLuaMaterial::renderer::solver::value::vVec4,
+    PHLuaMaterial::renderer::solver::value::vVec4,
+    PHLuaMaterial::renderer::solver::value::vVec4,
 };
+
+//to be used when the switch becomes not enough
+typedef void (*getter)(GLfloat *, PHGameManager *);
+typedef void (*matrix_getter)(PHMatrix & m, PHGameManager *);
 
 void PHLuaMaterial::renderer::solver::value::solveVariable(PHGameManager * gm, PHMatrix * m, int & ms)
 {
@@ -241,11 +264,9 @@ void PHLuaMaterial::renderer::solver::value::solveVariable(PHGameManager * gm, P
     {
         case modelView:
             (*m) = gm->modelViewMatrix();
-            ms++;
             break;
         case projection:
             (*m) = gm->projectionMatrix();
-            ms++;
             break;
         case color:
         {
@@ -253,10 +274,40 @@ void PHLuaMaterial::renderer::solver::value::solveVariable(PHGameManager * gm, P
             fv[0]=c.r; fv[1]=c.g; fv[2]=c.b; fv[3]=c.a;
             break;
         }
+        case ambientColor:
+        {
+            PHColor c = gm->ambientColor();
+            fv[0]=c.r; fv[1]=c.g; fv[2]=c.b; fv[3]=c.a;
+            break;
+        }
+        case lPos:
+        {
+            PHVector3 c = gm->currentLight()->position;
+            fv[0]=c.x; fv[1]=c.y; fv[2]=c.z;
+            break;
+        }
+        case lDiff:
+        {
+            PHColor c = gm->currentLight()->diffuse;
+            fv[0]=c.r; fv[1]=c.g; fv[2]=c.b; fv[3]=c.a;
+            break;
+        }
+        case lSpec:
+        {
+            PHColor c = gm->currentLight()->specular;
+            fv[0]=c.r; fv[1]=c.g; fv[2]=c.b; fv[3]=c.a;
+            break;
+        }
+        case lIntensity:
+            f = gm->currentLight()->intensity;
+            break;
     };
     type = e_type[vari];
     if (type == vMatrix)
+    {
         this->m = m;
+        ms++;
+    }
 }
 
 //Operations
@@ -368,6 +419,12 @@ static void fdivide_v4_v4(PHLuaMaterial::renderer::solver::value * s){
 static void fmultmat(PHLuaMaterial::renderer::solver::value * s, PHMatrix * m){
     (*m) = (*(s[0].m))*(*(s[1].m));
 }
+static void ftransposed(PHLuaMaterial::renderer::solver::value * s, PHMatrix * m){
+    (*m) = s[0].m->transposed();
+}
+static void finverse(PHLuaMaterial::renderer::solver::value * s, PHMatrix * m){
+    (*m) = s[0].m->inverse();
+}
 
 static const operation op_f[] = {
     fplus_f_f,
@@ -392,33 +449,37 @@ static const operation op_f[] = {
     fdivide_v3_v3,
     fdivide_v4_f,
     fdivide_v4_v4,
-    (operation)fmultmat
+    (operation)fmultmat,
+    (operation)ftransposed,
+    (operation)finverse
 };
 
-enum op_names {
-    plus_f_f,
-    plus_v2_v2,
-    plus_v3_v3,
-    plus_v4_v4,
-    minus_f_f,
-    minus_v2_v2,
-    minus_v3_v3,
-    minus_v4_v4,
-    multiply_f_f,
-    multiply_v2_f,
-    multiply_v2_v2,
-    multiply_v3_f,
-    multiply_v3_v3,
-    multiply_v4_f,
-    multiply_v4_v4,
-    divide_f_f,
-    divide_v2_f,
-    divide_v2_v2,
-    divide_v3_f,
-    divide_v3_v3,
-    divide_v4_f,
-    divide_v4_v4,
-    multmat
+const char * op_names[] = {
+    "plus_f_f",
+    "plus_v2_v2",
+    "plus_v3_v3",
+    "plus_v4_v4",
+    "minus_f_f",
+    "minus_v2_v2",
+    "minus_v3_v3",
+    "minus_v4_v4",
+    "multiply_f_f",
+    "multiply_v2_f",
+    "multiply_v2_v2",
+    "multiply_v3_f",
+    "multiply_v3_v3",
+    "multiply_v4_f",
+    "multiply_v4_v4",
+    "divide_f_f",
+    "divide_v2_f",
+    "divide_v2_v2",
+    "divide_v3_f",
+    "divide_v3_v3",
+    "divide_v4_f",
+    "divide_v4_v4",
+    "multiply_mat_mat",
+    "transposed_mat",
+    "inverse_mat"
 };
 
 const int op_type[] = {
@@ -450,9 +511,13 @@ const int op_type[] = {
     PHLuaMaterial::renderer::solver::value::vVec4,
     //multmat
     PHLuaMaterial::renderer::solver::value::vMatrix,
+    //transposed
+    PHLuaMaterial::renderer::solver::value::vMatrix,
+    //inverse
+    PHLuaMaterial::renderer::solver::value::vMatrix,
 };
 
-const int op_argcount[] = {
+static const int op_argcount[] = {
     //plus
     2, 2, 2, 2,
     //minus
@@ -462,7 +527,23 @@ const int op_argcount[] = {
     //divide
     2, 2,2, 2,2, 2,2,
     //multmat
-    2
+    2,
+    //transposed
+    1,
+    //inverse
+    1
+};
+
+static const char * type_names[] = {
+   "inv",
+   "f",
+   "v2",
+   "v3",
+   "v4",
+   "mat",
+   "var",
+   "op",
+   "i"
 };
 
 
@@ -481,6 +562,41 @@ int PHLuaMaterial::renderer::solver::value::returnType()
 {
     return op_type[i];
 }
+
+void PHLuaMaterial::initEnvironment(lua_State * L)
+{
+    lua_newtable(L);
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, "ops_c");
+    lua_newtable(L);
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, "ops_r");
+    for (int i = 0; i < sizeof(op_names)/sizeof(const char*); i++)
+    {
+        lua_pushnumber(L, i);
+        lua_setfield(L, -3, op_names[i]);
+        lua_pushstring(L, type_names[op_type[i]]);
+        lua_setfield(L, -2, op_names[i]);
+    }
+    lua_pop(L, 2);
+    PHLuaLoadFile(L, gm->resourceDirectory(), "materials/common.lua");
+    
+    lua_newtable(L);
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, "vars");
+    lua_getglobal(L, "metastack");
+    lua_getfield(L, -1, "variable");
+    for (int i = 0; i < sizeof(e_names)/sizeof(const char*); i++)
+    {
+        lua_pushvalue(L, -1);
+        lua_pushnumber(L, i);
+        lua_pushstring(L, type_names[e_type[i]]);
+        PHLuaCall(L, 2, 1);
+        lua_setfield(L, -4, e_names[i]);
+    }
+    lua_pop(L, 3);
+}
+
 
 void PHLuaMaterial::renderer::solver::solve(PHGameManager * gm)
 {
@@ -505,8 +621,8 @@ void PHLuaMaterial::renderer::solver::solve(PHGameManager * gm)
         } else {
             stack[s] = v;
             stack[s].solveVariable(gm, matrixStack+ms, ms);
-            s++;
         }
+        s++;
     }
     stack[0].applyUniform(uniform);
 }

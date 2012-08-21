@@ -56,6 +56,16 @@ const GLenum PHGLInternalFormats[] = {
 #else
     GL_LUMINANCE,
 #endif
+#ifdef GL_RED8
+    GL_RED8,
+#else
+    GL_RED,
+#endif
+#ifdef GL_RG8
+    GL_RG8,
+#else
+    GL_RG,
+#endif
     GL_LUMINANCE_ALPHA,
 #ifdef GL_RGBA8
     GL_RGBA8, 
@@ -97,6 +107,8 @@ const GLenum PHGLFormats[]  = {
 #endif
     GL_ALPHA, 
     GL_LUMINANCE, 
+    GL_RED,
+    GL_RG,
     GL_LUMINANCE_ALPHA, 
     GL_RGBA, 
     GL_RGBA, 
@@ -106,17 +118,19 @@ const GLenum PHGLFormats[]  = {
 
 const GLenum PHGLTypes[] = {
     0, 
-    GL_UNSIGNED_SHORT,
-    GL_UNSIGNED_INT,
-    GL_UNSIGNED_INT,
-    GL_FLOAT,
-    GL_UNSIGNED_INT,
-    GL_FLOAT,
-    GL_UNSIGNED_BYTE, 
-    GL_UNSIGNED_BYTE, 
-    GL_UNSIGNED_BYTE, 
-    GL_UNSIGNED_BYTE, 
-    GL_UNSIGNED_SHORT, 
-    GL_UNSIGNED_BYTE, 
-    GL_UNSIGNED_SHORT
+    GL_UNSIGNED_SHORT, //D16
+    GL_UNSIGNED_INT, //D24
+    GL_UNSIGNED_INT, //D32
+    GL_FLOAT, //D32F
+    GL_UNSIGNED_INT, //D24S8
+    GL_FLOAT, //D32FS8
+    GL_UNSIGNED_BYTE, //A8
+    GL_UNSIGNED_BYTE, //L8
+    GL_UNSIGNED_BYTE, //R8
+    GL_UNSIGNED_BYTE, //RG8
+    GL_UNSIGNED_BYTE, //LA8
+    GL_UNSIGNED_BYTE, //RGBA8
+    GL_UNSIGNED_SHORT, //RGBA16
+    GL_UNSIGNED_BYTE, //RGB8
+    GL_UNSIGNED_SHORT //RGB16
 };

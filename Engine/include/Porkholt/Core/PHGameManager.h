@@ -202,6 +202,8 @@ private:
     PHGLVertexArrayObject * _boundVAO;
     PHGLVertexArrayObject * _solidSquareVAO;
     PHGLVertexBufferObject * _solidSquareVBO;
+    PHGLVertexArrayObject * _fullScreenVAO;
+    PHGLVertexBufferObject * _fullScreenVBO;
     PHGLFramebuffer * _boundFBO;
     
     
@@ -275,6 +277,8 @@ public:
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
     void pushSpriteShader(PHGLShaderProgram * p);
     void popSpriteShader();
+    PHGLVertexArrayObject * fullScreenVAO() { if (!_fullScreenVAO) buildFullScreenVAO(); return _fullScreenVAO; }
+    void buildFullScreenVAO();
     PHGLVertexArrayObject * solidSquareVAO() { if (!_solidSquareVAO) buildSolidSquareVAO(); return _solidSquareVAO; }
     void buildSolidSquareVAO();
     

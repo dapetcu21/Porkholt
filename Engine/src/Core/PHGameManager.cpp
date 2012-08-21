@@ -23,7 +23,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
+PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
 {
     memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -42,6 +42,10 @@ PHGameManager::~PHGameManager()
         fpsView->release();
     if (viewController)
         viewController->release();
+    if (_fullScreenVAO)
+        _fullScreenVAO->release();
+    if (_fullScreenVBO)
+        _fullScreenVBO->release();
     if (_solidSquareVAO)
         _solidSquareVAO->release();
     if (_solidSquareVBO)
@@ -771,6 +775,29 @@ void PHGameManager::buildSolidSquareVAO()
     vbo->unbind();
     _solidSquareVAO = vao;
     _solidSquareVBO = vbo;
+}
+
+void PHGameManager::buildFullScreenVAO()
+{
+    PHGLVertexArrayObject * vao = new PHGLVertexArrayObject(this);
+    PHGLVertexBufferObject * vbo = new PHGLVertexBufferObject(this);
+    
+    vao->bind();
+    vbo->bindTo(PHGLVBO::arrayBuffer);
+    static const GLfloat a[] = {
+        -1,-1,   0,0,
+         1,-1,   1,0,
+        -1, 1,   0,1,
+         1, 1,   1,1
+    };
+    vbo->setData(a, sizeof(GLfloat)*16, PHGLVBO::staticDraw);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, 0, vbo);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, sizeof(GLfloat)*2, vbo);
+    vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    vao->unbind();
+    vbo->unbind();
+    _fullScreenVAO = vao;
+    _fullScreenVBO = vbo;
 }
 
 void PHGameManager::setActiveTexture(int tmu)

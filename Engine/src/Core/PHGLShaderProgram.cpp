@@ -121,14 +121,6 @@ void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * 
     }
 
 #ifdef PH_DEBUG
-    if (!validate())
-    {
-        glDeleteProgram(identifier);
-        throw "OpenGL Shader program validation failed: " + nm;
-    }
-#endif
-    
-#ifdef PH_DEBUG
     PHLog("Shader program \"%s\" compiled and linked", pname.c_str());
 #endif
 }
