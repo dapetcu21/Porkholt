@@ -108,6 +108,7 @@ public:
 	void setScaleX(ph_float scale) { _scaleX = scale; effectCached = false; };
 	ph_float scaleY() { return _scaleY; };
 	void setScaleY(ph_float scale) { _scaleY = scale; effectCached = false; };
+    void setScale(const PHSize & s) { _scaleX = s.x, _scaleY = s.y; effectCached = false; }
 	int effectOrder() { return effOrder; };
 	void setEffectOrder(int eff) { effOrder = eff; effectCached = false; };
 	void rotate(ph_float rot) { _rotation+= rot; effectCached = false; };

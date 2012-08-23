@@ -144,7 +144,11 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     else
         rsrcDir->retain();
     shdDir = rsrcDir->directoryAtPath("shaders");
-    matDir = rsrcDir->directoryAtPath("materials");
+    try {
+        matDir = rsrcDir->directoryAtPath("materials");
+    } catch(...) {
+        matDir = NULL;
+    }
     try {
         imgDir = rsrcDir->directoryAtPath("img");
     } catch(...) {

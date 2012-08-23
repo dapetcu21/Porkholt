@@ -5,7 +5,7 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLTexture.h>
 
-#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(NULL), arraysVBO(NULL), lineSpace(0.5), vbuffer(NULL), indices(NULL), vao(NULL)
+#define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(NULL), arraysVBO(NULL), lineSpace(0.5), vbuffer(NULL), indices(NULL), vao(NULL), ww(true)
 
 PHTextView::PHTextView() : PHView(), PHTEXTVIEW_INIT
 {
@@ -125,7 +125,7 @@ void PHTextView::recalculatePositions()
     int n = (int)_text.size();
     while (p<=n)
     {
-        bool isBreak = p>=n || PHIsBreakCharacter(_text[p]);
+        bool isBreak = p>=n || (ww? PHIsBreakCharacter(_text[p]): PHIsMandatoryBreakCharacter(_text[p]));
         if (isBreak)
         {
             if (p==st)

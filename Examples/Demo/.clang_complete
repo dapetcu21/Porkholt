@@ -1,0 +1,9 @@
+-I ../../Engine/include
+-I ../../Externals/lua/src
+-I ../../Externals/libpng
+-I ../../Externals/zlib
+-I ../../Externals/uremote/include
+-I ../../Externals/box2d/Box2D
+-I ../../Beeno/Game/UI
+-I ../../Beeno/Game/LevelSystem
+

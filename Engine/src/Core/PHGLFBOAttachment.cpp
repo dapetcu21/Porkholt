@@ -58,13 +58,21 @@ const GLenum PHGLInternalFormats[] = {
 #endif
 #ifdef GL_RED8
     GL_RED8,
-#else
+#elif defined(GL_RED)
     GL_RED,
+#elif defined(GL_LUMINANCE8)
+    GL_LUMINANCE8,
+#else
+    GL_LUMINANCE,
 #endif
 #ifdef GL_RG8
     GL_RG8,
-#else
+#elif defined(GL_RG)
     GL_RG,
+#elif defined(GL_LUMINANCE_ALPHA8)
+    GL_LUMINANCE_ALPHA8,
+#else
+    GL_LUMINANCE_ALPHA,
 #endif
     GL_LUMINANCE_ALPHA,
 #ifdef GL_RGBA8
@@ -106,10 +114,18 @@ const GLenum PHGLFormats[]  = {
     GL_DEPTH_STENCIL_OES,
 #endif
     GL_ALPHA, 
-    GL_LUMINANCE, 
+    GL_LUMINANCE,
+#ifdef GL_RED
     GL_RED,
+#else
+    GL_LUMINANCE,
+#endif
+#ifdef GL_RG
     GL_RG,
-    GL_LUMINANCE_ALPHA, 
+#else
+    GL_LUMINANCE_ALPHA,
+#endif
+    GL_LUMINANCE_ALPHA,
     GL_RGBA, 
     GL_RGBA, 
     GL_RGB, 

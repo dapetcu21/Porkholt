@@ -19,6 +19,7 @@
 #include <Porkholt/Core/PHNormalImage.h>
 #include <Porkholt/UI/PHButtonView.h>
 #include <Porkholt/Core/PHDeferredView.h>
+#include <Porkholt/Core/PHPostProcess.h>
 
 class PHSliderView : public PHView
 {
@@ -219,24 +220,24 @@ public:
         tv->release();
     }
     
-    ph_float addBullet(const string & s, ph_float border, ph_float fontsize) {
-        return addBullet(getView(), s, border, fontsize);
+    ph_float addBullet(const string & s, ph_float border, ph_float fontsize, bool code) {
+        return addBullet(getView(), s, border, fontsize, code);
     }
     
     ph_float addBullet(const string & s, ph_float border) {
-        return addBullet(getView(), s, border, 40.0f);
+        return addBullet(getView(), s, border, 40.0f, false);
     }
     
     ph_float addBullet(PHView * v, const string & s, ph_float border) {
-        return addBullet(v, s, border, 40.0f);
+        return addBullet(v, s, border, 40.0f, false);
     }
     
-    ph_float addBullet(PHView * v, const string & s, ph_float border, ph_float fontsize)
+    ph_float addBullet(PHView * v, const string & s, ph_float border, ph_float fontsize, bool code)
     {
         PHRect b = v->bounds();
         
         PHTextView * tv = new PHTextView(PHRect(b.width * titleborder, 0, b.width * (1.0f - 2*titleborder), b.height - border));
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->fontNamed(code?"Monaco":"Helvetica"));
         tv->setFontSize(fontsize);
         tv->setFontColor(PHClearColor);
         tv->setAlignment(PHTextView::justifyLeft | PHTextView::alignTop);
@@ -506,87 +507,321 @@ protected:
     }
 };
 
+class PHCodeView : public PHView
+{
+    public:
+        PHTextView * tv1, * tv2;
+        PHSize dracie_size;
+        PHCodeView(const PHRect & r, const string & t, const string & s, PHFont * f, PHFont * tf, float tts, float ts)
+        {
+            setFrame(r);
+            #define border_dracie 20
+
+            PHTextView * tv = tv1 = new PHTextView(PHRect(
+                border_dracie,
+                border_dracie,
+                r.width - 2*border_dracie,
+                r.height - 2*border_dracie));
+            tv->setFont(f);
+            tv->setFontSize(tts);
+            tv->setFontColor(PHWhiteColor);
+            tv->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);
+            tv->setText(t);
+
+            PHSize sz = tv->textSize();
+
+            addChild(tv);
+            tv->release();
+
+            tv = tv2 = new PHTextView(PHRect(
+                border_dracie,
+                border_dracie,
+                r.width - 2*border_dracie,
+                r.height - border_dracie * 3 - sz.height));
+            tv->setText(s);
+            tv->setWordWrap(false);
+            tv->setFont(tf);
+            tv->setFontSize(ts);
+            tv->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);
+            tv->setFontColor(PHWhiteColor);
+
+            dracie_size = tv->textSize();
+            dracie_size.height += border_dracie *3 + sz.height;
+
+
+            addChild(tv);
+            tv->release();
+
+            setScale(PHSize(1.4, 1.4));
+            beginCinematicAnimation(0.5, PHCinematicAnimator::FadeOutFunction);
+            animateScale(PHSize(1/1.4, 1/1.4));
+            animateBgColor(PHColor(0.0, 0.0, 0.0, 0.8));
+            commitCinematicAnimation();
+
+        }
+};
+
 class PHPorkholt3D : public PHSlide
 {
 protected:
     PHMeshBody * lbody, *body;
     ph_float time;
+    PHPostProcess * canvas;
+    PHView * curtain;
+    PHImageView * v1, * v2;
     
     PHView * loadView(const PHRect & r)
     {
-        PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, r.width/r.height, 0.5f, 50.0f));
+        PHView * v = new PHView(r);
         
+        canvas = new PHPostProcess(gm);
+        v->addChild(canvas);
+        canvas->setColorFormat(PHGLFBOAttachment::RGBA8);
+        canvas->setDepthFormat(PHGLFBOAttachment::Depth16);
+        canvas->setMaterial(gm->materialNamed("cell_shading"));
+        canvas->additionalUniforms()->at("texture").setValue(canvas->colorTexture());       
+        PHGLTexture1D * cell_map = new PHGLTexture1D(gm);
+        #define cells 5
+        uint8_t b[cells];
+        for (int i = 0; i<cells; i++)
+            b[i] = i * (1.0f/(cells-1)) * 255;
+        cell_map->setData(b, cells, PHGLTexture::R8);
+        cell_map->setWrapS(PHGLTexture::clampToEdge);
+        cell_map->setMinFilter(PHGLTexture::nearest);
+        cell_map->setMagFilter(PHGLTexture::nearest);
+        canvas->additionalUniforms()->at("cellmap").setValue(cell_map);
+        cell_map->release();
+
+        canvas->setEffectEnabled(false);
+        
+
+        PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
+        canvas->addChild(container);
+        canvas->release();
+        container->release();
+
         body = new PHMeshBody();
-        PHSphereMesh * mesh = new PHSphereMesh(gm, 100, 100);
-        body->setMesh(mesh);
-        mesh->release();
+        body->setMesh(PHSphereMesh::sphere(gm));
         body->setPosition(PH3DPoint(0,0,-5));
-        PHMaterial * mat = new PHMaterial(PHColor(27/255.0f, 122/255.0f, 224/255.0f), PHWhiteColor, 10.0f);
-        body->setMaterial(mat);
-        mat->release();
+        body->setMaterial(gm->materialNamed("chestie_albastra"));
         container->addChild(body);
+
+        PHImage * img = gm->imageNamed("earth", true);
+        PHImageView * iv = v1 =  new PHImageView(PHRect(0,0,200,100));
+        iv->setImage(img);
+        v->addChild(iv);
+        iv->release();
         
+        iv = v2 = new PHImageView(PHRect(200,0,200,100));
+        iv->setImage(img->normalMap());
+        v->addChild(iv);
+        iv->release();
+
         lbody = new PHMeshBody();
         lbody->setMesh(PHSphereMesh::sphere(gm));
         lbody->setScale(PH3DSize(0.2,0.2,0.2));
-        mat = new PHMaterial(PHClearColor, PHClearColor, 0, PHWhiteColor);
-        lbody->setMaterial(mat);
-        mat->release();
+        lbody->setMaterial(gm->materialNamed("chestie_alba"));
         container->addChild(lbody);
-        
-        PHView * v = new PHView(r);
-        v->addChild(container);
-        container->release();
         
         PHGLLight * l = new PHGLLight(PHGLLight::pointLight, PH3DOriginPoint, 2);
         gm->setCurrentLight(l);
         l->release();
         gm->setAmbientColor(PHColor(0.5,0.5,0.5));
         
-        PHRect b = v->bounds();
-        
-        PHTextView * tv = new PHTextView(PHRect(b.width * titleborder, 0, b.width * (1.0f - 2*titleborder), b.height - titleheader));
-        tv->setFont(gm->fontNamed("Helvetica"));
-        tv->setFontSize(80.0f);
-        tv->setFontColor(PHClearColor);
-        tv->setAlignment(PHTextView::justifyCenter | PHTextView::alignTop);
-        tv->setText("3D");
-        PHSize sz = tv->textSize();
-        tv->setFrame(PHRect(b.width * titleborder, b.height - titleheader - sz.height, b.width * (1.0f - 2*titleborder), sz.height));
-        tv->beginCinematicAnimation(1.0f, PHCinematicAnimator::FadeOutFunction);
-        tv->animateCustomColor(PHWhiteColor);
-        tv->commitCinematicAnimation();
-        tv->setAutoresizeMask(PHView::ResizeFixedUp | PHView::ResizeFlexibleWidth);
-        v->addChild(tv);
-        tv->release();
-        
+        curtain = new PHView(v->bounds());
+        curtain->setBackgroundColor(PHColor(0.0f, 0.0f, 0.0f, 0.0f));
+        v->addChild(curtain);
+        curtain->release();
+
         return v;
     }
-    
+
+    PHCodeView * cv1, * cv2;
+   
+    void chestie()
+    {
+        PHLog("manele");
+    }
+
     void screenTapped(int count)
     {
         switch (count) {
             case 0:
             {
-                PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed("earth", true));
-                if (img)
-                    body->setTexture(img->texture(), img->textureCoordinates());
-                body->material()->diffuse = PHWhiteColor;
+                curtain->beginCinematicAnimation(1.0f, PHCinematicAnimator::FadeOutFunction);
+                curtain->animateBgColor(PHColor(0.6f,0.6f,0.6f,0.8));
+                curtain->commitCinematicAnimation();
+
+                v1->beginCinematicAnimation(1.0f, PHCinematicAnimator::FadeOutFunction);
+                v1->animateCustomColor(PHColor(1.0, 1.0, 1.0, 0.0));
+                v1->commitCinematicAnimation();
+
+                v2->beginCinematicAnimation(1.0f, PHCinematicAnimator::FadeOutFunction);
+                v2->animateCustomColor(PHColor(1.0, 1.0, 1.0, 0.0));
+                v2->commitCinematicAnimation();
                 return;
             }
             case 1:
             {
-                PHNormalImage * img = dynamic_cast<PHNormalImage*>(gm->imageNamed("earth", true)->normalMap());
-                if (img)
-                    body->setNormalMap(img->texture(), img->textureCoordinates());
+#define cpp_dubios_w 800
+#define cpp_dubios_h 200
+                PHRect r = curtain->bounds();
+                r.x = (r.width - cpp_dubios_w)/2;
+                r.y = (r.height - cpp_dubios_h)/2;
+                r.width = cpp_dubios_w;
+                r.height = cpp_dubios_h;
+                PHCodeView * cv = cv1 = new PHCodeView(r,  "C++ code:", 
+                "body = new PHMeshBody();\n\
+body->setMesh(PHSphereMesh::sphere(gm));\n\
+body->setPosition(PH3DPoint(0, 0, -5));\n\
+body->setMaterial(gm->materialNamed(\"chestie_albastra\"));\n\
+container->addChild(body);"
+                , gm->fontNamed("Helvetica"), gm->fontNamed("Monaco"), 30, 15);
+                curtain->addChild(cv);
+                cv->release();
+                return;
+            }
+            case 2:
+            {
+#define lua_dubios_w 800
+#define lua_dubios_h 560
+                PHRect r = curtain->bounds();
+                r.x = (r.width - lua_dubios_w)/2;
+                r.y = (r.height - lua_dubios_h - cpp_dubios_h - 20)/2;
+                r.width = lua_dubios_w;
+                r.height = lua_dubios_h;
+                
+                PHPoint mov(0, r.y - cv1->frame().y + lua_dubios_h + 20); 
+                r.y -= mov.y;
+
+                cv1->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+                cv1->animateMove(mov);
+                cv1->commitCinematicAnimation();
+
+                
+                PHCodeView * cv = cv2 = new PHCodeView(r, "chestie_albastra.lua:", 
+                "emissive = vec4(0.0, 0.0, 0.0, 0.0)\n\
+diffuse = vec4(1.0, 1.0, 1.0, 1.0)\n\
+specular = vec4(1.0, 1.0, 1.0, 1.0)\n\
+shininess = 10\n\
+\n\
+material = {\n\
+    [0] = {\n\
+        shader = \"front_pixel_shading[point_light][texture][normal_map][specular]\",\n\
+        uniforms = {\n\
+            modelViewMatrix = vars.modelViewMatrix,\n\
+            projectionMatrix = vars.projectionMatrix,\n\
+            normalMatrix = vars.modelViewMatrix.inverse.transposed,\n\
+            ambientColor = emissive + vars.ambientColor * diffuse,\n\
+            hininess = shininess,\n\
+            diffuseColor = diffuse * vars.lightDiffuse * vars.lightIntensity,\n\
+            specularColor = specular * vars.lightSpecular * vars.lightIntensity,\n\
+            lightPosition = vars.lightPosition;\n\
+            tex = \"earth\",\n\
+            nMap = \"earth.nmap\",\n\
+            texR = vec4(0, 0, 1, 1),\n\
+            nMapR = vec4(0, 0, 1, 1),\n\
+        }\n\
+    }\n\
+}", gm->fontNamed("Helvetica"), gm->fontNamed("Monaco"), 25, 14);
+
+                cv2->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+                cv2->animateMove(mov);
+                cv2->commitCinematicAnimation();
+
+
+                curtain->addChild(cv);
+                cv->release();
+                return;
+            }
+            case 3:
+            {
+                cv1->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+                cv1->animationCallback(PHInvN(cv1, PHView::removeFromParent));
+                cv1->animateScale(PHSize(3., 3.));
+                cv1->animateBgColor(PHColor(0, 0, 0, 0));
+                cv1->commitCinematicAnimation();
+
+                cv1->tv1->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+                cv1->tv1->animateCustomColor(PHColor(0, 0, 0, 0));
+                cv1->tv1->commitCinematicAnimation();
+
+                cv1->tv2->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+                cv1->tv2->animateCustomColor(PHColor(0, 0, 0, 0));
+                cv1->tv2->commitCinematicAnimation();
+
+
+                cv2->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+                cv2->animationCallback(PHInvN(cv2, PHView::removeFromParent));
+                cv2->animateScale(PHSize(3., 3.));
+                cv2->animateBgColor(PHClearColor);
+                cv2->commitCinematicAnimation();
+
+                cv2->tv1->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+                cv2->tv1->animateCustomColor(PHColor(0, 0, 0, 0));
+                cv2->tv1->commitCinematicAnimation();
+
+                cv2->tv2->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInFunction);
+                cv2->tv2->animateCustomColor(PHColor(0, 0, 0, 0));
+                cv2->tv2->commitCinematicAnimation();
+
+
+                curtain->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+                curtain->animateBgColor(PHClearColor);
+                curtain->commitCinematicAnimation();
+
+                return;
+            }
+            case 4:
+            {
+                canvas->setEffectEnabled(true);
                 return;
             }                
-            case 3:
+            case 5:
+            {
+                curtain->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
+                curtain->animateBgColor(PHColor(.6, .6, .6, .8));
+                curtain->commitCinematicAnimation();
+                return;
+            }
+            case 6:
+            {
+#define cell_dubios_w 800
+#define cell_dubios_h 600
+                PHRect r = curtain->bounds();
+                r.x = (r.width - cell_dubios_w)/2;
+                r.y = (r.height - cell_dubios_h)/2;
+                r.width = cell_dubios_w;
+                r.height = cell_dubios_h;
+               
+                PHCodeView * cv = new PHCodeView(r, "All the code needed:", "canvas = new PHPostProcess(gm);\n\
+v->addChild(canvas);\n\
+canvas->setColorFormat(PHGLFBOAttachment::RGBA8);\n\
+canvas->setDepthFormat(PHGLFBOAttachment::Depth16);\n\
+canvas->setMaterial(gm->materialNamed(\"cell_shading\"));\n\
+canvas->additionalUniforms()->at(\"texture\").setValue(canvas->colorTexture());       \n\
+PHGLTexture1D * cell_map = new PHGLTexture1D(gm);\n\
+#define cells 5\n\
+uint8_t b[cells];\n\
+for (int i = 0; i<cells; i++)\n\
+    b[i] = i * (1.0f/(cells-1)) * 255;\n\
+cell_map->setData(b, cells, PHGLTexture::R8);\n\
+cell_map->setWrapS(PHGLTexture::clampToEdge);\n\
+cell_map->setMinFilter(PHGLTexture::nearest);\n\
+cell_map->setMagFilter(PHGLTexture::nearest);\n\
+canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
+                , gm->fontNamed("Helvetica"), gm->fontNamed("Monaco"), 40, 20);
+                curtain->addChild(cv);
+                cv->release();
+                return;
+            }
+            case 7:
             {
                 PHViewController * vc = new PHPongController();
                 vc->init(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
+                return;
             }
         }
     }
@@ -817,7 +1052,7 @@ protected:
         }
 
         dv->setAmbientColor(PHColor(0.2,0.2,0.2,1.0));
-        dv->setNormalMapping(true);
+        //dv->setNormalMapping(true);
         
         PHImage * img = gm->imageNamed("igor", true);
         ph_float height = img->height()/2;
@@ -994,7 +1229,7 @@ class PHPorkholtParticles : public PHSlide
                 pv->sendToBack();
                 pv->release();
 
-                tb = addBullet(particleString, tb + 2*spacing, 25.0f);
+                tb = addBullet(particleString, tb + 2*spacing, 25.0f, true);
                 return;
             }
             case 2:
@@ -1049,7 +1284,7 @@ class PHPorkholtAnimImg : public PHSlide
             }
             case 2:
             {
-                tb = addBullet("section(\"idle\");\nframe(0, function() return 3+math.random()*3 end);\nframe(1, 0.1);\nframe(2, 0.2);\nframe(1, 0.1);\njump(\"idle\", 0);\n\nsection(\"moving\");\nframe(0, 0);", tb + 2*spacing);
+                tb = addBullet("section(\"idle\");\nframe(0, function() return 3+math.random()*3 end);\nframe(1, 0.1);\nframe(2, 0.2);\nframe(1, 0.1);\njump(\"idle\", 0);\n\nsection(\"moving\");\nframe(0, 0);", tb + 2*spacing, 40.0f, true);
                 vv->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeInOutFunction);
                 vv->animateMove(PHPoint((b.width * (1.0f - 3*textright) - rr.width/2) - b.width/2, 0));
                 vv->commitCinematicAnimation();
@@ -1097,7 +1332,7 @@ class PHPorkholtAnim : public PHSlide
                 return;
             case 1:
             {
-                tb = addBullet("v->beginCinematicAnimation(2.0f, PHCinematicAnimator::FadeInOutFunction);\nv->animateMove(PHPoint(200,0));\nv->animateRotate(M_PI / 2);\nv->animateScale(PHSize(1.3f,1.3f));\nv->commitCinematicAnimation();", tb + 2*spacing);
+                tb = addBullet("v->beginCinematicAnimation(2.0f, PHCinematicAnimator::FadeInOutFunction);\nv->animateMove(PHPoint(200,0));\nv->animateRotate(M_PI / 2);\nv->animateScale(PHSize(1.3f,1.3f));\nv->commitCinematicAnimation();", tb + 2*spacing, 40.0f, true);
                 
                 v = new PHTestView(PHRect(100,100,100,100));
                 getView()->addChild(v);
@@ -1140,7 +1375,7 @@ class PHPorkholtViews : public PHSlide
                 return;
             }
             case 2:
-                tb = addBullet("v1->addChild(v2);", tb + 2*spacing);
+                tb = addBullet("v1->addChild(v2);", tb + 2*spacing, 40.0f, true);
                 return;
             case 3:
             {

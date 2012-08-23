@@ -17,6 +17,7 @@ protected:
     int _alignment;
     string _text;
     PHColor color;
+    bool ww;
     
     bool needsReload;
     
@@ -63,6 +64,9 @@ public:
     void setFontColor(const PHColor & c) { color = c; }
     PHColor fontColor() { return color; }
     PHSize textSize() { if (needsReload) recalculatePositions(); return sz; }
+
+    void setWordWrap(bool w) { ww = w; needsReload = true; }
+    bool wordWrap() { return ww; }
     
     virtual PHColor cinematicCustomColor() { return color; }
     virtual void setCinematicCustomColor(const PHColor & c) { setFontColor(c); }
