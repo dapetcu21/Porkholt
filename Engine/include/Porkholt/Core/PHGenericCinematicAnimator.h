@@ -15,7 +15,7 @@ public:
     PHCinematicActor * actor() { return _actor; }
     
     PHGenericCinematicAnimator() : _actor(NULL) {};
-    PHGenericCinematicAnimator(PHAnimatorPool * pool) : _actor(NULL) {};
+    PHGenericCinematicAnimator(PHAnimatorPool * pool) : PHAnimator(pool), _actor(NULL) {};
     virtual ~PHGenericCinematicAnimator() {}
 };
 
