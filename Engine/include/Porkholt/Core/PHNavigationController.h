@@ -43,8 +43,6 @@ public:
 	void pushViewController(PHViewController * vc)  { pushViewController(vc, NoAnim, false); };
 	void popViewController() { popViewController(NoAnim); }
 	
-	virtual void updateScene(ph_float timeElapsed);
-	
 	virtual void viewDidDisappear();
 	virtual void viewWillAppear();
 	

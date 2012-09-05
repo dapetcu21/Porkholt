@@ -23,8 +23,7 @@ class PHGLVertexBufferObject;
 class PHNavigationController;
 class PHRemote;
 class PHTextView;
-class PHView;
-class PHViewController;
+class PHDrawable;
 class PHSoundManager;
 
 #undef uniformtrick
@@ -79,10 +78,10 @@ enum PHGLStates
     PHGLBackFaceCulling = 1<<8
 };
 
-class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool
+class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool, public PHMessagePool
 {
 private:
-	PHView * view;
+	PHDrawable * drawable;
 	PHNavigationController * viewController;
     PHEventHandler * evtHandler;
     PHAnimatorPool * animPool;
@@ -139,12 +138,13 @@ public:
 	void renderFrame(ph_float timeElapsed);
 	void appSuspended();
 	void appResumed();
-    void _appResumed(PHObject * sender, void * ud);
-    void _appSuspended(PHObject * sender, void * ud);
 	void appQuits();
 	void memoryWarning();
-	PHView * mainView() { return view; };
-    void setMainView(PHView * v);
+	PHDrawable * mainDrawable() { return drawable; };
+    void setMainDrawable(PHDrawable * v);
+
+    PHNavigationController * setUpNavigationController();
+
 
     PHGameManager * gameManager() { return this; }
     PHDirectory * resourceDirectory() { return rsrcDir; }
@@ -173,9 +173,6 @@ public:
     PHAnimatorPool * animatorPool();
     void pushAnimatorPool(PHAnimatorPool * pool);
     void popAnimatorPool();
-    
-    PHNavigationController * navigationController() { return viewController; }
-    PHView * rootView() { return view; }
     
     PHMessage * deallocMessage() { return exitmsg; }
     

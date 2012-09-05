@@ -264,10 +264,3 @@ void PHNavigationController::popViewController(int anim)
 	startAnimating();
 }
 
-void PHNavigationController::updateScene(ph_float timeElapsed)
-{
-	if (currentVC)
-		currentVC->_updateScene(timeElapsed);
-	if (lastVC)
-		lastVC->_updateScene(timeElapsed);
-}

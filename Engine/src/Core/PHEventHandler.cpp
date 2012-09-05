@@ -17,7 +17,7 @@ PHEvent * PHEventHandler::touchForUserData(void * ud, map<void*,PHEvent*>::itera
 
 void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 {
-    map<void*,PHEvent*>::iterator i;
+    /*map<void*,PHEvent*>::iterator i;
     PHEvent * event = touchForUserData(ud, i);
     if (!event)
     {
@@ -30,10 +30,12 @@ void PHEventHandler::touchDown(PHPoint pnt,void * ud)
     PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
     if (!event->_ownerView)
         event->_ownerView = v;
+        */
 }
 
 void PHEventHandler::touchUp(PHPoint pnt, void * ud)
 {
+    /*
 	map<void*,PHEvent*>::iterator i;
 	PHEvent * event = touchForUserData(ud,i);
 	if (!event) return;
@@ -43,10 +45,12 @@ void PHEventHandler::touchUp(PHPoint pnt, void * ud)
 		event->_ownerView->touchEvent(event);
 	events.erase(i);
 	event->release();
+    */
 }
 
 void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 {
+    /*
 	map<void*,PHEvent*>::iterator i;
 	PHEvent * event = touchForUserData(ud,i);
 	if (!event) return;
@@ -54,10 +58,12 @@ void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchMoved);
 	if (event->_ownerView)
 		event->_ownerView->touchEvent(event);
+        */
 }
 
 void PHEventHandler::touchCancelled(PHPoint pnt, void *ud)
 {
+    /*
 	map<void*,PHEvent*>::iterator i;
 	PHEvent * event = touchForUserData(ud,i);
 	if (!event) return;
@@ -67,10 +73,12 @@ void PHEventHandler::touchCancelled(PHPoint pnt, void *ud)
 		event->_ownerView->touchEvent(event);
 	events.erase(i);
 	event->release();
+    */
 }
 
 void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
 {
+    /*
     PHEvent * event = new PHEvent;
     event->ud = ud;
     event->_delta = delta;
@@ -80,10 +88,12 @@ void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
     if (!event->_ownerView)
         event->_ownerView = v;
     event->release();
+    */
 }
 
 void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
 {
+    /*
     PHEvent * event = new PHEvent;
     event->ud = ud;
     event->_zoom = zoom;
@@ -93,10 +103,12 @@ void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
     if (!event->_ownerView)
         event->_ownerView = v;
     event->release();
+    */
 }
 
 void PHEventHandler::pinchRotate(PHPoint pnt, ph_float rotation, void *ud)
 {
+    /*
     PHEvent * event = new PHEvent;
     event->ud = ud;
     event->_rotation = rotation;
@@ -106,26 +118,31 @@ void PHEventHandler::pinchRotate(PHPoint pnt, ph_float rotation, void *ud)
     if (!event->_ownerView)
         event->_ownerView = v;
     event->release();
+    */
 }
 
 void PHEventHandler::multitouchBegin(void *ud)
 {
+    /*
     PHEvent * event = new PHEvent;
     event->ud = ud;
     event->state = PHEvent::multitouchBegin;
     for (set<PHView*>::iterator i = mtviews.begin(); i!=mtviews.end(); i++)
         (*i)->touchEvent(event);
     event->release();   
+    */
 }
 
 void PHEventHandler::multitouchEnd(void *ud)
 {
+    /*
     PHEvent * event = new PHEvent;
     event->ud = ud;
     event->state = PHEvent::multitouchEnd;
     for (set<PHView*>::iterator i = mtviews.begin(); i!=mtviews.end(); i++)
         (*i)->touchEvent(event);
     event->release();   
+    */
 }
 
 void PHEventHandler::registerViewForMultitouchEvents(PHView* v)

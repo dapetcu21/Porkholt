@@ -5,10 +5,11 @@
 
 #include <Porkholt/Core/PHMain.h>
 #include <Porkholt/Core/PHView.h>
+#include <Porkholt/Core/PHAnimator.h>
 
 class PHNavigationController;
 
-class PHViewController : public PHObject
+class PHViewController : public PHAnimator 
 {
 private:
 protected:
@@ -23,8 +24,6 @@ protected:
     void setNavigationController(PHNavigationController * nc);
     virtual void updateScene(ph_float timeElapsed);
     
-    set<PHViewController*> managedControllers;
-    
     PHGameManager * gm;
     
 public:
@@ -37,7 +36,7 @@ public:
 	
     PHNavigationController * navigationController() { return navController; }
     
-	virtual void _updateScene(ph_float timeElapsed);
+	virtual void advanceAnimation(ph_float timeElapsed);
 	
 	enum ViewStates
 	{
@@ -54,8 +53,6 @@ public:
 		if (viewState==StateAppearing)
 		{
 			viewState = StateAppeared;
-            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
-                (*i)->_viewDidAppear();
 			viewDidAppear();
 		}
 	}
@@ -64,8 +61,6 @@ public:
 		if (viewState==StateNotAppeared)
 		{
 			viewState = StateAppearing;
-            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
-                (*i)->_viewWillAppear();
 			viewWillAppear();
 		}
 	}
@@ -74,8 +69,6 @@ public:
 		if (viewState==StateAppeared)
 		{
 			viewState = StateDisappearing;
-            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
-                (*i)->_viewWillDisappear();
 			viewWillDisappear();
 		}
 	}
@@ -84,14 +77,9 @@ public:
 		if (viewState==StateDisappearing)
 		{
 			viewState = StateNotAppeared;
-            for(set<PHViewController*>::iterator i = managedControllers.begin(); i!= managedControllers.end(); i++)
-                (*i)->_viewDidDisappear();
 			viewWillDisappear();
 		}
 	}
-    
-    void manageViewController(PHViewController *vc);
-    void stopManagingViewController(PHViewController *vc);
     
     void setGameManager(PHGameManager * gameManager) { gm = gameManager; }
     PHGameManager * gameManager() { return gm; }

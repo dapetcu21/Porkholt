@@ -29,7 +29,7 @@ PHParticleAnimator * PHParticleAnimator::fromLua(lua_State *L, bool unique)
         lua_pushlightuserdata(L, p);
         lua_setfield(L, -2, "ud");
         
-        PHMessage::messageWithName("luaDestroy")->addListener(p, (PHCallback)&PHParticleAnimator::luaDestroy);
+        PHMessage::messageWithName("luaDestroy")->addListener(PHInvBindN(p, PHParticleAnimator::luaDestroy));
         
         p->loadFromLua(L);
         

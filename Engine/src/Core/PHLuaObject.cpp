@@ -6,7 +6,7 @@
 
 PHLuaObject::PHLuaObject(const string & className) : _luaClassName(className)
 {
-    PHMessage::messageWithName("luaDestroy")->addListener((PHObject*)this, (PHCallback)&PHLuaObject::luaDestroy);
+    PHMessage::messageWithName("luaDestroy")->addListener(PHInvBindN((PHObject*)this, PHLuaObject::luaDestroy));
 }
 
 

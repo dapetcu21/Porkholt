@@ -29,7 +29,7 @@ PHBezierPath * PHBezierPath::fromLua(lua_State * L, bool unique)
         lua_pushlightuserdata(L, p);
         lua_setfield(L, -2, "ud");
         
-        PHMessage::messageWithName("luaDestroy")->addListener(p, (PHCallback)&PHBezierPath::luaDestroy);
+        PHMessage::messageWithName("luaDestroy")->addListener(PHInvBindN(p, PHBezierPath::luaDestroy));
         p->beginCommitGrouping();
         
         lua_getfield(L, -1, "points");

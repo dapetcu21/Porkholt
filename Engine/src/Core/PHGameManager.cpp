@@ -20,12 +20,14 @@
 #include <Porkholt/Core/PHThreading.h>
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHTime.h>
+#include <Porkholt/Core/PH2DCamera.h>
+#include <Porkholt/Core/PHViewControllerHolder.h>
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : view(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
 {
-    memset(boundVBOs, 0, sizeof(boundVBOs));
+memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
 }
 
@@ -36,8 +38,8 @@ PHGameManager::~PHGameManager()
     {
         exitmsg->broadcast(this, NULL);
     }
-    if (view)
-        view->release();
+    if (drawable)
+        drawable->release();
     if (fpsView)
         fpsView->release();
     if (viewController)
@@ -74,22 +76,20 @@ PHGameManager::~PHGameManager()
         delete remote;
 }
 
-void PHGameManager::setMainView(PHView * v)
+void PHGameManager::setMainDrawable(PHDrawable * v)
 {
     if (v)
     {
         v->setGameManager(this);
         v->retain();
     }
-    if (view)
+    if (drawable)
     {
-        view->setGameManager(NULL);
-        view->release();
+        drawable->setGameManager(NULL);
+        drawable->release();
     }
-    view = v;
+    drawable = v;
     setProjection(); 
-    if (view)
-        view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
 }
 
 void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
@@ -187,6 +187,8 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     }
     setProjection();
+    setModelViewMatrix(PHIdentityMatrix);
+    setProjectionMatrix(PHIdentityMatrix);
     
     if (useShaders())
     {
@@ -196,18 +198,6 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         colorSpriteUniform = &spriteStates->at("color");
         textureSpriteUniform = &spriteStates->at("texture");
     }
-    
-    view = new PHView(PHRect(0,0,_screenWidth,_screenHeight));
-    view->setGameManager(this);
-	view->setUserInput(true);
-    view->setAutoresizesSubviews(true);
-    
-    viewController = new PHNavigationController();
-	viewController->init(this);
-	viewController->_viewWillAppear();
-	view->addChild(viewController->getView());
-    view->setGameManager(this);
-    viewController->_viewDidAppear();
     
     entryPoint(this);
     
@@ -236,10 +226,6 @@ void PHGameManager::setProjectionMatrix(const PHMatrix & m)
 void PHGameManager::setProjection()
 {
     glViewport(0, 0, _screenWidth, _screenHeight);
-    PHMatrix m;
-    m.loadTranslation(-1,-1);
-    m.scale(2.0f/(_screenWidth), 2.0f/(_screenHeight));
-    setProjectionMatrix(m);
 }
 
 void PHGameManager::setScreenSize(ph_float w, ph_float h)
@@ -247,8 +233,6 @@ void PHGameManager::setScreenSize(ph_float w, ph_float h)
     _screenWidth = w;
     _screenHeight = h;
     setProjection(); 
-    if (view)
-        view->setFrame(PHRect(0,0,_screenWidth,_screenHeight));
 }
 
 void PHGameManager::processInput()
@@ -292,11 +276,10 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 		
     setModelViewMatrix(PHIdentityMatrix);
     
-	if (viewController)  
-		viewController->_updateScene(timeElapsed);
     animPool->advanceAnimation(timeElapsed);
     
-	view->render();
+    if (drawable)
+	    drawable->render();
     
     ph_float tm = PHTime::getTime();
     if (showFPS)
@@ -313,13 +296,13 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
         fpsView = new PHTextView();
         fpsView->setGameManager(this);
         fpsView->setFont(fontNamed("Arial"));
-        fpsView->setFontSize(30.0f);
+        fpsView->setFontSize(30.0f*0.5f/screenHeight());
         fpsView->setFontColor(PHColor(0.1f,0.9f,1.0f));
         fpsView->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);
         fpsLeft = 1.0f;
         frames = 0;
     }
-    fpsView->setFrame(view->frame());
+    fpsView->setFrame(PHRect(-1, -1, 2, 2));
     frames++;
     fpsLeft -= timeElapsed;
     if (fpsLeft <=0)
@@ -465,24 +448,6 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
         setGLAttributeStates(vertexAttrib);
 }
 
-void PHGameManager::_appSuspended(PHObject * sender, void * ud)
-{
-	if (viewController)
-	{
-		viewController->_viewWillDisappear();
-		viewController->_viewDidDisappear();
-	}
-}
-
-void PHGameManager::_appResumed(PHObject * sender, void * ud)
-{
-    if (viewController)
-	{
-		viewController->_viewWillAppear();
-		viewController->_viewDidAppear();
-	}
-}
-
 void PHGameManager::appSuspended()
 {
     if (!loaded) return;
@@ -494,7 +459,6 @@ void PHGameManager::appSuspended()
 #ifdef PH_SIMULATOR
     remote->stop();
 #endif
-    animPool->scheduleAction(PHInv(this,PHGameManager::_appSuspended, NULL));
     
 }
 
@@ -512,9 +476,7 @@ void PHGameManager::appResumed()
         PHLog("URemote: %s",err.c_str());
     }
 #endif
-    animPool->scheduleAction(PHInv(this,PHGameManager::_appResumed, NULL));
 }
-
 
 void PHGameManager::appQuits()
 {
@@ -892,4 +854,23 @@ void PHGameManager::popAnimatorPool()
             animPoolStacks.erase(it);
     }
     animPoolMutex->unlock();
+}
+
+PHNavigationController * PHGameManager::setUpNavigationController()
+{
+    PH2DCamera * camera = new PH2DCamera();
+    camera->setIgnoresMatrices(true);
+    setMainDrawable(camera);
+    PHRect bounds = screenBounds();
+    PHViewControllerHolder * holder = new PHViewControllerHolder(bounds);
+    camera->addChild(holder);
+    
+    PHNavigationController * nav = new PHNavigationController();
+    nav->init(this, bounds);
+    holder->setViewController(nav);
+    
+    camera->release();
+    holder->release();
+    nav->release();
+    return nav;
 }

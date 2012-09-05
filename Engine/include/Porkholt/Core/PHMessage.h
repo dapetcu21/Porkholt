@@ -5,23 +5,39 @@
 
 #include <Porkholt/Core/PHMain.h>
 
+class PHMessage;
+
+class PHMessagePool 
+{
+    private:
+        map<string,PHMessage*> messages;
+    public:
+        PHMessage * messageWithName(const string & name);
+        ~PHMessagePool();
+};
+
 class PHMessage : public PHObject
 {
-private:
-	string name;
-	static map<string,PHMessage*> messages;
-	PHMessage(string name);
-	
-	list< pair<PHObject*,PHCallback> > objects;
-	
-public:
-	~PHMessage();
-	
-	static PHMessage * messageWithName(string name);
-	void addListener(PHObject * obj, PHCallback cb);
-	void removeListener(PHObject * obj);
-	void removeListener(PHObject * obj, PHCallback cb);
-	void broadcast(PHObject * sender, void * ud);
+    private:
+        string name;
+        PHMessage(string name);
+        list<PHInvocation> objects;
+        static PHMessagePool pool;
+        friend class PHMessagePool;
+        
+    public:
+        
+        void addListener(const PHInvocation & inv);
+        void removeListener(PHObject * obj);
+        void removeListener(PHObject * obj, PHCallback cb);
+        void removeListener(const PHInvocation & inv);
+        void broadcast(PHObject * sender, void * ud);
+        void broadcast(PHObject * sender);
+        
+        static PHMessage * messageWithName(const string & name)
+        {
+            return pool.messageWithName(name);
+        }
 };
 
 #endif
