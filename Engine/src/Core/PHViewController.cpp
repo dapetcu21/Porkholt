@@ -15,14 +15,14 @@ PHView * PHViewController::loadView(const PHRect & frame)
 
 void PHViewController::init(PHGameManager * gameManager)
 {
-    gm = gameManager;
-	view = loadView(gameManager->screenBounds());
-    view->setGameManager(gameManager);
+    init(gameManager, gameManager->screenBounds());
 }
 
 void PHViewController::init(PHGameManager * gameManager,const PHRect & frame)
 {
     gm = gameManager;
+    if (!animatorPool())
+        setAnimatorPool(gm->animatorPool());
 	view = loadView(frame);
     view->setGameManager(gameManager);
 }

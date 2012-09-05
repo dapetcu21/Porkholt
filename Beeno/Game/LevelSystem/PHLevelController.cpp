@@ -227,8 +227,8 @@ void PHLevelController::resume()
 PHView * PHLevelController::loadView(const PHRect & frame)
 {
 #if !(defined(PH_DEBUG) && defined(PH_DESKTOP))
-	PHMessage::messageWithName("appSuspended")->addListener(this,(PHCallback)&PHLevelController::appSuspended);
-	PHMessage::messageWithName("appResumed")->addListener(this,(PHCallback)&PHLevelController::appResumed);
+	gm->messageWithName("appSuspended")->addListener(PHInvN(this, PHLevelController::appSuspended));
+	gm->messageWithName("appResumed")->addListener(PHInvN(this, PHLevelController::appResumed));
 #endif
 	
 	PHView * view = new PHView(frame);

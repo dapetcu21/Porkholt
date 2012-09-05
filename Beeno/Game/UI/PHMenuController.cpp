@@ -37,7 +37,6 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     nav->_viewWillAppear();
     v->addChild(nav->getView());
     nav->_viewDidAppear();
-    manageViewController(nav);
     
     vc = new PHTitleScreen();
 	vc->init(gm,v->bounds());
@@ -50,8 +49,24 @@ PHView * PHMenuController::loadView(const PHRect & frame)
 
 void PHMenuController::viewWillAppear()
 {
+    nav->_viewWillAppear();
     resetClouds(getView());
     gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("title"));
+}
+
+void PHMenuController::viewDidAppear()
+{
+    nav->_viewDidAppear();
+}
+
+void PHMenuController::viewWillDisappear()
+{
+    nav->_viewWillDisappear();
+}
+
+void PHMenuController::viewDidDisappear()
+{
+    nav->_viewDidDisappear();
 }
 
 void PHMenuController::resetClouds(PHView * v)

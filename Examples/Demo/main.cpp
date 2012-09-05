@@ -161,7 +161,7 @@ protected:
 public:
     
     PHSlide() : cnt(0) {
-        PHMessage::messageWithName("thingTapped")->addListener(this, (PHCallback)&PHSlide::_screenTapped);
+        PHMessage::messageWithName("thingTapped")->addListener(PHInvBindN(this, PHSlide::_screenTapped));
     }
     
     ~PHSlide() {
@@ -393,7 +393,7 @@ protected:
         view->addChild(scoreBV);
         clear();
         
-        PHMessage::messageWithName("appResumed")->addListener(this, (PHCallback)&PHPongController::clear);
+        gm->messageWithName("appResumed")->addListener(PHInvBindN(this, PHPongController::clear));
         
         return view;
     }
@@ -1499,7 +1499,7 @@ public:
         PHSlide * vc = new PHPorkholt2();
         vc->init(gm);
         gm->soundManager()->setBackgroundMusic(NULL);
-        gm->navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+        navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
     }
 };
@@ -1519,7 +1519,7 @@ class PHBeeno4 : public PHSlide
         {
             PHBeenoDemo * vc = new PHBeenoDemo();
             vc->init(gm);
-            gm->navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+            navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->titleScreen()->setBackButton(PHInv(vc, PHBeenoDemo::backPressed,vc));
             vc->release();
         }
@@ -1848,16 +1848,21 @@ void PHGameEntryPoint(PHGameManager * gm)
     gm->imageNamed("earth");
     gm->imageNamed("concept");
     
-    PHCapView * v = new PHCapView(gm->navigationController()->getView()->frame());
+    PHNavigationController * nav = gm->setUpNavigationController();
+    PHView * navview = nav->getView();
+    PHDrawable * navparent = navview->parent();
+
+    PHCapView * v = new PHCapView(navview->frame());
+    navview->setFrame(navview->frame());
     v->setAutoresizesSubviews(true);
     v->setUserInput(true);
-    v->addChild(gm->navigationController()->getView());
-    gm->setMainView(v);
+    v->addChild(navview);
+    navparent->addChild(v); 
     v->release();
     
     PHViewController * vc = new PHTitle();
 	vc->init(gm);
-    gm->navigationController()->pushViewController(vc);
+    nav->pushViewController(vc);
     vc->release();
     
 }

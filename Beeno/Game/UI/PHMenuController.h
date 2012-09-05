@@ -15,6 +15,9 @@ private:
     PHTitleScreen * vc;
     
     void viewWillAppear();
+    void viewDidAppear();
+    void viewWillDisappear();
+    void viewDidDisappear();
     void resetClouds(PHView * v);
 protected:
     virtual PHView * loadView(const PHRect & frame);

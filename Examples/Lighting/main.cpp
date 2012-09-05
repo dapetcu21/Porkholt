@@ -85,7 +85,7 @@ void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHIgorController * vc = new PHIgorController();
 	vc->init(gm);
-    gm->navigationController()->pushViewController(vc);
+    gm->setUpNavigationController()->pushViewController(vc);
 }
 
 int main(int argc, char *argv[]) {

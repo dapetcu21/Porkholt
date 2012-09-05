@@ -305,7 +305,7 @@ void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHViewController * vc = new PHMathrisViewController();
     vc->init(gm);
-    gm->navigationController()->pushViewController(vc);
+    gm->setUpNavigationController()->pushViewController(vc);
     vc->release();
 }
 

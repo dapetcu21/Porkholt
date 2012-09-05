@@ -454,7 +454,7 @@ void PHGameManager::appSuspended()
     if (!loaded) return;
 	if (suspended) return;
 	suspended = true;
-	PHMessage::messageWithName("appSuspended")->broadcast(this, NULL);
+	messageWithName("appSuspended")->broadcast(this, NULL);
     PHLog("appSuspended");
 #ifdef PH_SIMULATOR
     remote->stop();
@@ -468,7 +468,7 @@ void PHGameManager::appResumed()
     if (!suspended) return;
 	suspended = false;
 	PHLog("appResumed");
-	PHMessage::messageWithName("appResumed")->broadcast(this, NULL);
+	messageWithName("appResumed")->broadcast(this, NULL);
 #ifdef PH_SIMULATOR
     try {
         remote->start();

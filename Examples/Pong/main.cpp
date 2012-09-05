@@ -118,7 +118,7 @@ protected:
         view->addChild(scoreBV);
         clear();
         
-        PHMessage::messageWithName("appResumed")->addListener(this, (PHCallback)&PHPongController::clear);
+        gm->messageWithName("appResumed")->addListener(PHInvBindN(this, PHPongController::clear));
         
         return view;
     }
@@ -237,7 +237,7 @@ void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHPongController * vc = new PHPongController();
 	vc->init(gm);
-    gm->navigationController()->pushViewController(vc);
+    gm->setUpNavigationController()->pushViewController(vc);
 }
 
 int main(int argc, char *argv[]) {

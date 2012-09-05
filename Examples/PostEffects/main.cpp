@@ -106,7 +106,7 @@ void PHGameEntryPoint(PHGameManager * gm)
 {    
     PHViewController * vc = new PH3DDemoViewController();
 	vc->init(gm);
-    gm->navigationController()->pushViewController(vc);
+    gm->setUpNavigationController()->pushViewController(vc);
 }
 
 int main(int argc, char *argv[]) {
