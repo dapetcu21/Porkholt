@@ -11,6 +11,7 @@ PHViewControllerHolder::PHViewControllerHolder() : vc(NULL)
 PHViewControllerHolder::PHViewControllerHolder(const PHRect & fr) : PHView(fr), vc(NULL)
 {
     setAutoresizesSubviews(true);
+    setUserInput(true);
 }
 
 PHViewControllerHolder::~PHViewControllerHolder()

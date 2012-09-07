@@ -319,6 +319,23 @@ struct PH3DPoint
 #endif
     }
     
+    PHPoint xy() { return PHPoint(x, y); }
+    PHPoint yz() { return PHPoint(y, z); }
+} PH_PACKED_STRUCT;
+
+struct PHAABox
+{
+    PH3DPoint start, end;
+
+    PHAABox() {}
+    PHAABox(const PH3DPoint & s, const PH3DPoint & e) : start(s), end(e) {}
+    PHAABox(const PHAABox & o) : start(o.start), end(o.end) {};
+
+    PHAABox & operator = (const PHAABox & o) { 
+        start = o.start;
+        end = o. end;
+        return *this;
+    }
 } PH_PACKED_STRUCT;
 
 #ifdef PH_PACKED_STRUCT_PRAGMA
@@ -327,6 +344,7 @@ struct PH3DPoint
 
 typedef PH3DPoint PH3DSize;
 typedef PH3DPoint PHVector3;
+typedef PHAABox PHPositionalVector;
 #define PH3DNullSize PH3DOriginPoint
 #define PHNullVector3 PH3DOriginPoint 
 extern const PH3DSize PH3DUnitSize;

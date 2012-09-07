@@ -1,6 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/UI/PHTestView.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 char color_notex_sprites [] = "color_notex_sprites";
 
@@ -35,11 +36,14 @@ void PHTestView::touchEvent(PHEvent * event)
 	if (event->type() == PHEvent::touchMoved)
 	{
 		PHPoint p[2];
-		p[0] = event->location();
-		p[1] = event->lastLocation();
-		if (_parent && _parent->isView())
+        if (_parent && _parent->isView())
 		{
-			superview()->toMyCoordinates(p, 2);
+            p[0] = event->location();
+            p[1] = event->lastLocation();
+            //PHLog("%f %f  %f %f", p[0].x, p[0].y, p[1].x, p[1].y);
+            p[0] = event->drawableLocation()->pointInView(parent());
+            p[1] = event->lastDrawableLocation()->pointInView(parent());
+            //PHLog("%f %f  %f %f", p[0].x, p[0].y, p[1].x, p[1].y);
 		}
 		PHRect frame;
 		frame = this->frame();

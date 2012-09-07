@@ -10,10 +10,12 @@ class PHCamera : public PHDrawable
         virtual PHMatrix projection() = 0;
         virtual void reshape() = 0;
         ~PHCamera();
-        PHCamera() : im(false) {};
+        PHCamera();
 
         void setIgnoresMatrices(bool i) { im = i; }
         bool ignoresMatrices() { return im; }
+
+        PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
 
     protected:
         bool im;

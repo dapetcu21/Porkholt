@@ -245,6 +245,7 @@ public:
         return PHTransformPointMatrix(m,p);
 #endif
     }
+
     PH3DPoint untransformPoint(const PH3DPoint & p) const { return inverse().transformPoint(p); }
     PHPoint transformPoint(const PHPoint & p) const
     {
@@ -258,6 +259,21 @@ public:
 #endif
     }
     PHPoint untransformPoint(const PHPoint & p) const { return inverse().transformPoint(p); }
+
+    PHPoint operator * (const PHPoint & p) const
+    {
+        return transformPoint(p);
+    }
+
+    PH3DPoint operator * (const PH3DPoint & p) const
+    {
+        return transformPoint(p);
+    }
+
+    PHAABox operator * (const PHAABox & p) const
+    {
+        return PHAABox(transformPoint(p.start), transformPoint(p.end));
+    }
 };
 
 extern const PHMatrix PHIdentityMatrix;

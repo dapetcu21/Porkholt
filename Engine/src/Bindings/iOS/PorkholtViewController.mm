@@ -156,7 +156,6 @@ extern void * PHWUD;
 
 - (void)openGLFrame:(CADisplayLink*)displayLink
 {
-    [PHTouchInterfaceSingleton processQueue];
     gameManager->processInput();
     [v setFramebuffer];
     

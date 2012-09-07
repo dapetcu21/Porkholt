@@ -3,10 +3,14 @@
 #include <Porkholt/Core/PHDrawable.h>
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHMutex.h>
+#include <Porkholt/Core/PHEventHandler.h>
+#include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHEvent.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 const string PHDrawable::_luaClass("PHDrawable");
 
-#define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false)
+#define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false), _userInput(false)
 
 PHMutex * PHDrawable::mutex() 
 { 
@@ -89,6 +93,7 @@ void PHDrawable::removeAllChildren()
 
 PHDrawable::~PHDrawable()
 {
+    gm->eventHandler()->removeDrawable(this);
     for (set<lua_State*>::iterator i = luaStates.begin(); i!=luaStates.end(); i++)
         PHLuaDeleteWeakRef(*i, this);
     removeFromParent();
@@ -169,4 +174,31 @@ void PHDrawable::registerLuaInterface(lua_State * L)
     lua_pop(L, 1);
 }
 
+void PHDrawable::touchEvent(PHEvent * evt)
+{
+}
 
+void PHDrawable::handleEvent(PHEvent * evt)
+{
+    if (evt->owner() == this)
+    {
+        touchEvent(evt);
+        return;
+    }
+    if (!_userInput) return;
+
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end() && !evt->handled(); i++)
+        (*i)->handleEvent(evt);
+
+    if (!evt->handled())
+    {
+        touchEvent(evt);
+        if (evt->handled())
+            evt->setOwner(this);
+    }
+}
+
+PHPositionalVector PHDrawable::positionInMyCoordinates(PHDrawableCoordinates * c)
+{
+    return c->positionInDrawable(parent());
+}

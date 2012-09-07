@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHCamera.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 void PHCamera::render()
 {
@@ -29,8 +30,18 @@ void PHCamera::_reshape()
     reshape();
 }
 
+PHCamera::PHCamera() : im(false)
+{
+    setUserInput(true);
+}
+
 PHCamera::~PHCamera()
 {
     if (gm)
         gm->messageWithName("reshapeWindow")->removeListener(this);
+}
+
+PHPositionalVector PHCamera::positionInMyCoordinates(PHDrawableCoordinates * c)
+{
+    return projection().inverse() * c->positionInDrawable(im?NULL:parent());
 }

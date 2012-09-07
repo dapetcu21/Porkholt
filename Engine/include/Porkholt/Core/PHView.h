@@ -18,7 +18,6 @@ protected:
     bool fhoriz,fvert;
 	ph_float _rotation,_scaleX,_scaleY;
 	ph_float _alpha;
-	bool _userInput;
 	bool _optimize;
 	PHColor _backColor;
 	int effOrder;
@@ -38,10 +37,11 @@ private:
     int resizeMask;
 public:
 	PHMatrix applyMatrices();
-	
-public:
-    virtual void touchEvent(PHEvent * touch) {};
     PHMatrix loadMatrixTree(PHView * until);
+	
+    void handleEvent(PHEvent * evt);
+    PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates * d);
+public:
 	
     enum Effects
     {
@@ -116,8 +116,7 @@ public:
 	ph_float alpha() { return _alpha; }
 	void setBackgroundColor(const PHColor &color) { _backColor = color; };
 	PHColor backgroundColor() { return _backColor; };
-	void setUserInput(bool ui) { _userInput = ui; };
-	bool userInput() { return _userInput; };
+
 	void setOptimizations(bool ui) { _optimize = ui; };
 	bool optimizations() { return _optimize; };
     
@@ -126,23 +125,11 @@ public:
     int autoresizeMask() { return resizeMask; }
     void setAutoresizeMask(int m) { resizeMask = m; }
 	
-	PHPoint toMyCoordinates(const PHPoint & pnt, PHView * until);
-	void toMyCoordinates(PHPoint * pnt, int n, PHView * until);
-	PHPoint fromMyCoordinates(const PHPoint & pnt, PHView * until);
-	void fromMyCoordinates(PHPoint * pnt, int n, PHView * until);
-    
-	PHPoint toMyCoordinates(const PHPoint & pnt) { return toMyCoordinates(pnt, NULL); }
-	void toMyCoordinates(PHPoint * pnt, int n) { toMyCoordinates(pnt, n, NULL); }
-	PHPoint fromMyCoordinates(const PHPoint & pnt) { return fromMyCoordinates(pnt, NULL); }
-	void fromMyCoordinates(PHPoint * pnt, int n) { fromMyCoordinates(pnt, n, NULL); }
-	
 	virtual ~PHView();
 	friend class PHGameManager;
 	friend class PHEventHandler;
 	
 private:
-    PHView * pointerDeepFirst(const PHMatrix & m, PHEvent * touch);
-    
     virtual void layoutSubviews(const PHRect & oldBounds);
     void autoresizeMyself(const PHSize & delta);
 //animation system

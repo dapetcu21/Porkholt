@@ -125,27 +125,32 @@ void * PHWCreateWindow(const string & title, const PHWVideoMode & vm, int flags,
     PHWSetVSync((flags & PHWVSync)!=0);
 }
 
+static PHPoint adjustPoint(int x, int y)
+{
+    return PHPoint(
+        x *  2.0f / PHWGameManager->screenWidth() - 1,
+        y * -2.0f / PHWGameManager->screenWidth() + 1;
+        );
+}
 
 void PHWMouseDown(int button, int x, int y)
 {
     PHWMouseMask[button] = true;
-    y = PHWGameManager->screenHeight() - y;
-    PHWGameManager->eventHandler()->touchDown(PHPoint(x, y), (void*)(size_t)(button));
+    PHWGameManager->eventHandler()->touchDown(adjustPoint(x, y), (void*)(size_t)(button));
 }
 
 void PHWMouseUp(int button, int x, int y)
 {
     PHWMouseMask[button] = false;
-    y = PHWGameManager->screenHeight() - y;
-    PHWGameManager->eventHandler()->touchUp(PHPoint(x, y), (void*)(size_t)(button));
+    PHWGameManager->eventHandler()->touchUp(adjustPoint(x, y), (void*)(size_t)(button));
 }
 
 void PHWMouseMoved(int x, int y)
 {
-    y = PHWGameManager->screenHeight() - y;
+    PHPoint p = adjustPoint(x, y);
     for (int i = 0; i<PHWMaxButtons; i++)
         if (PHWMouseMask[i])
-            PHWGameManager->eventHandler()->touchMoved(PHPoint(x, y), (void*)(size_t)(i));
+            PHWGameManager->eventHandler()->touchMoved(p, (void*)(size_t)(i));
 }
 
 static bool PHHasVSync = false;

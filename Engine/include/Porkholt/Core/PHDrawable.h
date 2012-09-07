@@ -9,6 +9,8 @@
 class PHMutex;
 class PHAuxLayerView;
 class PHView;
+class PHEvent;
+class PHDrawableCoordinates;
 class PHDrawable : public PHObject
 {
 protected:
@@ -63,7 +65,17 @@ public:
 public:
     PHGameManager * gameManager() { return gm; }
     void setGameManager(PHGameManager * gameManager);
+
     
+    virtual void handleEvent(PHEvent * evt);
+    virtual void touchEvent(PHEvent * evt); //to be renamed recievedEvent
+    virtual PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
+private:
+    bool _userInput;
+public:
+	void setUserInput(bool ui) { _userInput = ui; };
+	bool userInput() { return _userInput; };
+
 protected:
     virtual void attachedToGameManager() {};
     

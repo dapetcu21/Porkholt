@@ -265,6 +265,8 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     PHAutoreleasePool pool;
 
+    evtHandler->processQueue();
+    
     lastElapsed = timeElapsed;
     setClearColor(PHBlackColor);
     setDepthClearValue(1.0f);

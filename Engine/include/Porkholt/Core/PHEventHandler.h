@@ -6,16 +6,22 @@
 #include <Porkholt/Core/PHMain.h>
 
 class PHEvent;
-class PHView;
+class PHDrawable;
 class PHGameManager;
+class PHMutex;
 
 class PHEventHandler : public PHObject
 {
 private:
 	map<void*,PHEvent*> events;
-    set<PHView*> mtviews;
-	PHEventHandler(PHGameManager * gameManager) : gm(gameManager) {};
-	PHEvent * touchForUserData(void * ud, map<void*,PHEvent*>::iterator & i);
+    set<PHDrawable*> mtlisteners;
+    list<PHEvent*> evtqueue;
+    PHMutex * mutex;
+
+	PHEventHandler(PHGameManager * gameManager);
+    ~PHEventHandler();
+
+	PHEvent * eventForUD(void * ud);
     PHGameManager * gm;
     
     friend class PHGameManager;
@@ -31,6 +37,9 @@ public:
     void multitouchBegin(void *ud);
     void multitouchEnd(void *ud);
 	
+    void addEvent(PHEvent * evt);
+    void processQueue(); 
+
     enum modifiers
     {
         shiftModifier = (1<<0),
@@ -40,9 +49,10 @@ public:
     };
     static int modifierMask();
     
-    void registerViewForMultitouchEvents(PHView*);
-    void unregisterViewForMultitouchEvents(PHView*);
-    void removeView(PHView * view);
+    void registerForMultitouchEvents(PHDrawable*);
+    void unregisterForMultitouchEvents(PHDrawable*);
+    void removeDrawable(PHDrawable*);
+
 };
 
 #endif

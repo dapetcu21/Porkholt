@@ -5,163 +5,205 @@
 #include <Porkholt/Core/PHEvent.h>
 #include <Porkholt/Core/PHView.h>
 #include <Porkholt/Core/PHTime.h>
+#include <Porkholt/Core/PHMutex.h>
 
-PHEvent * PHEventHandler::touchForUserData(void * ud, map<void*,PHEvent*>::iterator & i)
+PHEvent * PHEventHandler::eventForUD(void * ud)
 {
-    i = events.find(ud);
+    mutex->lock();
+    map<void*,PHEvent*>::iterator i = events.find(ud);
+    PHEvent * evt;
     if (i==events.end())
-        return NULL;
+    {
+        events[ud] = evt = new PHEvent();
+    }
     else
-        return i->second;
+    {
+        evt = new PHEvent(i->second);
+        i->second->release();
+        i->second = evt;
+    }
+    evt->retain();
+    evt->setUserData(ud);
+    mutex->unlock();
+    return evt;
 }
 
 void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 {
-    /*map<void*,PHEvent*>::iterator i;
-    PHEvent * event = touchForUserData(ud, i);
-    if (!event)
-    {
-        event = new PHEvent();
-        events.insert(pair<void*,PHEvent*>(ud,event));
-    }
-    event->setHandled(false);
-	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchDown);
-	event->ud = ud;
-    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
-    if (!event->_ownerView)
-        event->_ownerView = v;
-        */
-}
-
-void PHEventHandler::touchUp(PHPoint pnt, void * ud)
-{
-    /*
-	map<void*,PHEvent*>::iterator i;
-	PHEvent * event = touchForUserData(ud,i);
-	if (!event) return;
-    event->setHandled(false);
-	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchUp);
-	if (event->_ownerView)
-		event->_ownerView->touchEvent(event);
-	events.erase(i);
-	event->release();
-    */
+    PHEvent * evt = eventForUD(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setType(PHEvent::touchDown);
+    addEvent(evt);
 }
 
 void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 {
-    /*
-	map<void*,PHEvent*>::iterator i;
-	PHEvent * event = touchForUserData(ud,i);
-	if (!event) return;
-    event->setHandled(false);
-	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchMoved);
-	if (event->_ownerView)
-		event->_ownerView->touchEvent(event);
-        */
+    PHEvent * evt = eventForUD(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setType(PHEvent::touchMoved);
+    addEvent(evt);
 }
 
-void PHEventHandler::touchCancelled(PHPoint pnt, void *ud)
+void PHEventHandler::touchUp(PHPoint pnt, void * ud)
 {
-    /*
-	map<void*,PHEvent*>::iterator i;
-	PHEvent * event = touchForUserData(ud,i);
-	if (!event) return;
-    event->setHandled(false);
-	event->updateLocation(pnt, PHTime::getTime(), PHEvent::touchCancelled);
-	if (event->_ownerView)
-		event->_ownerView->touchEvent(event);
-	events.erase(i);
-	event->release();
-    */
+    PHEvent * evt = eventForUD(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setType(PHEvent::touchUp);
+    addEvent(evt);
+    mutex->lock();
+    evt->release();
+    events.erase(ud);
+    mutex->unlock();
+}
+
+void PHEventHandler::touchCancelled(PHPoint pnt, void * ud)
+{
+    PHEvent * evt = eventForUD(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setType(PHEvent::touchCancelled);
+    addEvent(evt);
+    evt->release();
+    events.erase(ud);
 }
 
 void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
 {
-    /*
-    PHEvent * event = new PHEvent;
-    event->ud = ud;
-    event->_delta = delta;
-    event->_location = pnt;
-    event->state = PHEvent::scrollWheel;
-    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
-    if (!event->_ownerView)
-        event->_ownerView = v;
-    event->release();
-    */
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setDelta(delta);
+    evt->setType(PHEvent::scrollWheel);
+    addEvent(evt);
 }
 
 void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
 {
-    /*
-    PHEvent * event = new PHEvent;
-    event->ud = ud;
-    event->_zoom = zoom;
-    event->_location = pnt;
-    event->state = PHEvent::pinchZoom;
-    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
-    if (!event->_ownerView)
-        event->_ownerView = v;
-    event->release();
-    */
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setZoom(zoom);
+    evt->setType(PHEvent::pinchZoom);
+    addEvent(evt);
 }
 
 void PHEventHandler::pinchRotate(PHPoint pnt, ph_float rotation, void *ud)
 {
-    /*
-    PHEvent * event = new PHEvent;
-    event->ud = ud;
-    event->_rotation = rotation;
-    event->_location = pnt;
-    event->state = PHEvent::pinchRotate;
-    PHView * v = gm->mainView()->pointerDeepFirst(PHIdentityMatrix, event);
-    if (!event->_ownerView)
-        event->_ownerView = v;
-    event->release();
-    */
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setLocation(pnt);
+    evt->setRotation(rotation);
+    evt->setType(PHEvent::pinchRotate);
+    addEvent(evt);
 }
 
 void PHEventHandler::multitouchBegin(void *ud)
 {
-    /*
-    PHEvent * event = new PHEvent;
-    event->ud = ud;
-    event->state = PHEvent::multitouchBegin;
-    for (set<PHView*>::iterator i = mtviews.begin(); i!=mtviews.end(); i++)
-        (*i)->touchEvent(event);
-    event->release();   
-    */
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setType(PHEvent::multitouchBegin);
+    addEvent(evt);
 }
 
 void PHEventHandler::multitouchEnd(void *ud)
 {
-    /*
-    PHEvent * event = new PHEvent;
-    event->ud = ud;
-    event->state = PHEvent::multitouchEnd;
-    for (set<PHView*>::iterator i = mtviews.begin(); i!=mtviews.end(); i++)
-        (*i)->touchEvent(event);
-    event->release();   
-    */
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
+    evt->setTime(PHTime::getTime());
+    evt->setType(PHEvent::multitouchEnd);
+    addEvent(evt);
 }
 
-void PHEventHandler::registerViewForMultitouchEvents(PHView* v)
+void PHEventHandler::registerForMultitouchEvents(PHDrawable * v)
 {
-    mtviews.insert(v);
+    mtlisteners.insert(v);
 }
 
-void PHEventHandler::unregisterViewForMultitouchEvents(PHView* v)
+void PHEventHandler::unregisterForMultitouchEvents(PHDrawable * v)
 {
-    mtviews.erase(v);
+    mtlisteners.erase(v);
 }
 
-void PHEventHandler::removeView(PHView * view)
+void PHEventHandler::addEvent(PHEvent * evt)
 {
-    unregisterViewForMultitouchEvents(view);
+    mutex->lock();
+    evtqueue.push_back(evt);
+    mutex->unlock();
+}
+
+void PHEventHandler::removeDrawable(PHDrawable * d)
+{
+    unregisterForMultitouchEvents(d);
+    mutex->lock();
 	for (map<void*,PHEvent*>::iterator i = events.begin(); i!= events.end(); i++)
 	{
         PHEvent * e = i->second;
-		if (e->_ownerView == view)
-			e->_ownerView = NULL;
+		if (e->owner() == d)
+			e->setOwner(NULL);
 	}
+    for (list<PHEvent*>::iterator i = evtqueue.begin(); i!= evtqueue.end(); i++)
+        if ((*i)->owner() == d)
+            (*i)->setOwner(NULL);
+    mutex->unlock();
 }
+
+void PHEventHandler::processQueue()
+{
+    while (1)
+    {
+        PHEvent * evt = NULL;
+        mutex->lock();
+        if (!evtqueue.empty())
+        {
+            evt = evtqueue.front();
+            evtqueue.pop_front();
+        }
+        mutex->unlock();
+        if (!evt) break;
+
+        PHDrawable * firstHandler = gm->mainDrawable();
+        switch (evt->type())
+        {
+            case PHEvent::touchMoved:
+            case PHEvent::touchUp:
+            case PHEvent::touchCancelled:
+                firstHandler = evt->owner();
+            case PHEvent::touchDown:
+            case PHEvent::pinchZoom:
+            case PHEvent::pinchRotate:
+            case PHEvent::scrollWheel:
+                if (firstHandler)
+                    firstHandler->handleEvent(evt);
+                break;
+            case PHEvent::multitouchBegin:
+            case PHEvent::multitouchEnd:
+                for (set<PHDrawable*>::iterator i = mtlisteners.begin(); i != mtlisteners.end(); i++)
+                    (*i)->handleEvent(evt);
+        }
+
+        evt->release();
+    }
+}
+
+PHEventHandler::PHEventHandler(PHGameManager * gameManager) : gm(gameManager), mutex(new PHMutex) 
+{
+}
+
+PHEventHandler::~PHEventHandler()
+{
+    mutex->lock();
+    for (list<PHEvent*>::iterator i = evtqueue.begin(); i != evtqueue.end(); i++)
+        (*i)->release();
+    for (map<void*, PHEvent*>::iterator i = events.begin(); i != events.end(); i++)
+        i->second->release();
+    mutex->unlock();
+    mutex->release();
+}
+

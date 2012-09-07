@@ -9,6 +9,7 @@
 #include <Porkholt/Core/PHEvent.h>
 #include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Sound/PHSound.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 #include <sstream>
 
 static const int width = 100;
@@ -42,7 +43,7 @@ class PHMathrisViewController : public PHViewController
             if (evt->type() == PHEvent::touchDown)
             {
                 evt->setHandled(true);
-                c->setLane(toMyCoordinates(evt->location()).x/width);
+                c->setLane(evt->drawableLocation()->pointInView(this).x/width);
             }
         }
     };

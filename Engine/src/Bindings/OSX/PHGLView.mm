@@ -215,10 +215,9 @@
 
 -(NSPoint)adjustPoint:(NSPoint)p
 {
-    if (!manual) return p;
     NSRect b = self.bounds;
-    p.x *= msize.width / b.size.width;
-    p.y *= msize.height / b.size.height;
+    p.x = p.x *  2.0 / b.size.width - 1;
+    p.y = p.y *  2.0 / b.size.height - 1;
     return p;
 }
 

@@ -4,6 +4,7 @@
 #include <Porkholt/UI/PHButtonView.h>
 #include <Porkholt/Core/PHNormalImage.h>
 #include <Porkholt/Core/PHAnimatedImage.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 PHButtonView::PHButtonView() : PHView(), imgUp(NULL), imgDown(NULL), _state(StateUp)
 {
@@ -40,13 +41,13 @@ void PHButtonView::touchEvent(PHEvent * event)
 	if (event->type() == PHEvent::touchUp)
 	{
 		_state = StateUp;
-		if (invUp.valid() && PHPointInRect(toMyCoordinates(event->location()),bounds()))
+		if (invUp.valid() && PHPointInRect(event->drawableLocation()->pointInView(this), bounds()))
 			invUp.call(this);
         event->setHandled(true);
 	}
     if (event->type() == PHEvent::touchMoved)
     {
-        _state = PHPointInRect(toMyCoordinates(event->location()),bounds())?StateDown:StateUp;
+        _state = PHPointInRect(event->drawableLocation()->pointInView(this), bounds())?StateDown:StateUp;
         event->setHandled(true);
     }
     if (event->type() == PHEvent::touchCancelled)

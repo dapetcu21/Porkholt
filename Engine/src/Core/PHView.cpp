@@ -7,10 +7,11 @@
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHMutex.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 const string PHView::_luaClass("PHView");
 
-#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _userInput(false), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
+#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -236,8 +237,6 @@ PHView::~PHView()
 {
     if (auxLayer)
         auxLayer->removeView(this);
-    if (gm)
-        gm->eventHandler()->removeView(this);
 }
 
 char notex_sprites [] = "notex_sprites";
@@ -256,34 +255,6 @@ void PHView::drawBackground()
     gm->solidSquareVAO()->draw();
     gm->setModelViewMatrix(old);
     
-}
-
-//stuff
-PHView * PHView::pointerDeepFirst(const PHMatrix & om, PHEvent * touch)
-{
-	if (!_userInput) return NULL;
-    PHMatrix m = om * applyMatrices();
-	PHView * view = NULL;
-    for (list<PHDrawable*>::reverse_iterator i = _children.rbegin(); i!= _children.rend(); i++)
-        if ((*i)->isView())
-        {
-            PHView * v = ((PHView*)(*i))->pointerDeepFirst(m, touch);
-            if (v)
-            {
-                view = v;
-                break;
-            }
-        }
-	if (!view)
-	{
-		PHPoint pnt = m.untransformPoint(touch->location());
-		if (PHPointInRect(pnt,_bounds))
-        {
-            touchEvent(touch);
-			view = touch->handled()?this:NULL;
-        }
-	}
-	return view;
 }
 
 PHView * PHView::viewWithTag(int tag)
@@ -311,40 +282,11 @@ list<PHView*> * PHView::viewsWithTag(int tag)
     return l;
 }
 
-//geometry
 PHMatrix PHView::loadMatrixTree(PHView * until)
 {
 	if (_parent && (_parent!=until) && (_parent->isView()))
         return (((PHView*)_parent)->loadMatrixTree(until)) * applyMatrices();
     return applyMatrices();
-}
-
-PHPoint PHView::toMyCoordinates(const PHPoint & pnt, PHView * until)
-{
-    if (until==this) return pnt;
-    return loadMatrixTree(until).untransformPoint(pnt);
-}
-
-void PHView::toMyCoordinates(PHPoint * pnt, int n, PHView * until)
-{
-    if (until==this) return;
-    PHMatrix m = loadMatrixTree(until).inverse();
-	for (int i=0; i<n; i++)
-		pnt[i] = m.transformPoint(pnt[i]);
-}
-
-PHPoint PHView::fromMyCoordinates(const PHPoint & pnt, PHView * until)
-{
-    if (until==this) return pnt;
-    return loadMatrixTree(until).transformPoint(pnt);
-}
-
-void PHView::fromMyCoordinates(PHPoint * pnt, int n, PHView * until)
-{
-    if (until==this) return;
-    PHMatrix m = loadMatrixTree(until);
-    for (int i=0; i<n; i++)
-		pnt[i] = m.transformPoint(pnt[i]);
 }
 
 void PHView::bindToAuxLayer(PHAuxLayerView * layer, PHView * from)
@@ -365,6 +307,33 @@ void PHView::attachedToGameManager()
 {
     PHDrawable::attachedToGameManager();
     actorAttachedToGameManager(gm);
+}
+
+void PHView::handleEvent(PHEvent * evt)
+{
+    if (evt->owner() == this)
+    {
+        touchEvent(evt);
+        return;
+    }
+    if (!userInput()) return;
+
+    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end() && !evt->handled(); i++)
+        (*i)->handleEvent(evt);
+
+    if (!evt->handled())
+    {
+        if (!evt->owner() && !PHPointInRect(evt->drawableLocation()->pointInView(this), bounds()))
+            return;
+        touchEvent(evt);
+        if (evt->handled())
+            evt->setOwner(this);
+    }
+}
+
+PHPositionalVector PHView::positionInMyCoordinates(PHDrawableCoordinates * d)
+{
+    return applyMatrices().inverse() * d->positionInDrawable(parent());
 }
 
 #pragma mark -
