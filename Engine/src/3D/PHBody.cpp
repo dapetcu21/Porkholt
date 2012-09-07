@@ -1,6 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/3D/PHBody.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 PHBody::PHBody() : pos(PH3DOriginPoint), rot(PHIdentityQuaternion), scl(PH3DUnitSize), _rotationalCenter(PH3DOriginPoint), _scalingCenter(PH3DOriginPoint), effOrder(PHBody::EffectOrderRotateScale), matrixCached(false), effectCached(false)
 {
@@ -46,6 +47,7 @@ PHMatrix PHBody::applyMatrices()
                 case EffectRotate:
                 {
                     if (rot == PHIdentityQuaternion) break; 
+                    rot.normalize();
                     if (_rotationalCenter == PH3DOriginPoint)
                         effectCache *= rot.rotationMatrix();
                     else
@@ -83,3 +85,9 @@ void PHBody::render()
     renderChildren();
     gm->setModelViewMatrix(o);
 }
+
+PHPositionalVector PHBody::positionInMyCoordinates(PHDrawableCoordinates * d)
+{
+    return applyMatrices().inverse() * d->positionInDrawable(parent());
+}
+

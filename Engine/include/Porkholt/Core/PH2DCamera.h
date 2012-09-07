@@ -11,9 +11,11 @@ class PH2DCamera : public PHCamera
         bool cache;
         PHSize sz;
 
-   public:
+    public:
         PH2DCamera();
         void setScreenSize(const PHSize & s) { sz = s; cache = false; }
+        PHSize screenSize() { return sz; }
+
         void reshape();    
         PHMatrix projection();
 };

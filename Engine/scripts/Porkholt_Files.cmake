@@ -98,6 +98,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PH2DCamera.cpp
   ${PH_ENGINE_PATH}/src/Core/PHViewControllerHolder.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawableCoordinates.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHPerspectiveCamera.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -210,6 +211,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PH2DCamera.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewControllerHolder.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawableCoordinates.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHPerspectiveCamera.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

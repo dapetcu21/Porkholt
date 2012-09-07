@@ -73,10 +73,10 @@ PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoint & pnt
 PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3DPoint & pnt)
 {
 	ph_float x,y,z,w;
-	x = pnt.x * m[0] + pnt.y * m[4] + /*0 * m[8] + 1 * */m[12];
-	y = pnt.x * m[1] + pnt.y * m[5] + /*0 * m[9] + 1 * */m[13];
-    z = pnt.x * m[2] + pnt.y * m[6] + /*0 * m[10] + 1 * */m[14];
-	w = pnt.x * m[3] + pnt.y * m[7] + /*0 * m[11]+ 1 * */m[15];        
+	x = pnt.x * m[0] + pnt.y * m[4] + pnt.z * m[8]  + m[12];
+	y = pnt.x * m[1] + pnt.y * m[5] + pnt.z * m[9]  + m[13];
+    z = pnt.x * m[2] + pnt.y * m[6] + pnt.z * m[10] + m[14];
+	w = pnt.x * m[3] + pnt.y * m[7] + pnt.z * m[11] + m[15];        
 	
 	return PH3DPoint(x/w, y/w, z/w);
 }

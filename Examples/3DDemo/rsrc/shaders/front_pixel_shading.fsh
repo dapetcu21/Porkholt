@@ -35,7 +35,7 @@ highp vec3 adjustN(highp vec3 N, highp vec3 dev)
 	highp vec2 st1 = dFdy(nc);
 	highp vec3 S = normalize( q0 * st1.t - q1 * st0.t);
 	highp vec3 T = normalize(-q0 * st1.s + q1 * st0.s);
-	return normalize(mat3(-S, -T, N) * dev);
+	return normalize(mat3(S, -T, N) * dev);
 }
 #endif
 

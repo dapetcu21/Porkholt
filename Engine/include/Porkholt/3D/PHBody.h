@@ -58,6 +58,8 @@ public:
 	
     PHMatrix applyMatrices();
     virtual void render();
+
+    PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
 };
 
 #endif

@@ -103,6 +103,8 @@ struct PHQuaternion
 		return PHQuaternion(cos(alpha/2), x*s, y*s, z*s);
 	}
 	PHMatrix rotationMatrix(); //use normalize() first
+
+    static PHQuaternion fromPointsOnSphere(const PHVector3 & from, const PHVector3 & to);
 } PH_PACKED_STRUCT;
 
 #ifdef PH_PACKED_STRUCT_PRAGMA

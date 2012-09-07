@@ -53,3 +53,14 @@ void PHQuaternion::saveToLua(lua_State * L) const
     lua_pushnumber(L, z);
     lua_setfield(L, -2, "z");
 }
+
+
+PHQuaternion PHQuaternion::fromPointsOnSphere(const PHVector3 & from, const PHVector3 & to)
+{
+    if (from == to) return PHIdentityQuaternion;
+    PHVector3 normal = PHVector3::cross(from, to);
+    ph_float cosa = PHVector3::dot(from, to);
+    ph_float cosa2 = sqrt((cosa + 1) / 2);
+    normal /= 2*cosa2;
+    return PHQuaternion(cosa2, normal.x, normal.y, normal.z);
+}
