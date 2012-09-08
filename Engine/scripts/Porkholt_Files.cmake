@@ -1,4 +1,5 @@
 set(PH_ENGINE_SRCS
+  ${PH_ENGINE_PATH}/src/Core/PH2DCamera.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAccelInterface.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimatedImage.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimator.cpp
@@ -6,11 +7,13 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHAutoreleasePool.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAuxLayerView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHBezierPath.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHCamera.cpp
   ${PH_ENGINE_PATH}/src/Core/PHCinematicActor.cpp
   ${PH_ENGINE_PATH}/src/Core/PHCinematicAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHCurve.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDeferredView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawable.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHDrawableCoordinates.cpp
   ${PH_ENGINE_PATH}/src/Core/PHErrors.cpp
   ${PH_ENGINE_PATH}/src/Core/PHEvent.cpp
   ${PH_ENGINE_PATH}/src/Core/PHEventHandler.cpp
@@ -35,7 +38,10 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimatorGroup.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLua.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.lua.h
   ${PH_ENGINE_PATH}/src/Core/PHLuaObject.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHMaterialInitPool.cpp
   ${PH_ENGINE_PATH}/src/Core/PHMessage.cpp
   ${PH_ENGINE_PATH}/src/Core/PHMotion.cpp
   ${PH_ENGINE_PATH}/src/Core/PHNavigationController.cpp
@@ -43,6 +49,8 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHObject.cpp
   ${PH_ENGINE_PATH}/src/Core/PHParticleAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHParticleView.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHPerspectiveCamera.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHPostProcess.cpp
   ${PH_ENGINE_PATH}/src/Core/PHStripeCurve.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTextView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTextureAtlas.cpp
@@ -54,11 +62,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHUtilities.cpp
   ${PH_ENGINE_PATH}/src/Core/PHView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHViewController.cpp
-  ${PH_ENGINE_PATH}/src/3D/PHBody.cpp
-  ${PH_ENGINE_PATH}/src/3D/PHMesh.cpp
-  ${PH_ENGINE_PATH}/src/3D/PHMeshBody.cpp
-  ${PH_ENGINE_PATH}/src/3D/PHProjectionChanger.cpp
-  ${PH_ENGINE_PATH}/src/3D/PHSphereMesh.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHViewControllerHolder.cpp
   ${PH_ENGINE_PATH}/src/Geometry/PHColor.cpp
   ${PH_ENGINE_PATH}/src/Geometry/PHGeometry.cpp
   ${PH_ENGINE_PATH}/src/Geometry/PHMatrix.cpp
@@ -81,6 +85,10 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Sound/PHSoundManager.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHSoundPool.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHWAVDecoder.cpp
+  ${PH_ENGINE_PATH}/src/3D/PHBody.cpp
+  ${PH_ENGINE_PATH}/src/3D/PHMesh.cpp
+  ${PH_ENGINE_PATH}/src/3D/PHMeshBody.cpp
+  ${PH_ENGINE_PATH}/src/3D/PHSphereMesh.cpp
   ${PH_ENGINE_PATH}/src/UI/PHButtonView.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTestView.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTestViewController.cpp
@@ -90,18 +98,10 @@ set(PH_ENGINE_SRCS
   ${PH_EXTERNALS}/uremote/src/URCommon.cpp
   ${PH_EXTERNALS}/uremote/src/URField.cpp
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.lua.h
-  ${PH_ENGINE_PATH}/src/Core/PHPostProcess.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHMaterialInitPool.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHCamera.cpp
-  ${PH_ENGINE_PATH}/src/Core/PH2DCamera.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHViewControllerHolder.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHDrawableCoordinates.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHPerspectiveCamera.cpp
   )
 
 set(PH_ENGINE_HEADERS
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PH2DCamera.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAccelInterface.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAnimatedImage.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAnimator.h
@@ -109,11 +109,13 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAutoreleasePool.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAuxLayerView.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHBezierPath.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHCamera.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHCinematicActor.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHCinematicAnimator.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHCurve.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDeferredView.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawable.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawableCoordinates.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHErrors.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEvent.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEventHandler.h
@@ -141,8 +143,11 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHKeyframeAnimator.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHKeyframeAnimatorGroup.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHLua.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHLuaMaterial.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHLuaObject.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMain.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMaterial.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMaterialInitPool.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMessage.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMotion.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMutex.h
@@ -151,6 +156,8 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHObject.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHParticleAnimator.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHParticleView.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHPerspectiveCamera.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHPostProcess.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHRemote.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHSemaphore.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHSerialization.h
@@ -166,12 +173,8 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHUtilities.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHView.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewController.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewControllerHolder.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHWindowing.h
-  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHBody.h
-  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMesh.h
-  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMeshBody.h
-  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHProjectionChanger.h
-  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHSphereMesh.h
   ${PH_ENGINE_PATH}/include/Porkholt/Geometry/PHColor.h
   ${PH_ENGINE_PATH}/include/Porkholt/Geometry/PHGeometry.h
   ${PH_ENGINE_PATH}/include/Porkholt/Geometry/PHMatrix.h
@@ -198,20 +201,15 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundManager.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundPool.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHWAVDecoder.h
+  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHBody.h
+  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMesh.h
+  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMeshBody.h
+  ${PH_ENGINE_PATH}/include/Porkholt/3D/PHSphereMesh.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHButtonView.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTestView.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTestViewController.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextController.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextControllerView.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMaterial.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHLuaMaterial.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHPostProcess.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHMaterialInitPool.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHCamera.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PH2DCamera.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHViewControllerHolder.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawableCoordinates.h
-  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHPerspectiveCamera.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

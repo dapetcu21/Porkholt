@@ -5,7 +5,6 @@
 #include <Porkholt/Core/PHViewController.h>
 #include <Porkholt/3D/PHMeshBody.h>
 #include <Porkholt/3D/PHSphereMesh.h>
-#include <Porkholt/3D/PHProjectionChanger.h>
 #include <Porkholt/Core/PHNormalImage.h>
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHDrawableCoordinates.h>
@@ -68,6 +67,8 @@ public:
             if (s.y != t.y) r.y = k1*(t.y-s.y) + s.y; 
             if (s.z != t.z) r.z = k1*(t.z-s.z) + s.z; 
 
+            if (!manual)
+                lastPoint = r;
             manual = true;
 
             PHQuaternion q;
@@ -79,14 +80,14 @@ public:
                     break;
                 case PHEvent::touchUp:
                     rotSpeed = 0;
+                    q = PHQuaternion::fromPointsOnSphere(lastPoint, r);
+                    _body->setRotation(_body->rotation() * q);
+                    break;
                 case PHEvent::touchMoved:
                     q = PHQuaternion::fromPointsOnSphere(lastPoint, r);
                     _body->setRotation(_body->rotation() * q);
-                    if (evt->type() != PHEvent::touchUp)
-                    {
-                        axis = q.rotationAxis();
-                        rotSpeed = q.rotationAngle() / (evt->time() - evt->lastTime());
-                    }
+                    axis = q.rotationAxis();
+                    rotSpeed = q.rotationAngle() / (evt->time() - evt->lastTime());
             };
         }
 
