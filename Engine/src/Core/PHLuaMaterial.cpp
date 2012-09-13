@@ -97,7 +97,6 @@ void PHLuaMaterial::loadFromLua(lua_State * L)
                     mem += sizeof(PHMatrix) * mat_size;
                     mem += sizeof(renderer::solver::value) * st_size;
                     uint8_t * m = (uint8_t*)malloc(mem);
-                    PHLog("malloc(%d)", int(mem));
                     r.vars = (renderer::solver*)m;
                     m += sizeof(renderer::solver) * r.nvars;
                     PHMatrix * mat_stack = (PHMatrix*)m;
@@ -123,10 +122,8 @@ void PHLuaMaterial::loadFromLua(lua_State * L)
                                     s.matrixStack = mat_stack;
                                     s.uniform = u;
                                     PHLuaGetNumberField(s.eq_n, "n");
-                                    PHLog("giving it from(%d)", int(m - (uint8_t*)r.vars));
                                     s.equation = (renderer::solver::value*)m;
                                     m+= sizeof(renderer::solver::value) * s.eq_n;
-                                    PHLog("giving it   to(%d)", int(m - (uint8_t*)r.vars));
                                     for (int j = 1; j<=s.eq_n; j++)
                                     {
                                         lua_pushnumber(L, j);
@@ -665,9 +662,9 @@ void PHLuaMaterial::renderer::solver::value::readFromLua(lua_State * L)
     {
         type = vInvalid;
         char c[2] = {'x','\0'};
-        for (int i = 0; i<4; i++, c[0]++)
+        for (int j = 0; j<4; j++, c[0]++)
         {
-            lua_pushnumber(L, i+1);
+            lua_pushnumber(L, j+1);
             lua_gettable(L, -2);
             if (!lua_isnumber(L, -1))
             {
@@ -677,7 +674,7 @@ void PHLuaMaterial::renderer::solver::value::readFromLua(lua_State * L)
             if (lua_isnumber(L, -1))
             {
                 type++;
-                fv[i] = lua_tonumber(L, -1);
+                fv[j] = lua_tonumber(L, -1);
                 lua_pop(L, 1);
             } else {
                 lua_pop(L, 1);

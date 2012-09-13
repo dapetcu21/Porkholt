@@ -129,9 +129,8 @@ public:
 	friend class PHGameManager;
 	friend class PHEventHandler;
 	
-private:
     virtual void layoutSubviews(const PHRect & oldBounds);
-    void autoresizeMyself(const PHSize & delta);
+    void autoresizeMyself(const PHRect & parentBounds, const PHSize & delta);
 //animation system
 protected:
     void setCinematicPosition(const PHPoint & p) { setPosition(p); }

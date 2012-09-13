@@ -61,6 +61,9 @@ class PHModeTextView : public PHTextView
 
 class PHVideoModeViewController : public PHViewController
 {
+public:
+    PHVideoModeViewController(PHGameManager * gm) : PHViewController(gm) {} 
+protected:
     PHTextView * resView;
 
     void closeWindow()
@@ -154,8 +157,7 @@ class PHVideoModeViewController : public PHViewController
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHViewController * vc = new PHVideoModeViewController();
-	vc->init(gm);
+    PHViewController * vc = new PHVideoModeViewController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
 }
 

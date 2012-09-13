@@ -5,7 +5,7 @@
 #include <Porkholt/Core/PHTextView.h>
 #include <Porkholt/Core/PHGameManager.h>
 
-PHTextController::PHTextController(vector<string> * s) : PHViewController(), bColor(PHBlackColor), fColor(PHWhiteColor), strings(s), canAdvance(false), pos(0), textView(NULL), blackoutView(NULL)
+PHTextController::PHTextController(PHGameManager * gm, vector<string> * s) : PHViewController(gm), bColor(PHBlackColor), fColor(PHWhiteColor), strings(s), canAdvance(false), pos(0), textView(NULL), blackoutView(NULL)
 {
     
 }

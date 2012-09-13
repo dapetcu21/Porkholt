@@ -129,7 +129,7 @@ static PHPoint adjustPoint(int x, int y)
 {
     return PHPoint(
         x *  2.0f / PHWGameManager->screenWidth() - 1,
-        y * -2.0f / PHWGameManager->screenWidth() + 1;
+        y * -2.0f / PHWGameManager->screenHeight() + 1
         );
 }
 

@@ -18,8 +18,7 @@ void PHTestViewController::callback1(PHObject * sender, void * ud)
 
 void PHTestViewController::callback2(PHObject * sender, void * ud)
 {
-	PHTestViewController * vc = new PHTestViewController();
-	vc->init(gm);
+	PHTestViewController * vc = new PHTestViewController(gm);
 	if (navController)
     {
         int anim = (int)(size_t)ud;
@@ -30,7 +29,7 @@ void PHTestViewController::callback2(PHObject * sender, void * ud)
 
 void PHTestViewController::callback3(PHObject * sender, void * ud)
 {
-    PHLog("callback3: %x %x", (unsigned)(unsigned long long)sender, (unsigned int)(unsigned long long)ud);
+    PHLog("callback3: %p %p", sender, ud);
 }
 
 PHView * PHTestViewController::loadView(const PHRect & frame)

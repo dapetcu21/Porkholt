@@ -5,12 +5,15 @@
 PHViewControllerHolder::PHViewControllerHolder() : vc(NULL)
 {
     setAutoresizesSubviews(true);
+    setAutoresizeMask(PHView::ResizeAll);
+    setUserInput(true);
 }
 
 
 PHViewControllerHolder::PHViewControllerHolder(const PHRect & fr) : PHView(fr), vc(NULL)
 {
     setAutoresizesSubviews(true);
+    setAutoresizeMask(PHView::ResizeAll);
     setUserInput(true);
 }
 

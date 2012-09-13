@@ -1,23 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
 project(Porkholt)
 
-if(NOT DEFINED PH_PLATFORM)
-  if (APPLE)
-    set(PH_PLATFORM OSX)
-  else()
-    set(PH_PLATFORM X11)
-  endif()
-  message("PH_PLATFORM is not defined. Defaulting to \"${PH_PLATFORM}\"")
+set(PH_PLATFORM_DOC "Target platform. Can be one of X11 OSX iOS Android")
+if (APPLE)
+    set(PH_PLATFORM OSX CACHE STRING ${PH_PLATFORM_DOC})
+else()
+    set(PH_PLATFORM X11 CACHE STRING ${PH_PLATFORM_DOC})
 endif()
 
-if(NOT DEFINED PH_ENGINE_PATH)
-  set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-  message("PH_ENGINE_PATH is not defined. Defaulting to \"${PH_ENGINE_PATH}\"")
-endif()
-
-IF(NOT DEFINED PH_EXTERNALS)
-  set(PH_EXTERNALS "${PH_ENGINE_PATH}/../Externals")
-endif()
+set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "Path to the Engine folder")
+set(PH_EXTERNALS "${PH_ENGINE_PATH}/../Externals" CACHE PATH "Path to the Externals folder")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if(CMAKE_GENERATOR STREQUAL "Xcode")
@@ -38,7 +30,20 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
+if (PH_PLATFORM STREQUAL "Android")
+include(${CMAKE_CURRENT_SOURCE_DIR}/scripts/Android_Fork.cmake)
+endif()
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/scripts/Porkholt_Files.cmake)
+
+if(PH_PLATFORM STREQUAL "Android")
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      )
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      )
+
+    include_directories(${PH_EXTERNALS}/openal-soft/include)
+endif()
 
 if(PH_PLATFORM STREQUAL "X11")
     set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
@@ -86,30 +91,46 @@ if(PH_PLATFORM STREQUAL "iOS")
       )
 endif()
 
+if(PH_PLATFORM STREQUAL "Android")
+    if (PH_FORK STREQUAL "1")
+        link_directories(${PH_EXTERNALS}/lib/android/libs/${ANDROID_NDK_ABI_NAME})
+        add_library(Porkholt SHARED ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
+        target_link_libraries(Porkholt openal)
 
-add_library(Porkholt ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
-
-if(PH_PLATFORM STREQUAL "OSX")
-    set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
-    set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-endif()
-if(PH_PLATFORM STREQUAL "iOS")
-    set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
-    set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
-    set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-endif()
-
-if(CMAKE_GENERATOR STREQUAL "Xcode")
-    add_custom_command( TARGET Porkholt
-        PRE_BUILD
-        COMMAND ${PH_EXTERNALS}/make.sh
-        WORKING_DIRECTORY ${PH_EXTERNALS}
-        )
+        add_custom_target(External_Libs
+            COMMAND ${PH_EXTERNALS}/make_android.sh "${ANDROID_NDK}" "${ANDROID_ABI}" "${ANDROID_NDK_ABI_NAME}"
+            WORKING_DIRECTORY ${PH_EXTERNALS}
+            VERBATIM
+            )
+        add_dependencies(Porkholt External_Libs)
+    else()
+        invoke_make(Porkholt)
+    endif()
 else()
-    add_custom_target(External_Libs
-        COMMAND ${PH_EXTERNALS}/make.sh
-        WORKING_DIRECTORY ${PH_EXTERNALS}
-        )
-    add_dependencies(Porkholt External_Libs)
-endif()
+    add_library(Porkholt ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
 
+    if(PH_PLATFORM STREQUAL "OSX")
+        set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
+        set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
+    endif()
+    if(PH_PLATFORM STREQUAL "iOS")
+        set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
+        set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
+        set_target_properties(Porkholt PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
+    endif()
+
+    if(CMAKE_GENERATOR STREQUAL "Xcode")
+        add_custom_command( TARGET Porkholt
+            PRE_BUILD
+            COMMAND ${PH_EXTERNALS}/make.sh
+            WORKING_DIRECTORY ${PH_EXTERNALS}
+            )
+    else()
+        add_custom_target(External_Libs
+            COMMAND ${PH_EXTERNALS}/make.sh
+            WORKING_DIRECTORY ${PH_EXTERNALS}
+            )
+        add_dependencies(Porkholt External_Libs)
+    endif()
+
+    endif()

@@ -1,56 +1,29 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#define PHGLEXTDefine(ret, name, ...) \
-typedef ret (* name ## _t )(__VA_ARGS__); \
-name ## _t name
-
-
-private:
-PHGLEXTDefine(GLvoid,    glBindVertexArray, GLuint);
-PHGLEXTDefine(GLvoid,    glDeleteVertexArrays, GLsizei, const GLuint *);
-PHGLEXTDefine(GLvoid,    glGenVertexArrays, GLsizei n, GLuint *);
-
-PHGLEXTDefine(GLboolean, glIsRenderbuffer, GLuint);
-PHGLEXTDefine(GLvoid,    glBindRenderbuffer, GLenum, GLuint);
-PHGLEXTDefine(GLvoid,    glDeleteRenderbuffers, GLsizei, const GLuint *);
-PHGLEXTDefine(GLvoid,    glGenRenderbuffers, GLsizei, GLuint *);
-
-PHGLEXTDefine(GLvoid,    glRenderbufferStorage, GLenum, GLenum, GLsizei, GLsizei);
-PHGLEXTDefine(GLvoid,    glRenderbufferStorageMultisample, GLenum, GLsizei, GLenum, GLsizei, GLsizei);
-PHGLEXTDefine(GLvoid,    glGetRenderbufferParameteriv, GLenum, GLenum, GLint*);
-
-PHGLEXTDefine(GLboolean, glIsFramebuffer, GLuint);
-PHGLEXTDefine(GLvoid,    glBindFramebuffer, GLenum, GLuint);
-PHGLEXTDefine(GLvoid,    glDeleteFramebuffers, GLsizei, const GLuint *);
-PHGLEXTDefine(GLvoid,    glGenFramebuffers, GLsizei, GLuint *);
-
-PHGLEXTDefine(GLenum,    glCheckFramebufferStatus, GLenum);
-PHGLEXTDefine(GLvoid,    glFramebufferTexture1D, GLenum, GLenum, GLenum, GLuint, GLint);
-PHGLEXTDefine(GLvoid,    glFramebufferTexture2D, GLenum, GLenum, GLenum, GLuint, GLint);
-PHGLEXTDefine(GLvoid,    glFramebufferTexture3D, GLenum, GLenum, GLenum, GLuint, GLint, GLint);
-PHGLEXTDefine(GLvoid,    glFramebufferTextureLayer, GLenum, GLenum, GLuint, GLint, GLint);
-PHGLEXTDefine(GLvoid,    glFramebufferRenderbuffer, GLenum, GLenum, GLenum, GLuint);
-PHGLEXTDefine(GLvoid,    glGetFramebufferAttachmentParameteriv, GLenum, GLenum, GLenum, GLint *);
-PHGLEXTDefine(GLvoid,    glBlitFramebuffer, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
-
-PHGLEXTDefine(GLvoid,    glGenerateMipmap, GLenum);
-
-#ifdef PH_GLES
-PHGLEXTDefine(GLvoid,    glClearDepth, GLfloat);
-#else
-PHGLEXTDefine(GLvoid,    glClearDepth, GLclampd);
-#endif
-
-
-
-void loadExtensionCompat();
-
 PHColor ccolor;
 float cdepth;
 int cstencil;
+set<string> extensions;
+bool parsedExtensions;
+static bool phglinited;
+int openGLVersionMajor,openGLVersionMinor,glslVersion;
+string glslHeader;
+bool openGLCaps[PHGLNumberCapabilities];
+
+
+void initPHGL();
+void loadCapabilities();
 
 public:
-void * glFunctionAddress(const char * s);
+
+bool hasExtension(const string & ext);
+bool isGLES() { return openGLCaps[PHGLCapabilityOpenGLES]; }
+bool useShaders() { return openGLCaps[PHGLCapabilityShaders]; }
+int openGLMajorVersion() { return openGLVersionMajor; }
+int openGLMinorVersion() { return openGLVersionMinor; }
+int openGLSLVersion() { return glslVersion; }
+bool hasCapability(int cap) { return openGLCaps[cap]; }
+
 void setClearColor(const PHColor & c);
 void setDepthClearValue(float val);
 void setStencilClearValue(int val);

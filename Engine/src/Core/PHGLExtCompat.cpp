@@ -8,7 +8,7 @@
 #include <dlfcn.h>
 #endif
 
-void * PHGameManager::glFunctionAddress(const char * s)
+void * PHGL::glFunctionAddress(const char * s)
 {
 #if defined(_WIN32)
     return wglGetProcAddress((LPCSTR)s);
@@ -32,117 +32,286 @@ void * PHGameManager::glFunctionAddress(const char * s)
 #endif
 }
 
-
-#define set(name, val) name = (name ## _t)(val)
-#define setf(name, val) name = (name ## _t)(glFunctionAddress(#val))
-
-void PHGameManager::loadExtensionCompat()
+void PHGameManager::loadCapabilities()
 {
+    if (!parsedExtensions)
+    {
+        const char * ver = (char*) PHGL::glGetString(GL_VERSION);
+        const char * vers = ver;
+        bool es = strstr(ver, "ES");
+        openGLCaps[PHGLCapabilityOpenGLES] = es;
+        
+        int number = 0;
+        bool major = true;
+        while (*ver)
+        {
+            if ((*ver)=='.')
+            {
+                if (major)
+                {
+                    openGLVersionMajor = number;
+                    major = false;
+                    number = 0;
+                }
+                else 
+                    break;
+            } else
+                if (('0'<=(*ver)) && ((*ver)<='9'))
+                    number=number*10+*ver-'0';
+                else
+                    if (number || !major)
+                        break;
+            ver++;
+        }
+        openGLVersionMinor = number;
+        
+#ifdef GL_NUM_EXTENSIONS
+        if (!es && openGLVersionMajor>=3)
+        {
+            GLint n;
+            PHGL::glGetIntegerv(GL_NUM_EXTENSIONS, &n);
+            for (int i=0; i<n; i++)
+                extensions.insert(string((const char*)PHGL::glGetStringi(GL_EXTENSIONS, i)));
+        } else
+#endif
+        {
+            const char * ext = (char*) PHGL::glGetString(GL_EXTENSIONS);
+            while (ext && ext[0])
+            {
+                const char * pos = strpbrk(ext, " ");
+                if (!pos)
+                    pos = ext+strlen(ext);
+                extensions.insert(string(ext,pos-ext));
+                if (!pos[0])
+                    ext = pos;
+                else
+                    ext = pos+1;
+            }
+        }
+        parsedExtensions = true;
+        
+        glslVersion = 0;
+        const char * glslvp = (const char*)PHGL::glGetString(GL_SHADING_LANGUAGE_VERSION);
+        const char * glslv = glslvp;
+        for (;(*glslv) && glslVersion<100; glslv++)
+        {
+            char c = *glslv;
+            if (c>='0' && c<='9')
+                glslVersion = glslVersion*10 + (c-'0');
+        }
+        while (glslVersion && glslVersion<100)
+            glslVersion *= 10;
+        
+#ifdef PH_DEBUG
+        string s;
+        for (set<string>::iterator i = extensions.begin(); i!=extensions.end(); i++)
+        {
+            s+=*i;
+            s+=" ";
+        }
+        
+        PHLog("OpenGL Version: \"%s\" -> %s %d.%d",vers,es?"ES":"",openGLVersionMajor,openGLVersionMinor);
+        PHLog("GLSL Version: \"%s\" -> %d",glslvp,glslVersion);
+        PHLog("OpenGL Extensions: %s",s.c_str());
+#endif
+        
+        openGLCaps[PHGLCapabilityNPOT] = (openGLVersionMajor>=2 || extensions.count("OES_texture_npot") || extensions.count("GL_ARB_texture_non_power_of_two") || extensions.count("GL_IMG_texture_npot"));
+        openGLCaps[PHGLCapabilityAppleLimitedNPOT] =
+            (extensions.count("GL_APPLE_texture_2D_limited_npot") && !extensions.count("OES_texture_npot")) 
+#ifdef PH_IPHONE_OS
+            || (es && (openGLVersionMajor==2));
+#endif
+        ;
+        openGLCaps[PHGLCapabilityGLES1] = es && (openGLVersionMajor == 1);
+        openGLCaps[PHGLCapabilityGLES2] = es && (openGLVersionMajor >= 2);
+        openGLCaps[PHGLCapabilityShaders] = (openGLVersionMajor>=2);
+        GLint tmp;
+        PHGL::glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &tmp);
+        _maxVertexAttribs = (int)tmp;
+        
+        stringstream sstr;
+        sstr<<"#version "<<glslVersion<<"\n";
+        sstr<<"#define PH_ENGINE\n";
+        sstr<<"#define PH_GLSL_VERSION "<<glslVersion<<"\n";
+        sstr<<"#define PH_GL_MINOR_VERSION "<<openGLVersionMinor<<"\n";
+        sstr<<"#define PH_GL_MAJOR_VERSION "<<openGLVersionMajor<<"\n";
+        if (!es)
+        {
+            sstr<<"#define highp \n";
+            sstr<<"#define mediump \n";
+            sstr<<"#define lowp \n";
+            sstr<<"#define PH_GL_ES\n";
+        }
+        
+        glslHeader = sstr.str();
+        
+    }
+}
+
+bool PHGameManager::hasExtension(const string & ext)
+{
+    return extensions.count(ext);
+}
+
+bool PHGameManager::phglinited = false;
+
+#define sete(f, e) PHGLSetf(f, f ## e)
+#define set(f) PHGLSetf(f, f)
+#define setn(f) PHGLSet(f, NULL)
+
+void PHGameManager::initPHGL()
+{
+    if (phglinited)
+    {
+        loadCapabilities();
+        return;
+    }
+    phglinited = true;
+
+    //load non-extension stuff
+
+    set(glGetBooleanv);
+    set(glGetDoublev);
+    set(glGetFloatv);
+    set(glGetIntegerv);
+    set(glGetString);
+    set(glEnable);
+    set(glDisable);
+
+    loadCapabilities();
+
     bool es = isGLES();
     int glMaj = openGLMajorVersion();
     int glMin = openGLMinorVersion();
+
+    if (es && glMaj>=2)
+    {
+        setn(glEnableClientState);
+        setn(glDisableClientState);
+    } else {
+        set(glEnableClientState);
+        set(glDisableClientState);
+    }
+
     #ifndef PH_FORCE_FAKE_VAO
     if ((glMaj >= 3 && !es) || hasExtension("GL_ARB_vertex_array_object"))
     {
-        setf(glBindVertexArray, glBindVertexArray);
-        setf(glDeleteVertexArrays, glDeleteVertexArrays);
-        setf(glGenVertexArrays, glGenVertexArrays);
+        PHGLSetf(glBindVertexArray, glBindVertexArray);
+        PHGLSetf(glDeleteVertexArrays, glDeleteVertexArrays);
+        PHGLSetf(glGenVertexArrays, glGenVertexArrays);
     }
     else
     if (hasExtension("GL_OES_vertex_array_object"))
     {
-        setf(glBindVertexArray, glBindVertexArrayOES);
-        setf(glDeleteVertexArrays, glDeleteVertexArraysOES);
-        setf(glGenVertexArrays, glGenVertexArraysOES);
+        PHGLSetf(glBindVertexArray, glBindVertexArrayOES);
+        PHGLSetf(glDeleteVertexArrays, glDeleteVertexArraysOES);
+        PHGLSetf(glGenVertexArrays, glGenVertexArraysOES);
     }
     else
     if (hasExtension("GL_APPLE_vertex_array_object"))
     {
-        setf(glBindVertexArray, glBindVertexArrayAPPLE);
-        setf(glDeleteVertexArrays, glDeleteVertexArraysAPPLE);
-        setf(glGenVertexArrays, glGenVertexArraysAPPLE);
+        PHGLSetf(glBindVertexArray, glBindVertexArrayAPPLE);
+        PHGLSetf(glDeleteVertexArrays, glDeleteVertexArraysAPPLE);
+        PHGLSetf(glGenVertexArrays, glGenVertexArraysAPPLE);
     }
     else
     #endif
     {
-        set(glBindVertexArray, NULL);
-        set(glDeleteVertexArrays, NULL);
-        set(glGenVertexArrays, NULL);
+        PHGLSet(glBindVertexArray, NULL);
+        PHGLSet(glDeleteVertexArrays, NULL);
+        PHGLSet(glGenVertexArrays, NULL);
     }
     if ((es?(glMaj>=2):(glMaj >=3)) || hasExtension("GL_ARB_framebuffer_object"))
     {
-        setf(glIsRenderbuffer, glIsRenderbuffer);
-        setf(glBindRenderbuffer, glBindRenderbuffer);
-        setf(glDeleteRenderbuffers, glDeleteRenderbuffers);
-        setf(glGenRenderbuffers, glGenRenderbuffers);
-        setf(glRenderbufferStorage, glRenderbufferStorage);
-        setf(glRenderbufferStorageMultisample, glRenderbufferStorageMultisample);
-        setf(glGetRenderbufferParameteriv, glGetRenderbufferParameteriv);
-        setf(glIsFramebuffer, glIsFramebuffer);
-        setf(glBindFramebuffer, glBindFramebuffer);
-        setf(glDeleteFramebuffers, glDeleteFramebuffers);
-        setf(glGenFramebuffers, glGenFramebuffers);
-        setf(glCheckFramebufferStatus, glCheckFramebufferStatus);
-        setf(glFramebufferTexture1D, glFramebufferTexture1D);
-        setf(glFramebufferTexture2D, glFramebufferTexture2D);
-        setf(glFramebufferTexture3D, glFramebufferTexture3D);
-        setf(glFramebufferTextureLayer, glFramebufferTextureLayer);
-        setf(glFramebufferRenderbuffer, glFramebufferRenderbuffer);
-        setf(glGetFramebufferAttachmentParameteriv, glGetFramebufferAttachmentParameteriv);
-        setf(glBlitFramebuffer, glBlitFramebuffer);
-        setf(glGenerateMipmap, glGenerateMipmap);
+        PHGLSetf(glIsRenderbuffer, glIsRenderbuffer);
+        PHGLSetf(glBindRenderbuffer, glBindRenderbuffer);
+        PHGLSetf(glDeleteRenderbuffers, glDeleteRenderbuffers);
+        PHGLSetf(glGenRenderbuffers, glGenRenderbuffers);
+        PHGLSetf(glRenderbufferStorage, glRenderbufferStorage);
+        PHGLSetf(glRenderbufferStorageMultisample, glRenderbufferStorageMultisample);
+        PHGLSetf(glGetRenderbufferParameteriv, glGetRenderbufferParameteriv);
+        PHGLSetf(glIsFramebuffer, glIsFramebuffer);
+        PHGLSetf(glBindFramebuffer, glBindFramebuffer);
+        PHGLSetf(glDeleteFramebuffers, glDeleteFramebuffers);
+        PHGLSetf(glGenFramebuffers, glGenFramebuffers);
+        PHGLSetf(glCheckFramebufferStatus, glCheckFramebufferStatus);
+        PHGLSetf(glFramebufferTexture1D, glFramebufferTexture1D);
+        PHGLSetf(glFramebufferTexture2D, glFramebufferTexture2D);
+        PHGLSetf(glFramebufferTexture3D, glFramebufferTexture3D);
+        PHGLSetf(glFramebufferTextureLayer, glFramebufferTextureLayer);
+        PHGLSetf(glFramebufferRenderbuffer, glFramebufferRenderbuffer);
+        PHGLSetf(glGetFramebufferAttachmentParameteriv, glGetFramebufferAttachmentParameteriv);
+        PHGLSetf(glBlitFramebuffer, glBlitFramebuffer);
+        PHGLSetf(glGenerateMipmap, glGenerateMipmap);
     } 
     else 
     if (hasExtension("GL_OES_framebuffer_object"))
     {
-        setf(glIsRenderbuffer, glIsRenderbufferOES);
-        setf(glBindRenderbuffer, glBindRenderbufferOES);
-        setf(glDeleteRenderbuffers, glDeleteRenderbuffersOES);
-        setf(glGenRenderbuffers, glGenRenderbuffersOES);
-        setf(glRenderbufferStorage, glRenderbufferStorageOES);
-        set (glRenderbufferStorageMultisample, NULL);
-        setf(glGetRenderbufferParameteriv, glGetRenderbufferParameterivOES);
-        setf(glIsFramebuffer, glIsFramebufferOES);
-        setf(glBindFramebuffer, glBindFramebufferOES);
-        setf(glDeleteFramebuffers, glDeleteFramebuffersOES);
-        setf(glGenFramebuffers, glGenFramebuffersOES);
-        setf(glCheckFramebufferStatus, glCheckFramebufferStatusOES);
-        set (glFramebufferTexture1D, NULL);
-        setf(glFramebufferTexture2D, glFramebufferTexture2DOES);
-        set (glFramebufferTexture3D, NULL);
-        set (glFramebufferTextureLayer, NULL);
-        setf(glFramebufferRenderbuffer, glFramebufferRenderbufferOES);
-        setf(glGetFramebufferAttachmentParameteriv, glGetFramebufferAttachmentParameterivOES);
-        set (glBlitFramebuffer, NULL);
-        setf(glGenerateMipmap, glGenerateMipmapOES);
+        PHGLSetf(glIsRenderbuffer, glIsRenderbufferOES);
+        PHGLSetf(glBindRenderbuffer, glBindRenderbufferOES);
+        PHGLSetf(glDeleteRenderbuffers, glDeleteRenderbuffersOES);
+        PHGLSetf(glGenRenderbuffers, glGenRenderbuffersOES);
+        PHGLSetf(glRenderbufferStorage, glRenderbufferStorageOES);
+        PHGLSet (glRenderbufferStorageMultisample, NULL);
+        PHGLSetf(glGetRenderbufferParameteriv, glGetRenderbufferParameterivOES);
+        PHGLSetf(glIsFramebuffer, glIsFramebufferOES);
+        PHGLSetf(glBindFramebuffer, glBindFramebufferOES);
+        PHGLSetf(glDeleteFramebuffers, glDeleteFramebuffersOES);
+        PHGLSetf(glGenFramebuffers, glGenFramebuffersOES);
+        PHGLSetf(glCheckFramebufferStatus, glCheckFramebufferStatusOES);
+        PHGLSet (glFramebufferTexture1D, NULL);
+        PHGLSetf(glFramebufferTexture2D, glFramebufferTexture2DOES);
+        PHGLSet (glFramebufferTexture3D, NULL);
+        PHGLSet (glFramebufferTextureLayer, NULL);
+        PHGLSetf(glFramebufferRenderbuffer, glFramebufferRenderbufferOES);
+        PHGLSetf(glGetFramebufferAttachmentParameteriv, glGetFramebufferAttachmentParameterivOES);
+        PHGLSet (glBlitFramebuffer, NULL);
+        PHGLSetf(glGenerateMipmap, glGenerateMipmapOES);
     } else 
     {
-        set(glIsRenderbuffer, NULL);
-        set(glBindRenderbuffer, NULL);
-        set(glDeleteRenderbuffers, NULL);
-        set(glGenRenderbuffers, NULL);
-        set(glRenderbufferStorage, NULL);
-        set(glRenderbufferStorageMultisample, NULL);
-        set(glGetRenderbufferParameteriv, NULL);
-        set(glIsFramebuffer, NULL);
-        set(glBindFramebuffer, NULL);
-        set(glDeleteFramebuffers, NULL);
-        set(glGenFramebuffers, NULL);
-        set(glCheckFramebufferStatus, NULL);
-        set(glFramebufferTexture1D, NULL);
-        set(glFramebufferTexture2D, NULL);
-        set(glFramebufferTexture3D, NULL);
-        set(glFramebufferTextureLayer, NULL);
-        set(glFramebufferRenderbuffer, NULL);
-        set(glGetFramebufferAttachmentParameteriv, NULL);
-        set(glBlitFramebuffer, NULL);
-        set(glGenerateMipmap, NULL);
+        PHGLSet(glIsRenderbuffer, NULL);
+        PHGLSet(glBindRenderbuffer, NULL);
+        PHGLSet(glDeleteRenderbuffers, NULL);
+        PHGLSet(glGenRenderbuffers, NULL);
+        PHGLSet(glRenderbufferStorage, NULL);
+        PHGLSet(glRenderbufferStorageMultisample, NULL);
+        PHGLSet(glGetRenderbufferParameteriv, NULL);
+        PHGLSet(glIsFramebuffer, NULL);
+        PHGLSet(glBindFramebuffer, NULL);
+        PHGLSet(glDeleteFramebuffers, NULL);
+        PHGLSet(glGenFramebuffers, NULL);
+        PHGLSet(glCheckFramebufferStatus, NULL);
+        PHGLSet(glFramebufferTexture1D, NULL);
+        PHGLSet(glFramebufferTexture2D, NULL);
+        PHGLSet(glFramebufferTexture3D, NULL);
+        PHGLSet(glFramebufferTextureLayer, NULL);
+        PHGLSet(glFramebufferRenderbuffer, NULL);
+        PHGLSet(glGetFramebufferAttachmentParameteriv, NULL);
+        PHGLSet(glBlitFramebuffer, NULL);
+        PHGLSet(glGenerateMipmap, NULL);
     }
+
+    set(glGenBuffers);
+    set(glDeleteBuffers);
+    set(glIsBuffer);
+    set(glBindBuffer);
+    set(glBufferData);
+    set(glBufferSubData);
+
+    set(glDepthMask);
+    set(glDepthFunc);
+    set(glCullFace);
+    set(glBlendFunc);
+    set(glPolygonMode);
+    set(glPixelStorei);
+    set(glPixelStoref);
+    set(glTexEnvi);
+    set(glTexEnvf);
     
     if (es)
-        setf(glClearDepth, glClearDepthf);
+        PHGLSetf(glClearDepth, glClearDepthf);
     else
-        setf(glClearDepth, glClearDepth);
+        PHGLSetf(glClearDepth, glClearDepth);
 }
 
 #ifndef GL_MAX_COLOR_ATTACHMENTS
@@ -174,7 +343,7 @@ void PHGameManager::setClearColor(const PHColor & c)
 void PHGameManager::setDepthClearValue(float val)
 {
     if (cdepth == val) return;
-    glClearDepth(val);
+    PHGL::glClearDepth(val);
     cdepth = val;
 }
 

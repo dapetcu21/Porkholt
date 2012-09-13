@@ -4,6 +4,24 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHView.h>
 
+#define INIT  view(NULL), navController(NULL), viewState(StateNotAppeared), rmNav(false), gm(_gm) 
+
+PHViewController::PHViewController(PHGameManager * _gm) : INIT, ir(_gm->screenBounds())
+{
+    setAnimatorPool(gm->animatorPool());
+    
+}
+
+PHView * PHViewController::getView()
+{
+    if (!view)
+    {
+        view = loadView(ir);
+        view->setGameManager(gm);
+    }
+    return view;
+}
+
 PHView * PHViewController::loadView(const PHRect & frame)
 {
 	PHView * view = new PHView(frame);
@@ -11,20 +29,6 @@ PHView * PHViewController::loadView(const PHRect & frame)
     view->setAutoresizesSubviews(true);
     view->setAutoresizeMask(PHView::ResizeAll);
 	return view;
-}
-
-void PHViewController::init(PHGameManager * gameManager)
-{
-    init(gameManager, gameManager->screenBounds());
-}
-
-void PHViewController::init(PHGameManager * gameManager,const PHRect & frame)
-{
-    gm = gameManager;
-    if (!animatorPool())
-        setAnimatorPool(gm->animatorPool());
-	view = loadView(frame);
-    view->setGameManager(gameManager);
 }
 
 void PHViewController::advanceAnimation(ph_float timeElapsed)

@@ -5,15 +5,11 @@
 #include <Porkholt/Core/PHViewController.h>
 #include <Porkholt/3D/PHMeshBody.h>
 #include <Porkholt/3D/PHSphereMesh.h>
-#include <Porkholt/3D/PHProjectionChanger.h>
 #include <Porkholt/Core/PHNormalImage.h>
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHPostProcess.h>
-
-#include <Porkholt/IO/PHFile.h>
-#include <Porkholt/IO/PHDirectory.h>
-#include <Porkholt/Core/PHLuaMaterial.h>
+#include <Porkholt/Core/PHPerspectiveCamera.h>
 
 class PH3DDemoViewController : public PHViewController
 {
@@ -43,10 +39,13 @@ protected:
         canvas->additionalUniforms()->at("cellmap").setValue(cell_map);
         cell_map->release();
 
-        canvas->setEffectEnabled(false);
+        canvas->setEffectEnabled(true);
         
 
-        PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
+        PHPerspectiveCamera * container = new PHPerspectiveCamera();
+        container->setNearClippingPlane(0.5f);
+        container->setFarClippingPlane(50.0f);
+        container->setIgnoresMatrices(true);
         canvas->addChild(container);
         canvas->release();
         container->release();
@@ -92,7 +91,7 @@ protected:
     }
     
 public:
-    PH3DDemoViewController() : lbody(NULL), time(0) {}
+    PH3DDemoViewController(PHGameManager * gm) : PHViewController(gm), lbody(NULL), time(0) {}
     ~PH3DDemoViewController()
     {
         if (lbody)
@@ -104,8 +103,7 @@ public:
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHViewController * vc = new PH3DDemoViewController();
-	vc->init(gm);
+    PHViewController * vc = new PH3DDemoViewController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
 }
 

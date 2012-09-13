@@ -20,6 +20,7 @@ protected:
 	friend class PHGameManager;
 	int viewState;
     bool rmNav;
+    PHRect ir;
     
     void setNavigationController(PHNavigationController * nc);
     virtual void updateScene(ph_float timeElapsed);
@@ -27,13 +28,13 @@ protected:
     PHGameManager * gm;
     
 public:
-	PHView * getView() { return view; };
-	PHViewController() : view(NULL), navController(NULL), viewState(StateNotAppeared), rmNav(false) {};
 	virtual ~PHViewController();
 	
-	void init(PHGameManager * gameManager);
-	void init(PHGameManager * gameManager, const PHRect & frame);
+    PHViewController(PHGameManager * gameManager);
 	
+	PHView * getView(); 
+    void setInitialViewFrame(PHRect & r) { ir = r; }
+
     PHNavigationController * navigationController() { return navController; }
     
 	virtual void advanceAnimation(ph_float timeElapsed);

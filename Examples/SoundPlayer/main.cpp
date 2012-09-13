@@ -7,6 +7,7 @@
 #include <Porkholt/Sound/PHRawDecoder.h>
 #include <Porkholt/Sound/PHAudioBuffer.h>
 #include <Porkholt/UI/PHButtonView.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 class PHSliderView : public PHView
 {
@@ -53,7 +54,7 @@ public:
     {
         if (evt->type() == PHEvent::touchDown)
         {
-            PHPoint p = toMyCoordinates(evt->location());
+            PHPoint p = evt->drawableLocation()->pointInView(this);
             ph_float pos = (p.x - bounds().x) / bounds().width;
             setPosition(pos);
             submitPosition(pos);
@@ -132,6 +133,9 @@ public:
 
 class PHPlayerController : public PHViewController
 {
+public:
+    PHPlayerController(PHGameManager * gm) : PHViewController(gm) {}
+protected:
     PHSound * snd;
     PHSeekSlider * slider;
 
@@ -249,8 +253,7 @@ class PHPlayerController : public PHViewController
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHViewController * vc = new PHPlayerController();
-    vc->init(gm);
+    PHViewController * vc = new PHPlayerController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
     vc->release();
 }

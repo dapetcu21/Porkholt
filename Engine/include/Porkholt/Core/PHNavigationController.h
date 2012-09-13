@@ -26,7 +26,7 @@ private:
 	
 	friend class PHAnimationDescriptor;
 public:
-	PHNavigationController() : currentVC(NULL), lastVC(NULL), fadeView(NULL), _fadeColor(PHBlackColor), animation(NoAnim), hidden(true) {};
+	PHNavigationController(PHGameManager * gm) : PHViewController(gm), currentVC(NULL), lastVC(NULL), fadeView(NULL), _fadeColor(PHBlackColor), animation(NoAnim), hidden(true) {};
 	enum Animations
 	{
 		NoAnim = 0,

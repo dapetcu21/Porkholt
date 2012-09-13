@@ -13,6 +13,7 @@ private:
 protected:
 	virtual PHView * loadView(const PHRect & frame);
 public:
+    PHTestViewController(PHGameManager * gm) : PHViewController(gm) {}
 	virtual void updateScene(ph_float timeElapsed);
 	
 	void callback1(PHObject * sender, void * ud);

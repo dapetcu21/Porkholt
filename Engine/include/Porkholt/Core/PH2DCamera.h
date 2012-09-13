@@ -10,6 +10,7 @@ class PH2DCamera : public PHCamera
         PHMatrix mat;
         bool cache;
         PHSize sz;
+        PHSize oldSize;
 
     public:
         PH2DCamera();

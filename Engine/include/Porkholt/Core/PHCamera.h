@@ -16,12 +16,12 @@ class PHCamera : public PHDrawable
         bool ignoresMatrices() { return im; }
 
         PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
+        virtual void render();
 
     protected:
         bool im;
         void _reshape();
         void attachedToGameManager();
-        virtual void render();
 };
 
 #endif

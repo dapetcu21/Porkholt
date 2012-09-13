@@ -17,6 +17,10 @@ static const int height = 50;
 
 class PHMathrisViewController : public PHViewController
 {
+public:
+    PHMathrisViewController(PHGameManager * gm) : PHViewController(gm) {} 
+
+protected:
     int lines, cols;
     int num;
     bool dn;
@@ -304,8 +308,7 @@ class PHMathrisViewController : public PHViewController
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHViewController * vc = new PHMathrisViewController();
-    vc->init(gm);
+    PHViewController * vc = new PHMathrisViewController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
     vc->release();
 }

@@ -55,7 +55,13 @@ using namespace std;
 
 #ifdef __linux__
     #define PH_LINUX
-    #define PH_DESKTOP
+    #ifdef __ANDROID__
+        #define PH_ANDROID
+        #define PH_MOBILE
+        #define PH_GLES
+    #else
+        #define PH_DESKTOP
+    #endif
 #endif
 
 #if !defined(PH_MOBILE) && !defined(PH_DESKTOP)
@@ -77,19 +83,6 @@ void * PHAlloc(void)
     return (void*) new T;
 }
 
-#if defined(PH_IPHONE_OS)
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES1/glext.h>
-    #include <OpenGLES/ES2/gl.h>
-    #include <OpenGLES/ES2/glext.h>
-#elif defined(PH_MAC_OS)
-    #include <OpenGL/gl.h>
-    #include <OpenGL/glext.h>
-#else
-    #define GL_GLEXT_PROTOTYPES
-    #include <GL/gl.h>
-    #include <GL/glext.h>
-#endif
 
 #if defined(DEBUG) || defined(_DEBUG)
     #define PH_DEBUG
@@ -126,6 +119,7 @@ struct lua_State;
 #endif
 #endif
 
+#include <Porkholt/Core/PHGL.h>
 #include <Porkholt/Core/PHUtilities.h>
 #include <Porkholt/Core/PHInvocation.h>
 #include <Porkholt/Core/PHObject.h>

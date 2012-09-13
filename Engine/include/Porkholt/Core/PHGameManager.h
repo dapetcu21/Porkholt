@@ -25,6 +25,7 @@ class PHRemote;
 class PHTextView;
 class PHDrawable;
 class PHSoundManager;
+class PH2DCamera;
 
 #undef uniformtrick
 #ifdef PHGLUNIFORMSTATES_H
@@ -108,6 +109,7 @@ private:
     int frames;
     ph_float fpsLeft;
     PHTextView * fpsView;
+    PH2DCamera * fpsCamera;
     bool capped;
     void renderFPS(ph_float timeElapsed);
     
@@ -184,12 +186,7 @@ private:
     uint32_t openGLStates,openGLVertexAttribStates;
     PHMatrix _modelView,_projection;
     PHColor _currentColor;
-    set<string> extensions;
-    bool parsedExtensions;
-    int openGLVersionMajor,openGLVersionMinor,glslVersion;
-    string glslHeader;
-    bool openGLCaps[PHGLNumberCapabilities];
-    
+        
     list<PHGLShaderProgram*> spriteShaderStack;
     PHGLUniformStates * spriteStates;
     uniformtrick * modelViewSpriteUniform;
@@ -265,15 +262,7 @@ public:
     {
         return _currentColor;
     }
-    void loadCapabilities();
-    bool isGLES() { return openGLCaps[PHGLCapabilityOpenGLES]; }
-    bool useShaders() { return openGLCaps[PHGLCapabilityShaders]; }
-    int openGLMajorVersion() { return openGLVersionMajor; }
-    int openGLMinorVersion() { return openGLVersionMinor; }
-    int openGLSLVersion() { return glslVersion; }
-    bool hasCapability(int cap) { return openGLCaps[cap]; }
-    bool hasExtension(const string & ext);
-    
+        
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
     void pushSpriteShader(PHGLShaderProgram * p);
     void popSpriteShader();

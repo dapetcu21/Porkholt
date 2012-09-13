@@ -78,13 +78,13 @@ GLenum PHGLVertexBufferObject::usages[] = {
 
 PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gameManager) : gm(gameManager), bound(0)
 {
-    glGenBuffers(1, &vbo);
+    PHGL::glGenBuffers(1, &vbo);
 }
 
 PHGLVertexBufferObject::~PHGLVertexBufferObject()
 {
     if (PHThread::currentThread() == PHThread::mainThread())
-        glDeleteBuffers(1, &vbo);
+        PHGL::glDeleteBuffers(1, &vbo);
     else
         gm->queueDeleteVBO(vbo);
 }
@@ -109,13 +109,13 @@ if (!b) { \
 void PHGLVertexBufferObject::setData(const void * data, size_t size, int usage)
 {
     bind_begin
-    glBufferData(targets[bound], size, data, usages[usage]);
+    PHGL::glBufferData(targets[bound], size, data, usages[usage]);
     bind_end
 }
 
 void PHGLVertexBufferObject::setSubData(const void * data, size_t offset, size_t size)
 {
     bind_begin
-    glBufferSubData(targets[bound], offset, size, data);
+    PHGL::glBufferSubData(targets[bound], offset, size, data);
     bind_end
 }

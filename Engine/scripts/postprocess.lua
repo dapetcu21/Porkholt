@@ -193,7 +193,6 @@ function create_map(files, src, dst, hd)
   while files[tostring(i)..'.png'] == 'f' do
     local fn = tostring(i)..'.png'
     local exec = gm_exe..' identify -format "%w %h" "'..src..'/'..fn..'"';
-    print(exec)
     local f = io.popen(exec)
     local x = f:read("*n")
     local y = f:read("*n")

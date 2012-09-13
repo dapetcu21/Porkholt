@@ -104,6 +104,8 @@ void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
 
 void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
+    initPHGL();
+
 	fps = params.fps;
 	_screenWidth = params.screenWidth;
 	_screenHeight = params.screenHeight;
@@ -113,7 +115,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     entryPoint = params.entryPoint;
     _defaultFBO = params.defaultFBO;
     if (_defaultFBO == 0)
-        glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
+        PHGL::glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     lt = PHTime::getTime();
 	setUserData(ud);
     
@@ -172,19 +174,18 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
             sndDir->release();
     }
     
-    loadCapabilities();
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
-	glDisable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glCullFace(GL_BACK);
-    glDisable(GL_CULL_FACE);
-    //glPolygonMode(GL_FRONT,GL_LINE); //wireframe
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    PHGL::glDisable(GL_DEPTH_TEST);
+    PHGL::glDepthMask(GL_TRUE);
+    PHGL::glDepthFunc(GL_LEQUAL);
+	PHGL::glDisable(GL_BLEND);
+	PHGL::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    PHGL::glCullFace(GL_BACK);
+    PHGL::glDisable(GL_CULL_FACE);
+    //PHGL::glPolygonMode(GL_FRONT,GL_LINE); //wireframe
+    PHGL::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (!useShaders())
     {
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        PHGL::glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     }
     setProjection();
     setModelViewMatrix(PHIdentityMatrix);
@@ -233,6 +234,7 @@ void PHGameManager::setScreenSize(ph_float w, ph_float h)
     _screenWidth = w;
     _screenHeight = h;
     setProjection(); 
+    messageWithName("reshapeWindow")->broadcast(this);
 }
 
 void PHGameManager::processInput()
@@ -271,11 +273,7 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     setClearColor(PHBlackColor);
     setDepthClearValue(1.0f);
 
-   // glClearDepth(1.0);
-   // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     clearBuffers(PHGameManager::colorBuffers | PHGameManager::depthBuffer);
-		
     setModelViewMatrix(PHIdentityMatrix);
     
     animPool->advanceAnimation(timeElapsed);
@@ -295,16 +293,21 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
 {
     if (!fpsView)
     {
+        fpsCamera = new PH2DCamera();
+        fpsCamera->setIgnoresMatrices(true);
+        fpsCamera->setGameManager(this);
         fpsView = new PHTextView();
         fpsView->setGameManager(this);
         fpsView->setFont(fontNamed("Arial"));
-        fpsView->setFontSize(30.0f*0.5f/screenHeight());
+        fpsView->setFontSize(30.0f);
         fpsView->setFontColor(PHColor(0.1f,0.9f,1.0f));
         fpsView->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);
+        fpsView->setFrame(screenBounds());
+        fpsView->setAutoresizeMask(PHView::ResizeAll);
+        fpsCamera->addChild(fpsView);
         fpsLeft = 1.0f;
         frames = 0;
     }
-    fpsView->setFrame(PHRect(-1, -1, 2, 2));
     frames++;
     fpsLeft -= timeElapsed;
     if (fpsLeft <=0)
@@ -315,15 +318,15 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
         frames = 0;
         fpsLeft += (int(-fpsLeft)+1);
     }
-    fpsView->render();
+    fpsCamera->render();
 }
 
 void PHGameManager::clearDeleteQueue()
 {
     if (!deleteVBOs.empty())
-        glDeleteBuffers(deleteVBOs.size(), &(deleteVBOs[0]));
+        PHGL::glDeleteBuffers(deleteVBOs.size(), &(deleteVBOs[0]));
     if (!deleteVAOs.empty())
-        glDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
+        PHGL::glDeleteVertexArrays(deleteVAOs.size(), &(deleteVAOs[0]));
     deleteVBOs.clear();
     deleteVAOs.clear();
 }
@@ -493,128 +496,6 @@ void PHGameManager::memoryWarning()
 	PHLog("memoryWarning");
 }
 
-void PHGameManager::loadCapabilities()
-{
-    if (!parsedExtensions)
-    {
-        const char * ver = (char*) glGetString(GL_VERSION);
-        const char * vers = ver;
-        bool es = strstr(ver, "ES");
-        openGLCaps[PHGLCapabilityOpenGLES] = es;
-        
-        int number = 0;
-        bool major = true;
-        while (*ver)
-        {
-            if ((*ver)=='.')
-            {
-                if (major)
-                {
-                    openGLVersionMajor = number;
-                    major = false;
-                    number = 0;
-                }
-                else 
-                    break;
-            } else
-                if (('0'<=(*ver)) && ((*ver)<='9'))
-                    number=number*10+*ver-'0';
-                else
-                    if (number || !major)
-                        break;
-            ver++;
-        }
-        openGLVersionMinor = number;
-        
-#ifdef GL_NUM_EXTENSIONS
-        if (!es && openGLVersionMajor>=3)
-        {
-            GLint n;
-            glGetIntegerv(GL_NUM_EXTENSIONS, &n);
-            for (int i=0; i<n; i++)
-                extensions.insert(string((const char*)glGetStringi(GL_EXTENSIONS, i)));
-        } else
-#endif
-        {
-            const char * ext = (char*) glGetString(GL_EXTENSIONS);
-            while (ext && ext[0])
-            {
-                const char * pos = strpbrk(ext, " ");
-                if (!pos)
-                    pos = ext+strlen(ext);
-                extensions.insert(string(ext,pos-ext));
-                if (!pos[0])
-                    ext = pos;
-                else
-                    ext = pos+1;
-            }
-        }
-        parsedExtensions = true;
-        
-        glslVersion = 0;
-        const char * glslvp = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
-        const char * glslv = glslvp;
-        for (;(*glslv) && glslVersion<100; glslv++)
-        {
-            char c = *glslv;
-            if (c>='0' && c<='9')
-                glslVersion = glslVersion*10 + (c-'0');
-        }
-        while (glslVersion && glslVersion<100)
-            glslVersion *= 10;
-        
-#ifdef PH_DEBUG
-        string s;
-        for (set<string>::iterator i = extensions.begin(); i!=extensions.end(); i++)
-        {
-            s+=*i;
-            s+=" ";
-        }
-        
-        PHLog("OpenGL Version: \"%s\" -> %s %d.%d",vers,es?"ES":"",openGLVersionMajor,openGLVersionMinor);
-        PHLog("GLSL Version: \"%s\" -> %d",glslvp,glslVersion);
-        PHLog("OpenGL Extensions: %s",s.c_str());
-#endif
-        
-        openGLCaps[PHGLCapabilityNPOT] = (openGLVersionMajor>=2 || extensions.count("OES_texture_npot") || extensions.count("GL_ARB_texture_non_power_of_two") || extensions.count("GL_IMG_texture_npot"));
-        openGLCaps[PHGLCapabilityAppleLimitedNPOT] =
-            (extensions.count("GL_APPLE_texture_2D_limited_npot") && !extensions.count("OES_texture_npot")) 
-#ifdef PH_IPHONE_OS
-            || (es && (openGLVersionMajor==2));
-#endif
-        ;
-        openGLCaps[PHGLCapabilityGLES1] = es && (openGLVersionMajor == 1);
-        openGLCaps[PHGLCapabilityGLES2] = es && (openGLVersionMajor >= 2);
-        openGLCaps[PHGLCapabilityShaders] = (openGLVersionMajor>=2);
-        GLint tmp;
-        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &tmp);
-        _maxVertexAttribs = (int)tmp;
-        
-        stringstream sstr;
-        sstr<<"#version "<<glslVersion<<"\n";
-        sstr<<"#define PH_ENGINE\n";
-        sstr<<"#define PH_GLSL_VERSION "<<glslVersion<<"\n";
-        sstr<<"#define PH_GL_MINOR_VERSION "<<openGLVersionMinor<<"\n";
-        sstr<<"#define PH_GL_MAJOR_VERSION "<<openGLVersionMajor<<"\n";
-        if (!es)
-        {
-            sstr<<"#define highp \n";
-            sstr<<"#define mediump \n";
-            sstr<<"#define lowp \n";
-            sstr<<"#define PH_GL_ES\n";
-        }
-        
-        glslHeader = sstr.str();
-        
-        loadExtensionCompat();
-    }
-}
-
-bool PHGameManager::hasExtension(const string & ext)
-{
-    return extensions.count(ext);
-}
-
 void PHGameManager::pushSpriteShader(PHGLShaderProgram * p) 
 { 
     if (!p) return;
@@ -682,7 +563,7 @@ void PHGameManager::bindVBO(PHGLVertexBufferObject * vbo, int location)
         if (vbo)
             vbo->bound = location;
         _boundVAO->elementVBO = vbo;
-        glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
+        PHGL::glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
         return;
     }
     if (boundVBOs[location]==vbo) return;
@@ -691,7 +572,7 @@ void PHGameManager::bindVBO(PHGLVertexBufferObject * vbo, int location)
     if (vbo)
         vbo->bound = location;
     boundVBOs[location] = vbo;
-    glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
+    PHGL::glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
 }
 
 void PHGameManager::bindVAO(PHGLVertexArrayObject * vao)
@@ -714,8 +595,8 @@ void PHGameManager::bindVAO(PHGLVertexArrayObject * vao)
         if (boundVBOs[PHGLVBO::elementArrayBuffer])
             boundVBOs[PHGLVBO::elementArrayBuffer]->bound = PHGLVBO::elementArrayBuffer;
     
-    if (glBindVertexArray)
-        glBindVertexArray(vao?(vao->vao):0);
+    if (PHGL::glBindVertexArray)
+        PHGL::glBindVertexArray(vao?(vao->vao):0);
     else
     {
         if (vao)
@@ -867,8 +748,7 @@ PHNavigationController * PHGameManager::setUpNavigationController()
     PHViewControllerHolder * holder = new PHViewControllerHolder(bounds);
     camera->addChild(holder);
     
-    PHNavigationController * nav = new PHNavigationController();
-    nav->init(this, bounds);
+    PHNavigationController * nav = new PHNavigationController(this);
     holder->setViewController(nav);
     
     camera->release();

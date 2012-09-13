@@ -38,11 +38,12 @@ void PHView::setFrame(const PHRect &frame)
 void PHView::layoutSubviews(const PHRect & oldBounds)
 {
     if (!autoresize) return;
-    PHRect delta = bounds() - oldBounds;
+    PHRect b = bounds();
+    PHRect delta = b - oldBounds;
     PHSize d = delta.size();
     for (list<PHDrawable*>::iterator i = _children.begin(); i!= _children.end(); i++)
         if ((*i)->isView())
-            ((PHView*)(*i))->autoresizeMyself(d);
+            ((PHView*)(*i))->autoresizeMyself(b, d);
 }
 
 inline static PHPoint doTheMaths(ph_float lw, ph_float mw, ph_float rw, bool l, bool m, bool r, ph_float delta)
@@ -90,11 +91,8 @@ inline static PHPoint doTheMaths(ph_float lw, ph_float mw, ph_float rw, bool l, 
     }
 }
 
-void PHView::autoresizeMyself(const PHSize & delta)
+void PHView::autoresizeMyself(const PHRect & pb, const PHSize & delta)
 {
-    PHDrawable * p = parent();
-    if (!p || !p->isView()) return;
-    PHRect pb = ((PHView*)p)->bounds();
     PHPoint dx = doTheMaths(_frame.x, _frame.width, pb.width - _frame.x - _frame.width,
                         !(resizeMask & ResizeFixedLeft), (resizeMask & ResizeFlexibleWidth)!=0, !(resizeMask & ResizeFixedRight), delta.x);
     PHPoint dy = doTheMaths(_frame.y, _frame.height, pb.height - _frame.y - _frame.height,

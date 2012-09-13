@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHViewController.h>
 #include <Porkholt/Core/PHView.h>
 #include <Porkholt/Core/PHTextView.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 #include <sstream>
 
 
@@ -11,16 +12,16 @@ class PHCapturePView : public PHView
 {
 protected:
     ph_float y;
-    PHEvent * e;
+    void * e;
     bool has;
     
     void touchEvent(PHEvent * evt)
     {
         if ((evt->type() == PHEvent::touchDown) || (evt->type() == PHEvent::touchMoved))
         {
-            if (e && (e!=evt)) return;
-            e = evt;
-            y = toMyCoordinates(evt->location()).y;
+            if (e && (e!=evt->userData())) return;
+            e = evt->userData();
+            y = evt->drawableLocation()->pointInView(this).y;
             has = true;
             evt->setHandled(true);
         }
@@ -230,13 +231,15 @@ protected:
         ms = min<ph_float>(max<ph_float>(-ms,bp-old),ms);
         return old+ms;
     }
+
+    public:
+    PHPongController(PHGameManager * gm) : PHViewController(gm) {}
 };
 
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHPongController * vc = new PHPongController();
-	vc->init(gm);
+    PHPongController * vc = new PHPongController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
 }
 

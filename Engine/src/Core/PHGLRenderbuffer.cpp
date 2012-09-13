@@ -8,24 +8,24 @@
 PHGLRenderbuffer::PHGLRenderbuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt) : INIT
 {
     pfmt = fmt;
-    gm->glGenRenderbuffers(1, &id);
-    gm->glBindRenderbuffer(GL_RENDERBUFFER, id);
-    gm->glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
+    PHGL::glGenRenderbuffers(1, &id);
+    PHGL::glBindRenderbuffer(GL_RENDERBUFFER, id);
+    PHGL::glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
 }
 
 PHGLRenderbuffer::PHGLRenderbuffer(PHGameManager * gm, int width, int height, enum pixelFormat fmt, int samples) : INIT
 {
     pfmt = fmt;
-    gm->glGenRenderbuffers(1, &id);
-    gm->glBindRenderbuffer(GL_RENDERBUFFER, id);
-    if (gm->glRenderbufferStorageMultisample)
-        gm->glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, PHGLInternalFormats[fmt], width, height);
+    PHGL::glGenRenderbuffers(1, &id);
+    PHGL::glBindRenderbuffer(GL_RENDERBUFFER, id);
+    if (PHGL::glRenderbufferStorageMultisample)
+        PHGL::glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, PHGLInternalFormats[fmt], width, height);
     else
-        gm->glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
+        PHGL::glRenderbufferStorage(GL_RENDERBUFFER, PHGLInternalFormats[fmt], width, height);
 }
 
 PHGLRenderbuffer::~PHGLRenderbuffer()
 {
-    glDeleteRenderbuffers(1, &id);
+    PHGL::glDeleteRenderbuffers(1, &id);
 }
 

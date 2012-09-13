@@ -14,6 +14,11 @@ static void new_thread ( void * ud )
 	((PHThread*)ud)->execute();
 }
 
+static void thread_exit_handler(int sig)
+{ 
+    pthread_exit(0);
+}
+
 void PHThread::execute()
 {
 	if (initMutex)
@@ -21,6 +26,16 @@ void PHThread::execute()
 		initMutex->lock();
 		initMutex->unlock();
 	}
+
+#ifdef PH_ANDROID
+    struct sigaction actions;
+    memset(&actions, 0, sizeof(actions)); 
+    sigemptyset(&actions.sa_mask);
+    actions.sa_flags = 0; 
+    actions.sa_handler = thread_exit_handler;
+    sigaction(SIGUSR1,&actions,NULL);
+#endif
+    
     invocation.call(this);
     if (autorelease)
         release();
@@ -49,7 +64,11 @@ void PHThread::terminate()
 	if (running)
 	{
 		running = false;
-		pthread_cancel(thread);
+#ifdef PH_ANDROID
+		pthread_kill(thread, SIGUSR1);
+#else
+        pthread_cancel(thread);
+#endif
 	}
 }
 

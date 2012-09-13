@@ -7,7 +7,7 @@
 
 PHGLFramebuffer::PHGLFramebuffer(PHGameManager * gam) : gm(gam), dth(NULL), stc(NULL)
 {
-    gm->glGenFramebuffers(1, &id);
+    PHGL::glGenFramebuffers(1, &id);
     nclr = gm->colorAttachmentCount();
     clr = new PHGLFBOAttachment * [nclr];
     memset(clr, 0, sizeof(PHGLFBOAttachment*)*nclr);
@@ -15,7 +15,7 @@ PHGLFramebuffer::PHGLFramebuffer(PHGameManager * gam) : gm(gam), dth(NULL), stc(
 
 PHGLFramebuffer::~PHGLFramebuffer()
 {
-    gm->glDeleteFramebuffers(1, &id);
+    PHGL::glDeleteFramebuffers(1, &id);
     for (int i = 0; i<nclr; i++)
         if (clr[i])
             clr[i]->release();
@@ -80,15 +80,15 @@ void PHGLFramebuffer::attachToTarget(PHGLFBOAttachment * a, GLenum t)
     {
         PHGLTexture2D * tex = dynamic_cast<PHGLTexture2D*>(a);
         if (tex)
-            gm->glFramebufferTexture2D(GL_FRAMEBUFFER, t, tex->target, tex->tex, 0);
+            PHGL::glFramebufferTexture2D(GL_FRAMEBUFFER, t, tex->target, tex->tex, 0);
         else
         {
             PHGLRenderbuffer * rb = dynamic_cast<PHGLRenderbuffer*>(a);
             if (rb)
-               gm->glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, rb->id);
+               PHGL::glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, rb->id);
         }
     } else 
-        gm->glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, 0);
+        PHGL::glFramebufferRenderbuffer(GL_FRAMEBUFFER, t, GL_RENDERBUFFER, 0);
     gm->bindFramebuffer(f);
 }
 
@@ -106,7 +106,7 @@ bool PHGLFramebuffer::isComplete()
 {
     PHGLFramebuffer * f = gm->boundFramebuffer();
     gm->bindFramebuffer(this);
-    bool b = (gm->glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    bool b = (PHGL::glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     gm->bindFramebuffer(f);
     return b;
 }

@@ -31,7 +31,7 @@ protected:
     void endBlackout();
     
 public:
-    PHTextController(vector<string> * strings);
+    PHTextController(PHGameManager * gm, vector<string> * strings);
     ~PHTextController();
     
     PHColor backgroundColor() { return bColor; }

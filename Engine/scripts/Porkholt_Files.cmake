@@ -121,6 +121,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEventHandler.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHFont.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHFontInitPool.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGL.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLExtCompat.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLFBOAttachment.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLFramebuffer.h

@@ -88,6 +88,8 @@ public:
                     _body->setRotation(_body->rotation() * q);
                     axis = q.rotationAxis();
                     rotSpeed = q.rotationAngle() / (evt->time() - evt->lastTime());
+                    if (rotSpeed > 20)
+                        rotSpeed = 20;
             };
         }
 
@@ -176,7 +178,7 @@ protected:
     }
     
 public:
-    PH3DDemoViewController() : lbody(NULL), time(0) {}
+    PH3DDemoViewController(PHGameManager * gm) : PHViewController(gm), lbody(NULL), time(0) {}
     ~PH3DDemoViewController()
     {
         if (lbody)
@@ -188,8 +190,7 @@ public:
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHViewController * vc = new PH3DDemoViewController();
-	vc->init(gm);
+    PHViewController * vc = new PH3DDemoViewController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
 }
 
