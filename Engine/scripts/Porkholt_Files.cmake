@@ -19,6 +19,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHEventHandler.cpp
   ${PH_ENGINE_PATH}/src/Core/PHFont.cpp
   ${PH_ENGINE_PATH}/src/Core/PHFontInitPool.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHGL.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLExtCompat.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLFBOAttachment.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGLFramebuffer.cpp   
