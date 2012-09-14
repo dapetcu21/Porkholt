@@ -251,7 +251,7 @@ PHView * PHLevelController::loadView(const PHRect & frame)
 	return view;
 }
 
-PHLevelController::PHLevelController(PHDirectory * dir) : PHViewController(), world(NULL), scripingEngine(NULL), menuView(NULL), directory(dir), ready1(false), ready2(false), _outcome(LevelRunning)
+PHLevelController::PHLevelController(PHGameManager * gm, PHDirectory * dir) : PHViewController(gm), world(NULL), scripingEngine(NULL), menuView(NULL), directory(dir), ready1(false), ready2(false), _outcome(LevelRunning)
 {
     dir->retain();
 }
@@ -295,8 +295,7 @@ void PHLevelController::_endLevelWithOutcome(PHObject *sender, void *ud)
             v->push_back("You're dead!\n Live with it.");
         }
         PHLog("_endLevel");
-        PHTextController * vc = new PHTextController(v);
-        vc->init(gm);
+        PHTextController * vc = new PHTextController(gm, v);
         vc->setForegroundColor(PHWhiteColor);
         vc->setBackgroundColor(PHBlackColor);
         vc->setDoneCallback(PHInv(this, PHLevelController::textViewControllerFinished, (void*)2));
@@ -360,8 +359,7 @@ void PHLevelController::curtainEnded(PHTextController * sender, void * ud)
 void PHLevelController::_curtainText(PHObject * sender, void * ud)
 {
     curtainData * cd = (curtainData*)ud;
-    PHTextController * vc = new PHTextController(cd->v);
-    vc->init(gm);
+    PHTextController * vc = new PHTextController(gm, cd->v);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
     vc->setDoneCallback(PHInv(this, PHLevelController::curtainEnded, ud));
@@ -414,8 +412,7 @@ PHViewController * PHLevelController::mainViewController()
         this->retain();
         return this;
     }
-    PHTextController * vc = new PHTextController(v);
-    vc->init(gm);
+    PHTextController * vc = new PHTextController(gm, v);
     vc->setForegroundColor(PHWhiteColor);
     vc->setBackgroundColor(PHBlackColor);
     vc->setDoneCallback(PHInv(this, PHLevelController::textViewControllerFinished, (void*)1));

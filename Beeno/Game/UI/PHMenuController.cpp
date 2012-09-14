@@ -3,6 +3,7 @@
 #include "PHMenuController.h"
 #include <Porkholt/Core/PHView.h>
 #include <Porkholt/Core/PHNavigationController.h>
+#include <Porkholt/Core/PHViewControllerHolder.h>
 #include "PHTitleScreen.h"
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Sound/PHSoundManager.h>
@@ -32,14 +33,16 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     }
     resetClouds(v);
     
-    nav = new PHNavigationController();
-    nav->init(gm,frame);
-    nav->_viewWillAppear();
-    v->addChild(nav->getView());
-    nav->_viewDidAppear();
+    nav = new PHNavigationController(gm);
+    nav->setInitialViewFrame(v->bounds());
+    PHViewControllerHolder * holder = new PHViewControllerHolder();
+    holder->setViewController(nav);
+    v->addChild(holder);
+    holder->release();
+    nav->setNavigationController(navigationController());
     
-    vc = new PHTitleScreen();
-	vc->init(gm,v->bounds());
+    vc = new PHTitleScreen(gm);
+    vc->setInitialViewFrame(v->bounds());
 	nav->pushViewController(vc);
     vc->release();
     nav->release();

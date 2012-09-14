@@ -106,8 +106,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
 {
     ostringstream oss;
     oss<<"lvl"<<nr;
-    PHLevelController * lvlvc = new PHLevelController(path->directoryAtPath(oss.str()));
-    lvlvc->init(gm);
+    PHLevelController * lvlvc = new PHLevelController(gm, path->directoryAtPath(oss.str()));
     lvlvc->setEndLevelCallback(PHInv(this, PHChapterController::levelEnded, (void*)(size_t)nr));
     PHViewController * vc = lvlvc->mainViewController();
     navController->navigationController()->pushViewController(vc,PHNavigationController::FadeToColor,replace);
@@ -116,7 +115,7 @@ void PHChapterController::loadLevel(int nr,bool replace)
 
 }
 
-PHChapterController::PHChapterController(PHDirectory * _path) : path(_path)
+PHChapterController::PHChapterController(PHGameManager * gm, PHDirectory * _path) : PHViewController(gm), path(_path)
 {
     path->retain();
 }

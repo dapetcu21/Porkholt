@@ -197,25 +197,21 @@ void PHView::render()
 		minX=minY=0x3f3f3f3f;
 		maxX=maxY=-0x3f3f3f3f;
 #define test\
-		if (pnt.x<minX)\
-			minX = pnt.x;\
-		if (pnt.x>maxX)\
-			maxX = pnt.x;\
-		if (pnt.y<minY)\
-			minY = pnt.y;\
-		if (pnt.y>maxY)\
-			maxY = pnt.y;
-        PHMatrix pm = gm->projectionMatrix() * m;
-		pnt = pm.transformPoint(PHPoint(_bounds.x,_bounds.y));
-		test;
-		pnt = pm.transformPoint(PHPoint(_bounds.x+_bounds.width,_bounds.y));
-		test;
-		pnt = pm.transformPoint(PHPoint(_bounds.x+_bounds.width,_bounds.y+_bounds.height));
-		test;
-		pnt = pm.transformPoint(PHPoint(_bounds.x,_bounds.y+_bounds.height));
-		test;
 		
-		optimizeOut = !PHRectIntersectsRect(PHRect(minX, minY, maxX-minX, maxY-maxY), PHRect(-1, -1, 2, 2));
+        PHMatrix pm = gm->projectionMatrix() * m;
+        for (int i = 0; i<4; i++)
+        {
+            PHPoint pnt = pm.transformPoint(_bounds.corner(i));
+            if (pnt.x<minX)
+                minX = pnt.x;
+            if (pnt.x>maxX)
+                maxX = pnt.x;
+            if (pnt.y<minY)
+                minY = pnt.y;
+            if (pnt.y>maxY)
+                maxY = pnt.y;
+        }
+		optimizeOut = !PHRectIntersectsRect(PHRect(minX, minY, maxX-minX, maxY-minY), PHRect(-1, -1, 2, 2));
 	}
 	
 	if (!optimizeOut)

@@ -15,11 +15,12 @@
 #include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/3D/PHMeshBody.h>
 #include <Porkholt/3D/PHSphereMesh.h>
-#include <Porkholt/3D/PHProjectionChanger.h>
 #include <Porkholt/Core/PHNormalImage.h>
 #include <Porkholt/UI/PHButtonView.h>
 #include <Porkholt/Core/PHDeferredView.h>
 #include <Porkholt/Core/PHPostProcess.h>
+#include <Porkholt/Core/PHPerspectiveCamera.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 class PHSliderView : public PHView
 {
@@ -66,7 +67,7 @@ public:
     {
         if (evt->type() == PHEvent::touchDown)
         {
-            PHPoint p = toMyCoordinates(evt->location());
+            PHPoint p = evt->drawableLocation()->pointInView(this);
             ph_float pos = (p.x - bounds().x) / bounds().width;
             setPosition(pos);
             submitPosition(pos);
@@ -160,7 +161,7 @@ protected:
     
 public:
     
-    PHSlide() : cnt(0) {
+    PHSlide(PHGameManager * gm) : PHViewController(gm), cnt(0) {
         PHMessage::messageWithName("thingTapped")->addListener(PHInvBindN(this, PHSlide::_screenTapped));
     }
     
@@ -268,7 +269,7 @@ protected:
         {
             if (e && (e!=evt)) return;
             e = evt;
-            y = toMyCoordinates(evt->location()).y;
+            y = evt->drawableLocation()->pointInView(this).y;
             has = true;
             evt->setHandled(true);
         }
@@ -288,6 +289,8 @@ public:
 
 class PHPongController : public PHSlide
 {
+public:
+    PHPongController(PHGameManager * gm) : PHSlide(gm) {}
 protected:
     PHView * paddleA, * paddleB;
     PHCapturePView * captureA, * captureB;
@@ -595,7 +598,11 @@ protected:
         canvas->setEffectEnabled(false);
         
 
-        PHProjectionChanger * container = new PHProjectionChanger(PHMatrix::perspective(M_PI/4, gm->screenWidth()/gm->screenHeight(), 0.5f, 50.0f));
+        PHPerspectiveCamera * container = new PHPerspectiveCamera();
+        container->setNearClippingPlane(0.5f);
+        container->setFarClippingPlane(50.0f);
+        container->setIgnoresMatrices(true);
+
         canvas->addChild(container);
         canvas->release();
         container->release();
@@ -817,8 +824,7 @@ canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
             }
             case 7:
             {
-                PHViewController * vc = new PHPongController();
-                vc->init(gm);
+                PHViewController * vc = new PHPongController(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -836,7 +842,7 @@ canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
     }
     
 public:
-    PHPorkholt3D() : lbody(NULL), time(0) {}
+    PHPorkholt3D(PHGameManager * gm) : PHSlide(gm), lbody(NULL), time(0) {}
     ~PHPorkholt3D()
     {
         if (lbody)
@@ -848,6 +854,9 @@ public:
 
 class PHOneMoreThing : public PHSlide
 {
+    public:
+    PHOneMoreThing(PHGameManager * gm) : PHSlide(gm) {}
+    protected:
     void screenTapped(int count)
     {
         if (count == 0)
@@ -856,8 +865,7 @@ class PHOneMoreThing : public PHSlide
         }
         if (count == 1)
         {
-            PHSlide * vc = new PHPorkholt3D();
-            vc->init(gm);
+            PHSlide * vc = new PHPorkholt3D(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->release();
         }
@@ -869,11 +877,14 @@ class PHPlayerController : public PHSlide
     PHSound * snd;
     PHSeekSlider * slider;
 
+public:
+    PHPlayerController(PHGameManager * gm) : PHSlide(gm) {}
     ~PHPlayerController()
     {
         slider->release();
         snd->release();
     }
+protected:
 
 #define buttonborder 10
 #define buttonsize 30
@@ -999,8 +1010,7 @@ class PHPlayerController : public PHSlide
                 return;
             case 4:
             {
-                PHViewController * vc = new PHOneMoreThing();
-                vc->init(gm);
+                PHViewController * vc = new PHOneMoreThing(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1011,7 +1021,8 @@ class PHPlayerController : public PHSlide
 
 class PHIgorController : public PHSlide
 {
-    
+public:
+    PHIgorController(PHGameManager * gm) : PHSlide(gm) {}
 protected:
 #define numLights 12
     
@@ -1092,8 +1103,7 @@ protected:
     
     void screenTapped(int count)
     {
-        PHSlide * vc = new PHPlayerController;
-        vc->init(gm);
+        PHSlide * vc = new PHPlayerController(gm);
         navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
     }
@@ -1111,6 +1121,7 @@ protected:
 
 class PHPorkholtBezier : public PHSlide
 {
+protected:
     ph_float tb;
     PHBezierPath * bez;
     bool animates;
@@ -1160,8 +1171,7 @@ class PHPorkholtBezier : public PHSlide
                 return;
             case 5:
             {
-                PHSlide * vc = new PHIgorController;
-                vc->init(gm);
+                PHSlide * vc = new PHIgorController(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1179,7 +1189,7 @@ class PHPorkholtBezier : public PHSlide
         bez->replaceAnchorPoint(PHCurve::anchorPoint(PHPoint(0.75f, 1-3*sin(time)),0), 6);
     }
 public:
-    PHPorkholtBezier() : time(0), bez(NULL), animates(false) {}
+    PHPorkholtBezier(PHGameManager * gm) : PHSlide(gm), time(0), bez(NULL), animates(false) {}
 };
 #define particleString \
 "PHParticleView * pv = new PHParticleView(PHRect(-100,0,10,10));\n"\
@@ -1200,6 +1210,9 @@ public:
 
 class PHPorkholtParticles : public PHSlide
 {
+public:
+    PHPorkholtParticles(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1234,8 +1247,7 @@ class PHPorkholtParticles : public PHSlide
             }
             case 2:
             {
-                PHSlide * vc = new PHPorkholtBezier;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtBezier(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1246,6 +1258,9 @@ class PHPorkholtParticles : public PHSlide
 
 class PHPorkholtAnimImg : public PHSlide
 {
+public:
+    PHPorkholtAnimImg(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     PHImageView * vv;
     PHRect rr;
@@ -1292,8 +1307,7 @@ class PHPorkholtAnimImg : public PHSlide
             }
             case 3:
             {
-                PHSlide * vc = new PHPorkholtParticles;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtParticles(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1304,6 +1318,9 @@ class PHPorkholtAnimImg : public PHSlide
 
 class PHPorkholtAnim : public PHSlide
 {
+public:
+    PHPorkholtAnim(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     PHView * v;
     
@@ -1342,8 +1359,7 @@ class PHPorkholtAnim : public PHSlide
             }
             case 2:
             {
-                PHSlide * vc = new PHPorkholtAnimImg;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtAnimImg(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1354,6 +1370,9 @@ class PHPorkholtAnim : public PHSlide
 
 class PHPorkholtViews : public PHSlide
 {
+public:
+    PHPorkholtViews(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1379,8 +1398,7 @@ class PHPorkholtViews : public PHSlide
                 return;
             case 3:
             {
-                PHSlide * vc = new PHPorkholtAnim;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtAnim(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1391,6 +1409,9 @@ class PHPorkholtViews : public PHSlide
 
 class PHPorkholtHighLevel : public PHSlide
 {
+public:
+    PHPorkholtHighLevel(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1406,8 +1427,7 @@ class PHPorkholtHighLevel : public PHSlide
                 return;
             case 3:
             {
-                PHSlide * vc = new PHPorkholtViews;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtViews(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1418,6 +1438,9 @@ class PHPorkholtHighLevel : public PHSlide
 
 class PHPorkholtLowLevel : public PHSlide
 {
+public:
+    PHPorkholtLowLevel(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1448,8 +1471,7 @@ class PHPorkholtLowLevel : public PHSlide
                 return;
             case 8:
             {
-                PHSlide * vc = new PHPorkholtHighLevel;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtHighLevel(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1460,6 +1482,9 @@ class PHPorkholtLowLevel : public PHSlide
 
 class PHPorkholt2 : public PHSlide
 {
+public:
+    PHPorkholt2(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1481,8 +1506,7 @@ class PHPorkholt2 : public PHSlide
                 return;
             case 5:
             {
-                PHSlide * vc = new PHPorkholtLowLevel;
-                vc->init(gm);
+                PHSlide * vc = new PHPorkholtLowLevel(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1494,10 +1518,10 @@ class PHPorkholt2 : public PHSlide
 class PHBeenoDemo : public PHMenuController
 {
 public:
+    PHBeenoDemo(PHGameManager * gm) : PHMenuController(gm) {}
     void backPressed(PHObject * sender, PHMenuController * ud)
     {
-        PHSlide * vc = new PHPorkholt2();
-        vc->init(gm);
+        PHSlide * vc = new PHPorkholt2(gm);
         gm->soundManager()->setBackgroundMusic(NULL);
         navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
@@ -1506,6 +1530,9 @@ public:
 
 class PHBeeno4 : public PHSlide
 {
+public:
+    PHBeeno4(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     PHView * loadView(const PHRect & r)
     {
         PHImageView * v = new PHImageView(r);
@@ -1517,8 +1544,7 @@ class PHBeeno4 : public PHSlide
     {
         if (count == 0)
         {
-            PHBeenoDemo * vc = new PHBeenoDemo();
-            vc->init(gm);
+            PHBeenoDemo * vc = new PHBeenoDemo(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->titleScreen()->setBackButton(PHInv(vc, PHBeenoDemo::backPressed,vc));
             vc->release();
@@ -1528,6 +1554,9 @@ class PHBeeno4 : public PHSlide
 
 class PHBeeno3 : public PHSlide
 {
+public:
+    PHBeeno3(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1549,8 +1578,7 @@ class PHBeeno3 : public PHSlide
                 tb = addBullet("- 16 hours of gameplay", tb + spacing);
                 return;
             case 6:
-                PHSlide * vc = new PHBeeno4;
-                vc->init(gm);
+                PHSlide * vc = new PHBeeno4(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1560,6 +1588,9 @@ class PHBeeno3 : public PHSlide
 
 class PHBeeno2 : public PHSlide
 {
+public:
+    PHBeeno2(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1617,8 +1648,7 @@ class PHBeeno2 : public PHSlide
                 return;
             }
             case 5:
-                PHSlide * vc = new PHBeeno3;
-                vc->init(gm);
+                PHSlide * vc = new PHBeeno3(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1628,6 +1658,9 @@ class PHBeeno2 : public PHSlide
 
 class PHBeeno : public PHSlide
 {
+public:
+    PHBeeno(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1646,8 +1679,7 @@ class PHBeeno : public PHSlide
                 tb = addBullet("- Unique control scheme", tb + spacing);
                 return;
             case 4:
-                PHSlide * vc = new PHBeeno2;
-                vc->init(gm);
+                PHSlide * vc = new PHBeeno2(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1657,6 +1689,9 @@ class PHBeeno : public PHSlide
 
 class PHGames2 : public PHSlide
 {
+public:
+    PHGames2(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1672,8 +1707,7 @@ class PHGames2 : public PHSlide
                 tb = addBullet("- Turning them into reality", tb + spacing);
                 return;
             case 3:
-                PHSlide * vc = new PHBeeno;
-                vc->init(gm);
+                PHSlide * vc = new PHBeeno(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
@@ -1683,6 +1717,9 @@ class PHGames2 : public PHSlide
 
 class PHGames : public PHSlide
 {
+public:
+    PHGames(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     void screenTapped(int count)
     {
         if (count == 0)
@@ -1691,8 +1728,7 @@ class PHGames : public PHSlide
         }
         if (count == 1)
         {
-            PHSlide * vc = new PHGames2;
-            vc->init(gm);
+            PHSlide * vc = new PHGames2(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->release();
         }
@@ -1701,6 +1737,9 @@ class PHGames : public PHSlide
 
 class PHPorkholt : public PHSlide
 {
+public:
+    PHPorkholt(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     ph_float tb;
     void screenTapped(int count)
     {
@@ -1722,8 +1761,7 @@ class PHPorkholt : public PHSlide
                 tb = addBullet("- More on that later", tb + spacing);
                 return;
             case 5:
-                PHSlide * vc = new PHGames;
-                vc->init(gm);
+                PHSlide * vc = new PHGames(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
         }
@@ -1732,6 +1770,8 @@ class PHPorkholt : public PHSlide
 
 class PHSparta : public PHSlide
 {
+public:
+    PHSparta(PHGameManager * gm) : PHSlide(gm) {}
 protected:
     ph_float tb;
     void screenTapped(int count)
@@ -1773,8 +1813,7 @@ protected:
         }
         if (count == 4)
         {
-            PHSlide * vc = new PHBeeno4;
-            vc->init(gm);
+            PHSlide * vc = new PHBeeno4(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->release();
         }
@@ -1783,7 +1822,9 @@ protected:
 
 class PHTitle : public PHSlide
 {
-protected:    
+public:
+    PHTitle(PHGameManager * gm) : PHSlide(gm) {}
+protected:
     void screenTapped(int count)
     {
         if (count == 0)
@@ -1810,8 +1851,7 @@ protected:
         }
         if (count == 1)
         {
-            PHSlide * vc = new PHSparta;
-            vc->init(gm);
+            PHSlide * vc = new PHSparta(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->release();
         }
@@ -1829,7 +1869,7 @@ public:
 protected:
     void touchEvent(PHEvent * evt)
     {
-        if (((evt->type() == PHEvent::touchDown) || (evt->type() == PHEvent::touchUp)) && PHPointInRect(toMyCoordinates(evt->location()), this->bounds()))
+        if (((evt->type() == PHEvent::touchDown) || (evt->type() == PHEvent::touchUp)) && PHPointInRect(evt->drawableLocation()->pointInView(this), this->bounds()))
         {
             evt->setHandled(true);
             if (evt->type() == PHEvent::touchUp)
@@ -1860,8 +1900,7 @@ void PHGameEntryPoint(PHGameManager * gm)
     navparent->addChild(v); 
     v->release();
     
-    PHViewController * vc = new PHTitle();
-	vc->init(gm);
+    PHViewController * vc = new PHTitle(gm);
     nav->pushViewController(vc);
     vc->release();
     

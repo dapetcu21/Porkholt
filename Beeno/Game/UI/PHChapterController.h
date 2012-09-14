@@ -19,7 +19,7 @@ protected:
     void backPressed(PHObject * sender, void *ud);
     void loadLevel(int nr,bool replace);
 public:
-    PHChapterController(PHDirectory * path);
+    PHChapterController(PHGameManager * gm, PHDirectory * path);
     virtual ~PHChapterController();
 };
 

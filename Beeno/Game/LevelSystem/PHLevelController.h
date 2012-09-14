@@ -73,7 +73,7 @@ public:
 	
 	void auxThread(PHThread * sender, void * ud);
 	
-	PHLevelController(PHDirectory * path);
+	PHLevelController(PHGameManager * gm, PHDirectory * path);
 	
 	~PHLevelController();
 	

@@ -33,7 +33,8 @@ PHView * PHViewController::loadView(const PHRect & frame)
 
 void PHViewController::advanceAnimation(ph_float timeElapsed)
 {
-    updateScene(timeElapsed);
+    if (view)
+        updateScene(timeElapsed);
 }
 
 void PHViewController::updateScene(ph_float timeElapsed)

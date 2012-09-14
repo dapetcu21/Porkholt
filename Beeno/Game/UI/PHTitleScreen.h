@@ -13,6 +13,7 @@ protected:
     
 public:
     void setBackButton(PHInvocation inv);
+    PHTitleScreen(PHGameManager * gm) : PHViewController(gm) {} 
 };
 
 #endif

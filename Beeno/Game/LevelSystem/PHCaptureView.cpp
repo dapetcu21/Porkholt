@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHThreading.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 void PHCaptureView::setMutex(PHMutex * m) 
 { 
@@ -24,8 +25,8 @@ void PHCaptureView::touchEvent(PHEvent * event)
 	if (event->type() == PHEvent::touchMoved)
 	{
 		PHPoint p1,p2,p;
-		p1 = toMyCoordinates(event->location());
-		p2 = toMyCoordinates(event->lastLocation());
+		p1 = event->drawableLocation()->pointInView(this);
+		p2 = event->lastDrawableLocation()->pointInView(this);
 		p.x = p1.x-p2.x;
 		p.y = p1.y-p2.y;
         ph_float dpi = gm->dotsPerInch();

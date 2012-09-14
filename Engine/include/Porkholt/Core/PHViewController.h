@@ -22,7 +22,6 @@ protected:
     bool rmNav;
     PHRect ir;
     
-    void setNavigationController(PHNavigationController * nc);
     virtual void updateScene(ph_float timeElapsed);
     
     PHGameManager * gm;
@@ -33,9 +32,10 @@ public:
     PHViewController(PHGameManager * gameManager);
 	
 	PHView * getView(); 
-    void setInitialViewFrame(PHRect & r) { ir = r; }
+    void setInitialViewFrame(const PHRect & r) { ir = r; }
 
     PHNavigationController * navigationController() { return navController; }
+    void setNavigationController(PHNavigationController * nc);
     
 	virtual void advanceAnimation(ph_float timeElapsed);
 	

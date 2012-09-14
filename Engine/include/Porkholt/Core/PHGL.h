@@ -43,6 +43,7 @@ namespace PHGL {
     PHGLDefine(GLvoid,    glGetFloatv, GLenum,   GLfloat*);
     PHGLDefine(GLvoid,    glGetIntegerv, GLenum, GLint*);
     PHGLDefine(const GLubyte*, glGetString, GLenum);
+    PHGLDefine(const GLubyte*, glGetStringi, GLenum, GLint);
 
     PHGLDefine(GLvoid,    glEnable, GLenum);
     PHGLDefine(GLvoid,    glDisable, GLenum);
