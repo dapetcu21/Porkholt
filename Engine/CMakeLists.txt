@@ -95,7 +95,7 @@ if(PH_PLATFORM STREQUAL "Android")
     if (PH_FORK STREQUAL "1")
         link_directories(${PH_EXTERNALS}/lib/android/libs/${ANDROID_NDK_ABI_NAME})
         add_library(Porkholt SHARED ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
-        target_link_libraries(Porkholt openal)
+        target_link_libraries(Porkholt openal lua png15)
 
         add_custom_target(External_Libs
             COMMAND ${PH_EXTERNALS}/make_android.sh "${ANDROID_NDK}" "${ANDROID_ABI}" "${ANDROID_NDK_ABI_NAME}"

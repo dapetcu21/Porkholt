@@ -19,3 +19,5 @@ compile_lib() {
 }
 
 compile_lib openal-soft openal
+compile_lib lua lua
+compile_lib libpng png15
