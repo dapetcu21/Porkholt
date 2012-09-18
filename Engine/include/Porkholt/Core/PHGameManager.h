@@ -254,7 +254,7 @@ public:
             if (!useShaders())
             {
                 PH24BitColor t(clr);
-                glColor4ub(t.r,t.g,t.b,t.a);
+                PHGL::glColor4ub(t.r,t.g,t.b,t.a);
             }
         }
     }
@@ -293,36 +293,38 @@ public:
 #define PHIMAGEATTRIBUTE_TXC 1
 #define PHIMAGEATTRIBUTE_CLR 2
 #define PHIMAGEATTRIBUTE_NRM 3
+
+    //TODO: move these in .cpp
     void vertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
         if (openGLCaps[PHGLCapabilityShaders])
-            glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, size, type, GL_FALSE, stride, ptr);
+            PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, size, type, GL_FALSE, stride, ptr);
         else
-            glVertexPointer(size, type, stride, ptr);
+            PHGL::glVertexPointer(size, type, stride, ptr);
     }
     
     void texCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
         if (openGLCaps[PHGLCapabilityShaders])
-            glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, size, type, GL_FALSE, stride, ptr);
+            PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, size, type, GL_FALSE, stride, ptr);
         else
-            glTexCoordPointer(size, type, stride, ptr);
+            PHGL::glTexCoordPointer(size, type, stride, ptr);
     }
     
     void normalPointer(GLenum type, GLsizei stride, const GLvoid *ptr)
     {
         if (openGLCaps[PHGLCapabilityShaders])
-            glVertexAttribPointer(PHIMAGEATTRIBUTE_NRM, 3, type, GL_FALSE, stride, ptr);
+            PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_NRM, 3, type, GL_FALSE, stride, ptr);
         else
-            glNormalPointer(type, stride, ptr);
+            PHGL::glNormalPointer(type, stride, ptr);
     }
     
     void colorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
         if (openGLCaps[PHGLCapabilityShaders])
-            glVertexAttribPointer(PHIMAGEATTRIBUTE_CLR, size, type, (type==GL_UNSIGNED_BYTE), stride, ptr);
+            PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_CLR, size, type, (type==GL_UNSIGNED_BYTE), stride, ptr);
         else
-            glColorPointer(size, type, stride, ptr);
+            PHGL::glColorPointer(size, type, stride, ptr);
     }
     
     PHGLLight * currentLight() { return lgth; }

@@ -57,6 +57,7 @@ namespace PHGL {
     def(void, glEnableVertexAttribArray, GLuint);
     def(void, glDisableVertexAttribArray, GLuint);
     def(void, glBindAttribLocation, GLuint, GLuint, const GLchar*);
+    def(void, glVertexAttribPointer, GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
 
     def(void, glBindVertexArray, GLuint);
     def(void, glDeleteVertexArrays, GLsizei, const GLuint *);
@@ -108,6 +109,10 @@ namespace PHGL {
     def(void, glPixelStoref, GLenum, GLfloat);
     def(void, glTexEnvi, GLenum, GLenum, GLint);
     def(void, glTexEnvf, GLenum, GLenum, GLfloat);
+    def(void, glViewport, GLint, GLint, GLsizei, GLsizei);
+    def(void, glMatrixMode, GLenum);
+    def(void, glLoadMatrixf, const GLfloat *);
+    def(void, glColor4ub, GLubyte, GLubyte, GLubyte, GLubyte);
 
     def(GLuint, glCreateShader, GLenum);
     def(void, glDeleteShader, GLuint);
@@ -121,8 +126,37 @@ namespace PHGL {
     def(void, glDeleteProgram, GLuint);
     def(void, glLinkProgram, GLuint);
     def(void, glValidateProgram, GLuint);
+    def(void, glUseProgram, GLuint);
     def(void, glGetProgramiv, GLuint, GLenum, GLint*);
     def(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei*, GLchar*);
+
+    def(void, glGenTextures, GLsizei, GLuint*);
+    def(void, glDeleteTextures, GLsizei, GLuint*);
+    def(void, glBindTexture, GLenum, GLuint);
+    def(void, glActiveTexture, GLenum);
+    def(void, glTexParameteri, GLenum, GLenum, GLint);
+    def(void, glTexImage1D, GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, const GLvoid*);
+    def(void, glTexImage2D, GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid*);
+    def(void, glTexImage3D, GLenum, GLint, GLint, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid*);
+
+    def(GLint, glGetUniformLocation, GLuint, const GLchar*);
+    def(void, glUniform1f, GLint, GLfloat);
+    def(void, glUniform2f, GLint, GLfloat, GLfloat);
+    def(void, glUniform3f, GLint, GLfloat, GLfloat, GLfloat);
+    def(void, glUniform4f, GLint, GLfloat, GLfloat, GLfloat, GLfloat);
+    def(void, glUniform1i, GLint, GLint);
+    def(void, glUniform2i, GLint, GLint, GLint);
+    def(void, glUniform3i, GLint, GLint, GLint, GLint);
+    def(void, glUniform4i, GLint, GLint, GLint, GLint, GLint);
+    def(void, glUniformMatrix4fv, GLint, GLsizei, GLboolean, const GLfloat*);
+
+    def(void, glDrawArrays, GLenum, GLint, GLsizei);
+    def(void, glDrawElements, GLenum, GLsizei, GLenum, const GLvoid *);
+
+    def(void, glVertexPointer, GLint, GLenum, GLsizei, const GLvoid *);
+    def(void, glColorPointer, GLint, GLenum, GLsizei, const GLvoid *);
+    def(void, glNormalPointer, GLenum, GLsizei, const GLvoid *);
+    def(void, glTexCoordPointer, GLint, GLenum, GLsizei, const GLvoid *);
 
 #undef def
 

@@ -193,10 +193,30 @@ void PHGameManager::initPHGL()
     set(glPixelStoref);
     set(glTexEnvi);
     set(glTexEnvf);
+    set(glViewport);
+    set(glColor4ub);
     
+    set(glGenTextures);
+    set(glDeleteTextures);
+    set(glBindTexture);
+    set(glActiveTexture);
+    set(glTexParameteri);
+#ifdef GL_TEXTURE_1D
+    set(glTexImage1D);
+#endif
+#ifdef GL_TEXTURE_2D
+    set(glTexImage2D);
+#endif
+#ifdef GL_TEXTURE_3D
+    set(glTexImage3D);
+#endif
+
     set(glClearColor);
     set(glClearStencil);
     set(glClear);
+
+    set(glDrawElements);
+    set(glDrawArrays);
     
     loadCapabilities();
 
@@ -214,6 +234,7 @@ void PHGameManager::initPHGL()
         set(glDisableVertexAttribArray);
         set(glEnableVertexAttribArray);
         set(glBindAttribLocation);
+        set(glVertexAttribPointer);
 
         set(glCreateShader);
         set(glDeleteShader);
@@ -226,12 +247,32 @@ void PHGameManager::initPHGL()
         set(glCreateProgram);
         set(glDeleteProgram);
         set(glLinkProgram);
+        set(glUseProgram);
         set(glValidateProgram);
         set(glGetProgramiv);
         set(glGetProgramInfoLog);
+
+        set(glGetUniformLocation);
+        set(glUniform1f);
+        set(glUniform2f);
+        set(glUniform3f);
+        set(glUniform4f);
+        set(glUniform1i);
+        set(glUniform2i);
+        set(glUniform3i);
+        set(glUniform4i);
+        set(glUniformMatrix4fv);
     } else {
         set(glEnableClientState);
         set(glDisableClientState);
+
+        set(glVertexPointer);
+        set(glColorPointer);
+        set(glNormalPointer);
+        set(glTexCoordPointer);
+
+        set(glMatrixMode);
+        set(glLoadMatrixf);
     }
 
     #ifndef PH_FORCE_FAKE_VAO
@@ -311,9 +352,9 @@ int PHGameManager::colorAttachmentCount()
     if (!clat)
     {
         GLint v;
-        glGetError();
-        glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &v);
-        if (glGetError() == GL_INVALID_ENUM)
+        PHGL::glGetError();
+        PHGL::glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &v);
+        if (PHGL::glGetError() == GL_INVALID_ENUM)
             clat = 1;
         else
             clat = v;
@@ -324,7 +365,7 @@ int PHGameManager::colorAttachmentCount()
 void PHGameManager::setClearColor(const PHColor & c)
 {
     if (ccolor == c) return;
-    glClearColor(c.r, c.g, c.b, c.a);
+    PHGL::glClearColor(c.r, c.g, c.b, c.a);
     ccolor = c;
 }
 
@@ -338,7 +379,7 @@ void PHGameManager::setDepthClearValue(float val)
 void PHGameManager::setStencilClearValue(int val)
 {
     if (cstencil == val)
-    glClearStencil(val);
+    PHGL::glClearStencil(val);
     cstencil = val;
 }
 
@@ -351,5 +392,5 @@ void PHGameManager::clearBuffers(int m)
         mask |= GL_DEPTH_BUFFER_BIT;
     if (m&stencilBuffer)
         mask |= GL_STENCIL_BUFFER_BIT;
-    glClear(mask);
+    PHGL::glClear(mask);
 }

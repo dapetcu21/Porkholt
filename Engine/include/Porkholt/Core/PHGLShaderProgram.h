@@ -19,7 +19,7 @@ protected:
     
     void init(PHGameManager * gm, PHDirectory * shdDir, PHFile * file, const vector<string> * ops);
 
-    void _use() { glUseProgram(identifier); }
+    void _use() { PHGL::glUseProgram(identifier); }
 
     friend class PHGameManager;
 public:
