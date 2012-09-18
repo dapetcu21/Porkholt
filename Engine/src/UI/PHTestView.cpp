@@ -26,7 +26,7 @@ void PHTestView::draw()
     gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
     gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
     
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 void PHTestView::touchEvent(PHEvent * event)

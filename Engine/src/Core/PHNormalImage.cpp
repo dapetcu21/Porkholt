@@ -147,13 +147,13 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
     gm->applySpriteShader();
     if (gm->useShaders())
     {
-        glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
-        glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);
+        PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
+        PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);
     } else {
-        glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-        glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+        PHGL::glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+        PHGL::glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     }
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao, PHGLVertexBufferObject * & vbo)

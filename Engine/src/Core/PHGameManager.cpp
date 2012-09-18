@@ -208,8 +208,8 @@ void PHGameManager::setModelViewMatrix(const PHMatrix & m)
 {
     if (!useShaders())
     {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(m.floats());
+        PHGL::glMatrixMode(GL_MODELVIEW);
+        PHGL::glLoadMatrixf(m.floats());
     }
     _modelView = m;
 }
@@ -218,15 +218,15 @@ void PHGameManager::setProjectionMatrix(const PHMatrix & m)
 {
     if (!useShaders())
     {
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(m.floats());
+        PHGL::glMatrixMode(GL_PROJECTION);
+        PHGL::glLoadMatrixf(m.floats());
     }
     _projection = m;
 }
 
 void PHGameManager::setProjection()
 {
-    glViewport(0, 0, _screenWidth, _screenHeight);
+    PHGL::glViewport(0, 0, _screenWidth, _screenHeight);
 }
 
 void PHGameManager::setScreenSize(ph_float w, ph_float h)
@@ -656,7 +656,7 @@ void PHGameManager::setActiveTexture(int tmu)
 {
     if (aTMU == tmu) return;
     aTMU = tmu;
-    glActiveTexture(GL_TEXTURE0 + tmu);
+    PHGL::glActiveTexture(GL_TEXTURE0 + tmu);
 }
 
 void PHGameManager::bindTexture(PHGLTexture * tx)
@@ -677,9 +677,9 @@ void PHGameManager::bindFramebuffer(PHGLFramebuffer * fbo)
     if (_boundFBO == fbo) return;
    _boundFBO = fbo;
    if (fbo)
-       glBindFramebuffer(GL_FRAMEBUFFER, fbo->id);
+       PHGL::glBindFramebuffer(GL_FRAMEBUFFER, fbo->id);
    else
-       glBindFramebuffer(GL_FRAMEBUFFER, _defaultFBO);
+       PHGL::glBindFramebuffer(GL_FRAMEBUFFER, _defaultFBO);
 }
 
 void PHGameManager::destroyTexture(PHGLTexture * tx)

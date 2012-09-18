@@ -41,35 +41,35 @@ void PHGLShader::loadWithData(const string & header, const uint8_t * d, size_t s
             t = -1;
             break;
     }
-    identifier = glCreateShader(t);
+    identifier = PHGL::glCreateShader(t);
     const GLchar * strings[2] = { header.c_str(), data };
     GLint sizes[2] = { header.length(), size };
-    glShaderSource(identifier, 2, strings, sizes);
-    glCompileShader(identifier);
+    PHGL::glShaderSource(identifier, 2, strings, sizes);
+    PHGL::glCompileShader(identifier);
     
 #ifdef PH_DEBUG
     GLint logLength;
-    glGetShaderiv(identifier, GL_INFO_LOG_LENGTH, &logLength);
+    PHGL::glGetShaderiv(identifier, GL_INFO_LOG_LENGTH, &logLength);
     if (logLength > 0)
     {
         GLchar * log = new GLchar[logLength];
-        glGetShaderInfoLog(identifier, logLength, &logLength, log);
+        PHGL::glGetShaderInfoLog(identifier, logLength, &logLength, log);
         PHLog("GL: Shader compile log: %s",log);
         delete [] log;
     }
 #endif
     
     GLint status;
-    glGetShaderiv(identifier, GL_COMPILE_STATUS, &status);
+    PHGL::glGetShaderiv(identifier, GL_COMPILE_STATUS, &status);
     if (status == GL_FALSE)
     {
-        glDeleteShader(identifier);
+        PHGL::glDeleteShader(identifier);
         throw "OpenGL Shader compilation failed";
     }
 }
 
 PHGLShader::~PHGLShader()
 {
-    glDeleteShader(identifier);
+    PHGL::glDeleteShader(identifier);
 }
 

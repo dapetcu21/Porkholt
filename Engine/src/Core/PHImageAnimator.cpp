@@ -184,15 +184,15 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
         gm->setGLStates(states);
         if (gm->useShaders())
         {
-            glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
-            glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords2);
+            PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
+            PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords2);
         } else {
-            glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-            glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
+            PHGL::glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+            PHGL::glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
         }
         gm->setColor(tt.multipliedAlpha(remaining/time));
         gm->applySpriteShader();
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 	
     PHRect r = port.portionOf(_image->atlas()->textureCoordinates(realframe));
@@ -211,11 +211,11 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
     gm->setGLStates(states);
     if (gm->useShaders())
     {
-        glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
-        glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);
+        PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
+        PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 0, squareTexCoords);
     } else {
-        glVertexPointer(2, GL_FLOAT, 0, squareVertices);
-        glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
+        PHGL::glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+        PHGL::glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     }
     if (fade)
     {
@@ -223,7 +223,7 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
     }
     gm->setColor(tt);
     gm->applySpriteShader();
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 void PHImageAnimator::bindCurrentFrameToTexture(int tx)

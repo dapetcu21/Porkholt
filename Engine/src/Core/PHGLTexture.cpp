@@ -10,18 +10,18 @@
 
 PHGLTexture::PHGLTexture(PHGameManager * gameManager) : tex(0), gm(gameManager), wS(repeat), wT(repeat), wR(repeat), min(linear), mag(linear), mipMap(false), bound(false)
 {
-    glGenTextures(1, &tex);
+    PHGL::glGenTextures(1, &tex);
 }
 
 PHGLTexture::~PHGLTexture()
 {
-    glDeleteTextures(1, &tex);
+    PHGL::glDeleteTextures(1, &tex);
     gm->destroyTexture(this);
 }
 
 void PHGLTexture::_bind()
 {
-    glBindTexture(target, tex);
+    PHGL::glBindTexture(target, tex);
 }
 
 void PHGLTexture::bind()
@@ -76,7 +76,7 @@ void PHGLTexture::setWrapS(enum wrapType t)
 {
     bind_begin;
     wS = t;
-    glTexParameteri(target, GL_TEXTURE_WRAP_S, openGLEnumFromWrapType(t));
+    PHGL::glTexParameteri(target, GL_TEXTURE_WRAP_S, openGLEnumFromWrapType(t));
     bind_end;
 }
 #endif
@@ -86,7 +86,7 @@ void PHGLTexture::setWrapT(enum wrapType t)
 {
     bind_begin;
     wT = t;
-    glTexParameteri(target, GL_TEXTURE_WRAP_T, openGLEnumFromWrapType(t));
+    PHGL::glTexParameteri(target, GL_TEXTURE_WRAP_T, openGLEnumFromWrapType(t));
     bind_end;
 }
 #endif
@@ -96,7 +96,7 @@ void PHGLTexture::setWrapR(enum wrapType t)
 {
     bind_begin;
     wR = t;
-    glTexParameteri(target, GL_TEXTURE_WRAP_R, openGLEnumFromWrapType(t));
+    PHGL::glTexParameteri(target, GL_TEXTURE_WRAP_R, openGLEnumFromWrapType(t));
     bind_end;
 }
 #endif
@@ -105,7 +105,7 @@ void PHGLTexture::setMinFilter(enum aaFilter t)
 {
     bind_begin;
     min = t;
-    glTexParameteri(target, GL_TEXTURE_MIN_FILTER, openGLEnumFromAAFilter(t));
+    PHGL::glTexParameteri(target, GL_TEXTURE_MIN_FILTER, openGLEnumFromAAFilter(t));
     updateMipMap();
     bind_end;
 }
@@ -114,7 +114,7 @@ void PHGLTexture::setMagFilter(enum aaFilter t)
 {
     bind_begin;
     mag = t;
-    glTexParameteri(target, GL_TEXTURE_MAG_FILTER, openGLEnumFromAAFilter(t));
+    PHGL::glTexParameteri(target, GL_TEXTURE_MAG_FILTER, openGLEnumFromAAFilter(t));
     updateMipMap();
     bind_end;
 }
@@ -142,9 +142,9 @@ void PHGLTexture::updateMipMap()
 void PHGLTexture1D::setData(uint8_t * data, size_t width, enum pixelFormat f)
 {
     bind_begin;
-    glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGL::glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage1D(target, 0, PHGLInternalFormats[f], width, 0, PHGLFormats[f], PHGLTypes[f], data);
+    PHGL::glTexImage1D(target, 0, PHGLInternalFormats[f], width, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
     pfmt = f;
@@ -156,9 +156,9 @@ void PHGLTexture1D::setData(uint8_t * data, size_t width, enum pixelFormat f)
 void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pixelFormat f)
 {
     bind_begin;
-    glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGL::glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage2D(target, 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
+    PHGL::glTexImage2D(target, 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
     h = height;
@@ -227,9 +227,9 @@ PHRect PHGLTexture2D::loadFromFile(const string & fname, bool antialiasing)
 void PHGLTexture3D::setData(uint8_t *data, size_t width, size_t height, size_t depth, enum pixelFormat f)
 {
     bind_begin;
-    glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGL::glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage3D(target, 0, PHGLInternalFormats[f], width, height, depth, 0, PHGLFormats[f], PHGLTypes[f], data);
+    PHGL::glTexImage3D(target, 0, PHGLInternalFormats[f], width, height, depth, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;
     h = height;
@@ -251,9 +251,9 @@ void PHGLTextureCubeMap::setData(uint8_t *data, size_t width, size_t height, enu
         GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
         GL_TEXTURE_CUBE_MAP_POSITIVE_Z
     };
-    glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
+    PHGL::glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGLClearError();
-    glTexImage2D(faces[face], 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
+    PHGL::glTexImage2D(faces[face], 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     bind_end;
 }

@@ -76,9 +76,9 @@ void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * 
         throw ex;
     }
     
-    identifier = glCreateProgram();
-    glAttachShader(identifier, vShader->shaderID());
-    glAttachShader(identifier, fShader->shaderID());
+    identifier = PHGL::glCreateProgram();
+    PHGL::glAttachShader(identifier, vShader->shaderID());
+    PHGL::glAttachShader(identifier, fShader->shaderID());
     
     lua_getglobal(L,"attributeBindings");
     if (lua_istable(L, -1))
@@ -87,36 +87,36 @@ void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * 
         while (lua_next(L, -2) != 0)
         {
             if (lua_isstring(L, -2) && lua_isnumber(L, -1))
-                glBindAttribLocation(identifier, (GLint)lua_tonumber(L, -1), lua_tostring(L, -2));
+                PHGL::glBindAttribLocation(identifier, (GLint)lua_tonumber(L, -1), lua_tostring(L, -2));
             lua_pop(L,1);
         }
     }
     lua_pop(L, 1);
     lua_close(L);
     
-    glLinkProgram(identifier);
+    PHGL::glLinkProgram(identifier);
 #ifdef PH_DEBUG
     GLint logLength;
-    glGetProgramiv(identifier, GL_INFO_LOG_LENGTH, &logLength);
+    PHGL::glGetProgramiv(identifier, GL_INFO_LOG_LENGTH, &logLength);
     if (logLength > 0)
     {
         GLchar * log = new GLchar[logLength];
-        glGetProgramInfoLog(identifier, logLength, &logLength, log);
+        PHGL::glGetProgramInfoLog(identifier, logLength, &logLength, log);
         PHLog("GL: Program link log: %s",log);
         delete [] log;
     }
 #endif
     
-    glDetachShader(identifier, vShader->shaderID());
-    glDetachShader(identifier, fShader->shaderID());
+    PHGL::glDetachShader(identifier, vShader->shaderID());
+    PHGL::glDetachShader(identifier, fShader->shaderID());
     vShader->release();
     fShader->release();
     
     GLint status;
-    glGetProgramiv(identifier, GL_LINK_STATUS, &status);
+    PHGL::glGetProgramiv(identifier, GL_LINK_STATUS, &status);
     if (status == GL_FALSE)
     {
-        glDeleteProgram(identifier);
+        PHGL::glDeleteProgram(identifier);
         throw "OpenGL Shader program linking failed: " + nm;
     }
 
@@ -127,20 +127,20 @@ void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * 
 
 bool PHGLShaderProgram::validate()
 {
-    glValidateProgram(identifier);
+    PHGL::glValidateProgram(identifier);
     
     GLint logLength;
-    glGetProgramiv(identifier, GL_INFO_LOG_LENGTH, &logLength);
+    PHGL::glGetProgramiv(identifier, GL_INFO_LOG_LENGTH, &logLength);
     if (logLength > 0)
     {
         GLchar * log = new GLchar[logLength];
-        glGetProgramInfoLog(identifier, logLength, &logLength, log);
+        PHGL::glGetProgramInfoLog(identifier, logLength, &logLength, log);
         PHLog("GL: Program validate log: %s",log);
         delete [] log;
     }
     
     GLint status;
-    glGetProgramiv(identifier, GL_VALIDATE_STATUS, &status);
+    PHGL::glGetProgramiv(identifier, GL_VALIDATE_STATUS, &status);
     return (status==GL_TRUE);
 }
 

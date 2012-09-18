@@ -10,7 +10,7 @@ string PHLuaError("Lua Error");
 
 void PHGLCheckError_()
 {
-    GLenum e = glGetError(); 
+    GLenum e = PHGL::glGetError(); 
     if (e!=GL_NO_ERROR) 
         PHLog("OpenGL error %x in "__FILE__":%d", __LINE__ , int(e));   
 }

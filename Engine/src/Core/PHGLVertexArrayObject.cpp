@@ -50,7 +50,7 @@ void PHGLVertexArrayObject::fakeBind()
                 attribute * a = i->second;
                 if (a->vbo)
                     a->vbo->bindTo(PHGLVBO::arrayBuffer);
-                glVertexAttribPointer(i->first, a->size, a->type, a->normalized, a->stride, (const GLvoid*)a->offset);
+                PHGL::glVertexAttribPointer(i->first, a->size, a->type, a->normalized, a->stride, (const GLvoid*)a->offset);
                 mask |= (1<< (i->first));
             }
             gm->setGLAttributeStates(mask);
@@ -64,7 +64,7 @@ void PHGLVertexArrayObject::fakeBind()
                 attribute * a = i->second;
                 if (a->vbo)
                     a->vbo->bindTo(PHGLVBO::arrayBuffer);
-                glVertexPointer(a->size, a->type, a->stride, (const GLvoid*)a->offset);
+                PHGL::glVertexPointer(a->size, a->type, a->stride, (const GLvoid*)a->offset);
                 mask |= (1 << PHIMAGEATTRIBUTE_POS);
             }
             
@@ -74,7 +74,7 @@ void PHGLVertexArrayObject::fakeBind()
                 attribute * a = i->second;
                 if (a->vbo)
                     a->vbo->bindTo(PHGLVBO::arrayBuffer);
-                glTexCoordPointer(a->size, a->type, a->stride, (const GLvoid*)a->offset);
+                PHGL::glTexCoordPointer(a->size, a->type, a->stride, (const GLvoid*)a->offset);
                 mask |= (1 << PHIMAGEATTRIBUTE_TXC);
             }
             
@@ -84,7 +84,7 @@ void PHGLVertexArrayObject::fakeBind()
                 attribute * a = i->second;
                 if (a->vbo)
                     a->vbo->bindTo(PHGLVBO::arrayBuffer);
-                glColorPointer(a->size, a->type, a->stride, (const GLvoid*)a->offset);
+                PHGL::glColorPointer(a->size, a->type, a->stride, (const GLvoid*)a->offset);
                 mask |= (1 << PHIMAGEATTRIBUTE_CLR);
             }
             
@@ -94,7 +94,7 @@ void PHGLVertexArrayObject::fakeBind()
                 attribute * a = i->second;
                 if (a->vbo)
                     a->vbo->bindTo(PHGLVBO::arrayBuffer);
-                glNormalPointer(a->type, a->stride, (const GLvoid*)a->offset);
+                PHGL::glNormalPointer(a->type, a->stride, (const GLvoid*)a->offset);
                 mask |= (1 << PHIMAGEATTRIBUTE_NRM);
             }
             
@@ -102,7 +102,7 @@ void PHGLVertexArrayObject::fakeBind()
         }
         gm->bindVBO(vbo, PHGLVBO::arrayBuffer);
     }
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementVBO?(elementVBO->vbo):0); 
+    PHGL::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementVBO?(elementVBO->vbo):0); 
 }
 
 void PHGLVertexArrayObject::fakeUnbind()
@@ -110,7 +110,7 @@ void PHGLVertexArrayObject::fakeUnbind()
     if (elementVBO)
     {
         PHGLVertexBufferObject * vbo = gm->boundVBO(PHGLVBO::elementArrayBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo?(vbo->vbo):0);
+        PHGL::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo?(vbo->vbo):0);
     }
 }
 
@@ -127,26 +127,26 @@ void PHGLVertexArrayObject::vertexPointer(GLuint index, GLint size, GLenum type,
         {
             switch (index) {
                 case PHIMAGEATTRIBUTE_POS:
-                    glEnableClientState(GL_VERTEX_ARRAY);
-                    glVertexPointer(size, type, stride, (const GLvoid *)offset);
+                    PHGL::glEnableClientState(GL_VERTEX_ARRAY);
+                    PHGL::glVertexPointer(size, type, stride, (const GLvoid *)offset);
                     break;
                 case PHIMAGEATTRIBUTE_TXC:
-                    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                    glTexCoordPointer(size, type, stride, (const GLvoid *)offset);
+                    PHGL::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                    PHGL::glTexCoordPointer(size, type, stride, (const GLvoid *)offset);
                     break;
                 case PHIMAGEATTRIBUTE_CLR:
-                    glEnableClientState(GL_COLOR_ARRAY);
-                    glColorPointer(size, type, stride, (const GLvoid *)offset);
+                    PHGL::glEnableClientState(GL_COLOR_ARRAY);
+                    PHGL::glColorPointer(size, type, stride, (const GLvoid *)offset);
                     break;
                 case PHIMAGEATTRIBUTE_NRM:
-                    glEnableClientState(GL_NORMAL_ARRAY);
-                    glNormalPointer(type, stride, (const GLvoid *)offset);
+                    PHGL::glEnableClientState(GL_NORMAL_ARRAY);
+                    PHGL::glNormalPointer(type, stride, (const GLvoid *)offset);
                     break;
             }
         } else
         {
-            glEnableVertexAttribArray(index);
-            glVertexAttribPointer(index, size, type, normalized, stride, (const GLvoid *)offset);
+            PHGL::glEnableVertexAttribArray(index);
+            PHGL::glVertexAttribPointer(index, size, type, normalized, stride, (const GLvoid *)offset);
         }
         
         gm->bindVBO(oldvbo, PHGLVBO::arrayBuffer);
@@ -178,20 +178,20 @@ void PHGLVertexArrayObject::disableAttribute(GLuint index)
         {
             switch (index) {
                 case PHIMAGEATTRIBUTE_POS:
-                    glDisableClientState(GL_VERTEX_ARRAY);
+                    PHGL::glDisableClientState(GL_VERTEX_ARRAY);
                     break;
                 case PHIMAGEATTRIBUTE_TXC:
-                    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+                    PHGL::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
                     break;
                 case PHIMAGEATTRIBUTE_CLR:
-                    glDisableClientState(GL_COLOR_ARRAY);
+                    PHGL::glDisableClientState(GL_COLOR_ARRAY);
                     break;
                 case PHIMAGEATTRIBUTE_NRM:
-                    glDisableClientState(GL_NORMAL_ARRAY);
+                    PHGL::glDisableClientState(GL_NORMAL_ARRAY);
                     break;
             }
         } else
-            glDisableVertexAttribArray(index);
+            PHGL::glDisableVertexAttribArray(index);
         
         
         bind_end
@@ -229,10 +229,10 @@ void PHGLVertexArrayObject::draw()
     switch (drawType)
     {
         case drawArrays:
-            glDrawArrays(mode, first, count);
+            PHGL::glDrawArrays(mode, first, count);
             break;
         case drawElements:
-            glDrawElements(mode, count, type, (const GLvoid*)offset);
+            PHGL::glDrawElements(mode, count, type, (const GLvoid*)offset);
             break;
     }
     bind_end

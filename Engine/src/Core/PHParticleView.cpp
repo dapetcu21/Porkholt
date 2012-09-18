@@ -263,7 +263,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     gm->applyShader(gm->shaderProgramNamed<color_sprites>());
     
     vao->bind();
-    glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);
+    PHGL::glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);
     vao->unbind();
 }
 

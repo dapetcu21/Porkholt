@@ -12,7 +12,7 @@ GLint PHGLUniformStates::uniform::location(PHGLShaderProgram * shader)
     map<PHGLShaderProgram*,int>::iterator i = shaders.find(shader);
     if (i == shaders.end())
     {
-        loc = glGetUniformLocation(shader->programID(), name.c_str());
+        loc = PHGL::glGetUniformLocation(shader->programID(), name.c_str());
         shaders.insert(make_pair<PHGLShaderProgram*,int>(shader,loc));
     } else
         loc = i->second;
@@ -27,19 +27,19 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader, int * tc)
     switch  (type)
     {
     case float3Type:
-        glUniform3f(loc, floatValue[0], floatValue[1], floatValue[2]);
+        PHGL::glUniform3f(loc, floatValue[0], floatValue[1], floatValue[2]);
         break;
     case float4Type:
-        glUniform4f(loc, floatValue[0], floatValue[1], floatValue[2], floatValue[3]);
+        PHGL::glUniform4f(loc, floatValue[0], floatValue[1], floatValue[2], floatValue[3]);
         break;
     case matrixType:
-        glUniformMatrix4fv(loc, 1, GL_FALSE, floatValue);
+        PHGL::glUniformMatrix4fv(loc, 1, GL_FALSE, floatValue);
         break;
     case floatType:
-        glUniform1f(loc, floatValue[0]);
+        PHGL::glUniform1f(loc, floatValue[0]);
         break;
     case float2Type:
-        glUniform2f(loc, floatValue[0], floatValue[1]);
+        PHGL::glUniform2f(loc, floatValue[0], floatValue[1]);
         break;
     case imageType:
     {
@@ -47,7 +47,7 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader, int * tc)
         {
             int c = tc?((*tc)++):0;
             img->texture()->bind(c);
-            glUniform1i(loc, c);
+            PHGL::glUniform1i(loc, c);
         }
         break;
     }
@@ -57,21 +57,21 @@ void PHGLUniformStates::uniform::apply(PHGLShaderProgram * shader, int * tc)
         {
             int c = tc?((*tc)++):0;
             tex->bind(c);
-            glUniform1i(loc, c);
+            PHGL::glUniform1i(loc, c);
         }
         break;
     }
     case intType:
-        glUniform1i(loc, intValue[0]);
+        PHGL::glUniform1i(loc, intValue[0]);
         break;
     case int3Type:
-        glUniform3i(loc, intValue[0], intValue[1], intValue[2]);
+        PHGL::glUniform3i(loc, intValue[0], intValue[1], intValue[2]);
         break;
     case int4Type:
-        glUniform4i(loc, intValue[0], intValue[1], intValue[2], intValue[3]);
+        PHGL::glUniform4i(loc, intValue[0], intValue[1], intValue[2], intValue[3]);
         break;
     case int2Type:
-        glUniform2i(loc, intValue[0], floatValue[1]);
+        PHGL::glUniform2i(loc, intValue[0], floatValue[1]);
         break;
     };
 }
