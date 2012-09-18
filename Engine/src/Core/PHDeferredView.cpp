@@ -118,7 +118,7 @@ void PHDeferredView::composite()
     if (normal)
         static_cast<PHGLTexture2D*>(normalFBO->colorAttachment(0))->bind(1);
     
-	glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+	PHGL::glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
     PHGLVertexArrayObject * vao = gm->solidSquareVAO();
     vao->bind();
     
@@ -192,7 +192,7 @@ void PHDeferredView::composite()
     }
     
     vao->unbind();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    PHGL::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void PHDeferredView::addLight(PHGLLight * l)

@@ -157,7 +157,6 @@ bool PHGameManager::phglinited = false;
 
 #define sete(f, e) PHGLSetf(f, f ## e)
 #define set(f) PHGLSetf(f, f)
-#define setn(f) PHGLSet(f, NULL)
 
 void PHGameManager::initPHGL()
 {
@@ -168,8 +167,6 @@ void PHGameManager::initPHGL()
     }
     phglinited = true;
 
-    //load non-extension stuff
-
     set(glGetBooleanv);
     set(glGetDoublev);
     set(glGetFloatv);
@@ -178,17 +175,60 @@ void PHGameManager::initPHGL()
     set(glGetStringi);
     set(glEnable);
     set(glDisable);
+    set(glGetError);
 
+    set(glGenBuffers);
+    set(glDeleteBuffers);
+    set(glIsBuffer);
+    set(glBindBuffer);
+    set(glBufferData);
+    set(glBufferSubData);
+
+    set(glDepthMask);
+    set(glDepthFunc);
+    set(glCullFace);
+    set(glBlendFunc);
+    set(glPolygonMode);
+    set(glPixelStorei);
+    set(glPixelStoref);
+    set(glTexEnvi);
+    set(glTexEnvf);
+    
+    set(glClearColor);
+    set(glClearStencil);
+    set(glClear);
+    
     loadCapabilities();
 
     bool es = isGLES();
     int glMaj = openGLMajorVersion();
     int glMin = openGLMinorVersion();
 
-    if (es && glMaj>=2)
+    if (es)
+        sete(glClearDepth, f);
+    else
+        set(glClearDepth);
+
+    if (useShaders())
     {
-        setn(glEnableClientState);
-        setn(glDisableClientState);
+        set(glDisableVertexAttribArray);
+        set(glEnableVertexAttribArray);
+        set(glBindAttribLocation);
+
+        set(glCreateShader);
+        set(glDeleteShader);
+        set(glCompileShader);
+        set(glAttachShader);
+        set(glDetachShader);
+        set(glShaderSource);
+        set(glGetShaderiv);
+
+        set(glCreateProgram);
+        set(glDeleteProgram);
+        set(glLinkProgram);
+        set(glValidateProgram);
+        set(glGetProgramiv);
+        set(glGetProgramInfoLog);
     } else {
         set(glEnableClientState);
         set(glDisableClientState);
@@ -215,13 +255,8 @@ void PHGameManager::initPHGL()
         sete(glDeleteVertexArrays, APPLE);
         sete(glGenVertexArrays, APPLE);
     }
-    else
     #endif
-    {
-        setn(glBindVertexArray);
-        setn(glDeleteVertexArrays);
-        setn(glGenVertexArrays);
-    }
+
     if ((es?(glMaj>=2):(glMaj >=3)) || hasExtension("GL_ARB_framebuffer_object"))
     {
         set(glIsRenderbuffer);
@@ -253,66 +288,18 @@ void PHGameManager::initPHGL()
         sete(glDeleteRenderbuffers, OES);
         sete(glGenRenderbuffers, OES);
         sete(glRenderbufferStorage, OES);
-        setn(glRenderbufferStorageMultisample);
         sete(glGetRenderbufferParameteriv, OES);
         sete(glIsFramebuffer, OES);
         sete(glBindFramebuffer, OES);
         sete(glDeleteFramebuffers, OES);
         sete(glGenFramebuffers, OES);
         sete(glCheckFramebufferStatus, OES);
-        setn(glFramebufferTexture1D);
         sete(glFramebufferTexture2D, OES);
-        setn(glFramebufferTexture3D);
-        setn(glFramebufferTextureLayer);
         sete(glFramebufferRenderbuffer, OES);
         sete(glGetFramebufferAttachmentParameteriv, OES);
-        setn(glBlitFramebuffer);
         sete(glGenerateMipmap, OES);
-    } else 
-    {
-        setn(glIsRenderbuffer);
-        setn(glBindRenderbuffer);
-        setn(glDeleteRenderbuffers);
-        setn(glGenRenderbuffers);
-        setn(glRenderbufferStorage);
-        setn(glRenderbufferStorageMultisample);
-        setn(glGetRenderbufferParameteriv);
-        setn(glIsFramebuffer);
-        setn(glBindFramebuffer);
-        setn(glDeleteFramebuffers);
-        setn(glGenFramebuffers);
-        setn(glCheckFramebufferStatus);
-        setn(glFramebufferTexture1D);
-        setn(glFramebufferTexture2D);
-        setn(glFramebufferTexture3D);
-        setn(glFramebufferTextureLayer);
-        setn(glFramebufferRenderbuffer);
-        setn(glGetFramebufferAttachmentParameteriv);
-        setn(glBlitFramebuffer);
-        setn(glGenerateMipmap);
     }
 
-    set(glGenBuffers);
-    set(glDeleteBuffers);
-    set(glIsBuffer);
-    set(glBindBuffer);
-    set(glBufferData);
-    set(glBufferSubData);
-
-    set(glDepthMask);
-    set(glDepthFunc);
-    set(glCullFace);
-    set(glBlendFunc);
-    set(glPolygonMode);
-    set(glPixelStorei);
-    set(glPixelStoref);
-    set(glTexEnvi);
-    set(glTexEnvf);
-    
-    if (es)
-        sete(glClearDepth, f);
-    else
-        set(glClearDepth);
 }
 
 #ifndef GL_MAX_COLOR_ATTACHMENTS

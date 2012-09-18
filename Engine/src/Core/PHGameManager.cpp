@@ -346,9 +346,9 @@ void PHGameManager::setGLAttributeStates(uint32_t vertexAttrib)
             if (xra & flag)
             {
                 if (vertexAttrib & flag)
-                    glEnableVertexAttribArray(i);
+                    PHGL::glEnableVertexAttribArray(i);
                 else
-                    glDisableVertexAttribArray(i);
+                    PHGL::glDisableVertexAttribArray(i);
             }
         }
     } else {
@@ -357,33 +357,33 @@ void PHGameManager::setGLAttributeStates(uint32_t vertexAttrib)
         if (xra & mask )
         {
             if (vertexAttrib & mask)
-                glEnableClientState(GL_VERTEX_ARRAY);
+                PHGL::glEnableClientState(GL_VERTEX_ARRAY);
             else
-                glDisableClientState(GL_VERTEX_ARRAY);
+                PHGL::glDisableClientState(GL_VERTEX_ARRAY);
         }
         mask = (1 << PHIMAGEATTRIBUTE_CLR);
         if (xra & mask)
         {
             if (vertexAttrib & mask)
-                glEnableClientState(GL_COLOR_ARRAY);
+                PHGL::glEnableClientState(GL_COLOR_ARRAY);
             else
-                glDisableClientState(GL_COLOR_ARRAY);
+                PHGL::glDisableClientState(GL_COLOR_ARRAY);
         }
         mask = (1 << PHIMAGEATTRIBUTE_TXC);
         if (xra & mask)
         {
             if (vertexAttrib & mask)
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                PHGL::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             else
-                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+                PHGL::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
         mask = (1 << PHIMAGEATTRIBUTE_NRM);
         if (xra & mask)
         {
             if (vertexAttrib & mask)
-                glEnableClientState(GL_NORMAL_ARRAY);
+                PHGL::glEnableClientState(GL_NORMAL_ARRAY);
             else
-                glDisableClientState(GL_NORMAL_ARRAY);
+                PHGL::glDisableClientState(GL_NORMAL_ARRAY);
         }
     }
 }
@@ -423,30 +423,30 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
     if (!useShaders() && (xr & PHGLTexture0))
     {
         if (states & PHGLTexture0)
-            glEnable(GL_TEXTURE_2D);
+            PHGL::glEnable(GL_TEXTURE_2D);
         else
-            glDisable(GL_TEXTURE_2D);
+            PHGL::glDisable(GL_TEXTURE_2D);
     }
     if (xr & PHGLZTesting)
     {
         if (states & PHGLZTesting)
-            glEnable(GL_DEPTH_TEST);
+            PHGL::glEnable(GL_DEPTH_TEST);
         else
-            glDisable(GL_DEPTH_TEST);
+            PHGL::glDisable(GL_DEPTH_TEST);
     }
     if (xr & PHGLBackFaceCulling)
     {
         if (states & PHGLBackFaceCulling)
-            glEnable(GL_CULL_FACE);
+            PHGL::glEnable(GL_CULL_FACE);
         else
-            glDisable(GL_CULL_FACE);
+            PHGL::glDisable(GL_CULL_FACE);
     }
     if (xr & PHGLBlending)
     {
         if (states & PHGLBlending)
-            glEnable(GL_BLEND);
+            PHGL::glEnable(GL_BLEND);
         else
-            glDisable(GL_BLEND);
+            PHGL::glDisable(GL_BLEND);
     }
     
     if (vertexAttrib)

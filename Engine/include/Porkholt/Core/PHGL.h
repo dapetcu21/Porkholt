@@ -28,78 +28,103 @@
 namespace PHGL {
 
 #ifdef PHGL_CPP
-    #define PHGLDefine(ret, name, ...) \
+    #define def(ret, name, ...) \
     typedef ret (* name ## _t )(__VA_ARGS__); \
-    name ## _t name
+    name ## _t name = (name ## _t)NULL
 #else 
-    #define PHGLDefine(ret, name, ...) \
+    #define def(ret, name, ...) \
     typedef ret (* name ## _t )(__VA_ARGS__); \
     extern name ## _t name
 #endif
 
+    def(void, glGetBooleanv, GLenum, GLboolean*);
+    def(void, glGetDoublev , GLenum, GLdouble*);
+    def(void, glGetFloatv, GLenum,   GLfloat*);
+    def(void, glGetIntegerv, GLenum, GLint*);
+    def(GLenum, glGetError);
+    def(const GLubyte*, glGetString, GLenum);
+    def(const GLubyte*, glGetStringi, GLenum, GLint);
 
-    PHGLDefine(GLvoid,    glGetBooleanv, GLenum, GLboolean*);
-    PHGLDefine(GLvoid,    glGetDoublev , GLenum, GLdouble*);
-    PHGLDefine(GLvoid,    glGetFloatv, GLenum,   GLfloat*);
-    PHGLDefine(GLvoid,    glGetIntegerv, GLenum, GLint*);
-    PHGLDefine(const GLubyte*, glGetString, GLenum);
-    PHGLDefine(const GLubyte*, glGetStringi, GLenum, GLint);
+    def(void, glClearColor, GLclampf, GLclampf, GLclampf, GLclampf);
+    def(void, glClearStencil, GLint);
+    def(void, glClear, GLbitfield);
 
-    PHGLDefine(GLvoid,    glEnable, GLenum);
-    PHGLDefine(GLvoid,    glDisable, GLenum);
-    PHGLDefine(GLvoid,    glEnableClientState, GLenum);
-    PHGLDefine(GLvoid,    glDisableClientState, GLenum);
+    def(void, glEnable, GLenum);
+    def(void, glDisable, GLenum);
+    def(void, glEnableClientState, GLenum);
+    def(void, glDisableClientState, GLenum);
 
-    PHGLDefine(GLvoid,    glBindVertexArray, GLuint);
-    PHGLDefine(GLvoid,    glDeleteVertexArrays, GLsizei, const GLuint *);
-    PHGLDefine(GLvoid,    glGenVertexArrays, GLsizei n, GLuint *);
+    def(void, glEnableVertexAttribArray, GLuint);
+    def(void, glDisableVertexAttribArray, GLuint);
+    def(void, glBindAttribLocation, GLuint, GLuint, const GLchar*);
 
-    PHGLDefine(GLboolean, glIsRenderbuffer, GLuint);
-    PHGLDefine(GLvoid,    glBindRenderbuffer, GLenum, GLuint);
-    PHGLDefine(GLvoid,    glDeleteRenderbuffers, GLsizei, const GLuint *);
-    PHGLDefine(GLvoid,    glGenRenderbuffers, GLsizei, GLuint *);
+    def(void, glBindVertexArray, GLuint);
+    def(void, glDeleteVertexArrays, GLsizei, const GLuint *);
+    def(void, glGenVertexArrays, GLsizei n, GLuint *);
 
-    PHGLDefine(GLvoid,    glRenderbufferStorage, GLenum, GLenum, GLsizei, GLsizei);
-    PHGLDefine(GLvoid,    glRenderbufferStorageMultisample, GLenum, GLsizei, GLenum, GLsizei, GLsizei);
-    PHGLDefine(GLvoid,    glGetRenderbufferParameteriv, GLenum, GLenum, GLint*);
+    def(GLboolean, glIsRenderbuffer, GLuint);
+    def(void, glBindRenderbuffer, GLenum, GLuint);
+    def(void, glDeleteRenderbuffers, GLsizei, const GLuint *);
+    def(void, glGenRenderbuffers, GLsizei, GLuint *);
 
-    PHGLDefine(GLboolean, glIsFramebuffer, GLuint);
-    PHGLDefine(GLvoid,    glBindFramebuffer, GLenum, GLuint);
-    PHGLDefine(GLvoid,    glDeleteFramebuffers, GLsizei, const GLuint *);
-    PHGLDefine(GLvoid,    glGenFramebuffers, GLsizei, GLuint *);
+    def(void, glRenderbufferStorage, GLenum, GLenum, GLsizei, GLsizei);
+    def(void, glRenderbufferStorageMultisample, GLenum, GLsizei, GLenum, GLsizei, GLsizei);
+    def(void, glGetRenderbufferParameteriv, GLenum, GLenum, GLint*);
 
-    PHGLDefine(GLenum,    glCheckFramebufferStatus, GLenum);
-    PHGLDefine(GLvoid,    glFramebufferTexture1D, GLenum, GLenum, GLenum, GLuint, GLint);
-    PHGLDefine(GLvoid,    glFramebufferTexture2D, GLenum, GLenum, GLenum, GLuint, GLint);
-    PHGLDefine(GLvoid,    glFramebufferTexture3D, GLenum, GLenum, GLenum, GLuint, GLint, GLint);
-    PHGLDefine(GLvoid,    glFramebufferTextureLayer, GLenum, GLenum, GLuint, GLint, GLint);
-    PHGLDefine(GLvoid,    glFramebufferRenderbuffer, GLenum, GLenum, GLenum, GLuint);
-    PHGLDefine(GLvoid,    glGetFramebufferAttachmentParameteriv, GLenum, GLenum, GLenum, GLint *);
-    PHGLDefine(GLvoid,    glBlitFramebuffer, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
+    def(GLboolean, glIsFramebuffer, GLuint);
+    def(void, glBindFramebuffer, GLenum, GLuint);
+    def(void, glDeleteFramebuffers, GLsizei, const GLuint *);
+    def(void, glGenFramebuffers, GLsizei, GLuint *);
 
-    PHGLDefine(GLvoid,    glGenerateMipmap, GLenum);
+    def(GLenum, glCheckFramebufferStatus, GLenum);
+    def(void, glFramebufferTexture1D, GLenum, GLenum, GLenum, GLuint, GLint);
+    def(void, glFramebufferTexture2D, GLenum, GLenum, GLenum, GLuint, GLint);
+    def(void, glFramebufferTexture3D, GLenum, GLenum, GLenum, GLuint, GLint, GLint);
+    def(void, glFramebufferTextureLayer, GLenum, GLenum, GLuint, GLint, GLint);
+    def(void, glFramebufferRenderbuffer, GLenum, GLenum, GLenum, GLuint);
+    def(void, glGetFramebufferAttachmentParameteriv, GLenum, GLenum, GLenum, GLint *);
+    def(void, glBlitFramebuffer, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
 
-    PHGLDefine(GLvoid,    glGenBuffers, GLsizei, GLuint*);
-    PHGLDefine(GLvoid,    glDeleteBuffers, GLsizei, GLuint*);
-    PHGLDefine(GLvoid,    glIsBuffer, GLuint);
-    PHGLDefine(GLvoid,    glBindBuffer, GLenum, GLuint);
-    PHGLDefine(GLvoid,    glBufferData, GLenum, GLsizeiptr, const GLvoid*, GLenum);
-    PHGLDefine(GLvoid,    glBufferSubData, GLenum, GLintptr, GLsizeiptr, const GLvoid*);
+    def(void, glGenerateMipmap, GLenum);
+
+    def(void, glGenBuffers, GLsizei, GLuint*);
+    def(void, glDeleteBuffers, GLsizei, GLuint*);
+    def(void, glIsBuffer, GLuint);
+    def(void, glBindBuffer, GLenum, GLuint);
+    def(void, glBufferData, GLenum, GLsizeiptr, const GLvoid*, GLenum);
+    def(void, glBufferSubData, GLenum, GLintptr, GLsizeiptr, const GLvoid*);
 
 #ifdef PH_GLES
-    PHGLDefine(GLvoid,    glClearDepth, GLfloat);
+    def(void, glClearDepth, GLfloat);
 #else
-    PHGLDefine(GLvoid,    glClearDepth, GLclampd);
+    def(void, glClearDepth, GLclampd);
 #endif
-    PHGLDefine(GLvoid,    glDepthMask, GLenum);
-    PHGLDefine(GLvoid,    glDepthFunc, GLenum);
-    PHGLDefine(GLvoid,    glCullFace, GLenum);
-    PHGLDefine(GLvoid,    glBlendFunc, GLenum, GLenum);
-    PHGLDefine(GLvoid,    glPolygonMode, GLenum, GLenum);
-    PHGLDefine(GLvoid,    glPixelStorei, GLenum, GLint);
-    PHGLDefine(GLvoid,    glPixelStoref, GLenum, GLfloat);
-    PHGLDefine(GLvoid,    glTexEnvi, GLenum, GLenum, GLint);
-    PHGLDefine(GLvoid,    glTexEnvf, GLenum, GLenum, GLfloat);
+    def(void, glDepthMask, GLenum);
+    def(void, glDepthFunc, GLenum);
+    def(void, glCullFace, GLenum);
+    def(void, glBlendFunc, GLenum, GLenum);
+    def(void, glPolygonMode, GLenum, GLenum);
+    def(void, glPixelStorei, GLenum, GLint);
+    def(void, glPixelStoref, GLenum, GLfloat);
+    def(void, glTexEnvi, GLenum, GLenum, GLint);
+    def(void, glTexEnvf, GLenum, GLenum, GLfloat);
+
+    def(GLuint, glCreateShader, GLenum);
+    def(void, glDeleteShader, GLuint);
+    def(void, glCompileShader, GLuint);
+    def(void, glAttachShader, GLuint, GLuint);
+    def(void, glDetachShader, GLuint, GLuint);
+    def(void, glShaderSource, GLuint, GLsizei, const GLchar**, const GLint*);
+    def(void, glGetShaderiv, GLuint, GLenum, GLint*);
+
+    def(GLuint, glCreateProgram);
+    def(void, glDeleteProgram, GLuint);
+    def(void, glLinkProgram, GLuint);
+    def(void, glValidateProgram, GLuint);
+    def(void, glGetProgramiv, GLuint, GLenum, GLint*);
+    def(void, glGetProgramInfoLog, GLuint, GLsizei, GLsizei*, GLchar*);
+
+#undef def
 
     enum libs {
         libOpenGL,
