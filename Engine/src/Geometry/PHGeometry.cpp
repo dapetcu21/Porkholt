@@ -47,16 +47,15 @@ bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, ph_float radiu
     return (pnt-origin).length()<=radius;
 }
 
+#define pil(x, a, b) ((x>=a) && (x<=b))
+#define lil(x, y, a, b) (pil(x, a, b) || pil(y, a, b) || pil(a, x, y) || pil(b, x, y))
 bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2)
 {
-    return (PHPointInRect(r1.corner(0), r2)||
-            PHPointInRect(r1.corner(1), r2)||
-            PHPointInRect(r1.corner(2), r2)||
-            PHPointInRect(r1.corner(3), r2)||
-            PHPointInRect(r2.corner(0), r1)||
-            PHPointInRect(r2.corner(1), r1)||
-            PHPointInRect(r2.corner(2), r1)||
-            PHPointInRect(r2.corner(3), r1));
+    float xb1 = r1.x + r1.width;
+    float xb2 = r2.x + r2.width;
+    float yb1 = r1.y + r1.height;
+    float yb2 = r2.y + r2.height;
+    return lil(r1.x, xb1, r2.x, xb2) && lil(r1.y, yb1, r2.y, yb2);
 }
 
 ph_float PHAngleFromNormalizedVector(const PHPoint & vec)

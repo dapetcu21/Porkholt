@@ -12,8 +12,8 @@ class PHCamera : public PHDrawable
         ~PHCamera();
         PHCamera();
 
-        void setIgnoresMatrices(bool i) { im = i; }
-        bool ignoresMatrices() { return im; }
+        void setResetsMatrices(bool i) { im = i; }
+        bool resetsMatrices() { return im; }
 
         PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
         virtual void render();

@@ -109,6 +109,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 	fps = params.fps;
 	_screenWidth = params.screenWidth;
 	_screenHeight = params.screenHeight;
+    _oldBounds = screenBounds();
     dpi = params.dpi;
 	suspended = 0;
     loaded = true;
@@ -231,6 +232,7 @@ void PHGameManager::setProjection()
 
 void PHGameManager::setScreenSize(ph_float w, ph_float h)
 {
+    _oldBounds = screenBounds();
     _screenWidth = w;
     _screenHeight = h;
     setProjection(); 
@@ -294,7 +296,6 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
     if (!fpsView)
     {
         fpsCamera = new PH2DCamera();
-        fpsCamera->setIgnoresMatrices(true);
         fpsCamera->setGameManager(this);
         fpsView = new PHTextView();
         fpsView->setGameManager(this);
@@ -742,7 +743,6 @@ void PHGameManager::popAnimatorPool()
 PHNavigationController * PHGameManager::setUpNavigationController()
 {
     PH2DCamera * camera = new PH2DCamera();
-    camera->setIgnoresMatrices(true);
     setMainDrawable(camera);
     PHRect bounds = screenBounds();
     PHViewControllerHolder * holder = new PHViewControllerHolder(bounds);

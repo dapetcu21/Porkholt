@@ -52,24 +52,28 @@ PHView * PHMenuController::loadView(const PHRect & frame)
 
 void PHMenuController::viewWillAppear()
 {
-    nav->_viewWillAppear();
+    if (nav)
+        nav->_viewWillAppear();
     resetClouds(getView());
     gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("title"));
 }
 
 void PHMenuController::viewDidAppear()
 {
-    nav->_viewDidAppear();
+    if (nav)
+        nav->_viewDidAppear();
 }
 
 void PHMenuController::viewWillDisappear()
 {
-    nav->_viewWillDisappear();
+    if (nav)
+        nav->_viewWillDisappear();
 }
 
 void PHMenuController::viewDidDisappear()
 {
-    nav->_viewDidDisappear();
+    if (nav)
+        nav->_viewDidDisappear();
 }
 
 void PHMenuController::resetClouds(PHView * v)

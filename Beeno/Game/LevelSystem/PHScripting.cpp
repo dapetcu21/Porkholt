@@ -186,6 +186,8 @@ static int PHWorld_boom(lua_State * L)
     return 0;
 }
 
+PHLuaStringGetter(PHWorld, resourcePath);
+
 void PHScripting::loadWorld()
 {
     lua_getglobal(L,"PHWorld");
@@ -201,6 +203,7 @@ void PHScripting::loadWorld()
     PHLuaAddMethod(PHWorld, win);
     PHLuaAddMethod(PHWorld, die);
     PHLuaAddMethod(PHWorld, boom);
+    PHLuaAddMethod(PHWorld, resourcePath);
 
     lua_pop(L, 1);
     

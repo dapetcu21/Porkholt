@@ -45,7 +45,6 @@ protected:
         PHPerspectiveCamera * container = new PHPerspectiveCamera();
         container->setNearClippingPlane(0.5f);
         container->setFarClippingPlane(50.0f);
-        container->setIgnoresMatrices(true);
         canvas->addChild(container);
         canvas->release();
         container->release();

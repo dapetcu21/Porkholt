@@ -95,6 +95,7 @@ private:
 
 	ph_float _screenWidth;
 	ph_float _screenHeight;
+    PHRect _oldBounds;
     ph_float dpi;
 	int fps;
     ph_float lt;
@@ -131,6 +132,7 @@ public:
 	ph_float screenWidth() { return _screenWidth; };
 	ph_float screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
+    PHRect oldScreenBounds() { return _oldBounds; }
     void setScreenSize(ph_float w, ph_float h);
 	int framesPerSecond() { return fps; }
     void setFramesPerSecond(int f) { fps = f; }

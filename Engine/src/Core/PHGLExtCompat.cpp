@@ -243,6 +243,7 @@ void PHGameManager::initPHGL()
         set(glDetachShader);
         set(glShaderSource);
         set(glGetShaderiv);
+        set(glGetShaderInfoLog);
 
         set(glCreateProgram);
         set(glDeleteProgram);

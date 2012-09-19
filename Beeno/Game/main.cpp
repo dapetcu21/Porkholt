@@ -5,9 +5,9 @@
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHMenuController * vc = new PHMenuController();
-	vc->init(gm);
+    PHMenuController * vc = new PHMenuController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
+    vc->release();
 }
 
 int main(int argc, char *argv[]) {

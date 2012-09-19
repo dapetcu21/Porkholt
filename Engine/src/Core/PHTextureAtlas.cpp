@@ -187,7 +187,7 @@ void PHTextureAtlas::loadInVRAM()
     {
         PHTextureAtlas::loadStruct::params & p = ls->mp[i->first];
         _bounds[j] = i->second;
-        _texCoords[j] = PHRect(i->second.x / p.bw, i->second.y / p.bh, i->second.width / p.bw, i->second.height / p.bh);
+        _texCoords[j] = PHRect(i->second.x / p.bw, (p.bh - i->second.y - i->second.height) / p.bh, i->second.width / p.bw, i->second.height / p.bh);
         _textures[j] = v[i->first];
         v[i->first]->retain();
     }

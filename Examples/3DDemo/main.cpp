@@ -122,7 +122,6 @@ protected:
         PHPerspectiveCamera * container = new PHPerspectiveCamera();
         container->setNearClippingPlane(0.5f);
         container->setFarClippingPlane(50.0f);
-        container->setIgnoresMatrices(true);
 
         PHView * v = new PHView(r);
         v->setUserInput(true);

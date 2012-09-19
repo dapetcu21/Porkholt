@@ -129,6 +129,7 @@ public:
     void boom(const PHPoint & location, ph_float magnitude, ph_float damage, ph_float radius);
     
     PHDirectory * resourceDirectory();
+    string resourcePath();
     //void printObjects();
     
 private:

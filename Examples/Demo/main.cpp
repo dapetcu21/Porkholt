@@ -21,6 +21,8 @@
 #include <Porkholt/Core/PHPostProcess.h>
 #include <Porkholt/Core/PHPerspectiveCamera.h>
 #include <Porkholt/Core/PHDrawableCoordinates.h>
+#include <Porkholt/Core/PH2DCamera.h>
+#include <Porkholt/Core/PHViewControllerHolder.h>
 
 class PHSliderView : public PHView
 {
@@ -260,19 +262,20 @@ class PHCapturePView : public PHView
 {
 protected:
     ph_float y;
-    PHEvent * e;
+    void * e;
     bool has;
     
     void touchEvent(PHEvent * evt)
     {
         if ((evt->type() == PHEvent::touchDown) || (evt->type() == PHEvent::touchMoved))
         {
-            if (e && (e!=evt)) return;
-            e = evt;
+            if (e && (e!=evt->userData())) return;
+            e = evt->userData();
             y = evt->drawableLocation()->pointInView(this).y;
             has = true;
             evt->setHandled(true);
         }
+        if (evt->type() == PHEvent::touchMoved)
         if ((evt->type() == PHEvent::touchUp) || (evt->type() == PHEvent::touchCancelled))
             e = NULL;
     }
@@ -601,7 +604,6 @@ protected:
         PHPerspectiveCamera * container = new PHPerspectiveCamera();
         container->setNearClippingPlane(0.5f);
         container->setFarClippingPlane(50.0f);
-        container->setIgnoresMatrices(true);
 
         canvas->addChild(container);
         canvas->release();
@@ -645,11 +647,6 @@ protected:
 
     PHCodeView * cv1, * cv2;
    
-    void chestie()
-    {
-        PHLog("manele");
-    }
-
     void screenTapped(int count)
     {
         switch (count) {
@@ -1648,10 +1645,12 @@ protected:
                 return;
             }
             case 5:
+            {
                 PHSlide * vc = new PHBeeno3(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
                 return;
+            }
         }
     }
 };
@@ -1746,21 +1745,14 @@ protected:
         switch (count)
         {
             case 0:
-                tb = addTitle("Porkholt Engine", titleheader);
+                tb = addTitle("Porkholt SDK", titleheader);
                 return;
             case 1:
                 tb = addBullet("- 2D Graphics engine", tb + 2*spacing);
                 return;
+                tb = addBullet("- Awesome, but more on that later", tb + spacing);
+                return;
             case 2:
-                tb = addBullet("- Multipurpose", tb + spacing);
-                return;
-            case 3:
-                tb = addBullet("- Crossplatform", tb + spacing);
-                return;
-            case 4:
-                tb = addBullet("- More on that later", tb + spacing);
-                return;
-            case 5:
                 PHSlide * vc = new PHGames(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
@@ -1813,7 +1805,7 @@ protected:
         }
         if (count == 4)
         {
-            PHSlide * vc = new PHBeeno4(gm);
+            PHSlide * vc = new PHPorkholt(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->release();
         }
@@ -1854,6 +1846,7 @@ protected:
             PHSlide * vc = new PHSparta(gm);
             navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
             vc->release();
+            gm->soundManager()->setBackgroundMusic(NULL);
         }
     }
 };
@@ -1869,11 +1862,10 @@ public:
 protected:
     void touchEvent(PHEvent * evt)
     {
-        if (((evt->type() == PHEvent::touchDown) || (evt->type() == PHEvent::touchUp)) && PHPointInRect(evt->drawableLocation()->pointInView(this), this->bounds()))
+        if (evt->type() == PHEvent::touchDown)
         {
+            PHMessage::messageWithName("thingTapped")->broadcast(this, NULL);
             evt->setHandled(true);
-            if (evt->type() == PHEvent::touchUp)
-                PHMessage::messageWithName("thingTapped")->broadcast(this, NULL);
         }
     }
 };
@@ -1887,23 +1879,31 @@ void PHGameEntryPoint(PHGameManager * gm)
     gm->imageNamed("sparta");
     gm->imageNamed("earth");
     gm->imageNamed("concept");
-    
-    PHNavigationController * nav = gm->setUpNavigationController();
-    PHView * navview = nav->getView();
-    PHDrawable * navparent = navview->parent();
 
-    PHCapView * v = new PHCapView(navview->frame());
-    navview->setFrame(navview->frame());
-    v->setAutoresizesSubviews(true);
-    v->setUserInput(true);
-    v->addChild(navview);
-    navparent->addChild(v); 
-    v->release();
+    PH2DCamera * camera = new PH2DCamera();
+    gm->setMainDrawable(camera);
+    PHRect bounds = gm->screenBounds();
+
+    PHCapView * cap = new PHCapView(bounds);
+    cap->setUserInput(true);
+    cap->setAutoresizesSubviews(true);
+    cap->setAutoresizeMask(PHView::ResizeAll);
+    camera->addChild(cap);
+
+    PHViewControllerHolder * holder = new PHViewControllerHolder(bounds);
+    cap->addChild(holder);
     
+    PHNavigationController * nav = new PHNavigationController(gm);
+    holder->setViewController(nav);
+    
+    camera->release();
+    holder->release();
+    cap->release();
+        
     PHViewController * vc = new PHTitle(gm);
     nav->pushViewController(vc);
     vc->release();
-    
+    nav->release(); 
 }
 
 int main(int argc, char *argv[]) {

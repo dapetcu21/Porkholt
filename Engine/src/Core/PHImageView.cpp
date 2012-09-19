@@ -570,7 +570,7 @@ static int PHImageView_setImage(lua_State * L)
     if (s.find('/')==s.npos)
         img = v->gameManager()->imageNamed(s);
     else
-        img = v->gameManager()->imageNamed(s, v->gameManager()->resourceDirectory());
+        img = v->gameManager()->imageNamed(s, v->gameManager()->resourceDirectory()); //DAFUQ???
     v->setImage(img);
     return 0;
 }

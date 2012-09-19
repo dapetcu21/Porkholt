@@ -121,6 +121,7 @@ namespace PHGL {
     def(void, glDetachShader, GLuint, GLuint);
     def(void, glShaderSource, GLuint, GLsizei, const GLchar**, const GLint*);
     def(void, glGetShaderiv, GLuint, GLenum, GLint*);
+    def(void, glGetShaderInfoLog, GLuint, GLsizei, GLsizei*, GLchar*);
 
     def(GLuint, glCreateProgram);
     def(void, glDeleteProgram, GLuint);

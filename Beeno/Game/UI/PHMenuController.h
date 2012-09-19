@@ -25,7 +25,7 @@ protected:
     
 public:
     PHTitleScreen * titleScreen() { getView(); return vc; }
-    PHMenuController(PHGameManager * gm) : PHViewController(gm) {}
+    PHMenuController(PHGameManager * gm) : PHViewController(gm), nav(NULL) {}
 };
 
 #endif

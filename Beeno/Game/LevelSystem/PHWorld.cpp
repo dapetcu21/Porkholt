@@ -29,6 +29,7 @@
 #include <Porkholt/Sound/PHSoundPool.h>
 #include <Porkholt/Sound/PHSound.h>
 #include <Porkholt/Core/PHMutex.h>
+#include <Porkholt/IO/PHDirectory.h>
 
 //304 19
 #define GAUGE_WIDTH (256/480.0f)
@@ -618,6 +619,17 @@ void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage,
 PHDirectory * PHWorld::resourceDirectory()
 {
     return levelController()->bundleDirectory();
+}
+
+string PHWorld::resourcePath()
+{
+    string rp = resourceDirectory()->path();
+    string grp = gm->resourceDirectory()->path();
+    size_t n = grp.length();
+    if (grp == rp.substr(0, n))
+        return rp.substr(n);
+    else 
+        return rp;
 }
 
 #define retainImage(fname) { PHImage * i = gm->imageNamed(fname); if (i) { if(preloadedImages.insert(i).second) i->retain(); } }

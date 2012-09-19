@@ -30,7 +30,7 @@ void PHCamera::_reshape()
     reshape();
 }
 
-PHCamera::PHCamera() : im(false)
+PHCamera::PHCamera() : im(true)
 {
     setUserInput(true);
 }
