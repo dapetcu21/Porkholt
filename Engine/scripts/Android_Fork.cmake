@@ -1,8 +1,16 @@
 if (NOT PH_FORK STREQUAL "1")
     get_cmake_property(CACHE_VARS CACHE_VARIABLES)
+    set(CMAKE_SUCKS1 "LIBRARY_OUTPUT_PATH_ROOT")
+    set(CMAKE_SUCKS2 "CMAKE_BUILD_TYPE")
     foreach(CACHE_VAR ${CACHE_VARS})
         get_property(CACHE_VAR_HELPSTRING CACHE ${CACHE_VAR} PROPERTY HELPSTRING)
-        if(CACHE_VAR MATCHES "^PH.?" OR CACHE_VAR_HELPSTRING STREQUAL "No help, variable specified on the command line.")
+        #message("${CACHE_VAR} ${${CACHE_VAR}} ${CACHE_VAR_HELPSTRING}")
+        if (CACHE_VAR MATCHES "^PH.?" OR 
+            CACHE_VAR MATCHES "ANDROID.?" OR 
+            CACHE_VAR STREQUAL CMAKE_SUCKS1 OR 
+            CACHE_VAR STREQUAL CMAKE_SUCKS2 OR 
+            CACHE_VAR_HELPSTRING STREQUAL "No help, variable specified on the command line.")
+
             get_property(CACHE_VAR_TYPE CACHE ${CACHE_VAR} PROPERTY TYPE)
             if(CACHE_VAR_TYPE STREQUAL "UNINITIALIZED")
                 set(CACHE_VAR_TYPE)
@@ -13,10 +21,12 @@ if (NOT PH_FORK STREQUAL "1")
         endif()
     endforeach()
 
-    if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        set(ANDROID_ARCHS armeabi-v7a;x86;mips)
-    else()
-        set(ANDROID_ARCHS armeabi-v7a)
+    if(NOT ANDROID_ARCHS)
+        if (CMAKE_BUILD_TYPE STREQUAL "Release")
+            set(ANDROID_ARCHS armeabi-v7a;x86;mips)
+        else()
+            set(ANDROID_ARCHS armeabi-v7a)
+        endif()
     endif()
     
     if (NOT ANDROID_NDK AND NOT EXISTS "$ENV{ANDROID_NDK}" AND EXISTS "/opt/android-ndk")

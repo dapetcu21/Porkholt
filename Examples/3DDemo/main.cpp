@@ -88,8 +88,8 @@ public:
                     _body->setRotation(_body->rotation() * q);
                     axis = q.rotationAxis();
                     rotSpeed = q.rotationAngle() / (evt->time() - evt->lastTime());
-                    if (rotSpeed > 20)
-                        rotSpeed = 20;
+                    if (rotSpeed > 15)
+                        rotSpeed = 15;
             };
         }
 

@@ -17,8 +17,34 @@ void * PHGL::glFunctionAddress(const char * s)
     static void * f;
     if (!h)
     {
-        if ((h = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL)) == NULL)
-            return NULL;
+        const char * libName[] = {NULL, NULL, NULL, NULL, NULL, NULL};
+        switch (linkedLibrary)
+        {
+            case libOpenGL:
+                libName[0] = "libGL.so";
+                break;
+            case libOpenGLES1:
+                libName[0] = "libGLESv1_CM.so";
+                libName[1] = "libGLES_CM.so";
+                libName[2] = "libGLESv1.so";
+                libName[3] = "libGLES.so";
+                break;
+            case libOpenGLES2:
+                libName[0] = "libGLESv2.so";
+                libName[1] = "libGLESv1_CM.so";
+                libName[2] = "libGLES_CM.so";
+                libName[3] = "libGLESv1.so";
+                libName[4] = "libGLES.so";
+                break;
+        }
+        for (int i = 0; !h && libName[i]; i++)
+            h = dlopen(libName[i], RTLD_LAZY | RTLD_LOCAL);
+        if (!h)
+        {
+            h = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
+            if (!h)
+                return NULL;
+        }
         f = dlsym(h, "glXGetProcAddress");
         if (!f)
             f = dlsym(h, "glXGetProcAddressARB");
@@ -92,15 +118,18 @@ void PHGameManager::loadCapabilities()
         
         glslVersion = 0;
         const char * glslvp = (const char*)PHGL::glGetString(GL_SHADING_LANGUAGE_VERSION);
-        const char * glslv = glslvp;
-        for (;(*glslv) && glslVersion<100; glslv++)
+        if (glslvp)
         {
-            char c = *glslv;
-            if (c>='0' && c<='9')
-                glslVersion = glslVersion*10 + (c-'0');
+            const char * glslv = glslvp;
+            for (;(*glslv) && glslVersion<100; glslv++)
+            {
+                char c = *glslv;
+                if (c>='0' && c<='9')
+                    glslVersion = glslVersion*10 + (c-'0');
+            }
+            while (glslVersion && glslVersion<100)
+                glslVersion *= 10;
         }
-        while (glslVersion && glslVersion<100)
-            glslVersion *= 10;
         
 #ifdef PH_DEBUG
         string s;

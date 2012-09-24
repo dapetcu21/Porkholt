@@ -162,15 +162,13 @@ namespace PHGL {
 #undef def
 
     enum libs {
+        libLinked,
         libOpenGL,
         libOpenGLES1,
         libOpenGLES2
     };
 
-#ifndef PHGL_CPP
-    extern
-#endif
-    enum libs linkedLibrary;
+    extern enum libs linkedLibrary;
 
     void * glFunctionAddress(const char * s);
 

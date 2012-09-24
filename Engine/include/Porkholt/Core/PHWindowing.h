@@ -44,10 +44,28 @@ public:
     }
 };
 
-int PHWMain(int argc, char * argv[], const PHWVideoMode & vmode, int flags, void (*entryPoint)(PHGameManager *), void * ud);
-inline int PHWMain(int argc, char * argv[], int flags, void (*entryPoint)(PHGameManager *), void * ud)
+#ifdef PH_ANDROID
+#define PHMAIN ANativeActivity_onCreate 
+#define PHMAIN_PROTO void* activity, void* savedState, size_t savedStateSize
+#define PHMAIN_ARGS activity, savedState, savedStateSize
+#define PHMAIN_RETURN(x) x
+#define PHMAIN_TYPE void
+#define PHMAIN_DEFINE extern "C" PHMAIN_TYPE PHMAIN(PHMAIN_PROTO)
+#else
+#define PHMAIN main
+#define PHMAIN_PROTO int argc, char * argv[]
+#define PHMAIN_ARGS argc, argv
+#define PHMAIN_RETURN(x) return (x)
+#define PHMAIN_TYPE int
+#define PHMAIN_DEFINE PHMAIN_TYPE PHMAIN(PHMAIN_PROTO)
+#endif
+
+#define PHMAIN_DECLARE(...) PHMAIN_DEFINE { PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, __VA_ARGS__)); }
+
+int PHWMain(PHMAIN_PROTO, const PHWVideoMode & vmode, int flags, void (*entryPoint)(PHGameManager *), void * ud);
+inline int PHWMain(PHMAIN_PROTO, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
-    return PHWMain(argc, argv, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), flags, entryPoint, ud);
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), flags, entryPoint, ud));
 }
 
 void PHWSetVideoMode(const PHWVideoMode & vm);

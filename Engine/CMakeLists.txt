@@ -31,71 +31,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 if (PH_PLATFORM STREQUAL "Android")
-include(${CMAKE_CURRENT_SOURCE_DIR}/scripts/Android_Fork.cmake)
+    include(${PH_ENGINE_PATH}/scripts/Android_Fork.cmake)
 endif()
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/scripts/Porkholt_Files.cmake)
-
-if(PH_PLATFORM STREQUAL "Android")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      )
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      )
-
-    include_directories(${PH_EXTERNALS}/openal-soft/include)
-endif()
-
-if(PH_PLATFORM STREQUAL "X11")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      ${PH_ENGINE_PATH}/src/Bindings/X11/PHWindowing.cpp
-      ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.cpp
-      )
-      
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.h
-      )
-endif()
-
-if(PH_PLATFORM STREQUAL "OSX")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindowing.mm
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
-      )
-      
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHAppDelegate.h
-      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHGLView.h
-      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHWindow.h
-      )
-
-endif()
-
-if(PH_PLATFORM STREQUAL "iOS")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.mm
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtAppDelegate.mm
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PHStartGame.mm
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.mm
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.mm
-      )
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.h
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtAppDelegate.h
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.h
-      ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.h
-      )
-    include_directories(
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/Geometry/math
-      )
-endif()
+include(${PH_ENGINE_PATH}/scripts/Porkholt_Files.cmake)
 
 if(PH_PLATFORM STREQUAL "Android")
     if (PH_FORK STREQUAL "1")
         link_directories(${PH_EXTERNALS}/lib/android/libs/${ANDROID_NDK_ABI_NAME})
         add_library(Porkholt SHARED ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
-        target_link_libraries(Porkholt openal lua png15)
+        target_link_libraries(Porkholt openal lua png15 android log EGL)
 
         add_custom_target(External_Libs
             COMMAND ${PH_EXTERNALS}/make_android.sh "${ANDROID_NDK}" "${ANDROID_ABI}" "${ANDROID_NDK_ABI_NAME}"

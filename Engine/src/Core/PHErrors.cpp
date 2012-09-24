@@ -3,6 +3,10 @@
 #include <Porkholt/Core/PHErrors.h>
 #include <cstdarg>
 
+#ifdef PH_ANDROID
+#include <android/log.h>
+#endif
+
 string PHIOError("I/O Error");
 string PHInvalidFileFormat("Invalid File Format");
 string PHSysCallError("System Call Error");
@@ -14,6 +18,25 @@ void PHGLCheckError_()
     if (e!=GL_NO_ERROR) 
         PHLog("OpenGL error %x in "__FILE__":%d", __LINE__ , int(e));   
 }
+
+#ifdef PH_ANDROID
+void PHLog(const char * str, ...)
+{
+	va_list al;
+	va_start(al,str);
+	__android_log_vprint(ANDROID_LOG_INFO, "Porkholt", str, al);
+	va_end(al);
+}
+
+void PHLog(const string & str, ...)
+{
+	va_list al;
+	va_start(al,str);
+	__android_log_vprint(ANDROID_LOG_INFO, "Porkholt", str.c_str(), al);
+	va_end(al);
+}
+
+#else
 
 void PHLog(const char * str, ...)
 {
@@ -34,3 +57,5 @@ void PHLog(const string & str, ...)
 	fprintf(stderr, "\n");
 	va_end(al);
 }
+
+#endif

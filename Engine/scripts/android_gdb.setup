@@ -1,0 +1,2 @@
+set solib-search-path @PH_GDB_SOLIB_PATH@
+directory @PH_GDB_DIRECTORY@

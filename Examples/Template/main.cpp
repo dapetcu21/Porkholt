@@ -10,7 +10,5 @@ void PHGameEntryPoint(PHGameManager * gm)
     vc->release();
 }
 
-int main(int argc, char *argv[]) {
-    return PHWMain(argc, argv, PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL);
-}
+PHMAIN_DECLARE(PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL);
  

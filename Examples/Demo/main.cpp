@@ -1821,7 +1821,7 @@ protected:
     {
         if (count == 0)
         {
-            gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("cfox"));
+            //gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("cfox"));
             PHView * v = getView();
             PHImage * img = gm->imageNamed("porkholt_labs");
             PHRect rr(0, 0, img->width(), img->height());

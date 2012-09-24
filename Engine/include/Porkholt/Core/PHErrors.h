@@ -12,7 +12,7 @@ inline void PHNop() {};
 
 #ifdef PH_DEBUG
 #define PHGLCheckError PHGLCheckError_
-#define PHGLClearError glGetError
+#define PHGLClearError PHGL::glGetError
 #else
 #define PHGLCheckError PHNop
 #define PHGLClearError PHNop

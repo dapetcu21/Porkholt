@@ -268,7 +268,7 @@ void PHGameManager::processInput()
 void PHGameManager::renderFrame(ph_float timeElapsed)
 {	
     PHAutoreleasePool pool;
-
+    
     evtHandler->processQueue();
     
     lastElapsed = timeElapsed;

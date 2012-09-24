@@ -216,3 +216,62 @@ set(PH_ENGINE_HEADERS
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
 
+if(PH_PLATFORM STREQUAL "Android")
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      ${PH_ENGINE_PATH}/src/Bindings/Android/PHWindowing.cpp
+      ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.c
+      )
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.h
+      )
+    include_directories(
+      ${PH_EXTERNALS}/openal-soft/include
+      )
+endif()
+
+if(PH_PLATFORM STREQUAL "X11")
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      ${PH_ENGINE_PATH}/src/Bindings/X11/PHWindowing.cpp
+      ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.cpp
+      )
+      
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.h
+      )
+endif()
+
+if(PH_PLATFORM STREQUAL "OSX")
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindowing.mm
+      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
+      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
+      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
+      )
+      
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHAppDelegate.h
+      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHGLView.h
+      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHWindow.h
+      )
+
+endif()
+
+if(PH_PLATFORM STREQUAL "iOS")
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.mm
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtAppDelegate.mm
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PHStartGame.mm
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.mm
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.mm
+      )
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.h
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtAppDelegate.h
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.h
+      ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.h
+      )
+    include_directories(
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/Geometry/math
+      )
+endif()
+
