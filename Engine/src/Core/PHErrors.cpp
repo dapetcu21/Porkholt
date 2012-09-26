@@ -12,11 +12,11 @@ string PHInvalidFileFormat("Invalid File Format");
 string PHSysCallError("System Call Error");
 string PHLuaError("Lua Error");
 
-void PHGLCheckError_()
+void PHGLCheckError_(const char * file, int line)
 {
     GLenum e = PHGL::glGetError(); 
     if (e!=GL_NO_ERROR) 
-        PHLog("OpenGL error %x in "__FILE__":%d", __LINE__ , int(e));   
+        PHLog("OpenGL error 0x%x in %s:%d", int(e), file, line);   
 }
 
 #ifdef PH_ANDROID

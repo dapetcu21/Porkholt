@@ -2,7 +2,7 @@
 
 #include <Porkholt/Core/PHGLFBOAttachment.h>
 
-const GLenum PHGLInternalFormats[] = {
+GLenum PHGLInternalFormats[] = {
     0,
 #ifdef GL_DEPTH_COMPONENT16
     GL_DEPTH_COMPONENT16,
@@ -97,7 +97,7 @@ const GLenum PHGLInternalFormats[] = {
 #endif
 };
 
-const GLenum PHGLFormats[]  = {
+GLenum PHGLFormats[]  = {
     0, 
     GL_DEPTH_COMPONENT,
     GL_DEPTH_COMPONENT,
@@ -132,7 +132,7 @@ const GLenum PHGLFormats[]  = {
     GL_RGB
 };
 
-const GLenum PHGLTypes[] = {
+GLenum PHGLTypes[] = {
     0, 
     GL_UNSIGNED_SHORT, //D16
     GL_UNSIGNED_INT, //D24

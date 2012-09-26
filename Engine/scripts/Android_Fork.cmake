@@ -23,7 +23,7 @@ if (NOT PH_FORK STREQUAL "1")
 
     if(NOT ANDROID_ARCHS)
         if (CMAKE_BUILD_TYPE STREQUAL "Release")
-            set(ANDROID_ARCHS armeabi-v7a;x86;mips)
+            set(ANDROID_ARCHS armeabi;armeabi-v7a;x86;mips)
         else()
             set(ANDROID_ARCHS armeabi-v7a)
         endif()
@@ -45,7 +45,7 @@ if (NOT PH_FORK STREQUAL "1")
     foreach(ARCH ${ANDROID_ARCHS})
         set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${ARCH})
         exec(COMMAND mkdir -p ${OUTPUT_DIR})
-        exec(COMMAND ${CMAKE_COMMAND} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_ARGS} -DANDROID_ABI=${ARCH} -DCMAKE_TOOLCHAIN_FILE=${PH_ENGINE_PATH}/scripts/android.toolchain.cmake -DPH_FORK=1
+        exec(COMMAND ${CMAKE_COMMAND} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_ARGS} -DANDROID_DYNAMIC_STL=TRUE -DANDROID_ABI=${ARCH} -DCMAKE_TOOLCHAIN_FILE=${PH_ENGINE_PATH}/scripts/android.toolchain.cmake -DPH_FORK=1
                         WORKING_DIRECTORY ${OUTPUT_DIR})
     endforeach()
 

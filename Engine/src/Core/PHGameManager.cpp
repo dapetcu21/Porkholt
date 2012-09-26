@@ -25,7 +25,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0)
 {
 memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -272,7 +272,6 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     evtHandler->processQueue();
     
     lastElapsed = timeElapsed;
-    setClearColor(PHBlackColor);
     setDepthClearValue(1.0f);
 
     clearBuffers(PHGameManager::colorBuffers | PHGameManager::depthBuffer);
@@ -445,13 +444,22 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
     if (xr & PHGLBlending)
     {
         if (states & PHGLBlending)
+        {
+            PHLog("enable");
             PHGL::glEnable(GL_BLEND);
+            PHGLCheckError();
+        }
         else
+        {
+            PHLog("disable");
             PHGL::glDisable(GL_BLEND);
+            PHGLCheckError();
+        }
     }
     
     if (vertexAttrib)
         setGLAttributeStates(vertexAttrib);
+    PHGLCheckError();
 }
 
 void PHGameManager::appSuspended()

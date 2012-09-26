@@ -37,13 +37,19 @@ void * PHGL::glFunctionAddress(const char * s)
                 libName[4] = "libGLES.so";
                 break;
         }
+        int i = 0;
         for (int i = 0; !h && libName[i]; i++)
             h = dlopen(libName[i], RTLD_LAZY | RTLD_LOCAL);
-        if (!h)
+        if (h)
+            PHLog("Found OpenGL library at %s", libName[i]);
+        if (!h && (linkedLibrary == libLinked))
         {
             h = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
-            if (!h)
-                return NULL;
+        }
+        if (!h)
+        {
+            PHLog("Cannot find the OpenGL library");
+            return NULL;
         }
         f = dlsym(h, "glXGetProcAddress");
         if (!f)
@@ -155,6 +161,7 @@ void PHGameManager::loadCapabilities()
         openGLCaps[PHGLCapabilityGLES2] = es && (openGLVersionMajor >= 2);
         openGLCaps[PHGLCapabilityShaders] = (openGLVersionMajor>=2);
         GLint tmp;
+
         PHGL::glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &tmp);
         _maxVertexAttribs = (int)tmp;
         

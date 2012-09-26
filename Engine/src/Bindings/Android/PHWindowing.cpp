@@ -2,10 +2,13 @@
 
 #include <EGL/egl.h>
 #include <android/sensor.h>
+#include "android_native_app_glue.h"
 #include <Porkholt/Core/PHWindowing.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/IO/PHDirectory.h>
-#include "android_native_app_glue.h"
+#include <Porkholt/Core/PHAccelInterface.h>
+#include <Porkholt/Core/PHTime.h>
 
 class PHWVideoMode PHW_VideoMode;
 int PHWFlags;
@@ -37,24 +40,65 @@ struct PHWState {
     int32_t width;
     int32_t height;
     ph_float fps; 
+    ph_float dpi;
+    ph_float lastTime;
+    int orient;
+    bool vsync;
 
     PHGameManager * gm;
+
+    JNIEnv *jni;
+    jobject myInstance;
+    jclass myClass;
 };
+
+void PHWLoadFromJava(PHWState & state)
+{
+    JNIEnv *jni = state.jni;
+    if (!state.jni)
+    {
+        state.app->activity->vm->AttachCurrentThread(&state.jni, NULL);
+        jni = state.jni; 
+        jclass activityClass = jni->FindClass("android/app/NativeActivity");
+        jmethodID getClassLoader = jni->GetMethodID(activityClass,"getClassLoader", "()Ljava/lang/ClassLoader;");
+        jobject cls = jni->CallObjectMethod(state.app->activity->clazz, getClassLoader);
+        jclass classLoader = jni->FindClass("java/lang/ClassLoader");
+        jmethodID findClass = jni->GetMethodID(classLoader, "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;");
+        jstring strClassName = jni->NewStringUTF("org/porkholt/jniloader/JNILoader");
+        
+        state.myClass = (jclass)jni->CallObjectMethod(cls, findClass, strClassName);
+        jmethodID constructor = jni->GetMethodID(state.myClass, "<init>", "(Landroid/app/NativeActivity;)V");
+        state.myInstance = jni->NewObject(state.myClass, constructor, state.app->activity->clazz);
+    }
+
+    jmethodID load = jni->GetMethodID(state.myClass, "load", "()V");
+    jni->CallVoidMethod(state.myInstance, load);
+
+    jfieldID rrid = jni->GetFieldID(state.myClass, "refreshRate", "F");
+    jfieldID dpiid = jni->GetFieldID(state.myClass, "dpi", "F");
+    jfieldID oriid = jni->GetFieldID(state.myClass, "orientation", "I");
+
+    state.fps = jni->GetFloatField(state.myInstance, rrid);
+    state.dpi = jni->GetFloatField(state.myInstance, dpiid);
+    state.orient = jni->GetIntField(state.myInstance, oriid);
+}
+
 
 void PHWInitWindow(PHWState & state)
 {
     EGLint attribs[] = {
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-            EGL_BLUE_SIZE, 8,
-            EGL_GREEN_SIZE, 8,
             EGL_RED_SIZE, 8,
+            EGL_GREEN_SIZE, 8,
+            EGL_BLUE_SIZE, 8,
+            EGL_ALPHA_SIZE, 8,
             EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT | ((PHWFlags & PHWGLES1) ? EGL_OPENGL_ES_BIT : 0),
             EGL_STENCIL_SIZE, (PHWFlags & PHWStencilBuffer) ? 1 : 0,
             EGL_DEPTH_SIZE, (PHWFlags & PHWDepthBuffer) ? 1 : 0,
             EGL_NONE
     };
 
-    EGLint w, h, fps, format;
+    EGLint w, h, format;
     EGLint numConfigs;
     EGLConfig * config = NULL;
     EGLSurface surface;
@@ -75,37 +119,40 @@ void PHWInitWindow(PHWState & state)
     int mscore = 0;
     for (EGLint i = 0; i < numConfigs; i++)
     {
-        EGLint depth, stencil, gl;
+        EGLint depth, stencil, gl, smax;
         EGLConfig & c = *(configs + i);
         eglGetConfigAttrib(display, c, EGL_DEPTH_SIZE, &depth);
         eglGetConfigAttrib(display, c, EGL_STENCIL_SIZE, &stencil);
         eglGetConfigAttrib(display, c, EGL_RENDERABLE_TYPE, &gl);
+        eglGetConfigAttrib(display, c, EGL_MAX_SWAP_INTERVAL, &smax);
+
         if (!(PHWFlags & PHWDepthBuffer))
-            depth = -depth;
+            depth = 1<<5-1-depth;
         if (!(PHWFlags & PHWStencilBuffer))
-            stencil = -stencil;
-        int score = ((gl & EGL_OPENGL_ES2_BIT)?10000:0) + depth*100 + stencil;
-        PHLog("config: %d", score);
+            stencil = 1<<5-1-stencil;
+        int score = ((gl & EGL_OPENGL_ES2_BIT)?1<<11:0) + ((smax>=1)?(1<<10):0) + (depth<<5) + stencil;
         if (score > mscore)
         {
             mscore = score;
             config = configs + i;
         }
     }
-    PHLog("score %d %d", mscore, (int)(config - configs));
+    state.vsync = ((mscore & (1<<10)) != 0);
 
-    EGLint gl;
+    EGLint gl, smin;
     eglGetConfigAttrib(display, *config, EGL_NATIVE_VISUAL_ID, &format);
     eglGetConfigAttrib(display, *config, EGL_RENDERABLE_TYPE, &gl);
+    eglGetConfigAttrib(display, *config, EGL_MIN_SWAP_INTERVAL, &smin);
+
     bool gles2 = (gl & EGL_OPENGL_ES2_BIT) != 0;
     PHGL::linkedLibrary = gles2 ? PHGL::libOpenGLES2 : PHGL::libOpenGLES1;
-    PHLog("meow %d", PHGL::linkedLibrary);
 
     ANativeWindow_setBuffersGeometry(state.app->window, 0, 0, format);
 
     surface = eglCreateWindowSurface(display, *config, state.app->window, NULL);
-    const EGLint attrib_list [] = {EGL_CONTEXT_CLIENT_VERSION, gles2?2:1, EGL_NONE};
-    context = eglCreateContext(display, *config, NULL, attrib_list);
+    const EGLint contextAttribs [] = {EGL_CONTEXT_CLIENT_VERSION, gles2?2:1, EGL_NONE};
+    context = eglCreateContext(display, *config, NULL, contextAttribs);
+    eglSwapInterval(display, state.vsync?max(smin,1):0);
 
     delete [] configs;
 
@@ -116,22 +163,26 @@ void PHWInitWindow(PHWState & state)
 
     eglQuerySurface(display, surface, EGL_WIDTH, &w);
     eglQuerySurface(display, surface, EGL_HEIGHT, &h);
-    fps = 60.0f; //FUCK YOU GOOGLE
 
     state.display = display;
     state.context = context;
     state.surface = surface;
     state.width = w;
     state.height = h;
-    state.fps = fps;
 
     PHGameManager * gameManager = state.gm = new PHGameManager;
     PHGameManagerInitParameters params;
-    params.screenHeight = w; 
-    params.screenWidth = h; 
-    params.fps = fps;
-    params.dpi = 160; //FUCK YOU GOOGLE
-    PHDirectory * dir = PHInode::directoryAtFSPath("/sdcard/porkholt/rsrc"); //FUCK YOU GOOGLE
+    params.screenWidth = w; 
+    params.screenHeight = h; 
+    params.fps = state.fps;
+    params.dpi = state.dpi; 
+    PHDirectory * dir = NULL;
+    try {
+        dir = PHInode::directoryAtFSPath("/sdcard/porkholt/rsrc"); //FUCK YOU GOOGLE
+    } catch (const string & ex)
+    {
+        PHLog("Can't load resource directory: %s", ex.c_str());
+    }
     params.setResourceDirectory(dir);
     dir->release();
     params.entryPoint = PHWEntryPoint;
@@ -141,13 +192,26 @@ void PHWInitWindow(PHWState & state)
         gameManager->setUsesRemote(true);
     if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
         gameManager->setPlatformSuffix(".hd");
-    gameManager->setFpsCapped(true);
+    gameManager->setFpsCapped(state.vsync);
     gameManager->setUserData(PHWUD);
+
+
+#ifdef PH_DEBUG
+    PHLog("Loaded window %dx%d@%.1f, vsync: %s, orientation: %d degrees", w, h, state.fps, state.vsync?"on":"off", (int)state.orient * 90);
+#endif
     gameManager->init(params);
+
+    state.lastTime = PHTime::getTime();
 }
 
 void PHWDestroyWindow(PHWState & state)
 {
+    if (state.gm)
+    {
+        state.gm->release();
+        state.gm = NULL;
+    }
+
     if (state.display != EGL_NO_DISPLAY) {
         eglMakeCurrent(state.display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         if (state.context != EGL_NO_CONTEXT) {
@@ -158,7 +222,7 @@ void PHWDestroyWindow(PHWState & state)
         }
         eglTerminate(state.display);
     }
-    state.animating = true;
+    state.animating = false;
     state.display = EGL_NO_DISPLAY;
     state.context = EGL_NO_CONTEXT;
     state.surface = EGL_NO_SURFACE;
@@ -168,9 +232,14 @@ void PHWRender(PHWState & state)
 {
     if (state.display == EGL_NO_DISPLAY) return;
     if (!state.gm) return;
-
+    
     eglMakeCurrent(state.display, state.surface, state.surface, state.context);
-    state.gm->renderFrame(1.0f/state.fps); 
+
+    ph_float lt = state.lastTime;
+    ph_float t = state.lastTime = PHTime::getTime();
+    ph_float fi = state.gm->frameInterval();
+    ph_float tt = state.vsync?(round((t-lt)/fi)*fi):(t-lt);
+    state.gm->renderFrame(tt); 
     eglSwapBuffers(state.display, state.surface);
 }
 
@@ -190,8 +259,7 @@ void PHWOnCmd(struct android_app* app, int32_t cmd)
             if (state.accelerometerSensor)
             {
                 ASensorEventQueue_enableSensor(state.sensorEventQueue, state.accelerometerSensor);
-                if (state.gm)
-                    ASensorEventQueue_setEventRate(state.sensorEventQueue, state.accelerometerSensor, state.fps * 1000000L);
+                ASensorEventQueue_setEventRate(state.sensorEventQueue, state.accelerometerSensor, 1000000L / state.fps);
             }
             state.animating = true;
             if (state.gm)
@@ -208,9 +276,64 @@ void PHWOnCmd(struct android_app* app, int32_t cmd)
     }
 }
 
+void PHWOnTouchEvent(PHWState & state, int type, int pointer, ph_float x, ph_float y)
+{
+    if (!state.gm) return;
+    void * ud = (void*)pointer;
+    PHPoint p(x/state.width  *  2 - 1, 
+              y/state.height * -2 + 1);
+    switch(type)
+    {
+        case AMOTION_EVENT_ACTION_DOWN:
+            state.gm->eventHandler()->touchDown(p, ud);
+            break;
+        case AMOTION_EVENT_ACTION_UP:
+            state.gm->eventHandler()->touchUp(p, ud);
+            break;
+        case AMOTION_EVENT_ACTION_MOVE:
+            state.gm->eventHandler()->touchMoved(p, ud);
+            break;
+        case AMOTION_EVENT_ACTION_CANCEL:
+            state.gm->eventHandler()->touchCancelled(p, ud);
+            break;
+    }
+}
+
 int32_t PHWOnInputEvent(struct android_app* app, AInputEvent * evt)
 {
     PHWState & state = *(PHWState*)(app->userData);
+    if (AInputEvent_getType(evt) == AINPUT_EVENT_TYPE_MOTION) {
+    	int type;
+        int action = AMotionEvent_getAction(evt);
+        int pointer = (action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+        int pc;
+        
+        switch(action & AMOTION_EVENT_ACTION_MASK)
+        {
+            case AMOTION_EVENT_ACTION_DOWN:
+            case AMOTION_EVENT_ACTION_POINTER_DOWN:
+                type = AMOTION_EVENT_ACTION_DOWN;
+                break;
+            case AMOTION_EVENT_ACTION_UP:
+            case AMOTION_EVENT_ACTION_POINTER_UP:
+            case AMOTION_EVENT_ACTION_OUTSIDE:
+                type = AMOTION_EVENT_ACTION_UP;
+                break;
+            case AMOTION_EVENT_ACTION_MOVE:
+                type = AMOTION_EVENT_ACTION_MOVE;
+                pc = AMotionEvent_getPointerCount(evt);
+                for (int p=0; p<pc; p++)
+                    PHWOnTouchEvent(state, type, AMotionEvent_getPointerId(evt, p), AMotionEvent_getX(evt, p), AMotionEvent_getY(evt, p));
+                return true;
+            case AMOTION_EVENT_ACTION_CANCEL:
+                type = AMOTION_EVENT_ACTION_CANCEL;
+                break;
+            default:
+                return 0;
+        }
+        PHWOnTouchEvent(state, type, AMotionEvent_getPointerId(evt, pointer), AMotionEvent_getX(evt, pointer), AMotionEvent_getY(evt, pointer));
+		return 1;
+    }
     return 0;
 }
 
@@ -231,6 +354,8 @@ void android_main(android_app * app)
     state.accelerometerSensor = ASensorManager_getDefaultSensor(state.sensorManager, ASENSOR_TYPE_ACCELEROMETER);
     state.sensorEventQueue = ASensorManager_createEventQueue(state.sensorManager, app->looper, LOOPER_ID_USER, NULL, NULL);
 
+    PHWLoadFromJava(state);
+
     while(1)
     {
         int ident;
@@ -242,14 +367,35 @@ void android_main(android_app * app)
                 source->process(app, source);
             }
 
-            if (ident == LOOPER_ID_USER) {
-                if (state.accelerometerSensor != NULL) {
+            if (ident == LOOPER_ID_USER) 
+            {
+                if (state.accelerometerSensor != NULL) 
+                {
                     ASensorEvent event;
                     while (ASensorEventQueue_getEvents(state.sensorEventQueue,
-                            &event, 1) > 0) {
-                        PHLog("accelerometer: x=%f y=%f z=%f",
-                                event.acceleration.x, event.acceleration.y,
-                                event.acceleration.z);
+                            &event, 1) > 0) 
+                    {
+                        PHAcceleration accel;
+                        accel.x = event.acceleration.x;
+                        accel.y = event.acceleration.y;
+                        accel.z = event.acceleration.z;
+                        ph_float x=accel.x, y=accel.y;
+                        switch(state.orient)
+                        {
+                            case 1:
+                                accel.x = -y;
+                                accel.y = x;
+                                break;
+                            case 2:
+                                accel.x = -x;
+                                accel.y = -y;
+                                break;
+                            case 3:
+                                accel.x = y;
+                                accel.y = -x;
+                                break;
+                        }
+                        PHAccelInterface::setAcceleration(accel);
                     }
                 }
             }

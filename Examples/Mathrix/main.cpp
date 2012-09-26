@@ -119,7 +119,6 @@ protected:
         text->release();
 
         snd = gm->soundManager()->soundNamed("explosion");
-
         lines --;
         
         block = NULL;
@@ -313,8 +312,9 @@ void PHGameEntryPoint(PHGameManager * gm)
     vc->release();
 }
 
-int main(int argc, char *argv[]) {
+PHMAIN_DEFINE
+{    
     srand(time(NULL));
-    return PHWMain(argc, argv, PHWVideoMode(800,600,PHWVideoMode::Windowed), PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL);
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVideoMode(800,600,PHWVideoMode::Windowed), PHWGLES1 | PHWVSync, &PHGameEntryPoint,NULL));
 }
  

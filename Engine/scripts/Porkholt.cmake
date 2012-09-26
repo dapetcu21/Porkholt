@@ -77,6 +77,9 @@ function(porkholt PH_APP_TARGET)
   if (NOT DEFINED PH_COPYRIGHT)
     set(PH_COPYRIGHT "Copyright © 2012 __MyCompanyName__. All rights reserved.")
   endif()
+  if (NOT DEFINED PH_ORIENTATION)
+    set(PH_ORIENTATION "landscape")
+  endif()
 
   if(PH_PLATFORM STREQUAL "Android")
     if (NOT PH_FORK STREQUAL "1")
@@ -122,8 +125,13 @@ function(porkholt PH_APP_TARGET)
 
       link_directories("${LIBRARY_OUTPUT_PATH_ROOT}/libs/${ANDROID_NDK_ABI_NAME}")
       add_library(${PH_APP_TARGET} SHARED ${PH_SOURCES})
-      target_link_libraries(${PH_APP_TARGET} -lPorkholt)
+      target_link_libraries(${PH_APP_TARGET} -lPorkholt -llua)
       add_dependencies(${PH_APP_TARGET} ${PH_APP_TARGET}-CopyLibraries)
+
+      if(PH_USE_BOX2D)
+          include("${PH_ENGINE_PATH}/scripts/Box2D.cmake")
+          target_link_libraries(${PH_APP_TARGET} Box2D)
+      endif()
 
       add_library(bootstrap SHARED ${CMAKE_CURRENT_BINARY_DIR}/../bootstrap.c)
       target_link_libraries(bootstrap log)
@@ -311,9 +319,15 @@ function(porkholt PH_APP_TARGET)
       unset(ANDROID_SDK)
     endif()
 
+    set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/res/raw/rsrc)
+    add_custom_target(
+        ${PH_APP_TARGET}-resources
+        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} "build" ${PH_EXTERNALS}
+      )
+
     add_custom_target(
         ${PH_APP_TARGET}
-        ALL /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; android update project -p . --target android-10 --name ${PH_APP_TARGET}"
+        ALL /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; mkdir -p src/org/porkholt/jniloader; cp ${PH_ENGINE_PATH}/scripts/JNILoader.java src/org/porkholt/jniloader/JNILoader.java && android update project -p . --target android-10 --name ${PH_APP_TARGET}"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
         )
@@ -333,18 +347,30 @@ function(porkholt PH_APP_TARGET)
         VERBATIM
         )
 
+    add_custom_target(
+        ${PH_APP_TARGET}-run
+        COMMAND /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; adb shell am start -a android.intent.action.MAIN -n ${PH_BUNDLE_ID}/android.app.NativeActivity"
+        VERBATIM
+        )
+
     if (NOT TARGET install)
         add_custom_target(install)
+    endif()
+    if (NOT TARGET run)
+        add_custom_target(run)
     endif()
     if (NOT TARGET package)
         add_custom_target(package)
     endif()
 
     add_dependencies(${PH_APP_TARGET} ${PH_APP_TARGET}-lib)
+    add_dependencies(${PH_APP_TARGET} ${PH_APP_TARGET}-resources)
     add_dependencies(${PH_APP_TARGET}-install ${PH_APP_TARGET})
     add_dependencies(${PH_APP_TARGET}-package ${PH_APP_TARGET})
+    add_dependencies(${PH_APP_TARGET}-run ${PH_APP_TARGET}-install)
     add_dependencies(package ${PH_APP_TARGET}-package)
     add_dependencies(install ${PH_APP_TARGET}-install)
+    add_dependencies(run ${PH_APP_TARGET}-run)
 
   endif()
 endfunction()

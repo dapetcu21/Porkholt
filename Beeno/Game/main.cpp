@@ -10,9 +10,9 @@ void PHGameEntryPoint(PHGameManager * gm)
     vc->release();
 }
 
-int main(int argc, char *argv[]) {
-    return PHWMain(argc, 
-                   argv,
+PHMAIN_DEFINE
+{
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, 
                    PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed),
                    PHWGLES1 
 #if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
@@ -20,5 +20,5 @@ int main(int argc, char *argv[]) {
                    | PHWShowFPS
 #endif
                    | PHWVSync
-                   , &PHGameEntryPoint, NULL);
+                   , &PHGameEntryPoint, NULL));
 }

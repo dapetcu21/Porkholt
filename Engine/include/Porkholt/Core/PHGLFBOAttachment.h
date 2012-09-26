@@ -36,9 +36,9 @@ public:
     enum pixelFormat format() { return pfmt; }
 };
 
-extern const GLenum PHGLInternalFormats[];
-extern const GLenum PHGLFormats[];
-extern const GLenum PHGLTypes[];
+extern GLenum PHGLInternalFormats[];
+extern GLenum PHGLFormats[];
+extern GLenum PHGLTypes[];
 
 
 #endif

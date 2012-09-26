@@ -6,12 +6,12 @@
 
 void PHLog(const char * str, ...);
 void PHLog(const string & str, ...);
-void PHGLCheckError_();
+void PHGLCheckError_(const char * file, int line);
 
 inline void PHNop() {};
 
 #ifdef PH_DEBUG
-#define PHGLCheckError PHGLCheckError_
+#define PHGLCheckError() PHGLCheckError_(__FILE__, __LINE__)
 #define PHGLClearError PHGL::glGetError
 #else
 #define PHGLCheckError PHNop

@@ -31,8 +31,8 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
 -(void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
 	PHAcceleration accel;
-	accel.x=[acceleration x];
-	accel.y=[acceleration y];
+	accel.x=-[acceleration y];
+	accel.y=[acceleration x];
 	accel.z=[acceleration z];
 	PHAccelInterface::setAcceleration(accel);
 }
