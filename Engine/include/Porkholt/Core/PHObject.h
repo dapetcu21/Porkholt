@@ -20,6 +20,8 @@ class PHObject
 private:
     int _refcount;
     void * inv;
+
+    void zombie();
 public:
 	PHObject(): _refcount(1), inv(NULL) {};
 	PHOBJECT_PREFIX PHObject * retain() { _refcount++; return this;};
@@ -37,7 +39,7 @@ public:
         }
         if (_refcount<0) 
         {
-            fprintf(stderr,"Porkholt: HEY YOU! this(%llx) is a zombie object. Set a breakpoint in PHObject::release() to debug\n",(unsigned long long)(size_t)this);
+            zombie();
             return NULL;
         }
         return this; 

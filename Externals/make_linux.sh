@@ -31,3 +31,6 @@ compilelib() {
 compilelib libz.a zlib ./zlib_compile_linux.sh $1
 compilelib libpng15.a libpng ./libpng_compile_linux.sh $1
 compilelib liblua.a Lua ./liblua_compile_linux.sh $1
+compilelib libogg.a OGG ./libogg_compile_linux.sh $1
+compilelib libvorbis.a Vorbis ./libvorbis_compile_linux.sh $1
+

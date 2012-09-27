@@ -10,6 +10,7 @@
 #include <Porkholt/Core/PHFont.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <sstream>
 
 #define SIZ_BK_WID 0.09

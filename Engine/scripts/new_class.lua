@@ -46,8 +46,8 @@ files = file:read("*a")
 file:close()
 
 if (not string.find(files, class)) then
-    files = string.gsub(files, "(set%(PH_ENGINE_SRCS[ \t\n{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/src/"..class..".cpp\n%2")
-    files = string.gsub(files, "(set%(PH_ENGINE_HEADERS[ \t\n{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/include/Porkholt/"..class..".h\n%2")
+    files = string.gsub(files, "(set%(PH_ENGINE_SRCS[ \t\n{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/src/"..class..".cpp\n%2", 1)
+    files = string.gsub(files, "(set%(PH_ENGINE_HEADERS[ \t\n{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/include/Porkholt/"..class..".h\n%2", 1)
     file = io.open(fname, "w")
     file:write(files)
     file:close()

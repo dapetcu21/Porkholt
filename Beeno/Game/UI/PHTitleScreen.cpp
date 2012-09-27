@@ -7,6 +7,7 @@
 #include "PHChapterController.h"
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/UI/PHTestViewController.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 
 #define POS_BG_Y 0.65
 #define BORDER_BG_LEFT 0.05

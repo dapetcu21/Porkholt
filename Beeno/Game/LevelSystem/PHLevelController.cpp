@@ -26,6 +26,7 @@
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Core/PHThreading.h>
 #include <Porkholt/Core/PHTime.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 
 #include <sstream>
 

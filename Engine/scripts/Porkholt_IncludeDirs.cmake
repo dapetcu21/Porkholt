@@ -6,6 +6,8 @@ if (NOT DEFINED PH_ENGINE_HINCLUDED)
     ${PH_EXTERNALS}/libpng
     ${PH_EXTERNALS}/zlib
     ${PH_EXTERNALS}/uremote/include
+    ${PH_EXTERNALS}/libogg/include
+    ${PH_EXTERNALS}/libvorbis/include
     )
 
     if (PH_PLATFORM STREQUAL OSX)

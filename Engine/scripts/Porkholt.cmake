@@ -163,6 +163,9 @@ function(porkholt PH_APP_TARGET)
       ${PH_EXTERNALS}/lib/${PH_LIBS}/liblua.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
+      ${PH_EXTERNALS}/lib/${PH_LIBS}/libvorbisfile.a
+      ${PH_EXTERNALS}/lib/${PH_LIBS}/libvorbis.a
+      ${PH_EXTERNALS}/lib/${PH_LIBS}/libogg.a
       ${X11_LIBRARIES}
       ${PH_XRANDR}
       ${OPENGL_LIBRARIES}

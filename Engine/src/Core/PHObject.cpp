@@ -33,3 +33,8 @@ void PHObject::clearInvocations()
     }
     delete s;
 }
+
+void PHObject::zombie()
+{
+    PHLog("HEY YOU! this(%p) is a zombie object. Set a breakpoint in PHObject::zombie() to debug\n", this);
+}

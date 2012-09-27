@@ -86,6 +86,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Sound/PHSoundManager.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHSoundPool.cpp
   ${PH_ENGINE_PATH}/src/Sound/PHWAVDecoder.cpp
+  ${PH_ENGINE_PATH}/src/Sound/PHOggVorbis.cpp
   ${PH_ENGINE_PATH}/src/3D/PHBody.cpp
   ${PH_ENGINE_PATH}/src/3D/PHMesh.cpp
   ${PH_ENGINE_PATH}/src/3D/PHMeshBody.cpp
@@ -204,6 +205,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundManager.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHSoundPool.h
   ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHWAVDecoder.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Sound/PHOggVorbis.h
   ${PH_ENGINE_PATH}/include/Porkholt/3D/PHBody.h
   ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMesh.h
   ${PH_ENGINE_PATH}/include/Porkholt/3D/PHMeshBody.h
@@ -222,11 +224,9 @@ if(PH_PLATFORM STREQUAL "Android")
     set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
       ${PH_ENGINE_PATH}/src/Bindings/Android/PHWindowing.cpp
       ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.c
-      ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
       )
     set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
       ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.h
-      ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
       )
     include_directories(
       ${PH_EXTERNALS}/openal-soft/include
@@ -237,12 +237,10 @@ if(PH_PLATFORM STREQUAL "X11")
     set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
       ${PH_ENGINE_PATH}/src/Bindings/X11/PHWindowing.cpp
       ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.cpp
-      ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
       )
       
     set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
       ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.h
-      ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
       )
 endif()
 
@@ -252,14 +250,12 @@ if(PH_PLATFORM STREQUAL "OSX")
       ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
       ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
       ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
-      ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
       )
       
     set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
       ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHAppDelegate.h
       ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHGLView.h
       ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHWindow.h
-      ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
       )
 
 endif()
@@ -271,14 +267,12 @@ if(PH_PLATFORM STREQUAL "iOS")
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PHStartGame.mm
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.mm
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.mm
-      ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
       )
     set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
       ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.h
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtAppDelegate.h
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.h
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.h
-      ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
       )
     include_directories(
       ${CMAKE_CURRENT_SOURCE_DIR}/src/Geometry/math

@@ -9,6 +9,7 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Sound/PHWAVDecoder.h>
+#include <Porkholt/Sound/PHOggVorbis.h>
 
 map<string, PHAllocator> * PHSoundManager::extensions = NULL;
 bool PHSoundManager::plugLoaded = false;
@@ -78,6 +79,7 @@ void PHSoundManager::loadPlugins()
 
     registerPlugin("wav", PHAlloc<PHWAVDecoder>);
     registerPlugin("wave", PHAlloc<PHWAVDecoder>);
+    registerPlugin("ogg", PHAlloc<PHOggVorbis>);
 }
 
 void PHSoundManager::registerPlugin(const string & ext, PHAllocator a)
