@@ -67,6 +67,7 @@ void PHTitleScreen::setBackButton(PHInvocation inv)
 
 void PHTitleScreen::buttonPressed(PHObject * sender, void * ud)
 {
+    PHAutoreleasePool ap;
     PHViewController * vc = new PHChapterController(gm, gm->resourceDirectory()->directoryAtPath("levels/current"));
     gm->loadAllImages();
     navigationController()->pushViewController(vc,PHNavigationController::SlideLeft);

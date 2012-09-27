@@ -94,7 +94,8 @@ PHThread::PHThread(pthread_t tr) : PHTHREAD_INILIST
 PHThread * PHThread::currentThread()
 {
 	threads_mutex -> lock();
-	PHThread * res = threads[pthread_self()];
+    map<PHThreadID, PHThread*>::iterator it = threads.find(pthread_self());
+	PHThread * res = (it==threads.end()) ? NULL : it->second;
 	threads_mutex -> unlock();
 	return res;
 }

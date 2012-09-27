@@ -384,11 +384,11 @@ void PHLevelController::curtainText(const string & s, lua_State * L)
 
 vector<string> * PHLevelController::parseFile(const string & name)
 {
+    PHAutoreleasePool p;
     try {
         PHFile * file = directory->fileAtPath(name);
         vector<string> * v = new vector<string>;
         char * b = (char*)file->loadToBuffer();
-        file->release();
         char * s = b, * str;
         while ((str = strtok(s, "|")))
         {

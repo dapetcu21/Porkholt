@@ -9,6 +9,7 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/Core/PHAccelInterface.h>
 #include <Porkholt/Core/PHTime.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 
 class PHWVideoMode PHW_VideoMode;
 int PHWFlags;
@@ -131,6 +132,9 @@ void PHWInitWindow(PHWState & state)
         if (!(PHWFlags & PHWStencilBuffer))
             stencil = 1<<5-1-stencil;
         int score = ((gl & EGL_OPENGL_ES2_BIT)?1<<11:0) + ((smax>=1)?(1<<10):0) + (depth<<5) + stencil;
+
+        //PHLog("config: 0x%x", score);
+
         if (score > mscore)
         {
             mscore = score;
@@ -170,6 +174,7 @@ void PHWInitWindow(PHWState & state)
     state.width = w;
     state.height = h;
 
+    PHAutoreleasePool ap;
     PHGameManager * gameManager = state.gm = new PHGameManager;
     PHGameManagerInitParameters params;
     params.screenWidth = w; 
@@ -177,14 +182,11 @@ void PHWInitWindow(PHWState & state)
     params.fps = state.fps;
     params.dpi = state.dpi; 
     PHDirectory * dir = NULL;
-    try {
-        dir = PHInode::directoryAtFSPath("/sdcard/porkholt/rsrc"); //FUCK YOU GOOGLE
-    } catch (const string & ex)
-    {
+    try { dir = PHInode::directoryAtFSPath("/sdcard/porkholt/rsrc"); } //FUCK YOU GOOGLE
+    catch (const string & ex) {
         PHLog("Can't load resource directory: %s", ex.c_str());
     }
     params.setResourceDirectory(dir);
-    dir->release();
     params.entryPoint = PHWEntryPoint;
     if (PHWFlags & PHWShowFPS)
         gameManager->setShowsFPS(true);
@@ -239,6 +241,7 @@ void PHWRender(PHWState & state)
     ph_float t = state.lastTime = PHTime::getTime();
     ph_float fi = state.gm->frameInterval();
     ph_float tt = state.vsync?(round((t-lt)/fi)*fi):(t-lt);
+    //PHLog("frame %f actual: %f", tt, t-lt);
     state.gm->renderFrame(tt); 
     eglSwapBuffers(state.display, state.surface);
 }

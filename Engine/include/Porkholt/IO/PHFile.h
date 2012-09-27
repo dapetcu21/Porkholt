@@ -23,13 +23,13 @@ public:
         uint8_t * buf = new uint8_t[sz+1];
         buf[sz] = 0;
         try {
-        open(Read);
-        read(buf, sz);
-        close();
-        } catch (string ex)
+            open(Read);
+            read(buf, sz);
+            close();
+        } catch (...)
         {
             delete[] buf;
-            throw ex;
+            throw;
         }
         return buf;
     }

@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHGLShader.h>
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 
@@ -19,6 +20,8 @@ PHGLShaderProgram::PHGLShaderProgram(PHGameManager * gm, PHDirectory * shdDir, P
 
 void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * file, const vector<string> * ops)
 {
+    PHAutoreleasePool ap;
+
     this->gm = gm;
     lua_State * L = lua_open();
     if (ops)
@@ -52,15 +55,11 @@ void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * 
     }
     
     vShader = fShader = NULL;
-    PHFile * vfile = NULL;
-    PHFile * ffile = NULL;
     try {
-        vfile = shdDir->fileAtPath(vshader); 
-        ffile = shdDir->fileAtPath(fshader); 
+        PHFile * vfile = shdDir->fileAtPath(vshader); 
+        PHFile * ffile = shdDir->fileAtPath(fshader); 
         vShader = new PHGLShader(*header, vfile, PHGLShader::vertexShader);
         fShader = new PHGLShader(*header, ffile, PHGLShader::fragmentShader);
-        vfile->release();
-        ffile->release();
     }
     catch (string ex)
     {
@@ -68,10 +67,6 @@ void PHGLShaderProgram::init(PHGameManager * gm, PHDirectory * shdDir, PHFile * 
             vShader->release();
         if (fShader)
             fShader->release();
-        if (vfile)
-            vfile->release();
-        if (ffile)
-            ffile->release();
         lua_close(L);
         throw ex;
     }

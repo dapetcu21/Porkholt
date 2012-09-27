@@ -1,6 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/IO/PHDirectory.h>
 
@@ -109,15 +110,12 @@ bool PHLuaLoadFile(lua_State * L, string fname)
 
 bool PHLuaLoadFile(lua_State * L, PHDirectory * dir, const string & fname)
 {
-    PHFile * file = dir->fileAtPath(fname);
-    if (!file)
-    {
-        PHLog("File doesn't exist: \"%s\"", fname.c_str());
-        return false;
+    PHAutoreleasePool ap;
+    try { return PHLuaLoadFile(L, dir->fileAtPath(fname)); }
+    catch(const string & ex) {
+        PHLog("Lua: Can't load \"%s\": %s", fname.c_str(), ex.c_str()); 
     }
-    bool r = PHLuaLoadFile(L, file);
-    file->release();
-    return r;
+    return false;
 }
 
 bool PHLuaLoadFile(lua_State * L, PHFile * file)

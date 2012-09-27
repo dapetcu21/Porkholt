@@ -1,6 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #import <Porkholt/Bindings/OSX/PHGLView.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #import <Porkholt/Core/PHGameManager.h>
 #import <Porkholt/Core/PHEventHandler.h>
 #import <Porkholt/Core/PHEvent.h>
@@ -51,6 +52,8 @@
                                                     repeats:YES];
     
     NSRect frame = [self bounds];
+    PHThread::mainThread();
+    PHAutoreleasePool ap;
     gameManager = new PHGameManager;
     gameManager->setUserData(self);
     
@@ -67,9 +70,10 @@
     initParams.screenWidth = frame.size.width;
     initParams.screenHeight = frame.size.height;
     initParams.fps = fps;
-    PHDirectory * dir = PHInode::directoryAtFSPath(string([res UTF8String]) + "/rsrc");
-    initParams.setResourceDirectory(dir);
-    dir->release();
+    try { initParams.setResourceDirectory(PHInode::directoryAtFSPath(string([res UTF8String]) + "/rsrc")); }
+    catch (const string & ex) {
+        PHLog("Can't load resource directory: %s", ex.c_str());
+    }
     initParams.entryPoint = entryPoint;
     if (flags & PHWRemote)
         gameManager->setUsesRemote(true);

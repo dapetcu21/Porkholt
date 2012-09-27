@@ -11,11 +11,15 @@ PHInode * PHInode::itemAtFSPath(const string & p)
     struct stat results;
     if (stat(p.c_str(), &results) != 0)
         throw string(strerror(errno));
+    PHInode * i;
     if (results.st_mode & S_IFDIR)
-        return new PHRegularDirectory(p, false);
-    if (results.st_mode & S_IFREG)
-        return new PHRegularFile(p, false);
-    throw string("not a file or directory");
+        i = new PHRegularDirectory(p, false);
+    else if (results.st_mode & S_IFREG)
+        i = new PHRegularFile(p, false);
+    else
+        throw string("not a file or directory");
+    i->autorelease();
+    return i;
 }
 
 PHFile * PHInode::fileAtFSPath(const string & p)
@@ -24,7 +28,11 @@ PHFile * PHInode::fileAtFSPath(const string & p)
     if (stat(p.c_str(), &results) != 0)
         throw string(strerror(errno));
     if (results.st_mode & S_IFREG)
-        return new PHRegularFile(p ,false);
+    {
+        PHFile * i = new PHRegularFile(p ,false);
+        i->autorelease();
+        return i;
+    }
     throw string("not a file");
 }
 
@@ -34,7 +42,12 @@ PHDirectory * PHInode::directoryAtFSPath(const string & p)
     if (stat(p.c_str(), &results) != 0)
         throw string(strerror(errno));
     if (results.st_mode & S_IFDIR)
-        return new PHRegularDirectory(p ,false);
+    {
+        PHLog("meow");
+        PHDirectory * i = new PHRegularDirectory(p ,false);
+        i->autorelease();
+        return i;
+    }
     throw string("not a directory");
 }
 

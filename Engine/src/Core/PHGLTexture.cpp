@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHFile.h>
 #define PNG_DEBUG 4
 #include <png.h>
@@ -267,15 +268,10 @@ void PHGLTextureCubeMap::setData(uint8_t *data, size_t width, size_t height, enu
 uint8_t * PHGLTexture::dataFromFile(const string & fname, size_t & width, size_t & height, size_t & bufWidth, size_t & bufHeight, bool powerOfTwo, size_t & size, enum pixelFormat & format)
 {
     PHStream * fd = NULL;
+    PHAutoreleasePool ap;
     fd = PHInode::fileAtFSPath(fname);
     uint8_t * r;
-    try {
-        r = dataFromFile(fd, width, height, bufWidth, bufHeight, powerOfTwo, size, format);
-    } catch (string ex) {
-        fd->release();
-        throw ex;
-    }
-    fd->release();
+    r = dataFromFile(fd, width, height, bufWidth, bufHeight, powerOfTwo, size, format);
     return r;
 }
 

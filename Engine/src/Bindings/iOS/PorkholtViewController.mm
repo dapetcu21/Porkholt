@@ -13,6 +13,7 @@
 #include <sys/sysctl.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/Core/PHTime.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #import "EAGLView.h"
 
 PHGameManager * PHGameManagerSingleton;
@@ -122,6 +123,7 @@ extern void * PHWUD;
         [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES]; //to keep the run loop blocking
     }
     
+    PHAutoreleasePool ap;
     gameManager = new PHGameManager;
     
     PHGameManagerInitParameters params;
@@ -131,9 +133,13 @@ extern void * PHWUD;
     params.screenWidth = s.bounds.size.height*scale;
     params.fps = FPS;
     params.dpi = 160*scale;
-    PHDirectory * dir = PHInode::directoryAtFSPath((string)([[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"rsrc"] UTF8String]));
-    params.setResourceDirectory(dir);
-    dir->release();
+    try {
+        PHDirectory * dir = PHInode::directoryAtFSPath((string)([[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"rsrc"] UTF8String]));
+        params.setResourceDirectory(dir);
+    } catch (const string & ex) {
+        PHLog("Can't load resource directory: %s", ex.c_str());
+    }
+    initParams.entryPoint = entryPoint;
     params.entryPoint = PHWEntryPoint;
     if (PHWFlags & PHWShowFPS)
         gameManager->setShowsFPS(true);

@@ -1,5 +1,6 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Sound/PHOpenAL.h>
 #include <Porkholt/Sound/PHSound.h>
@@ -126,18 +127,13 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
             string enm = name + "." + i->first;
             if (dir->fileExists(enm))
             {
-                PHFile * file = NULL;
+                PHAutoreleasePool ap;
                 PHDecoder * decoder = NULL;
                 try {
                     decoder = (PHDecoder*)(i->second)();
-                    file = dir->fileAtPath(enm);
-                    decoder->loadFromFile(file);
-                    file->release();
-                    file = NULL;
+                    decoder->loadFromFile(dir->fileAtPath(enm));
                 } catch (string ex) {
                     PHLog("Can't load \"%s\": %s",enm.c_str(), ex.c_str());
-                    if (file)
-                        file->release();
                     if (decoder)
                         decoder->release();
                     throw;

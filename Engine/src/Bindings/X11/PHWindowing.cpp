@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHWindowing.h>
 #include "PHX11.h"
 #include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/IO/PHDirectory.h>
@@ -101,15 +102,17 @@ void * PHWCreateWindow(const string & title, const PHWVideoMode & vm, int flags,
     PHWCurrentVideoMode.width = resolutionX;
     PHWCurrentVideoMode.height = resolutionY;
     
+    PHAutoreleasePool ap;
     PHGameManager * gm = PHWGameManager = new PHGameManager;
     gm->setUserData(ud);
     PHGameManagerInitParameters init;
     init.screenWidth = resolutionX;
     init.screenHeight = resolutionY;
     init.fps = rr;
-    PHDirectory * dir = PHInode::directoryAtFSPath(PHResourcePath.c_str());
-    init.setResourceDirectory(dir);
-    dir->release();
+    try { init.setResourceDirectory(PHInode::directoryAtFSPath(PHResourcePath.c_str())); }
+    catch (const string & ex) {
+        PHLog("Can't load resource directory: %s", ex.c_str());
+    }
     init.entryPoint = entryPoint;
     if (flags & PHWRemote)
         gm->setUsesRemote(true);

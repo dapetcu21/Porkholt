@@ -104,6 +104,7 @@ void PHChapterController::backPressed(PHObject * sender, void *ud)
 
 void PHChapterController::loadLevel(int nr,bool replace)
 {
+    PHAutoreleasePool ap;
     ostringstream oss;
     oss<<"lvl"<<nr;
     PHLevelController * lvlvc = new PHLevelController(gm, path->directoryAtPath(oss.str()));

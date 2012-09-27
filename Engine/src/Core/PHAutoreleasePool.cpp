@@ -4,7 +4,7 @@
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHThreading.h>
 
-map<PHThread*, list<PHAutoreleasePool*> > PHAutoreleasePool::pools;
+map<PHThreadID, list<PHAutoreleasePool*> > PHAutoreleasePool::pools;
 PHMutex * PHAutoreleasePool::mutex = new PHMutex();
 
 void PHAutoreleasePool::noPoolInPlace(PHObject * obj)
@@ -26,7 +26,7 @@ PHAutoreleasePool * PHAutoreleasePool::currentPool()
     PHAutoreleasePool * r = NULL;
     mutex->lock();
 
-    map<PHThread*, list<PHAutoreleasePool*> >::iterator i = pools.find(PHThread::currentThread());
+    map<PHThreadID, list<PHAutoreleasePool*> >::iterator i = pools.find(PHThread::currentThreadID());
     if (i != pools.end())
     {
         list<PHAutoreleasePool*> & l = i->second;
@@ -47,8 +47,8 @@ void PHAutoreleasePool::drain()
 PHAutoreleasePool::PHAutoreleasePool()
 {
     mutex->lock();
-    PHThread * t = PHThread::currentThread();
-    map<PHThread*, list<PHAutoreleasePool*> >::iterator i = pools.find(t);
+    PHThreadID t = PHThread::currentThreadID();
+    map<PHThreadID, list<PHAutoreleasePool*> >::iterator i = pools.find(t);
     if (i == pools.end())
         i = pools.insert(make_pair(t, list<PHAutoreleasePool*>())).first;
     i->second.push_back(this);
@@ -60,7 +60,7 @@ PHAutoreleasePool::~PHAutoreleasePool()
     drain();
 
     mutex->lock();
-    map<PHThread*, list<PHAutoreleasePool*> >::iterator i = pools.find(PHThread::currentThread());
+    map<PHThreadID, list<PHAutoreleasePool*> >::iterator i = pools.find(PHThread::currentThreadID());
     if (i != pools.end())
     {
         list<PHAutoreleasePool*> & l = i->second;

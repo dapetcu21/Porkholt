@@ -11,12 +11,14 @@ PHGLShader::PHGLShader(const string & header, const string & data, int type)
 PHGLShader::PHGLShader(const string & header, PHFile * file, int type)
 {
     size_t s = 0;
-    uint8_t * d = file->loadToBuffer(s);
+    uint8_t * d = NULL;
     try {
-    loadWithData(header, d, s, type);
-    } catch (string ex) {
-        delete[] d;
-        throw ex;
+        d = file->loadToBuffer(s);
+        loadWithData(header, d, s, type);
+    } catch (...) {
+        if (d)
+            delete[] d;
+        throw;
     }
     delete[] d;
 }

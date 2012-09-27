@@ -16,16 +16,11 @@ PHFont* PHFontInitPool::fontNamed(const string & name)
     map<string,PHFont*>::iterator i = fonts.find(name);
     if (i==fonts.end())
     {
-        PHFile * file = NULL;
         try {
-            file = fontDirectory()->fileAtPath(name+".phf");
-            fnt = PHFontInitPool::fontFromFile(file);
-            file->release();
+            fnt = PHFontInitPool::fontFromFile(fontDirectory()->fileAtPath(name+".phf"));
         } catch (string ex)
         {
-            if (file)
-                file->release();
-            PHLog(ex);
+            PHLog("Can't load font \"%s\": %s", name.c_str(), name.c_str());
             return NULL;
         }
         fonts[name] = fnt;

@@ -10,10 +10,12 @@
 class PHMutex;
 class PHEventQueue;
 
+typedef pthread_t PHThreadID;
+
 class PHThread : public PHObject
 {
 private:
-	pthread_t thread;
+	PHThreadID thread;
 	PHMutex * initMutex;
 	bool running,autorelease;
     PHInvocation invocation;
@@ -27,6 +29,7 @@ public:
 	void join();
 	bool isRunning() { return running; }
 	PHThread();
+	PHThread(PHThreadID id);
 	~PHThread();
 	
     bool autoRelease() { return autorelease; }
@@ -39,10 +42,11 @@ public:
         t->setAutoRelease(true);
         t->start();
     }
-    
+
+    PHThreadID nativeThreadID() { return thread; } 
+    static PHThreadID currentThreadID() { return pthread_self(); }
 private:
-	PHThread(pthread_t);
-	static map<pthread_t,PHThread*> threads;
+	static map<PHThreadID,PHThread*> threads;
 	static PHThread * main;
 	static PHMutex * threads_mutex;
 	void addToThreads();

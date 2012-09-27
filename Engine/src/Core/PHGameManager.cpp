@@ -25,7 +25,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0)
 {
 memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -104,6 +104,7 @@ void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
 
 void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
+    PHAutoreleasePool ap;
     initPHGL();
 
 	fps = params.fps;
@@ -144,36 +145,35 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     rsrcDir = params.resourceDirectory();
     if (!rsrcDir)
         rsrcDir = PHInode::directoryAtFSPath("./rsrc");
-    else
-        rsrcDir->retain();
-    shdDir = rsrcDir->directoryAtPath("shaders");
+    rsrcDir->retain();
+    try {
+        shdDir = rsrcDir->directoryAtPath("shaders");
+        shdDir->retain();
+    } catch(...) {
+        shdDir = NULL;
+    }
     try {
         matDir = rsrcDir->directoryAtPath("materials");
+        matDir->retain();
     } catch(...) {
         matDir = NULL;
     }
     try {
         imgDir = rsrcDir->directoryAtPath("img");
+        imgDir->retain();
     } catch(...) {
         imgDir = NULL; 
     }
     try {
         fntDir = rsrcDir->directoryAtPath("fnt");
+        fntDir->retain();
     } catch (...) {
         fntDir = NULL;
     }
-    PHDirectory * sndDir = NULL;
     try {
-        sndDir = rsrcDir->directoryAtPath("snd");
-        sndMan = new PHSoundManager(sndDir);
+        sndMan = new PHSoundManager(rsrcDir->directoryAtPath("snd"));
         animPool->addAnimator(sndMan);
-        sndDir->release();
-        sndDir = NULL;
-    } catch (...)
-    {
-        if (sndDir)
-            sndDir->release();
-    }
+    } catch (...) {}
     
     PHGL::glDisable(GL_DEPTH_TEST);
     PHGL::glDepthMask(GL_TRUE);

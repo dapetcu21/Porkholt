@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHMaterialInitPool.h>
 #include <Porkholt/Core/PHLuaMaterial.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 
@@ -23,20 +24,12 @@ PHMaterial * PHMaterialInitPool::materialFromFile(PHFile * file)
 
 PHMaterial * PHMaterialInitPool::materialNamed(const string & name, PHDirectory * dir)
 {
-    PHMaterial * mat = NULL;
-    PHFile * file = NULL;
-    try {
-        file = dir->fileAtPath(name + ".lua");
-        mat = new PHLuaMaterial(gameManager(), file);
-        file->release();
-    } catch(const string & ex)
-    {
-        if (file)
-            file->release();
+    PHAutoreleasePool ap;
+    try { return materialFromFile(dir->fileAtPath(name + ".lua")); }
+    catch(const string & ex) {
         PHLog("Could not load material \"%s\": %s", name.c_str(), ex.c_str());
-        mat = NULL;
     }
-    return mat;
+    return NULL;
 }
 
 void PHMaterialInitPool::collectGarbageMaterials()

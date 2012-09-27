@@ -5,30 +5,23 @@
 #include <Porkholt/IO/PHFileManager.h>
 #include <Porkholt/Core/PHAnimatedImage.h>
 #include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 
 PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir, bool nmap)
 {
     PHImage * img = NULL;
-    PHInode * file = NULL;
+    PHAutoreleasePool ap;
     bool aa = dir->itemExists(name + ".png.aa");
     try {
-        file = dir->itemAtPath(name + hdsuf + ".png");
-        img = PHImageInitPool::imageFromFile(file, aa);
-        file->release();
+        img = PHImageInitPool::imageFromFile(dir->itemAtPath(name + hdsuf + ".png"), aa);
     } catch (...)
     {
-        if (file)
-            file ->release();
         try {
-            file = dir->itemAtPath(name + ".png");
-            img = PHImageInitPool::imageFromFile(file, aa);
-            file->release();
+            img = PHImageInitPool::imageFromFile(dir->itemAtPath(name + ".png"), aa);
         } catch (string ex)
         {
-            if (file)
-                file->release();
             PHLog("Could not load image \"%s\": %s", name.c_str(), ex.c_str());
             img = PHImageInitPool::imageNamed("placeholder");
         }

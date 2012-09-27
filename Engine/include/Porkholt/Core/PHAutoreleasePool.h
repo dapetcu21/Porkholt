@@ -8,13 +8,14 @@
 #include <list>
 
 class PHObject;
-class PHThread;
 class PHMutex;
+
+#include <Porkholt/Core/PHThread.h>
 
 class PHAutoreleasePool
 {
     std::vector<PHObject*> objects;
-    static std::map<PHThread*, std::list<PHAutoreleasePool*> > pools;
+    static std::map<PHThreadID, std::list<PHAutoreleasePool*> > pools;
     static PHMutex * mutex;
 
     public:

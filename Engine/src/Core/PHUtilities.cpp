@@ -2,9 +2,16 @@
 
 #include <Porkholt/Core/PHUtilities.h>
 
-void PHHashedString::recomputeHash()
+template<>
+void PHHashedStr<string>::recomputeHash()
 {
     h = PHCRC32(0, (const uint8_t*)(&(str[0])), str.size());
+}
+
+template<>
+void PHHashedStr<const char*>::recomputeHash()
+{
+    h = PHCRC32Until(0, (const uint8_t*)str);
 }
 
 static uint32_t crc32_tab[] = {
@@ -58,5 +65,13 @@ uint32_t PHCRC32(uint32_t crc, const uint8_t * p, size_t size)
     crc = crc ^ ~0U;
     while (size--)
     	crc = crc32_tab[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
+    return crc ^ ~0U;
+}
+
+uint32_t PHCRC32Until(uint32_t crc, const uint8_t * p, uint8_t until)
+{
+    crc = crc ^ ~0U;
+    while ((*p)!=until)
+        crc = crc32_tab[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
     return crc ^ ~0U;
 }

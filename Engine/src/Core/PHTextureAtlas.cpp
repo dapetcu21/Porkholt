@@ -9,6 +9,7 @@
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHThreading.h>
+#include <Porkholt/Core/PHAutoreleasePool.h>
 
 lua_State * PHTextureAtlas::staticL = NULL;
 PHMutex * PHTextureAtlas::luaMutex = new PHMutex;
@@ -147,6 +148,8 @@ void PHTextureAtlas::loadFromDir(PHDirectory * dir, lua_State * L)
 
 void PHTextureAtlas::loadInMemory()
 {
+    PHAutoreleasePool ap;
+
     if (ploaded) return;
     int j=0;
     ls->mp.resize(ls->maps.size());
@@ -156,7 +159,6 @@ void PHTextureAtlas::loadInMemory()
         PHFile * f = ls->dir->fileAtPath(*i);
         PHTextureAtlas::loadStruct::params & p = ls->mp[j];
         p.data = PHGLTexture::dataFromFile(f, p.w, p.h, p.bw, p.bh, pot, p.sz, p.fmt);
-        f->release();
         p.aa = ls->dir->fileExists((*i) + ".aa");
     }
     ploaded = true;

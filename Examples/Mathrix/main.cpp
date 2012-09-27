@@ -178,7 +178,7 @@ protected:
                         255);
             clr *= 1/255.0f;
             block->setTintColor(clr);
-            block->setShader(gm->shaderProgramNamed("rares_shader"));
+            //block->setShader(gm->shaderProgramNamed("rares_shader"));
             PHTextView * tv = new PHTextView(block->bounds());
             tv->setFont(gm->fontNamed("Helvetica"));
             tv->setFontColor(PHWhiteColor);
