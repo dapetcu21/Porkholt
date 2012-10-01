@@ -20,7 +20,9 @@ PHLinkDirectory::PHLinkDirectory(PHDirectory * dir, PHFile * symlinks) : root(di
 PHLinkDirectory::PHLinkDirectory(PHDirectory * dir) : root(dir), PHDirectory(dir->path())
 {
     PHAutoreleasePool ap;
-    init(dir->fileAtPath("_symlinks"));
+    PHFile * f = NULL;
+    try { f = dir->fileAtPath("_symlinks"); } catch (...) {}
+    init(f);
 }
 
 PHLinkDirectory::PHLinkDirectory(PHDirectory * dir, PHLinkDirectory_data * _d, const string & _prefix): PHDirectory(dir->path() + "/" + _prefix), root(dir), d(_d), prefix(_prefix + "/")
@@ -32,7 +34,8 @@ PHLinkDirectory::PHLinkDirectory(PHDirectory * dir, PHLinkDirectory_data * _d, c
 void PHLinkDirectory::init(PHFile * symlinks)
 {
     root->retain();
-    uint8_t * data = symlinks->loadToBuffer();
+    static const uint8_t null_data[] = {0};
+    uint8_t * data = symlinks ? symlinks->loadToBuffer() : const_cast<uint8_t*>(null_data);
     char * s = (char*)data;
     char * p = s;
     char * v[2] = {NULL, NULL};
@@ -54,6 +57,9 @@ void PHLinkDirectory::init(PHFile * symlinks)
         }
         s = ++p;
     }
+
+    if (symlinks && data)
+        delete [] data;
 }
 
 PHLinkDirectory::~PHLinkDirectory()
