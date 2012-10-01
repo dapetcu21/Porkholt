@@ -1,5 +1,8 @@
 if (NOT DEFINED PH_ENGINE_HINCLUDED)
   set(PH_ENGINE_HINCLUDED "YES")
+  if (ANDROID_ABI)
+      include_directories("${PH_EXTERNALS}/libogg/build-${ANDROID_ABI}/inc")
+  endif()
   include_directories(
     ${PH_ENGINE_PATH}/include 
     ${PH_EXTERNALS}/lua/src

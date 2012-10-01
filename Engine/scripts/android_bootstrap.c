@@ -27,6 +27,9 @@ void ANativeActivity_onCreate(ANativeActivity * app, void * ud, size_t udsize)
     load_lib(LIB_PATH "libpng15.so");
     load_lib(LIB_PATH "liblua.so");
     load_lib(LIB_PATH "libopenal.so");
+    load_lib(LIB_PATH "libogg.so");
+    load_lib(LIB_PATH "libvorbis.so");
+    load_lib(LIB_PATH "libvorbisfile.so");
     load_lib(LIB_PATH "libPorkholt.so");
     void (*main)(ANativeActivity*, void*, size_t) = dlsym(load_lib(LIB_PATH "lib@PH_APP_TARGET@.so"), "ANativeActivity_onCreate");
     if (!main)

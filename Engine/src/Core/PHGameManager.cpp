@@ -444,17 +444,9 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
     if (xr & PHGLBlending)
     {
         if (states & PHGLBlending)
-        {
-            PHLog("enable");
             PHGL::glEnable(GL_BLEND);
-            PHGLCheckError();
-        }
         else
-        {
-            PHLog("disable");
             PHGL::glDisable(GL_BLEND);
-            PHGLCheckError();
-        }
     }
     
     if (vertexAttrib)
@@ -555,8 +547,7 @@ void PHGameManager::applySpriteShader()
 
 void PHGameManager::useShader(PHGLShaderProgram * prog)
 {
-    if (_shader==prog)
-        return;
+    if (_shader==prog) return;
     _shader = prog;
     prog->_use();
 }

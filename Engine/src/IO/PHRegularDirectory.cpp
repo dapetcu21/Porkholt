@@ -6,7 +6,7 @@
 PHRegularDirectory::PHRegularDirectory(const string & p) : PHDirectory(p) 
 {
     struct stat results;
-    if (stat(_path.c_str(), &results) != 0)
+    if (::stat(_path.c_str(), &results) != 0)
         throw string(strerror(errno));
     if (!(results.st_mode & S_IFDIR))
         throw string("not a directory");
@@ -43,4 +43,9 @@ bool PHRegularDirectory::directoryExists(const string & p)
 bool PHRegularDirectory::fileExists(const string & p)
 {
     return PHInode::fileExistsOnFS(_path + "/" + p);
+}
+
+void PHRegularDirectory::stat(const string & path, PHInode::stat_t & s)
+{
+    PHInode::statFS(_path + "/" + path, s);
 }

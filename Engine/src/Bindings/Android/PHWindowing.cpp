@@ -7,6 +7,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHLinkDirectory.h>
 #include <Porkholt/Core/PHAccelInterface.h>
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/Core/PHAutoreleasePool.h>
@@ -182,7 +183,10 @@ void PHWInitWindow(PHWState & state)
     params.fps = state.fps;
     params.dpi = state.dpi; 
     PHDirectory * dir = NULL;
-    try { dir = PHInode::directoryAtFSPath("/sdcard/porkholt/rsrc"); } //FUCK YOU GOOGLE
+    try { 
+        dir = new PHLinkDirectory(PHInode::directoryAtFSPath("/sdcard/porkholt/rsrc")); // FUCK YOU GOOGLE
+        dir->autorelease();
+    } 
     catch (const string & ex) {
         PHLog("Can't load resource directory: %s", ex.c_str());
     }

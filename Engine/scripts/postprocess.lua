@@ -1,11 +1,32 @@
-externals_dir = arg[4]
+#!/usr/bin/env lua
+
 local src = arg[1]
 local dst = arg[2]
-local action = arg[3]
-downscale_hd = (action ~= 'build-nodownscale')
-if (action == 'clean') then
-  os.execute('rm -r "'..dst..'"')
-  return 0
+externals_dir = arg[3]
+
+local file = io.popen('readlink -m "'..src..'"')
+src = file:lines()()
+file:close()
+file = io.popen('readlink -m "'..dst..'"')
+dst = file:lines()()
+file:close()
+root_src = src;
+root_dst = dst;
+
+fake_links = false
+downscale_hd = false
+local i = 4
+while arg[i] ~= nil do
+  local a = arg[i]
+  if (a == "fakesymlinks") then
+    fake_links = true
+  elseif (a == "downscale") then
+    downscale_hd = true
+  elseif (a == "clean") then
+    os.execute('rm -r "'..dst..'"')
+    return 0
+  end
+  i = i + 1
 end
 
 function check_versions()
@@ -58,7 +79,7 @@ function dir_list(dir)
     s = s..'"'..dir.."/"..line..'" '
   end
   if not b then
-      return files
+    return files
   end
   local file = io.popen(s)
   local ln = file:lines()
@@ -126,32 +147,59 @@ function compress_script(src, dst, name)
   end
 end
 
-function downscale_png(srcd, dstd, f, stp, name)
-  name = name or f
-  if (downscale_hd) then
-    local fhd = string.gsub(f, ".png$", ".hd.png");
-    local fm = file_modif(srcd.."/"..f)
-    local dm = file_modif(dstd.."/"..f)
-    local dmh= file_modif(dstd.."/"..fhd)
-    if ((fm > dm) or (fm > dmh)) then
-        if (stp == 'l') then
-          print('Symlinking image "'..name..'"')
-          local fl = io.popen('readlink "'..srcd.."/"..f..'"')
-          local link = fl:lines()()
-          fl:close()
-          local lihd = string.gsub(link, ".png$", ".hd.png");
-          local cmd = 'cd "'..dstd..'"'
-          cmd = cmd..' && ln -sf "'..link..'" "'..dstd.."/"..f..'"'
-          cmd = cmd..' && ln -sf "'..lihd..'" "'..dstd.."/"..fhd..'"'
-          os.execute(cmd)
-        else
-          print('Downscaling image "'..name..'"')
-      	  os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 25% "png32:'..dstd.."/"..f..'"')
-      	  os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 50% "png32:'..dstd.."/"..fhd..'"')
-  	    end
+function link(destd, prefix, lk, f)
+ if fake_links then
+  local ns = prefix..f
+  local file = io.popen('readlink -m "'..root_dst..'/'..prefix..lk..'"')
+  local nd = file:lines()()
+  file:close()
+  local n = string.len(root_dst)+1
+  nd = string.gsub(string.sub(nd, n), '^/?', '')
+  
+  syml:write(ns..'\n'..nd..'\n\n')
+ else
+  local cmd = 'cd "'..destd..'" && ln -sf "'..lk..'" "'..f..'"'
+  os.execute(cmd)
+ end
+end
+
+function link_file(srcd, dstd, f, named)
+    local fl = io.popen('readlink "'..srcd..'/'..f..'"')
+    local lk = fl:lines()()
+    fl:close()
+
+    link(dstd, named, lk, f)
+end
+
+function downscale_png(srcd, dstd, f, stp, named)
+  named = named or ""
+  if (stp == 'l') then
+    if (downscale_hd) then
+      local fl = io.popen('readlink "'..srcd.."/"..f..'"')
+      local lnk = fl:lines()()
+      fl:close()
+
+      local lhd = string.gsub(lnk, ".png$", ".hd.png");
+      local fhd = string.gsub(f, ".png$", ".hd.png");
+      link(dstd, named, lnk, f)
+      link(dstd, named, lhd, fhd)
+    else
+      link_file(srcd, dstd, f, named)
     end
   else
-    copy_file(srcd.."/"..f, dstd.."/"..f, name)
+    if (downscale_hd) then
+      local fhd = string.gsub(f, ".png$", ".hd.png");
+      local fm = file_modif(srcd.."/"..f)
+      local dm = file_modif(dstd.."/"..f)
+      local dmh= file_modif(dstd.."/"..fhd)
+      if ((fm > dm) or (fm > dmh)) then
+        print('Downscaling image "'..named..f..'"')
+        os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 25% "png32:'..dstd.."/"..f..'"')
+        os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 50% "png32:'..dstd.."/"..fhd..'"')
+      end
+    else
+      copy_file(srcd.."/"..f, dstd.."/"..f, named..f)
+    end
   end
 end
 
@@ -303,11 +351,12 @@ function crawl_dir(src, dst, prefix)
   local sl = dir_list(src)
   local dl = dir_list(dst)
   
-  sl[".DS_Store"]  = nil
-  sl[".git"]  = nil
-  sl[".svn"]  = nil
-  sl["CVS"]  = nil
-  
+  sl[".DS_Store"] = nil
+  sl[".git"] = nil
+  sl[".svn"] = nil
+  sl["CVS"] = nil
+  dl["_symlinks"] = nil
+
   for f,tp in pairs(dl) do
     local ff = f;
     local ext = file_extension(f)
@@ -322,26 +371,39 @@ function crawl_dir(src, dst, prefix)
   
   for f,tp in pairs(sl) do
     local ext = file_extension(f)
+
     if (tp == "d") then
       if (ext == "png") then
         anim_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
       else
         crawl_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
       end
-    elseif ((tp == "f") or (tp == "l")) then
+    elseif (tp == "l") then
       if (ext == "png") then
-        downscale_png(src, dst, f, tp, prefix..f)
+        downscale_png(src, dst, f, tp, prefix)
+      else
+        link_file(src, dst, f, prefix)
+      end
+    elseif (tp == "f") then
+      if (ext == "png") then
+        downscale_png(src, dst, f, tp, prefix)
       elseif (ext == "lua") then
-        if (tp == "l") then
-          copy_file(src..'/'..f, dst..'/'..f, prefix..f)
-        else
-          compress_script(src..'/'..f, dst..'/'..f, prefix..f)
-        end
+        compress_script(src..'/'..f, dst..'/'..f, prefix..f)
       else
         copy_file(src..'/'..f, dst..'/'..f, prefix..f)
       end
     end
+
   end
 end
 
+if fake_links then
+  dir_make(dst)
+  syml=io.open(dst..'/_symlinks', 'w')
+end
+  
 crawl_dir(src, dst)
+
+if fake_links then
+  syml:close()
+end

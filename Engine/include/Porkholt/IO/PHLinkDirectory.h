@@ -6,11 +6,15 @@
 
 class PHFile;
 
+struct PHLinkDirectory_data;
 class PHLinkDirectory : public PHDirectory
 {
     protected:
         PHDirectory * root;
-        map<PHHashedString, string> links;
+        PHLinkDirectory_data * d;
+        string prefix;
+
+        PHLinkDirectory(PHDirectory * dir, PHLinkDirectory_data * d, const string & prefix);
         
         void init(PHFile * symlinks);
         const string & _resolvedPath(const string & p);
@@ -19,16 +23,15 @@ class PHLinkDirectory : public PHDirectory
         PHLinkDirectory(PHDirectory * dir);
         ~PHLinkDirectory();
 
-        string resolvedPath(const string & p) { return _resolvedPath(p); }
+        PHFile * fileAtPath(const string & s) { return root->fileAtPath(_resolvedPath(prefix+s)); }
+        PHDirectory * directoryAtPath(const string & s);
+        PHInode * itemAtPath(const string & s);
 
-        PHInode * itemAtPath(const string & s) { return root->itemAtPath(_resolvedPath(s)); }
-        PHFile * fileAtPath(const string & s) { return root->fileAtPath(_resolvedPath(s)); }
-        PHDirectory * directoryAtPath(const string & s) { return root->directoryAtPath(_resolvedPath(s)); }
+        bool itemExists(const string & s) { return root->itemExists(_resolvedPath(prefix+s)); }
+        bool fileExists(const string & s) { return root->fileExists(_resolvedPath(prefix+s)); }
+        bool directoryExists(const string & s) { return root->directoryExists(_resolvedPath(prefix+s)); }
 
-        bool itemExists(const string & s) { return root->itemExists(_resolvedPath(s)); }
-        bool fileExists(const string & s) { return root->fileExists(_resolvedPath(s)); }
-        bool directoryExists(const string & s) { return root->directoryExists(_resolvedPath(s)); }
-
+        void stat(const string & s, PHInode::stat_t & st) { root->stat(_resolvedPath(prefix+s), st); }
 };
 
 #endif

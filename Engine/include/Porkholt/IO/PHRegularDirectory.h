@@ -19,6 +19,8 @@ public:
     bool itemExists(const string & path);
     bool fileExists(const string & path);
     bool directoryExists(const string & path);
+     
+    void stat(const string & path, PHInode::stat_t & s);
 };
 
 #endif

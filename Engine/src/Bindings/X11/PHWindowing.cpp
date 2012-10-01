@@ -8,6 +8,7 @@
 #include <Porkholt/Core/PHEventHandler.h>
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHLinkDirectory.h>
 #include <GL/glx.h>
 
 static bool PHNamesInitialized = false;
@@ -109,7 +110,10 @@ void * PHWCreateWindow(const string & title, const PHWVideoMode & vm, int flags,
     init.screenWidth = resolutionX;
     init.screenHeight = resolutionY;
     init.fps = rr;
-    try { init.setResourceDirectory(PHInode::directoryAtFSPath(PHResourcePath.c_str())); }
+    try { 
+        PHDirectory * f = new PHLinkDirectory(PHInode::directoryAtFSPath(PHResourcePath.c_str()));
+        f->autorelease();
+        init.setResourceDirectory(f); }
     catch (const string & ex) {
         PHLog("Can't load resource directory: %s", ex.c_str());
     }

@@ -17,6 +17,8 @@ public:
     virtual bool itemExists(const string & path) = 0;
     virtual bool fileExists(const string & path) = 0;
     virtual bool directoryExists(const string & path) = 0;
+
+    virtual void stat(const string & path, PHInode::stat_t & s) = 0;
 };
 
 #endif

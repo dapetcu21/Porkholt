@@ -65,5 +65,7 @@ compilelibosx() {
 compilelib libz.a zlib ./zlib_compile_darwin.sh $1
 compilelib libpng15.a libpng ./libpng_compile_darwin.sh $1
 compilelib liblua.a Lua ./liblua_compile_darwin.sh $1
+compilelib libogg.a Ogg ./libogg_compile_darwin.sh $1
+compilelib libvorbis.a Vorbis ./libvorbis_compile_darwin.sh $1
 compilelibosx libopenal.dylib OpenAL ./libopenal_compile_darwin.sh $1
 

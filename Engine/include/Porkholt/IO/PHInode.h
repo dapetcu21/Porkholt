@@ -27,6 +27,17 @@ public:
     static bool itemExistsOnFS(const string & p);
     static bool fileExistsOnFS(const string & p);
     static bool directoryExistsOnFS(const string & p);
+
+    struct stat_t
+    {
+        enum st_type {
+            None,
+            File,
+            Directory
+        } type;
+        size_t size;
+    };
+    static void statFS(const string & p, stat_t & s);
 };
 
 #endif

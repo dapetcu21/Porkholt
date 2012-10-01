@@ -111,3 +111,23 @@ PHInode::PHInode(const string & path) : _path(path)
         }
     }
 }
+
+void PHInode::statFS(const string & p, PHInode::stat_t & s)
+{
+    struct stat results;
+    if (stat(p.c_str(), &results) != 0)
+    {
+        s.type = stat_t::None;
+        s.size = 0;
+    }
+    else
+    {
+        if (results.st_mode & S_IFDIR)
+            s.type = stat_t::Directory;
+        else if (results.st_mode & S_IFREG)
+            s.type = stat_t::File;
+        else
+            s.type = stat_t::None;
+        s.size = results.st_size;
+    }
+}

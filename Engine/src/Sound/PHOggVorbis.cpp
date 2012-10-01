@@ -110,12 +110,12 @@ void PHOggVorbis::_loadData(uint8_t * data, size_t firstSample, size_t length)
         long r = ov_read(ov, (char*)data, length*fl, end, 2, 1, &cs);
         data+=r;
         length -= r/fl;
-    }
-    while(length);
+    } while(length);
 }
 
 void PHOggVorbis::_releaseFileHandle()
 {
     ov_clear(ov);
+    delete ov;
 }
 
