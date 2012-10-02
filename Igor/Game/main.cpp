@@ -9,13 +9,14 @@ void PHGameEntryPoint(PHGameManager * gm)
     gm->setUpNavigationController()->pushViewController(vc);
 }
 
-int main(int argc, char *argv[]) {
+PHMAIN_DEFINE
+{
     srand(time(NULL));
-    return PHWMain(argc, argv, PHWVSync
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVSync
 #if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
                    | PHWRemote
                    | PHWShowFPS
 #endif
-                   , &PHGameEntryPoint, NULL);
+                   , &PHGameEntryPoint, NULL));
 }
  
