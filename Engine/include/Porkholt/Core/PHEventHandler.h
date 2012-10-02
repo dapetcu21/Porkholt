@@ -9,11 +9,12 @@ class PHEvent;
 class PHDrawable;
 class PHGameManager;
 class PHMutex;
+struct PHEventProps;
 
 class PHEventHandler : public PHObject
 {
 private:
-	map<void*,PHEvent*> events;
+	map<void*,PHEventProps*> props;
     set<PHDrawable*> mtlisteners;
     list<PHEvent*> evtqueue;
     PHMutex * mutex;
@@ -21,7 +22,6 @@ private:
 	PHEventHandler(PHGameManager * gameManager);
     ~PHEventHandler();
 
-	PHEvent * eventForUD(void * ud);
     PHGameManager * gm;
     
     friend class PHGameManager;

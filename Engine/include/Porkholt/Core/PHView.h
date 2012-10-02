@@ -41,6 +41,7 @@ public:
 	
     void handleEvent(PHEvent * evt);
     PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates * d);
+    PHPositionalVector positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p);
 public:
 	
     enum Effects

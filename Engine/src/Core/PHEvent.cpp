@@ -19,20 +19,14 @@ PHEvent::PHEvent(PHEvent * o) : INIT
 PHDrawableCoordinates * PHEvent::drawableLocation()
 {
     if (!coord)
-        coord = new PHDrawableCoordinates(PHAABox(
-            PHVector3(_location.x, _location.y, -1),
-            PHVector3(_location.x, _location.y, 1))
-       );
+        coord = new PHDrawableCoordinates(_location);
     return coord;
 }
 
 PHDrawableCoordinates * PHEvent::lastDrawableLocation()
 {
     if (!lastCoord)
-        lastCoord = new PHDrawableCoordinates(PHAABox(
-            PHVector3(_lastLocation.x, _lastLocation.y, -1),
-            PHVector3(_lastLocation.x, _lastLocation.y, 1))
-       );
+        lastCoord = new PHDrawableCoordinates(_lastLocation);
     return lastCoord;
 }
 

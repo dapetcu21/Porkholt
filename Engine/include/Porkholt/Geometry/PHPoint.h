@@ -329,6 +329,7 @@ struct PHAABox
 
     PHAABox() {}
     PHAABox(const PH3DPoint & s, const PH3DPoint & e) : start(s), end(e) {}
+    PHAABox(const PHPoint & p) : start(p.x, p.y, -1), end(p.x, p.y, 1) {}
     PHAABox(const PHAABox & o) : start(o.start), end(o.end) {};
 
     PHAABox & operator = (const PHAABox & o) { 

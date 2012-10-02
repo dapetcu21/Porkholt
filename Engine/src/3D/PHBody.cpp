@@ -91,3 +91,10 @@ PHPositionalVector PHBody::positionInMyCoordinates(PHDrawableCoordinates * d)
     return applyMatrices().inverse() * d->positionInDrawable(parent());
 }
 
+PHPositionalVector PHBody::positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p)
+{
+    return applyMatrices() * p;
+}
+
+
+

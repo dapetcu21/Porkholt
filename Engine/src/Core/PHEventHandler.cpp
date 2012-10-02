@@ -7,30 +7,17 @@
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/Core/PHMutex.h>
 
-PHEvent * PHEventHandler::eventForUD(void * ud)
+struct PHEventProps
 {
-    mutex->lock();
-    map<void*,PHEvent*>::iterator i = events.find(ud);
-    PHEvent * evt;
-    if (i==events.end())
-    {
-        events[ud] = evt = new PHEvent();
-    }
-    else
-    {
-        evt = new PHEvent(i->second);
-        i->second->release();
-        i->second = evt;
-    }
-    evt->retain();
-    evt->setUserData(ud);
-    mutex->unlock();
-    return evt;
-}
+    PHPoint loc;
+    ph_float time;
+    PHDrawable * owner;
+};
 
 void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 {
-    PHEvent * evt = eventForUD(ud);
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
     evt->setTime(PHTime::getTime());
     evt->setLocation(pnt);
     evt->setType(PHEvent::touchDown);
@@ -39,7 +26,8 @@ void PHEventHandler::touchDown(PHPoint pnt,void * ud)
 
 void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 {
-    PHEvent * evt = eventForUD(ud);
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
     evt->setTime(PHTime::getTime());
     evt->setLocation(pnt);
     evt->setType(PHEvent::touchMoved);
@@ -48,26 +36,22 @@ void PHEventHandler::touchMoved(PHPoint pnt, void * ud)
 
 void PHEventHandler::touchUp(PHPoint pnt, void * ud)
 {
-    PHEvent * evt = eventForUD(ud);
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
     evt->setTime(PHTime::getTime());
     evt->setLocation(pnt);
     evt->setType(PHEvent::touchUp);
     addEvent(evt);
-    mutex->lock();
-    evt->release();
-    events.erase(ud);
-    mutex->unlock();
 }
 
 void PHEventHandler::touchCancelled(PHPoint pnt, void * ud)
 {
-    PHEvent * evt = eventForUD(ud);
+    PHEvent * evt = new PHEvent();
+    evt->setUserData(ud);
     evt->setTime(PHTime::getTime());
     evt->setLocation(pnt);
     evt->setType(PHEvent::touchCancelled);
     addEvent(evt);
-    evt->release();
-    events.erase(ud);
 }
 
 void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
@@ -142,11 +126,11 @@ void PHEventHandler::removeDrawable(PHDrawable * d)
 {
     unregisterForMultitouchEvents(d);
     mutex->lock();
-	for (map<void*,PHEvent*>::iterator i = events.begin(); i!= events.end(); i++)
+	for (map<void*,PHEventProps*>::iterator i = props.begin(); i!= props.end(); i++)
 	{
-        PHEvent * e = i->second;
-		if (e->owner() == d)
-			e->setOwner(NULL);
+        PHEventProps * p = i->second;
+		if (p->owner == d)
+            p->owner = NULL;
 	}
     for (list<PHEvent*>::iterator i = evtqueue.begin(); i!= evtqueue.end(); i++)
         if ((*i)->owner() == d)
@@ -168,11 +152,48 @@ void PHEventHandler::processQueue()
         mutex->unlock();
         if (!evt) break;
 
-        #ifdef PH_DEBUG
-        //PHLog("event: %f %f  type: %d ud: %p   owner: %p", evt->location().x, evt->location().y, evt->type(), evt->userData(), evt->owner());
-        #endif
-
         PHDrawable * firstHandler = gm->mainDrawable();
+
+        bool destroy = false;
+        switch (evt->type())
+        {
+            case PHEvent::touchCancelled:
+            case PHEvent::touchUp:
+                destroy = true;
+            case PHEvent::touchMoved:
+            {
+                map<void*, PHEventProps*>::iterator i = props.find(evt->userData());
+                if (i!=props.end())
+                {
+                    PHEventProps * prop = i->second;
+                    evt->setLastLocation(prop->loc);
+                    evt->setLastTime(prop->time);
+                    evt->setOwner(prop->owner);
+                    prop->loc = evt->location();
+                    prop->time = evt->time();
+                    break;
+                }
+            }
+            case PHEvent::touchDown:
+            {
+                PHEventProps * prop = new PHEventProps;
+                prop->loc = evt->location();
+                prop->time = evt->time();
+                prop->owner = evt->owner();
+                props.insert(make_pair(evt->userData(), prop));
+                break;
+            }
+        }
+        if (destroy)
+        {
+            map<void*, PHEventProps*>::iterator i = props.find(evt->userData());
+            if (i!=props.end())
+            {
+                delete i->second;
+                props.erase(i);
+            }
+        }
+        
         switch (evt->type())
         {
             case PHEvent::touchMoved:
@@ -192,6 +213,21 @@ void PHEventHandler::processQueue()
                     (*i)->handleEvent(evt);
         }
 
+        switch (evt->type())
+        {
+            case PHEvent::touchMoved:
+            case PHEvent::touchDown:
+            {
+                map<void*, PHEventProps*>::iterator i = props.find(evt->userData());
+                if (i!=props.end())
+                    i->second->owner = evt->owner();
+            }
+        }
+
+        #ifdef PH_DEBUG
+        PHLog("event: %f %f  type: %d ud: %p   owner: %p", evt->location().x, evt->location().y, evt->type(), evt->userData(), evt->owner());
+        #endif
+
         evt->release();
     }
 }
@@ -205,8 +241,8 @@ PHEventHandler::~PHEventHandler()
     mutex->lock();
     for (list<PHEvent*>::iterator i = evtqueue.begin(); i != evtqueue.end(); i++)
         (*i)->release();
-    for (map<void*, PHEvent*>::iterator i = events.begin(); i != events.end(); i++)
-        i->second->release();
+    for (map<void*, PHEventProps*>::iterator i = props.begin(); i != props.end(); i++)
+        delete i->second;
     mutex->unlock();
     mutex->release();
 }

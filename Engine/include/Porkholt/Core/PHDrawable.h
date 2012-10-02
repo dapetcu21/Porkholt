@@ -70,6 +70,7 @@ public:
     virtual void handleEvent(PHEvent * evt);
     virtual void touchEvent(PHEvent * evt); //to be renamed recievedEvent
     virtual PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
+    virtual PHPositionalVector positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p);
 private:
     bool _userInput;
 public:

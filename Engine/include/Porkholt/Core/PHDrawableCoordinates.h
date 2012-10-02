@@ -10,15 +10,14 @@ class PHDrawableCoordinates : public PHObject
     private:
         map<PHDrawable*, PHPositionalVector> coord;
     public:
-        PHDrawableCoordinates(const PHPositionalVector & screenSpace);
+        PHDrawableCoordinates(const PHPositionalVector & screenSpace, PHDrawable * d = NULL);
+
+        void propagateUpstream(PHDrawable * d, PHDrawable * until = NULL);
+        PHPoint pointInView(PHDrawable * d);
+        void clearCache();
 
         PHPositionalVector positionInDrawable(PHDrawable*);
         void setPositionInDrawable(PHDrawable*, const PHPositionalVector &);
-
-        PHPoint pointInView(PHDrawable * d);
-
-        void clearCache();
-
 };
 
 #endif

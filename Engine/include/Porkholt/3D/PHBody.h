@@ -60,6 +60,7 @@ public:
     virtual void render();
 
     PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
+    PHPositionalVector positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p);
 };
 
 #endif

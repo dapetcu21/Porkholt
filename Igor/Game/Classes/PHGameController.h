@@ -41,6 +41,8 @@ public:
     void detachLightFromView(PHView * v);
     
     void reset();
+
+    PHGameController(PHGameManager * gm) : PHViewController(gm) {}
 };
 
 

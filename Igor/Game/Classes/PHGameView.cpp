@@ -1,6 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "PHGameView.h"
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 #define INIT t1(NULL), t2(NULL)
 
@@ -13,41 +14,44 @@ void PHGameView::touchEvent(PHEvent *evt)
     {
         case PHEvent::touchDown:
         {
-            PHPoint p = toMyCoordinates(evt->location());
+            PHPoint p = evt->drawableLocation()->pointInView(this);
             if (p.x <boundsCenter().x)
             {
                 if (!t1)
                 {
-                    t1 = evt;
+                    t1 = evt->userData();
                     p1 = p;
                     evt->setHandled(true);
+                    PHLog("maw");
                 }
             } else {
                 if (!t2)
                 {
-                    t2 = evt;
+                    t2 = evt->userData();
                     p2 = p;
                     evt->setHandled(true);
+                    PHLog("maw");
                 }
             }
             break;
         }
         case PHEvent::touchMoved:
         {
-            PHPoint p = toMyCoordinates(evt->location());
-            if (evt==t1)
+            PHPoint p = evt->drawableLocation()->pointInView(this);
+            if (evt->userData()==t1)
                 p1 = p;
-            if (evt==t2)
+            if (evt->userData()==t2)
                 p2 = p;
             break;
         }
         case PHEvent::touchUp:
         case PHEvent::touchCancelled:
         {
-            if (evt==t1)
+            if (evt->userData()==t1)
                 t1 = NULL;
-            if (evt==t2)
+            if (evt->userData()==t2)
                 t2 = NULL;
+            PHLog("meow %p %p", t1, t2);
             break;
         }
     }

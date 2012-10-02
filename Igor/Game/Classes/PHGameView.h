@@ -8,8 +8,8 @@
 class PHGameView : public PHView
 {
 protected:
-    PHEvent * t1;
-    PHEvent * t2;
+    void * t1;
+    void * t2;
     PHPoint p1;
     PHPoint p2;
     

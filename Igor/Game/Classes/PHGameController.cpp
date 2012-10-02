@@ -6,6 +6,7 @@
 #include "PHGameView.h"
 #include "PHPlayerView.h"
 #include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 #define screenHeight 4.0f
 PHRect PHGameController::playerRect(-0.5,-0.5,1,1);
@@ -69,7 +70,8 @@ void PHGameController::syncLights()
             l->release();
             deleteList.push_back(v);
         } else {
-            l->position = PH3DPoint(v->fromMyCoordinates(v->boundsCenter()), l->position.z);
+            PHDrawableCoordinates dc(v->boundsCenter(), v);
+            l->position = PH3DPoint(dc.pointInView(defferedView), l->position.z);
         }
     }
     for (list<PHView*>::iterator i = deleteList.begin(); i!= deleteList.end(); i++)

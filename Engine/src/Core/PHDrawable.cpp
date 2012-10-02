@@ -202,3 +202,9 @@ PHPositionalVector PHDrawable::positionInMyCoordinates(PHDrawableCoordinates * c
 {
     return c->positionInDrawable(parent());
 }
+
+PHPositionalVector PHDrawable::positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p)
+{
+    return p;
+}
+

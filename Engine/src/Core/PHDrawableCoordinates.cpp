@@ -2,9 +2,10 @@
 #include <Porkholt/Core/PHDrawableCoordinates.h>
 #include <Porkholt/Core/PHDrawable.h>
 
-PHDrawableCoordinates::PHDrawableCoordinates(const PHPositionalVector & screenSpace)
+PHDrawableCoordinates::PHDrawableCoordinates(const PHPositionalVector & screenSpace, PHDrawable * d)
 {
-    setPositionInDrawable(NULL, screenSpace);
+    setPositionInDrawable(d, screenSpace);
+    propagateUpstream(d);
 }
 
 void PHDrawableCoordinates::setPositionInDrawable(PHDrawable * d, const PHPositionalVector & v)
@@ -32,4 +33,15 @@ PHPositionalVector PHDrawableCoordinates::positionInDrawable(PHDrawable * d)
 PHPoint PHDrawableCoordinates::pointInView(PHDrawable * d)
 {
     return positionInDrawable(d).start.xy();
+}
+
+void PHDrawableCoordinates::propagateUpstream(PHDrawable * d, PHDrawable * until)
+{
+    PHPositionalVector p = positionInDrawable(d);
+    while (d!=until)
+    {
+        p = d->positionInParent(this, p);
+        d = d->parent();
+        setPositionInDrawable(d, p);
+    }
 }

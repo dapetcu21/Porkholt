@@ -330,6 +330,11 @@ PHPositionalVector PHView::positionInMyCoordinates(PHDrawableCoordinates * d)
     return applyMatrices().inverse() * d->positionInDrawable(parent());
 }
 
+PHPositionalVector PHView::positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p)
+{
+    return applyMatrices() * p;
+}
+
 #pragma mark -
 #pragma Scripting
 
