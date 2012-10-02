@@ -30,6 +30,10 @@ PHView * PHGameController::loadView(const PHRect & frame)
     
     gameView->addChild(backgroundView);
     gameView->addChild(playerView = new PHPlayerView(playerRect));
+
+    mob = new PHImageView(PHRect(-0.5, -0.5, 1, 1));
+    mob->setImage(gm->imageNamed("mob"));
+    gameView->addChild(mob);
     
     ph_float ratio = frame.height/screenHeight;
     PHGLLight * l = new PHGLLight(PHGLLight::pointLight, PHVector3(0,0,ratio), PHWhiteColor, ratio);
@@ -54,6 +58,7 @@ PHGameController::~PHGameController()
     playerView->release();
     gameView->release();
     defferedView->release();
+    mob->release();
 }
 
 void PHGameController::syncLights()
@@ -136,12 +141,14 @@ void PHGameController::attachLightToView(PHGLLight * l, PHView * v)
 
 void PHGameController::updateScene(ph_float elapsedTime)
 {
-    //if (gameView->touchesLeft())
-    {
-        PHPoint pnt = gameView->leftTouch();
-        PHLowPassFilter(playerPos.y, pnt.y, elapsedTime, 5.0f);
-    }
+    PHPoint pnt = gameView->leftTouch();
+    PHLowPassFilter(playerPos.y, pnt.y, elapsedTime, 5.0f);
+    pnt = gameView->rightTouch();
+    PHLowPassFilter(mobPos.y, pnt.y, elapsedTime, 5.0f);
+    PHLowPassFilter(mobPos.x, pnt.x, elapsedTime, 5.0f);
+    
     playerView->setPosition(playerPos+playerRect.origin());
+    mob->setPosition(mobPos-mob->boundsCenter());
     
     ph_float max = gameView->bounds().width;
     ph_float advance = elapsedTime*4.0f;

@@ -15,11 +15,13 @@ class PHImageView;
 class PHGameController : public PHViewController
 {
 protected:
-    PHPoint playerPos;
+
+    PHPoint playerPos, mobPos;
     PHDeferredView * defferedView;
     PHGameView * gameView;
     PHPlayerView * playerView;
     PHImageView * backgroundView;
+    PHImageView * mob;
     
     PHView * loadView(const PHRect & frame);
     void updateScene(ph_float elapsedTime);

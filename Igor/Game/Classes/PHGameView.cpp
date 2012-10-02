@@ -22,7 +22,6 @@ void PHGameView::touchEvent(PHEvent *evt)
                     t1 = evt->userData();
                     p1 = p;
                     evt->setHandled(true);
-                    PHLog("maw");
                 }
             } else {
                 if (!t2)
@@ -30,7 +29,6 @@ void PHGameView::touchEvent(PHEvent *evt)
                     t2 = evt->userData();
                     p2 = p;
                     evt->setHandled(true);
-                    PHLog("maw");
                 }
             }
             break;
@@ -51,7 +49,6 @@ void PHGameView::touchEvent(PHEvent *evt)
                 t1 = NULL;
             if (evt->userData()==t2)
                 t2 = NULL;
-            PHLog("meow %p %p", t1, t2);
             break;
         }
     }
