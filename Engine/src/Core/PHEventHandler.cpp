@@ -225,7 +225,7 @@ void PHEventHandler::processQueue()
         }
 
         #ifdef PH_DEBUG
-        PHLog("event: %f %f  type: %d ud: %p   owner: %p", evt->location().x, evt->location().y, evt->type(), evt->userData(), evt->owner());
+        //PHLog("event: %f %f  type: %d ud: %p   owner: %p", evt->location().x, evt->location().y, evt->type(), evt->userData(), evt->owner());
         #endif
 
         evt->release();
