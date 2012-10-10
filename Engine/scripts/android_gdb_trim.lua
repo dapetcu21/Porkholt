@@ -17,8 +17,11 @@ end
 map = {}
 out = ""
 
+package.path = package.path..";"..string.gsub(arg[0], "(/?)[^/]*%.lua$", "%1?.lua")
+require("path")
+
 for i,v in ipairs(arg) do
-    v = strip_n(exec('readlink -f "'..v..'"'))
+    v = path.getabsolute(v)
     v = strip_n(exec('dirname "'..v..'"'))
     if not map[v] then
         map[v] = true

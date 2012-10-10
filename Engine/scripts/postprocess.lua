@@ -1,15 +1,14 @@
 #!/usr/bin/env lua
 
+package.path = package.path..";"..string.gsub(arg[0], "(/?)[^/]*%.lua$", "%1?.lua")
+require("path")
+
 local src = arg[1]
 local dst = arg[2]
 externals_dir = arg[3]
 
-local file = io.popen('readlink -m "'..src..'"')
-src = file:lines()()
-file:close()
-file = io.popen('readlink -m "'..dst..'"')
-dst = file:lines()()
-file:close()
+src = path.getabsolute(src)
+dst = path.getabsolute(dst)
 root_src = src;
 root_dst = dst;
 
@@ -150,12 +149,9 @@ end
 function link(destd, prefix, lk, f)
  if fake_links then
   local ns = prefix..f
-  local file = io.popen('readlink -m "'..root_dst..'/'..prefix..lk..'"')
-  local nd = file:lines()()
-  file:close()
+  local nd = path.getabsolute(root_dst..'/'..prefix..lk)
   local n = string.len(root_dst)+1
   nd = string.gsub(string.sub(nd, n), '^/?', '')
-  
   syml:write(ns..'\n'..nd..'\n\n')
  else
   local cmd = 'cd "'..destd..'" && ln -sf "'..lk..'" "'..f..'"'
