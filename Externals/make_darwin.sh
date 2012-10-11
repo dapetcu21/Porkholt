@@ -62,6 +62,38 @@ compilelibosx() {
 	fi
 }
 
+if [ -d /Developer ]; then
+    DEVEL=/Developer
+else
+    DEVEL=/Applications/XCode.app/Contents/Developer
+fi
+
+OSXSDKS="$DEVEL/SDKs"
+IOSSDKS="$DEVEL/Platforms/iPhoneOS.platform/Developer/SDKs"
+SIMSDKS="$DEVEL/Platforms/iPhoneSimulator.platform/Developer/SDKs"
+if [ ! -d "$OSXSDKS" ]; then
+    OSXSDKS="$DEVEL/Platforms/MacOSX.platform/Developer/SDKs"
+fi
+
+export OSXCC=cc
+export OSXCPP=c++
+export IOSCC="$DEVEL/Platforms/iPhoneOS.platform/Developer/usr/bin/cc"
+export IOSCPP="$DEVEL/Platforms/iPhoneOS.platform/Developer/usr/bin/c++"
+export SIMCC="$DEVEL/Platforms/iPhoneSimulator.platform/Developer/usr/bin/cc"
+export SIMCPP="$DEVEL/Platforms/iPhoneSimulator.platform/Developer/usr/bin/c++"
+if [ ! -d "$SIMCC" ]; then
+    export SIMCC="$DEVEL/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+    export SIMCPP="$DEVEL/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+fi
+
+latestsdk() {
+    echo "$1/$(ls "$1" | sort | tail -n 1)"
+}
+
+export OSXSDK=$(latestsdk "$OSXSDKS")
+export IOSSDK=$(latestsdk "$IOSSDKS")
+export SIMSDK=$(latestsdk "$SIMSDKS")
+
 compilelib libz.a zlib ./zlib_compile_darwin.sh $1
 compilelib libpng15.a libpng ./libpng_compile_darwin.sh $1
 compilelib liblua.a Lua ./liblua_compile_darwin.sh $1

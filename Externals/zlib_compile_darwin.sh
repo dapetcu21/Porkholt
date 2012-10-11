@@ -1,69 +1,50 @@
 #!/bin/sh
- 
-# build_fat.sh
-#
-# Created by Robert Carlsen on 15.07.2009.
-# Heavily Modified by Marius Petcu
-# build an arm / i386 lib of standard linux project
 
 cd zlib
 
 LIBFILE=libz
-
-MACSDK=SDKs/MacOSX10.6.sdk
-IOSSDK=SDKs/iPhoneOS5.0.sdk
-SIMSDK=SDKs/iPhoneSimulator5.0.sdk
-
 LIBPATH_static=$LIBFILE.a
 LIBNAME_static=`basename $LIBPATH_static`
 LIBINSTALL_static=$LIBNAME_static
 
+rm -rf lnsout
 mkdir -p lnsout
 
 #-------------------------------
 
-DEVROOT=/Developer/Platforms/iPhoneOS.platform/Developer
-SDKROOT=$DEVROOT/$IOSSDK
-export CC=$DEVROOT/usr/bin/cc
-
-export CFLAGS="-arch armv6 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
-make distclean
+export CC="$IOSCC"
+export CFLAGS="-arch armv6 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
+make distclean 2>&1 > /dev/null
 ./configure
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
 
-export CFLAGS="-arch armv7 -isysroot $SDKROOT -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
-make distclean
+export CFLAGS="-arch armv7 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
+make distclean 2>&1 > /dev/null
 ./configure
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
 
 #-------------------------------
 
-DEVROOT=/Developer/Platforms/iPhoneSimulator.platform/Developer
-SDKROOT=$DEVROOT/$SIMSDK
-export CC=$DEVROOT/usr/bin/cc
-
-export CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
-make distclean
+export CC="$SIMCC"
+export CFLAGS="-arch i386 -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
+make distclean 2>&1 > /dev/null
 ./configure
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim
  
 #-------------------------------
 
-DEVROOT=/Developer
-SDKROOT=$DEVROOT/$MACSDK
-export CC="cc"
-
-export CFLAGS="-arch i386 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make distclean
+export CC="$OSXCC"
+export CFLAGS="-arch i386 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+make distclean 2>&1 > /dev/null
 ./configure
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.i386
 
-export CFLAGS="-arch x86_64 -isysroot $SDKROOT -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make distclean
+export CFLAGS="-arch x86_64 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+make distclean 2>&1 > /dev/null
 ./configure
 make
 cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
@@ -77,4 +58,6 @@ mkdir -p ../lib/darwin/ios
 mkdir -p ../lib/darwin/osx
 cp lnsout/$LIBNAME_static.ios ../lib/darwin/ios/$LIBINSTALL_static
 cp lnsout/$LIBNAME_static.osx ../lib/darwin/osx/$LIBINSTALL_static
+
+rm -rf lnsout
 cd ..
