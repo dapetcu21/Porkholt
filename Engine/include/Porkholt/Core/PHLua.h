@@ -22,6 +22,7 @@ bool PHLuaLoadString(lua_State * L, const char * s);
 bool PHLuaCall(lua_State * L,int inargs, int outargs);
 
 void PHLuaSetIncludePath(lua_State * L, string path);
+void PHLuaAddIncludeDir(lua_State * L, PHDirectory * dir);
 void PHLuaGetWeakRef(lua_State * L, void * ref);
 void PHLuaSetWeakRef(lua_State * L, void * ref);
 void PHLuaDeleteWeakRef(lua_State * L, void * ref);

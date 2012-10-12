@@ -17,6 +17,11 @@ void PHLuaSetIncludePath(lua_State * L, string path)
     lua_pop( L, 1 );
 }
 
+void PHLuaAddIncludeDir(lua_State * L, PHDirectory * dir)
+{
+    //TO DO
+}
+
 void PHLuaSetHardRef(lua_State * L, void * ref)
 {
     lua_pushlightuserdata(L,ref);

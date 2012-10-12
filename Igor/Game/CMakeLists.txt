@@ -8,14 +8,12 @@ include(Porkholt)
 set(PH_NAME "Igor")
 set(PH_SOURCES
   main.cpp
-  Classes/PHGameController.cpp
-  Classes/PHGameView.cpp
-  Classes/PHPlayerView.cpp
+  Classes/IGLevelController.cpp
+  Classes/IGScripting.cpp
+  Classes/IGWorld.cpp
   )
 set(PH_HEADERS
-  Classes/PHGameController.h
-  Classes/PHGameView.h
-  Classes/PHPlayerView.h
+  Classes/IGLevelController.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

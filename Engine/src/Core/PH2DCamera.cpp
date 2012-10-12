@@ -13,7 +13,16 @@ PHMatrix PH2DCamera::projection()
     cache = true;
     PHSize s = sz;
     if (!s.x || !s.y)
-        s = gm->screenBounds().size();
+    {
+        PHSize ss = gm->screenBounds().size();
+        if (s.x)
+            s.y = s.x/ss.x*ss.y;
+        else if (s.y)
+            s.x = s.y/ss.y*ss.x;
+        else
+            s = ss;
+    }
+
     return mat = PHMatrix::translation(PHPoint(-1, -1)) * PHMatrix::scaling(2/s.x, 2/s.y, 1);
 }
 
