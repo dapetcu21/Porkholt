@@ -12,7 +12,7 @@ void PHGameEntryPoint(PHGameManager * gm)
     PH2DCamera * camera = new PH2DCamera();
     camera->setScreenSize(PHSize(0,4.0f));
     gm->setMainDrawable(camera);
-    PHRect bounds = gm->screenBounds();
+    PHRect bounds = camera->realScreenBounds();
     PHViewControllerHolder * holder = new PHViewControllerHolder(bounds);
     camera->addChild(holder);
     

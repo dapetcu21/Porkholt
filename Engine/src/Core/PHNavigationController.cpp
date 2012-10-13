@@ -242,6 +242,7 @@ void PHNavigationController::pushViewController(PHViewController * vc, int anim,
     if (currentVC)
         currentVC->rmNav = false;
 	currentVC = vc;
+    vc->setInitialViewFrame(getView()->bounds());
 	animation = anim;
 	startAnimating();
 }

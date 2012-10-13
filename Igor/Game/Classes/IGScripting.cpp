@@ -17,7 +17,9 @@ IGScripting::IGScripting(PHGameManager * _gm, PHDirectory * _dir, IGWorld * _wor
     L = lua_open();
     luaL_openlibs(L);
 
-    if (PHLuaLoadFile(L, gm->resourceDirectory()->directoryAtPath("scripts"), "common.lua"))
+    PHDirectory * scripts = gm->resourceDirectory()->directoryAtPath("scripts");
+    PHLuaAddIncludeDir(L, scripts);
+    if (PHLuaLoadFile(L, scripts, "common.lua"))
     {
         loadCInterface();
         PHLuaAddIncludeDir(L, dir);
@@ -37,7 +39,7 @@ void IGScripting::loadCInterface()
 {
 }
 
-void IGScripting::frame(ph_float elapsed)
+void IGScripting::advanceAnimation(ph_float elapsed)
 {
     lua_getglobal(L, "frame");
     lua_pushnumber(L, elapsed);

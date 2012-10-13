@@ -11,9 +11,13 @@ set(PH_SOURCES
   Classes/IGLevelController.cpp
   Classes/IGScripting.cpp
   Classes/IGWorld.cpp
+  Classes/IGBackground.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
+  Classes/IGScripting.h
+  Classes/IGWorld.h
+  Classes/IGBackground.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

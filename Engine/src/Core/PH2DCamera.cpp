@@ -11,6 +11,12 @@ PHMatrix PH2DCamera::projection()
     if (cache)
         return mat;
     cache = true;
+    PHSize s = realScreenSize();
+    return mat = PHMatrix::translation(PHPoint(-1, -1)) * PHMatrix::scaling(2/s.x, 2/s.y, 1);
+}
+
+PHSize PH2DCamera::realScreenSize()
+{
     PHSize s = sz;
     if (!s.x || !s.y)
     {
@@ -22,8 +28,7 @@ PHMatrix PH2DCamera::projection()
         else
             s = ss;
     }
-
-    return mat = PHMatrix::translation(PHPoint(-1, -1)) * PHMatrix::scaling(2/s.x, 2/s.y, 1);
+    return s;
 }
 
 void PH2DCamera::reshape()

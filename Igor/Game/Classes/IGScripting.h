@@ -1,13 +1,13 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAnimator.h>
 
 struct lua_State;
 class PHDirectory;
 class PHGameManager;
 class IGWorld;
 
-class IGScripting : public PHObject
+class IGScripting : public PHAnimator
 {
     protected:
         lua_State * L;
@@ -20,5 +20,5 @@ class IGScripting : public PHObject
         IGScripting(PHGameManager * gm, PHDirectory * dir, IGWorld * world);
         ~IGScripting();
 
-        void frame(ph_float elapsed);
+        void advanceAnimation(ph_float elapsed);
 };

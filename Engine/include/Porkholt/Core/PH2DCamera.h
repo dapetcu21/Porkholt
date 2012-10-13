@@ -15,6 +15,8 @@ class PH2DCamera : public PHCamera
         PH2DCamera();
         void setScreenSize(const PHSize & s) { sz = s; cache = false; }
         PHSize screenSize() { return sz; }
+        PHSize realScreenSize();
+        PHRect realScreenBounds() { PHSize sz = realScreenSize(); return PHRect(0, 0, sz.x, sz.y); }
 
         void reshape();    
         PHMatrix projection();

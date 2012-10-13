@@ -1,13 +1,13 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAnimator.h>
 
 class PHGameManager;
 class PHDirectory;
 class IGObject;
 class PHView;
 
-class IGWorld : public PHObject
+class IGWorld : public PHAnimator
 {
     protected:
         list<IGObject*> _objects;
@@ -20,4 +20,6 @@ class IGWorld : public PHObject
 
         const list<IGObject*> & objects() { return _objects; }
         PHView * view() { return _view; }
+        
+        void advanceAnimation(ph_float elapsed);
 };

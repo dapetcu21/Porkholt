@@ -4,14 +4,18 @@
 
 class IGScripting;
 class IGWorld;
+class IGBackground;
 class PHDirectory;
+class PHAnimatorPool;
 
 class IGLevelController : public PHViewController
 {
     protected:
         IGScripting * scripting;
         IGWorld * world;
+        IGBackground * bg;
         PHDirectory * dir;
+        PHAnimatorPool * animpool;
     public:
         IGLevelController(PHGameManager * gm, PHDirectory * lvlDir);
         ~IGLevelController();

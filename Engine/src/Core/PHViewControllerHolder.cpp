@@ -27,10 +27,13 @@ void PHViewControllerHolder::setViewController(PHViewController * c)
 {
     if (c)
     {
+        c->setInitialViewFrame(bounds());
         c->retain();
         if (gm)
             c->_viewWillAppear();
-        addChild(c->getView());
+        PHView * vi = c->getView();
+        vi->setFrame(bounds());
+        addChild(vi);
         c->getView()->setAutoresizeMask(PHView::ResizeAll);
         if (gm)
             c->_viewDidAppear();

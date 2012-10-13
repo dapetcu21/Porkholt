@@ -17,3 +17,6 @@ IGWorld::~IGWorld()
     dir->release();
 }
 
+void IGWorld::advanceAnimation(ph_float elapsed)
+{
+}

@@ -2,8 +2,11 @@
 
 #include "IGLevelController.h"
 #include "IGScripting.h"
+#include "IGBackground.h"
 #include "IGWorld.h"
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/Core/PHViewControllerHolder.h>
 
 IGLevelController::IGLevelController(PHGameManager * gm, PHDirectory * lvldir) : PHViewController(gm), dir(lvldir), world(NULL), scripting(NULL)
 {
@@ -12,11 +15,21 @@ IGLevelController::IGLevelController(PHGameManager * gm, PHDirectory * lvldir) :
 
 PHView * IGLevelController::loadView(const PHRect & f)
 {
+    animpool = new PHAnimatorPool();
+
     PHView * v = new PHView(f);
     world = new IGWorld(gm, dir, f);
     scripting = new IGScripting(gm, dir, world);
-
+    world->setAnimatorPool(animpool);
+    scripting->setAnimatorPool(animpool);
+    bg = new IGBackground(gm);
+    PHViewControllerHolder * h = new PHViewControllerHolder(f);
+    h->setViewController(bg);
+    bg->release();
+    v->addChild(h);
+    h->release();
     v->addChild(world->view());
+
     return v;
 }
 
@@ -28,11 +41,13 @@ IGLevelController::~IGLevelController()
         scripting->release();
     if (dir)
         dir->release();
+    if (animpool)
+        animpool->release();
 }
 
 void IGLevelController::updateScene(ph_float elapsed)
 {
-    scripting->frame(elapsed);
+    animpool->advanceAnimation(elapsed);
 }
 
 
