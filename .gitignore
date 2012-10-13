@@ -58,7 +58,7 @@ _
 /Externals/zlib/minigzipsh
 /Externals/zlib/zlib.pc
 /Externals/zlib/libz.*
-/Externals/zlib/ztest6485.c
+/Externals/zlib/ztest*.c
 /Externals/libpng/pngtest-static
 
 /Externals/libogg/Makefile

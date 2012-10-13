@@ -10,42 +10,29 @@ LIBINSTALL_static=$LIBNAME_static
 rm -rf lnsout
 mkdir -p lnsout
 
-#-------------------------------
+for ARCH in $IOSARCHS; do
+    CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
+    make clean 2>&1 > /dev/null
+    cd src && make liblua.a CC="$IOSCC $CFLAGS" MYCFLAGS=-DLUA_USE_LINUX && cd - || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.ios.$ARCH
+done
 
-CFLAGS="-arch armv6 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
-make clean
-make macosx CC="$IOSCC $CFLAGS"
-cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
-
-CFLAGS="-arch armv7 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
-make clean
-make macosx CC="$IOSCC $CFLAGS"
-cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
-
-#-------------------------------
-
-CFLAGS="-arch i386 -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
-make clean
-make macosx CC="$SIMCC $CFLAGS"
-cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim
+for ARCH in $SIMARCHS; do
+    CFLAGS="-arch $ARCH -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
+    make clean 2>&1 > /dev/null
+    cd src && make liblua.a CC="$SIMCC $CFLAGS" MYCFLAGS=-DLUA_USE_LINUX && cd - || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.sim.$ARCH
+done
  
-#-------------------------------
+for ARCH in $OSXARCHS; do
+    CFLAGS="-arch $ARCH -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+    make clean 2>&1 > /dev/null
+    make macosx CC="$OSXCC $CFLAGS" || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.osx.$ARCH
+done
 
-CFLAGS="-arch i386 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make clean
-make macosx CC="$OSXCC $CFLAGS"
-cp $LIBPATH_static lnsout/$LIBNAME_static.i386
-
-CFLAGS="-arch x86_64 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make clean
-make macosx CC="$OSXCC $CFLAGS"
-cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
-
-#-------------------------------
-
-/usr/bin/lipo -arch armv6 lnsout/$LIBNAME_static.armv6 -arch armv7 lnsout/$LIBNAME_static.armv7 -arch i386 lnsout/$LIBNAME_static.i386.sim -create -output lnsout/$LIBNAME_static.ios
-/usr/bin/lipo -arch i386 lnsout/$LIBNAME_static.i386 -arch x86_64 lnsout/$LIBNAME_static.x86_64 -create -output lnsout/$LIBNAME_static.osx
-
+$IOSLIPO lnsout/$LIBNAME_static.ios.* lnsout/$LIBNAME_static.sim.* -create -output lnsout/$LIBNAME_static.ios
+$OSXLIPO lnsout/$LIBNAME_static.osx.* -create -output lnsout/$LIBNAME_static.osx
 mkdir -p ../lib/darwin/ios
 mkdir -p ../lib/darwin/osx
 cp lnsout/$LIBNAME_static.ios ../lib/darwin/ios/$LIBINSTALL_static

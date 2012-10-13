@@ -12,56 +12,35 @@ mkdir -p lnsout
 rm -rf prebuilt
 mkdir -p prebuilt
 
-#-------------------------------
-
 export CC="$IOSCC"
-export CFLAGS="-arch armv6 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
-make distclean
-./configure --host=armv6-apple-darwin
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
-cp -r src/.libs prebuilt/ios-armv6
-
-export CFLAGS="-arch armv7 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp"
-make distclean
-./configure --host=armv7-apple-darwin
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
-cp -r src/.libs prebuilt/ios-armv7
-
-
-#-------------------------------
+for ARCH in $IOSARCHS; do
+    export CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -O3" 
+    make distclean 2>&1 > /dev/null
+    ./configure --host=$ARCH-apple-darwin && make || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.ios.$ARCH
+    cp -r src/.libs prebuilt/ios-$ARCH
+done
 
 export CC="$SIMCC"
-export CFLAGS="-arch i386 -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
-make distclean
-./configure
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim
-cp -r src/.libs prebuilt/ios-i386
+for ARCH in $SIMARCHS; do
+    export CFLAGS="-arch $ARCH -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
+    make distclean 2>&1 > /dev/null
+    ./configure && make || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.sim.$ARCH
+    cp -r src/.libs prebuilt/ios-$ARCH
+done
  
-#-------------------------------
-
 export CC="$OSXCC"
-export CFLAGS="-arch i386 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make distclean
-./configure
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.i386
-cp -r src/.libs prebuilt/osx-i386
+for ARCH in $OSXARCHS; do
+    export CFLAGS="-arch $ARCH -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+    make distclean 2>&1 > /dev/null
+    ./configure && make || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.osx.$ARCH
+    cp -r src/.libs prebuilt/osx-$ARCH
+done
 
-export CFLAGS="-arch x86_64 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
-make distclean
-./configure
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
-cp -r src/.libs prebuilt/osx-x86_64
-
-#-------------------------------
-
-/usr/bin/lipo -arch armv6 lnsout/$LIBNAME_static.armv6 -arch armv7 lnsout/$LIBNAME_static.armv7 -arch i386 lnsout/$LIBNAME_static.i386.sim -create -output lnsout/$LIBNAME_static.ios
-/usr/bin/lipo -arch i386 lnsout/$LIBNAME_static.i386 -arch x86_64 lnsout/$LIBNAME_static.x86_64 -create -output lnsout/$LIBNAME_static.osx
-
+$IOSLIPO lnsout/$LIBNAME_static.ios.* lnsout/$LIBNAME_static.sim.* -create -output lnsout/$LIBNAME_static.ios
+$OSXLIPO lnsout/$LIBNAME_static.osx.* -create -output lnsout/$LIBNAME_static.osx
 mkdir -p ../lib/darwin/ios
 mkdir -p ../lib/darwin/osx
 cp lnsout/$LIBNAME_static.ios ../lib/darwin/ios/$LIBINSTALL_static

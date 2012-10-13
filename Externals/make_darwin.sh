@@ -65,7 +65,8 @@ compilelibosx() {
 if [ -d /Developer ]; then
     DEVEL=/Developer
 else
-    DEVEL=/Applications/XCode.app/Contents/Developer
+    DEVEL=/Applications/Xcode.app/Contents/Developer
+    XCAPP=1
 fi
 
 OSXSDKS="$DEVEL/SDKs"
@@ -77,22 +78,83 @@ fi
 
 export OSXCC=cc
 export OSXCPP=c++
-export IOSCC="$DEVEL/Platforms/iPhoneOS.platform/Developer/usr/bin/cc"
-export IOSCPP="$DEVEL/Platforms/iPhoneOS.platform/Developer/usr/bin/c++"
-export SIMCC="$DEVEL/Platforms/iPhoneSimulator.platform/Developer/usr/bin/cc"
-export SIMCPP="$DEVEL/Platforms/iPhoneSimulator.platform/Developer/usr/bin/c++"
-if [ ! -d "$SIMCC" ]; then
-    export SIMCC="$DEVEL/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
-    export SIMCPP="$DEVEL/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+export OSXLIPO=lipo
+
+if [ $XCAPP == "1" ]; then
+    export IOSCC=$(xcrun -sdk iphoneos -find cc)
+    export IOSCPP=$(xcrun -sdk iphoneos -find c++)
+    export SIMCC=$(xcrun -sdk iphonesimulator -find cc)
+    export SIMCPP=$(xcrun -sdk iphonesimulator -find c++)
+    export IOSLIPO=$(xcrun -sdk iphoneos -find lipo)
+    export SIMLIPO=$(xcrun -sdk iphoneos -find lipo)
+else
+    #iOS compilers
+
+    IOSDIR="$DEVEL/Platforms/iPhoneOS.platform/Developer/usr/bin"
+    export IOSCC="$IOSDIR/cc"
+    if [ ! -f "$IOSCC" ] ; then
+        export IOSCC="$IOSDIR/clang"
+    if [ ! -f "$IOSCC" ] ; then
+        export IOSCC="$IOSDIR/gcc"
+    fi
+    fi
+
+    export IOSCPP="$IOSDIR/c++"
+    if [ ! -f "$IOSCPP" ] ; then
+        export IOSCPP="$IOSDIR/clang"
+    if [ ! -f "$IOSCPP" ] ; then
+        export IOSCPP="$IOSDIR/g++"
+    fi
+    fi
+
+    export IOSLIPO="$IOSDIR/lipo"
+    if [ ! -f "$IOSLIPO" ] ; then
+        export IOSLIPO=lipo
+    fi
+
+    #Simulator compilers
+
+    SIMDIR="$DEVEL/Platforms/iPhoneSimulator.platform/Developer/usr/bin"
+    export SIMCC="$SIMDIR/cc"
+    if [ ! -f "$SIMCC" ] ; then
+        export SIMCC="$SIMDIR/clang"
+    if [ ! -f "$SIMCC" ] ; then
+        export SIMCC="$SIMDIR/gcc"
+    if [ ! -f "$SIMCC" ] ; then
+        export SIMCC="$DEVEL/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+    fi
+    fi
+    fi
+
+    export SIMCPP="$SIMDIR/c++"
+    if [ ! -f "$SIMCPP" ] ; then
+        export SIMCPP="$SIMDIR/clang"
+    if [ ! -f "$SIMCPP" ] ; then
+        export SIMCPP="$SIMDIR/g++"
+    if [ ! -f "$SIMCPP" ] ; then
+        export SIMCPP="$DEVEL/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+    fi
+    fi
+    fi
+
+    export SIMLIPO=lipo
 fi
 
 latestsdk() {
     echo "$1/$(ls "$1" | sort | tail -n 1)"
 }
 
+archsof() {
+    $2 -info $1/usr/lib/libSystem.dylib | sed s/Architectures\ in\ the\ fat\ file.*\ are:\ // | sed s/Non-fat\ file:.*\ is\ architecture:\ //
+}
+
 export OSXSDK=$(latestsdk "$OSXSDKS")
 export IOSSDK=$(latestsdk "$IOSSDKS")
 export SIMSDK=$(latestsdk "$SIMSDKS")
+
+export IOSARCHS=$(archsof "$IOSSDK" "$IOSLIPO" )
+export SIMARCHS=$(archsof "$SIMSDK" "$SIMLIPO" )
+export OSXARCHS=$(archsof "$OSXSDK" "$OSXLIPO" )
 
 compilelib libz.a zlib ./zlib_compile_darwin.sh $1
 compilelib libpng15.a libpng ./libpng_compile_darwin.sh $1

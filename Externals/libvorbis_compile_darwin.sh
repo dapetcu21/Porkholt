@@ -17,62 +17,42 @@ mkdir -p lnsout
 
 LIBOGG="$(pwd)/../libogg"
 
-#-------------------------------
-
 export CC="$IOSCC"
-export CFLAGS="-arch armv6 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -O3" 
-make distclean 2>&1 > /dev/null
-./configure --with-ogg-includes="$LIBOGG/include/" --with-ogg-libraries="$LIBOGG/prebuilt/ios-armv6/" --host=armv6-apple-darwin 
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.armv6
-cp $LIBPATH2_static lnsout/$LIBNAME2_static.armv6
-
-export CFLAGS="-arch armv7 -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -O3"
-make distclean 2>&1 > /dev/null
-./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/ios-armv7" --host=armv7-apple-darwin
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.armv7
-cp $LIBPATH2_static lnsout/$LIBNAME2_static.armv7
-
-#-------------------------------
+for ARCH in $IOSARCHS; do
+    export CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -O3" 
+    make distclean 2>&1 > /dev/null
+    ./configure --with-ogg-includes="$LIBOGG/include/" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH/" --host=$ARCH-apple-darwin && make || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.ios.$ARCH
+    cp $LIBPATH2_static lnsout/$LIBNAME2_static.ios.$ARCH
+done
 
 export CC="$SIMCC"
-export CFLAGS="-arch i386 -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp -O3"
-make distclean 2>&1 > /dev/null
-./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/ios-i386" --disable-oggtest
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.i386.sim
-cp $LIBPATH2_static lnsout/$LIBNAME2_static.i386.sim
- 
-#-------------------------------
+for ARCH in $SIMARCHS; do
+    export CFLAGS="-arch $ARCH -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp -O3"
+    make distclean 2>&1 > /dev/null
+    ./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH" --disable-oggtest && make || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.sim.$ARCH
+    cp $LIBPATH2_static lnsout/$LIBNAME2_static.sim.$ARCH
+done
 
 export CC="$OSXCC"
-export CFLAGS="-arch i386 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp -O3"
-make distclean 2>&1 > /dev/null
-./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/osx-i386" --target=i386-apple-darwin --disable-oggtest
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.i386
-cp $LIBPATH2_static lnsout/$LIBNAME2_static.i386
+for ARCH in $OSXARCHS; do
+    export CFLAGS="-arch $ARCH -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp -O3"
+    make distclean 2>&1 > /dev/null
+    ./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/osx-$ARCH" --target=$ARCH-apple-darwin --disable-oggtest && make || exit 1
+    cp $LIBPATH_static lnsout/$LIBNAME_static.osx.$ARCH
+    cp $LIBPATH2_static lnsout/$LIBNAME2_static.osx.$ARCH
+done
 
-export CFLAGS="-arch x86_64 -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp -O3"
-make distclean 2>&1 > /dev/null
-./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/osx-x86_64" --target=x86_64-apple-darwin --disable-oggtest
-make
-cp $LIBPATH_static lnsout/$LIBNAME_static.x86_64
-cp $LIBPATH2_static lnsout/$LIBNAME2_static.x86_64
-
-#-------------------------------
-
-/usr/bin/lipo -arch armv6 lnsout/$LIBNAME_static.armv6 -arch armv7 lnsout/$LIBNAME_static.armv7 -arch i386 lnsout/$LIBNAME_static.i386.sim -create -output lnsout/$LIBNAME_static.ios
-/usr/bin/lipo -arch armv6 lnsout/$LIBNAME2_static.armv6 -arch armv7 lnsout/$LIBNAME2_static.armv7 -arch i386 lnsout/$LIBNAME2_static.i386.sim -create -output lnsout/$LIBNAME2_static.ios
-/usr/bin/lipo -arch i386 lnsout/$LIBNAME_static.i386 -arch x86_64 lnsout/$LIBNAME_static.x86_64 -create -output lnsout/$LIBNAME_static.osx
-/usr/bin/lipo -arch i386 lnsout/$LIBNAME2_static.i386 -arch x86_64 lnsout/$LIBNAME2_static.x86_64 -create -output lnsout/$LIBNAME2_static.osx
-
+$IOSLIPO  lnsout/$LIBNAME_static.ios.*  lnsout/$LIBNAME_static.sim.* -create -output  lnsout/$LIBNAME_static.ios
+$IOSLIPO lnsout/$LIBNAME2_static.ios.* lnsout/$LIBNAME2_static.sim.* -create -output lnsout/$LIBNAME2_static.ios
+$OSXLIPO  lnsout/$LIBNAME_static.osx.* -create -output  lnsout/$LIBNAME_static.osx
+$OSXLIPO lnsout/$LIBNAME2_static.osx.* -create -output lnsout/$LIBNAME2_static.osx
 mkdir -p ../lib/darwin/ios
 mkdir -p ../lib/darwin/osx
-cp lnsout/$LIBNAME_static.ios ../lib/darwin/ios/$LIBINSTALL_static
+cp  lnsout/$LIBNAME_static.ios  ../lib/darwin/ios/$LIBINSTALL_static
 cp lnsout/$LIBNAME2_static.ios ../lib/darwin/ios/$LIBINSTALL2_static
-cp lnsout/$LIBNAME_static.osx ../lib/darwin/osx/$LIBINSTALL_static
+cp  lnsout/$LIBNAME_static.osx  ../lib/darwin/osx/$LIBINSTALL_static
 cp lnsout/$LIBNAME2_static.osx ../lib/darwin/osx/$LIBINSTALL2_static
 
 rm -rf lnsout
