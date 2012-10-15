@@ -37,6 +37,7 @@ IGScripting::~IGScripting()
 
 void IGScripting::loadCInterface()
 {
+
 }
 
 void IGScripting::advanceAnimation(ph_float elapsed)

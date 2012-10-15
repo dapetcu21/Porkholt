@@ -32,7 +32,7 @@ PHLuaObject::~PHLuaObject()
     }
 }
 
-void PHLuaObject::luaInstance(lua_State * L, void * this_ud_pointer)
+void PHLuaObject::luaInstance(lua_State * L, void * this_ud_pointer = this)
 {
     _luaStates.insert(L);
     PHLuaGetWeakRef(L, this);

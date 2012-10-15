@@ -20,5 +20,12 @@ class IGScripting : public PHAnimator
         IGScripting(PHGameManager * gm, PHDirectory * dir, IGWorld * world);
         ~IGScripting();
 
+        lua_State * luaState() { return L; }
+
         void advanceAnimation(ph_float elapsed);
+
+
+        static map<string, PHAllocator> * luaClasses;
 };
+
+#define IGSCRIPTING_REGISTERCLASS(name, clss) PH_REGISTERCLASS(IGScripting::luaClasses)
