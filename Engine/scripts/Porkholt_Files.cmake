@@ -101,6 +101,7 @@ set(PH_ENGINE_SRCS
   ${PH_EXTERNALS}/uremote/src/URField.cpp
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
   ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHTransformDrawable.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -216,6 +217,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextController.h
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextControllerView.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTransformDrawable.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

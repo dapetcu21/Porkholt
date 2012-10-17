@@ -1,5 +1,8 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#ifndef IGLEVELCONTROLLER_H
+#define IGLEVELCONTROLLER_H
+
 #include <Porkholt/Core/PHViewController.h>
 
 class IGScripting;
@@ -23,3 +26,5 @@ class IGLevelController : public PHViewController
         void updateScene(ph_float elapsed);
         PHView * loadView(const PHRect & f);
 };
+
+#endif

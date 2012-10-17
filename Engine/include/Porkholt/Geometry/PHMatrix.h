@@ -274,6 +274,14 @@ public:
     {
         return PHAABox(transformPoint(p.start), transformPoint(p.end));
     }
+
+    bool operator == (const PHMatrix & o) const
+    {
+        for (int i = 0; i < 16; i++)
+            if (m[i] != o.m[i])
+                return false;
+        return true;
+    }
 };
 
 extern const PHMatrix PHIdentityMatrix;

@@ -1,11 +1,15 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#ifndef IGOBJECT_H
+#define IGOBJECT_H
+
 #include <Porkholt/Core/PHMain.h>
 
 class IGScripting;
 class IGWorld;
 class PHDrawable;
 struct lua_State;
+class b2Body;
 
 class IGObject : public PHObject
 {
@@ -15,22 +19,29 @@ class IGObject : public PHObject
         IGScripting * scripting;
         PHDrawable * drawable;
         list<IGObject*>::iterator world_pos;
+        friend class IGWorld;
 
     public:
         IGObject(IGWorld * world);
-        ~IGObject();
+        virtual ~IGObject();
 
         void attachToWorld(IGWorld * w, bool before = true, IGObject * ref = NULL);
 
         virtual const char * luaClass() { return "IGObject"; } 
-        static void initLuaState(IGScripting * scripting);
+        static void loadLuaInterface(IGScripting * scripting);
 
         void getLuaObject(IGScripting * scripting);
         PHDrawable * getDrawable();
 
         virtual void animate(ph_float elapsed);
 
+        virtual b2Body * physicsBody() { return NULL; }
+
+        IGWorld * getWorld() { return world; }
+
     protected:
         virtual void attachedToWorld();
         virtual PHDrawable * loadDrawable();
 };
+
+#endif

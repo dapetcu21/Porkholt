@@ -2,10 +2,14 @@
 
 #include "IGScripting.h"
 #include "IGWorld.h"
+#include "IGObject.h"
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/IO/PHDirectory.h>
+
+map<string, IGScriptingAllocator> * IGScripting::luaClasses;
+list<IGScriptingIface> * IGScripting::luaInterfaces;
 
 IGScripting::IGScripting(PHGameManager * _gm, PHDirectory * _dir, IGWorld * _world) : gm(_gm), dir(_dir), world(_world)
 {
@@ -35,9 +39,36 @@ IGScripting::~IGScripting()
     world->release();
 }
 
+void IGScripting::classFromName(const string & s)
+{
+    map<string, IGScriptingAllocator>::iterator i = luaClasses->find(s);
+    if (i == luaClasses->end())
+    {
+        PHLog("No class named \"%s\" found", s.c_str());
+        lua_pushnil(L);
+        return;
+    }
+    IGObject * obj = i->second(world);
+    obj->getLuaObject(this);
+}
+
+static int IGScripting_classFromName(lua_State * L)
+{
+    IGScripting * s = (IGScripting*)PHLuaThisPointer(L); 
+    s->classFromName(string(lua_tostring(L, 2)));
+    return 1;
+}
+
 void IGScripting::loadCInterface()
 {
+    lua_getglobal(L, "IGScripting");
+    lua_pushlightuserdata(L, this);
+    lua_setfield(L, -2, "ud");
 
+    PHLuaAddMethod_(IGScripting, classFromName);
+
+    for (list<IGScriptingIface>::iterator i = luaInterfaces->begin(); i != luaInterfaces->end(); i++)
+        (*i)(this);
 }
 
 void IGScripting::advanceAnimation(ph_float elapsed)

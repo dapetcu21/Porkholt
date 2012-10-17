@@ -6,13 +6,15 @@
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHDrawable.h>
 
+IGSCRIPTING_REGISTERCLASS("IGObject", IGObject)
+
 IGObject::IGObject(IGWorld * w) : world(w), L(NULL), scripting(NULL), drawable(NULL)
 {
 }
 
 void IGObject::attachToWorld(IGWorld * w, bool before, IGObject * ref)
 {
-    w->insertObject(w, before, ref);
+    w->insertObject(this, before, ref);
 }
 
 void IGObject::getLuaObject(IGScripting * s)
@@ -28,11 +30,11 @@ void IGObject::getLuaObject(IGScripting * s)
         return;
     lua_pop(L, 1);
 
-    lua_getglobal(L, luaClass());
-    lua_getfield(L, -1, "_new");
+    lua_newtable(L);
     lua_pushvalue(L, -1);
-    PHLuaCall(L, 1, 1);
-    lua_remove(L, -2);
+    lua_setmetatable(L, -2);
+    lua_getglobal(L, luaClass());
+    lua_setfield(L, -2, "__index");
     lua_pushlightuserdata(L, this);
     lua_setfield(L, -2, "ud");
 
@@ -79,7 +81,7 @@ IGObject::~IGObject()
 
 //--- Lua Scripting ---
 
-void IGObject::initLuaState(IGScripting * scr)
+void IGObject::loadLuaInterface(IGScripting * scr)
 {
     lua_State * L = scr->luaState();
 }

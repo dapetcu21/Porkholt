@@ -43,7 +43,6 @@ PHDirectory * PHInode::directoryAtFSPath(const string & p)
         throw string(strerror(errno));
     if (results.st_mode & S_IFDIR)
     {
-        PHLog("meow");
         PHDirectory * i = new PHRegularDirectory(p ,false);
         i->autorelease();
         return i;

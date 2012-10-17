@@ -3,22 +3,27 @@ IGObject = {
     className = "IGObject"
 }
 
+IGScripting = {}
+
 function IGObject:new(...)
-    local o = _classFromName(self.className)
-    setmetatable(o, o)
-    o.__index = self
-    return self.init(o, unpack(arg))
+    local o = IGScripting:_classFromName(self.className)
+    o:init(unpack(arg))
+    return o
 end
 
 function IGObject:subclass(name)
     local o = { className = name }
-    setmetatable(o, o)
     o.__index = self
+    setmetatable(o, o)
     return o
 end
 
 function IGObject:init()
     return self
+end
+
+function vec2(x, y)
+    return { x = x, y = y }
 end
 
 IGProp = IGObject:subclass("IGProp")

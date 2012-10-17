@@ -3,7 +3,7 @@
 #ifndef PHLUAOBJECT_H
 #define PHLUAOBJECT_H
 
-#include <Porkholt/Core/PHLuaObject.h>
+#include <Porkholt/Core/PHMain.h>
 
 class PHLuaObject
 {
@@ -15,7 +15,7 @@ private:
     void luaDestroy(PHObject * sender, void * ud);
     
 public:
-    void luaInstance(lua_State * L, void * this_ud_pointer = this);
+    void luaInstance(lua_State * L, void * this_ud_pointer);
     
     PHLuaObject(const string & className);
     virtual ~PHLuaObject();

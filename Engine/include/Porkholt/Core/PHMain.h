@@ -34,7 +34,7 @@ using namespace std;
 
 #elif defined(__GNUC__)
     #define PH_INITIALIZER(f) \
-    static void f(void) __attribute__((constructor)); \
+    static void f(void) __attribute__((constructor, used)); \
     static void f(void)
 #endif
 
