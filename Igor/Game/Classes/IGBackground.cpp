@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "IGBackground.h"
-#include <Porkholt/Core/PHImageview.h>
+#include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHGameManager.h>
 
 IGBackground::IGBackground(PHGameManager * gm) : PHViewController(gm)

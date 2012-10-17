@@ -1,4 +1,3 @@
-/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "IGWorld.h"
 #include "IGObject.h"
@@ -28,7 +27,6 @@ void IGWorld::advanceAnimation(ph_float elapsed)
 
 void IGWorld::insertObject(IGObject * obj, bool before, IGObject * ref)
 {
-    if (obj->world) return;
     list<IGObject*>::iterator pos = _objects.end();
     if (before)
     {

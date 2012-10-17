@@ -80,15 +80,15 @@ void PHLuaDeleteWeakRef(lua_State * L, void * ref)
     lua_pop(L,1);
 }
 
-void * PHLuaThisPointer(lua_State * L)
+void * PHLuaThisPointer(lua_State * L, int index)
 {
-    if (lua_gettop(L)<1 || !lua_istable(L, 1)) 
+    if (lua_gettop(L)<index || !lua_istable(L, index)) 
     {
         lua_pushstring(L, "this function requires the self argument");
         lua_error(L);
         return NULL;
     }
-    lua_getfield(L, 1, "ud");
+    lua_getfield(L, index, "ud");
     if (!lua_isuserdata(L, -1))
     {
         lua_pop(L, 1);

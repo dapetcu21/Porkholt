@@ -16,7 +16,6 @@ class IGImageProp : public IGProp
         virtual ~IGImageProp();
         const char * luaClass() { return "IGImageProp"; }
 
-        PHDrawable * loadDrawable();
         PHImageView * imageView() { return iv; }
 
         static void loadLuaInterface(IGScripting * s); 

@@ -25,8 +25,14 @@ end
 function vec2(x, y)
     return { x = x, y = y }
 end
+function rect(x, y, w, h)
+    return { x = x, y = y, width = w, height = h }
+end
 
 IGProp = IGObject:subclass("IGProp")
 
 IGImageProp = IGProp:subclass("IGImageProp")
 
+function frame(elapsed)
+--    print("frame", elapsed)
+end

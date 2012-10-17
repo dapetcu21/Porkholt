@@ -46,8 +46,7 @@ PHDrawable * IGObject::getDrawable()
 {
     if (!drawable)
         drawable = loadDrawable();
-    return drawable;
-}
+    return drawable; }
 
 void IGObject::animate(ph_float elapsed)
 {
@@ -81,7 +80,23 @@ IGObject::~IGObject()
 
 //--- Lua Scripting ---
 
+static int IGObject_attachToWorld(lua_State * L)
+{
+    IGObject * o = (IGObject*)PHLuaThisPointer(L);
+    bool before = true;
+    if (lua_isboolean(L, 2))
+        before = lua_toboolean(L, 2);
+    IGObject * p = NULL;
+    if (lua_istable(L, 3))
+        p = (IGObject*)PHLuaThisPointer(L, 3);
+    o->attachToWorld(o->getWorld(), before, p);
+    o->release();
+}
+
 void IGObject::loadLuaInterface(IGScripting * scr)
 {
     lua_State * L = scr->luaState();
+    lua_getglobal(L, "IGObject");
+
+    PHLuaAddMethod(IGObject, attachToWorld);
 }

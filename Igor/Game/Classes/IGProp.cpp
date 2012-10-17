@@ -7,7 +7,7 @@
 
 IGSCRIPTING_REGISTERCLASS("IGProp", IGProp)
 
-IGProp::IGProp(IGWorld * world) : IGObject(world)
+IGProp::IGProp(IGWorld * world) : IGObject(world), pos(0, 0)
 {
 }
 
@@ -20,7 +20,7 @@ void IGProp::setPosition(const PHPoint & p)
     if (body)
     {
     } else {
-        PHTransformDrawable * td = dynamic_cast<PHTransformDrawable*>(td);
+        PHTransformDrawable * td = (PHTransformDrawable*)drawable;
         if (td)
             td->setTranslation(p);
     }
@@ -30,6 +30,7 @@ void IGProp::setPosition(const PHPoint & p)
 PHDrawable * IGProp::loadDrawable()
 {
     PHTransformDrawable * td = new PHTransformDrawable;
+    td->setTranslation(pos);
     configureDrawable(td);
     return td;
 }

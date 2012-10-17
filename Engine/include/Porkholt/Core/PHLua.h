@@ -29,7 +29,7 @@ void PHLuaDeleteWeakRef(lua_State * L, void * ref);
 void PHLuaGetHardRef(lua_State * L, void * ref);
 void PHLuaSetHardRef(lua_State * L, void * ref);
 void PHLuaDeleteHardRef(lua_State * L, void * ref);
-void * PHLuaThisPointer(lua_State * L);
+void * PHLuaThisPointer(lua_State * L, int index = 1);
 void PHLuaSeedRandom(lua_State * L);
 
 #define PHLuaAddMethod(classn,method) lua_pushcfunction(L, classn ## _ ## method); lua_setfield(L, -2, #method);
