@@ -11,6 +11,13 @@ class PHAuxLayerView;
 class PHView;
 class PHEvent;
 class PHDrawableCoordinates;
+
+class PHDrawableInputDelegate
+{
+    public:
+        virtual void drawableRecievedEvent(PHDrawable * d, PHEvent * evt) = 0;
+};
+
 class PHDrawable : public PHObject
 {
 protected:
@@ -22,6 +29,7 @@ protected:
 	PHDrawable * _parent;
     size_t _tag;
     PHMutex * mtx;
+    PHDrawableInputDelegate * _inputDelegate;
     
 	virtual void draw() {}
 public:
@@ -69,6 +77,8 @@ public:
     
     virtual void handleEvent(PHEvent * evt);
     virtual void touchEvent(PHEvent * evt); //to be renamed recievedEvent
+    PHDrawableInputDelegate * inputDelegate() { return _inputDelegate; }
+    void setInputDelegate(PHDrawableInputDelegate * del) { _inputDelegate = del; }
     virtual PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
     virtual PHPositionalVector positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p);
 private:

@@ -15,6 +15,9 @@ set(PH_SOURCES
   Classes/IGObject.cpp
   Classes/IGProp.cpp
   Classes/IGImageProp.cpp
+  Classes/IGInput.cpp
+  Classes/IGDampingProp.cpp
+  Classes/IGPlayer.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -24,8 +27,12 @@ set(PH_HEADERS
   Classes/IGObject.h
   Classes/IGProp.h
   Classes/IGImageProp.h
+  Classes/IGInput.h
+  Classes/IGDampingProp.h
+  Classes/IGPlayer.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")
+set(PH_USE_BOX2D "YES")
 
 porkholt(Igor ${PH_SOURCES} ${PH_HEADERS})

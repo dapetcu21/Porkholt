@@ -33,6 +33,8 @@ PHPoint PHPoint::fromLua(lua_State * L, int index)
 void PHPoint::saveToLua(lua_State * L) const
 {
     lua_newtable(L);    
+    lua_getglobal(L, "PHVector2_meta");
+    lua_setmetatable(L, -2);
     lua_pushnumber(L, x);
     lua_setfield(L, -2, "x");
     lua_pushnumber(L, y);
@@ -65,6 +67,8 @@ PH3DPoint PH3DPoint::fromLua(lua_State * L, int index)
 void PH3DPoint::saveToLua(lua_State * L) const
 {
     lua_newtable(L);    
+    lua_getglobal(L, "PHVector3_meta");
+    lua_setmetatable(L, -2); 
     lua_pushnumber(L, x);
     lua_setfield(L, -2, "x");
     lua_pushnumber(L, y);

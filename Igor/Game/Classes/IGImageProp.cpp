@@ -55,4 +55,6 @@ void IGImageProp::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGImageProp, setImage)
     PHLuaAddMethod(IGImageProp, setBounds)
     PHLuaAddMethod(IGImageProp, bounds)
+
+    lua_pop(L, 1);
 }

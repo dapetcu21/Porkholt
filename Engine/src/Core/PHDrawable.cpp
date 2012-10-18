@@ -10,7 +10,7 @@
 
 const string PHDrawable::_luaClass("PHDrawable");
 
-#define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false), _userInput(false)
+#define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false), _userInput(false), _inputDelegate(NULL)
 
 PHMutex * PHDrawable::mutex() 
 { 
@@ -176,6 +176,8 @@ void PHDrawable::registerLuaInterface(lua_State * L)
 
 void PHDrawable::touchEvent(PHEvent * evt)
 {
+    if (_inputDelegate)
+        _inputDelegate->drawableRecievedEvent(this, evt);
 }
 
 void PHDrawable::handleEvent(PHEvent * evt)

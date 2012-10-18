@@ -36,6 +36,7 @@ class IGObject : public PHObject
         virtual void animate(ph_float elapsed);
 
         virtual b2Body * physicsBody() { return NULL; }
+        virtual void setPhysicsBody(b2Body * b) {}
 
         IGWorld * getWorld() { return world; }
 

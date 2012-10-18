@@ -91,6 +91,7 @@ static int IGObject_attachToWorld(lua_State * L)
         p = (IGObject*)PHLuaThisPointer(L, 3);
     o->attachToWorld(o->getWorld(), before, p);
     o->release();
+    return 0;
 }
 
 void IGObject::loadLuaInterface(IGScripting * scr)

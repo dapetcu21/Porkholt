@@ -14,6 +14,7 @@ root_dst = dst;
 
 fake_links = false
 downscale_hd = false
+luacompress = true
 local i = 4
 while arg[i] ~= nil do
   local a = arg[i]
@@ -21,6 +22,8 @@ while arg[i] ~= nil do
     fake_links = true
   elseif (a == "downscale") then
     downscale_hd = true
+  elseif (a == "noluacompress") then
+    luacompress = false
   elseif (a == "clean") then
     os.execute('rm -r "'..dst..'"')
     return 0
@@ -138,11 +141,15 @@ function copy_file(src, dst, name)
 end
 
 function compress_script(src, dst, name)
-  if (file_modif(src) > file_modif(dst)) then
-    name = name or f
-    print('Compressing script "'..name..'"')
-    local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && '..externals_dir.."/lua/src/lua".." "..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null';
-  	os.execute(scriptline)
+  if (not luacompress) then
+    copy_file(src, dst, name)
+  else
+    if (file_modif(src) > file_modif(dst)) then
+      name = name or f
+      print('Compressing script "'..name..'"')
+      local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && '..externals_dir.."/lua/src/lua".." "..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null';
+      os.execute(scriptline)
+    end
   end
 end
 

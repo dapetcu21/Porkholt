@@ -1,3 +1,4 @@
+/* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include "IGWorld.h"
 #include "IGObject.h"
@@ -5,10 +6,15 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/Core/PHView.h>
+#include <Box2D/Box2D.h>
 
 IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size) : gm(_gm), dir(_dir), _view(new PHView(size))
 {
+    _view->setUserInput(true);
     dir->retain();
+    phyWorld = new b2World(b2Vec2(0, 0), true);
+    b2BodyDef def;
+    ground = phyWorld->CreateBody(&def);
 }
 
 IGWorld::~IGWorld()
@@ -17,10 +23,14 @@ IGWorld::~IGWorld()
     for (list<IGObject*>::iterator i = _objects.begin(); i != _objects.end(); i++)
         (*i)->release();
     dir->release();
+    phyWorld->DestroyBody(ground);
+    delete phyWorld;
 }
 
 void IGWorld::advanceAnimation(ph_float elapsed)
 {
+    phyWorld->Step(gm->frameInterval(), 6, 2);
+    phyWorld->ClearForces();
     for (list<IGObject*>::iterator i = _objects.begin(); i != _objects.end(); i++)
         (*i)->animate(elapsed);
 }
@@ -54,7 +64,7 @@ void IGWorld::insertObject(IGObject * obj, bool before, IGObject * ref)
         _view->addChildBefore(d, lastD);
     }
 
-    //add physics here
+    obj->attachedToWorld(); 
 }
 
 void IGWorld::removeObject(IGObject * obj)
@@ -64,6 +74,6 @@ void IGWorld::removeObject(IGObject * obj)
     PHDrawable * d = obj->getDrawable();
     if (d) 
         d->removeFromParent();
-    //remove physics here
+    obj->setPhysicsBody(NULL);
     obj->release();
 }

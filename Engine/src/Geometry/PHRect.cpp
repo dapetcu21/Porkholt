@@ -40,6 +40,8 @@ PHRect PHRect::fromLua(lua_State * L, int index)
 void PHRect::saveToLua(lua_State * L) const
 {
     lua_newtable(L);    
+    lua_getglobal(L, "PHRect_meta");
+    lua_setmetatable(L, -2);
     lua_pushnumber(L, x);
     lua_setfield(L, -2, "x");
     lua_pushnumber(L, y);
