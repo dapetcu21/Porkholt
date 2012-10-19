@@ -47,6 +47,13 @@ function PHVector2_meta.__div(a, b)
         return vec2(a.x/b.x, a.y/b.y)
     end
 end
+PHVector2_meta.__index = PHVector2_meta
+function PHVector2_meta.length(o)
+    return math.sqrt(o.x*o.x + o.y*o.y)
+end
+function PHVector2_meta.lengthSquared(o)
+    return o.x*o.x + o.y*o.y
+end
 
 function vec2(x, y)
     local o = { x = x, y = y }
@@ -60,12 +67,39 @@ function rect(x, y, w, h)
     return o
 end
 
+IGCallbackTable = {}
+function IGCallbackTable:new(o)
+    o = o or {}
+    o.__index = self
+    setmetatable(o, o)
+    return o
+end
+
+function IGCallbackTable:addCallback(cb)
+    local n = #self + 1
+    self[n] = cb
+    self[cb]  = n
+end
+
+function IGCallbackTable:removeCallback(cb)
+    table.remove(self, self[cb])
+    self[cb] = nil
+end
+
+function IGCallbackTable:call(...)
+    for i,v in ipairs(self) do
+        v(unpack(arg))
+    end
+end
+onFrame = IGCallbackTable:new()
+
 IGProp = IGObject:subclass("IGProp")
 IGImageProp = IGProp:subclass("IGImageProp")
 IGInput = IGObject:subclass("IGInput")
 IGDampingProp = IGProp:subclass("IGDampingProp")
 IGPlayer = IGProp:subclass("IGPlayer")
 
+
 function frame(elapsed)
---    print("frame", elapsed)
+    onFrame:call(elapsed)
 end
