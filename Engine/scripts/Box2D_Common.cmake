@@ -1,79 +1,146 @@
-set(PH_B2D_PATH "${PH_EXTERNALS}/${PH_B2D_PATH}/box2d/Box2D")
+set(PH_B2D_PATH "${PH_EXTERNALS}/box2d/Box2D")
+
+set(BOX2D_Collision_SRCS
+    ${PH_B2D_PATH}/Box2D/Collision/b2BroadPhase.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2CollideCircle.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2CollideEdge.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2CollidePolygon.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2Collision.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2Distance.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2DynamicTree.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/b2TimeOfImpact.cpp
+)
+set(BOX2D_Collision_HDRS
+    ${PH_B2D_PATH}/Box2D/Collision/b2BroadPhase.h
+    ${PH_B2D_PATH}/Box2D/Collision/b2Collision.h
+    ${PH_B2D_PATH}/Box2D/Collision/b2Distance.h
+    ${PH_B2D_PATH}/Box2D/Collision/b2DynamicTree.h
+    ${PH_B2D_PATH}/Box2D/Collision/b2TimeOfImpact.h
+)
+set(BOX2D_Shapes_SRCS
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2CircleShape.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2EdgeShape.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2ChainShape.cpp
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2PolygonShape.cpp
+)
+set(BOX2D_Shapes_HDRS
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2CircleShape.h
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2EdgeShape.h
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2ChainShape.h
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2PolygonShape.h
+    ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2Shape.h
+)
+set(BOX2D_Common_SRCS
+    ${PH_B2D_PATH}/Box2D/Common/b2BlockAllocator.cpp
+    ${PH_B2D_PATH}/Box2D/Common/b2Draw.cpp
+    ${PH_B2D_PATH}/Box2D/Common/b2Math.cpp
+    ${PH_B2D_PATH}/Box2D/Common/b2Settings.cpp
+    ${PH_B2D_PATH}/Box2D/Common/b2StackAllocator.cpp
+    ${PH_B2D_PATH}/Box2D/Common/b2Timer.cpp
+)
+set(BOX2D_Common_HDRS
+    ${PH_B2D_PATH}/Box2D/Common/b2BlockAllocator.h
+    ${PH_B2D_PATH}/Box2D/Common/b2Draw.h
+    ${PH_B2D_PATH}/Box2D/Common/b2GrowableStack.h
+    ${PH_B2D_PATH}/Box2D/Common/b2Math.h
+    ${PH_B2D_PATH}/Box2D/Common/b2Settings.h
+    ${PH_B2D_PATH}/Box2D/Common/b2StackAllocator.h
+    ${PH_B2D_PATH}/Box2D/Common/b2Timer.h
+)
+set(BOX2D_Dynamics_SRCS
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2Body.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2ContactManager.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2Fixture.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2Island.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2World.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2WorldCallbacks.cpp
+)
+set(BOX2D_Dynamics_HDRS
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2Body.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2ContactManager.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2Fixture.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2Island.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2TimeStep.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2World.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/b2WorldCallbacks.h
+)
+set(BOX2D_Contacts_SRCS
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2CircleContact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2Contact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ContactSolver.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ChainAndCircleContact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonContact.cpp
+)
+set(BOX2D_Contacts_HDRS
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2CircleContact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2Contact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ContactSolver.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ChainAndCircleContact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonContact.h
+)
+set(BOX2D_Joints_SRCS
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2DistanceJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2FrictionJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2GearJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2Joint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2MouseJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PrismaticJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PulleyJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2RevoluteJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2RopeJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WeldJoint.cpp
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WheelJoint.cpp
+)
+set(BOX2D_Joints_HDRS
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2DistanceJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2FrictionJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2GearJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2Joint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2MouseJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PrismaticJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PulleyJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2RevoluteJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2RopeJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WeldJoint.h
+    ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WheelJoint.h
+)
+set(BOX2D_Rope_SRCS
+    ${PH_B2D_PATH}/Box2D/Rope/b2Rope.cpp
+)
+set(BOX2D_Rope_HDRS
+    ${PH_B2D_PATH}/Box2D/Rope/b2Rope.h
+)
+set(BOX2D_General_HDRS
+    ${PH_B2D_PATH}/Box2D/Box2D.h
+)
+
 set(PH_B2D_SRCS
-  ${PH_B2D_PATH}/Box2D/Collision/b2BroadPhase.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/b2CollideCircle.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/b2CollidePolygon.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/b2Collision.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/b2Distance.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/b2DynamicTree.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/b2TimeOfImpact.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2CircleShape.cpp
-  ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2PolygonShape.cpp
-  ${PH_B2D_PATH}/Box2D/Common/b2BlockAllocator.cpp
-  ${PH_B2D_PATH}/Box2D/Common/b2Math.cpp
-  ${PH_B2D_PATH}/Box2D/Common/b2Settings.cpp
-  ${PH_B2D_PATH}/Box2D/Common/b2StackAllocator.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2Body.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2ContactManager.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2Fixture.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2Island.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2World.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2WorldCallbacks.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2CircleContact.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2Contact.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ContactSolver.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonContact.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2TOISolver.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2DistanceJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2FrictionJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2GearJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2Joint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2LineJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2MouseJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PrismaticJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PulleyJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2RevoluteJoint.cpp
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WeldJoint.cpp
-  )
+    ${BOX2D_Joints_SRCS}
+    ${BOX2D_Contacts_SRCS}
+    ${BOX2D_Dynamics_SRCS}
+    ${BOX2D_Common_SRCS}
+    ${BOX2D_Shapes_SRCS}
+    ${BOX2D_Collision_SRCS}
+    ${BOX2D_Rope_SRCS}
+)
 
 set(PH_B2D_HEADERS
-  ${PH_B2D_PATH}/Box2D/Box2D.h
-  ${PH_B2D_PATH}/Box2D/Collision/b2BroadPhase.h
-  ${PH_B2D_PATH}/Box2D/Collision/b2Collision.h
-  ${PH_B2D_PATH}/Box2D/Collision/b2Distance.h
-  ${PH_B2D_PATH}/Box2D/Collision/b2DynamicTree.h
-  ${PH_B2D_PATH}/Box2D/Collision/b2TimeOfImpact.h
-  ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2CircleShape.h
-  ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2PolygonShape.h
-  ${PH_B2D_PATH}/Box2D/Collision/Shapes/b2Shape.h
-  ${PH_B2D_PATH}/Box2D/Common/b2BlockAllocator.h
-  ${PH_B2D_PATH}/Box2D/Common/b2Math.h
-  ${PH_B2D_PATH}/Box2D/Common/b2Settings.h
-  ${PH_B2D_PATH}/Box2D/Common/b2StackAllocator.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2Body.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2ContactManager.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2Fixture.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2Island.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2TimeStep.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2World.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/b2WorldCallbacks.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2CircleContact.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2Contact.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2ContactSolver.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2PolygonContact.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Contacts/b2TOISolver.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2DistanceJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2FrictionJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2GearJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2Joint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2LineJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2MouseJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PrismaticJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2PulleyJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2RevoluteJoint.h
-  ${PH_B2D_PATH}/Box2D/Dynamics/Joints/b2WeldJoint.h
-  )
+    ${BOX2D_General_HDRS}
+    ${BOX2D_Joints_HDRS}
+    ${BOX2D_Contacts_HDRS}
+    ${BOX2D_Dynamics_HDRS}
+    ${BOX2D_Common_HDRS}
+    ${BOX2D_Shapes_HDRS}
+    ${BOX2D_Collision_HDRS}
+    ${BOX2D_Rope_HDRS}
+)
 
 include(${PH_ENGINE_PATH}/scripts/Box2D_IncludeDirs.cmake)

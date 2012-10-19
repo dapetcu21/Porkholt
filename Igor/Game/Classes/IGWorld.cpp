@@ -12,7 +12,7 @@ IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size) :
 {
     _view->setUserInput(true);
     dir->retain();
-    phyWorld = new b2World(b2Vec2(0, 0), true);
+    phyWorld = new b2World(b2Vec2(0, 0));
     b2BodyDef def;
     ground = phyWorld->CreateBody(&def);
 }
