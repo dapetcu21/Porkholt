@@ -1,11 +1,11 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#include <Box2D/Box2D.h>
 #include "IGProp.h"
 #include "IGWorld.h"
 #include "IGScripting.h"
 #include <Porkholt/Core/PHTransformDrawable.h>
 #include <Porkholt/Core/PHLua.h>
-#include <Box2D/Box2D.h>
 
 IGSCRIPTING_REGISTERCLASS("IGProp", IGProp)
 
@@ -81,28 +81,32 @@ PHLuaNumberSetter(IGProp, setRotation)
 static int IGProp_applyLinearImpulse(lua_State * L)
 {
     IGProp * o = (IGProp*)PHLuaThisPointer(L);
-    PHPoint v(0,0), p(0,0);
-    if (lua_istable(L, 2))
-        v = PHPoint::fromLua(L, 2);
-    if (lua_istable(L, 3))
-        p = PHPoint::fromLua(L, 3);
     b2Body * b = o->physicsBody();
     if (b)
+    {
+        PHPoint v(0,0), p(b->GetWorldCenter());
+        if (lua_istable(L, 2))
+            v = PHPoint::fromLua(L, 2);
+        if (lua_istable(L, 3))
+            p = PHPoint::fromLua(L, 3);
         b->ApplyLinearImpulse(b2Vec2(v.x, v.y), b2Vec2(p.x, p.y));
+    }
     return 0;
 }
 
 static int IGProp_applyForce(lua_State * L)
 {
     IGProp * o = (IGProp*)PHLuaThisPointer(L);
-    PHPoint v(0,0), p(0,0);
-    if (lua_istable(L, 2))
-        v = PHPoint::fromLua(L, 2);
-    if (lua_istable(L, 3))
-        p = PHPoint::fromLua(L, 3);
     b2Body * b = o->physicsBody();
     if (b)
+    {
+        PHPoint v(0,0), p(b->GetWorldCenter());
+        if (lua_istable(L, 2))
+            v = PHPoint::fromLua(L, 2);
+        if (lua_istable(L, 3))
+            p = PHPoint::fromLua(L, 3);
         b->ApplyForce(b2Vec2(v.x, v.y), b2Vec2(p.x, p.y));
+    }
     return 0;
 }
 

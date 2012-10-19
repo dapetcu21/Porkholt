@@ -11,7 +11,6 @@ class IGDampingProp : public IGProp
     protected:
         b2MouseJoint * cui;
         PHVector2 dampImpulse;
-        ph_float dampAngImpulse;
         ph_float maxF, dampTorque, dampFreq;
     public:
         IGDampingProp(IGWorld * w);
