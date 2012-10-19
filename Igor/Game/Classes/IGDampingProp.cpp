@@ -91,10 +91,24 @@ void IGDampingProp::setDampingFrequency(ph_float f)
 
 //--- Lua Scripting ---
 
+PHLuaNumberGetter(IGDampingProp, dampingForce);
+PHLuaNumberGetter(IGDampingProp, dampingTorque);
+PHLuaNumberGetter(IGDampingProp, dampingFrequency);
+PHLuaNumberSetter(IGDampingProp, setDampingForce);
+PHLuaNumberSetter(IGDampingProp, setDampingTorque);
+PHLuaNumberSetter(IGDampingProp, setDampingFrequency);
+
 void IGDampingProp::loadLuaInterface(IGScripting * s)
 {
     lua_State * L = s->luaState();
     lua_getglobal(L, "IGDampingProp");
+
+    PHLuaAddMethod(IGDampingProp, dampingForce);
+    PHLuaAddMethod(IGDampingProp, setDampingForce);
+    PHLuaAddMethod(IGDampingProp, dampingForce);
+    PHLuaAddMethod(IGDampingProp, setDampingTorque);
+    PHLuaAddMethod(IGDampingProp, dampingFrequency);
+    PHLuaAddMethod(IGDampingProp, setDampingFrequency);
 
     lua_pop(L, 1);
 }
