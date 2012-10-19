@@ -26,14 +26,14 @@ const PHMatrix & PHTransformDrawable::matrix()
     {
         cache = true;
         bool first = true;
-        if (sca.x != 1 || sca.y != 1 || sca.y != 1)
+                if (tra.x || tra.y || tra.z)
         {
             if (first)
             {
-                mat = PHMatrix::scaling(sca);
+                mat = PHMatrix::translation(tra);
                 first = false;
-            } else
-                mat *= PHMatrix::scaling(sca);
+            } else 
+                mat *= PHMatrix::translation(tra);
         }
         if (rot != PHIdentityQuaternion)
         {
@@ -44,14 +44,14 @@ const PHMatrix & PHTransformDrawable::matrix()
             } else
                 mat *= rot.rotationMatrix();
         }
-        if (tra.x || tra.y || tra.z)
+        if (sca.x != 1 || sca.y != 1 || sca.y != 1)
         {
             if (first)
             {
-                mat = PHMatrix::translation(tra);
+                mat = PHMatrix::scaling(sca);
                 first = false;
-            } else 
-                mat *= PHMatrix::translation(tra);
+            } else
+                mat *= PHMatrix::scaling(sca);
         }
         if (cus)
         {

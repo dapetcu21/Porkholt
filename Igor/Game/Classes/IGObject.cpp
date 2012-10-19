@@ -52,6 +52,10 @@ void IGObject::animate(ph_float elapsed)
 {
 }
 
+void IGObject::adjustPhysics(ph_float elapsed)
+{
+}
+
 void IGObject::attachedToWorld()
 {
 }

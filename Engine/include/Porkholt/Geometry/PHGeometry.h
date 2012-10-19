@@ -51,4 +51,12 @@ inline ph_float PHWarp(ph_float v, ph_float f)
     return v;
 }
 
+inline ph_float PHNormalizeAngle(ph_float v)
+{
+    if (v>M_PI)
+        v-=((int)(v+M_PI)/(M_PI*2))*(M_PI*2);
+    if (v<-M_PI)
+        v-=((int)(v-M_PI)/(M_PI*2))*(M_PI*2);
+    return v;
+}
 #endif

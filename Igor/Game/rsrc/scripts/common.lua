@@ -74,18 +74,15 @@ function IGCallbackTable:new(o)
     setmetatable(o, o)
     return o
 end
-
 function IGCallbackTable:addCallback(cb)
     local n = #self + 1
     self[n] = cb
     self[cb]  = n
 end
-
 function IGCallbackTable:removeCallback(cb)
     table.remove(self, self[cb])
     self[cb] = nil
 end
-
 function IGCallbackTable:call(...)
     for i,v in ipairs(self) do
         v(unpack(arg))
@@ -98,6 +95,8 @@ IGImageProp = IGProp:subclass("IGImageProp")
 IGInput = IGObject:subclass("IGInput")
 IGDampingProp = IGProp:subclass("IGDampingProp")
 IGPlayer = IGProp:subclass("IGPlayer")
+IGMob = IGDampingProp:subclass("IGMob")
+IGBasicMob = IGDampingProp:subclass("IGBasicMob")
 
 
 function frame(elapsed)

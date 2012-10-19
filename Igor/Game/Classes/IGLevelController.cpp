@@ -21,8 +21,8 @@ PHView * IGLevelController::loadView(const PHRect & f)
     v->setUserInput(true);
     world = new IGWorld(gm, dir, f);
     scripting = new IGScripting(gm, dir, world);
-    world->setAnimatorPool(animpool);
     scripting->setAnimatorPool(animpool);
+    world->setAnimatorPool(animpool);
     bg = new IGBackground(gm);
     PHViewControllerHolder * h = new PHViewControllerHolder(f);
     h->setViewController(bg);

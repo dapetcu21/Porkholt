@@ -34,6 +34,7 @@ class IGObject : public PHObject
         PHDrawable * getDrawable();
 
         virtual void animate(ph_float elapsed);
+        virtual void adjustPhysics(ph_float elapsed);
 
         virtual b2Body * physicsBody() { return NULL; }
         virtual void setPhysicsBody(b2Body * b) {}

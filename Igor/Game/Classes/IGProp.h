@@ -24,9 +24,9 @@ class IGProp : public IGObject
         virtual ~IGProp();
         virtual const char * luaClass() { return "IGProp"; }
 
-        void setPosition(const PHPoint & p);
+        virtual void setPosition(const PHPoint & p);
         const PHPoint & position() { return pos; }
-        void setRotation(ph_float rot);
+        virtual void setRotation(ph_float rot);
         ph_float rotation() { return rot; }
 
         static void loadLuaInterface(IGScripting * s);

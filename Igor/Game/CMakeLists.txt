@@ -18,6 +18,8 @@ set(PH_SOURCES
   Classes/IGInput.cpp
   Classes/IGDampingProp.cpp
   Classes/IGPlayer.cpp
+  Classes/IGMob.cpp
+  Classes/IGBasicMob.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -30,6 +32,8 @@ set(PH_HEADERS
   Classes/IGInput.h
   Classes/IGDampingProp.h
   Classes/IGPlayer.h
+  Classes/IGMob.h
+  Classes/IGBasicMob.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

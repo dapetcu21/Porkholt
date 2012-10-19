@@ -151,6 +151,12 @@ struct PHPoint
         return v1.x*v2.x+v1.y*v2.y;
 #endif
     }
+
+#ifdef BOX2D_H
+    PHPoint(const b2Vec2 & o) : x(o.x), y(o.y) {};
+    b2Vec2 b2d() const { return b2Vec2(x, y); }
+    const PHPoint & operator = (const b2Vec2 & o) { x = o.x; y = o.y; return (*this); }
+#endif
 } PH_PACKED_STRUCT;
 
 typedef PHPoint PHSize;
@@ -321,6 +327,12 @@ struct PH3DPoint
     
     PHPoint xy() { return PHPoint(x, y); }
     PHPoint yz() { return PHPoint(y, z); }
+
+#ifdef BOX2D_H
+    PH3DPoint(const b2Vec3 & o) : x(o.x), y(o.y), z(o.z) {}
+    b2Vec3 b2d() const { return b2Vec3(x, y, z); } 
+    const PH3DPoint & operator = (const b2Vec3 & o) { x = o.x; y = o.y; return (*this); }
+#endif
 } PH_PACKED_STRUCT;
 
 struct PHAABox

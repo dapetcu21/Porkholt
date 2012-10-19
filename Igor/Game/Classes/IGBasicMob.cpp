@@ -1,27 +1,25 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
-#include "IGPlayer.h"
-#include "IGWorld.h"
+#include "IGBasicMob.h"
 #include "IGScripting.h"
+#include "IGWorld.h"
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHImageView.h>
-#include <Porkholt/Core/PHGameManager.h>
 #include <Box2D/Box2D.h>
 
-IGSCRIPTING_REGISTERCLASS("IGPlayer", IGPlayer)
+IGSCRIPTING_REGISTERCLASS("IGBasicMob", IGBasicMob)
 
-IGPlayer::IGPlayer(IGWorld * w) : IGProp(w)
+IGBasicMob::IGBasicMob(IGWorld * w) : IGMob(w)
 {
 }
 
-IGPlayer::~IGPlayer()
+IGBasicMob::~IGBasicMob()
 {
 }
 
-void IGPlayer::attachedToWorld()
+void IGBasicMob::attachedToWorld()
 {
     b2BodyDef def;
-    def.fixedRotation = true;
     def.type = b2_dynamicBody;
     def.position.Set(pos.x, pos.y);
     def.angle = rot;
@@ -29,29 +27,27 @@ void IGPlayer::attachedToWorld()
 
     b2PolygonShape shape;
     shape.SetAsBox(0.5, 0.5);
-//    shape.m_p.Set(0, 0);
-//    shape.m_radius = 0.5;
 
     b2FixtureDef fdef;
     fdef.shape = &shape;
     fdef.density = 1.0f;
     body->CreateFixture(&fdef);
+
+    createDampingJoint();
 }
 
-void IGPlayer::configureDrawable(PHDrawable * d)
+void IGBasicMob::configureDrawable(PHDrawable * d)
 {
     PHImageView * iv = new PHImageView(PHRect(-0.5 ,-0.5, 1, 1));
-    iv->setImage(world->gameManager()->imageNamed("player"));
+    iv->setImage(world->gameManager()->imageNamed("mob"));
     d->addChild(iv);
     iv->release();
 }
 
-//--- Lua Scripting ---
-
-void IGPlayer::loadLuaInterface(IGScripting * s)
+void IGBasicMob::loadLuaInterface(IGScripting * s)
 {
     lua_State * L = s->luaState();
-    lua_getglobal(L, "IGPlayer");
+    lua_getglobal(L, "IGBasicMob");
 
     lua_pop(L, 1);
 }

@@ -13,6 +13,7 @@ IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size) :
     _view->setUserInput(true);
     dir->retain();
     phyWorld = new b2World(b2Vec2(0, 0));
+    phyWorld->SetAutoClearForces(false);
     b2BodyDef def;
     ground = phyWorld->CreateBody(&def);
 }
@@ -29,7 +30,12 @@ IGWorld::~IGWorld()
 
 void IGWorld::advanceAnimation(ph_float elapsed)
 {
-    phyWorld->Step(gm->frameInterval(), 6, 2);
+    ph_float ts = gm->frameInterval();
+    if (elapsed < ts/2) return;
+    for (list<IGObject*>::iterator i = _objects.begin(); i != _objects.end(); i++)
+        (*i)->adjustPhysics(elapsed);
+    for (ph_float el = elapsed; el >= ts/2; el -= ts)
+        phyWorld->Step(ts, 6, 2);
     phyWorld->ClearForces();
     for (list<IGObject*>::iterator i = _objects.begin(); i != _objects.end(); i++)
         (*i)->animate(elapsed);
