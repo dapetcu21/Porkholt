@@ -4,17 +4,19 @@
 #define IGPROP_H
 
 #include "IGObject.h"
+#include "IGContactHandler.h"
 
 class b2Body;
 class b2MouseJoint;
 
-class IGProp : public IGObject
+class IGProp : public IGObject, public IGContactHandler
 {
     protected:
         PHPoint pos;
         ph_float rot;
         b2Body * body;
         b2MouseJoint * posJoint;
+        bool collisions;
 
         void createPositionJoint();
         PHDrawable * loadDrawable();
@@ -28,6 +30,8 @@ class IGProp : public IGObject
         const PHPoint & position() { return pos; }
         virtual void setRotation(ph_float rot);
         ph_float rotation() { return rot; }
+        void setCollisionEvents(bool ce) { collisions = ce; }
+        bool collisionEvents() { return collisions; }
 
         static void loadLuaInterface(IGScripting * s);
         b2Body * physicsBody() { return body; }

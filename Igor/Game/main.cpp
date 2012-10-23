@@ -34,7 +34,7 @@ PHMAIN_DEFINE
     PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, 
         PHWVideoMode(480*2, 320*2, PHWVideoMode::Windowed), 
         PHWVSync
-#if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
+#if defined(PH_SIMULATOR) || (defined (PH_DEBUG)) 
         | PHWRemote
         | PHWShowFPS
 #endif

@@ -4,13 +4,14 @@
 #define IGBULLETMANAGER_H
 
 #include "IGObject.h"
+#include "IGContactHandler.h"
 
 class PHView;
 class PHParticleView;
 class b2Body;
 class IGBulletParticles;
 
-class IGBulletManager : public IGObject 
+class IGBulletManager : public IGObject, public IGContactHandler
 {
     public:
         IGBulletManager(IGWorld * w);
@@ -42,8 +43,8 @@ class IGBulletManager : public IGObject
             bullet b;
             b2Body * body;
             bullet_info * next, * prev; 
-            PHParticleView * pv;
             ph_float time;
+            bool processed;
         };
         bullet_info * bullets;
         bullet_info * lbullets;
@@ -51,8 +52,17 @@ class IGBulletManager : public IGObject
         IGBulletParticles * pa;
         PHParticleView * pv;
 
+        struct bullet_contact
+        {
+            IGObject * object;
+            bullet_info * bullet;
+        };
+        list<bullet_contact> contacts;
+
         b2Body * physicsForBullet(bullet_info & b);
         void animate(ph_float elapsed);
+        bool collisionCallback(bullet_info * bullet, IGObject * o);
+        void beginContact(bool aBody, b2Contact * contact);
 };
 
 #endif

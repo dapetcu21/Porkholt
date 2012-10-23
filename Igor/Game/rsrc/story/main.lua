@@ -13,7 +13,7 @@ mob:setPosition(vec2(4, 2))
 mob:attachToWorld()
 
 function input:touchMoved(delta)
-    player:applyLinearImpulse(delta * player:mass() * 1.5)
+    player:applyLinearImpulse(delta * player:mass() * 2.5)
 end
 
 onFrame:addCallback(function (elapsed)
@@ -44,3 +44,17 @@ onFrame:addCallback(function (elapsed)
         cooldown = cooldown + 0.2
     end
 end)
+
+function bullets:onImpact(object, bullet)
+    if (bullet.owner == 1) then
+        if (object == mob) then
+            print("mob hit")
+            bullets:removeBullet(bullet.handle)
+        end
+    elseif (bullet.owner == 2) then
+        if (object == player) then
+            print("player hit")
+        end
+    end
+end
+

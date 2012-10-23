@@ -171,35 +171,24 @@ void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pix
 
 PHRect PHGLTexture2D::loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw, size_t bh, enum pixelFormat fmt, bool aa)
 {
-    /*bool rrepeat = true;
     if (gm->hasCapability(PHGLCapabilityAppleLimitedNPOT))
     {
         bool pots = ((w & ~(w ^ (w-1))) == 0) && ((h & ~(h ^ (h-1))) == 0);
         if (!pots)
         {
             aa = false;
-            rrepeat = false;
         }
-    }*/
-    bool rrepeat = false;
+    }
     
     bind_begin;
-    setWrapS(rrepeat?repeat:clampToEdge);
-    setWrapT(rrepeat?repeat:clampToEdge);
+    setWrapS(clampToEdge);
+    setWrapT(clampToEdge);
     setMinFilter(aa?linearMipmapNearest:linear);
     setMagFilter(linear);
     setData(buf, bw, bh, fmt);
     bind_end;
     
-    if (rrepeat)
-        return PHRect(1.0f/(bw*2), 
-                      1.0f/(bh*2), 
-                      (w-1)/ph_float(bw), 
-                      (h-1)/ph_float(bh));
-    else
-        return PHRect(0, 0,
-                      w/ph_float(bw),
-                      h/ph_float(bh));
+    return PHRect(0, 0, w/ph_float(bw), h/ph_float(bh));
 }
 
 PHRect PHGLTexture2D::loadFromFile(PHStream * fd, bool antialiasing)

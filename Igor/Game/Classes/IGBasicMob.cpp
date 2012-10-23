@@ -23,6 +23,7 @@ void IGBasicMob::attachedToWorld()
     def.type = b2_dynamicBody;
     def.position.Set(pos.x, pos.y);
     def.angle = rot;
+    def.userData = this;
     body = world->physicsWorld()->CreateBody(&def);
 
     b2PolygonShape shape;
@@ -31,6 +32,8 @@ void IGBasicMob::attachedToWorld()
     b2FixtureDef fdef;
     fdef.shape = &shape;
     fdef.density = 1.0f;
+    fdef.filter.categoryBits = IGWorld::collisionMobs;
+    fdef.filter.maskBits = IGWorld::collisionAllMob;
     body->CreateFixture(&fdef);
 
     createDampingJoint();

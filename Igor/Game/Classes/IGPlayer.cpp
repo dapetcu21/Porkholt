@@ -25,6 +25,7 @@ void IGPlayer::attachedToWorld()
     def.type = b2_dynamicBody;
     def.position.Set(pos.x, pos.y);
     def.angle = rot;
+    def.userData = this;
     body = world->physicsWorld()->CreateBody(&def);
 
     b2PolygonShape shape;
@@ -35,6 +36,8 @@ void IGPlayer::attachedToWorld()
     b2FixtureDef fdef;
     fdef.shape = &shape;
     fdef.density = 1.0f;
+    fdef.filter.categoryBits = IGWorld::collisionPlayer;
+    fdef.filter.maskBits = IGWorld::collisionAllPlayer;
     body->CreateFixture(&fdef);
 }
 

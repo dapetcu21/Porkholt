@@ -80,6 +80,8 @@ PHLuaPointGetter(IGProp, position)
 PHLuaPointSetter(IGProp, setPosition)
 PHLuaNumberGetter(IGProp, rotation)
 PHLuaNumberSetter(IGProp, setRotation)
+PHLuaBoolGetter(IGProp, collisionEvents);
+PHLuaBoolSetter(IGProp, setCollisionEvents);
 
 static int IGProp_applyLinearImpulse(lua_State * L)
 {
@@ -214,6 +216,8 @@ void IGProp::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGProp, setBullet);
     PHLuaAddMethod(IGProp, isFixedRotation);
     PHLuaAddMethod(IGProp, setFixedRotation);
+    PHLuaAddMethod(IGProp, collisionEvents);
+    PHLuaAddMethod(IGProp, setCollisionEvents);
 
     PHLuaAddMethod(IGProp, mass);
 

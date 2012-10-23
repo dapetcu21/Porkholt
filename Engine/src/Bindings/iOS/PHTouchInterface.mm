@@ -42,37 +42,35 @@ PHTouchInterface * PHTouchInterfaceSingleton = NULL;
     CGRect b = [self bounds];
     return PHPoint(
         p.x *  2.0 / b.size.width - 1,
-        p.y * -2.0 / b.size.width + 1
+        p.y * -2.0 / b.size.height + 1
         );
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	for (UITouch * touch in touches)
-        PHGameManagerSingleton->eventHandler()->touchDown([self adjustPoint:[touch locationInView:self]], event);
+        PHGameManagerSingleton->eventHandler()->touchDown([self adjustPoint:[touch locationInView:self]], touch);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	for (UITouch * touch in touches)
-        PHGameManagerSingleton->eventHandler()->touchMoved([self adjustPoint:[touch locationInView:self]], event);
+        PHGameManagerSingleton->eventHandler()->touchMoved([self adjustPoint:[touch locationInView:self]], touch);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	for (UITouch * touch in touches)
-        PHGameManagerSingleton->eventHandler()->touchUp([self adjustPoint:[touch locationInView:self]], event);
+        PHGameManagerSingleton->eventHandler()->touchUp([self adjustPoint:[touch locationInView:self]], touch);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	for (UITouch * touch in touches)
-        PHGameManagerSingleton->eventHandler()->touchCancelled([self adjustPoint:[touch locationInView:self]], event);
+        PHGameManagerSingleton->eventHandler()->touchCancelled([self adjustPoint:[touch locationInView:self]], touch);
 }
 
 - (void)dealloc {
-	mutex->release();
-	q.clear();
 	[UIAccelerometer sharedAccelerometer].delegate=nil;
     [super dealloc];
 }

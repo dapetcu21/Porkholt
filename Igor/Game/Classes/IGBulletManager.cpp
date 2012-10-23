@@ -23,6 +23,10 @@ class IGBulletParticles : public PHParticleAnimator
             part.v2d = NULL;
             part.type = particleType2D;
         }
+        ~IGBulletParticles()
+        {
+            free(part.v2d);
+        }
 
         particles * calculatedParticles();
         void advanceAnimation(ph_float elapsed) {}
@@ -51,24 +55,47 @@ void * IGBulletManager::addBullet(const bullet & b)
     i->b = b;
     i->body = NULL;
     i->next = bullets;
+    if (i->next)
+        i->next->prev = i;
     i->prev = NULL;
     bullets = i;
     i->body = physicsForBullet(*i);
-
+    i->processed = false;
     return (void*)i;
 }
 
 void IGBulletManager::removeBullet(void * h)
 {
     bullet_info * i = (bullet_info*)h;
-    world->physicsWorld()->DestroyBody(i->body);
     if (i->next)
         i->next->prev = i->prev;
     if (i->prev)
         i->prev->next = i->next;
-    if (i==bullets)
-        bullets = NULL;
-    delete i;
+    if (bullets == i)
+        bullets = i->next;
+    if (i->b.type == 1)
+    {
+        i->next = lbullets;
+        i->prev = NULL;
+        if (i->next)
+            i->next->prev = i;
+        lbullets = i;
+        i->time = 1.0f;
+    } else {
+        world->physicsWorld()->DestroyBody(i->body);
+        delete i;
+    }
+}
+
+void IGBulletManager::beginContact(bool aBody, b2Contact * contact)
+{
+    b2Fixture * f = aBody ? contact->GetFixtureA() : contact->GetFixtureB();
+    b2Fixture * of = aBody ? contact->GetFixtureB() : contact->GetFixtureA();
+    bullet_contact c;
+    c.object = (IGObject*)of->GetBody()->GetUserData();
+
+    c.bullet = ((bullet_info*)f->GetUserData());
+    contacts.push_back(c);
 }
 
 b2Body * IGBulletManager::physicsForBullet(bullet_info & b)
@@ -78,6 +105,7 @@ b2Body * IGBulletManager::physicsForBullet(bullet_info & b)
     def.angle = b.b.rotation;
     def.type = b2_dynamicBody;
     def.bullet = true;
+    def.userData = this;
     def.linearVelocity = PHVector2(8, 0).rotated(b.b.rotation).b2d();
     b2Body * bd = world->physicsWorld()->CreateBody(&def);
     b2PolygonShape s;
@@ -85,7 +113,15 @@ b2Body * IGBulletManager::physicsForBullet(bullet_info & b)
     b2FixtureDef fdef;
     fdef.density = 5.0f;
     fdef.shape = &s;
-    fdef.userData = this;
+    fdef.userData = &b;
+    if (b.b.type == 1)
+    {
+        fdef.filter.categoryBits = IGWorld::collisionPlayerBullets;
+        fdef.filter.maskBits = IGWorld::collisionAllPlayerBullets;
+    } else {
+        fdef.filter.categoryBits = IGWorld::collisionMobBullets;
+        fdef.filter.maskBits = IGWorld::collisionAllMobBullets;
+    }
     bd->CreateFixture(&fdef);
     return bd;
 }
@@ -143,10 +179,69 @@ PHDrawable * IGBulletManager::loadDrawable()
     return (PHDrawable*)v->retain();
 }
 
+bool IGBulletManager::collisionCallback(bullet_info * bullet, IGObject * o)
+{
+    if (!scripting) return false;
+    bool r = false;
+    PHLuaGetWeakRef(L, this);
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "onImpact");
+        if (lua_isfunction(L, -1))
+        {
+            lua_pushvalue(L, -2);
+            PHLuaGetWeakRef(L, o);
+            if (lua_istable(L, -1))
+            {
+                lua_newtable(L);
+                lua_pushlightuserdata(L, bullet);
+                lua_setfield(L, -2, "handle");
+                lua_pushnumber(L, bullet->b.type);
+                lua_setfield(L, -2, "type");
+                lua_pushnumber(L, bullet->b.owner);
+                lua_setfield(L, -2, "owner");
+                PHLuaCall(L, 3, 1);
+                r = true;
+            } else
+                lua_pop(L, 2);
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+    return r;
+}
+
 void IGBulletManager::animate(ph_float elapsed)
 {
+    for (list<bullet_contact>::iterator i = contacts.begin(); i != contacts.end(); i++)
+    {
+        if (i->bullet->processed) continue;
+        i->bullet->processed = collisionCallback(i->bullet, i->object);
+    }
+    contacts.clear();
     for (bullet_info * p = bullets; p; p = p->next)
     {
+        p->processed = false;
+        p->b.position = p->body->GetPosition();
+        p->b.rotation = p->body->GetAngle();
+    }
+    bullet_info * nx;
+    for (bullet_info * p = lbullets; p; p = nx)
+    {
+        nx = p->next;
+        p->time -= elapsed*2;
+        if (p->time < 0)
+        {
+            if (p->prev)
+                p->prev->next = p->next;
+            if (p->next)
+                p->next->prev = p->prev;
+            if (p == lbullets)
+                lbullets = p->next;
+            world->physicsWorld()->DestroyBody(p->body);
+            delete p;
+            continue;
+        }
         p->b.position = p->body->GetPosition();
         p->b.rotation = p->body->GetAngle();
     }

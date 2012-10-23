@@ -2,11 +2,48 @@
 
 #include "IGWorld.h"
 #include "IGObject.h"
+#include "IGContactHandler.h"
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/Core/PHView.h>
 #include <Box2D/Box2D.h>
+
+class IGContactListener : public b2ContactListener
+{
+    public:
+        void BeginContact(b2Contact* contact)
+        {
+            IGContactHandler * ha = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureA()->GetBody()->GetUserData());
+            if (ha) ha->beginContact(true, contact);
+            IGContactHandler * hb = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureB()->GetBody()->GetUserData());
+            if (hb) hb->beginContact(false, contact);
+        }
+
+        void EndContact(b2Contact* contact)
+        {
+            IGContactHandler * ha = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureA()->GetBody()->GetUserData());
+            if (ha) ha->endContact(true, contact);
+            IGContactHandler * hb = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureB()->GetBody()->GetUserData());
+            if (hb) hb->endContact(false, contact);
+        }
+        
+        void PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+        {
+            IGContactHandler * ha = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureA()->GetBody()->GetUserData());
+            if (ha) ha->preSolve(true, contact, oldManifold);
+            IGContactHandler * hb = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureB()->GetBody()->GetUserData());
+            if (hb) hb->preSolve(false, contact, oldManifold);
+        }
+
+        void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+        {
+            IGContactHandler * ha = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureA()->GetBody()->GetUserData());
+            if (ha) ha->postSolve(true, contact, impulse);
+            IGContactHandler * hb = dynamic_cast<IGContactHandler*>((IGObject*)contact->GetFixtureB()->GetBody()->GetUserData());
+            if (hb) hb->postSolve(false, contact, impulse);
+        }
+};
 
 IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size) : gm(_gm), dir(_dir), _view(new PHView(size))
 {
@@ -16,6 +53,8 @@ IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size) :
     phyWorld->SetAutoClearForces(false);
     b2BodyDef def;
     ground = phyWorld->CreateBody(&def);
+    cl = new IGContactListener();
+    phyWorld->SetContactListener(cl);
 }
 
 IGWorld::~IGWorld()
@@ -26,6 +65,7 @@ IGWorld::~IGWorld()
     dir->release();
     phyWorld->DestroyBody(ground);
     delete phyWorld;
+    delete cl;
 }
 
 void IGWorld::advanceAnimation(ph_float elapsed)
