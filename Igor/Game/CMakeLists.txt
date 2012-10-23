@@ -21,6 +21,7 @@ set(PH_SOURCES
   Classes/IGMob.cpp
   Classes/IGBasicMob.cpp
   Classes/IGBulletManager.cpp
+  Classes/IGScreenBounds.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -36,6 +37,7 @@ set(PH_HEADERS
   Classes/IGMob.h
   Classes/IGBasicMob.h
   Classes/IGBulletManager.h
+  Classes/IGScreenBounds.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

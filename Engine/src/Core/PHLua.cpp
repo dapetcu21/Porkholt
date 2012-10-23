@@ -17,9 +17,31 @@ void PHLuaSetIncludePath(lua_State * L, string path)
     lua_pop( L, 1 );
 }
 
+static int PHLua_require(lua_State * L)
+{
+    luaL_checkstring(L, 1);
+    string s = lua_tostring(L, 1);
+    PHDirectory * dir = (PHDirectory*)lua_touserdata(L, lua_upvalueindex(1));
+    if (dir->fileExists(s+".lua"))
+        PHLuaLoadFile(L, dir, s+".lua");
+    else
+    if (dir->fileExists(s))
+        PHLuaLoadFile(L, dir, s);
+    else
+    {   
+        lua_pushvalue(L, lua_upvalueindex(2));
+        lua_pushvalue(L, 1);
+        PHLuaCall(L, 2, 0);
+    }
+    return 0;
+}
+
 void PHLuaAddIncludeDir(lua_State * L, PHDirectory * dir)
 {
-    //TO DO
+    lua_pushlightuserdata(L, dir);
+    lua_getglobal(L, "require");
+    lua_pushcclosure(L, &PHLua_require, 2);
+    lua_setglobal(L, "require");
 }
 
 void PHLuaSetHardRef(lua_State * L, void * ref)

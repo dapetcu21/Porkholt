@@ -1,30 +1,9 @@
-input = IGInput:new()
-input:attachToWorld()
-
-bullets = IGBulletManager:new()
-bullets:attachToWorld()
-
-player = IGPlayer:new()
-player:setPosition(vec2(1, 2))
-player:attachToWorld()
+require("bullets")
+require("player")
 
 mob = IGBasicMob:new()
 mob:setPosition(vec2(4, 2))
 mob:attachToWorld()
-
-function input:touchMoved(delta)
-    player:applyLinearImpulse(delta * player:mass() * 2.5)
-end
-
-onFrame:addCallback(function (elapsed)
-    local imp = -player:linearVelocity() * player:mass()
-    local maximpulse = 5 * elapsed;
-    local l = imp:length();
-    if (l>maximpulse) then
-        imp = imp * (maximpulse / l)
-    end
-    player:applyLinearImpulse(imp)
-end)
 
 time = 0
 onFrame:addCallback(function (elapsed)
@@ -33,28 +12,4 @@ onFrame:addCallback(function (elapsed)
     mob:setRotation(time)
 end)
 
-cooldown = 0
-onFrame:addCallback(function (elapsed)
-    if not input:isFiring() then 
-        return
-    end
-    cooldown = cooldown - elapsed;
-    while (cooldown < 0) do
-        bullets:addBullet(1, player:position() + vec2(0.5, 0), 0, 1); --fire
-        cooldown = cooldown + 0.2
-    end
-end)
-
-function bullets:onImpact(object, bullet)
-    if (bullet.owner == 1) then
-        if (object == mob) then
-            print("mob hit")
-            bullets:removeBullet(bullet.handle)
-        end
-    elseif (bullet.owner == 2) then
-        if (object == player) then
-            print("player hit")
-        end
-    end
-end
 
