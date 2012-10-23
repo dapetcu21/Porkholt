@@ -31,4 +31,19 @@ onFrame:addCallback(function (elapsed)
     end
 end)
 
+onFrame:addCallback(function (elapsed)
+    local p = player:position()
+    local v = player:linearVelocity()
+    local limit = 0.5
+    if p.x < limit then
+        local f = (limit - (p.x + v.x * 0.07)) * 50
+        player:applyForce(vec2(f, 0))
+    end
+    limit = 3
+    if p.x > limit then
+        local f = (limit - (p.x + v.x * 0.07)) * 50
+        player:applyForce(vec2(f, 0))
+    end
+end)
+
 
