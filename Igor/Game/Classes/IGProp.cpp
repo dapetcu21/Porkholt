@@ -68,6 +68,9 @@ void IGProp::animate(ph_float elapsed)
         PHTransformDrawable * td = (PHTransformDrawable*)drawable;
         td->setTranslation(PHVector3(v.x, v.y ,0));
         td->setRotation(PHQuaternion(r, PHVector3(0, 0, 1)));
+
+        pos = PHPoint(v);
+        rot = r;
     }
 }
 

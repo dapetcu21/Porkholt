@@ -1,7 +1,7 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
 #include <Porkholt/Core/PHParticleView.h>
-#include <Porkholt/Core/PHParticleAnimator.h>
+#include <Porkholt/Core/PHGenericParticleAnimator.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHNormalImage.h>
@@ -34,7 +34,7 @@ const string PHParticleView::_luaClass("PHParticleView");
 void PHParticleView::init()
 {
     luaClass = &_luaClass;
-    PHParticleAnimator * panim = new PHParticleAnimator;
+    PHParticleAnimator * panim = new PHGenericParticleAnimator;
     setParticleAnimator(panim);
     panim->release();
 }
@@ -82,7 +82,7 @@ void PHParticleView::loadFromLua(lua_State * L)
         lua_getfield(L, -1, "particleAnimator");
         if (lua_istable(L, -1))
         {
-            PHParticleAnimator * pa = PHParticleAnimator::fromLua(L);
+            PHParticleAnimator * pa = PHGenericParticleAnimator::fromLua(L);
             setParticleAnimator(pa);
         }
         lua_pop(L, 1);
@@ -125,11 +125,11 @@ char color_sprites[] = "color_sprites";
 
 void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PHColor & tint)
 {
-    vector<PHParticleAnimator::particle> * particles = (vector<PHParticleAnimator::particle>*)p;
-    if (!p || !particles->size()) return;
-    size_t n = particles->size();
+    PHParticleAnimator::particles * particles = (PHParticleAnimator::particles*)p;
+    if (!p || !particles->n) return;
+    size_t n = particles->n;
     size_t nrVertices = n*4;
-    GLfloat * buffer = new GLfloat[nrVertices*(2+2+1)];
+    GLfloat * buffer = new GLfloat[nrVertices*(3+2+1)];
     GLfloat * b = buffer;
     GLfloat stdTxC[8] = 
     {
@@ -140,14 +140,15 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     };
     for (size_t i = 0; i<n; i++)
     {
-        PHParticleAnimator::particle & p = particles->at(i);
+        PHParticleAnimator::particle2D & p = particles->v2d[i];
         const PHSize & sz = p.size;
-        PHPoint pp[4];
-        pp[0] = PHPoint(-sz.width/2,-sz.height/2);
-        pp[1] = PHPoint(+sz.width/2,-sz.height/2);
-        pp[2] = PHPoint(-sz.width/2,+sz.height/2);
-        pp[3] = PHPoint(+sz.width/2,+sz.height/2);
-        
+        PH3DPoint pp[4];
+        pp[0] = PH3DPoint(-sz.width/2,-sz.height/2, 0);
+        pp[1] = PH3DPoint(+sz.width/2,-sz.height/2, 0);
+        pp[2] = PH3DPoint(-sz.width/2,+sz.height/2, 0);
+        pp[3] = PH3DPoint(+sz.width/2,+sz.height/2, 0);
+        PH24BitColor c = PH24BitColor(p.color);
+
         for (int j=0; j<4; j++)
         {
             pp[j].rotate(p.rotation);
@@ -155,14 +156,14 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
             
             b[0] = pp[j].x;
             b[1] = pp[j].y;
+            b[2] = pp[j].z;
             
-            b[2] = stdTxC[(j<<1)];
-            b[3] = stdTxC[(j<<1)+1];
+            b[3] = stdTxC[(j<<1)];
+            b[4] = stdTxC[(j<<1)+1];
             
-            PH24BitColor c = PH24BitColor(p.color);
-            *((uint32_t*)(b+4)) = *((uint32_t*)&c);
+            *((uint32_t*)(b+5)) = *((uint32_t*)&c);
             
-            b+=5;
+            b+=6;
         }
     }
     
@@ -172,8 +173,8 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         vbo = new PHGLVertexBufferObject(gm);
     
     vbo->bindTo(PHGLVBO::arrayBuffer);
-    vbo->setData(NULL, sizeof(GLfloat)*nrVertices*5, gm->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
-    vbo->setSubData(buffer, 0, sizeof(GLfloat)*nrVertices*5);
+    vbo->setData(NULL, sizeof(GLfloat)*nrVertices*6, gm->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
+    vbo->setSubData(buffer, 0, sizeof(GLfloat)*nrVertices*6);
     
     cacheLeft -= gm->frameInterval();
     if (cacheLeft <=0)
@@ -196,13 +197,10 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         
         if (useBytes)
         {
-            if (n)
-            {
-                bIndices[0] = 0;
-                bIndices[1] = 1;
-                bIndices[2] = 2;
-                bIndices[3] = 3;
-            }
+            bIndices[0] = 0;
+            bIndices[1] = 1;
+            bIndices[2] = 2;
+            bIndices[3] = 3;
             for (size_t i=1; i<n; i++)
             {
                 size_t i6 = i*6;
@@ -215,13 +213,10 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
                 bIndices[i6+3] = i4+3;
             }
         } else {
-            if (n)
-            {
-                sIndices[0] = 0;
-                sIndices[1] = 1;
-                sIndices[2] = 2;
-                sIndices[3] = 3;
-            }
+            sIndices[0] = 0;
+            sIndices[1] = 1;
+            sIndices[2] = 2;
+            sIndices[3] = 3;
             for (size_t i=1; i<n; i++)
             {
                 size_t i6 = i*6;
@@ -250,9 +245,9 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     {
         vao = new PHGLVertexArrayObject(gm);
         vao->bindToEdit();
-        vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, 0, vbo);
-        vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*5, sizeof(GLfloat)*2, vbo);
-        vao->vertexPointer(PHIMAGEATTRIBUTE_CLR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(GLfloat)*5, sizeof(GLfloat)*4, vbo);
+        vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, 0, vbo);
+        vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, sizeof(GLfloat)*3, vbo);
+        vao->vertexPointer(PHIMAGEATTRIBUTE_CLR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(GLfloat)*6, sizeof(GLfloat)*5, vbo);
         indexVBO->bindTo(PHGLVBO::elementArrayBuffer);
         vao->unbind();
     }
@@ -288,10 +283,10 @@ void PHParticleView::render()
         default:
             return;
     }
-    vector<PHParticleAnimator::particle> * particles = particleAnim->calculatedParticles();
+    PHParticleAnimator::particles * particles = particleAnim->calculatedParticles();
     particleM->unlock();
     if (!particles) return;
-    if (!particles->empty())
+    if (particles->n)
     {
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * applyMatrices());
@@ -320,7 +315,6 @@ void PHParticleView::render()
         
         gm->setModelViewMatrix(om);
     }
-    delete particles;
 }
 
 void PHParticleView::attachedToGameManager()

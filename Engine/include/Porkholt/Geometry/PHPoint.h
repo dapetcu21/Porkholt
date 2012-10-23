@@ -254,6 +254,23 @@ struct PH3DPoint
         PH3DPoint res(x/d,y/d,z/d);
         return res;
     }
+    void rotate(ph_float angle)
+    {
+        ph_float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
+        x = cosv*ox-sinv*oy;
+        y = sinv*ox+cosv*oy;
+    }
+
+    PH3DPoint rotated(ph_float angle) const
+    {
+        PH3DPoint p;
+        ph_float sinv = sin(angle), cosv = cos(angle);
+        p.x = cosv*x-sinv*y;
+        p.y = sinv*x+cosv*y;
+        p.z = z;
+        return p;
+    }
+ 
     ph_float length() const { return sqrt(x*x+y*y+z*z); } 
     ph_float squaredLength() const { return x*x+y*y+z*z; }
     

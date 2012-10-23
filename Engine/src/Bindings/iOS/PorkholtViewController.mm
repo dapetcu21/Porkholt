@@ -139,7 +139,6 @@ extern void * PHWUD;
     } catch (const string & ex) {
         PHLog("Can't load resource directory: %s", ex.c_str());
     }
-    initParams.entryPoint = entryPoint;
     params.entryPoint = PHWEntryPoint;
     if (PHWFlags & PHWShowFPS)
         gameManager->setShowsFPS(true);

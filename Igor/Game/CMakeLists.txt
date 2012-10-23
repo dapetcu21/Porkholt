@@ -20,6 +20,7 @@ set(PH_SOURCES
   Classes/IGPlayer.cpp
   Classes/IGMob.cpp
   Classes/IGBasicMob.cpp
+  Classes/IGBulletManager.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -34,6 +35,7 @@ set(PH_HEADERS
   Classes/IGPlayer.h
   Classes/IGMob.h
   Classes/IGBasicMob.h
+  Classes/IGBulletManager.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

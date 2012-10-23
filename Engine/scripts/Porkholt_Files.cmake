@@ -48,7 +48,6 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHNavigationController.cpp
   ${PH_ENGINE_PATH}/src/Core/PHNormalImage.cpp
   ${PH_ENGINE_PATH}/src/Core/PHObject.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHParticleAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHParticleView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHPerspectiveCamera.cpp
   ${PH_ENGINE_PATH}/src/Core/PHPostProcess.cpp
@@ -102,6 +101,7 @@ set(PH_ENGINE_SRCS
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
   ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTransformDrawable.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHGenericParticleAnimator.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -218,6 +218,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/UI/PHTextControllerView.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTransformDrawable.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGenericParticleAnimator.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

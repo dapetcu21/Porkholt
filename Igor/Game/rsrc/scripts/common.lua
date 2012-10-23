@@ -97,6 +97,7 @@ IGDampingProp = IGProp:subclass("IGDampingProp")
 IGPlayer = IGProp:subclass("IGPlayer")
 IGMob = IGDampingProp:subclass("IGMob")
 IGBasicMob = IGDampingProp:subclass("IGBasicMob")
+IGBulletManager = IGObject:subclass("IGBulletManager")
 
 
 function frame(elapsed)

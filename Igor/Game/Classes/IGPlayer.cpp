@@ -28,7 +28,7 @@ void IGPlayer::attachedToWorld()
     body = world->physicsWorld()->CreateBody(&def);
 
     b2PolygonShape shape;
-    shape.SetAsBox(0.5, 0.5);
+    shape.SetAsBox(0.4, 0.4);
 //    shape.m_p.Set(0, 0);
 //    shape.m_radius = 0.5;
 
@@ -40,7 +40,7 @@ void IGPlayer::attachedToWorld()
 
 void IGPlayer::configureDrawable(PHDrawable * d)
 {
-    PHImageView * iv = new PHImageView(PHRect(-0.5 ,-0.5, 1, 1));
+    PHImageView * iv = new PHImageView(PHRect(-0.4 ,-0.4, 0.8, 0.8));
     iv->setImage(world->gameManager()->imageNamed("player"));
     d->addChild(iv);
     iv->release();

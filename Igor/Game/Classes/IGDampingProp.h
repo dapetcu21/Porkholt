@@ -11,6 +11,8 @@ class IGDampingProp : public IGProp
     protected:
         b2MouseJoint * cui;
         PHVector2 dampImpulse;
+        PHVector2 desiredPos;
+        ph_float desiredRot;
         ph_float maxF, dampTorque, dampFreq;
     public:
         IGDampingProp(IGWorld * w);
@@ -18,6 +20,8 @@ class IGDampingProp : public IGProp
 
         void setPosition(const PHPoint & p);
         void setRotation(ph_float r);
+        PHVector2 desiredPosition() { return desiredPos; }
+        ph_float desiredRotation() { return desiredRot; }
         void createDampingJoint();
 
         void setDampingForce(ph_float p);

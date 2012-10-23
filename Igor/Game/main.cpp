@@ -7,7 +7,7 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include "IGLevelController.h"
 
-void PHGameEntryPoint(PHGameManager * gm)
+void IGGameEntryPoint(PHGameManager * gm)
 {    
     PH2DCamera * camera = new PH2DCamera();
     camera->setScreenSize(PHSize(0,4.0f));
@@ -31,11 +31,15 @@ void PHGameEntryPoint(PHGameManager * gm)
 PHMAIN_DEFINE
 {
     srand(time(NULL));
-    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVSync
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, 
+        PHWVideoMode(480*2, 320*2, PHWVideoMode::Windowed), 
+        PHWVSync
 #if defined(PH_SIMULATOR) || (defined(PH_DESKTOP) && defined (PH_DEBUG)) 
-                   | PHWRemote
-                   | PHWShowFPS
+        | PHWRemote
+        | PHWShowFPS
 #endif
-                   , &PHGameEntryPoint, NULL));
+        ,
+        &IGGameEntryPoint, 
+        NULL));
 }
  
