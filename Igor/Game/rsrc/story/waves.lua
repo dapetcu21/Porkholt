@@ -3,6 +3,11 @@ IWaveManager = IObject:new()
 function IWaveManager:frame(elapsed)
     if self.wave then
         self.wave:frame(elapsed)
+        if self.wave:waveFinished() then
+            print("wave finished")
+            self.wave = nil
+            self:dispatchWave()
+        end
     end
 end 
 
@@ -21,7 +26,8 @@ end
 IBasicMobWave = IWave:new()
 
 function IBasicMobWave:init(mobsPerSecond, duration, speed)
-    if IWave.init(self) then
+    self = IWave.init(self)
+    if self then
         self.objects = {}
         self.duration = duration
         self.speed = speed;
@@ -35,29 +41,55 @@ function IBasicMobWave:frame(elapsed)
         local prob = self.mps * elapsed;
         if math.random() <= prob then
             local mob = IGBasicMob:new()
+            mob:setHealth(2.0)
             mob:setPosition(vec2(8, math.random()* 3 + 0.5))
             mob:attachToWorld()
+            mob.onDie:addCallback(function (m)
+                self.objects[m] = nil
+                print('mob died')
+            end)
             self.objects[mob] = true
         end
     end
+    
+    local dt = {}
 
     for mob,d in pairs(self.objects) do
-        local p = mob:desiredPosition()
-        local l = player:position()
-        if p.x < l.x then
-            vel = vec2(-self.speed, 0)
+        if mob:position().x < -1.5 then
+            mob:removeFromWorld()
+            dt[mob] = true
         else
-            vel = l - p
-            local len = vel:length()
-            local long = self.speed
-            if len > long then
-                vel = vel * (long / len)
+            local l = player:position()
+            local p = mob:desiredPosition()
+            if p.x < l.x then
+                vel = vec2(-self.speed, 0)
+            else
+                vel = l - p
+                local len = vel:length()
+                local long = self.speed
+                if len > long then
+                    vel = vel * (long / len)
+                end
             end
+
+            mob:setPosition(p + vel * elapsed)
         end
-
-        mob:setPosition(p + vel * elapsed)
-
     end
+
+    for mob,d in pairs(dt) do
+        self.objects[mob] = nil
+        print("mob expired")
+    end
+end
+
+function IBasicMobWave:waveFinished()
+    if self.duration > 0 then
+        return false
+    end
+    for mob,d in pairs(self.objects) do
+        return false
+    end
+    return true
 end
 
 --------------------------
@@ -65,7 +97,8 @@ end
 ISimWave = IWave:new()
 
 function ISimWave:init(v, miu, k, g)
-    if IWave.init(self) then
+    self = IWave.init(self)
+    if self then
         self.obj = IGBasicMob:new()
         self.obj:setPosition(vec2(3, 2))
         self.obj:attachToWorld()
@@ -87,7 +120,10 @@ function ISimWave:frame(elapsed)
     print (x)
 end
 
+----------------------------
+
 local w = IBasicMobWave:new(2, 10, 1)
 IWaveManager.wave = w
 
-
+function IWaveManager:dispatchWave()
+end

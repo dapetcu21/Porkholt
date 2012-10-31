@@ -116,10 +116,11 @@ void IGWorld::insertObject(IGObject * obj, bool before, IGObject * ref)
 void IGWorld::removeObject(IGObject * obj)
 {
     if (obj->world != this) return;
-    obj->world = NULL;
     PHDrawable * d = obj->getDrawable();
     if (d) 
         d->removeFromParent();
     obj->setPhysicsBody(NULL);
+    obj->world = NULL;
+    _objects.erase(obj->world_pos);
     obj->release();
 }

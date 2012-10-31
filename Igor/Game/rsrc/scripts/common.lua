@@ -17,6 +17,24 @@ function IGObject:subclass(name)
     return o
 end
 
+function IGObject:isKindOfClass(class)
+    local s = nil
+    if type(class) == "string" then
+        s = class
+    elseif type(class) == "table" then
+        s = class.className
+    end
+    if s then
+        while self do
+            if self.className == s then
+                return true
+            end
+            self = self.__index
+        end
+    end
+    return false
+end
+
 function IGObject:init()
     return self
 end
@@ -109,10 +127,37 @@ IGInput = IGObject:subclass("IGInput")
 IGDampingProp = IGProp:subclass("IGDampingProp")
 IGPlayer = IGProp:subclass("IGPlayer")
 IGMob = IGDampingProp:subclass("IGMob")
-IGBasicMob = IGDampingProp:subclass("IGBasicMob")
+IGBasicMob = IGMob:subclass("IGBasicMob")
 IGBulletManager = IGObject:subclass("IGBulletManager")
 IGScreenBounds = IGObject:subclass("IGScreenBounds")
 
+function IGMob:init()
+    self = IGObject.init(self)
+    if self then
+        self.onDie = IGCallbackTable:new()
+    end
+    return self
+end
+
+function IGBasicMob:init()
+    self = IGMob.init(self)
+    if self then
+        self.onDie:addCallback(function (mob)
+            mob:removeFromWorld()
+        end)
+    end
+end
+
+function IGMob:dieCallback()
+    self.onDie:call(self)
+end
+
+function IGBasicMob:beginContact(o)
+    if o == player then
+        player:loseHealth(2)
+        self:die()
+    end
+end
 
 function frame(elapsed)
     onFrame:call(elapsed)

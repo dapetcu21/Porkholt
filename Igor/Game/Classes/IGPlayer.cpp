@@ -49,12 +49,53 @@ void IGPlayer::configureDrawable(PHDrawable * d)
     iv->release();
 }
 
+void IGPlayer::loseHealth(ph_float h)
+{
+    hp -= h;
+    if (hp <= 0)
+        die();
+}
+
+void IGPlayer::die()
+{
+    if (L)
+    {
+        PHLuaGetWeakRef(L, this);
+        if (lua_istable(L, -1))
+        {
+            lua_getfield(L, -1, "dieCallback");
+            if (lua_isfunction(L, -1))
+            {
+                lua_pushvalue(L, -2);
+                PHLuaCall(L, 1, 0);
+                lua_pop(L, 1);
+                return;
+            }
+            lua_pop(L, 1);
+        } 
+        lua_pop(L, 1);
+    }
+    removeFromWorld();
+}
+
+
+
 //--- Lua Scripting ---
+
+PHLuaNumberGetter(IGPlayer, health);
+PHLuaNumberSetter(IGPlayer, setHealth);
+PHLuaNumberSetter(IGPlayer, loseHealth);
+PHLuaDefineCall(IGPlayer, die);
 
 void IGPlayer::loadLuaInterface(IGScripting * s)
 {
     lua_State * L = s->luaState();
     lua_getglobal(L, "IGPlayer");
+
+    PHLuaAddMethod(IGPlayer, health);
+    PHLuaAddMethod(IGPlayer, setHealth);
+    PHLuaAddMethod(IGPlayer, loseHealth);
+    PHLuaAddMethod(IGPlayer, die);
 
     lua_pop(L, 1);
 }

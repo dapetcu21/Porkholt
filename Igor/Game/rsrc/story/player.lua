@@ -2,11 +2,12 @@ input = IGInput:new()
 input:attachToWorld()
 
 player = IGPlayer:new()
+player:setHealth(6)
 player:setPosition(vec2(1, 2))
 player:attachToWorld()
 
 function input:touchMoved(delta)
-    player:applyLinearImpulse(delta * player:mass() * 2.5)
+    player:applyLinearImpulse(delta * player:mass() * 3.5)
 end
 
 onFrame:addCallback(function (elapsed)

@@ -24,6 +24,8 @@ class IGProp : public IGObject, public IGContactHandler
 
         void beginContact(bool aBody, b2Contact * contact);
         void endContact(bool aBody, b2Contact* contact);
+        void _beginContact(PHObject * sender, IGObject * contact);
+        void _endContact(PHObject * sender, IGObject * contact);
         //void preSolve(bool aBody, b2Contact* contact, const b2Manifold* oldManifold);
         //void postSolve(bool aBody, b2Contact* contact, const b2ContactImpulse* impulse);
 

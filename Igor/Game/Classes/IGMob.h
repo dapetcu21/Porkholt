@@ -15,7 +15,7 @@ class IGMob : public IGDampingProp
 
         void setHealth(ph_float h) { hp = h; }
         ph_float health() { return hp; }
-        void loseHP(ph_float h);
+        void loseHealth(ph_float h);
         virtual void die();
 
         const char * luaClass() { return "IGMob"; }

@@ -14,15 +14,32 @@ IGMob::~IGMob()
 {
 }
 
-void IGMob::loseHP(ph_float h)
+void IGMob::loseHealth(ph_float h)
 {
     hp -= h;
-    if (hp < 0)
+    if (hp <= 0)
         die();
 }
 
 void IGMob::die()
 {
+    if (L)
+    {
+        PHLuaGetWeakRef(L, this);
+        if (lua_istable(L, -1))
+        {
+            lua_getfield(L, -1, "dieCallback");
+            if (lua_isfunction(L, -1))
+            {
+                lua_pushvalue(L, -2);
+                PHLuaCall(L, 1, 0);
+                lua_pop(L, 1);
+                return;
+            }
+            lua_pop(L, 1);
+        } 
+        lua_pop(L, 1);
+    }
     removeFromWorld();
 }
 
@@ -30,7 +47,7 @@ void IGMob::die()
 
 PHLuaNumberGetter(IGMob, health);
 PHLuaNumberSetter(IGMob, setHealth);
-PHLuaNumberSetter(IGMob, loseHP);
+PHLuaNumberSetter(IGMob, loseHealth);
 PHLuaDefineCall(IGMob, die);
 
 void IGMob::loadLuaInterface(IGScripting * s)
@@ -40,7 +57,7 @@ void IGMob::loadLuaInterface(IGScripting * s)
 
     PHLuaAddMethod(IGMob, health);
     PHLuaAddMethod(IGMob, setHealth);
-    PHLuaAddMethod(IGMob, loseHP);
+    PHLuaAddMethod(IGMob, loseHealth);
     PHLuaAddMethod(IGMob, die);
 
     lua_pop(L, 1);

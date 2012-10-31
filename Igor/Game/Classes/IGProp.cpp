@@ -6,6 +6,7 @@
 #include "IGScripting.h"
 #include <Porkholt/Core/PHTransformDrawable.h>
 #include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHAnimatorPool.h>
 
 IGSCRIPTING_REGISTERCLASS("IGProp", IGProp)
 
@@ -74,7 +75,7 @@ void IGProp::animate(ph_float elapsed)
     }
 }
 
-void IGProp::beginContact(bool aBody, b2Contact * c)
+void IGProp::_beginContact(PHObject * sender, IGObject * o)
 {
     PHLuaGetWeakRef(L, this);
     if (lua_istable(L, -1))
@@ -83,7 +84,34 @@ void IGProp::beginContact(bool aBody, b2Contact * c)
         if (lua_isfunction(L, -1))
         {
             lua_pushvalue(L, -2);
-            IGObject * o = (IGObject*)(aBody ? c->GetFixtureB() : c->GetFixtureA())->GetBody()->GetUserData();
+            PHLuaGetWeakRef(L, o);
+            if (lua_istable(L, -1))
+            {
+                PHLuaCall(L, 2, 1);
+            } else
+                lua_pop(L, 2);
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+}
+
+void IGProp::beginContact(bool aBody, b2Contact * c)
+{
+    IGObject * o = (IGObject*)(aBody ? c->GetFixtureB() : c->GetFixtureA())->GetBody()->GetUserData();
+    if (o)
+        world->gameManager()->animatorPool()->scheduleAction(PHInvBind(this, IGProp::_beginContact, o));
+}
+
+void IGProp::_endContact(PHObject * sender, IGObject * o)
+{
+    PHLuaGetWeakRef(L, this);
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "endContact");
+        if (lua_isfunction(L, -1))
+        {
+            lua_pushvalue(L, -2);
             PHLuaGetWeakRef(L, o);
             if (lua_istable(L, -1))
             {
@@ -98,24 +126,9 @@ void IGProp::beginContact(bool aBody, b2Contact * c)
 
 void IGProp::endContact(bool aBody, b2Contact * c)
 {
-    PHLuaGetWeakRef(L, this);
-    if (lua_istable(L, -1))
-    {
-        lua_getfield(L, -1, "endContact");
-        if (lua_isfunction(L, -1))
-        {
-            lua_pushvalue(L, -2);
-            IGObject * o = (IGObject*)(aBody ? c->GetFixtureB() : c->GetFixtureA())->GetBody()->GetUserData();
-            PHLuaGetWeakRef(L, o);
-            if (lua_istable(L, -1))
-            {
-                PHLuaCall(L, 2, 1);
-            } else
-                lua_pop(L, 2);
-        }
-        lua_pop(L, 1);
-    }
-    lua_pop(L, 1);
+    IGObject * o = (IGObject*)(aBody ? c->GetFixtureB() : c->GetFixtureA())->GetBody()->GetUserData();
+    if (o)
+        world->gameManager()->animatorPool()->scheduleAction(PHInvBind(this, IGProp::_endContact, o));
 }
 
 //--- Lua Interface ---
