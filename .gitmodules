@@ -1,6 +1,6 @@
 [submodule "PHRemote"]
 	path = PHRemote
-	url = git://github.com/dapetcu21/PHRemote.git
+	url = git@github.com:dapetcu21/PHRemote.git
 [submodule "Externals/openal-soft"]
 	path = Externals/openal-soft
-	url = git://github.com/dapetcu21/openal-soft.git
+	url = git@github.com:dapetcu21/openal-soft.git

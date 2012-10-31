@@ -87,7 +87,7 @@ function ISimWave:frame(elapsed)
     print (x)
 end
 
-local w = ISimWave:new(20, 10, 10, 10)
---IWaveManager.wave = w
+local w = IBasicMobWave:new(2, 10, 1)
+IWaveManager.wave = w
 
 
