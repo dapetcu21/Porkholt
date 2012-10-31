@@ -51,13 +51,12 @@ function IBasicMobWave:frame(elapsed)
             self.objects[mob] = true
         end
     end
-    
-    local dt = {}
 
     for mob,d in pairs(self.objects) do
         if mob:position().x < -1.5 then
             mob:removeFromWorld()
-            dt[mob] = true
+            self.objects[mob] = nil;
+            print("mob expired")
         else
             local l = player:position()
             local p = mob:desiredPosition()
@@ -75,21 +74,14 @@ function IBasicMobWave:frame(elapsed)
             mob:setPosition(p + vel * elapsed)
         end
     end
-
-    for mob,d in pairs(dt) do
-        self.objects[mob] = nil
-        print("mob expired")
-    end
 end
 
 function IBasicMobWave:waveFinished()
-    if self.duration > 0 then
+    if self.duration > 0 or next(self.objects) then
         return false
+    else
+        return true
     end
-    for mob,d in pairs(self.objects) do
-        return false
-    end
-    return true
 end
 
 --------------------------

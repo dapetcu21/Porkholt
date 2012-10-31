@@ -360,6 +360,13 @@ function crawl_dir(src, dst, prefix)
   sl["CVS"] = nil
   dl["_symlinks"] = nil
 
+  for f,tp in pairs(sl) do
+    local ext = f:sub(-3)
+    if (f:sub(1,1) == '.' and (ext == 'swp' or ext == 'swo')) or f:sub(-1) == '~' then
+      sl[f] = nil 
+    end
+  end
+
   for f,tp in pairs(dl) do
     local ff = f;
     local ext = file_extension(f)
@@ -374,7 +381,6 @@ function crawl_dir(src, dst, prefix)
   
   for f,tp in pairs(sl) do
     local ext = file_extension(f)
-
     if (tp == "d") then
       if (ext == "png") then
         anim_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
@@ -396,7 +402,6 @@ function crawl_dir(src, dst, prefix)
         copy_file(src..'/'..f, dst..'/'..f, prefix..f)
       end
     end
-
   end
 end
 
