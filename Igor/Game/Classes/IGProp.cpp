@@ -74,6 +74,50 @@ void IGProp::animate(ph_float elapsed)
     }
 }
 
+void IGProp::beginContact(bool aBody, b2Contact * c)
+{
+    PHLuaGetWeakRef(L, this);
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "beginContact");
+        if (lua_isfunction(L, -1))
+        {
+            lua_pushvalue(L, -2);
+            IGObject * o = (IGObject*)(aBody ? c->GetFixtureB() : c->GetFixtureA())->GetBody()->GetUserData();
+            PHLuaGetWeakRef(L, o);
+            if (lua_istable(L, -1))
+            {
+                PHLuaCall(L, 2, 1);
+            } else
+                lua_pop(L, 2);
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+}
+
+void IGProp::endContact(bool aBody, b2Contact * c)
+{
+    PHLuaGetWeakRef(L, this);
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "endContact");
+        if (lua_isfunction(L, -1))
+        {
+            lua_pushvalue(L, -2);
+            IGObject * o = (IGObject*)(aBody ? c->GetFixtureB() : c->GetFixtureA())->GetBody()->GetUserData();
+            PHLuaGetWeakRef(L, o);
+            if (lua_istable(L, -1))
+            {
+                PHLuaCall(L, 2, 1);
+            } else
+                lua_pop(L, 2);
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+}
+
 //--- Lua Interface ---
 
 PHLuaPointGetter(IGProp, position)

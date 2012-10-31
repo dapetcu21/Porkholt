@@ -9,6 +9,9 @@
 #include <Porkholt/Core/PHParticleAnimator.h>
 #include <Porkholt/Core/PHLua.h>
 
+#define b1h 0.2
+#define b1w 0.2
+
 IGSCRIPTING_REGISTERCLASS("IGBulletManager", IGBulletManager)
 
 class IGBulletParticles : public PHParticleAnimator
@@ -38,7 +41,7 @@ IGBulletManager::IGBulletManager(IGWorld * w) : IGObject(w), bullets(NULL), lbul
     pv = new PHParticleView(v->bounds());
     pa = new IGBulletParticles(this);
     pv->setParticleAnimator(pa);
-    pv->setImage(w->gameManager()->imageNamed("particle"));
+    pv->setImage(w->gameManager()->imageNamed("bullet"));
     v->addChild(pv);
 }
 
@@ -106,12 +109,13 @@ b2Body * IGBulletManager::physicsForBullet(bullet_info & b)
     def.type = b2_dynamicBody;
     def.bullet = true;
     def.userData = this;
-    def.linearVelocity = PHVector2(8, 0).rotated(b.b.rotation).b2d();
+    def.linearVelocity = PHVector2(4, 0).rotated(b.b.rotation).b2d();
+    def.angularVelocity =  -5;
     b2Body * bd = world->physicsWorld()->CreateBody(&def);
-    b2PolygonShape s;
-    s.SetAsBox(0.2, 0.1);
+    b2CircleShape s;
+    s.m_radius = b1w/2;
     b2FixtureDef fdef;
-    fdef.density = 5.0f;
+    fdef.density = 15.0f;
     fdef.shape = &s;
     fdef.userData = &b;
     if (b.b.type == 1)
@@ -154,7 +158,7 @@ PHParticleAnimator::particles * IGBulletParticles::calculatedParticles()
                 v->color = PHWhiteColor;
                 v->position = p->b.position;
                 v->rotation = p->b.rotation;
-                v->size = PHSize(0.4, 0.2);
+                v->size = PHSize(b1w, b1h);
                 v->ud = (void*)p->b.type;
                 v++;
                 break;
@@ -166,7 +170,7 @@ PHParticleAnimator::particles * IGBulletParticles::calculatedParticles()
                 v->color = PHColor(1, 1, 1, p->time);
                 v->position = p->b.position;
                 v->rotation = p->b.rotation;
-                v->size = PHSize(0.4, 0.2);
+                v->size = PHSize(b1w, b1h);
                 v->ud = (void*)p->b.type;
                 v++;
                 break;

@@ -20,7 +20,7 @@
 #include <Porkholt/Core/PHMessage.h>
 #include "PHLBomberBird.h"
 #include "PHLEggBomb.h"
-#include <Porkholt/Core/PHParticleAnimator.h>
+#include <Porkholt/Core/PHGenericParticleAnimator.h>
 #include <Porkholt/Core/PHParticleView.h>
 #include <Porkholt/Core/PHKeyframeAnimatorGroup.h>
 #include <Porkholt/IO/PHDirectory.h>
@@ -217,7 +217,7 @@ void PHScripting::loadWorld()
     PHView::registerLuaInterface(L);
     PHImageView::registerLuaInterface(L);
     PHParticleView::registerLuaInterface(L);
-    PHParticleAnimator::registerLuaInterface(L);
+    PHGenericParticleAnimator::registerLuaInterface(L);
     PHLMob::registerLuaInterface(L);
     PHLBull::registerLuaInterface(L);
     PHLSign::registerLuaInterface(L);

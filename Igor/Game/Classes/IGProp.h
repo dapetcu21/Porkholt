@@ -21,6 +21,12 @@ class IGProp : public IGObject, public IGContactHandler
         void createPositionJoint();
         PHDrawable * loadDrawable();
         virtual void configureDrawable(PHDrawable * d) {};
+
+        void beginContact(bool aBody, b2Contact * contact);
+        void endContact(bool aBody, b2Contact* contact);
+        //void preSolve(bool aBody, b2Contact* contact, const b2Manifold* oldManifold);
+        //void postSolve(bool aBody, b2Contact* contact, const b2ContactImpulse* impulse);
+
     public:
         IGProp(IGWorld * world);
         virtual ~IGProp();
@@ -30,6 +36,7 @@ class IGProp : public IGObject, public IGContactHandler
         const PHPoint & position() { return pos; }
         virtual void setRotation(ph_float rot);
         ph_float rotation() { return rot; }
+        
         void setCollisionEvents(bool ce) { collisions = ce; }
         bool collisionEvents() { return collisions; }
 

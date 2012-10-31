@@ -17,6 +17,9 @@ IGBasicMob::~IGBasicMob()
 {
 }
 
+#define mx (0.15 * (894.0 / 441))
+#define my (0.15)
+
 void IGBasicMob::attachedToWorld()
 {
     b2BodyDef def;
@@ -27,7 +30,7 @@ void IGBasicMob::attachedToWorld()
     body = world->physicsWorld()->CreateBody(&def);
 
     b2PolygonShape shape;
-    shape.SetAsBox(0.4, 0.4);
+    shape.SetAsBox(mx, my);
 
     b2FixtureDef fdef;
     fdef.shape = &shape;
@@ -41,7 +44,7 @@ void IGBasicMob::attachedToWorld()
 
 void IGBasicMob::configureDrawable(PHDrawable * d)
 {
-    PHImageView * iv = new PHImageView(PHRect(-0.4 ,-0.4, 0.8, 0.8));
+    PHImageView * iv = new PHImageView(PHRect(-mx, -my, 2*mx, 2*my));
     iv->setImage(world->gameManager()->imageNamed("mob"));
     d->addChild(iv);
     iv->release();

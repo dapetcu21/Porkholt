@@ -14,6 +14,7 @@ class IGDampingProp : public IGProp
         PHVector2 desiredPos;
         ph_float desiredRot;
         ph_float maxF, dampTorque, dampFreq;
+        bool dampEnabled;
     public:
         IGDampingProp(IGWorld * w);
         ~IGDampingProp();
@@ -30,6 +31,8 @@ class IGDampingProp : public IGProp
         ph_float dampingTorque() { return dampTorque; }
         void setDampingFrequency(ph_float f);
         ph_float dampingFrequency() { return dampFreq; }
+        void setDamping(bool damp) { dampEnabled = damp; }
+        bool isDamping() { return dampEnabled; }
 
         virtual void adjustPhysics(ph_float elapsed);
         virtual void animate(ph_float elapsed);

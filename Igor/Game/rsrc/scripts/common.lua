@@ -21,6 +21,19 @@ function IGObject:init()
     return self
 end
 
+IObject = {}
+function IObject:new(...)
+    local o = { __index = self; }
+    setmetatable(o, o)
+    o:init(unpack(arg))
+    return o
+end
+
+function IObject:init()
+    return self
+end
+
+
 PHVector2_meta = {}
 PHRect_meta = {}
 

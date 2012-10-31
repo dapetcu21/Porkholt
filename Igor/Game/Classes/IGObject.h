@@ -26,6 +26,7 @@ class IGObject : public PHObject
         virtual ~IGObject();
 
         void attachToWorld(IGWorld * w, bool before = true, IGObject * ref = NULL);
+        void removeFromWorld();
 
         virtual const char * luaClass() { return "IGObject"; } 
         static void loadLuaInterface(IGScripting * scripting);

@@ -143,7 +143,7 @@ PHWorld::PHWorld(PHGameManager * mgr, const PHRect & size, PHLevelController * c
     view->addChild(pauseButton);
     pauseButton->release();
 	b2Vec2 grav(0,-10);
-	physicsWorld = new b2World(grav,true);
+	physicsWorld = new b2World(grav);
     physicsWorld->SetContactFilter(contactFilter = new PHContactFilter);
     physicsWorld->SetContactListener(contactListener = new PHContactListener);
 }

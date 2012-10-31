@@ -82,6 +82,11 @@ IGObject::~IGObject()
         drawable->release();
 }
 
+void IGObject::removeFromWorld()
+{
+    world->removeObject(this);
+}
+
 //--- Lua Scripting ---
 
 static int IGObject_attachToWorld(lua_State * L)
@@ -98,10 +103,19 @@ static int IGObject_attachToWorld(lua_State * L)
     return 0;
 }
 
+static int IGObject_removeFromWorld(lua_State * L)
+{
+    IGObject * o = (IGObject*)PHLuaThisPointer(L);
+    o->removeFromWorld();
+    return 0;
+}
+
 void IGObject::loadLuaInterface(IGScripting * scr)
 {
     lua_State * L = scr->luaState();
     lua_getglobal(L, "IGObject");
 
     PHLuaAddMethod(IGObject, attachToWorld);
+    PHLuaAddMethod(IGObject, removeFromWorld);
 }
+

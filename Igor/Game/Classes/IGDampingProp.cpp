@@ -9,7 +9,7 @@
 
 IGSCRIPTING_REGISTERCLASS("IGDampingProp", IGDampingProp)
 
-IGDampingProp::IGDampingProp(IGWorld * w) : IGProp(w), cui(NULL), dampImpulse(0, 0), maxF(20), dampTorque(30), dampFreq(3), desiredPos(0, 0), desiredRot(0)
+IGDampingProp::IGDampingProp(IGWorld * w) : IGProp(w), cui(NULL), dampImpulse(0, 0), maxF(20), dampTorque(30), dampFreq(3), desiredPos(0, 0), desiredRot(0), dampEnabled(true)
 {
 }
 
@@ -37,6 +37,7 @@ void IGDampingProp::setPosition(const PHPoint & p)
 
 void IGDampingProp::createDampingJoint()
 {
+    if (!dampEnabled) return;
     if (!body) return;
     b2MouseJointDef def;
     def.bodyB = body;
@@ -97,6 +98,8 @@ PHLuaNumberSetter(IGDampingProp, setDampingTorque);
 PHLuaNumberSetter(IGDampingProp, setDampingFrequency);
 PHLuaPointGetter(IGDampingProp, desiredPosition);
 PHLuaNumberGetter(IGDampingProp, desiredRotation);
+PHLuaBoolGetter(IGDampingProp, isDamping);
+PHLuaBoolSetter(IGDampingProp, setDamping);
 
 void IGDampingProp::loadLuaInterface(IGScripting * s)
 {
@@ -111,6 +114,8 @@ void IGDampingProp::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGDampingProp, setDampingFrequency);
     PHLuaAddMethod(IGDampingProp, desiredPosition);
     PHLuaAddMethod(IGDampingProp, desiredRotation);
+    PHLuaAddMethod(IGDampingProp, setDamping);
+    PHLuaAddMethod(IGDampingProp, isDamping);
 
     lua_pop(L, 1);
 }
