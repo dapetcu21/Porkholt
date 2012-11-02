@@ -95,7 +95,7 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
     }
     if (skipFirst)
     {
-        skipFirst = false;
+        skipFirst--;
         return;
     }
     ph_float tm = elapsedTime;

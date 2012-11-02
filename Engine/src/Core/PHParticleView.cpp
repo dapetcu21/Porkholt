@@ -34,9 +34,6 @@ const string PHParticleView::_luaClass("PHParticleView");
 void PHParticleView::init()
 {
     luaClass = &_luaClass;
-    PHParticleAnimator * panim = new PHGenericParticleAnimator;
-    setParticleAnimator(panim);
-    panim->release();
 }
 
 PHParticleView::~PHParticleView()

@@ -158,9 +158,9 @@ void PHCinematicActor::animationTag(size_t tag)
     _cinematicAnimator->setTag(tag);
 }
 
-void PHCinematicActor::animationSkipFirstFrame()
+void PHCinematicActor::animationSkipFirstFrames(int n)
 {
-    _cinematicAnimator->setSkipsFirstFrame(true);
+    _cinematicAnimator->setSkipsFirstFrames(n);
 }
 
 void PHCinematicActor::animateCustomValue(ph_float val)

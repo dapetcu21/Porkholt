@@ -9,7 +9,7 @@
 #include "PHTitleScreen.h"
 #include <Porkholt/UI/PHTestView.h>
 #include <Porkholt/Core/PHParticleView.h>
-#include <Porkholt/Core/PHParticleAnimator.h>
+#include <Porkholt/Core/PHGenericParticleAnimator.h>
 #include <Porkholt/Core/PHBezierPath.h>
 #include <Porkholt/Sound/PHSound.h>
 #include <Porkholt/Sound/PHSoundManager.h>
@@ -1190,8 +1190,9 @@ public:
 };
 #define particleString \
 "PHParticleView * pv = new PHParticleView(PHRect(-100,0,10,10));\n"\
+"PHGenericParticleAnimator * pa = new PHGenericParticleAnimator();\n"\
 "pv->setImage(gm->imageNamed(\"leaf\"));\n"\
-"PHParticleAnimator * pa = pv->particleAnimator();\n"\
+"pv->setParticleAnimator(pa);\n"\
 "pa->setGenerationArea(PHRect(0,0,0,b.height));\n"\
 "pa->setGravity(PHPoint(100, 0));\n"\
 "pa->setParticleLifetime(5.0f);\n"\
@@ -1203,7 +1204,9 @@ public:
 "pa->setSpreadAngle(M_PI/6);\n"\
 "pa->setParticlesPerSecond(10);\n"\
 "pa->setRotatesWithVelocity(true);\n"\
-"v->addChild(pv);\n"
+"v->addChild(pv);\n"\
+"pa->release();\n"\
+"pv->release();\n"\
 
 class PHPorkholtParticles : public PHSlide
 {
@@ -1222,8 +1225,9 @@ protected:
             case 1:
             {
                 PHParticleView * pv = new PHParticleView(PHRect(-100,0,10,10));
+                PHGenericParticleAnimator * pa = new PHGenericParticleAnimator();
                 pv->setImage(gm->imageNamed("leaf"));
-                PHParticleAnimator * pa = pv->particleAnimator();
+                pv->setParticleAnimator(pa);
                 pa->setGenerationArea(PHRect(0,0,0,b.height));
                 pa->setGravity(PHPoint(100, 0));
                 pa->setParticleLifetime(5.0f);
@@ -1236,6 +1240,7 @@ protected:
                 pa->setParticlesPerSecond(10);
                 pa->setRotatesWithVelocity(true);
                 v->addChild(pv);
+                pa->release();
                 pv->sendToBack();
                 pv->release();
 
@@ -1900,7 +1905,7 @@ void PHGameEntryPoint(PHGameManager * gm)
     holder->release();
     cap->release();
         
-    PHViewController * vc = new PHTitle(gm);
+    PHViewController * vc = new PHPorkholt3D(gm);
     nav->pushViewController(vc);
     vc->release();
     nav->release(); 

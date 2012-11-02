@@ -53,7 +53,7 @@ void PHNavigationController::startFadeAnimation()
         fc = f;
     fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
     fadeView->animateBgColor(fc);
-    fadeView->animationSkipFirstFrame();
+    fadeView->animationSkipFirstFrames(2);
     fadeView->animationTag(-4432);
     fadeView->animationCallback(PHInvN(this,PHNavigationController::middleFadeAnimation));
     fadeView->commitCinematicAnimation();
@@ -69,7 +69,7 @@ void PHNavigationController::middleFadeAnimation()
     
     fadeView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
     fadeView->animateBgColor(PHClearColor);
-    fadeView->animationSkipFirstFrame();
+    fadeView->animationSkipFirstFrames(2);
     fadeView->animationTag(-4432);
     fadeView->animationCallback(PHInvN(this,PHNavigationController::endFadeAnimation));
     fadeView->commitCinematicAnimation();
@@ -128,7 +128,7 @@ void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
         lastV->animateMove(PHPoint(x,y));
         lastV->animationCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
         lastV->animationTag(-4432);
-        lastV->animationSkipFirstFrame();
+        lastV->animationSkipFirstFrames(2);
         lastV->commitCinematicAnimation();
 	}
 	if (currentVC)
@@ -140,7 +140,7 @@ void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
         currentV->animateMove(PHPoint(x,y));
         currentV->animationTag(-4432);
         currentV->animationCallback(PHInvN(this,PHNavigationController::endSlideAnimation));
-        currentV->animationSkipFirstFrame();
+        currentV->animationSkipFirstFrames(2);
         currentV->commitCinematicAnimation();
 	}
 }

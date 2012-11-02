@@ -36,6 +36,8 @@ void * PHGL::glFunctionAddress(const char * s)
                 libName[3] = "libGLESv1.so";
                 libName[4] = "libGLES.so";
                 break;
+            default:
+                break;
         }
         int i = 0;
         for (int i = 0; !h && libName[i]; i++)

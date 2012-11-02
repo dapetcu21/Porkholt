@@ -32,6 +32,14 @@ void PHImageView::setShader(PHGLShaderProgram *sh)
     shad = sh;
 }
 
+void PHImageView::setCinematicCustomColor(const PHColor & clr)
+{
+    if (clr == PHWhiteColor)
+        setTintColor(PHInvalidColor);
+    else
+        setTintColor(clr);
+}
+
 bool PHImageView::supportsRenderMode(int rm)
 {
     return (rm == PHGameManager::defaultRenderMode) || ((rm == PHDeferredView::normalMapRenderMode) && _image && _image->normalMap());

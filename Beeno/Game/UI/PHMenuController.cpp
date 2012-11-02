@@ -35,7 +35,7 @@ PHView * PHMenuController::loadView(const PHRect & frame)
     
     nav = new PHNavigationController(gm);
     nav->setInitialViewFrame(v->bounds());
-    PHViewControllerHolder * holder = new PHViewControllerHolder();
+    PHViewControllerHolder * holder = new PHViewControllerHolder(v->bounds());
     holder->setViewController(nav);
     v->addChild(holder);
     holder->release();

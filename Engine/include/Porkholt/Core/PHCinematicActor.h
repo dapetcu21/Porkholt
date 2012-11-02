@@ -55,7 +55,7 @@ public:
     void animateCustomColor(const PHColor & clr);
     void animateCustomValue(ph_float val);
     void animationCallback(const PHInvocation & inv);
-    void animationSkipFirstFrame();
+    void animationSkipFirstFrames(int f);
     void animationTag(size_t tag);
     
    
