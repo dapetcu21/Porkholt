@@ -38,6 +38,9 @@ class IGProp : public IGObject, public IGContactHandler
         const PHPoint & position() { return pos; }
         virtual void setRotation(ph_float rot);
         ph_float rotation() { return rot; }
+
+        PHPoint worldPoint(const PHPoint & p);
+        PHPoint localPoint(const PHPoint & p);
         
         void setCollisionEvents(bool ce) { collisions = ce; }
         bool collisionEvents() { return collisions; }

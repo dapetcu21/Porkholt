@@ -14,7 +14,7 @@ class IGDampingProp : public IGProp
         PHVector2 desiredPos;
         ph_float desiredRot;
         ph_float maxF, dampTorque, dampFreq;
-        bool dampEnabled;
+        bool dampEnabled, rr;
     public:
         IGDampingProp(IGWorld * w);
         ~IGDampingProp();
@@ -24,6 +24,9 @@ class IGDampingProp : public IGProp
         PHVector2 desiredPosition() { return desiredPos; }
         ph_float desiredRotation() { return desiredRot; }
         void createDampingJoint();
+
+        void setRestrictRotation(bool r) { rr = r; }
+        bool restrictRotation() { return rr; }
 
         void setDampingForce(ph_float p);
         ph_float dampingForce() { return maxF; }

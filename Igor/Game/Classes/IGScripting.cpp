@@ -4,6 +4,7 @@
 #include "IGWorld.h"
 #include "IGObject.h"
 #include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHView.h>
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/IO/PHDirectory.h>
@@ -39,6 +40,11 @@ IGScripting::~IGScripting()
     world->release();
 }
 
+PHPoint IGScripting::screenSize()
+{
+    return world->view()->bounds().size();
+}
+
 void IGScripting::classFromName(const string & s)
 {
     map<string, IGScriptingAllocator>::iterator i = luaClasses->find(s);
@@ -59,6 +65,26 @@ static int IGScripting_classFromName(lua_State * L)
     return 1;
 }
 
+static int IGScripting_localPoint(lua_State * L)
+{
+    PHPoint p = PHPoint::fromLua(L, 1); 
+    PHPoint pos = PHPoint::fromLua(L, 2); 
+    float ang = lua_tonumber(L, 3);
+    ((p-pos).rotated(-ang)).saveToLua(L);
+    return 1;
+}
+
+static int IGScripting_worldPoint(lua_State * L)
+{
+    PHPoint p = PHPoint::fromLua(L, 1); 
+    PHPoint pos = PHPoint::fromLua(L, 2); 
+    float ang = lua_tonumber(L, 3);
+    (pos + p.rotated(ang)).saveToLua(L);
+    return 1;
+}
+
+PHLuaPointGetter(IGScripting, screenSize);
+
 void IGScripting::loadCInterface()
 {
     lua_getglobal(L, "IGScripting");
@@ -66,6 +92,14 @@ void IGScripting::loadCInterface()
     lua_setfield(L, -2, "ud");
 
     PHLuaAddMethod_(IGScripting, classFromName);
+    PHLuaAddMethod(IGScripting, screenSize);
+
+    lua_pop(L, 1);
+
+    lua_pushvalue(L, LUA_GLOBALSINDEX);
+    PHLuaAddMethod(IGScripting, worldPoint);
+    PHLuaAddMethod(IGScripting, localPoint);
+    lua_pop(L, 1);
 
     for (list<IGScriptingIface>::iterator i = luaInterfaces->begin(); i != luaInterfaces->end(); i++)
         (*i)(this);

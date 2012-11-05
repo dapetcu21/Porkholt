@@ -44,6 +44,16 @@ void IGProp::setRotation(ph_float r)
     rot = r;
 }
 
+PHPoint IGProp::worldPoint(const PHPoint & p)
+{
+    return pos + p.rotated(rot);
+}
+
+PHPoint IGProp::localPoint(const PHPoint & p)
+{
+    return (p - pos).rotated(-rot);
+}
+
 void IGProp::setPhysicsBody(b2Body * b)
 {
     if (body)
@@ -139,6 +149,19 @@ PHLuaNumberGetter(IGProp, rotation)
 PHLuaNumberSetter(IGProp, setRotation)
 PHLuaBoolGetter(IGProp, collisionEvents);
 PHLuaBoolSetter(IGProp, setCollisionEvents);
+
+static int IGProp_worldPoint(lua_State * L)
+{
+    IGProp * o = (IGProp*)PHLuaThisPointer(L);
+    o->worldPoint(PHPoint::fromLua(L, 2)).saveToLua(L);
+    return 1;
+}
+static int IGProp_localPoint(lua_State * L)
+{
+    IGProp * o = (IGProp*)PHLuaThisPointer(L);
+    o->localPoint(PHPoint::fromLua(L, 2)).saveToLua(L);
+    return 1;
+}
 
 static int IGProp_applyLinearImpulse(lua_State * L)
 {
@@ -258,6 +281,9 @@ void IGProp::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGProp, setPosition);
     PHLuaAddMethod(IGProp, rotation);
     PHLuaAddMethod(IGProp, setRotation);
+
+    PHLuaAddMethod(IGProp, worldPoint);
+    PHLuaAddMethod(IGProp, localPoint);
 
     PHLuaAddMethod(IGProp, setAngularVelocity);
     PHLuaAddMethod(IGProp, setLinearVelocity);

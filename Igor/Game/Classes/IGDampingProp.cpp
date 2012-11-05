@@ -9,7 +9,7 @@
 
 IGSCRIPTING_REGISTERCLASS("IGDampingProp", IGDampingProp)
 
-IGDampingProp::IGDampingProp(IGWorld * w) : IGProp(w), cui(NULL), dampImpulse(0, 0), maxF(20), dampTorque(30), dampFreq(3), desiredPos(0, 0), desiredRot(0), dampEnabled(true)
+IGDampingProp::IGDampingProp(IGWorld * w) : IGProp(w), cui(NULL), dampImpulse(0, 0), maxF(20), dampTorque(30), dampFreq(3), desiredPos(0, 0), desiredRot(0), dampEnabled(true), rr(true)
 {
 }
 
@@ -19,7 +19,7 @@ IGDampingProp::~IGDampingProp()
 
 void IGDampingProp::setRotation(ph_float r)
 {
-    if (!body || !cui)
+    if (!body || !cui || !rr)
         IGProp::setRotation(r);
     desiredRot = r;
 }
@@ -52,12 +52,15 @@ void IGDampingProp::adjustPhysics(ph_float elapsed)
 {
     if (body && cui)
     {
-        ph_float totalRotation = PHNormalizeAngle(desiredRot - body->GetAngle()) - body->GetAngularVelocity() / dampFreq;
-        ph_float desiredAngularVelocity = totalRotation / elapsed;
-        ph_float change = dampTorque * elapsed;
-        desiredAngularVelocity = min( change, max(-change, desiredAngularVelocity));
-        ph_float impulse = body->GetInertia() * desiredAngularVelocity;
-        body->ApplyAngularImpulse(impulse);
+        if (rr)
+        {
+            ph_float totalRotation = PHNormalizeAngle(desiredRot - body->GetAngle()) - body->GetAngularVelocity() / dampFreq;
+            ph_float desiredAngularVelocity = totalRotation / elapsed;
+            ph_float change = dampTorque * elapsed;
+            desiredAngularVelocity = min( change, max(-change, desiredAngularVelocity));
+            ph_float impulse = body->GetInertia() * desiredAngularVelocity;
+            body->ApplyAngularImpulse(impulse);
+        }
 
         dampImpulse *= body->GetMass() / elapsed;
         body->ApplyLinearImpulse(dampImpulse.b2d(), body->GetWorldCenter());
@@ -100,6 +103,9 @@ PHLuaPointGetter(IGDampingProp, desiredPosition);
 PHLuaNumberGetter(IGDampingProp, desiredRotation);
 PHLuaBoolGetter(IGDampingProp, isDamping);
 PHLuaBoolSetter(IGDampingProp, setDamping);
+PHLuaBoolGetter(IGDampingProp, restrictRotation);
+PHLuaBoolSetter(IGDampingProp, setRestrictRotation);
+
 
 void IGDampingProp::loadLuaInterface(IGScripting * s)
 {
@@ -116,6 +122,8 @@ void IGDampingProp::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGDampingProp, desiredRotation);
     PHLuaAddMethod(IGDampingProp, setDamping);
     PHLuaAddMethod(IGDampingProp, isDamping);
+    PHLuaAddMethod(IGDampingProp, restrictRotation);
+    PHLuaAddMethod(IGDampingProp, setRestrictRotation);
 
     lua_pop(L, 1);
 }

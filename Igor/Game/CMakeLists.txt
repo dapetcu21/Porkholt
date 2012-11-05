@@ -18,10 +18,12 @@ set(PH_SOURCES
   Classes/IGInput.cpp
   Classes/IGDampingProp.cpp
   Classes/IGPlayer.cpp
+  Classes/IGWallCell.cpp
   Classes/IGMob.cpp
   Classes/IGBasicMob.cpp
   Classes/IGBulletManager.cpp
   Classes/IGScreenBounds.cpp
+  Classes/IGKinematic.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -36,8 +38,10 @@ set(PH_HEADERS
   Classes/IGPlayer.h
   Classes/IGMob.h
   Classes/IGBasicMob.h
+  Classes/IGWallCell.h
   Classes/IGBulletManager.h
   Classes/IGScreenBounds.h
+  Classes/IGKinematic.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

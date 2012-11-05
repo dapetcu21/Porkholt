@@ -115,7 +115,7 @@ end
 ----------------------------
 
 local w = IBasicMobWave:new(2, 10, 1)
-IWaveManager.wave = w
+--IWaveManager.wave = w
 
 function IWaveManager:dispatchWave()
 end

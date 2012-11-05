@@ -7,8 +7,7 @@ IGScripting = {}
 
 function IGObject:new(...)
     local o = IGScripting:_classFromName(self.className)
-    o:init(unpack(arg))
-    return o
+    return o:init(unpack(arg))
 end
 
 function IGObject:subclass(name)
@@ -43,8 +42,7 @@ IObject = {}
 function IObject:new(...)
     local o = { __index = self; }
     setmetatable(o, o)
-    o:init(unpack(arg))
-    return o
+    return self.init(o, unpack(arg))
 end
 
 function IObject:init()
@@ -130,9 +128,11 @@ IGMob = IGDampingProp:subclass("IGMob")
 IGBasicMob = IGMob:subclass("IGBasicMob")
 IGBulletManager = IGObject:subclass("IGBulletManager")
 IGScreenBounds = IGObject:subclass("IGScreenBounds")
+IGWallCell = IGDampingProp:subclass("IGWallCell")
+IGKinematic = IGProp:subclass("IGKinematic")
 
 function IGMob:init()
-    self = IGObject.init(self)
+    self = IGDampingProp.init(self)
     if self then
         self.onDie = IGCallbackTable:new()
     end
@@ -146,6 +146,7 @@ function IGBasicMob:init()
             mob:removeFromWorld()
         end)
     end
+    return self
 end
 
 function IGMob:dieCallback()
@@ -161,4 +162,14 @@ end
 
 function frame(elapsed)
     onFrame:call(elapsed)
+end
+
+function lowpass(last, new, period, cutoff)
+    local RC = 1 / cutoff
+    local alpha = period/(period + RC)
+    return new * alpha + last * (1 - alpha)
+end
+
+function rand(lower, upper)
+    return lower + math.random() * (upper-lower)
 end
