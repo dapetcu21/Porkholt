@@ -37,7 +37,7 @@ class PHProfilerCollection : public PHObject
 };
 
 #ifdef PH_DEBUG
-#define PH_PROFILING
+//#define PH_PROFILING
 #endif
 
 #ifdef PH_PROFILING
@@ -45,6 +45,11 @@ class PHProfilerCollection : public PHObject
 #define PHProfilingStop(p) p->profileStop()
 extern PHProfiler * PHLuaProfiler;
 extern PHProfilerCollection * PHMainProfilers;
+#else
+#define PHProfilingStart(p)
+#define PHProfilingStop(p)
+#define PHLuaProfiler NULL
+#define PHMainProfilers NULL
 #endif
 
 #endif
