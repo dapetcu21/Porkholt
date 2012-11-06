@@ -7,7 +7,7 @@ IGScripting = {}
 
 function IGObject:new(...)
     local o = IGScripting:_classFromName(self.className)
-    return o:init(unpack(arg))
+    return o:init(...)
 end
 
 function IGObject:subclass(name)
@@ -42,7 +42,7 @@ IObject = {}
 function IObject:new(...)
     local o = { __index = self; }
     setmetatable(o, o)
-    return self.init(o, unpack(arg))
+    return self.init(o, ...)
 end
 
 function IObject:init()
@@ -114,7 +114,7 @@ function IGCallbackTable:removeCallback(cb)
 end
 function IGCallbackTable:call(...)
     for i,v in ipairs(self) do
-        v(unpack(arg))
+        v(...)
     end
 end
 onFrame = IGCallbackTable:new()

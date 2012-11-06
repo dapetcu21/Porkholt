@@ -31,6 +31,8 @@ function(porkholt PH_APP_TARGET)
   else()
     set(PH_EXTERNALS ${PH_EXTERNALS} CACHE STRING ${PH_EXTERNALS_DOC})
   endif()
+
+  include(${PH_ENGINE_PATH}/scripts/Porkholt_Common.cmake)
   
   set(LIBRARY_OUTPUT_PATH_ROOT ${CMAKE_CURRENT_BINARY_DIR} CACHE STRING "Don't change")
   if (NOT PH_FORK STREQUAL "1")
@@ -38,28 +40,6 @@ function(porkholt PH_APP_TARGET)
   endif()
 
   include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
-
-  if(CMAKE_GENERATOR STREQUAL "Xcode")
-      if(PH_PLATFORM STREQUAL "OSX")
-        set(CMAKE_OSX_SYSROOT macosx PARENT_SCOPE)
-      elseif(PH_PLATFORM STREQUAL "iOS")
-        set(CMAKE_OSX_SYSROOT iphoneos PARENT_SCOPE)
-        set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator" PARENT_SCOPE)
-      endif()
-  endif()
-
-  if    (PH_PLATFORM STREQUAL "OSX")
-      set(CMAKE_OSX_ARCHITECTURES i386;x86_64 PARENT_SCOPE)
-  elseif(PH_PLATFORM STREQUAL "iOS")
-      set(CMAKE_OSX_ARCHITECTURES armv6;armv7 PARENT_SCOPE)
-  endif()
-  
-  set(CMAKE_CONFIGURATION_TYPES Debug Release PARENT_SCOPE)
-  if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
-  endif()
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os" PARENT_SCOPE)
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG" PARENT_SCOPE)
 
   if (NOT DEFINED PH_MARKETING_VERSION)
     set(PH_MARKETING_VERSION 1.0)
@@ -128,7 +108,7 @@ function(porkholt PH_APP_TARGET)
 
       link_directories("${LIBRARY_OUTPUT_PATH_ROOT}/libs/${ANDROID_NDK_ABI_NAME}")
       add_library(${PH_APP_TARGET} SHARED ${PH_SOURCES})
-      target_link_libraries(${PH_APP_TARGET} -lPorkholt -llua)
+      target_link_libraries(${PH_APP_TARGET} -lPorkholt -lluajit)
       add_dependencies(${PH_APP_TARGET} ${PH_APP_TARGET}-CopyLibraries)
 
       if(PH_USE_BOX2D)
@@ -163,7 +143,7 @@ function(porkholt PH_APP_TARGET)
   
   if(NOT PH_PLATFORM STREQUAL "Android")
     target_link_libraries(${PH_APP_TARGET} Porkholt
-      ${PH_EXTERNALS}/lib/${PH_LIBS}/liblua.a
+      ${PH_EXTERNALS}/lib/${PH_LIBS}/libluajit.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libvorbisfile.a
@@ -276,7 +256,7 @@ function(porkholt PH_APP_TARGET)
       add_custom_command(
         TARGET ${PH_APP_TARGET}
         POST_BUILD
-        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_BUILD_TYPE}
         )
       if (PH_PLATFORM STREQUAL "OSX")
         add_custom_command(
@@ -289,7 +269,7 @@ function(porkholt PH_APP_TARGET)
       set(APP_NAME "${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app")
       add_custom_target(
         PostProcess_Resources
-        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_BUILD_TYPE}
         )
       add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
       add_dependencies(PostProcess_Resources External_Libs)  
@@ -306,7 +286,7 @@ function(porkholt PH_APP_TARGET)
     set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}-rsrc)
     add_custom_target(
       PostProcess_Resources
-      COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+      COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_BUILD_TYPE}
       )
     add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
     add_dependencies(PostProcess_Resources External_Libs)
@@ -332,7 +312,7 @@ function(porkholt PH_APP_TARGET)
     set(PH_BUILD_TYPE ${PH_BUILD_TYPE} fakesymlinks downscale)
     add_custom_target(
         ${PH_APP_TARGET}-resources
-        COMMAND ${PH_EXTERNALS}/lua/src/lua ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_BUILD_TYPE}
       )
 
     add_custom_target(
@@ -383,4 +363,5 @@ function(porkholt PH_APP_TARGET)
     add_dependencies(run ${PH_APP_TARGET}-run)
 
   endif()
+
 endfunction()

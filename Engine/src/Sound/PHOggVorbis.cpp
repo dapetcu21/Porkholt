@@ -28,7 +28,6 @@ size_t PHOggVorbis::fread(void * d, size_t size, size_t nmemb)
     size_t r = min((fsz-fp)/size, nmemb);
     try { 
         r = file->read((uint8_t*)d, r * size)/size; 
-        if (r<0) r=0;
         fp = fp + r;
         return r;
     }
@@ -61,6 +60,8 @@ int PHOggVorbis::fseek(int64_t d, int t)
             case SEEK_END:
                 file->setPointer(fsz+d);
                 return fp = fsz + d;
+            default:
+                return -1;
         }
     } catch (...) {
         return -1;

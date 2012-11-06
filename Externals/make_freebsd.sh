@@ -30,6 +30,6 @@ compilelib() {
 
 compilelib libz.a zlib ./zlib_compile_freebsd.sh $1
 compilelib libpng15.a libpng ./libpng_compile_freebsd.sh $1
-compilelib liblua.a Lua ./liblua_compile_freebsd.sh $1
+compilelib libluajit.a LuaJIT ./libluajit_compile_freebsd.sh $1
 compilelib libogg.a Ogg ./libogg_compile_freebsd.sh $1
 compilelib libvorbis.a Vorbis ./libvorbis_compile_freebsd.sh $1

@@ -48,3 +48,4 @@ set(PH_IOS_TARGET_IPAD "YES")
 set(PH_USE_BOX2D "YES")
 
 porkholt(Igor ${PH_SOURCES} ${PH_HEADERS})
+

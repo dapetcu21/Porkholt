@@ -45,6 +45,15 @@ _
 /Externals/lua/lib/
 /Externals/lua/lnsout/
 /Externals/lua/man/
+/Externals/luajit/src/host/minilua
+/Externals/luajit/src/jit/vmdef.lua
+/Externals/luajit/src/lj_bcdef.h
+/Externals/luajit/src/lj_ffdef.h
+/Externals/luajit/src/lj_folddef.h
+/Externals/luajit/src/lj_libdef.h
+/Externals/luajit/src/lj_recdef.h
+/Externals/luajit/src/lj_vm.s
+/Externals/luajit/src/luajit
 /Externals/zlib/Makefile
 /Externals/zlib/lnsout/
 /Externals/zlib/zconf.h

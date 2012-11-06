@@ -11,28 +11,7 @@ endif()
 set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "Path to the Engine folder")
 set(PH_EXTERNALS "${PH_ENGINE_PATH}/../Externals" CACHE PATH "Path to the Externals folder")
 
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
-if(CMAKE_GENERATOR STREQUAL "Xcode")
-    if    (PH_PLATFORM STREQUAL "OSX")
-        set(CMAKE_OSX_SYSROOT macosx)
-    elseif(PH_PLATFORM STREQUAL "iOS")
-        set(CMAKE_OSX_SYSROOT iphoneos)
-        set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
-    endif()
-endif()
-
-if    (PH_PLATFORM STREQUAL "OSX")
-    set(CMAKE_OSX_ARCHITECTURES i386;x86_64)
-elseif(PH_PLATFORM STREQUAL "iOS")
-    set(CMAKE_OSX_ARCHITECTURES armv6;armv7)
-endif()
-
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
-endif()
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Os")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+include(${PH_ENGINE_PATH}/scripts/Porkholt_Common.cmake)
 
 if (PH_PLATFORM STREQUAL "Android")
     include(${PH_ENGINE_PATH}/scripts/Android_Fork.cmake)
@@ -44,7 +23,7 @@ if(PH_PLATFORM STREQUAL "Android")
     if (PH_FORK STREQUAL "1")
         link_directories(${PH_EXTERNALS}/lib/android/libs/${ANDROID_NDK_ABI_NAME})
         add_library(Porkholt SHARED ${PH_ENGINE_SRCS} ${PH_ENGINE_HEADERS})
-        target_link_libraries(Porkholt openal lua png15 ogg vorbis vorbisfile android log EGL)
+        target_link_libraries(Porkholt openal luajit png15 ogg vorbis vorbisfile android log EGL)
 
         add_custom_target(External_Libs
             COMMAND ${PH_EXTERNALS}/make_android.sh "${ANDROID_NDK}" "${ANDROID_ABI}" "${ANDROID_NDK_ABI_NAME}"
