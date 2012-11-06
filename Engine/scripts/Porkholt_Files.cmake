@@ -102,6 +102,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTransformDrawable.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGenericParticleAnimator.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHProfilerCollection.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -219,6 +220,8 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHLinkDirectory.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHTransformDrawable.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGenericParticleAnimator.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHProfiler.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHProfilerCollection.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

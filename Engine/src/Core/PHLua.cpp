@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/Core/PHProfilerCollection.h>
 
 void PHLuaSetIncludePath(lua_State * L, string path)
 {
@@ -125,13 +126,16 @@ void * PHLuaThisPointer(lua_State * L, int index)
 
 bool PHLuaLoadFile(lua_State * L, string fname)
 {
+    PHProfilingStart(PHLuaProfiler);
     int error = luaL_loadfile(L, fname.c_str()) || lua_pcall(L,0,0,0);
     if (error)
     {
         PHLog("Lua: %s",lua_tostring(L,-1));
         lua_pop(L, 1);
+        PHProfilingStop(PHLuaProfiler);
         return false;
     }
+    PHProfilingStop(PHLuaProfiler);
     return true;
 }
 
@@ -147,12 +151,14 @@ bool PHLuaLoadFile(lua_State * L, PHDirectory * dir, const string & fname)
 
 bool PHLuaLoadFile(lua_State * L, PHFile * file)
 {
+    PHProfilingStart(PHLuaProfiler);
     uint8_t * buf;
     size_t sz;
     try {
         buf = file->loadToBuffer(sz);
     } catch(string e) {
         PHLog(e);
+        PHProfilingStop(PHLuaProfiler);
         return false;
     }
     int error = luaL_loadbuffer(L, (const char*)buf, sz, file->name().c_str()) || lua_pcall(L,0,0,0);
@@ -161,38 +167,47 @@ bool PHLuaLoadFile(lua_State * L, PHFile * file)
     {
         PHLog("Lua: %s",lua_tostring(L,-1));
         lua_pop(L, 1);
+        PHProfilingStop(PHLuaProfiler);
         return false;
     }
+    PHProfilingStop(PHLuaProfiler);
     return true;
 }
 
 bool PHLuaLoadString(lua_State * L, string s)
 {
+    PHProfilingStart(PHLuaProfiler);
     int error = luaL_loadstring(L, s.c_str()) || lua_pcall(L,0,0,0);
     if (error)
     {
         PHLog("Lua: %s",lua_tostring(L,-1));
         lua_pop(L, 1);
+        PHProfilingStop(PHLuaProfiler);
         return false;
     }
+    PHProfilingStop(PHLuaProfiler);
     return true;
 }
 
 bool PHLuaLoadString(lua_State * L, const char * s)
 {
+    PHProfilingStart(PHLuaProfiler);
     int error = luaL_loadstring(L, s) || lua_pcall(L,0,0,0);
     if (error)
     {
         PHLog("Lua: %s",lua_tostring(L,-1));
         lua_pop(L, 1);
+        PHProfilingStop(PHLuaProfiler);
         return false;
     }
+    PHProfilingStop(PHLuaProfiler);
     return true;
 }
 
 
 bool PHLuaCall(lua_State * L,int inargs, int outargs)
 {
+    PHProfilingStart(PHLuaProfiler);
     int error = lua_pcall(L, inargs, outargs, 0);
     if (error)
     {
@@ -200,8 +215,10 @@ bool PHLuaCall(lua_State * L,int inargs, int outargs)
             PHLog("Lua: %s",lua_tostring(L,-1));
             lua_pop(L, 1);
         } 
+        PHProfilingStop(PHLuaProfiler);
         return false;
     }
+    PHProfilingStop(PHLuaProfiler);
     return true;
 }
 

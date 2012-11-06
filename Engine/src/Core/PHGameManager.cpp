@@ -22,6 +22,7 @@
 #include <Porkholt/Core/PHTime.h>
 #include <Porkholt/Core/PH2DCamera.h>
 #include <Porkholt/Core/PHViewControllerHolder.h>
+#include <Porkholt/Core/PHProfilerCollection.h>
 
 //#define PH_FORCE_FAKE_VAO
 
@@ -288,6 +289,10 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     lt = tm;
     
     clearDeleteQueue();
+
+#ifdef PH_PROFILING
+    PHMainProfilers->collect(frameInterval());
+#endif
 }
 
 void PHGameManager::renderFPS(ph_float timeElapsed)
