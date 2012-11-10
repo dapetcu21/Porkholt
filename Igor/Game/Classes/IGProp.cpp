@@ -87,6 +87,7 @@ void IGProp::animate(ph_float elapsed)
 
 void IGProp::_beginContact(PHObject * sender, IGObject * o)
 {
+    if (!L) return;
     PHLuaGetWeakRef(L, this);
     if (lua_istable(L, -1))
     {
@@ -115,6 +116,7 @@ void IGProp::beginContact(bool aBody, b2Contact * c)
 
 void IGProp::_endContact(PHObject * sender, IGObject * o)
 {
+    if (!L) return;
     PHLuaGetWeakRef(L, this);
     if (lua_istable(L, -1))
     {

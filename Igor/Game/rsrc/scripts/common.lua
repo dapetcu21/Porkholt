@@ -130,11 +130,24 @@ IGBulletManager = IGObject:subclass("IGBulletManager")
 IGScreenBounds = IGObject:subclass("IGScreenBounds")
 IGWallCell = IGDampingProp:subclass("IGWallCell")
 IGKinematic = IGProp:subclass("IGKinematic")
+IGWallManager = IGObject:subclass("IGWallManager")
 
 function IGMob:init()
     self = IGDampingProp.init(self)
     if self then
         self.onDie = IGCallbackTable:new()
+    end
+    return self
+end
+
+function IGWallManager:init(lower, upper, vel)
+    self = IGObject.init(self)
+    if self then
+        self:setLowerMargin(lower)
+        self:setUpperMargin(upper)
+        self:setWallVelocity(vel)
+        self:setCellWidth(0.45)
+        self:setLeftEpsilon(0.25)
     end
     return self
 end
