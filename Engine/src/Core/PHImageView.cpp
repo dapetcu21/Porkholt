@@ -346,7 +346,7 @@ void PHImageView::renderStraight()
                 gm->setColor(t.multipliedAlpha(rem));
                 _animator->bindLastFrameToTexture(0);
                 gm->applySpriteShader();
-                straightVAO1->bind();
+                straightVAO2->bind();
                 straightVAO2->draw();
             }
             

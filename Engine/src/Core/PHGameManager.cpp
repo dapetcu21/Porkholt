@@ -26,7 +26,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
 {
 memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -452,6 +452,13 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
             PHGL::glEnable(GL_BLEND);
         else
             PHGL::glDisable(GL_BLEND);
+    }
+    if (xr & PHGLStencilTesting)
+    {
+        if (states & PHGLStencilTesting)
+            PHGL::glEnable(GL_STENCIL_TEST);
+        else
+            PHGL::glDisable(GL_STENCIL_TEST);
     }
     
     if (vertexAttrib)

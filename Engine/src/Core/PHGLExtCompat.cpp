@@ -255,6 +255,10 @@ void PHGameManager::initPHGL()
 
     set(glDrawElements);
     set(glDrawArrays);
+
+    set(glStencilOp);
+    set(glStencilFunc);
+    set(glStencilMask);
     
     loadCapabilities();
 
@@ -433,3 +437,34 @@ void PHGameManager::clearBuffers(int m)
         mask |= GL_STENCIL_BUFFER_BIT;
     PHGL::glClear(mask);
 }
+
+void PHGameManager::setStencilFunc(enum stencilFunc func, int ref, unsigned int mask)
+{
+    if (func == stencilF && ref == stencilRef && mask == stencilMask)
+        return;
+    stencilF = func;
+    stencilRef = ref;
+    stencilMask = mask;
+    static const GLenum lookup[] = {GL_ALWAYS, GL_NEVER, GL_LESS, GL_LEQUAL, GL_GREATER, GL_GEQUAL, GL_EQUAL, GL_NOTEQUAL};
+    PHGL::glStencilFunc(lookup[func], ref, mask);
+}
+
+void PHGameManager::setStencilOp(enum stencilOp sf, enum stencilOp df, enum stencilOp dp)
+{
+    if (sf == stencilOpSF && df == stencilOpDF && dp == stencilOpDP)
+        return;
+    stencilOpSF = sf;
+    stencilOpDF = df;
+    stencilOpDP = dp;
+    static const GLenum lookup[] = {GL_KEEP, GL_ZERO, GL_REPLACE, GL_INCR, GL_INCR_WRAP, GL_INCR, GL_DECR, GL_DECR_WRAP, GL_INVERT};
+    PHGL::glStencilOp(lookup[sf], lookup[df], lookup[dp]);
+}
+
+void PHGameManager::setStencilMask(unsigned int mask)
+{
+    if (mask == stencilWMask)
+        return;
+    stencilWMask = mask;
+    PHGL::glStencilMask(mask);
+}
+

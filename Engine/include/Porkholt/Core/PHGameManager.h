@@ -76,7 +76,8 @@ enum PHGLStates
     PHGLResetAllStates = 1<<5,
     PHGLNormalArray = 1<<6,
     PHGLBlending = 1<<7,
-    PHGLBackFaceCulling = 1<<8
+    PHGLBackFaceCulling = 1<<8,
+    PHGLStencilTesting = 1<<9
 };
 
 class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool, public PHMessagePool
@@ -148,7 +149,6 @@ public:
     void setMainDrawable(PHDrawable * v);
 
     PHNavigationController * setUpNavigationController();
-
 
     PHGameManager * gameManager() { return this; }
     PHDirectory * resourceDirectory() { return rsrcDir; }
@@ -274,8 +274,8 @@ public:
     void buildSolidSquareVAO();
     
     PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
-    
     PHGLUniformStates * spriteUniformStates() { return spriteStates; }
+
     void applySpriteShader();
     void applyShader(PHGLShaderProgram * shader);
     void reapplyMatrixUniform();
@@ -296,10 +296,9 @@ public:
 #define PHIMAGEATTRIBUTE_CLR 2
 #define PHIMAGEATTRIBUTE_NRM 3
 
-    //TODO: move these in .cpp
     void vertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
-        if (openGLCaps[PHGLCapabilityShaders])
+        if (useShaders())
             PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, size, type, GL_FALSE, stride, ptr);
         else
             PHGL::glVertexPointer(size, type, stride, ptr);
@@ -307,7 +306,7 @@ public:
     
     void texCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
-        if (openGLCaps[PHGLCapabilityShaders])
+        if (useShaders())
             PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_TXC, size, type, GL_FALSE, stride, ptr);
         else
             PHGL::glTexCoordPointer(size, type, stride, ptr);
@@ -315,7 +314,7 @@ public:
     
     void normalPointer(GLenum type, GLsizei stride, const GLvoid *ptr)
     {
-        if (openGLCaps[PHGLCapabilityShaders])
+        if (useShaders())
             PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_NRM, 3, type, GL_FALSE, stride, ptr);
         else
             PHGL::glNormalPointer(type, stride, ptr);
@@ -323,7 +322,7 @@ public:
     
     void colorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr)
     {
-        if (openGLCaps[PHGLCapabilityShaders])
+        if (useShaders())
             PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_CLR, size, type, (type==GL_UNSIGNED_BYTE), stride, ptr);
         else
             PHGL::glColorPointer(size, type, stride, ptr);

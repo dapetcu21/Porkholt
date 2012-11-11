@@ -159,6 +159,10 @@ namespace PHGL {
     def(void, glNormalPointer, GLenum, GLsizei, const GLvoid *);
     def(void, glTexCoordPointer, GLint, GLenum, GLsizei, const GLvoid *);
 
+    def(void, glStencilFunc, GLenum, GLint, GLuint);
+    def(void, glStencilOp, GLenum, GLenum, GLenum);
+    def(void, glStencilMask, GLuint);
+
 #undef def
 
     enum libs {
