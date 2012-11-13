@@ -23,7 +23,7 @@ head = "/* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */\n
 
 class = arg[1]
 super = arg[2]
-if (#super == 0) then
+if (not super or (#super == 0)) then
     super = "IGProp"
 end
 base = string.sub(class, string.find(class, "%w*$"))
