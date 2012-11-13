@@ -32,35 +32,35 @@ protected:
     PHAnimatorPool * pool;
     
     void curveCallback(PHCurve * sender, void *ud);
-	void rebuildCurvedVBO();
-    void rebuildStraightVBO();
+	void rebuildCurvedVAO();
+    void rebuildStraightVAO();
     void destroyVAOs();
     void destroyStraightVAO();
     void destroyCurvedVAO();
-    void rebuildVBO()
+    void rebuildVAO()
     {
         if (curve)
-            rebuildCurvedVBO();
+            rebuildCurvedVAO();
         else
-            rebuildStraightVBO();
+            rebuildStraightVAO();
     }
-    bool animatorNeedsVBORebuild();
+    bool animatorNeedsVAORebuild();
     
     PHCurve * curve;
     
-    bool VBOneedsRebuilding;
+    bool VAOneedsRebuilding;
     
     PHGLVertexArrayObject * curveVAO;
     PHGLVertexArrayObject * straightVAO1, * straightVAO2;
     
     int lastAnimFrame,animFrame;
     
-    void loadVBO()
+    void loadVAO()
     {
-        if (VBOneedsRebuilding)
+        if (VAOneedsRebuilding)
         {
-            rebuildVBO();
-            VBOneedsRebuilding = false;
+            rebuildVAO();
+            VAOneedsRebuilding = false;
         }
     }
     
@@ -91,7 +91,7 @@ public:
     bool normalMapping() { return _normalMapping; }
     
     const PHRect & textureCoordinates() { return coords; };
-	void setTextureCoordinates(const PHRect & r) { coords = r; VBOneedsRebuilding = true; };
+	void setTextureCoordinates(const PHRect & r) { coords = r; VAOneedsRebuilding = true; };
     
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; };
@@ -103,10 +103,10 @@ public:
     void setConstrainCurveToFrame(bool c) { constrain = c; }
     
     ph_float repeatX() { return _repeatX; }
-    void setRepeatX(ph_float rx) { _repeatX = rx; VBOneedsRebuilding = true; }
+    void setRepeatX(ph_float rx) { _repeatX = rx; VAOneedsRebuilding = true; }
     
     ph_float repeatY() { return _repeatY; }
-    void setRepeatY(ph_float ry) { _repeatY = ry; VBOneedsRebuilding = true; }
+    void setRepeatY(ph_float ry) { _repeatY = ry; VAOneedsRebuilding = true; }
     
     PHCurve * shape() { return curve; }
     void setShape(PHCurve * bp);

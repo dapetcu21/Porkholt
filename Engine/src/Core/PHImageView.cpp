@@ -21,7 +21,7 @@
 
 const string PHImageView::_luaClass("PHImageView");
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), shad(NULL)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VAOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), shad(NULL)
 
 void PHImageView::setShader(PHGLShaderProgram *sh)
 {
@@ -84,7 +84,7 @@ void PHImageView::setImage(PHImage * img)
     if (_image)
         _image->release();
     _image = img;
-    VBOneedsRebuilding = true;
+    VAOneedsRebuilding = true;
 }
 
 void PHImageView::destroyVAOs()
@@ -158,7 +158,7 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
     }
 }
 
-void PHImageView::rebuildCurvedVBO()
+void PHImageView::rebuildCurvedVAO()
 {
     destroyStraightVAO();
     if (curve)
@@ -180,7 +180,7 @@ void PHImageView::rebuildCurvedVBO()
 
 void PHImageView::curveCallback(PHCurve *sender, void *ud)
 {
-    VBOneedsRebuilding = true;
+    VAOneedsRebuilding = true;
 }
 
 void PHImageView::setShape(PHCurve *bp)
@@ -197,7 +197,7 @@ void PHImageView::setShape(PHCurve *bp)
         bp->addCallback(PHInv(this,PHImageView::curveCallback,NULL));
     }
     curve = bp;
-    VBOneedsRebuilding = true;
+    VAOneedsRebuilding = true;
 }
 
 void PHImageView::renderCurved()
@@ -205,7 +205,7 @@ void PHImageView::renderCurved()
     if (!_image) return;
     if (image()->isAnimated()) return;
     image()->load();
-    loadVBO();
+    loadVAO();
     
     gm->setColor(tint);
     gm->setGLStates(PHGLBlending | PHGLTexture0);
@@ -223,7 +223,7 @@ void PHImageView::renderCurved()
         curveVAO->draw();
 }
 
-void PHImageView::rebuildStraightVBO()
+void PHImageView::rebuildStraightVAO()
 {
     destroyCurvedVAO();
     if (_image)
@@ -247,7 +247,7 @@ void PHImageView::rebuildStraightVBO()
         destroyStraightVAO();
 }
 
-bool PHImageView::animatorNeedsVBORebuild()
+bool PHImageView::animatorNeedsVAORebuild()
 {
     if (!_image || !_animator || !_image->isAnimated())
         return false;
@@ -258,9 +258,9 @@ void PHImageView::renderStraight()
 {
     if (!_image) return;
     _image->load();
-    if (animatorNeedsVBORebuild())
-        VBOneedsRebuilding = true;
-    loadVBO();
+    if (animatorNeedsVAORebuild())
+        VAOneedsRebuilding = true;
+    loadVAO();
     if (straightVAO1)
     {
         PHMatrix om = gm->modelViewMatrix();
