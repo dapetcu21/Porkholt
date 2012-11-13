@@ -156,14 +156,11 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
     PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao, PHGLVertexBufferObject * & vbo)
+void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao)
 {
     if (!vao)
         vao = new PHGLVertexArrayObject(imageView->gameManager());
-    if (!vbo)
-        vbo = new PHGLVertexBufferObject(imageView->gameManager());
     PHImage::buildImageVAO(vao,
-                           vbo,
                            PHPoint(imageView->repeatX(),imageView->repeatY()),
                            imageView->textureCoordinates(),
                            txc

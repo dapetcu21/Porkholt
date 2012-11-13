@@ -235,21 +235,12 @@ void PHImageAnimator::bindLastFrameToTexture(int tx)
     _image->atlas()->texture(lastframe)->bind(tx);
 }
 
-void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject * & vao1, PHGLVertexBufferObject * & vbo1, PHGLVertexArrayObject * & vao2, PHGLVertexBufferObject * & vbo2)
+void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVAO * & vao1, PHGLVAO * & vao2)
 {
     if (!vao1)
         vao1 = new PHGLVertexArrayObject(imageView->gameManager());
-    if (!vbo1)
-        vbo1 = new PHGLVertexBufferObject(imageView->gameManager());
     if (fade&&!vao2)
         vao2 = new PHGLVertexArrayObject(imageView->gameManager());
-    if (fade&&!vbo2)
-        vbo2 = new PHGLVertexBufferObject(imageView->gameManager());
-    if (!fade&&vbo2)
-    {
-        vbo2->release();
-        vbo2 = NULL;
-    }
     if (!fade&&vao2)
     {
         vao2->release();
@@ -259,10 +250,10 @@ void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject
     PHPoint repeat(imageView->repeatX(), imageView->repeatY());
     PHRect port(imageView->textureCoordinates());
 
-    PHImage::buildImageVAO(vao1, vbo1, repeat, port, _image->atlas()->textureCoordinates(realframe));
+    PHImage::buildImageVAO(vao1, repeat, port, _image->atlas()->textureCoordinates(realframe));
     
     if (fade)
     {
-        PHImage::buildImageVAO(vao2, vbo2, repeat, port, _image->atlas()->textureCoordinates(lastframe));
+        PHImage::buildImageVAO(vao2, repeat, port, _image->atlas()->textureCoordinates(lastframe));
     }
 }

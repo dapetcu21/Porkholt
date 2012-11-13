@@ -13,7 +13,7 @@
 
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
-#define INIT particlePool(NULL), particleAnim(NULL), particleM(new PHMutex), vao(NULL), vbo(NULL), indexVBO(NULL), maxN(0), cacheTime(15), cacheLeft(15)
+#define INIT particlePool(NULL), particleAnim(NULL), particleM(new PHMutex), vao(NULL), maxN(0), cacheTime(15), cacheLeft(15)
 
 PHParticleView::PHParticleView() : PHImageView(), INIT 
 {
@@ -40,10 +40,6 @@ PHParticleView::~PHParticleView()
 {
     if (vao)
         vao->release();
-    if (vbo)
-        vbo->release();
-    if (indexVBO)
-        indexVBO->release();
     setParticleAnimator(NULL);
     particleM->unlock();
 }
@@ -164,10 +160,18 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         }
     }
     
+    PHGLVBO * vbo = vao ? vao->attributeVBO(PHIMAGEATTRIBUTE_POS) : NULL;
+    PHGLVBO * indexVBO = vao ? vao->elementArrayVBO() : NULL;
+
     if (!indexVBO)
         indexVBO = new PHGLVertexBufferObject(gm);
+    else
+        indexVBO->retain();
+
     if (!vbo)
         vbo = new PHGLVertexBufferObject(gm);
+    else
+        vbo->retain();
     
     vbo->bindTo(PHGLVBO::arrayBuffer);
     vbo->setData(NULL, sizeof(GLfloat)*nrVertices*6, gm->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
@@ -249,6 +253,8 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         vao->unbind();
     }
     vbo->unbind();
+    vbo->release();
+    indexVBO->release();
     delete [] buffer;   
     
     gm->setGLStates(PHGLBlending | PHGLTexture0);

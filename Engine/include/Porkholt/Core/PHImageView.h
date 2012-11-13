@@ -51,10 +51,7 @@ protected:
     bool VBOneedsRebuilding;
     
     PHGLVertexArrayObject * curveVAO;
-    PHGLVertexBufferObject * curveAttributeVBO, * curveElementVBO;
-    
     PHGLVertexArrayObject * straightVAO1, * straightVAO2;
-    PHGLVertexBufferObject * straightVBO1, * straightVBO2;
     
     int lastAnimFrame,animFrame;
     

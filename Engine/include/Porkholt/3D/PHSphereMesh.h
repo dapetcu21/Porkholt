@@ -15,12 +15,12 @@ class PHSphereMesh : public PHMesh
 {
 private:
     PHGLVertexArrayObject * vaos[3];
-    PHGLVertexBufferObject * vbos[3];
     ph_float closeDist, farDist;
     PHGameManager * gm;
 public:
     PHSphereMesh(PHGameManager * gm);
     PHSphereMesh(PHGameManager * gm, int latitude, int longitude);
+    ~PHSphereMesh();
     void setMediumLODInterval(ph_float close, ph_float far)
     {
         closeDist = close; 

@@ -19,6 +19,13 @@ PHSphereMesh::PHSphereMesh(PHGameManager * _gm, int latitude, int longitude) : I
     setResolutionForLOD(PHMesh::defaultLOD, latitude, longitude);
 }
 
+PHSphereMesh::~PHSphereMesh()
+{
+    releaseLOD(0);
+    releaseLOD(1);
+    releaseLOD(2);
+}
+
 PHGLVertexArrayObject * PHSphereMesh::vaoForLevelOfDetail(int lod)
 {
     if (vaos[lod]) return vaos[lod];
@@ -87,14 +94,15 @@ void PHSphereMesh::setResolutionForLOD(int lod, int latitude, int longitude)
     }
     vaos[lod] = new PHGLVertexArrayObject(gm);
     vaos[lod]->bindToEdit();
-    vbos[lod] = new PHGLVertexBufferObject(gm);
-    vbos[lod]->bindToArrayBuffer();
-    vbos[lod]->setData(buf, (longitude+1)*(latitude)*8*2*sizeof(GLfloat), PHGLVBO::staticDraw);
-    vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_POS, 3, GL_FLOAT, false, sizeof(GLfloat)*8, 0, vbos[lod]);
-    vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_NRM, 3, GL_FLOAT, false, sizeof(GLfloat)*8, sizeof(GLfloat)*3, vbos[lod]);
-    vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, false, sizeof(GLfloat)*8, sizeof(GLfloat)*6, vbos[lod]);
+    PHGLVBO * vbo = new PHGLVertexBufferObject(gm);
+    vbo->bindToArrayBuffer();
+    vbo->setData(buf, (longitude+1)*(latitude)*8*2*sizeof(GLfloat), PHGLVBO::staticDraw);
+    vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_POS, 3, GL_FLOAT, false, sizeof(GLfloat)*8, 0, vbo);
+    vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_NRM, 3, GL_FLOAT, false, sizeof(GLfloat)*8, sizeof(GLfloat)*3, vbo);
+    vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, false, sizeof(GLfloat)*8, sizeof(GLfloat)*6, vbo);
     vaos[lod]->setDrawArrays(GL_TRIANGLE_STRIP, 0, (longitude+1)*(latitude)*2);
-    vbos[lod]->unbind();
+    vbo->unbind();
+    vbo->release();
     vaos[lod]->unbind();
     delete[] buf;
 }
@@ -105,8 +113,6 @@ void PHSphereMesh::releaseLOD(int lod)
     {
         vaos[lod]->release();
         vaos[lod] = NULL;
-        vbos[lod]->release();
-        vbos[lod] = NULL;
     }
 }
 

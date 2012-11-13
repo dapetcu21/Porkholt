@@ -26,8 +26,9 @@ protected:
         PHGLVertexBufferObject * vbo;
     };
     
-    map<int, attribute* > attributes;
+    map<GLuint, attribute* > attributes;
     PHGLVertexBufferObject * elementVBO;
+    map<GLuint, PHGLVertexBufferObject *> attributeVBOs;
     
     GLenum mode;
     GLsizei count;
@@ -50,6 +51,8 @@ public:
     PHGLVertexArrayObject(PHGameManager * gameManager);
     ~PHGLVertexArrayObject();
     
+    PHGameManager * gameManager() { return gm; }
+    
     void fakeBind();
     void fakeUnbind();
 
@@ -60,6 +63,10 @@ public:
     
     void vertexPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, size_t offset, PHGLVertexBufferObject * vbo);
     void disableAttribute(GLuint index);
+
+    PHGLVertexBufferObject * attributeVBO(GLuint index);
+    PHGLVertexBufferObject * elementArrayVBO() { return elementVBO; }
+    void setElementArrayVBO(PHGLVertexBufferObject * vbo);
     
     void setDrawElements(GLenum mode, GLsizei count, GLenum type, size_t offset);
     void setDrawArrays(GLenum mode, GLint first, GLsizei count);

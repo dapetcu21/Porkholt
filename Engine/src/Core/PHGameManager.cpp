@@ -26,7 +26,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _solidSquareVBO(NULL), _fullScreenVAO(NULL), _fullScreenVBO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _fullScreenVAO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
 {
 memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -47,12 +47,8 @@ PHGameManager::~PHGameManager()
         viewController->release();
     if (_fullScreenVAO)
         _fullScreenVAO->release();
-    if (_fullScreenVBO)
-        _fullScreenVBO->release();
     if (_solidSquareVAO)
         _solidSquareVAO->release();
-    if (_solidSquareVBO)
-        _solidSquareVBO->release();
     if (evtHandler)
         evtHandler->release();
     if (animPool)
@@ -574,8 +570,7 @@ void PHGameManager::bindVBO(PHGLVertexBufferObject * vbo, int location)
             _boundVAO->elementVBO->bound = 0;
         if (vbo)
             vbo->bound = location;
-        _boundVAO->elementVBO = vbo;
-        PHGL::glBindBuffer(PHGLVertexBufferObject::targets[location], vbo?(vbo->vbo):0);
+        _boundVAO->setElementArrayVBO(vbo);
         return;
     }
     if (boundVBOs[location]==vbo) return;
@@ -637,8 +632,8 @@ void PHGameManager::buildSolidSquareVAO()
     vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     vao->unbind();
     vbo->unbind();
+    vbo->release();
     _solidSquareVAO = vao;
-    _solidSquareVBO = vbo;
 }
 
 void PHGameManager::buildFullScreenVAO()
@@ -660,8 +655,8 @@ void PHGameManager::buildFullScreenVAO()
     vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     vao->unbind();
     vbo->unbind();
+    vbo->release();
     _fullScreenVAO = vao;
-    _fullScreenVBO = vbo;
 }
 
 void PHGameManager::setActiveTexture(int tmu)

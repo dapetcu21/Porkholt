@@ -200,9 +200,7 @@ private:
     PHGLVertexBufferObject * boundVBOs[5];
     PHGLVertexArrayObject * _boundVAO;
     PHGLVertexArrayObject * _solidSquareVAO;
-    PHGLVertexBufferObject * _solidSquareVBO;
     PHGLVertexArrayObject * _fullScreenVAO;
-    PHGLVertexBufferObject * _fullScreenVBO;
     PHGLFramebuffer * _boundFBO;
     
     

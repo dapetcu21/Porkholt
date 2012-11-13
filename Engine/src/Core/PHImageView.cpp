@@ -21,7 +21,7 @@
 
 const string PHImageView::_luaClass("PHImageView");
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), curveAttributeVBO(NULL), curveElementVBO(NULL), straightVAO1(NULL), straightVBO1(NULL), straightVAO2(NULL), straightVBO2(NULL), shad(NULL)
+#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VBOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), shad(NULL)
 
 void PHImageView::setShader(PHGLShaderProgram *sh)
 {
@@ -95,16 +95,6 @@ void PHImageView::destroyVAOs()
 
 void PHImageView::destroyStraightVAO()
 {
-    if (straightVBO1)
-    {
-        straightVBO1->release();
-        straightVBO1 = NULL;
-    }
-    if (straightVBO2)
-    {
-        straightVBO2->release();
-        straightVBO2 = NULL;
-    }
     if (straightVAO1)
     {
         straightVAO1->release();
@@ -123,16 +113,6 @@ void PHImageView::destroyCurvedVAO()
     {
         curveVAO->release();
         curveVAO = NULL;
-    }
-    if (curveElementVBO)
-    {
-        curveElementVBO->release();
-        curveElementVBO = NULL;
-    }
-    if (curveAttributeVBO)
-    {
-        curveAttributeVBO->release();
-        curveAttributeVBO = NULL;
     }
 }
 
@@ -194,15 +174,19 @@ void PHImageView::rebuildCurvedVBO()
         curveVAO->bindToEdit();
         size_t nVertices;
         GLfloat * arr = curve->vertexData(nVertices, p);
-        if (!curveAttributeVBO)
-            curveAttributeVBO = new PHGLVertexBufferObject(gm);
+        PHGLVBO * vbo = curveVAO->attributeVBO(PHIMAGEATTRIBUTE_POS);
+        if (!vbo)
+            vbo = new PHGLVertexBufferObject(gm);
+        else
+            vbo->retain();
         
-        curveAttributeVBO->bindTo(PHGLVBO::arrayBuffer);
-        curveAttributeVBO->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
-        curveAttributeVBO->setSubData(arr, 0, nVertices*4*sizeof(GLfloat));
-        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, curveAttributeVBO);
-        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), curveAttributeVBO);
-        curveAttributeVBO->unbind();
+        vbo->bindTo(PHGLVBO::arrayBuffer);
+        vbo->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+        vbo->setSubData(arr, 0, nVertices*4*sizeof(GLfloat));
+        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, vbo);
+        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), vbo);
+        vbo->unbind();
+        vbo->release();
         
         size_t nIndexes;
         GLushort * indexes = curve->indexData(arr, 4, nVertices, nIndexes);
@@ -210,19 +194,20 @@ void PHImageView::rebuildCurvedVBO()
         
         if (indexes)
         {
-            if (!curveElementVBO)
-                curveElementVBO = new PHGLVertexBufferObject(gm);
-            curveElementVBO->bindTo(PHGLVBO::elementArrayBuffer);
-            curveElementVBO->setData(indexes, nIndexes*sizeof(GLushort), PHGLVBO::dynamicDraw);
+            PHGLVBO * ivbo = curveVAO->elementArrayVBO();
+            if (!ivbo)
+                ivbo = new PHGLVertexBufferObject(gm);
+            else
+                ivbo->retain();
+            ivbo->bindTo(PHGLVBO::elementArrayBuffer);
+            ivbo->setData(indexes, nIndexes*sizeof(GLushort), PHGLVBO::dynamicDraw);
             curveVAO->setDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0);
+
+            ivbo->release();
             
             delete indexes;
         } else {
-            if (curveElementVBO)
-            {
-                curveElementVBO->release();
-                curveElementVBO = NULL;
-            }
+            curveVAO->setElementArrayVBO(NULL);
             curveVAO->setDrawArrays(GL_TRIANGLE_STRIP, 0, nVertices);
         }
         
@@ -285,12 +270,7 @@ void PHImageView::rebuildStraightVBO()
     {
         if (_image->isNormal())
         {
-            ((PHNormalImage*)_image)->rebuildVAO(this,straightVAO1,straightVBO1);
-            if (straightVBO2)
-            {
-                straightVBO2->release();
-                straightVBO2 = NULL;
-            }
+            ((PHNormalImage*)_image)->rebuildVAO(this, straightVAO1);
             if (straightVAO2)
             {
                 straightVAO2->release();
@@ -299,7 +279,7 @@ void PHImageView::rebuildStraightVBO()
         }
         if (_image->isAnimated())
         {
-            _animator->rebuildVAOs(this,straightVAO1,straightVBO1,straightVAO2,straightVBO2);
+            _animator->rebuildVAOs(this, straightVAO1, straightVAO2);
             lastAnimFrame = _animator->lastRealFrame();
             animFrame = _animator->currentRealFrame();
         }

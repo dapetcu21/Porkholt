@@ -20,7 +20,6 @@ private:
     void renderParticles(void * particles, const PHRect & texCoord, const PHColor & tint);
     
     PHGLVertexArrayObject * vao;
-    PHGLVertexBufferObject * vbo, * indexVBO;
     
     bool useBytes;
     size_t maxN;

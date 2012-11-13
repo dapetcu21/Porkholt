@@ -46,7 +46,7 @@ public:
     void renderInFramePortionTint(PHGameManager * gameManager, const PHRect & frm,const PHRect & cnstr,const PHColor & tint);
     
     //VAOs
-    void rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao, PHGLVertexBufferObject * & vbo);
+    void rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao);
 	
     void loadFromFile(PHObject * sender, void * ud);
 	void loadToTexture(PHObject * sender, void * ud); //don't use

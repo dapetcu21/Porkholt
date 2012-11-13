@@ -17,7 +17,7 @@ PHMutex * PHImage::loadingMutex = new PHMutex;
 
 PHImage::PHImage(PHGameManager * gameManager) : loaded(false), gm(gameManager), _normalMap(NULL), loadMutex(new PHMutex(true)) { };
 
-void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord)
+void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord)
 {
     //TO REDO
     vector<GLfloat> v;
@@ -58,6 +58,11 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject 
         }
     }
     
+    PHGLVBO * vbo = vao->attributeVBO(PHIMAGEATTRIBUTE_POS);
+    if (vbo)
+        vbo->retain();
+    else
+        vbo = new PHGLVBO(vao->gameManager());
     vbo->bindTo(PHGLVBO::arrayBuffer);
     vbo->setData(&v[0], sizeof(GLfloat)*v.size(), PHGLVBO::dynamicDraw);
     vao->bindToEdit();
@@ -66,6 +71,7 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject 
     vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, (v.size()/4));
     vao->unbind();
     vbo->unbind();
+    vbo->release();
 }
 
 void PHImage::load() 

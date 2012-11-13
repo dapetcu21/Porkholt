@@ -22,8 +22,13 @@ PHGLVertexArrayObject::~PHGLVertexArrayObject()
         else
             gm->queueDeleteVAO(vao);
     }
-    for (map<int, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
+    for (map<GLuint, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
         delete i->second;
+    for (map<GLuint, PHGLVBO*>::iterator i = attributeVBOs.begin(); i!=attributeVBOs.end(); i++)
+        if (i->second)
+            i->second->release();
+    if (elementVBO)
+        elementVBO->release();
 }   
 
 #define bind_begin PHGLVAO * oldvao = gm->boundVAO(); bindToEdit();
@@ -45,7 +50,7 @@ void PHGLVertexArrayObject::fakeBind()
         if (gm->useShaders())
         {
             uint32_t mask = 0;
-            for (map<int, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
+            for (map<GLuint, attribute*>::iterator i = attributes.begin(); i!=attributes.end(); i++)
             {
                 attribute * a = i->second;
                 if (a->vbo)
@@ -56,7 +61,7 @@ void PHGLVertexArrayObject::fakeBind()
             gm->setGLAttributeStates(mask);
         } else {
             uint32_t mask = 0;
-            map<int, attribute*>::iterator i;
+            map<GLuint, attribute*>::iterator i;
             
             i = attributes.find(PHIMAGEATTRIBUTE_POS);
             if (i!=attributes.end())
@@ -166,6 +171,13 @@ void PHGLVertexArrayObject::vertexPointer(GLuint index, GLint size, GLenum type,
             delete o;
         attributes[index] = a;
     }
+
+    PHGLVBO * & v = attributeVBOs[index];
+    if (vbo)
+        vbo->retain();
+    if (v)
+        v->release();
+    v = vbo;
 }
 
 void PHGLVertexArrayObject::disableAttribute(GLuint index)
@@ -193,16 +205,22 @@ void PHGLVertexArrayObject::disableAttribute(GLuint index)
         } else
             PHGL::glDisableVertexAttribArray(index);
         
-        
         bind_end
     } else 
     {
-        map<int, attribute*>::iterator it = attributes.find(index);
+        map<GLuint, attribute*>::iterator it = attributes.find(index);
         if (it!=attributes.end())
         {
             delete it->second;
             attributes.erase(it);
         }
+    }
+    map<GLuint, PHGLVertexBufferObject *>::iterator it = attributeVBOs.find(index);
+    if (it!=attributeVBOs.end())
+    {
+        if (it->second)
+            it->second->release();
+        attributeVBOs.erase(it);
     }
 }
 
@@ -236,6 +254,24 @@ void PHGLVertexArrayObject::draw()
             break;
     }
     bind_end
+}
+
+PHGLVBO * PHGLVertexArrayObject::attributeVBO(GLuint index)
+{
+    map<GLuint, PHGLVBO*>::iterator it = attributeVBOs.find(index);
+    if (it == attributeVBOs.end()) return NULL;
+    return it->second;
+}
+
+void PHGLVertexArrayObject::setElementArrayVBO(PHGLVBO * vbo)
+{
+    if (bound)
+        PHGL::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo?(vbo->vbo):0);
+    if (vbo)
+        vbo->retain();
+    if (elementVBO)
+        elementVBO->release();
+    elementVBO = vbo;
 }
 
 void PHGLVertexArrayObject::bind()

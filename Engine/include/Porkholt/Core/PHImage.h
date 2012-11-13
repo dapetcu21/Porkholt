@@ -38,7 +38,7 @@ protected:
     friend class PHImageAnimator;
     friend class PHImageInitPool;
     
-    static void buildImageVAO(PHGLVertexArrayObject * vao, PHGLVertexBufferObject * vbo, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord);
+    static void buildImageVAO(PHGLVertexArrayObject * vao, const PHPoint & repeat, const PHRect & portion, const PHRect & texCoord);
     
 public:
     void load(); 
