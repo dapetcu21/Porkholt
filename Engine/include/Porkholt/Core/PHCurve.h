@@ -5,6 +5,8 @@
 
 #include <Porkholt/Core/PHMain.h>
 
+class PHGLVertexArrayObject;
+
 class PHCurve : public PHObject
 {
 public:
@@ -22,8 +24,7 @@ public:
     static GLfloat * vertexDataFromAnchorList(const vector<anchorPoint> & anchors, const PHRect & texCoord, size_t & nvertices);
     static void textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, const vector<anchorPoint> & anchors, const PHRect & texCoord);
     
-    virtual GLfloat * vertexData(size_t & nvertices, const PHRect & texCoord) = 0;
-    virtual GLushort * indexData(const GLfloat vertices[],size_t stride, size_t nvertices, size_t & ntriangles);
+    virtual void rebuildVAO(PHGLVertexArrayObject * vao, const PHRect & texCoord) = 0;
     
     static GLushort * triangulatePolygon(const GLfloat v[],size_t stride, size_t nvertices, size_t & ntriangles);
     static GLushort * triangulatePolygon(const vector<anchorPoint> & anchors, size_t & ntriangles);

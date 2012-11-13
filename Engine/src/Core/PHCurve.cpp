@@ -3,11 +3,6 @@
 
 #include <Porkholt/Core/PHCurve.h>
 
-GLushort * PHCurve::indexData(const GLfloat v[],size_t stride, size_t nvertices, size_t & ntriangles)
-{
-    return triangulatePolygon(v,stride,nvertices,ntriangles);
-}
-
 void PHCurve::modelChanged()
 {
     if (commitDisableCount) return;

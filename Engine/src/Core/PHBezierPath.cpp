@@ -3,6 +3,9 @@
 #include <Porkholt/Core/PHBezierPath.h>
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHMessage.h>
+#include <Porkholt/Core/PHGameManager.h>
+#include <Porkholt/Core/PHGLVertexArrayObject.h>
+#include <Porkholt/Core/PHGLVertexBufferObject.h>
 
 PHBezierPath * PHBezierPath::fromLua(lua_State * L, bool unique)
 {
@@ -190,12 +193,44 @@ bool PHBezierPath::operator == (const PHBezierPath & othr)
             equal(curves.begin(),curves.end(),othr.curves.begin());
 }
 
-GLfloat * PHBezierPath::vertexData(size_t & nvertices, const PHRect & texCoord)
+void PHBezierPath::rebuildVAO(PHGLVertexArrayObject * vao, const PHRect & texCoord)
 {
     const vector<anchorPoint> * a = tesselate(calculatedVertices());
-    GLfloat * r = vertexDataFromAnchorList(*a, texCoord, nvertices);
+    size_t nVertices;
+    GLfloat * r = vertexDataFromAnchorList(*a, texCoord, nVertices);
     delete a;
-    return r;
+
+    vao->bindToEdit();
+    PHGLVBO * vbo = vao->attributeVBO(PHIMAGEATTRIBUTE_POS);
+    if (!vbo)
+        vbo = new PHGLVertexBufferObject(vao->gameManager());
+    else
+        vbo->retain();
+    
+    vbo->bindTo(PHGLVBO::arrayBuffer);
+    vbo->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+    vbo->setSubData(r, 0, nVertices*4*sizeof(GLfloat));
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, vbo);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), vbo);
+    vbo->unbind();
+    vbo->release();
+    
+    size_t nIndexes;
+    GLushort * indexes = triangulatePolygon(r, 4, nVertices, nIndexes);
+    delete r;
+    
+    PHGLVBO * ivbo = vao->elementArrayVBO();
+    if (!ivbo)
+        ivbo = new PHGLVertexBufferObject(vao->gameManager());
+    else
+        ivbo->retain();
+    ivbo->bindTo(PHGLVBO::elementArrayBuffer);
+    ivbo->setData(indexes, nIndexes*sizeof(GLushort), PHGLVBO::dynamicDraw);
+    vao->setDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0);
+
+    ivbo->release();
+    delete indexes;
+    vao->unbind();
 }
 
 const vector<PHBezierPath::anchorPoint> & PHBezierPath::calculatedVertices()

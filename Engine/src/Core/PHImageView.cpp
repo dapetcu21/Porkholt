@@ -170,49 +170,9 @@ void PHImageView::rebuildCurvedVBO()
         PHRect p = img->textureCoordinates(textureCoordinates());
         p.width*=repeatX();
         p.height*=repeatY();
-        
-        curveVAO->bindToEdit();
-        size_t nVertices;
-        GLfloat * arr = curve->vertexData(nVertices, p);
-        PHGLVBO * vbo = curveVAO->attributeVBO(PHIMAGEATTRIBUTE_POS);
-        if (!vbo)
-            vbo = new PHGLVertexBufferObject(gm);
-        else
-            vbo->retain();
-        
-        vbo->bindTo(PHGLVBO::arrayBuffer);
-        vbo->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
-        vbo->setSubData(arr, 0, nVertices*4*sizeof(GLfloat));
-        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, vbo);
-        curveVAO->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), vbo);
-        vbo->unbind();
-        vbo->release();
-        
-        size_t nIndexes;
-        GLushort * indexes = curve->indexData(arr, 4, nVertices, nIndexes);
-        delete arr;
-        
-        if (indexes)
-        {
-            PHGLVBO * ivbo = curveVAO->elementArrayVBO();
-            if (!ivbo)
-                ivbo = new PHGLVertexBufferObject(gm);
-            else
-                ivbo->retain();
-            ivbo->bindTo(PHGLVBO::elementArrayBuffer);
-            ivbo->setData(indexes, nIndexes*sizeof(GLushort), PHGLVBO::dynamicDraw);
-            curveVAO->setDrawElements(GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0);
 
-            ivbo->release();
-            
-            delete indexes;
-        } else {
-            curveVAO->setElementArrayVBO(NULL);
-            curveVAO->setDrawArrays(GL_TRIANGLE_STRIP, 0, nVertices);
-        }
-        
-        curveVAO->unbind();
-        
+        curve->rebuildVAO(curveVAO, p);
+               
     } else {
         destroyCurvedVAO();
     }

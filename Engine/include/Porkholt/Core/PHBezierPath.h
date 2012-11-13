@@ -35,7 +35,7 @@ public:
     
     const vector<anchorPoint> & calculatedVertices();
     
-    GLfloat * vertexData(size_t & nvertices, const PHRect & texCoord);
+    void rebuildVAO(PHGLVertexArrayObject * vao, const PHRect & texCoord);
     
     PHBezierPath() : cache(NULL), L(NULL) {}
     ~PHBezierPath();

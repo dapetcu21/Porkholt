@@ -15,6 +15,8 @@ class IGWallCurve : public PHCurve
         ph_float _limit;
 
         friend class IGWallManager;
+
+        GLfloat * vertexData(size_t & nvertices, const PHRect & texCoord);
     public:
         IGWallCurve();
         ~IGWallCurve();
@@ -26,8 +28,7 @@ class IGWallCurve : public PHCurve
         void setLimit(ph_float l) { _limit = l; modelChanged(); }
         ph_float limit() { return _limit; }
 
-        GLfloat * vertexData(size_t & nvertices, const PHRect & texCoord);
-        GLushort * indexData(const GLfloat vertices[] , size_t stride, size_t nvertices, size_t & ntriangles) { return NULL; }
+        void rebuildVAO(PHGLVertexArrayObject * vbo, const PHRect & texCoord);
 };
 
 #endif

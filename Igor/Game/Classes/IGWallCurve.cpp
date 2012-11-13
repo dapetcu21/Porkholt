@@ -1,13 +1,14 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#include <Box2D/Box2D.h>
 #include "IGWallCurve.h"
 #include "IGWorld.h"
 #include "IGScripting.h"
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHGameManager.h>
-
-#include <Box2D/Box2D.h>
+#include <Porkholt/Core/PHGLVertexArrayObject.h>
+#include <Porkholt/Core/PHGLVertexBufferObject.h>
 
 IGWallCurve::IGWallCurve() : count(0), _offset(0), _width(1), _limit(0)
 {
@@ -15,6 +16,33 @@ IGWallCurve::IGWallCurve() : count(0), _offset(0), _width(1), _limit(0)
 
 IGWallCurve::~IGWallCurve()
 {
+}
+
+void IGWallCurve::rebuildVAO(PHGLVAO * vao, const PHRect & texCoord)
+{
+    size_t nVertices;
+    GLfloat * r = vertexData(nVertices, texCoord);
+
+    vao->bindToEdit();
+    PHGLVBO * vbo = vao->attributeVBO(PHIMAGEATTRIBUTE_POS);
+    if (!vbo)
+        vbo = new PHGLVertexBufferObject(vao->gameManager());
+    else
+        vbo->retain();
+    
+    vbo->bindTo(PHGLVBO::arrayBuffer);
+    vbo->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+    vbo->setSubData(r, 0, nVertices*4*sizeof(GLfloat));
+    delete r;
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, vbo);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), vbo);
+    vbo->unbind();
+    vbo->release();
+    
+    vao->setElementArrayVBO(NULL);
+    vao->setDrawArrays(GL_TRIANGLE_STRIP, 0, nVertices);
+    
+    vao->unbind();
 }
 
 GLfloat * IGWallCurve::vertexData(size_t & nvertices, const PHRect & txc)
