@@ -1,6 +1,9 @@
 /* Copyright (c) 2012 Marius Petcu, Porkholt Labs!. All rights reserved. */
 
+#include <Box2D/Box2D.h>
 #include "IGWallManager.h"
+#include "IGWallCurve.h"
+#include "IGWallView.h"
 #include "IGWallCell.h"
 #include "IGWorld.h"
 #include "IGScripting.h"
@@ -9,7 +12,7 @@
 
 IGSCRIPTING_REGISTERCLASS("IGWallManager", IGWallManager)
 
-IGWallManager::IGWallManager(IGWorld * w) : IGObject(w), upper(0.5), lower(0), velocity(1), width(0.5), epsilon(0.25), ftime(0)
+IGWallManager::IGWallManager(IGWorld * w) : IGObject(w), upper(0.5), lower(0), velocity(1), width(0.5), epsilon(0.25), ftime(0), view(NULL), curve(NULL)
 {
 }
 
@@ -20,11 +23,20 @@ IGWallManager::~IGWallManager()
         (*i)->removeFromWorld();
         (*i)->release();
     }
+    view->release();
+    curve->release();
 }
 
 PHDrawable * IGWallManager::loadDrawable()
 {
-    return NULL;
+    view = new IGWallView(world->view()->bounds()); 
+    view->setImage(world->gameManager()->imageNamed("wall"));
+    curve = new IGWallCurve();
+    curve->setLimit(0);
+    curve->setWidth(view->bounds().width);
+    view->setShape(curve); 
+    view->setConstrainCurveToFrame(false);
+    return view;
 }
 
 void IGWallManager::freset()
@@ -44,12 +56,15 @@ ph_float IGWallManager::f(ph_float x)
 
 void IGWallManager::animate(ph_float elapsed)
 {
-    for (list<IGWallCell*>::iterator i = cells.begin(); i != cells.end(); i++)
+    curve->beginCommitGrouping();
+    list<PHPoint>::iterator j = curve->points.begin();
+    for (list<IGWallCell*>::iterator i = cells.begin(); i != cells.end(); i++, j++)
     {
         IGWallCell * p = *i;
         PHVector2 v = p->desiredPosition();
         v.x -= velocity * elapsed;
         p->setPosition(v);
+        (*j) = p->physicsBody()->GetWorldPoint(b2Vec2(width/2, 0));
     }
 
     while (!cells.empty())
@@ -60,10 +75,11 @@ void IGWallManager::animate(ph_float elapsed)
             p->removeFromWorld();
             p->release();
             cells.pop_front();
+            curve->count--;
+            curve->points.pop_front();
         } else 
             break;
     }
-
     while (true)
     {
         IGWallCell * l = cells.empty() ? NULL : cells.back();
@@ -97,7 +113,11 @@ void IGWallManager::animate(ph_float elapsed)
         if (l)
             cell->weldToObject(l);
         cells.push_back(cell);
+
+        curve->count++;
+        curve->points.push_back(cell->worldPoint(PHVector2(width/2, 0)));
     }
+    curve->endCommitGrouping();
 }
 
 //--- Lua Scripting ---

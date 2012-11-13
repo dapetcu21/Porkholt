@@ -25,6 +25,8 @@ set(PH_SOURCES
   Classes/IGScreenBounds.cpp
   Classes/IGKinematic.cpp
   Classes/IGWallManager.cpp
+  Classes/IGWallView.cpp
+  Classes/IGWallCurve.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -44,6 +46,8 @@ set(PH_HEADERS
   Classes/IGScreenBounds.h
   Classes/IGKinematic.h
   Classes/IGWallManager.h
+  Classes/IGWallView.h
+  Classes/IGWallCurve.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

@@ -7,6 +7,8 @@
 #include <Porkholt/Core/PHDrawable.h>
 
 class IGWallCell;
+class IGWallView;
+class IGWallCurve;
 
 class IGWallManager : public IGObject
 {
@@ -19,6 +21,9 @@ class IGWallManager : public IGObject
         ph_float f(ph_float x);
         void fadvance(ph_float elapsed);
         void freset();
+
+        IGWallView * view;
+        IGWallCurve * curve;
 
     public:
         IGWallManager(IGWorld * world);
