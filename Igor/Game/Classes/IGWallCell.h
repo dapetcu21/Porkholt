@@ -6,14 +6,20 @@
 #include "IGDampingProp.h"
 
 class b2Joint;
+class PHImageView;
 
 class IGWallCell : public IGDampingProp
 {
     protected:
+        PHImageView * iv;
+        bool _flipped;
         void configureDrawable(PHDrawable * d);
     public:
         IGWallCell(IGWorld * w);
         ~IGWallCell();
+
+        bool flipped() { return _flipped; }
+        void setFlipped(bool b);
 
         void attachedToWorld();
         b2Joint * weldToObject(IGObject * obj, bool last = false);

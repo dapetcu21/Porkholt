@@ -13,8 +13,9 @@ class IGWallCurve;
 class IGWallManager : public IGObject
 {
     protected:
-        ph_float upper, lower, velocity, width, epsilon;
+        ph_float upper, lower, velocity, width, epsilon, flat;
         ph_float ftime;
+        ph_float fvel;
 
         list<IGWallCell*> cells;
 
@@ -35,6 +36,7 @@ class IGWallManager : public IGObject
         sgetter(wallVelocity, setWallVelocity, velocity);
         sgetter(cellWidth, setCellWidth, width);
         sgetter(leftEpsilon, setLeftEpsilon, epsilon);
+        sgetter(flatMargin, setFlatMargin, flat);
 
         PHDrawable * loadDrawable();
         void animate(ph_float elapsed);

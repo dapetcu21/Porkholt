@@ -140,14 +140,15 @@ function IGMob:init()
     return self
 end
 
-function IGWallManager:init(lower, upper, vel)
+function IGWallManager:init(lower, upper, vel, flat)
     self = IGObject.init(self)
     if self then
         self:setLowerMargin(lower)
         self:setUpperMargin(upper)
-        self:setWallVelocity(vel)
+        self:setWallVelocity(vel or 1)
         self:setCellWidth(0.45)
         self:setLeftEpsilon(0.25)
+        self:setFlatMargin(flat or 0)
     end
     return self
 end

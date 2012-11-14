@@ -84,34 +84,6 @@ function IBasicMobWave:waveFinished()
     end
 end
 
---------------------------
-
-ISimWave = IWave:new()
-
-function ISimWave:init(v, miu, k, g)
-    self = IWave.init(self)
-    if self then
-        self.obj = IGBasicMob:new()
-        self.obj:setPosition(vec2(3, 2))
-        self.obj:attachToWorld()
-        self.miu = miu
-        self.k = k
-        self.g = g
-        self.obj:setLinearVelocity(vec2(v, 0))
-    end
-    return self
-end
-
-function ISimWave:frame(elapsed)
-    local x = self.obj:position().x - 3
-    local vel = self.obj:linearVelocity().x
-    self.obj:applyForce(vec2(- x * self.k, 0))
-    if vel > 0.001 then
-        self.obj:applyForce(vec2(self.obj:mass() * self.g * self.miu * -(vel / math.abs(vel)), 0 ))
-    end
-    print (x)
-end
-
 ----------------------------
 
 local w = IBasicMobWave:new(2, 10, 1)

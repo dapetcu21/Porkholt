@@ -28,6 +28,8 @@ class IGWallCurve : public PHCurve
         void setLimit(ph_float l) { _limit = l; modelChanged(); }
         ph_float limit() { return _limit; }
 
+        bool perspectiveCorrectTextureMapping() { return true; }
+
         void rebuildVAO(PHGLVertexArrayObject * vbo, const PHRect & texCoord);
 };
 

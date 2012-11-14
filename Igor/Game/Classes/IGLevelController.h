@@ -16,7 +16,6 @@ class IGLevelController : public PHViewController
     protected:
         IGScripting * scripting;
         IGWorld * world;
-        IGBackground * bg;
         PHDirectory * dir;
         PHAnimatorPool * animpool;
     public:

@@ -12,7 +12,7 @@
 
 IGSCRIPTING_REGISTERCLASS("IGWallManager", IGWallManager)
 
-IGWallManager::IGWallManager(IGWorld * w) : IGObject(w), upper(0.5), lower(0), velocity(1), width(0.5), epsilon(0.25), ftime(0), view(NULL), curve(NULL)
+IGWallManager::IGWallManager(IGWorld * w) : IGObject(w), upper(0.5), lower(0), velocity(1), width(0.5), epsilon(0.25), ftime(0), view(NULL), curve(NULL), fvel(1)
 {
 }
 
@@ -33,8 +33,10 @@ PHDrawable * IGWallManager::loadDrawable()
     view->setImage(world->gameManager()->imageNamed("wall"));
     curve = new IGWallCurve();
     curve->setLimit(0);
-    curve->setWidth(view->bounds().width);
+    curve->setWidth(1.2);
+    curve->setLimit(flat);
     view->setShape(curve); 
+    view->setShader(world->gameManager()->shaderProgramNamed("sprites_persp"));
     view->setConstrainCurveToFrame(false);
     return view;
 }
@@ -46,7 +48,10 @@ void IGWallManager::freset()
 
 void IGWallManager::fadvance(ph_float elapsed)
 {
-    ftime += elapsed;
+    ftime += elapsed * fvel;
+    fvel+= elapsed * (rand()/(float)RAND_MAX*2-1);
+    if (fvel < 0.5) fvel = 0.5;
+    if (fvel > 1.5) fvel = 1.5;
 }
 
 ph_float IGWallManager::f(ph_float x)
@@ -57,6 +62,12 @@ ph_float IGWallManager::f(ph_float x)
 void IGWallManager::animate(ph_float elapsed)
 {
     curve->beginCommitGrouping();
+    ph_float off = curve->offset() + velocity * elapsed;
+    ph_float w = curve->width();
+    if (off >= w)
+        off -= w * floor(off/w);
+    curve->setOffset(off);
+        
     list<PHPoint>::iterator j = curve->points.begin();
     for (list<IGWallCell*>::iterator i = cells.begin(); i != cells.end(); i++, j++)
     {
@@ -111,7 +122,12 @@ void IGWallManager::animate(ph_float elapsed)
         cell->setRotation(ag);
         cell->attachToWorld(world);
         if (l)
+        {
             cell->weldToObject(l);
+            cell->setFlipped(!l->flipped());
+        } else {
+            cell->setFlipped(rand()&1);
+        }
         cells.push_back(cell);
 
         curve->count++;
@@ -127,12 +143,14 @@ PHLuaNumberGetter(IGWallManager, lowerMargin);
 PHLuaNumberGetter(IGWallManager, wallVelocity);
 PHLuaNumberGetter(IGWallManager, cellWidth);
 PHLuaNumberGetter(IGWallManager, leftEpsilon);
+PHLuaNumberGetter(IGWallManager, flatMargin);
 
 PHLuaNumberSetter(IGWallManager, setUpperMargin);
 PHLuaNumberSetter(IGWallManager, setLowerMargin);
 PHLuaNumberSetter(IGWallManager, setWallVelocity);
 PHLuaNumberSetter(IGWallManager, setCellWidth);
 PHLuaNumberSetter(IGWallManager, setLeftEpsilon);
+PHLuaNumberSetter(IGWallManager, setFlatMargin);
 
 void IGWallManager::loadLuaInterface(IGScripting * s)
 {
@@ -144,11 +162,13 @@ void IGWallManager::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGWallManager, wallVelocity);
     PHLuaAddMethod(IGWallManager, cellWidth);
     PHLuaAddMethod(IGWallManager, leftEpsilon);
+    PHLuaAddMethod(IGWallManager, flatMargin);
     PHLuaAddMethod(IGWallManager, setUpperMargin);
     PHLuaAddMethod(IGWallManager, setLowerMargin);
     PHLuaAddMethod(IGWallManager, setWallVelocity);
     PHLuaAddMethod(IGWallManager, setCellWidth);
     PHLuaAddMethod(IGWallManager, setLeftEpsilon);
+    PHLuaAddMethod(IGWallManager, setFlatMargin);
 
     lua_pop(L, 1);
 }

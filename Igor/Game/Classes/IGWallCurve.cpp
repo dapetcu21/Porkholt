@@ -31,11 +31,11 @@ void IGWallCurve::rebuildVAO(PHGLVAO * vao, const PHRect & texCoord)
         vbo->retain();
     
     vbo->bindTo(PHGLVBO::arrayBuffer);
-    vbo->setData(NULL, nVertices*4*sizeof(GLfloat), PHGLVBO::dynamicDraw);
-    vbo->setSubData(r, 0, nVertices*4*sizeof(GLfloat));
+    vbo->setData(NULL, nVertices*5*sizeof(GLfloat), PHGLVBO::dynamicDraw);
+    vbo->setSubData(r, 0, nVertices*5*sizeof(GLfloat));
     delete r;
-    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0, vbo);
-    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 2*sizeof(GLfloat), vbo);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), 0, vbo);
+    vao->vertexPointer(PHIMAGEATTRIBUTE_TXC, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), 2*sizeof(GLfloat), vbo);
     vbo->unbind();
     vbo->release();
     
@@ -56,7 +56,7 @@ GLfloat * IGWallCurve::vertexData(size_t & nvertices, const PHRect & txc)
     ph_float xf = points.front().x + _offset;
     ph_float xl = points.back().x + _offset;
     nvertices += 4*(size_t)(floor(xl/_width) - ceil(xf/_width) + 1);
-    GLfloat * v = new GLfloat[nvertices * 4];
+    GLfloat * v = new GLfloat[nvertices * 5];
     GLfloat * p = v;
     ph_float tx = xf/_width - floor(xf/_width);
     PHPoint lp = points.front();
@@ -70,45 +70,54 @@ GLfloat * IGWallCurve::vertexData(size_t & nvertices, const PHRect & txc)
         {
             ph_float f = (1.0f - ltx) / (tx - ltx);
             PHPoint pp = lp+(pt-lp)*f;
+            ph_float q = (pp.y - _limit);
             p[0] = pp.x;
             p[1] = _limit;
-            p[2] = txc.x + txc.width;
-            p[3] = txc.y;
+            p[2] = (txc.x + txc.width) * q;
+            p[3] = txc.y * q;
+            p[4] = q;
             
-            p[4] = pp.x;
-            p[5] = pp.y;
-            p[6] = txc.x + txc.width;
-            p[7] = txc.y + txc.height;
+            p[5] = pp.x;
+            p[6] = pp.y;
+            p[7] = (txc.x + txc.width) * q;
+            p[8] = (txc.y + txc.height) * q;
+            p[9] = q;
 
-            p+= 8;
+            p+= 10;
             
             p[0] = pp.x;
             p[1] = _limit;
-            p[2] = txc.x;
-            p[3] = txc.y;
+            p[2] = txc.x * q;
+            p[3] = txc.y * q;
+            p[4] = q;
             
-            p[4] = pp.x;
-            p[5] = pp.y;
-            p[6] = txc.x;
-            p[7] = txc.y + txc.height;
+            p[5] = pp.x;
+            p[6] = pp.y;
+            p[7] = txc.x * q;
+            p[8] = (txc.y + txc.height) * q;
+            p[9] = q;
 
-            p+= 8;
+            p+= 10;
             tx-=1.0f;
         }
 
+        ph_float q = (pt.y - _limit);
+
         p[0] = pt.x;
         p[1] = _limit;
-        p[2] = txc.x + txc.width * tx;
-        p[3] = txc.y;
+        p[2] = (txc.x + txc.width * tx) * q;
+        p[3] = txc.y * q;
+        p[4] = q;
         
-        p[4] = pt.x;
-        p[5] = pt.y;
-        p[6] = txc.x + txc.width * tx;
-        p[7] = txc.y + txc.height;
+        p[5] = pt.x;
+        p[6] = pt.y;
+        p[7] = (txc.x + txc.width * tx) * q;
+        p[8] = (txc.y + txc.height) * q;
+        p[9] = q;
 
-        p+= 8;
+        p+= 10;
         lp = pt;
     }
-    assert((p - v)/4 == nvertices);
+    assert((p - v)/5 == nvertices);
     return v;
 }

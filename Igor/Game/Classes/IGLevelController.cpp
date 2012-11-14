@@ -2,10 +2,10 @@
 
 #include "IGLevelController.h"
 #include "IGScripting.h"
-#include "IGBackground.h"
 #include "IGWorld.h"
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/Core/PHAnimatorPool.h>
+#include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHViewControllerHolder.h>
 
 IGLevelController::IGLevelController(PHGameManager * gm, PHDirectory * lvldir) : PHViewController(gm), dir(lvldir), world(NULL), scripting(NULL)
@@ -23,13 +23,11 @@ PHView * IGLevelController::loadView(const PHRect & f)
     scripting = new IGScripting(gm, dir, world);
     scripting->setAnimatorPool(animpool);
     world->setAnimatorPool(animpool);
-    bg = new IGBackground(gm);
     PHViewControllerHolder * h = new PHViewControllerHolder(f);
-    h->setViewController(bg);
-    bg->release();
     v->addChild(h);
     h->release();
     v->addChild(world->view());
+    gm->setClearColor(PHColor((float)0xd9/0xff, (float)0x68/0xff, (float)0x68/0xff));
 
     return v;
 }

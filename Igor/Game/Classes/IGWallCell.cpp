@@ -9,18 +9,20 @@
 #include <Box2D/Box2D.h>
 
 #define cwidth 0.5
-#define cheight 0.2
+#define cheight (137.0/253.0 * cwidth)
 #define weldpoint b2Vec2(-0.2, 0)
 #define lweldpoint b2Vec2(0.2, 0)
 
 IGSCRIPTING_REGISTERCLASS("IGWallCell", IGWallCell)
 
-IGWallCell::IGWallCell(IGWorld * w) : IGDampingProp(w)
+IGWallCell::IGWallCell(IGWorld * w) : IGDampingProp(w), _flipped(false), iv(NULL)
 {
 }
 
 IGWallCell::~IGWallCell()
 {
+    if (iv)
+        iv->release();
 }
 
 b2Joint * IGWallCell::weldToObject(IGObject * obj, bool last)
@@ -33,6 +35,13 @@ b2Joint * IGWallCell::weldToObject(IGObject * obj, bool last)
     def.frequencyHz = 2;
     return world->physicsWorld()->CreateJoint(&def);
 }
+
+void IGWallCell::setFlipped(bool f)
+{
+    _flipped = f;
+    if (iv)
+        iv->setVerticallyFlipped(f);
+} 
 
 void IGWallCell::attachedToWorld()
 {
@@ -62,10 +71,12 @@ void IGWallCell::attachedToWorld()
 
 void IGWallCell::configureDrawable(PHDrawable * d)
 {
-    PHImageView * iv = new PHImageView(PHRect(-cwidth/2, -cheight/2, cwidth, cheight));
-    iv->setImage(world->gameManager()->imageNamed("pill"));
+    iv = new PHImageView(PHRect(-cwidth/2, -cheight/2, cwidth, cheight));
+    stringstream oss;
+    oss<<"cell_"<<rand()%6+1;
+    iv->setImage(world->gameManager()->imageNamed(oss.str()));
+    iv->setVerticallyFlipped(_flipped);
     d->addChild(iv);
-    iv->release();
 }
 
 //--- Lua Scripting ---
