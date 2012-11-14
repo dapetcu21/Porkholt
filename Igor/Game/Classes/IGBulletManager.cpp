@@ -159,7 +159,7 @@ PHParticleAnimator::particles * IGBulletParticles::calculatedParticles()
                 v->position = p->b.position;
                 v->rotation = p->b.rotation;
                 v->size = PHSize(b1w, b1h);
-                v->ud = (void*)p->b.type;
+                v->ud = (void*)(size_t)p->b.type;
                 v++;
                 break;
         }
@@ -171,7 +171,7 @@ PHParticleAnimator::particles * IGBulletParticles::calculatedParticles()
                 v->position = p->b.position;
                 v->rotation = p->b.rotation;
                 v->size = PHSize(b1w, b1h);
-                v->ud = (void*)p->b.type;
+                v->ud = (void*)(size_t)p->b.type;
                 v++;
                 break;
         }
