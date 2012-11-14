@@ -12,19 +12,24 @@
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Core/PHThreading.h>
 
-PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord) : PHImage(texture->gameManager()), txc(textureCoord), tex(texture), pload(true)
+PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord) : PHImage(texture->gameManager()), txc(textureCoord), tex(texture), pload(true), _keepCount(0)
 {
     tex->retain();
     loaded = true;
+    bw = tex->width();
+    bh = tex->height();
+    _width = round(bw * txc.width);
+    _height = round(bh * txc.height);
+    _antialiasing = tex->minFilter() == PHGLTexture::linearMipmapNearest;
+    fmt = tex->format();
 }
 
-PHNormalImage::PHNormalImage(PHGameManager * gameManager, PHFile * file, bool aa): PHImage(gameManager), tex(NULL), pload(false)
+PHNormalImage::PHNormalImage(PHGameManager * gameManager, PHFile * file, bool aa, bool keep): PHImage(gameManager), tex(NULL), pload(false), _antialiasing(aa), _keepCount(keep != false)
 {
     fd = file;
     if (!fd)
         throw string("The fuck?");
     fd->retain();
-    antialiasing = aa;
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
     PHThread::detachThread(PHInv(this,PHNormalImage::loadFromFile, NULL));
 #else
@@ -53,9 +58,8 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
     bool pot = !PHGLTexture::supportsNPOT(gm);
     
     try {
-        buffer = PHGLTexture::dataFromFile(fd, w, h, bw, bh, pot, sz, fmt);
-        _width  = w;
-        _height = h;
+        buffer = PHGLTexture::dataFromFile(fd, _width, _height, bw, bh, pot, sz, fmt);
+        retainData();
     } catch (string ex)
     {
         PHLog("%s", ex.c_str());
@@ -89,11 +93,24 @@ void PHNormalImage::loadToTexture(PHObject * sender, void * ud)
     }
     
     tex = new PHGLTexture2D(gm);
-    txc = tex->loadFromData(buffer, w, h, bw, bh, fmt, antialiasing);
-	delete[] buffer;
+    txc = tex->loadFromData(buffer, _width, _height, bw, bh, fmt, _antialiasing);
+    _antialiasing = tex->minFilter() == PHGLTexture::linearMipmapNearest;
+    releaseData();
     loaded = true;
     
     loadMutex->unlock();
+}
+
+void PHNormalImage::retainData()
+{
+    _keepCount++;
+}
+
+void PHNormalImage::releaseData()
+{
+    if (keepCount <= 0) return;
+    if (!--_keepCount)
+        delete[] buffer;
 }
 
 PHNormalImage::~PHNormalImage()
@@ -102,6 +119,8 @@ PHNormalImage::~PHNormalImage()
         fd->release();
     if (tex)
         tex->release();
+    if (_keepCount)
+        delete[] buffer;
 }
 
 void PHNormalImage::bindToTexture(int tx)

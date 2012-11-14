@@ -18,9 +18,10 @@ private:
     PHRect txc;
 
     PHFile * fd;
-    bool antialiasing;
+    bool _antialiasing;
+    int _keepCount;
     uint8_t * buffer;
-    size_t w,h,bw,bh,sz;
+    size_t bw,bh,sz;
     enum PHGLTexture::pixelFormat fmt;
     
     PHGLTexture2D * tex;
@@ -30,13 +31,23 @@ private:
     virtual void _load() { if(!pload) loadFromFile(NULL,NULL); loadToTexture(NULL, NULL); }
 public:
     
-    PHNormalImage(PHGameManager * gameManager, PHFile * file, bool antialiasing);
+    PHNormalImage(PHGameManager * gameManager, PHFile * file, bool antialiasing = false, bool keepData = false);
     PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord);
     virtual ~PHNormalImage();
     
     void bindToTexture(int tx);
     PHRect textureCoordinates() { load(); return txc; }
     PHRect textureCoordinates(const PHRect & port);
+
+    size_t bufferWidth() { return bw; }
+    size_t bufferHeight() { return bh; }
+    bool antialiasing() { return _antialiasing; }
+    enum PHGLTexture::pixelFormat pixelFormat() { return fmt; }
+    uint8_t * imageData() { return buffer; }
+
+    int dataRetainCount() { return _keepCount; }
+    void retainData();
+    void releaseData();
     
     PHGLTexture2D * texture() { load(); return tex; }
     

@@ -17,11 +17,9 @@ private:
     map<PHHashedString, PHImage*> images;
 public:
     virtual PHDirectory * imageDirectory() = 0;
-    PHImage * imageFromFile(PHInode * file, bool antialiasing);
-    PHImage * imageNamed(const string & name, PHDirectory * dir, bool normalMap);
-	PHImage * imageNamed(const string & name, bool normalMap) { return imageNamed(name, imageDirectory(), normalMap); }
-    PHImage * imageNamed(const string & name, PHDirectory * dir) { return imageNamed(name, dir, false); }
-    PHImage * imageNamed(const string & name) { return imageNamed(name, imageDirectory(), false); }
+    PHImage * imageFromFile(PHInode * file, bool antialiasing = false, bool keepData = false);
+    PHImage * imageNamed(const string & name, PHDirectory * dir, bool normalMap = false, bool keepData = false);
+	PHImage * imageNamed(const string & name, bool normalMap = false, bool keepData = false) { return imageNamed(name, imageDirectory(), normalMap, keepData); }
     
     bool imageExists(const string & name, PHDirectory * dir);
     bool imageExists(const string & name) { return imageExists(name, imageDirectory()); }

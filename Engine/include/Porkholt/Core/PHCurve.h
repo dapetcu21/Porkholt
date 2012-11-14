@@ -29,6 +29,8 @@ public:
     static GLushort * triangulatePolygon(const GLfloat v[],size_t stride, size_t nvertices, size_t & ntriangles);
     static GLushort * triangulatePolygon(const vector<anchorPoint> & anchors, size_t & ntriangles);
     
+    virtual bool perspectiveCorrectTextureMapping() { return false; }
+    
 protected:
     int commitDisableCount;
     void modelChanged();

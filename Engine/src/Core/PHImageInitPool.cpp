@@ -9,13 +9,13 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 
-PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir, bool nmap)
+PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir, bool nmap, bool keep)
 {
     PHImage * img = NULL;
     PHAutoreleasePool ap;
     bool aa = dir->itemExists(name + ".png.aa");
     try {
-        img = PHImageInitPool::imageFromFile(dir->itemAtPath(name + hdsuf + ".png"), aa);
+        img = PHImageInitPool::imageFromFile(dir->itemAtPath(name + hdsuf + ".png"), aa, keep);
     } catch (...)
     {
         try {
@@ -35,7 +35,7 @@ PHImage * PHImageInitPool::imageNamed(const string & name, PHDirectory * dir, bo
     return img;
 }
 
-PHImage * PHImageInitPool::imageFromFile(PHInode * file, bool aa)
+PHImage * PHImageInitPool::imageFromFile(PHInode * file, bool aa, bool keep)
 {
 	PHImage * img;
     PHHashedString path(file->path());
@@ -46,7 +46,7 @@ PHImage * PHImageInitPool::imageFromFile(PHInode * file, bool aa)
         if (file->isDirectory())    
             img = new PHAnimatedImage(gm, (PHDirectory*)file);
         else if (file->isFile())
-            img = new PHNormalImage(gm, (PHFile*)file, aa);
+            img = new PHNormalImage(gm, (PHFile*)file, aa, keep);
 		if (img) 
             images[path] = img;
         else 

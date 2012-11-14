@@ -23,8 +23,8 @@ public:
 protected:
 	PHImage(PHGameManager * gameManager);
 	
-	int _height;
-    int _width;
+	size_t _height;
+    size_t _width;
     
     volatile bool loaded;
     virtual void _load() = 0;
@@ -42,8 +42,8 @@ protected:
     
 public:
     void load(); 
-	int height() { load(); return _height; };
-	int width() { load(); return _width; };
+	size_t height() { load(); return _height; };
+	size_t width() { load(); return _width; };
 
     virtual bool isNormal() { return false; };
     virtual bool isAnimated() { return false; };
