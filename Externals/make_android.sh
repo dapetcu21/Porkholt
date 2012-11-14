@@ -20,7 +20,7 @@ compile_lib() {
 }
 
 compile_lib openal-soft openal
-compile_lib lua lua
+compile_lib luajit luajit
 compile_lib libpng png15
 compile_lib libogg ogg
 compile_lib libvorbis vorbis

@@ -108,7 +108,7 @@ void PHNormalImage::retainData()
 
 void PHNormalImage::releaseData()
 {
-    if (keepCount <= 0) return;
+    if (_keepCount <= 0) return;
     if (!--_keepCount)
         delete[] buffer;
 }

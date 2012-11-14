@@ -25,7 +25,7 @@ void ANativeActivity_onCreate(ANativeActivity * app, void * ud, size_t udsize)
     LOGI("Loaded boostrap");
     load_lib(LIB_PATH "libgnustl_shared.so");
     load_lib(LIB_PATH "libpng15.so");
-    load_lib(LIB_PATH "liblua.so");
+    load_lib(LIB_PATH "libluajit.so");
     load_lib(LIB_PATH "libopenal.so");
     load_lib(LIB_PATH "libogg.so");
     load_lib(LIB_PATH "libvorbis.so");
