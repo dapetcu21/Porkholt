@@ -14,12 +14,14 @@ class IGDampingProp : public IGProp
         PHVector2 desiredPos;
         ph_float desiredRot;
         ph_float maxF, dampTorque, dampFreq;
+        ph_float foresight;
         bool dampEnabled, rr;
     public:
         IGDampingProp(IGWorld * w);
         ~IGDampingProp();
 
         void setPosition(const PHPoint & p);
+        void setPositionImmediately(const PHPoint & p);
         void setRotation(ph_float r);
         PHVector2 desiredPosition() { return desiredPos; }
         ph_float desiredRotation() { return desiredRot; }
@@ -32,6 +34,8 @@ class IGDampingProp : public IGProp
         ph_float dampingForce() { return maxF; }
         void setDampingTorque(ph_float t) { dampTorque = t; }
         ph_float dampingTorque() { return dampTorque; }
+        void setDampingForesight(ph_float t) { foresight = t; }
+        ph_float dampingForesight() { return foresight; }
         void setDampingFrequency(ph_float f);
         ph_float dampingFrequency() { return dampFreq; }
         void setDamping(bool damp) { dampEnabled = damp; }

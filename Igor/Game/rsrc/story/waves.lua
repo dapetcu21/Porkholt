@@ -86,8 +86,10 @@ end
 
 ----------------------------
 
-local w = IBasicMobWave:new(2, 10, 1)
-IWaveManager.wave = w
+function startGame()
+    local w = IBasicMobWave:new(2, 10, 1)
+    IWaveManager.wave = w
+end
 
 function IWaveManager:dispatchWave()
 end

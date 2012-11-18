@@ -1,5 +1,6 @@
 /* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */
 #include <Porkholt/Core/PHTransformDrawable.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 #include <Porkholt/Core/PHGameManager.h>
 
 PHTransformDrawable::PHTransformDrawable() : cache(false), cus(false), rot(PHIdentityQuaternion), tra(0,0,0), sca(1,1,1)
@@ -67,3 +68,14 @@ const PHMatrix & PHTransformDrawable::matrix()
     }
     return mat;
 }
+
+PHPositionalVector PHTransformDrawable::positionInMyCoordinates(PHDrawableCoordinates * d)
+{
+    return matrix().inverse() * d->positionInDrawable(parent());
+}
+
+PHPositionalVector PHTransformDrawable::positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p)
+{
+    return matrix() * p;
+}
+

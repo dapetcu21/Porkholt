@@ -23,6 +23,9 @@ class PHTransformDrawable : public PHDrawable
         void setRotation(const PHQuaternion & q) { rot = q; cache = false; }
         void setScale(const PHVector3 & s) { sca = s; cache = false; }
 
+        PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates * d);
+        PHPositionalVector positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p);
+
         const PH3DPoint & translation() { return tra; }
         const PHVector3 & scale() { return sca; }
         const PHQuaternion & rotation() { return rot; }

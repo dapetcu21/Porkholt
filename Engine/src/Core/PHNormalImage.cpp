@@ -185,3 +185,12 @@ void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * 
                            txc
                            );
 }
+
+
+PHPoint * PHNormalImage::detectOutline(uint8_t * data, size_t xs, size_t ys, size_t w, size_t h, size_t bw, enum PHGLTexture::pixelFormat fmt, ph_float treshold, size_t keypoints)
+{
+   struct pnt
+   {
+       size_t x,y;
+   };
+}

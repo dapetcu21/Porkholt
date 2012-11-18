@@ -312,7 +312,7 @@ void PHView::handleEvent(PHEvent * evt)
     }
     if (!userInput()) return;
 
-    for (list<PHDrawable*>::iterator i = _children.begin(); i!=_children.end() && !evt->handled(); i++)
+    for (list<PHDrawable*>::reverse_iterator i = _children.rbegin(); i!=_children.rend() && !evt->handled(); i++)
         (*i)->handleEvent(evt);
 
     if (!evt->handled())

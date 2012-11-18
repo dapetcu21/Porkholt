@@ -1,3 +1,16 @@
+function PHLog(...)
+    print(string.format(...))
+end
+
+log = PHLog
+
+function print(...)
+    local s = ''
+    for i = 1, select("#", ...) do 
+        s = s..tostring(select(i, ...))
+    end
+    _PHLog(s)
+end
 
 IGObject = { 
     className = "IGObject"
@@ -84,6 +97,12 @@ function PHVector2_meta.lengthSquared(o)
     return o.x*o.x + o.y*o.y
 end
 
+function PHVector2_meta.rotate(p, tetha)
+    local s = math.sin(tetha)
+    local c = math.cos(tetha)
+    return vec2(p.x * c - p.y * s, p.x * s + p.y * c)
+end
+
 function vec2(x, y)
     local o = { x = x, y = y }
     setmetatable(o, PHVector2_meta)
@@ -131,6 +150,8 @@ IGScreenBounds = IGObject:subclass("IGScreenBounds")
 IGWallCell = IGDampingProp:subclass("IGWallCell")
 IGKinematic = IGProp:subclass("IGKinematic")
 IGWallManager = IGObject:subclass("IGWallManager")
+IGBouncyButton = IGDampingProp:subclass("IGBouncyButton")
+IGBackgroundParticles = IGObject:subclass("IGBackgroundParticles")
 
 function IGMob:init()
     self = IGDampingProp.init(self)

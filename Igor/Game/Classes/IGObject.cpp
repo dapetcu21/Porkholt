@@ -117,5 +117,7 @@ void IGObject::loadLuaInterface(IGScripting * scr)
 
     PHLuaAddMethod(IGObject, attachToWorld);
     PHLuaAddMethod(IGObject, removeFromWorld);
+    
+    lua_pop(L, 1);
 }
 

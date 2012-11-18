@@ -24,27 +24,62 @@ head = "/* Copyright (c) Marius Petcu, Porkholt Labs!. All rights reserved. */\n
 class = arg[1]
 super = arg[2]
 if (not super or (#super == 0)) then
-    super = "PHObject"
+    super = "IGProp"
 end
 base = string.sub(class, string.find(class, "%w*$"))
 file = io.open(engine_path..'/Classes/'..class..'.cpp', 'w')
-file:write(head.."\n#include \""..class..".h\"\n")
-file:close()
+file:write(head.."\n#include \""..class..".h\"\n"
+..[[#include "IGWorld.h"
+#include "IGScripting.h"
+#include <Porkholt/Core/PHLua.h>
+#include <Porkholt/Core/PHImageView.h>
+#include <Porkholt/Core/PHGameManager.h>
+#include <Box2D/Box2D.h>
 
-if string.sub(super, 1, 2) == "PH" then
-    if super == PHObject then
-        inc = "<Porkholt/Core/PHMain.h>"
-    else
-        inc = "<Porkholt/Core/"..super..".h>"
-    end
-else
-    inc = '"'..super..'.h"'
-end
+IGSCRIPTING_REGISTERCLASS("]]..base..[[", ]]..base..[[)
+
+]]..base..[[::]]..base..[[(IGWorld * w) : ]]..super..[[(w)
+{
+}
+
+]]..base..[[::~]]..base..[[()
+{
+}
+
+void ]]..base..[[::attachedToWorld()
+{
+}
+
+void ]]..base..[[::configureDrawable(PHDrawable * d)
+{
+}
+
+//--- Lua Scripting ---
+
+void ]]..base..[[::loadLuaInterface(IGScripting * s)
+{
+    lua_State * L = s->luaState();
+    lua_getglobal(L, "]]..base..[[");
+
+    lua_pop(L, 1);
+}
+]])
+file:close()
 
 macro = string.upper(base).."_H"
 file = io.open(engine_path..'/Classes/'..class..'.h', 'w')
-file:write(head..'\n#ifndef '..macro..'\n#define '..macro..'\n\n#include '..inc..'\n\nclass '..base..[[ : public ]]..super..'\n'..
+file:write(head..'\n#ifndef '..macro..'\n#define '..macro..'\n\n#include "'..super..'.h"\n\nclass '..base..[[ : public ]]..super..'\n'..
 [[{
+    protected:
+        void configureDrawable(PHDrawable * d);
+    public:
+        ]]..base..[[(IGWorld * w);
+        ~]]..base..[[();
+
+        void attachedToWorld();
+
+        const char * luaClass() { return "]]..base..[["; } 
+        static void loadLuaInterface(IGScripting * s);
 };
 
 #endif

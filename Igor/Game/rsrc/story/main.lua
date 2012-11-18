@@ -1,4 +1,7 @@
 require("bullets")
+require("walls")
 require("player")
 require("waves")
-require("walls")
+require("menu")
+
+loadMenu()

@@ -195,19 +195,15 @@ bool IGBulletManager::collisionCallback(bullet_info * bullet, IGObject * o)
         {
             lua_pushvalue(L, -2);
             PHLuaGetWeakRef(L, o);
-            if (lua_istable(L, -1))
-            {
-                lua_newtable(L);
-                lua_pushlightuserdata(L, bullet);
-                lua_setfield(L, -2, "handle");
-                lua_pushnumber(L, bullet->b.type);
-                lua_setfield(L, -2, "type");
-                lua_pushnumber(L, bullet->b.owner);
-                lua_setfield(L, -2, "owner");
-                PHLuaCall(L, 3, 1);
-                r = true;
-            } else
-                lua_pop(L, 2);
+            lua_newtable(L);
+            lua_pushlightuserdata(L, bullet);
+            lua_setfield(L, -2, "handle");
+            lua_pushnumber(L, bullet->b.type);
+            lua_setfield(L, -2, "type");
+            lua_pushnumber(L, bullet->b.owner);
+            lua_setfield(L, -2, "owner");
+            PHLuaCall(L, 3, 1);
+            r = true;
         }
         lua_pop(L, 1);
     }

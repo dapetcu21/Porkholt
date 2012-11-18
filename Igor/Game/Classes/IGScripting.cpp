@@ -83,6 +83,12 @@ static int IGScripting_worldPoint(lua_State * L)
     return 1;
 }
 
+static int IGScripting_PHLog(lua_State * L)
+{
+    PHLog("Lua: %s", lua_tostring(L, 1));
+    return 0;
+}
+
 PHLuaPointGetter(IGScripting, screenSize);
 
 void IGScripting::loadCInterface()
@@ -99,6 +105,7 @@ void IGScripting::loadCInterface()
     lua_pushvalue(L, LUA_GLOBALSINDEX);
     PHLuaAddMethod(IGScripting, worldPoint);
     PHLuaAddMethod(IGScripting, localPoint);
+    PHLuaAddMethod_(IGScripting, PHLog);
     lua_pop(L, 1);
 
     for (list<IGScriptingIface>::iterator i = luaInterfaces->begin(); i != luaInterfaces->end(); i++)
