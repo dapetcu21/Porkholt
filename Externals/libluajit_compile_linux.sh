@@ -1,6 +1,6 @@
 #!/bin/bash
  
-cd lua
+cd luajit
 
 LIBFILE=src/libluajit
 
