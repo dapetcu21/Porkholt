@@ -147,7 +147,7 @@ function compress_script(src, dst, name)
     if (file_modif(src) > file_modif(dst)) then
       name = name or f
       print('Compressing script "'..name..'"')
-      local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && '..externals_dir.."/lua/src/lua".." "..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null';
+      local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && lua '..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null';
       os.execute(scriptline)
     end
   end

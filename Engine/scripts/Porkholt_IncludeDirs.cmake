@@ -11,6 +11,8 @@ if (NOT DEFINED PH_ENGINE_HINCLUDED)
     ${PH_EXTERNALS}/uremote/include
     ${PH_EXTERNALS}/libogg/include
     ${PH_EXTERNALS}/libvorbis/include
+    ${PH_EXTERNALS}/math/math-vfp
+    ${PH_EXTERNALS}/math/math-neon
     )
 
     if (PH_PLATFORM STREQUAL OSX)

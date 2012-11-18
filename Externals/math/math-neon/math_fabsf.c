@@ -37,7 +37,7 @@ float fabsf_neon_hfp(float x)
 {
 #ifdef __MATH_NEON
 	asm volatile (
-	"fabss	 		s0, s0					\n\t"	//s0 = fabs(s0)
+	"vabs.f32	 		s0, s0					\n\t"	//s0 = fabs(s0)
 	);
 #endif
 }

@@ -285,3 +285,46 @@ if(PH_PLATFORM STREQUAL "iOS")
       )
 endif()
 
+if (PH_PLATFORM STREQUAL "iOS" OR ANDROID_NDK_ABI_NAME MATCHES "arm.*")
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+        ${PH_EXTERNALS}/math/math-vfp/matrix_impl.cpp
+        ${PH_EXTERNALS}/math/math-neon/math_acosf.c
+        ${PH_EXTERNALS}/math/math-neon/math_asinf.c
+        ${PH_EXTERNALS}/math/math-neon/math_atan2f.c
+        ${PH_EXTERNALS}/math/math-neon/math_atanf.c
+        ${PH_EXTERNALS}/math/math-neon/math_ceilf.c
+        ${PH_EXTERNALS}/math/math-neon/math_cosf.c
+        ${PH_EXTERNALS}/math/math-neon/math_coshf.c
+        ${PH_EXTERNALS}/math/math-neon/math_debug.c
+        ${PH_EXTERNALS}/math/math-neon/math_expf.c
+        ${PH_EXTERNALS}/math/math-neon/math_fabsf.c
+        ${PH_EXTERNALS}/math/math-neon/math_floorf.c
+        ${PH_EXTERNALS}/math/math-neon/math_fmodf.c
+        ${PH_EXTERNALS}/math/math-neon/math_frexpf.c
+        ${PH_EXTERNALS}/math/math-neon/math_invsqrtf.c
+        ${PH_EXTERNALS}/math/math-neon/math_ldexpf.c
+        ${PH_EXTERNALS}/math/math-neon/math_log10f.c
+        ${PH_EXTERNALS}/math/math-neon/math_logf.c
+        ${PH_EXTERNALS}/math/math-neon/math_mat2.c
+        ${PH_EXTERNALS}/math/math-neon/math_mat3.c
+        ${PH_EXTERNALS}/math/math-neon/math_mat4.c
+        ${PH_EXTERNALS}/math/math-neon/math_modf.c
+        ${PH_EXTERNALS}/math/math-neon/math_powf.c
+        ${PH_EXTERNALS}/math/math-neon/math_runfast.c
+        ${PH_EXTERNALS}/math/math-neon/math_sincosf.c
+        ${PH_EXTERNALS}/math/math-neon/math_sinf.c
+        ${PH_EXTERNALS}/math/math-neon/math_sinfv.c
+        ${PH_EXTERNALS}/math/math-neon/math_sinhf.c
+        ${PH_EXTERNALS}/math/math-neon/math_sqrtf.c
+        ${PH_EXTERNALS}/math/math-neon/math_sqrtfv.c
+        ${PH_EXTERNALS}/math/math-neon/math_tanf.c
+        ${PH_EXTERNALS}/math/math-neon/math_tanhf.c
+        ${PH_EXTERNALS}/math/math-neon/math_vec2.c
+        ${PH_EXTERNALS}/math/math-neon/math_vec3.c
+        ${PH_EXTERNALS}/math/math-neon/math_vec4.c
+    )
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+        ${PH_EXTERNALS}/math/math-vfp/matrix_impl.h
+        ${PH_EXTERNALS}/math/math-neon/math_neon.h
+    )
+endif()

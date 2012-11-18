@@ -32,7 +32,7 @@ therefore m[2] = x2
 
 //matrix matrix multipication. d = m0 * m1;
 void
-matmul3_c(float m0[9], float m1[9], float d[9])
+matmul3_c(const float m0[9], const float m1[9], float d[9])
 {
 	d[0] = m0[0]*m1[0] + m0[3]*m1[1] + m0[6]*m1[2];
 	d[1] = m0[1]*m1[0] + m0[4]*m1[1] + m0[7]*m1[2];
@@ -46,7 +46,7 @@ matmul3_c(float m0[9], float m1[9], float d[9])
 }
 
 void 
-matmul3_neon(float m0[9], float m1[9], float d[9])
+matmul3_neon(const float m0[9], const float m1[9], float d[9])
 {
 #ifdef __MATH_NEON
 	asm volatile (
@@ -91,7 +91,7 @@ matmul3_neon(float m0[9], float m1[9], float d[9])
 
 //matrix vector multiplication. d = m * v
 void
-matvec3_c(float m[9], float v[3], float d[3])
+matvec3_c(const float m[9], const float v[3], float d[3])
 {
 	d[0] = m[0]*v[0] + m[3]*v[1] + m[6]*v[2];
 	d[1] = m[1]*v[0] + m[4]*v[1] + m[7]*v[2];
@@ -99,7 +99,7 @@ matvec3_c(float m[9], float v[3], float d[3])
 }
 
 void
-matvec3_neon(float m[9], float v[3], float d[3])
+matvec3_neon(const float m[9], const float v[3], float d[3])
 {
 #ifdef __MATH_NEON
 	int tmp;

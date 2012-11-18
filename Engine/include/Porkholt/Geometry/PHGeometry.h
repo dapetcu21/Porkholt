@@ -3,17 +3,14 @@
 #ifndef PHGEOMETRY_H
 #define PHGEOMETRY_H
 
-#if !defined(__i386__) && defined(__arm__)
-//#   ifdef __ARM_NEON__
-//#       include "math_neon.h"
-//#       define PH_MATRIX_NEON
-//#   else
-//#       include "matrix_impl.h"
-//#       define PH_MATRIX_VFP
-#           define PH_MATRIX_C
-//#   endif
+#if defined(__ARM_NEON__)
+    #include "math_neon.h"
+    #define PH_MATRIX_NEON
+#elif defined(__VFP_FP__)
+    #include "matrix_impl.h"
+    #define PH_MATRIX_VFP
 #else
-#   define PH_MATRIX_C
+    #define PH_MATRIX_C
 #endif
 
 #include <Porkholt/Geometry/PHPoint.h>

@@ -107,7 +107,8 @@ void sqrtfv_neon(float *x, int n, float *r)
 	//"bl 			sqrtf_neon_hfp 			\n\t"	//sqrtf_neon
 	"mov 			lr, ip 					\n\t"	//lr = ip
 	"vst1.32		d0[0], [r2]! 			\n\t"	//*r++ = r0
-	"subs 			r1, r1, #1				\n\t"	//r1 = r1 - 1;		
+	"subs 			r1, r1, #1				\n\t"	//r1 = r1 - 1;
+    "it             eq                      \n\t"
 	"bxeq 			lr						\n\t"	//
 
 	"1:				 						\n\t"	//
