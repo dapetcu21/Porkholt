@@ -77,6 +77,7 @@ class PHLuaMaterial : public PHMaterial
         ~PHLuaMaterial();
 
         void initEnvironment(lua_State * L);
+        bool materialSupportsRenderMode(int renderMode);
         void renderVAO(PHGLVertexArrayObject * vao, PHGLUniformStates * us);
 };
 

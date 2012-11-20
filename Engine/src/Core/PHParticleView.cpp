@@ -256,13 +256,12 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
     vbo->release();
     indexVBO->release();
     delete [] buffer;   
+
+    vao->setDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT, 0);
+    gm->pushSpriteShader(gm->shaderProgramNamed<color_sprites>());
+    _material->renderVAO(vao, gm->spriteUniformStates());
+    gm->popSpriteShader();
     
-    gm->setGLStates(PHGLBlending | PHGLTexture0);
-    gm->applyShader(gm->shaderProgramNamed<color_sprites>());
-    
-    vao->bind();
-    PHGL::glDrawElements(GL_TRIANGLE_STRIP, n?(n*6-2):0, useBytes?GL_UNSIGNED_BYTE:GL_UNSIGNED_SHORT, NULL);
-    vao->unbind();
 }
 
 void PHParticleView::render()
@@ -274,17 +273,21 @@ void PHParticleView::render()
         return;
     }
     PHImage * img = _image;
-    switch (gm->renderMode())
+    int rm = gm->renderMode();
+    if (!supportsRenderMode(rm))
+    {
+        particleM->unlock();
+        return;
+    }
+    switch (rm)
     {
         case PHGameManager::defaultRenderMode:
             break;
         case PHDeferredView::normalMapRenderMode:
             img = _image->normalMap();
-            if (!img)
-                return;
             break;
         default:
-            return;
+            break;
     }
     PHParticleAnimator::particles * particles = particleAnim->calculatedParticles();
     particleM->unlock();
@@ -293,6 +296,7 @@ void PHParticleView::render()
     {
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * applyMatrices());
+        gm->updateMatrixUniform();
         
         PHColor t = tint;
         if (!t.isValid())
@@ -300,22 +304,23 @@ void PHParticleView::render()
         img->load();
         if (img->isNormal())
         {
-            ((PHNormalImage*)img)->bindToTexture(0);
+            gm->setTextureUniform(((PHNormalImage*)img)->texture());
             renderParticles(particles,((PHNormalImage*)img)->textureCoordinates(textureCoordinates()),t);
         }
         if (img->isAnimated())
         {
-            _animator->bindCurrentFrameToTexture(0);
             bool fd = _animator->isFading();
             ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-            renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(1-rem));
             if (fd)
             {
-                _animator->bindLastFrameToTexture(0);
+                gm->setTextureUniform(_animator->lastFrameTexture());
                 renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(rem));
             }   
+            gm->setTextureUniform(_animator->currentFrameTexture());
+            renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(1-rem));
         }
         
+        gm->setTextureUniform(NULL);
         gm->setModelViewMatrix(om);
     }
 }

@@ -45,6 +45,7 @@ void IGPlayer::configureDrawable(PHDrawable * d)
 {
     PHImageView * iv = new PHImageView(PHRect(-0.4 ,-0.4, 0.8, 0.8));
     iv->setImage(world->gameManager()->imageNamed("player"));
+    iv->setMaterial(world->gameManager()->materialNamed("density"));
     d->addChild(iv);
     iv->release();
 }

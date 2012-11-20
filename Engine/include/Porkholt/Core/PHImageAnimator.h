@@ -12,6 +12,7 @@ class PHImageView;
 class PHGameManager;
 class PHGLVertexArrayObject;
 class PHGLVertexBufferObject;
+class PHGLTexture2D;
 
 class PHImageAnimator : public PHAnimator
 {
@@ -68,8 +69,9 @@ public:
     
     //VAOs
     void rebuildVAOs(PHImageView * imageView, PHGLVertexArrayObject * & vao1, PHGLVertexArrayObject * & vao2);
-    void bindCurrentFrameToTexture(int tx);
-    void bindLastFrameToTexture(int tx);
+
+    PHGLTexture2D * currentFrameTexture();
+    PHGLTexture2D * lastFrameTexture();
     
     PHRect currentFrameTextureCoordinates(const PHRect & port);
     PHRect lastFrameTextureCoordinates(const PHRect & port);

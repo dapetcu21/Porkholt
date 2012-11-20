@@ -143,6 +143,7 @@ void PHGLUniformStates::dump()
 
 void PHGLUniformStates::apply(PHGLShaderProgram * shader, int * tmuCount)
 {
+    shader->use();
     int t = 0;
     if (!tmuCount)
         tmuCount = &t;

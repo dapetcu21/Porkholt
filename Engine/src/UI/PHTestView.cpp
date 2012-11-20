@@ -2,6 +2,7 @@
 
 #include <Porkholt/UI/PHTestView.h>
 #include <Porkholt/Core/PHDrawableCoordinates.h>
+#include <Porkholt/Core/PHGLUniformStates.h>
 
 char color_notex_sprites [] = "color_notex_sprites";
 
@@ -22,7 +23,7 @@ void PHTestView::draw()
     };
 	
     gm->setGLStates(PHGLBlending | PHGLVertexArray | PHGLColorArray);
-    gm->applyShader(gm->shaderProgramNamed<color_notex_sprites>());
+    gm->spriteUniformStates()->apply(gm->shaderProgramNamed<color_notex_sprites>());
     gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
     gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
     

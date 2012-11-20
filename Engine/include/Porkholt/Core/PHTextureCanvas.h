@@ -25,13 +25,21 @@ protected:
     bool fs;
     int cmask;
 
+    int _renderMode;
+
     PHColor ccolor;
     float cdepth;
     int cstencil;
 
     PHGLFBOAttachment * rebuildAttachment(PHGLFBOAttachment * f, enum PHGLFBOAttachment::pixelFormat fmt, bool isTex, int w, int h, PHGLTexture2D ** cache);
     
+    PHInvocation cb;
+
 public:
+    int renderMode() { return _renderMode; }
+    void setRenderMode(int r) { _renderMode = r; }
+
+    void setOnRenderCallback(const PHInvocation & inv) { cb = inv; }
 
     PHTextureCanvas(PHGameManager * gm);
     ~PHTextureCanvas();
@@ -52,6 +60,8 @@ public:
 
     PHGLTexture2D * colorTexture(int color_attachment = 0);
     PHGLTexture2D * depthTexture();
+    void setColorTexture(PHGLTexture2D * tex, int color_attachment = 0);
+    void setDepthTexture(PHGLTexture2D * tex);
 
     bool fullScreenTexture() { return fs; }
     void setFullScreenTexture(bool fus) { fs = fus; }

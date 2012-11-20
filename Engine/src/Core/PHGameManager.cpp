@@ -520,44 +520,32 @@ void PHGameManager::popSpriteShader()
     }
 }
 
-void PHGameManager::reapplyMatrixUniform()
-{
-    if (!openGLCaps[PHGLCapabilityShaders]) return;
-    PHGLShaderProgram * shader = spriteShader();
-    if (!shader) return;
-    modelViewSpriteUniform->set(_projection * _modelView).apply(shader);
-}
-
-void PHGameManager::reapplyColorUniform()
-{
-    if (!openGLCaps[PHGLCapabilityShaders]) return;
-    PHGLShaderProgram * shader = spriteShader();
-    if (!shader) return;
-    colorSpriteUniform->set(_currentColor).apply(shader);
-}
-
-void PHGameManager::applyShader(PHGLShaderProgram * shader)
-{
-    if (useShaders())
-    {
-        if (!shader) return;
-        *modelViewSpriteUniform = _projection * _modelView;
-        *colorSpriteUniform = _currentColor;
-        useShader(shader);
-        spriteStates->apply(shader);
-    }
-}
-
-void PHGameManager::applySpriteShader()
-{
-    applyShader(spriteShader());
-}
-
 void PHGameManager::useShader(PHGLShaderProgram * prog)
 {
     if (_shader==prog) return;
     _shader = prog;
     prog->_use();
+}
+
+void PHGameManager::updateMatrixUniform()
+{
+    modelViewSpriteUniform->setValue(_projection * _modelView);
+}
+
+void PHGameManager::updateColorUniform()
+{
+    colorSpriteUniform->setValue(_currentColor);
+}
+
+void PHGameManager::updateSpriteUniforms()
+{
+    colorSpriteUniform->setValue(_currentColor);
+    modelViewSpriteUniform->setValue(_projection * _modelView);
+}
+
+void PHGameManager::setTextureUniform(PHGLTexture * tex)
+{
+    textureSpriteUniform->setValue(tex);
 }
 
 void PHGameManager::bindVBO(PHGLVertexBufferObject * vbo, int location)

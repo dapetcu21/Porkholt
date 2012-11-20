@@ -29,6 +29,7 @@ set(PH_SOURCES
   Classes/IGBouncyView.cpp
   Classes/IGBouncyButton.cpp
   Classes/IGBackgroundParticles.cpp
+  Classes/IGRipples.cpp
   )
 set(PH_HEADERS
   Classes/IGLevelController.h
@@ -52,6 +53,7 @@ set(PH_HEADERS
   Classes/IGBouncyView.h
   Classes/IGBouncyButton.h
   Classes/IGBackgroundParticles.h
+  Classes/IGRipples.h
   )
 include_directories(Classes)
 set(PH_IOS_TARGET_IPAD "YES")

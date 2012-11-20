@@ -8,6 +8,7 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHMutex.h>
 #include <Porkholt/Core/PHDrawableCoordinates.h>
+#include <Porkholt/Core/PHGLUniformStates.h>
 
 const string PHView::_luaClass("PHView");
 
@@ -245,7 +246,8 @@ void PHView::drawBackground()
     gm->setColor(_backColor);
     PHMatrix old = gm->modelViewMatrix();
     gm->setModelViewMatrix(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));
-    gm->applyShader(gm->shaderProgramNamed<notex_sprites>());
+    gm->updateSpriteUniforms();
+    gm->spriteUniformStates()->apply(gm->shaderProgramNamed<notex_sprites>());
     gm->solidSquareVAO()->draw();
     gm->setModelViewMatrix(old);
     

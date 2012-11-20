@@ -7,6 +7,7 @@
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHEvent.h>
 #include <Porkholt/Core/PHDrawableCoordinates.h>
+#include <Porkholt/Core/PHDrawableProxy.h>
 
 const string PHDrawable::_luaClass("PHDrawable");
 
@@ -91,9 +92,25 @@ void PHDrawable::removeAllChildren()
         (*i)->removeFromParent();
 }
 
+void PHDrawable::removeProxy(PHDrawableProxy* p)
+{
+    proxies.erase(p);
+}
+
+PHDrawable * PHDrawable::newProxy()
+{
+    PHDrawableProxy * p = new PHDrawableProxy(this);
+    proxies.insert(p);
+    p->autorelease();
+    return p;
+}
+
 PHDrawable::~PHDrawable()
 {
-    gm->eventHandler()->removeDrawable(this);
+    for (set<PHDrawableProxy*>::iterator i = proxies.begin(); i!= proxies.end(); i++)
+        (*i)->parentDestroyed();
+    if (gm)
+        gm->eventHandler()->removeDrawable(this);
     for (set<lua_State*>::iterator i = luaStates.begin(); i!=luaStates.end(); i++)
         PHLuaDeleteWeakRef(*i, this);
     removeFromParent();

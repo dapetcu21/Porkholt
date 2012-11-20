@@ -10,6 +10,7 @@ class PHGLUniformStates;
 class PHMaterial : public PHObject
 {
     public:
+        virtual bool materialSupportsRenderMode(int renderMode) = 0;
         virtual void renderVAO(PHGLVertexArrayObject * vao, PHGLUniformStates * additionalUniforms = NULL) = 0; 
 };
 

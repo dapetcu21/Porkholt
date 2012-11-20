@@ -152,6 +152,7 @@ IGKinematic = IGProp:subclass("IGKinematic")
 IGWallManager = IGObject:subclass("IGWallManager")
 IGBouncyButton = IGDampingProp:subclass("IGBouncyButton")
 IGBackgroundParticles = IGObject:subclass("IGBackgroundParticles")
+IGRipples = IGObject:subclass("IGRipples")
 
 function IGMob:init()
     self = IGDampingProp.init(self)

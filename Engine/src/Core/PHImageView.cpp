@@ -21,15 +21,33 @@
 
 const string PHImageView::_luaClass("PHImageView");
 
-#define PHIMAGEVIEW_INIT _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VAOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), shad(NULL)
+#define PHIMAGEVIEW_INIT imageMaterial(this), _material(&imageMaterial), _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VAOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), _shader(NULL)
+
+PHMaterial * PHImageView::material()
+{
+    if (_material == &imageMaterial)
+        return NULL;
+    return _material;
+}
+
+void PHImageView::setMaterial(PHMaterial * m)
+{
+    if (m)
+        m->retain();
+    else
+        m = &imageMaterial;
+    if (material())
+        _material->release();
+    _material = m;
+}
 
 void PHImageView::setShader(PHGLShaderProgram *sh)
 {
     if (sh)
         sh->retain();
-    if (shad)
-        shad->release();
-    shad = sh;
+    if (_shader)
+        _shader->release();
+    _shader = sh;
 }
 
 void PHImageView::setCinematicCustomColor(const PHColor & clr)
@@ -40,9 +58,14 @@ void PHImageView::setCinematicCustomColor(const PHColor & clr)
         setTintColor(clr);
 }
 
+bool PHImageView::ImageMaterial::materialSupportsRenderMode(int rm)
+{
+    return (rm == PHGameManager::defaultRenderMode) || ((rm == PHDeferredView::normalMapRenderMode) && _imageView->_image && _imageView->_image->normalMap());
+}
+
 bool PHImageView::supportsRenderMode(int rm)
 {
-    return (rm == PHGameManager::defaultRenderMode) || ((rm == PHDeferredView::normalMapRenderMode) && _image && _image->normalMap());
+    return _material->materialSupportsRenderMode(rm);
 }
 
 PHImageView::PHImageView() : PHView(), PHIMAGEVIEW_INIT
@@ -133,11 +156,11 @@ char missingnormals_sprites[] = "missingnormals_sprites";
 void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd, const PHColor & clr)
 {
     if (!_image) return;
-    bool nrm =  (gm->renderMode() == PHDeferredView::normalMapRenderMode);
+    bool nrm = _normalMapping && (gm->renderMode() == PHDeferredView::normalMapRenderMode);
     PHImage * img = _image;
     if (nrm)
     {
-        if (_normalMapping && (img->normalMap()))
+        if (img->normalMap())
             _image = img->normalMap();
         else
             gm->pushSpriteShader(gm->shaderProgramNamed<missingnormals_sprites>());
@@ -151,7 +174,7 @@ void PHImageView::renderInFramePortionTint(const PHRect & fr, const PHRect & crd
     
     if (nrm)
     {
-        if (_normalMapping && (img->normalMap()))
+        if (img->normalMap())
             _image = img;
         else
             gm->popSpriteShader();
@@ -188,39 +211,16 @@ void PHImageView::setShape(PHCurve *bp)
     if (curve)
     {
         curve->release();
-        curve->removeCallback(this);
+        curve->removeCallback((PHDrawable*)this);
     }
     curve = NULL;
     if (bp)
     {
         bp->retain();
-        bp->addCallback(PHInv(this,PHImageView::curveCallback,NULL));
+        bp->addCallback(PHInv((PHDrawable*)this,PHImageView::curveCallback,NULL));
     }
     curve = bp;
     VAOneedsRebuilding = true;
-}
-
-void PHImageView::renderCurved()
-{
-    if (!_image) return;
-    if (image()->isAnimated()) return;
-    image()->load();
-    loadVAO();
-    
-    gm->setColor(tint);
-    gm->setGLStates(PHGLBlending | PHGLTexture0);
-    ((PHNormalImage*)image())->bindToTexture(0);
-    gm->applySpriteShader();
-    
-    if (constrain)
-    {
-        PHMatrix om = gm->modelViewMatrix();
-        gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
-        gm->reapplyMatrixUniform();
-        curveVAO->draw();
-        gm->setModelViewMatrix(om);
-    } else     
-        curveVAO->draw();
 }
 
 void PHImageView::rebuildStraightVAO()
@@ -254,6 +254,16 @@ bool PHImageView::animatorNeedsVAORebuild()
     return ((_animator->lastRealFrame() != lastAnimFrame) || (_animator->currentRealFrame() != animFrame));
 }
 
+void PHImageView::ImageMaterial::renderVAO(PHGLVAO * vao, PHGLUniformStates * uniforms)
+{
+    PHGLShaderProgram * shader = _imageView->_shader;
+    if (!shader)
+        shader = _imageView->gm->spriteShader();
+    uniforms->apply(shader);
+    _imageView->gm->setGLStates(PHGLBlending | PHGLTexture0);
+    vao->draw();
+}
+
 void PHImageView::renderStraight()
 {
     if (!_image) return;
@@ -265,13 +275,13 @@ void PHImageView::renderStraight()
     {
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
+        gm->updateMatrixUniform();
         if (_image->isNormal())
         {
             gm->setColor(tint);
-            gm->setGLStates(PHGLBlending | PHGLTexture0);
-            ((PHNormalImage*)image())->bindToTexture(0);
-            gm->applySpriteShader();
-            straightVAO1->draw();
+            gm->updateColorUniform();
+            gm->setTextureUniform(((PHNormalImage*)image())->texture());
+            _material->renderVAO(straightVAO1, gm->spriteUniformStates());
         }
         
         if (_image->isAnimated())
@@ -279,57 +289,81 @@ void PHImageView::renderStraight()
             PHColor t = tint.isValid()?tint:PHWhiteColor;
             ph_float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
             
-            gm->setGLStates(PHGLBlending | PHGLTexture0);
             
             if (straightVAO2)
             {
                 gm->setColor(t.multipliedAlpha(rem));
-                _animator->bindLastFrameToTexture(0);
-                gm->applySpriteShader();
-                straightVAO2->bind();
-                straightVAO2->draw();
+                gm->updateColorUniform();
+                gm->setTextureUniform(_animator->lastFrameTexture());
+                _material->renderVAO(straightVAO2, gm->spriteUniformStates());
             }
             
             gm->setColor(t.multipliedAlpha(1-rem));
-            _animator->bindCurrentFrameToTexture(0);
-            gm->applySpriteShader();
-            straightVAO1->bind();
-            straightVAO1->draw();
-            
-            gm->bindVAO(NULL);
+            gm->updateColorUniform();
+            gm->setTextureUniform(_animator->currentFrameTexture());
+            _material->renderVAO(straightVAO1, gm->spriteUniformStates());
         }
+        
+        gm->setTextureUniform(NULL);
         gm->setModelViewMatrix(om);
     }
 }
 
+void PHImageView::renderCurved()
+{
+    if (!_image) return;
+    if (image()->isAnimated()) return;
+    image()->load();
+    loadVAO();
+    
+    gm->setColor(tint);
+    gm->updateColorUniform();
+    gm->setTextureUniform(((PHNormalImage*)image())->texture());
+    
+    if (constrain)
+    {
+        PHMatrix om = gm->modelViewMatrix();
+        gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
+        gm->updateMatrixUniform();
+        curveVAO->draw();
+        _material->renderVAO(curveVAO, gm->spriteUniformStates());
+        gm->setModelViewMatrix(om);
+    } else {
+        gm->updateMatrixUniform();
+        _material->renderVAO(curveVAO, gm->spriteUniformStates());
+    }
+
+    gm->setTextureUniform(NULL);
+}
+
+
+
 void PHImageView::draw()
 {
     if (!_image) return;
-    bool nrm = (gm->renderMode() == PHDeferredView::normalMapRenderMode);
-    bool sh = (shad!=NULL) && !nrm;
+    bool nrm = (gm->renderMode() == PHDeferredView::normalMapRenderMode) && _normalMapping;
     PHImage * img = _image;
+    PHGLShaderProgram * shd = _shader;
     if (nrm)
     {
-        if (_normalMapping && (img->normalMap()))
-            _image = img->normalMap();
+        if (img->normalMap())
+            _image = _image->normalMap();
         else
-            gm->pushSpriteShader(gm->shaderProgramNamed<missingnormals_sprites>());
+            _shader = gm->shaderProgramNamed<missingnormals_sprites>();
     }
-    if (sh)
-        gm->pushSpriteShader(shad);
+
     if (curve)
         renderCurved();
     else
         renderStraight();
+
     if (nrm)
     {
-        if (_normalMapping && (img->normalMap()))
+        if (img->normalMap())
             _image = img;
         else
-            gm->popSpriteShader();
+            _shader = shd;
     }
-    if (sh)
-        gm->popSpriteShader();
 }
 
 void PHImageView::attachedToGameManager()

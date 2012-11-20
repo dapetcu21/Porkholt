@@ -20,6 +20,11 @@ IGBasicMob::~IGBasicMob()
 #define mx (0.15 * (894.0 / 441))
 #define my (0.15)
 
+#define dx -0.6
+#define dy 0.5
+#define dif b2Vec2(-dx * mx, -dy * my)
+#define phdif PHPoint(-dx * mx, -dy * my)
+
 void IGBasicMob::attachedToWorld()
 {
     b2BodyDef def;
@@ -29,14 +34,27 @@ void IGBasicMob::attachedToWorld()
     def.userData = this;
     body = world->physicsWorld()->CreateBody(&def);
 
-    b2PolygonShape shape;
-    shape.SetAsBox(mx, my);
+    b2CircleShape circle;
+    circle.m_p = b2Vec2(mx*-0.720120, my*0.440059) + dif;
+    circle.m_radius = 0.3*mx;
 
     b2FixtureDef fdef;
-    fdef.shape = &shape;
-    fdef.density = 1.0f;
+    fdef.shape = &circle;
+    fdef.density = 10.0f;
     fdef.filter.categoryBits = IGWorld::collisionMobs;
     fdef.filter.maskBits = IGWorld::collisionAllMob;
+    body->CreateFixture(&fdef);
+    
+    b2PolygonShape shape;
+    b2Vec2 v2[] = {
+        b2Vec2(mx*-0.478212, my*0.344492) + dif,
+        b2Vec2(mx*0.527344, my*-0.917617) + dif,
+        b2Vec2(mx*0.962404, my*-0.246855) + dif,
+        b2Vec2(mx*0.787953, my*0.271484) + dif,
+    };
+    shape.Set(v2, 4);
+    fdef.shape = &shape;
+    fdef.density = 3.0f;
     body->CreateFixture(&fdef);
 
     createDampingJoint();
@@ -44,9 +62,14 @@ void IGBasicMob::attachedToWorld()
 
 void IGBasicMob::configureDrawable(PHDrawable * d)
 {
-    PHImageView * iv = new PHImageView(PHRect(-mx, -my, 2*mx, 2*my));
+    PHImageView * iv = new PHImageView(PHRect(-mx, -my, 2*mx, 2*my) + phdif);
     iv->setImage(world->gameManager()->imageNamed("mob"));
+    iv->setMaterial(world->gameManager()->materialNamed("density"));
     d->addChild(iv);
+    PHView * v = new PHView(PHRect(-0.1,-0.1, 0.2, 0.2));
+    v->setBackgroundColor(PHColor(1,0,0,1));
+    //d->addChild(v);
+    v->release();
     iv->release();
 }
 

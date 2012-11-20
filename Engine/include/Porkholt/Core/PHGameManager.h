@@ -272,12 +272,13 @@ public:
     void buildSolidSquareVAO();
     
     PHGLShaderProgram * normalSpriteShader() { return _spriteShader; }
-    PHGLUniformStates * spriteUniformStates() { return spriteStates; }
 
-    void applySpriteShader();
-    void applyShader(PHGLShaderProgram * shader);
-    void reapplyMatrixUniform();
-    void reapplyColorUniform();
+    PHGLUniformStates * spriteUniformStates() { return spriteStates; }
+    void updateMatrixUniform();
+    void updateColorUniform();
+    void setTextureUniform(PHGLTexture * tex);
+    void updateSpriteUniforms();
+
     PHGLShaderProgram * shader() { return _shader; }
     void useShader(PHGLShaderProgram * prog);
     

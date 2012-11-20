@@ -11,6 +11,7 @@
 #include <Porkholt/Core/PHAnimatorPool.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Core/PHThreading.h>
+#include <Porkholt/Core/PHGLUniformStates.h>
 
 PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord) : PHImage(texture->gameManager()), txc(textureCoord), tex(texture), pload(true), _keepCount(0)
 {
@@ -143,6 +144,7 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
 {
     load();
     
+    gm->updateMatrixUniform();
 	const GLfloat squareVertices[] = {
         frm.x,			frm.y,
         frm.x+frm.width,frm.y,
@@ -160,10 +162,11 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
     };
     
     int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
-    gm->setGLStates(states);
+    gm->setTextureUniform(texture());
     bindToTexture(0);
     gm->setColor(tint);
-    gm->applySpriteShader();
+    gm->updateColorUniform();
+    gm->spriteUniformStates()->apply(gm->spriteShader());
     if (gm->useShaders())
     {
         PHGL::glVertexAttribPointer(PHIMAGEATTRIBUTE_POS, 2, GL_FLOAT, GL_FALSE, 0, squareVertices);
@@ -173,6 +176,8 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
         PHGL::glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords);
     }
     PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    gm->setTextureUniform(NULL);
 }
 
 void PHNormalImage::rebuildVAO(PHImageView * imageView, PHGLVertexArrayObject * & vao)

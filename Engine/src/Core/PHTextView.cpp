@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLTexture.h>
+#include <Porkholt/Core/PHGLUniformStates.h>
 
 #define PHTEXTVIEW_INIT _font(NULL), size(1.0f), _alignment(alignCenter | justifyLeft), _text(""), color(PHWhiteColor), needsReload(true), nGlyphs(0), indicesVBO(NULL), arraysVBO(NULL), lineSpace(0.5), vbuffer(NULL), indices(NULL), vao(NULL), ww(true)
 
@@ -68,12 +69,13 @@ void PHTextView::draw()
     loadVBOs();
     if (!vao) return;
     
-    gm->setGLStates(PHGLBlending | PHGLTexture0);
-    gm->setActiveTexture(0);
-    gm->bindTexture(_font->texture());
+    gm->setTextureUniform(_font->texture());
     gm->setColor(color);
-    gm->applyShader(gm->shaderProgramNamed<text_shader>());
+    gm->updateSpriteUniforms();
+    gm->setGLStates(PHGLBlending | PHGLTexture0);
+    gm->spriteUniformStates()->apply(gm->shaderProgramNamed<text_shader>());
     vao->draw();
+    gm->setTextureUniform(NULL);
 }
 
 inline bool PHIsBreakCharacter(char c)

@@ -11,7 +11,7 @@ PHGLShader::PHGLShader(const string & header, const string & data, int type)
 PHGLShader::PHGLShader(const string & header, PHFile * file, int type)
 {
     size_t s = 0;
-    uint8_t * d = NULL;
+    uint8_t * d = NULL  ;
     try {
         d = file->loadToBuffer(s);
         loadWithData(header, d, s, type);

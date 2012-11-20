@@ -5,6 +5,7 @@
 
 #include <Porkholt/Core/PHView.h>
 #include <Porkholt/Core/PHImage.h>
+#include <Porkholt/Core/PHMaterial.h>
 
 class PHImage;
 class PHImageAnimator;
@@ -18,6 +19,18 @@ class PHGLShaderProgram;
 class PHImageView : public PHView
 {
 protected:
+    class ImageMaterial : public PHMaterial
+    {
+        protected:
+            PHImageView * _imageView;
+        public:
+            ImageMaterial(PHImageView * iv) : _imageView(iv) {}
+            bool materialSupportsRenderMode(int rm);
+            void renderVAO(PHGLVertexArrayObject * vao, PHGLUniformStates * additionalUniforms);
+    };
+    friend class ImageMaterial;
+    ImageMaterial imageMaterial;
+
 	PHImage * _image;
     PHImageAnimator * _animator;
 	PHRect coords;
@@ -68,10 +81,14 @@ protected:
 
     virtual void attachedToGameManager();
     
-    PHGLShaderProgram * shad;
-    
+    PHGLShaderProgram * _shader;
+    PHMaterial * _material;
+
 public:
-    PHGLShaderProgram * shader() { return shad; }
+    PHMaterial * material();
+    void setMaterial(PHMaterial * m);
+
+    PHGLShaderProgram * shader() { return _shader; }
     void setShader(PHGLShaderProgram * shad);
     
     PHAnimatorPool * animatorPool() { return pool; }

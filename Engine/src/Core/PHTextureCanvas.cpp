@@ -7,7 +7,7 @@
 #include <Porkholt/Core/PHGLRenderbuffer.h>
 #include <Porkholt/Core/PHAutoreleasePool.h>
 
-PHTextureCanvas::PHTextureCanvas(PHGameManager * _gm) : fbo(NULL), changed(true), dit(false),  dfmt(PHGLFBOAttachment::None), dtex(NULL), ow(-1), oh(-1), w(0), h(0), fs(true), cmask(PHGameManager::colorBuffers | PHGameManager::stencilBuffer | PHGameManager::depthBuffer), ccolor(PHClearColor), cdepth(1.0f), cstencil(0)
+PHTextureCanvas::PHTextureCanvas(PHGameManager * _gm) : fbo(NULL), changed(true), dit(false),  dfmt(PHGLFBOAttachment::None), dtex(NULL), ow(-1), oh(-1), w(0), h(0), fs(true), cmask(PHGameManager::colorBuffers | PHGameManager::stencilBuffer | PHGameManager::depthBuffer), ccolor(PHClearColor), cdepth(1.0f), cstencil(0), _renderMode(PHGameManager::defaultRenderMode)
 {
     setGameManager(_gm);
 }
@@ -34,6 +34,30 @@ void PHTextureCanvas::setDepthIsTexture(bool v)
         dtex->release();
         dtex = NULL;
     }
+    changed = true;
+}
+
+void PHTextureCanvas::setColorTexture(PHGLTexture2D * tex, int t)
+{
+    if (t >= ctex.size())
+        ctex.resize(t+1);
+    if (tex)
+        tex->retain();
+    if (ctex[t])
+        ctex[t]->release();
+    ctex[t] = tex;
+    changed = true;
+}
+
+void PHTextureCanvas::setDepthTexture(PHGLTexture2D * tex)
+{
+    if (tex && !dit)
+        setDepthIsTexture(true);
+    if (tex)
+        tex->retain();
+    if (dtex)
+        dtex->release();
+    dtex = tex;
     changed = true;
 }
 
@@ -93,19 +117,14 @@ PHGLFBOAttachment * PHTextureCanvas::rebuildAttachment(PHGLFBOAttachment * f, en
     }
     if (isTex)
     {
-        PHGLTexture2D * t = dynamic_cast<PHGLTexture2D*>(f);
+        PHGLTexture2D * t = dynamic_cast<PHGLTexture2D*>(*cache);
         if (!t)
         {
-            if (*cache)
-                t = *cache;
-            else 
-            {
-                *cache = t = new PHGLTexture2D(gm);
-                t->setWrapS(PHGLTexture::clampToEdge);
-                t->setWrapT(PHGLTexture::clampToEdge);
-                t->setMinFilter(PHGLTexture::linear);
-                t->setMagFilter(PHGLTexture::linear);
-            }
+            *cache = t = new PHGLTexture2D(gm);
+            t->setWrapS(PHGLTexture::clampToEdge);
+            t->setWrapT(PHGLTexture::clampToEdge);
+            t->setMinFilter(PHGLTexture::linear);
+            t->setMagFilter(PHGLTexture::linear);
         }
         if (t->format() != fmt || t->width() != w || t->height() != h)
             t->setData(NULL, w, h, fmt);
@@ -128,6 +147,10 @@ PHGLFBOAttachment * PHTextureCanvas::rebuildAttachment(PHGLFBOAttachment * f, en
 
 void PHTextureCanvas::render()
 {
+    int rm = gm->renderMode();
+    if (!supportsRenderMode(rm)) return;
+    cb.call(this);
+
     PHGLFramebuffer * f = gm->boundFramebuffer();
     
     int sw = w; int sh = h;
@@ -186,7 +209,9 @@ void PHTextureCanvas::render()
 
     gm->bindFramebuffer(fbo);
     gm->clearBuffers(mask & cmask);
+    gm->setRenderMode(_renderMode);
     renderChildren();
+    gm->setRenderMode(rm);
     gm->bindFramebuffer(f);
 
     if (mask & PHGameManager::colorBuffers)

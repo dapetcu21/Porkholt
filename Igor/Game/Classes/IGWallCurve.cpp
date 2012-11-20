@@ -23,7 +23,7 @@ void IGWallCurve::rebuildVAO(PHGLVAO * vao, const PHRect & texCoord)
     size_t nVertices;
     GLfloat * r = vertexData(nVertices, texCoord);
 
-    vao->bindToEdit();
+    vao->bindToEdit(); 
     PHGLVBO * vbo = vao->attributeVBO(PHIMAGEATTRIBUTE_POS);
     if (!vbo)
         vbo = new PHGLVertexBufferObject(vao->gameManager());

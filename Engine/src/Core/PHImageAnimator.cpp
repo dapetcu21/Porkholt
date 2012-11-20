@@ -12,6 +12,7 @@
 #include <Porkholt/Core/PHTextureAtlas.h>
 #include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/Core/PHMutex.h>
+#include <Porkholt/Core/PHGLUniformStates.h>
 
 #define INIT _image(img), running(true)
 
@@ -154,6 +155,7 @@ PHRect PHImageAnimator::lastFrameTextureCoordinates(const PHRect & port)
 void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect & frm,const PHRect & port,const PHColor & tint)
 {
     if (realframe<0) return;
+    gm->updateMatrixUniform();
     
     _image->load();
     
@@ -178,7 +180,7 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
             r.x + r.width   , r.y + r.height,
         };
         
-        _image->atlas()->texture(lastframe)->bind(0);
+        gm->setTextureUniform(_image->atlas()->texture(lastframe));
         
         int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
         gm->setGLStates(states);
@@ -191,7 +193,8 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
             PHGL::glTexCoordPointer(2, GL_FLOAT, 0, squareTexCoords2);
         }
         gm->setColor(tt.multipliedAlpha(remaining/time));
-        gm->applySpriteShader();
+        gm->updateColorUniform();
+        gm->spriteUniformStates()->apply(gm->spriteShader());
         PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 	
@@ -203,9 +206,8 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
             r.x + r.width   , r.y + r.height
         };
         
-
 	
-    _image->atlas()->texture(realframe)->bind(0);
+    gm->setTextureUniform(_image->atlas()->texture(realframe));
     
     int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
     gm->setGLStates(states);
@@ -222,17 +224,21 @@ void PHImageAnimator::renderInFramePortionTint(PHGameManager * gm, const PHRect 
         tt.a *= 1.0f-(remaining/time);
     }
     gm->setColor(tt);
-    gm->applySpriteShader();
+    gm->updateColorUniform();
+    gm->spriteUniformStates()->apply(gm->spriteShader());
     PHGL::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    gm->setTextureUniform(NULL);
 }
 
-void PHImageAnimator::bindCurrentFrameToTexture(int tx)
+PHGLTexture2D * PHImageAnimator::currentFrameTexture()
 {
-    _image->atlas()->texture(realframe)->bind(tx);
+    return _image->atlas()->texture(realframe);
 }
-void PHImageAnimator::bindLastFrameToTexture(int tx)
+
+PHGLTexture2D * PHImageAnimator::lastFrameTexture()
 {
-    _image->atlas()->texture(lastframe)->bind(tx);
+    return _image->atlas()->texture(lastframe);
 }
 
 void PHImageAnimator::rebuildVAOs(PHImageView * imageView, PHGLVAO * & vao1, PHGLVAO * & vao2)

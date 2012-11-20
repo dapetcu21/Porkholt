@@ -706,6 +706,18 @@ void PHLuaMaterial::renderer::solver::value::readFromLua(lua_State * L)
     type = vInvalid;
 }
 
+bool PHLuaMaterial::materialSupportsRenderMode(int renderMode)
+{
+    map<pair<int,int>, renderer>::iterator i;
+    for (i = renderers.begin(); i != renderers.end(); i++)
+    {
+        int rm = i->first.first;
+        if (rm == renderMode || rm == INT_MAX)
+            return true;
+    }
+    return false;
+}
+
 void PHLuaMaterial::renderVAO(PHGLVertexArrayObject * vao, PHGLUniformStates * us)
 {
     if (!vao) return;
@@ -733,7 +745,6 @@ void PHLuaMaterial::renderVAO(PHGLVertexArrayObject * vao, PHGLUniformStates * u
     for (int i = 0; i < r.nvars; i++)
         r.vars[i].solve(gm);
 
-    r.shader->use();
     int c = 0;
     r.uniforms->apply(r.shader, &c);
     if (us)

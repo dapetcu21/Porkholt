@@ -11,6 +11,7 @@ class PHAuxLayerView;
 class PHView;
 class PHEvent;
 class PHDrawableCoordinates;
+class PHDrawableProxy;
 
 class PHDrawableInputDelegate
 {
@@ -94,6 +95,11 @@ protected:
 public:
     bool isView() { return _isView; }
     PHView * toView() { if (_isView) return (PHView*)this; return NULL; }
+
+    PHDrawable * newProxy();
+protected:
+    set<PHDrawableProxy*> proxies;
+    void removeProxy(PHDrawableProxy * p);
 };
 
 #endif

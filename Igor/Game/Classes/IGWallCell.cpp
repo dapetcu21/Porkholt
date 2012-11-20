@@ -72,6 +72,7 @@ void IGWallCell::attachedToWorld()
 void IGWallCell::configureDrawable(PHDrawable * d)
 {
     iv = new PHImageView(PHRect(-cwidth/2, -cheight/2, cwidth, cheight));
+//    iv->setMaterial(world->gameManager()->materialNamed("density"));
     stringstream oss;
     oss<<"cell_"<<rand()%6+1;
     iv->setImage(world->gameManager()->imageNamed(oss.str()));
