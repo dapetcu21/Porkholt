@@ -1,12 +1,12 @@
 IWaveManager = IObject:new()
 
 function IWaveManager:frame(elapsed)
-    if self.wave then
-        self.wave:frame(elapsed)
-        if self.wave:waveFinished() then
-            print("wave finished")
+    local w = self.wave
+    if w then
+        w:frame(elapsed)
+        if w:waveFinished() then
             self.wave = nil
-            self:dispatchWave()
+            self:dispatchWave(w)
         end
     end
 end 
@@ -23,73 +23,42 @@ end
 function IWave:frame(elapsed)
 end
 
-IBasicMobWave = IWave:new()
-
-function IBasicMobWave:init(mobsPerSecond, duration, speed)
+IWaitWave = IWave:new()
+function IWaitWave:init(time)
     self = IWave.init(self)
     if self then
-        self.objects = {}
-        self.duration = duration
-        self.speed = speed;
-        self.mps = mobsPerSecond
+        self.time = time
     end
     return self
 end
-function IBasicMobWave:frame(elapsed)
-    if self.duration > 0 then
-        self.duration = self.duration - elapsed
-        local prob = self.mps * elapsed;
-        if math.random() <= prob then
-            local mob = IGBasicMob:new()
-            mob:setHealth(2.0)
-            mob:setPosition(vec2(8, math.random()* 3 + 0.5))
-            mob:attachToWorld()
-            mob.onDie:addCallback(function (m)
-                self.objects[m] = nil
-                print('mob died')
-            end)
-            self.objects[mob] = true
-        end
-    end
 
-    for mob,d in pairs(self.objects) do
-        if mob:position().x < -1.5 then
-            mob:removeFromWorld()
-            self.objects[mob] = nil;
-            print("mob expired")
-        else
-            local l = player:position()
-            local p = mob:desiredPosition()
-            if p.x < l.x then
-                vel = vec2(-self.speed, 0)
-            else
-                vel = l - p
-                local len = vel:length()
-                local long = self.speed
-                if len > long then
-                    vel = vel * (long / len)
-                end
-            end
-
-            mob:setPosition(p + vel * elapsed)
-        end
-    end
+function IWaitWave:frame(elapsed)
+    self.time = self.time - elapsed
 end
 
-function IBasicMobWave:waveFinished()
-    if self.duration > 0 or next(self.objects) then
-        return false
-    else
-        return true
-    end
+function IWaitWave:waveFinished()
+    return self.time < 0
 end
 
-----------------------------
+require("basic_mob_wave")
+require("knife_mob_wave")
+require("mixed_wave")
 
 function startGame()
-    local w = IBasicMobWave:new(2, 10, 1)
-    IWaveManager.wave = w
+    IWaveManager:reset()
+    IWaveManager:dispatchWave()
 end
 
-function IWaveManager:dispatchWave()
+function IWaveManager:reset()
+    self.difficulty = 1
+end
+function IWaveManager:dispatchWave(oldWave)
+    if not oldWave or oldWave:isKindOfClass(IWaitWave) then
+        local w = IMixedWave:new(self.difficulty)
+        self.wave = w
+    else
+        self.difficulty = self.difficulty + 1
+        local w = IWaitWave:new(5)
+        self.wave = w
+    end
 end

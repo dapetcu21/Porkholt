@@ -17,8 +17,8 @@ IGBasicMob::~IGBasicMob()
 {
 }
 
-#define mx (0.15 * (894.0 / 441))
 #define my (0.15)
+#define mx (my * (1000.0/700))
 
 #define dx -0.6
 #define dy 0.5
@@ -32,6 +32,7 @@ void IGBasicMob::attachedToWorld()
     def.position.Set(pos.x, pos.y);
     def.angle = rot;
     def.userData = this;
+    def.fixedRotation = true;
     body = world->physicsWorld()->CreateBody(&def);
 
     b2CircleShape circle;
@@ -63,7 +64,7 @@ void IGBasicMob::attachedToWorld()
 void IGBasicMob::configureDrawable(PHDrawable * d)
 {
     PHImageView * iv = new PHImageView(PHRect(-mx, -my, 2*mx, 2*my) + phdif);
-    iv->setImage(world->gameManager()->imageNamed("mob"));
+    iv->setImage(world->gameManager()->imageNamed("basic_mob"));
     iv->setMaterial(world->gameManager()->materialNamed("density"));
     d->addChild(iv);
     PHView * v = new PHView(PHRect(-0.1,-0.1, 0.2, 0.2));

@@ -10,6 +10,11 @@
 
 IGSCRIPTING_REGISTERCLASS("IGPlayer", IGPlayer)
 
+#define dy 0.32
+//#define dx (dy * (288.0/327))
+#define dx dy
+//#define dx (dy * (423.0/466))
+
 IGPlayer::IGPlayer(IGWorld * w) : IGProp(w)
 {
 }
@@ -29,9 +34,7 @@ void IGPlayer::attachedToWorld()
     body = world->physicsWorld()->CreateBody(&def);
 
     b2PolygonShape shape;
-    shape.SetAsBox(0.4, 0.4);
-//    shape.m_p.Set(0, 0);
-//    shape.m_radius = 0.5;
+    shape.SetAsBox(dx, dy);
 
     b2FixtureDef fdef;
     fdef.shape = &shape;
@@ -43,7 +46,7 @@ void IGPlayer::attachedToWorld()
 
 void IGPlayer::configureDrawable(PHDrawable * d)
 {
-    PHImageView * iv = new PHImageView(PHRect(-0.4 ,-0.4, 0.8, 0.8));
+    PHImageView * iv = new PHImageView(PHRect(-dx ,-dy, 2*dx, 2*dy));
     iv->setImage(world->gameManager()->imageNamed("player"));
     iv->setMaterial(world->gameManager()->materialNamed("density"));
     d->addChild(iv);

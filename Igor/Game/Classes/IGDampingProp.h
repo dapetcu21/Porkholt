@@ -27,8 +27,10 @@ class IGDampingProp : public IGProp
         ph_float desiredRotation() { return desiredRot; }
         void createDampingJoint();
 
-        void setRestrictRotation(bool r) { rr = r; }
         bool restrictRotation() { return rr; }
+        void setRestrictRotation(bool r) { rr = r; }
+        bool restrictTranslation() { return dampEnabled; }
+        void setRestrictTranslation(bool damp) { dampEnabled = damp; }
 
         void setDampingForce(ph_float p);
         ph_float dampingForce() { return maxF; }
@@ -38,8 +40,6 @@ class IGDampingProp : public IGProp
         ph_float dampingForesight() { return foresight; }
         void setDampingFrequency(ph_float f);
         ph_float dampingFrequency() { return dampFreq; }
-        void setDamping(bool damp) { dampEnabled = damp; }
-        bool isDamping() { return dampEnabled; }
 
         virtual void adjustPhysics(ph_float elapsed);
         virtual void animate(ph_float elapsed);

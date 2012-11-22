@@ -62,6 +62,15 @@ function IObject:init()
     return self
 end
 
+function IObject:isKindOfClass(class)
+    while self do
+        if self == class then
+            return true
+        end
+        self = self.__index
+    end
+    return false
+end
 
 PHVector2_meta = {}
 PHRect_meta = {}
@@ -153,6 +162,7 @@ IGWallManager = IGObject:subclass("IGWallManager")
 IGBouncyButton = IGDampingProp:subclass("IGBouncyButton")
 IGBackgroundParticles = IGObject:subclass("IGBackgroundParticles")
 IGRipples = IGObject:subclass("IGRipples")
+IGKnifeMob = IGMob:subclass("IGKnifeMob")
 
 function IGMob:init()
     self = IGDampingProp.init(self)
@@ -185,6 +195,16 @@ function IGBasicMob:init()
     return self
 end
 
+function IGKnifeMob:init()
+    self = IGMob.init(self)
+    if self then
+        self.onDie:addCallback(function (mob)
+            mob:removeFromWorld()
+        end)
+    end
+    return self
+end
+
 function IGMob:dieCallback()
     self.onDie:call(self)
 end
@@ -193,6 +213,13 @@ function IGBasicMob:beginContact(o)
     if o == player then
         player:loseHealth(2)
         self:die()
+    end
+end
+
+function IGKnifeMob:beginContact(o)
+    if o == player and not self.touchedPlayer then
+        self.touchedPlayer = true
+        player:loseHealth(2);
     end
 end
 

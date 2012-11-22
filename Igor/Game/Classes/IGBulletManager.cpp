@@ -9,8 +9,8 @@
 #include <Porkholt/Core/PHParticleAnimator.h>
 #include <Porkholt/Core/PHLua.h>
 
-#define b1h 0.2
-#define b1w 0.2
+#define b1h 0.1
+#define b1w b1h * (128.0/96) * 1.3
 
 IGSCRIPTING_REGISTERCLASS("IGBulletManager", IGBulletManager)
 
@@ -110,7 +110,6 @@ b2Body * IGBulletManager::physicsForBullet(bullet_info & b)
     def.bullet = true;
     def.userData = this;
     def.linearVelocity = PHVector2(4, 0).rotated(b.b.rotation).b2d();
-    def.angularVelocity =  -5;
     b2Body * bd = world->physicsWorld()->CreateBody(&def);
     b2CircleShape s;
     s.m_radius = b1w/2;

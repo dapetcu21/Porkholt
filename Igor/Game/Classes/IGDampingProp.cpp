@@ -19,7 +19,7 @@ IGDampingProp::~IGDampingProp()
 
 void IGDampingProp::setRotation(ph_float r)
 {
-    if (!body || !cui || !rr)
+    if (!body || !rr)
         IGProp::setRotation(r);
     desiredRot = r;
 }
@@ -55,7 +55,7 @@ void IGDampingProp::createDampingJoint()
 
 void IGDampingProp::adjustPhysics(ph_float elapsed)
 {
-    if (body && cui)
+    if (body)
     {
         if (rr)
         {
@@ -67,8 +67,11 @@ void IGDampingProp::adjustPhysics(ph_float elapsed)
             body->ApplyAngularImpulse(impulse);
         }
 
-        dampImpulse *= body->GetMass() / elapsed;
-        body->ApplyLinearImpulse(dampImpulse.b2d(), body->GetWorldCenter());
+        if (cui)
+        {
+            dampImpulse *= body->GetMass() / elapsed;
+            body->ApplyLinearImpulse(dampImpulse.b2d(), body->GetWorldCenter());
+        }
     }
 }
 
@@ -108,8 +111,8 @@ PHLuaNumberSetter(IGDampingProp, setDampingForesight);
 PHLuaNumberSetter(IGDampingProp, setDampingFrequency);
 PHLuaPointGetter(IGDampingProp, desiredPosition);
 PHLuaNumberGetter(IGDampingProp, desiredRotation);
-PHLuaBoolGetter(IGDampingProp, isDamping);
-PHLuaBoolSetter(IGDampingProp, setDamping);
+PHLuaBoolGetter(IGDampingProp, restrictTranslation);
+PHLuaBoolSetter(IGDampingProp, setRestrictTranslation);
 PHLuaBoolGetter(IGDampingProp, restrictRotation);
 PHLuaBoolSetter(IGDampingProp, setRestrictRotation);
 PHLuaPointSetter(IGDampingProp, setPositionImmediately);
@@ -130,8 +133,8 @@ void IGDampingProp::loadLuaInterface(IGScripting * s)
     PHLuaAddMethod(IGDampingProp, desiredPosition);
     PHLuaAddMethod(IGDampingProp, setPositionImmediately);
     PHLuaAddMethod(IGDampingProp, desiredRotation);
-    PHLuaAddMethod(IGDampingProp, setDamping);
-    PHLuaAddMethod(IGDampingProp, isDamping);
+    PHLuaAddMethod(IGDampingProp, restrictTranslation);
+    PHLuaAddMethod(IGDampingProp, setRestrictTranslation);
     PHLuaAddMethod(IGDampingProp, restrictRotation);
     PHLuaAddMethod(IGDampingProp, setRestrictRotation);
 

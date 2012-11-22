@@ -19,7 +19,7 @@ void main()
         texture2D(map, vec2(txc.x, txc.y - screenHInv)).r ;
 
     highp float delta = (texture2D(mask, txc).r - texture2D(oldmask, txc).r);
-    delta *= 1.0/60.0;
+    delta *= 4.0/60.0;
     delta += (sum * 2.0 - 2.0 - texture2D(map2, txc).r * 4.0)*0.98;
     gl_FragColor = vec4((delta + 2.0)* 0.25, 0.0, 0.0, 1.0); 
 }

@@ -64,113 +64,118 @@ void PHGenericParticleAnimator::loadFromLua(lua_State *L)
 {
     if (!lua_istable(L, -1)) return;
     mutex->lock();
-    PHLuaGetBoolField(playing,"isPlaying");
-    PHLuaGetBoolField(generating,"isGenerating");
-    PHLuaGetNumberField(genFor,"generatingFor");
-    PHLuaGetNumberField(pps,"particlesPerSecond");
-    PHLuaGetRectField(genArea,"generationArea");
-    PHLuaGetBoolField(elArea,"elipticalArea");
-    PHLuaGetPointField(vel,"velocity");
-    PHLuaGetNumberField(deltavel,"velocityVariation");
-    PHLuaGetAngleField(spreadAngl,"spreadAngle");
-    PHLuaGetPointField(grav,"gravity");
-    PHLuaGetPointField(initSize,"initialSize");
-    PHLuaGetPointField(endSize,"finalSize");
-    PHLuaGetNumberField(lifetime,"particleLifetime");
-    PHLuaGetNumberField(deltalifetime,"lifetimeVariation");
-    PHLuaGetColorField(initColor,"initialColor");
-    PHLuaGetColorField(endColor,"finalColor");
-    PHLuaGetBoolField(rotates,"rotatesWithVelocity");
-    PHLuaGetAngleField(rotoff,"rotationOffset");
+    PHLuaGetBoolField(playing, "isPlaying");
+    PHLuaGetBoolField(generating, "isGenerating");
+    PHLuaGetNumberField(genFor, "generatingFor");
+    PHLuaGetNumberField(pps, "particlesPerSecond");
+    PHLuaGetRectField(genArea, "generationArea");
+    PHLuaGetBoolField(elArea, "elipticalArea");
+    PHLuaGetPointField(vel, "velocity");
+    PHLuaGetNumberField(deltavel, "velocityVariation");
+    PHLuaGetAngleField(spreadAngl, "spreadAngle");
+    PHLuaGetPointField(grav, "gravity");
+    PHLuaGetPointField(initSize, "initialSize");
+    PHLuaGetNumberField(deltaSize,  "sizeVariation");
+    PHLuaGetPointField(endSize, "finalSize");
+    PHLuaGetNumberField(lifetime, "particleLifetime");
+    PHLuaGetNumberField(deltalifetime, "lifetimeVariation");
+    PHLuaGetColorField(initColor, "initialColor");
+    PHLuaGetColorField(endColor, "finalColor");
+    PHLuaGetBoolField(rotates, "rotatesWithVelocity");
+    PHLuaGetAngleField(rotoff, "rotationOffset");
     mutex->unlock();
 }
 
-PHLuaBoolGetter(PHGenericParticleAnimator,isPlaying);
-PHLuaBoolSetter(PHGenericParticleAnimator,setPlaying);
-PHLuaBoolGetter(PHGenericParticleAnimator,isGenerating);
-PHLuaBoolSetter(PHGenericParticleAnimator,setGenerating);
-PHLuaNumberGetter(PHGenericParticleAnimator,generatingFor);
-PHLuaNumberSetter(PHGenericParticleAnimator,setGeneratingFor);
-PHLuaNumberGetter(PHGenericParticleAnimator,particlesPerSecond);
-PHLuaNumberSetter(PHGenericParticleAnimator,setParticlesPerSecond);
-PHLuaRectGetter(PHGenericParticleAnimator,generationArea);
-PHLuaRectSetter(PHGenericParticleAnimator,setGenerationArea);
-PHLuaBoolGetter(PHGenericParticleAnimator,elipticalArea);
-PHLuaBoolSetter(PHGenericParticleAnimator,setElipticalArea);
-PHLuaPointGetter(PHGenericParticleAnimator,velocity);
-PHLuaPointSetter(PHGenericParticleAnimator,setVelocity);
-PHLuaNumberGetter(PHGenericParticleAnimator,velocityVariation);
-PHLuaNumberSetter(PHGenericParticleAnimator,setVelocityVariation);
-PHLuaAngleGetter(PHGenericParticleAnimator,spreadAngle);
-PHLuaAngleSetter(PHGenericParticleAnimator,setSpreadAngle);
-PHLuaPointGetter(PHGenericParticleAnimator,gravity);
-PHLuaPointSetter(PHGenericParticleAnimator,setGravity);
-PHLuaPointGetter(PHGenericParticleAnimator,initialSize);
-PHLuaPointSetter(PHGenericParticleAnimator,setInitSize);
-PHLuaPointGetter(PHGenericParticleAnimator,finalSize);
-PHLuaPointSetter(PHGenericParticleAnimator,setFinalSize);
-PHLuaNumberGetter(PHGenericParticleAnimator,particleLifetime);
-PHLuaNumberSetter(PHGenericParticleAnimator,setParticleLifetime);
-PHLuaNumberGetter(PHGenericParticleAnimator,lifetimeVariation);
-PHLuaNumberSetter(PHGenericParticleAnimator,setLifetimeVariation);
-PHLuaColorGetter(PHGenericParticleAnimator,initialColor);
-PHLuaColorSetter(PHGenericParticleAnimator,setInitColor);
-PHLuaColorGetter(PHGenericParticleAnimator,finalColor);
-PHLuaColorSetter(PHGenericParticleAnimator,setFinalColor);
-PHLuaBoolGetter(PHGenericParticleAnimator,rotatesWithVelocity);
-PHLuaBoolSetter(PHGenericParticleAnimator,setRotatesWithVelocity);
-PHLuaAngleGetter(PHGenericParticleAnimator,rotationOffset);
-PHLuaAngleSetter(PHGenericParticleAnimator,setRotationOffset);
-PHLuaDefineCall(PHGenericParticleAnimator,play);
-PHLuaDefineCall(PHGenericParticleAnimator,pause);
-PHLuaDefineCall(PHGenericParticleAnimator,clear);
+PHLuaBoolGetter(PHGenericParticleAnimator, isPlaying);
+PHLuaBoolSetter(PHGenericParticleAnimator, setPlaying);
+PHLuaBoolGetter(PHGenericParticleAnimator, isGenerating);
+PHLuaBoolSetter(PHGenericParticleAnimator, setGenerating);
+PHLuaNumberGetter(PHGenericParticleAnimator, generatingFor);
+PHLuaNumberSetter(PHGenericParticleAnimator, setGeneratingFor);
+PHLuaNumberGetter(PHGenericParticleAnimator, particlesPerSecond);
+PHLuaNumberSetter(PHGenericParticleAnimator, setParticlesPerSecond);
+PHLuaRectGetter(PHGenericParticleAnimator, generationArea);
+PHLuaRectSetter(PHGenericParticleAnimator, setGenerationArea);
+PHLuaBoolGetter(PHGenericParticleAnimator, elipticalArea);
+PHLuaBoolSetter(PHGenericParticleAnimator, setElipticalArea);
+PHLuaPointGetter(PHGenericParticleAnimator, velocity);
+PHLuaPointSetter(PHGenericParticleAnimator, setVelocity);
+PHLuaNumberGetter(PHGenericParticleAnimator, velocityVariation);
+PHLuaNumberSetter(PHGenericParticleAnimator, setVelocityVariation);
+PHLuaAngleGetter(PHGenericParticleAnimator, spreadAngle);
+PHLuaAngleSetter(PHGenericParticleAnimator, setSpreadAngle);
+PHLuaPointGetter(PHGenericParticleAnimator, gravity);
+PHLuaPointSetter(PHGenericParticleAnimator, setGravity);
+PHLuaNumberGetter(PHGenericParticleAnimator, sizeVariation);
+PHLuaNumberSetter(PHGenericParticleAnimator, setSizeVariation);
+PHLuaPointGetter(PHGenericParticleAnimator, initialSize);
+PHLuaPointSetter(PHGenericParticleAnimator, setInitSize);
+PHLuaPointGetter(PHGenericParticleAnimator, finalSize);
+PHLuaPointSetter(PHGenericParticleAnimator, setFinalSize);
+PHLuaNumberGetter(PHGenericParticleAnimator, particleLifetime);
+PHLuaNumberSetter(PHGenericParticleAnimator, setParticleLifetime);
+PHLuaNumberGetter(PHGenericParticleAnimator, lifetimeVariation);
+PHLuaNumberSetter(PHGenericParticleAnimator, setLifetimeVariation);
+PHLuaColorGetter(PHGenericParticleAnimator, initialColor);
+PHLuaColorSetter(PHGenericParticleAnimator, setInitColor);
+PHLuaColorGetter(PHGenericParticleAnimator, finalColor);
+PHLuaColorSetter(PHGenericParticleAnimator, setFinalColor);
+PHLuaBoolGetter(PHGenericParticleAnimator, rotatesWithVelocity);
+PHLuaBoolSetter(PHGenericParticleAnimator, setRotatesWithVelocity);
+PHLuaAngleGetter(PHGenericParticleAnimator, rotationOffset);
+PHLuaAngleSetter(PHGenericParticleAnimator, setRotationOffset);
+PHLuaDefineCall(PHGenericParticleAnimator, play);
+PHLuaDefineCall(PHGenericParticleAnimator, pause);
+PHLuaDefineCall(PHGenericParticleAnimator, clear);
 
 void PHGenericParticleAnimator::registerLuaInterface(lua_State *L)
 {
     lua_getglobal(L, "PHGenericParticleAnimator");
     if (lua_istable(L, -1))
     {
-        PHLuaAddMethod(PHGenericParticleAnimator,isPlaying);
-        PHLuaAddMethod(PHGenericParticleAnimator,setPlaying);
-        PHLuaAddMethod(PHGenericParticleAnimator,isGenerating);
-        PHLuaAddMethod(PHGenericParticleAnimator,setGenerating);
-        PHLuaAddMethod(PHGenericParticleAnimator,generatingFor);
-        PHLuaAddMethod(PHGenericParticleAnimator,setGeneratingFor);
-        PHLuaAddMethod(PHGenericParticleAnimator,particlesPerSecond);
-        PHLuaAddMethod(PHGenericParticleAnimator,setParticlesPerSecond);
-        PHLuaAddMethod(PHGenericParticleAnimator,generationArea);
-        PHLuaAddMethod(PHGenericParticleAnimator,setGenerationArea);
-        PHLuaAddMethod(PHGenericParticleAnimator,elipticalArea);
-        PHLuaAddMethod(PHGenericParticleAnimator,setElipticalArea);
-        PHLuaAddMethod(PHGenericParticleAnimator,velocity);
-        PHLuaAddMethod(PHGenericParticleAnimator,setVelocity);
-        PHLuaAddMethod(PHGenericParticleAnimator,velocityVariation);
-        PHLuaAddMethod(PHGenericParticleAnimator,setVelocityVariation);
-        PHLuaAddMethod(PHGenericParticleAnimator,spreadAngle);
-        PHLuaAddMethod(PHGenericParticleAnimator,setSpreadAngle);
-        PHLuaAddMethod(PHGenericParticleAnimator,gravity);
-        PHLuaAddMethod(PHGenericParticleAnimator,setGravity);
-        PHLuaAddMethod(PHGenericParticleAnimator,initialSize);
-        PHLuaAddMethod(PHGenericParticleAnimator,setInitSize);
-        PHLuaAddMethod(PHGenericParticleAnimator,finalSize);
-        PHLuaAddMethod(PHGenericParticleAnimator,setFinalSize);
-        PHLuaAddMethod(PHGenericParticleAnimator,particleLifetime);
-        PHLuaAddMethod(PHGenericParticleAnimator,setParticleLifetime);
-        PHLuaAddMethod(PHGenericParticleAnimator,lifetimeVariation);
-        PHLuaAddMethod(PHGenericParticleAnimator,setLifetimeVariation);
-        PHLuaAddMethod(PHGenericParticleAnimator,initialColor);
-        PHLuaAddMethod(PHGenericParticleAnimator,setInitColor);
-        PHLuaAddMethod(PHGenericParticleAnimator,finalColor);
-        PHLuaAddMethod(PHGenericParticleAnimator,setFinalColor);
-        PHLuaAddMethod(PHGenericParticleAnimator,rotatesWithVelocity);
-        PHLuaAddMethod(PHGenericParticleAnimator,setRotatesWithVelocity);
-        PHLuaAddMethod(PHGenericParticleAnimator,rotationOffset);
-        PHLuaAddMethod(PHGenericParticleAnimator,setRotationOffset);
-        PHLuaAddMethod(PHGenericParticleAnimator,play);
-        PHLuaAddMethod(PHGenericParticleAnimator,pause);
-        PHLuaAddMethod(PHGenericParticleAnimator,clear);
+        PHLuaAddMethod(PHGenericParticleAnimator, isPlaying);
+        PHLuaAddMethod(PHGenericParticleAnimator, setPlaying);
+        PHLuaAddMethod(PHGenericParticleAnimator, isGenerating);
+        PHLuaAddMethod(PHGenericParticleAnimator, setGenerating);
+        PHLuaAddMethod(PHGenericParticleAnimator, generatingFor);
+        PHLuaAddMethod(PHGenericParticleAnimator, setGeneratingFor);
+        PHLuaAddMethod(PHGenericParticleAnimator, particlesPerSecond);
+        PHLuaAddMethod(PHGenericParticleAnimator, setParticlesPerSecond);
+        PHLuaAddMethod(PHGenericParticleAnimator, generationArea);
+        PHLuaAddMethod(PHGenericParticleAnimator, setGenerationArea);
+        PHLuaAddMethod(PHGenericParticleAnimator, elipticalArea);
+        PHLuaAddMethod(PHGenericParticleAnimator, setElipticalArea);
+        PHLuaAddMethod(PHGenericParticleAnimator, velocity);
+        PHLuaAddMethod(PHGenericParticleAnimator, setVelocity);
+        PHLuaAddMethod(PHGenericParticleAnimator, velocityVariation);
+        PHLuaAddMethod(PHGenericParticleAnimator, setVelocityVariation);
+        PHLuaAddMethod(PHGenericParticleAnimator, spreadAngle);
+        PHLuaAddMethod(PHGenericParticleAnimator, setSpreadAngle);
+        PHLuaAddMethod(PHGenericParticleAnimator, gravity);
+        PHLuaAddMethod(PHGenericParticleAnimator, setGravity);
+        PHLuaAddMethod(PHGenericParticleAnimator, sizeVariation);
+        PHLuaAddMethod(PHGenericParticleAnimator, setSizeVariation);
+        PHLuaAddMethod(PHGenericParticleAnimator, initialSize);
+        PHLuaAddMethod(PHGenericParticleAnimator, setInitSize);
+        PHLuaAddMethod(PHGenericParticleAnimator, finalSize);
+        PHLuaAddMethod(PHGenericParticleAnimator, setFinalSize);
+        PHLuaAddMethod(PHGenericParticleAnimator, particleLifetime);
+        PHLuaAddMethod(PHGenericParticleAnimator, setParticleLifetime);
+        PHLuaAddMethod(PHGenericParticleAnimator, lifetimeVariation);
+        PHLuaAddMethod(PHGenericParticleAnimator, setLifetimeVariation);
+        PHLuaAddMethod(PHGenericParticleAnimator, initialColor);
+        PHLuaAddMethod(PHGenericParticleAnimator, setInitColor);
+        PHLuaAddMethod(PHGenericParticleAnimator, finalColor);
+        PHLuaAddMethod(PHGenericParticleAnimator, setFinalColor);
+        PHLuaAddMethod(PHGenericParticleAnimator, rotatesWithVelocity);
+        PHLuaAddMethod(PHGenericParticleAnimator, setRotatesWithVelocity);
+        PHLuaAddMethod(PHGenericParticleAnimator, rotationOffset);
+        PHLuaAddMethod(PHGenericParticleAnimator, setRotationOffset);
+        PHLuaAddMethod(PHGenericParticleAnimator, play);
+        PHLuaAddMethod(PHGenericParticleAnimator, pause);
+        PHLuaAddMethod(PHGenericParticleAnimator, clear);
     }
-    lua_pop(L,-1);
+    lua_pop(L, -1);
 }
 
 PHGenericParticleAnimator::particles * PHGenericParticleAnimator::calculatedParticles()
@@ -270,7 +275,7 @@ void PHGenericParticleAnimator::clear()
     heap.clear();
 }
 
-PHGenericParticleAnimator::PHGenericParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), initSize(0.1,0.1), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotates(false), rotoff(0), L(NULL), genQueue(0), cache(NULL), cached(false)
+PHGenericParticleAnimator::PHGenericParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), deltaSize(1), initSize(0.1,0.1), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotates(false), rotoff(0), L(NULL), genQueue(0), cache(NULL), cached(false)
 {}
 
 void PHGenericParticleAnimator::animateParticle(PHGenericParticleAnimator::particle_state * p, ph_float elapsed)
@@ -280,13 +285,15 @@ void PHGenericParticleAnimator::animateParticle(PHGenericParticleAnimator::parti
     p->part.position += p->velocity*elapsed;
     p->velocity += grav*elapsed;
     ph_float q = (p->lifespan)/(p->totalLife);
-    p->part.size = initSize*q + endSize*(1-q);
+    p->part.size += (endSize-initSize)*(elapsed / p->totalLife); 
     p->part.color = PHColor(initColor.r*q+endColor.r*(1-q),
                                 initColor.g*q+endColor.g*(1-q),
                                 initColor.b*q+endColor.b*(1-q),
                                 initColor.a*q+endColor.a*(1-q));
     if (rotates)
         p->part.rotation = PHAngleFromVector(p->velocity)-M_PI_2;
+    else
+        p->part.rotation = 0;
     p->part.rotation += rotoff;
 }
 
@@ -323,6 +330,7 @@ void PHGenericParticleAnimator::advanceAnimation(ph_float elapsedTime)
             particle_state * st = new particle_state;
             ph_float r1 = (ph_float)rand()/RAND_MAX;
             ph_float r2 = (ph_float)rand()/RAND_MAX;
+            ph_float r3 = (ph_float)rand()/RAND_MAX;
             PHPoint p;
             if (elArea)
                 p = PHPoint((cos(r2*M_PI*2)*r2+1)/2,(sin(r1*M_PI*2)*r2+1)/2);
@@ -331,7 +339,7 @@ void PHGenericParticleAnimator::advanceAnimation(ph_float elapsedTime)
             p.x = genArea.x + p.x*genArea.width;
             p.y = genArea.y + p.y*genArea.height;
             st->part.position = p;
-            st->part.size = initSize;
+            st->part.size = initSize * (1 + (deltaSize - 1) * r3);
             st->part.color = initColor;
             ph_float ang = PHAngleFromVector(vel);
             ph_float module = vel.length()+((ph_float)rand()/RAND_MAX)*deltavel;

@@ -91,6 +91,13 @@ static int IGScripting_PHLog(lua_State * L)
 
 PHLuaPointGetter(IGScripting, screenSize);
 
+static int PHVector2_meta_angle(lua_State * L)
+{
+    PHPoint p = PHPoint::fromLua(L, 1);
+    lua_pushnumber(L, PHAngleFromVector(p));
+    return 1;
+}
+
 void IGScripting::loadCInterface()
 {
     lua_getglobal(L, "IGScripting");
@@ -99,7 +106,10 @@ void IGScripting::loadCInterface()
 
     PHLuaAddMethod_(IGScripting, classFromName);
     PHLuaAddMethod(IGScripting, screenSize);
+    lua_pop(L, 1);
 
+    lua_getglobal(L, "PHVector2_meta");
+    PHLuaAddMethod(PHVector2_meta, angle);
     lua_pop(L, 1);
 
     lua_pushvalue(L, LUA_GLOBALSINDEX);
