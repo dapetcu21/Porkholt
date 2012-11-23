@@ -4,7 +4,7 @@ bullets:attachToWorld()
 bounds = IGScreenBounds:new()
 bounds:attachToWorld()
 
-function bullets:onImpact(object, bullet)
+function bullets:onStandardBulletImpact(object, bullet)
     if object then
         if (bullet.owner == 1) then
             if (object:isKindOfClass(IGMob)) then

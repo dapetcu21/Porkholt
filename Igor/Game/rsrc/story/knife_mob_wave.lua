@@ -22,7 +22,6 @@ function IKnifeMobWave:frame(elapsed)
             mob:attachToWorld()
             mob.onDie:addCallback(function (m)
                 self.objects[m] = nil
-                print('knife mob died')
             end)
             self.objects[mob] = true
         end
@@ -32,7 +31,6 @@ function IKnifeMobWave:frame(elapsed)
         if mob:position().x < -1.5 then
             mob:removeFromWorld()
             self.objects[mob] = nil;
-            print("knife mob expired")
         else
             local v = mob:linearVelocity()
             local delta = vec2(-self.speed, 0) - v

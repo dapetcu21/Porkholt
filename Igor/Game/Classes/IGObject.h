@@ -42,6 +42,8 @@ class IGObject : public PHObject
 
         IGWorld * getWorld() { return world; }
 
+        IGScripting * scriptingContext() { return scripting; }
+
     protected:
         virtual void attachedToWorld();
         virtual PHDrawable * loadDrawable();

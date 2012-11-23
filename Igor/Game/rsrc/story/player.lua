@@ -27,7 +27,7 @@ onFrame:addCallback(function (elapsed)
     end
     cooldown = cooldown - elapsed;
     while (cooldown < 0) do
-        bullets:addBullet(1, player:position() + vec2(0.5, 0), 0, 1); --fire
+        bullets:addBullet(bullets:newStandardBullet(player:position() + vec2(0.5, 0))); --fire
         cooldown = cooldown + 0.2
     end
 end)

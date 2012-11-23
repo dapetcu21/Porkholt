@@ -22,7 +22,6 @@ function IBasicMobWave:frame(elapsed)
             mob:attachToWorld()
             mob.onDie:addCallback(function (m)
                 self.objects[m] = nil
-                print('mob died')
             end)
             self.objects[mob] = true
         end
@@ -32,7 +31,6 @@ function IBasicMobWave:frame(elapsed)
         if mob:position().x < -1.5 then
             mob:removeFromWorld()
             self.objects[mob] = nil;
-            print("mob expired")
         else
             local l = player:position()
             local p = mob:desiredPosition()
