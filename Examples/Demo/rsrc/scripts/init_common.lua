@@ -207,9 +207,9 @@ function objectWithClass(class,...)
 	end
 	obj.realClass = class
 	if (Initializers[class]) then
-		Initializers[class](obj,unpack(arg))
+		Initializers[class](obj,...)
 	else
-		Initializers.PHLObject(obj,unpack(arg))
+		Initializers.PHLObject(obj,...)
 	end
 	return obj
 end

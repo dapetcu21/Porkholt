@@ -23,6 +23,7 @@ void PHTestView::draw()
     };
 	
     gm->setGLStates(PHGLBlending | PHGLVertexArray | PHGLColorArray);
+    gm->updateSpriteUniforms();
     gm->spriteUniformStates()->apply(gm->shaderProgramNamed<color_notex_sprites>());
     gm->vertexPointer(2, GL_FLOAT, 0, squareVertices);
     gm->colorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);

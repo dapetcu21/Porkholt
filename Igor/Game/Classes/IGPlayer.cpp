@@ -3,6 +3,7 @@
 #include "IGPlayer.h"
 #include "IGWorld.h"
 #include "IGScripting.h"
+#include "IGLevelController.h"
 #include <Porkholt/Core/PHLua.h>
 #include <Porkholt/Core/PHImageView.h>
 #include <Porkholt/Core/PHGameManager.h>
@@ -79,7 +80,12 @@ void IGPlayer::die()
         } 
         lua_pop(L, 1);
     }
+    IGWorld * w = world;
+    PHLog("meow");
     removeFromWorld();
+    PHLog("meow2");
+    w->levelController()->callBack();
+    PHLog("meow3");
 }
 
 

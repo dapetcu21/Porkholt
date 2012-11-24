@@ -94,12 +94,13 @@ end\n\
 function metastack.operate(op, ...)\n\
     local is = {}\n\
     local any = false\n\
-    for i,v in ipairs(arg) do\n\
+    for i = 1, select(\"#\",...) do\n\
+        local v = select(i,...)\n\
         is[i] = metastack.isstack(v)\n\
         any = any or is[i]\n\
     end\n\
     if not any then\n\
-        return ops[op](unpack(arg))\n\
+        return ops[op](...)\n\
     else\n\
         local o = { stack = { n = 0 } }\n\
         setmetatable(o, metastack)\n\
@@ -117,8 +118,8 @@ function metastack.operate(op, ...)\n\
                 f(a)\n\
             end\n\
        end\n\
-       for i,v in ipairs(arg) do\n\
-           add(v, is[i])\n\
+       for i = 1, select(\"#\",...) do\n\
+           add(select(i,...), is[i])\n\
        end\n\
        f({ op = ops_c[op] })\n\
        o.tp = ops_r[op]\n\

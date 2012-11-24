@@ -12,6 +12,7 @@ class PHView;
 class b2World;
 class b2Body;
 class IGContactListener;
+class IGLevelController;
 
 class IGWorld : public PHAnimator
 {
@@ -23,8 +24,9 @@ class IGWorld : public PHAnimator
         b2World * phyWorld;
         b2Body * ground;
         IGContactListener * cl;
+        IGLevelController * lc;
     public:
-        IGWorld(PHGameManager * gm, PHDirectory * dir, const PHRect & size);
+        IGWorld(PHGameManager * gm, PHDirectory * dir, const PHRect & size, IGLevelController * lc);
         ~IGWorld();
 
         enum collisionBits
@@ -48,6 +50,8 @@ class IGWorld : public PHAnimator
         PHView * view() { return _view; }
         b2World * physicsWorld() { return phyWorld; }
         b2Body * groundBody() { return ground; }
+
+        IGLevelController * levelController() { return lc; }
 
         PHGameManager * gameManager() { return gm; }
         

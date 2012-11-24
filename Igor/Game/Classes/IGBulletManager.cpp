@@ -97,8 +97,12 @@ PHDrawable * IGBulletManager::loadDrawable()
 
 void IGBulletManager::animate(ph_float elapsed)
 {
-    for (IGBullet * p = bullets; p; p = p->next)
+    IGBullet * nx;
+    for (IGBullet * p = bullets; p; p = nx)
+    {
+        nx = p->next;
         p->animate(elapsed);
+    }
 }
 
 void IGBulletManager::beginContact(bool aBody, b2Contact * contact)

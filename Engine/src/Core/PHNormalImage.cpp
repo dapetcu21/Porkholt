@@ -162,8 +162,8 @@ void PHNormalImage::renderInFramePortionTint(PHGameManager * gm, const PHRect & 
     };
     
     int states = PHGLBlending | PHGLVertexArray | PHGLTextureCoordArray | PHGLTexture0;
+    gm->setGLStates(states);
     gm->setTextureUniform(texture());
-    bindToTexture(0);
     gm->setColor(tint);
     gm->updateColorUniform();
     gm->spriteUniformStates()->apply(gm->spriteShader());

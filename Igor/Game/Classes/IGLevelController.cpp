@@ -19,7 +19,7 @@ PHView * IGLevelController::loadView(const PHRect & f)
 
     PHView * v = new PHView(f);
     v->setUserInput(true);
-    world = new IGWorld(gm, dir, f);
+    world = new IGWorld(gm, dir, f, this);
     scripting = new IGScripting(gm, dir, world);
     scripting->setAnimatorPool(animpool);
     world->setAnimatorPool(animpool);
@@ -28,6 +28,9 @@ PHView * IGLevelController::loadView(const PHRect & f)
     h->release();
     v->addChild(world->view());
     gm->setClearColor(PHColor((float)0xd9/0xff, (float)0x68/0xff, (float)0x68/0xff));
+
+    gm->imageNamed("basic_mob");
+    gm->imageNamed("knife");
 
     return v;
 }

@@ -45,7 +45,7 @@ class IGContactListener : public b2ContactListener
         }
 };
 
-IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size) : gm(_gm), dir(_dir), _view(new PHView(size))
+IGWorld::IGWorld(PHGameManager * _gm, PHDirectory * _dir, const PHRect & size, IGLevelController * _lc) : gm(_gm), dir(_dir), _view(new PHView(size)), lc(_lc)
 {
     _view->setUserInput(true);
     dir->retain();

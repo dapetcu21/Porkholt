@@ -23,6 +23,8 @@
 #include <Porkholt/Core/PHDrawableCoordinates.h>
 #include <Porkholt/Core/PH2DCamera.h>
 #include <Porkholt/Core/PHViewControllerHolder.h>
+#include <Porkholt/IO/PHDirectory.h>
+#include "IGLevelController.h"
 
 class PHSliderView : public PHView
 {
@@ -567,6 +569,178 @@ class PHCodeView : public PHView
         }
 };
 
+class PHRippleController : public PHObject
+{
+    protected:
+        PHDrawable * loadDrawable();
+        PHGLTexture2D * disperse[2];
+        PHGLTexture2D * displace[3];
+
+        PHPostProcess * disv, * difv;
+        PHTextureCanvas * distort;
+
+        PHGLUniformStates::uniform * umask, * uoldmask, * umap, * umap2, * utex;
+
+        void onFrame()
+        {
+            PHGLTexture2D * aux;
+            difv->setColorTexture(disperse[0]);
+            aux = difv->colorTexture();
+            if (!disperse[0]) 
+                aux->retain();
+            disperse[0] = aux;
+
+            umask->setValue(disperse[0]);
+            uoldmask->setValue(disperse[1]);
+
+            disv->setColorTexture(aux = displace[0]);
+
+            utex->setValue(aux);
+            umap->setValue(displace[2]);
+            umap2->setValue(displace[1]);
+
+
+            aux = disperse[0]; 
+            disperse[0] = disperse[1];
+            disperse[1] = aux;
+
+            aux = displace[0];
+            displace[0] = displace[1];
+            displace[1] = displace[2];
+            displace[2] = aux;
+        }
+
+        PHGameManager * gm;
+        PHDrawable * child;
+        PHDrawable * root;
+        PHView * stuff;
+    public:
+        ~PHRippleController()
+        {
+            if (disperse[0])
+                disperse[0]->release();
+            if (disperse[1])
+                disperse[1]->release();
+            if (displace[0])
+                displace[0]->release();
+            if (displace[1])
+                displace[1]->release();
+            if (displace[2])
+                displace[2]->release();
+            if (disv)
+                disv->release();
+            if (difv)
+                difv->release();
+            if (distort)
+                distort->release();
+        }
+
+        PHRippleController(PHGameManager * _gm, PHDrawable * _child) : gm(_gm), child(_child) 
+        {
+            disperse[0] = disperse[1] = displace[0] = displace[1] = displace[2] = NULL;
+        }
+
+        PHDrawable * drawable()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                PHGLTexture2D * t = new PHGLTexture2D(gm);
+                t->setWrapS(PHGLTexture::clampToEdge);
+                t->setWrapT(PHGLTexture::clampToEdge);
+                t->setMinFilter(PHGLTexture::linear);
+                t->setMagFilter(PHGLTexture::linear);
+                //uint16_t v[4] = {1<<15, 1<<15, 1<<15, 1<<15};
+                //uint8_t v[4] = {128, 128, 128, 128};
+                //t->setData((uint8_t*)&v, 1, 1, PHGLTexture::R16f);
+                displace[i] = t;
+            }
+            
+            disv = new PHPostProcess(gm);
+            disv->retain();
+            disv->setColorFormat(PHGLTexture::R16f);
+            disv->setMaterial(gm->materialNamed("displacement"));
+            disv->setOnRenderCallback(PHInvBind(this, PHRippleController::onFrame, NULL));
+
+            difv = new PHPostProcess(gm);
+            difv->setColorFormat(PHGLTexture::R16f);
+            difv->setMaterial(gm->materialNamed("dispersion"));
+            PHGLUniformStates * us = difv->additionalUniforms();
+            PHGLUniformStates * uv = disv->additionalUniforms();
+            umask = &(us->at("mask"));
+            uoldmask = &(us->at("oldmask"));
+            umap = &(us->at("map"));
+            umap2 = &(us->at("map2"));
+            utex = &(uv->at("map"));
+
+            us->at("screenW").setValue(gm->screenWidth());
+            us->at("screenH").setValue(gm->screenHeight());
+            uv->at("screenWInv").setValue(1.0f/gm->screenWidth());
+            uv->at("screenHInv").setValue(1.0f/gm->screenHeight());
+
+            stuff = new PHView(gm->screenBounds());
+
+            disv->addChild(difv);
+            difv->setRenderMode(666); 
+            difv->addChild(stuff->newProxy());
+
+            distort = new PHTextureCanvas(gm);
+            distort->setColorFormat(PHGLTexture::RGBA8);
+            distort->setDepthFormat(PHGLFBOAttachment::Depth16);
+            distort->setClearColor(PHColor(0.1, 0.1, 0.1, 1.0));
+            distort->addChild(child);
+            disv->addChild(distort);
+            uv->at("texture").setValue(distort->colorTexture());
+
+            PHDrawable * root = new PHDrawable();
+            root->addChild(disv);
+            root->addChild(stuff);
+
+            return root;
+        }
+
+        void showOff() 
+        {
+            PHRect b = stuff->bounds();
+            PHImageView * iv = new PHImageView(PHRect(-200, b.height/2 - 50, 100, 100));
+            iv->setImage(gm->imageNamed("player"));
+            iv->setMaterial(gm->materialNamed("density"));
+            iv->beginCinematicAnimation(2.5);
+            iv->animationSkipFirstFrames(1);
+            iv->animateMove(PHPoint(b.width/2 + 100, 0));
+
+            iv->chainCinematicAnimation(0.5);
+            iv->animateScale(PHPoint(-1, 1));
+            iv->chainCinematicAnimation(0.2);
+            iv->chainCinematicAnimation(0.5);
+            iv->animateScale(PHPoint(-1, 1));
+
+            iv->chainCinematicAnimation(2.5);
+            iv->animateMove(PHPoint(b.width/2 + 500, 0));
+            iv->commitCinematicAnimation();
+            stuff->addChild(iv);
+            iv->release();
+
+            PHView * vv = new PHView(PHRect(-500, b.height/2 - 100, 500, 200));
+            for (int i = 0; i < 20; i++)
+            {
+                PHImageView * v = new PHImageView(PHRect(0, 0, 50 * (10.0/7), 50));
+                v->setImage(gm->imageNamed("basic_mob"));
+                v->setHorizontallyFlipped(true);
+                v->setMaterial(gm->materialNamed("density"));
+                v->setCenter(PHPoint(50 + 400 * (rand() / (float)RAND_MAX), 25 + 150 * (rand() / (float)RAND_MAX)));
+                vv->addChild(v);
+                v->release();
+            }
+            stuff->addChild(vv);
+            vv->beginCinematicAnimation(5);
+            vv->animationSkipFirstFrames(1);
+            vv->chainCinematicAnimation(5);
+            vv->animateMove(PHPoint(b.width + 500, 0));
+            vv->commitCinematicAnimation();
+            vv->release();
+        }
+};
+
 class PHPorkholt3D : public PHSlide
 {
 protected:
@@ -575,11 +749,12 @@ protected:
     PHPostProcess * canvas;
     PHView * curtain;
     PHImageView * v1, * v2;
+    PHRippleController * ripples;
     
     PHView * loadView(const PHRect & r)
     {
         PHView * v = new PHView(r);
-        
+
         canvas = new PHPostProcess(gm);
         v->addChild(canvas);
         canvas->setColorFormat(PHGLFBOAttachment::RGBA8);
@@ -641,8 +816,13 @@ protected:
         curtain->setBackgroundColor(PHColor(0.0f, 0.0f, 0.0f, 0.0f));
         v->addChild(curtain);
         curtain->release();
+        
+        PHView * vv = new PHView(r);
 
-        return v;
+        ripples = new PHRippleController(gm, v);
+        vv->addChild(ripples->drawable());
+        v->release();
+        return vv;
     }
 
     PHCodeView * cv1, * cv2;
@@ -821,6 +1001,11 @@ canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
             }
             case 7:
             {
+                ripples->showOff();
+                return;
+            }
+            case 8:
+            {
                 PHViewController * vc = new PHPongController(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
@@ -839,13 +1024,15 @@ canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
     }
     
 public:
-    PHPorkholt3D(PHGameManager * gm) : PHSlide(gm), lbody(NULL), time(0) {}
+    PHPorkholt3D(PHGameManager * gm) : PHSlide(gm), lbody(NULL), time(0), ripples(NULL) {}
     ~PHPorkholt3D()
     {
         if (lbody)
             lbody->release();
         if (body)
             body->release();
+        if (ripples)
+            ripples->release();
     }
 };
 
@@ -1517,13 +1704,111 @@ protected:
     }
 };
 
+class PHIgorDemo : public PHViewController
+{
+    public:
+        PHIgorDemo(PHGameManager * gm) : PHViewController(gm) {}
+        
+        PHView * loadView(const PHRect & r)
+        {
+            PHView * v = new PHView(r);
+            v->setGameManager(gm);
+            v->setUserInput(true);
+
+            PH2DCamera * camera = new PH2DCamera();
+            camera->setScreenSize(PHSize(0,4.0f));
+            camera->setResetsMatrices(true);
+            v->addChild(camera);
+            PHRect bounds = camera->realScreenBounds();
+            PHViewControllerHolder * holder = new PHViewControllerHolder(bounds);
+            camera->addChild(holder);
+            
+            PHNavigationController * nav = new PHNavigationController(gm);
+            holder->setViewController(nav);
+            
+            camera->release();
+            holder->release();
+            nav->release();
+
+            PHDirectory * dir = gm->resourceDirectory()->directoryAtPath("story");
+            IGLevelController * vc = new IGLevelController(gm, dir);
+            nav->pushViewController(vc);
+
+            vc->setBackCallback(PHInv(this, PHIgorDemo::back, NULL));
+
+            return v;
+        }
+
+        void back()
+        {
+            PHSlide * vc = new PHPorkholt2(gm);
+            navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+            vc->release();
+            gm->setClearColor(PHClearColor);
+        }
+};
+
+class PHIgorJoking : public PHSlide
+{
+    public:
+        PHIgorJoking(PHGameManager * gm) : PHSlide(gm) {}
+        void screenTapped(int count)
+        {
+            switch (count) {
+                case 0:
+                    addFullScreenTitle("Just joking");
+                    break;
+                case 1:
+                {
+                    PHIgorDemo * vc = new PHIgorDemo(gm);
+                    navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+                    vc->release();
+                }
+            }
+        }
+};
+
+class PHIgorThisYear : public PHSlide
+{
+    public:
+        PHIgorThisYear(PHGameManager * gm) : PHSlide(gm) {}
+        void screenTapped(int count)
+        {
+            switch (count) {
+                case 0:
+                    addFullScreenTitle("This year...");
+                    return;
+                case 1:
+                    gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("drumroll"));
+                    return;
+                case 2:
+                {
+                    gm->soundManager()->setBackgroundMusic(NULL);
+                    PHImageView * iv = new PHImageView(gm->screenBounds());
+                    iv->setImage(gm->imageNamed("bsod"));
+                    getView()->addChild(iv);
+                    iv->release();
+                    return;
+                }
+                case 3:
+                {
+                    PHSlide * vc = new PHIgorJoking(gm);
+                    navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+                    vc->release();
+                    return;
+                }
+                
+            }
+        }
+};
+
 class PHBeenoDemo : public PHMenuController
 {
 public:
     PHBeenoDemo(PHGameManager * gm) : PHMenuController(gm) {}
     void backPressed(PHObject * sender, PHMenuController * ud)
     {
-        PHSlide * vc = new PHPorkholt2(gm);
+        PHSlide * vc = new PHIgorThisYear(gm);
         gm->soundManager()->setBackgroundMusic(NULL);
         navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
         vc->release();
@@ -1663,7 +1948,7 @@ protected:
 class PHBeeno : public PHSlide
 {
 public:
-    PHBeeno(PHGameManager * gm) : PHSlide(gm) {}
+PHBeeno(PHGameManager * gm) : PHSlide(gm) {}
 protected:
     ph_float tb;
     void screenTapped(int count)
@@ -1671,20 +1956,12 @@ protected:
         switch (count)
         {
             case 0:
-                tb = addTitle("Beeno", titleheader);
+                addFullScreenTitle("Last year...");
                 return;
             case 1:
-                tb = addBullet("- The most ambitious project of its kind", tb + 2*spacing);
-                return;
-            case 2:
-                tb = addBullet("- Story is the main focus", tb + spacing);
-                return;
-            case 3:
-                tb = addBullet("- Unique control scheme", tb + spacing);
-                return;
-            case 4:
-                PHSlide * vc = new PHBeeno2(gm);
+                PHBeenoDemo * vc = new PHBeenoDemo(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
+                vc->titleScreen()->setBackButton(PHInv(vc, PHBeenoDemo::backPressed,vc));
                 vc->release();
                 return;
         }
@@ -1755,9 +2032,10 @@ protected:
             case 1:
                 tb = addBullet("- 2D Graphics engine", tb + 2*spacing);
                 return;
+            case 2:
                 tb = addBullet("- Awesome, but more on that later", tb + spacing);
                 return;
-            case 2:
+            case 3:
                 PHSlide * vc = new PHGames(gm);
                 navigationController()->pushViewController(vc, PHNavigationController::FadeToColor, true);
                 vc->release();
@@ -1826,7 +2104,7 @@ protected:
     {
         if (count == 0)
         {
-            //gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("cfox"));
+            gm->soundManager()->setBackgroundMusic(gm->soundManager()->soundNamed("cfox"));
             PHView * v = getView();
             PHImage * img = gm->imageNamed("porkholt_labs");
             PHRect rr(0, 0, img->width(), img->height());
@@ -1857,7 +2135,6 @@ protected:
 };
 
 
-
 class PHCapView : public PHView
 {
 public:
@@ -1886,6 +2163,7 @@ void PHGameEntryPoint(PHGameManager * gm)
     gm->imageNamed("concept");
 
     PH2DCamera * camera = new PH2DCamera();
+//    camera->setScreenSize(PHVector2(0, 800));
     gm->setMainDrawable(camera);
     PHRect bounds = gm->screenBounds();
 
@@ -1905,7 +2183,8 @@ void PHGameEntryPoint(PHGameManager * gm)
     holder->release();
     cap->release();
         
-    PHViewController * vc = new PHPorkholt3D(gm);
+    PHViewController * vc = new PHTitle(gm);
+//    PHViewController * vc = new PHIgorThisYear(gm);
     nav->pushViewController(vc);
     vc->release();
     nav->release(); 

@@ -5,6 +5,7 @@ set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
 set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/scripts")
 set(PH_NAME "Demo")
 set(PH_BEENO "${PH_ENGINE_PATH}/../Beeno/Game")
+set(PH_IGOR "${PH_ENGINE_PATH}/../Igor/Game")
 
 set(PH_SOURCES
   main.cpp
@@ -88,6 +89,62 @@ set(PH_SOURCES
   ${PH_BEENO}/UI/PHChapterController.h
   ${PH_BEENO}/UI/PHTitleScreen.h
   ${PH_BEENO}/UI/PHMenuController.h
+
+  ${PH_IGOR}/Classes/IGLevelController.cpp
+  ${PH_IGOR}/Classes/IGScripting.cpp
+  ${PH_IGOR}/Classes/IGWorld.cpp
+  ${PH_IGOR}/Classes/IGObject.cpp
+  ${PH_IGOR}/Classes/IGProp.cpp
+  ${PH_IGOR}/Classes/IGImageProp.cpp
+  ${PH_IGOR}/Classes/IGInput.cpp
+  ${PH_IGOR}/Classes/IGDampingProp.cpp
+  ${PH_IGOR}/Classes/IGPlayer.cpp
+  ${PH_IGOR}/Classes/IGWallCell.cpp
+  ${PH_IGOR}/Classes/IGMob.cpp
+  ${PH_IGOR}/Classes/IGBasicMob.cpp
+  ${PH_IGOR}/Classes/IGBulletManager.cpp
+  ${PH_IGOR}/Classes/IGScreenBounds.cpp
+  ${PH_IGOR}/Classes/IGKinematic.cpp
+  ${PH_IGOR}/Classes/IGWallManager.cpp
+  ${PH_IGOR}/Classes/IGWallView.cpp
+  ${PH_IGOR}/Classes/IGWallCurve.cpp
+  ${PH_IGOR}/Classes/IGBouncyView.cpp
+  ${PH_IGOR}/Classes/IGBouncyButton.cpp
+  ${PH_IGOR}/Classes/IGBackgroundParticles.cpp
+  ${PH_IGOR}/Classes/IGRipples.cpp
+  ${PH_IGOR}/Classes/IGKnifeMob.cpp
+  ${PH_IGOR}/Classes/IGStandardBullet.cpp
+  ${PH_IGOR}/Classes/IGHomingBullet.cpp
+  ${PH_IGOR}/Classes/IGDeadpool.cpp
+
+  ${PH_IGOR}/Classes/IGLevelController.h
+  ${PH_IGOR}/Classes/IGScripting.h
+  ${PH_IGOR}/Classes/IGWorld.h
+  ${PH_IGOR}/Classes/IGObject.h
+  ${PH_IGOR}/Classes/IGProp.h
+  ${PH_IGOR}/Classes/IGImageProp.h
+  ${PH_IGOR}/Classes/IGInput.h
+  ${PH_IGOR}/Classes/IGDampingProp.h
+  ${PH_IGOR}/Classes/IGPlayer.h
+  ${PH_IGOR}/Classes/IGMob.h
+  ${PH_IGOR}/Classes/IGBasicMob.h
+  ${PH_IGOR}/Classes/IGWallCell.h
+  ${PH_IGOR}/Classes/IGBulletManager.h
+  ${PH_IGOR}/Classes/IGScreenBounds.h
+  ${PH_IGOR}/Classes/IGKinematic.h
+  ${PH_IGOR}/Classes/IGWallManager.h
+  ${PH_IGOR}/Classes/IGWallView.h
+  ${PH_IGOR}/Classes/IGWallCurve.h
+  ${PH_IGOR}/Classes/IGBouncyView.h
+  ${PH_IGOR}/Classes/IGBouncyButton.h
+  ${PH_IGOR}/Classes/IGBackgroundParticles.h
+  ${PH_IGOR}/Classes/IGRipples.h
+  ${PH_IGOR}/Classes/IGKnifeMob.h
+  ${PH_IGOR}/Classes/IGBullet.h
+  ${PH_IGOR}/Classes/IGStandardBullet.h
+  ${PH_IGOR}/Classes/IGHomingBullet.h
+  ${PH_IGOR}/Classes/IGDeadpool.h
+
   )
 
 set(PH_USE_BOX2D "YES")
@@ -95,7 +152,9 @@ set(PH_IOS_TARGET_IPAD "YES")
 
 include_directories(${PH_BEENO}
   ${PH_BEENO}/UI
-  ${PH_BEENO}/LevelSystem)
+  ${PH_BEENO}/LevelSystem
+  ${PH_IGOR}/Classes
+)
 
 include(Porkholt)
 porkholt(Demo ${PH_SOURCES})

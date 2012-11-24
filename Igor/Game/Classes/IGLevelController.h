@@ -18,9 +18,14 @@ class IGLevelController : public PHViewController
         IGWorld * world;
         PHDirectory * dir;
         PHAnimatorPool * animpool;
+
+        PHInvocation inv;
     public:
         IGLevelController(PHGameManager * gm, PHDirectory * lvlDir);
         ~IGLevelController();
+
+        void setBackCallback(const PHInvocation & i) { inv = i; }
+        void callBack() { inv.call(this); }
 
         void updateScene(ph_float elapsed);
         PHView * loadView(const PHRect & f);
