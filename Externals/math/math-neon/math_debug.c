@@ -265,7 +265,8 @@ void test_vectorfunc()
 {
 	float v0[4], v1[4], d[4];
 	
-	for(int i=0;i<4;i++)
+	int i;
+    for(i=0;i<4;i++)
 	{
 		v0[i] = 10*randf() - 5;
 		v1[i] = 10*randf() - 5;
@@ -282,13 +283,13 @@ void test_vectorfunc()
 	//dot 2
 	getrusage(RUSAGE_SELF, &ru);	
 	v2t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		r = dot2_c(v0, v1);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v2t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		r = dot2_neon(v0, v1);
 	};
@@ -306,13 +307,13 @@ void test_vectorfunc()
 	//normalize 2
 	getrusage(RUSAGE_SELF, &ru);	
 	v2t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		normalize2_c(v0, d);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v2t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		normalize2_neon(v0, d);
 	};
@@ -333,13 +334,13 @@ void test_vectorfunc()
 	//dot 3
 	getrusage(RUSAGE_SELF, &ru);	
 	v3t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		r = dot3_c(v0, v1);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v3t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		r = dot3_neon(v0, v1);
 	};
@@ -357,13 +358,13 @@ void test_vectorfunc()
 	//normalize 3
 	getrusage(RUSAGE_SELF, &ru);	
 	v3t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		normalize3_c(v0, d);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v3t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		normalize3_neon(v0, d);
 	};
@@ -382,13 +383,13 @@ void test_vectorfunc()
 	//cross 3
 	getrusage(RUSAGE_SELF, &ru);	
 	v3t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		cross3_c(v0, v1, d);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v3t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		cross3_neon(v0, v1, d);
 	};
@@ -409,13 +410,13 @@ void test_vectorfunc()
 	//dot 4
 	getrusage(RUSAGE_SELF, &ru);	
 	v4t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		r = dot4_c(v0, v1);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v4t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		r = dot4_neon(v0, v1);
 	};
@@ -433,13 +434,13 @@ void test_vectorfunc()
 	//normalize 4
 	getrusage(RUSAGE_SELF, &ru);	
 	v4t[0] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		normalize4_c(v0, d);
 	};
 	getrusage(RUSAGE_SELF, &ru);	
 	v4t[1] = ru.ru_utime.tv_sec * 1000000 + ru.ru_utime.tv_usec;
-	for(int i=0;i < testnum; i++)
+    for(i=0;i < testnum; i++)
 	{
 		normalize4_neon(v0, d);
 	};
@@ -470,7 +471,7 @@ void test_matrixfunc()
 	int testnum = 1000000;
 	struct rusage ru;
 	
-	for(int i=0;i<16;i++)
+    for(i=0;i<16;i++)
 	{
 		m0[i] = 10.0f * randf() - 5.0f; 
 		m1[i] = 10.0f * randf() - 5.0f; 

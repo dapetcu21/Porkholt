@@ -6,7 +6,7 @@
 #if defined(__ARM_NEON__)
     #include "math_neon.h"
     #define PH_MATRIX_NEON
-#elif defined(__VFP_FP__)
+#elif defined(__ARM_VFPV2__)
     #include "matrix_impl.h"
     #define PH_MATRIX_VFP
 #else

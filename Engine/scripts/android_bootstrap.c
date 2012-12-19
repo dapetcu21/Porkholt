@@ -4,6 +4,11 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#ifdef DEBUG
+#include <dirent.h>
+#endif
+
+
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "Porkholt", __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "Porkholt", __VA_ARGS__))
 
@@ -14,7 +19,7 @@ void * load_lib(const char * l)
     void * handle = dlopen(l, RTLD_NOW | RTLD_GLOBAL);
     if (!handle)
     {
-        LOGE("dlopen(\"%s\"): %s", l, strerror(errno));
+        LOGE("dlopen(\"%s\"): %s", l, dlerror());
         exit(1);
     }
     return handle;
@@ -23,6 +28,22 @@ void * load_lib(const char * l)
 void ANativeActivity_onCreate(ANativeActivity * app, void * ud, size_t udsize)
 {
     LOGI("Loaded boostrap");
+
+#ifdef DEBUG
+    LOGI("Contents of \"%s\":", LIB_PATH);
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(LIB_PATH);
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+            LOGI(dir->d_name);
+        }
+        closedir(d);
+    }
+#endif
+
     load_lib(LIB_PATH "libgnustl_shared.so");
     load_lib(LIB_PATH "libpng15.so");
     load_lib(LIB_PATH "libluajit.so");
