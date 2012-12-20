@@ -249,14 +249,13 @@ function(porkholt PH_APP_TARGET)
       set(PH_BUNDLE_PREFIX "Contents/Resources/")
     else()
       set(PH_BUNDLE_PREFIX "")
-      set(PH_BUILD_TYPE ${PH_BUILD_TYPE} downscale fakesymlinks)
     endif()
     if(CMAKE_GENERATOR STREQUAL "Xcode")
       set(APP_NAME \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME})
       add_custom_command(
         TARGET ${PH_APP_TARGET}
         POST_BUILD
-        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_PLATFORM} ${PH_BUILD_TYPE}
         )
       if (PH_PLATFORM STREQUAL "OSX")
         add_custom_command(
@@ -269,7 +268,7 @@ function(porkholt PH_APP_TARGET)
       set(APP_NAME "${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app")
       add_custom_target(
         PostProcess_Resources
-        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_PLATFORM} ${PH_BUILD_TYPE}
         )
       add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
       add_dependencies(PostProcess_Resources External_Libs)  
@@ -286,7 +285,7 @@ function(porkholt PH_APP_TARGET)
     set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}-rsrc)
     add_custom_target(
       PostProcess_Resources
-      COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+      COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_PLATFORM} ${PH_BUILD_TYPE}
       )
     add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
     add_dependencies(PostProcess_Resources External_Libs)
@@ -309,10 +308,9 @@ function(porkholt PH_APP_TARGET)
     endif()
 
     set(RES_DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/res/raw/rsrc)
-    set(PH_BUILD_TYPE ${PH_BUILD_TYPE} fakesymlinks downscale)
     add_custom_target(
         ${PH_APP_TARGET}-resources
-        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_BUILD_TYPE}
+        COMMAND ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${RES_DEST_DIR} ${PH_EXTERNALS} ${PH_PLATFORM} ${PH_BUILD_TYPE}
       )
 
     add_custom_target(

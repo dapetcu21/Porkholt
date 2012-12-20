@@ -2,26 +2,32 @@
 
 package.path = package.path..";"..string.gsub(arg[0], "(/?)[^/]*%.lua$", "%1?.lua")
 require("path")
+require("platforms")
+require("bakeapi")
 
 local src = arg[1]
 local dst = arg[2]
 externals_dir = arg[3]
+platform = platforms[arg[4]]
 
 src = path.getabsolute(src)
 dst = path.getabsolute(dst)
-root_src = src;
-root_dst = dst;
+root_src = src
+root_dst = dst
 
-fake_links = false
-downscale_hd = false
+fake_links = platform.fake_links
 luacompress = true
-local i = 4
+
+
+local i = 5
 while arg[i] ~= nil do
   local a = arg[i]
   if (a == "fakesymlinks") then
     fake_links = true
-  elseif (a == "downscale") then
-    downscale_hd = true
+  elseif (a == "nofakesymlinks") then
+    fake_links = false 
+  elseif (a == "luacompress") then
+    luacompress = true
   elseif (a == "noluacompress") then
     luacompress = false
   elseif (a == "clean") then
@@ -32,22 +38,22 @@ while arg[i] ~= nil do
 end
 
 function check_versions()
-    local file = io.popen("/usr/bin/stat --version 2>/dev/null")
-    local ver = file:read("*a")
-    file:close()
-    if string.find(ver,"GNU") then
-        gnu_stat = true
-    end
-    file = io.popen("which gm")
-    gm_exe = file:read("*a")
-    local n = string.len(gm_exe)
-    if (string.sub(gm_exe, -1) == "\n") then
-        gm_exe = string.sub(gm_exe, 1, -2)
-        n = n - 1
-    end
-    if (n == 0) then
-        gm_exe = "/opt/local/bin/gm" --For OS X With MacPorts
-    end
+  local file = io.popen("/usr/bin/stat --version 2>/dev/null")
+  local ver = file:read("*a")
+  file:close()
+  if string.find(ver,"GNU") then
+    gnu_stat = true
+  end
+  file = io.popen("which gm")
+  gm_exe = file:read("*a")
+  local n = string.len(gm_exe)
+  if (string.sub(gm_exe, -1) == "\n") then
+    gm_exe = string.sub(gm_exe, 1, -2)
+    n = n - 1
+  end
+  if (n == 0) then
+    gm_exe = "/opt/local/bin/gm" --For OS X With MacPorts
+  end
 end
 
 check_versions()
@@ -71,9 +77,9 @@ function dir_list(dir)
   file:close()
   local s
   if gnu_stat then
-      s = '/usr/bin/stat --format="%Y" '
+    s = '/usr/bin/stat --format="%Y" '
   else
-      s = '/usr/bin/stat -f "%m" '
+    s = '/usr/bin/stat -f "%m" '
   end
   local b
   for line,t in pairs(files) do
@@ -97,17 +103,7 @@ function dir_make(path)
 end
 
 function file_modif(file)
-  local c = modif_cache[file]
---  if (c) then 
---    return c
---  end
---  local fl = io.popen('/bin/test -r "'..file..'" && /usr/bin/stat -f "%m" "'..file..'"')
---  local line = fl:lines()()
---  fl:close()
---  c = tonumber(line) or 0
---  modif_cache[file] = c
---  return c
-  return c or 0
+  return modif_cache[file] or 0
 end
 
 function file_rm(file)
@@ -134,7 +130,7 @@ end
 function copy_file(src, dst, name)
   if (file_modif(src) > file_modif(dst)) then
     if name then
-        print('Copying file "'..name..'"')
+      print('Copying file "'..name..'"')
     end
     os.execute('cp -a "'..src..'" "'..dst..'"')
   end
@@ -147,61 +143,98 @@ function compress_script(src, dst, name)
     if (file_modif(src) > file_modif(dst)) then
       name = name or f
       print('Compressing script "'..name..'"')
-      local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && lua '..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null';
+      local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && lua '..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null'
       os.execute(scriptline)
     end
   end
 end
 
 function link(destd, prefix, lk, f)
- if fake_links then
-  local ns = prefix..f
-  local nd = path.getabsolute(root_dst..'/'..prefix..lk)
-  local n = string.len(root_dst)+1
-  nd = string.gsub(string.sub(nd, n), '^/?', '')
-  syml:write(ns..'\n'..nd..'\n\n')
- else
-  local cmd = 'cd "'..destd..'" && ln -sf "'..lk..'" "'..f..'"'
-  os.execute(cmd)
- end
+  if fake_links then
+    local ns = prefix..f
+    local nd = path.getabsolute(root_dst..'/'..prefix..lk)
+    local n = string.len(root_dst)+1
+    nd = string.gsub(string.sub(nd, n), '^/?', '')
+    syml:write(ns..'\n'..nd..'\n\n')
+  else
+    local cmd = 'cd "'..destd..'" && ln -sf "'..lk..'" "'..f..'"'
+    os.execute(cmd)
+  end
 end
 
 function link_file(srcd, dstd, f, named)
-    local fl = io.popen('readlink "'..srcd..'/'..f..'"')
-    local lk = fl:lines()()
-    fl:close()
+  local fl = io.popen('readlink "'..srcd..'/'..f..'"')
+  local lk = fl:lines()()
+  fl:close()
 
-    link(dstd, named, lk, f)
+  link(dstd, named, lk, f)
+end
+
+function scale_for_image(fname, screen, size)
+  local d = scaling_descriptors[fname]
+  local scale = screen.scale
+
+  if d then
+    local dw, dh
+    if d.w_ratio ~= nil then
+      dw = d.w_ratio * screen.w
+    elseif d.h_ratio ~= nil then
+      dh = d.h_ratio * screen.h
+    elseif d.w_inch ~=nil then
+      dw = d.w_inch * screen.ppi
+    elseif d.h_inch ~=nil then
+      dh = d.h_inch * screen.ppi
+    elseif d.w_cm ~=nil then
+      dw = d.w_cm * screen.ppi * 0.393701
+    elseif d.h_cm ~=nil then
+      dh = d.h_cm * screen.ppi * 0.393701
+    end
+
+    if dw ~= nil then
+      scale = math.floor(dw + 0.5) / size.w
+    elseif dh ~= nil then
+      scale = math.floor(dh + 0.5) / size.h
+    end
+
+    if scale ~= nil and scale > 0.9 then
+      scale = 1
+    end
+  end
+  return scale
 end
 
 function downscale_png(srcd, dstd, f, stp, named)
   named = named or ""
   if (stp == 'l') then
-    if (downscale_hd) then
-      local fl = io.popen('readlink "'..srcd.."/"..f..'"')
-      local lnk = fl:lines()()
-      fl:close()
+    local fl = io.popen('readlink "'..srcd.."/"..f..'"')
+    local lnk = fl:lines()()
+    fl:close()
 
-      local lhd = string.gsub(lnk, ".png$", ".hd.png");
-      local fhd = string.gsub(f, ".png$", ".hd.png");
-      link(dstd, named, lnk, f)
+    for ext,screen in pairs(platform.screens) do
+      local lhd = string.gsub(lnk, ".png$", ext..".png")
+      local fhd = string.gsub(f, ".png$", ext..".png")
       link(dstd, named, lhd, fhd)
-    else
-      link_file(srcd, dstd, f, named)
     end
   else
-    if (downscale_hd) then
-      local fhd = string.gsub(f, ".png$", ".hd.png");
-      local fm = file_modif(srcd.."/"..f)
-      local dm = file_modif(dstd.."/"..f)
+    local fm = file_modif(srcd.."/"..f)
+    local downscale = false
+    for ext,screen in pairs(platform.screens) do
+      local fhd = string.gsub(f, ".png$", ext..".png")
       local dmh= file_modif(dstd.."/"..fhd)
-      if ((fm > dm) or (fm > dmh)) then
-        print('Downscaling image "'..named..f..'"')
-        os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 25% "png32:'..dstd.."/"..f..'"')
-        os.execute(gm_exe..' convert "'..srcd.."/"..f..'" -resize 50% "png32:'..dstd.."/"..fhd..'"')
+      if (fm > dmh) then
+        downscale = true
+        break
       end
-    else
-      copy_file(srcd.."/"..f, dstd.."/"..f, named..f)
+    end
+    if downscale then
+      local img_name = named..f
+      print('Downscaling image "'..img_name..'"')
+      local size = image_size(srcd..'/'..f)
+      for ext,screen in pairs(platform.screens) do
+        local fhd = string.gsub(f, ".png$", ext..".png")
+        local scale = scale_for_image(img_name, screen, size)
+        os.execute(string.format('%s convert "%s/%s" -resize %.4f%% "png32:%s/%s"', gm_exe, srcd, f, scale*100, dstd, fhd))
+      end
     end
   end
 end
@@ -237,46 +270,51 @@ function layout_images(width, scale, src, ins, dst)
   return s, exec, w, h
 end
 
-function create_map(files, src, dst, hd)
+function image_size(file)
+    local exec = gm_exe..' identify -format "%w %h" "'..file..'"'
+    local f = io.popen(exec)
+    local o = { w = f:read("*n"), h = f:read("*n") }
+    f:close()
+    return o
+end
+
+function create_map(files, src, dst, screen, name)
   local i = 0
-  local of = {}
+  local file_list = {}
   local ins = {}
+  local max_size = { w = 0, h = 0 }
   while files[tostring(i)..'.png'] == 'f' do
     local fn = tostring(i)..'.png'
-    local exec = gm_exe..' identify -format "%w %h" "'..src..'/'..fn..'"';
-    local f = io.popen(exec)
-    local x = f:read("*n")
-    local y = f:read("*n")
-    f:close()
-    ins[i] = { fname = fn, w = x, h = y }
+    local size = image_size(src..'/'..fn)
+    max_size.w = math.max(max_size.w, size.w)
+    max_size.h = math.max(max_size.h, size.h)
+    ins[i] = { fname = fn, w = size.w, h = size.h }
+    file_list[fn] = true
     i = i + 1
   end
-  ins.n = i;
+  ins.n = i
   
-  local max, scale
-  if downscale_hd then
-    if hd then
-      max = 2048
-      scale = 0.5
-    else
-      max = 1024
-      scale = 0.25
+  if screen.max_texture == nil then
+    local size = math.max(screen.w, screen.h)
+    local b = 1
+    while (b < size) do
+      b = b * 2
     end
-  else
-    max = 4096
-    scale = 1
+    screen.max_texture = b
   end
-
+  
+  local max = screen.max_texture
+  local scale = scale_for_image(name, screen, max_size)
   local s, cmd, w, h = layout_images(max, scale, src, ins, dst..'/map.png')
 
   s = 'textureMaps = {\n  { fname = "map.png", ' .. s .. ' }\n}\n'
   os.execute(cmd)
 
-  return s, of
+  return s, file_list
 end
 
 
-function animation_dir(src, dst, prefix, hd)
+function animation_dir(src, dst, prefix, screen)
   prefix = prefix or ""
   dir_make(dst)
 
@@ -303,7 +341,8 @@ function animation_dir(src, dst, prefix, hd)
 
   if (smod > dmod) then
     print('Creating animation atlas "'..prefix..'"')
-    local s, valid_files = create_map(fl, src, dst, hd)
+    local s
+    s, valid_files = create_map(fl, src, dst, screen, prefix)
     local file, err = io.open(src..'/info.lua', 'r')
     if (file) then
       s = s..file:read("*a")
@@ -323,14 +362,14 @@ function animation_dir(src, dst, prefix, hd)
   if valid_files then
     for f,tp in pairs(dl) do
       if not valid_files[f] then
-        print('Removing file "'..prefix..f..'"')
+        print('Removing file "'..prefix..'/'..f..'"')
         file_rm(dst.."/"..f)
       end
     end
   else
     for f,tp in pairs(dl) do
       if not ((tp == "f") and ((file_extension(f) == "png") or (f == "info.lua"))) then
-        print('Removing file "'..prefix..f..'"')
+        print('Removing file "'..prefix..'/'..f..'"')
         file_rm(dst.."/"..f)
       end
     end
@@ -338,12 +377,9 @@ function animation_dir(src, dst, prefix, hd)
 end
 
 function anim_dir(src, dst, prefix)
-  if (downscale_hd) then
-    local fhd = string.gsub(dst, ".png$", ".hd.png")
-    animation_dir(src, dst, prefix, false)
-    animation_dir(src, fhd, prefix, true)
-  else
-    animation_dir(src, dst, prefix)
+  for ext, screen in pairs(platform.screens) do
+    local fhd = string.gsub(dst, ".png$", ext..".png")
+    animation_dir(src, fhd, prefix, screen)
   end
 end
 
@@ -353,6 +389,22 @@ function crawl_dir(src, dst, prefix)
   
   local sl = dir_list(src)
   local dl = dir_list(dst)
+
+  if sl["bakeconfig.lua"] then
+    sl["bakeconfig.lua"] = nil
+    local f, err = loadfile(src..'/bakeconfig.lua')
+    if not f then
+      print(err)
+    else
+      current_src = src
+      current_dst = dst
+      current_prefix = prefix
+      local status, err = pcall(f)
+      if not status then
+        print(err)
+      end
+    end
+  end
   
   sl[".DS_Store"] = nil
   sl[".git"] = nil
@@ -368,10 +420,10 @@ function crawl_dir(src, dst, prefix)
   end
 
   for f,tp in pairs(dl) do
-    local ff = f;
+    local ff = f
     local ext = file_extension(f)
-    if (downscale_hd) then
-      ff = string.gsub(ff, ".hd.png$", ".png");
+    for ext,screen in pairs(platform.screens) do
+      ff = string.gsub(ff, ext..".png$", ".png")
     end
     if (tp ~= sl[ff]) then
       print('Removing file "'..prefix..f..'"')
@@ -383,7 +435,7 @@ function crawl_dir(src, dst, prefix)
     local ext = file_extension(f)
     if (tp == "d") then
       if (ext == "png") then
-        anim_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
+        anim_dir(src..'/'..f, dst..'/'..f, prefix..f)
       else
         crawl_dir(src..'/'..f, dst..'/'..f, prefix..f..'/')
       end
