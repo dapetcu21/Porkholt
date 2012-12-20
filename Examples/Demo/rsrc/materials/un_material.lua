@@ -1,8 +1,8 @@
 material = {
-    [0] = {
-        shader = "dumb",
-        uniforms = {
-        }
+  [0] = {
+    shader = "dumb",
+    uniforms = {
     }
+  }
 }
 

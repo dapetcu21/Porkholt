@@ -1,8 +1,8 @@
 material = {
-    [0] = {
-        shader = "dispersion",
-        uniforms = {
-        }
+  [0] = {
+    shader = "dispersion",
+    uniforms = {
     }
+  }
 }
 

@@ -1,13 +1,13 @@
 material = {
-    [0] = {
-        shader = "sprites",
-        uniforms = {
-        }
-    },
-    [666] = {
-        shader = "density",
-        uniforms = {
-        }
+  [0] = {
+    shader = "sprites",
+    uniforms = {
     }
+  },
+  [666] = {
+    shader = "density",
+    uniforms = {
+    }
+  }
 }
 

@@ -14,87 +14,87 @@ end
 
 function PHLog(fmt, ...)
     local t = table.pack(...)
-	for i,v in ipairs(t) do
-		if (type(v) == "table") then
-			t[i] = tostring(v)
-		end
-	end
-	PHOutput(string.format(fmt, unpack(t)))
+  for i,v in ipairs(t) do
+    if (type(v) == "table") then
+      t[i] = tostring(v)
+    end
+  end
+  PHOutput(string.format(fmt, unpack(t)))
 end
 
 function PHPrint(t,level,prefix,pre)
-	if (not t) then return end
-	level = level or 1
-	prefix = prefix or ""
-	pre = pre or ""
-	if (type(t)=="table" and level>0) then
-		PHLog(prefix..pre.."%s:",t)
-		for i,v in pairs(t) do 
-			PHLog(prefix.."  %s: %s",i,tostring(v)); 
-		end
-		local super = getmetatable(t);
-		if (type(super)=="table") then
-			super = super.__index
-		end
-		if (type(super)=="table") then
-			PHPrint(super,level-1,prefix.."  ","index")
-		end
-	else
-		PHLog(prefix..pre.."%s",tostring(t))
-	end
+  if (not t) then return end
+  level = level or 1
+  prefix = prefix or ""
+  pre = pre or ""
+  if (type(t)=="table" and level>0) then
+    PHLog(prefix..pre.."%s:",t)
+    for i,v in pairs(t) do 
+      PHLog(prefix.."  %s: %s",i,tostring(v)); 
+    end
+    local super = getmetatable(t);
+    if (type(super)=="table") then
+      super = super.__index
+    end
+    if (type(super)=="table") then
+      PHPrint(super,level-1,prefix.."  ","index")
+    end
+  else
+    PHLog(prefix..pre.."%s",tostring(t))
+  end
 end
 
 function PHCallbackHelper(cb)
-	cb.callback(unpack(cb.args))
+  cb.callback(unpack(cb.args))
 end
 
 PHWorld = {}
 function PHWorld:insertObject(o) --not a good idea to batch-create objects mid-level, especially if not inserted at the end
-	local ud = self._insertObj
-	if ud then
-		ud = ud.ud
-	end
-	return self:_insertObject(o,self._insertPos,ud)
+  local ud = self._insertObj
+  if ud then
+    ud = ud.ud
+  end
+  return self:_insertObject(o,self._insertPos,ud)
 end
 function PHWorld:insertAtTheEnd()
-	self._insertPos = 0
-	self._insertObj = nil
+  self._insertPos = 0
+  self._insertObj = nil
 end
 function PHWorld:insertAtTheBeggining()
-	self._insertPos = 1
-	self._insertObj = nil
+  self._insertPos = 1
+  self._insertObj = nil
 end
 function PHWorld:insertBefore(o)
-	self._insertPos = 2
-	self._insertObj = o
+  self._insertPos = 2
+  self._insertObj = o
 end
 function PHWorld:insertAfter(o)
-	self._insertPos = 3
-	self._insertObj = o
+  self._insertPos = 3
+  self._insertObj = o
 end
 PHWorld:insertAtTheEnd()
 function PHWorld:fadeToColor(color,cb,...)
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_fadeToColor(color,call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_fadeToColor(color,call)
 end
 function PHWorld:dismissFading(cb,...)
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_dismissFading(call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_dismissFading(call)
 end
 --function PHWorld:dismissFading(cb,...)
 --function PHWorld:overlayText(text,duration)
 function PHWorld:curtainText(text,cb,...)
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_curtainText(text,call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_curtainText(text,call)
 end
 --function PHWorld:resourcePath()
 --function PHWorld:win()
@@ -103,15 +103,15 @@ end
 
 PHLObject = {}
 function PHLObject:new(o,ud, ...)
-	o = o or {}
-	o.ud = ud
-	setmetatable(o,self)
-	self.__index = self
-	o = o:init(...)
-	return o
+  o = o or {}
+  o.ud = ud
+  setmetatable(o,self)
+  self.__index = self
+  o = o:init(...)
+  return o
 end
 function PHLObject:init()
-	return self
+  return self
 end
 -- function PHLObject:rotation()
 -- function PHLObject:position()
@@ -145,14 +145,14 @@ end
 
 PHObject = {}
 function PHObject:new(o, ...)
-	o = o or {}
-	setmetatable(o,self)
-	self.__index = self
-	o = o:init(...)
-	return o
+  o = o or {}
+  setmetatable(o,self)
+  self.__index = self
+  o = o:init(...)
+  return o
 end
 function PHObject:init()
-	return self
+  return self
 end
 
 PHKeyframeAnimatorGroup = PHObject:new()
@@ -165,37 +165,37 @@ PHKeyframeAnimatorGroup = PHObject:new()
 
 PHTimer = PHObject:new{time = 0, willrepeat = false}
 function PHTimer:init(tm,rep,cb, ...)
-	if (PHObject.init(self)) then
-		self.time = tm or 0
-		self.willrepeat = rep or false
-		self.callback = cb or nil
-		self.args = table.pack(...)
-		return self
-	end
-	return nil
+  if (PHObject.init(self)) then
+    self.time = tm or 0
+    self.willrepeat = rep or false
+    self.callback = cb or nil
+    self.args = table.pack(...)
+    return self
+  end
+  return nil
 end
 function PHTimer:setCallback(cb, ...)
-	self.callback = cb or nil
-	self.args = table.pack(...)
+  self.callback = cb or nil
+  self.args = table.pack(...)
 end
 function PHTimer:timerFired()
-	local cb = self.callback
-	local args = self.args or {}
-	if (cb) then
-		cb(unpack(args))
-	end
+  local cb = self.callback
+  local args = self.args or {}
+  if (cb) then
+    cb(unpack(args))
+  end
 end
 --function PHTimer:invalidate()
 --function PHTimer:schedule(timer)
 
 PHLAnimation = PHObject:new{
-	LinearFunction = 0,
-	BounceFunction = 1,
-	FadeInFunction = 2,
-	FadeOutFunction = 3,
-	FadeInOutFunction = 4,
-	ConstantFunction = 5, --use this for forces and velocities
-	curveFunction = LinearFunction
+  LinearFunction = 0,
+  BounceFunction = 1,
+  FadeInFunction = 2,
+  FadeOutFunction = 3,
+  FadeInOutFunction = 4,
+  ConstantFunction = 5, --use this for forces and velocities
+  curveFunction = LinearFunction
 }
 --PHLAnimation.time --the duration of the animation
 --PHLAnimation.movement
@@ -223,13 +223,13 @@ PHLAnimation = PHObject:new{
 ---
 --PHLAnimation.callbackOnInvalidate --normally, calling invalidate() on an animation cancels the callback, set this to true to override that behaviour
 function PHLAnimation:setCallback(cb,...)
-	self.cb = cb
-	self.args = table.pack(...)
+  self.cb = cb
+  self.args = table.pack(...)
 end
 function PHLAnimation:animationFinished() --don't call this manually
-	if self.cb then
-		self.cb(unpack(self.args or {}))
-	end
+  if self.cb then
+    self.cb(unpack(self.args or {}))
+  end
 end
 
 PHView = PHObject:new()
@@ -302,36 +302,36 @@ PHLNPC = PHLObject:new()
 --function PHLNPC:usesTrail()
 --function PHLNPC:setUsesTrail(f)
 function PHLNPC:addDialog(text,cb,...)
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_addDialog(text,call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_addDialog(text,call)
 end
 function PHLNPC:setDialog(text,cb,...) --this immediately shows the dialog bypassing the stack system
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_setDialog(text,call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_setDialog(text,call)
 end
 --function PHLNPC:showsQuest()
 --function PHLNPC:setShowsQuest(s)
 --function PHLNPC:reallyShowsQuest()
 function PHLNPC:questTapped(obj) end --override this to do something when the user taps the quest/info popup
 function PHLNPC:walk(offset,speed,cb,...) --same as walkTo(position()+offset,speed), speed optional, defaults to 2
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_walk(offset,speed,call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_walk(offset,speed,call)
 end
 function PHLNPC:walkTo(destination,speed,cb,...) -- speed optional, defaults to 2
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_walkTo(destination,speed,call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_walkTo(destination,speed,call)
 end
 --function PHLNPC:braked()
 --function PHLNPC:setBraked() --brakes the body
@@ -360,8 +360,8 @@ PHLPlayer = PHLNPC:new()
 --function PHLPlayer:isBarHidden()
 --function PHLPlayer:setBarHidden(b)
 function PHLPlayer:setFreezed(b)
-	self:setBraked(b)
-	self:setUserInput(not b)
+  self:setBraked(b)
+  self:setUserInput(not b)
 end
 
 PHLSensor = PHLObject:new()
@@ -377,19 +377,19 @@ PHLBomberBird = PHLMob:new()
 PHLEggBomb = PHLSensor:new()
 
 function PHLBomberBird.createAndLaunchBird(accuracy,dropVelocity)
-	local bird = objectWithClass("PHLBomberBird")
-	local b = camera:bounds()
-	bird.startingPoint = point(
-		-bird.bounds.width-bird.bounds.x,
-		b.height-bird.bounds.height-bird.bounds.y)
-	local p = player:position()
-	bird.rotationAxis = point(p.x - b.x+(math.random()*2-1),bird.bounds.height+15+2.5*(math.random()*2-1))
-	bird.accuracy = accuracy
-	bird.dropVelocity = dropVelocity
-	PHWorld:insertAtTheEnd()
-	bird = PHWorld:insertObject(bird)
-	bird:attack()
-	return bird
+  local bird = objectWithClass("PHLBomberBird")
+  local b = camera:bounds()
+  bird.startingPoint = point(
+    -bird.bounds.width-bird.bounds.x,
+    b.height-bird.bounds.height-bird.bounds.y)
+  local p = player:position()
+  bird.rotationAxis = point(p.x - b.x+(math.random()*2-1),bird.bounds.height+15+2.5*(math.random()*2-1))
+  bird.accuracy = accuracy
+  bird.dropVelocity = dropVelocity
+  PHWorld:insertAtTheEnd()
+  bird = PHWorld:insertObject(bird)
+  bird:attack()
+  return bird
 end
 
 PHLCamera = PHLObject:new()
@@ -399,14 +399,14 @@ PHLCamera = PHLObject:new()
 
 PHLSign = PHLNPC:new()
 function PHLSign:display(cb,...)
-	local call = nil
-	if (cb) then
-		call = { callback = cb, args = table.pack(...) }
-	end
-	self:_display(call)
+  local call = nil
+  if (cb) then
+    call = { callback = cb, args = table.pack(...) }
+  end
+  self:_display(call)
 end
 function PHLSign:questTapped()
-	self:display()
+  self:display()
 end
 
 PHLPowerup = PHLSensor:new()

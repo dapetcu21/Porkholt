@@ -1,4 +1,4 @@
 attributeBindings = {
-	position = 0,
-    texCoord = 1
+  position = 0,
+  texCoord = 1
 }

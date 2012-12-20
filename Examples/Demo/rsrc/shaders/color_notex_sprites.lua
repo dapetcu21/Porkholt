@@ -1,4 +1,4 @@
 attributeBindings = {
-	position = 0,
-	vColor = 2
+  position = 0,
+  vColor = 2
 }

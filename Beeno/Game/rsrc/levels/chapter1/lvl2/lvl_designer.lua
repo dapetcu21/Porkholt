@@ -35,16 +35,16 @@ hpsign.pos = point(22.033515,7.641876)
 addObject(hpsign)
 
 local bezierCurve0 = {
-	points = { n=6,
-		[0] = { point = point(0.100808,-0.000176), tag = 1 },
-		[1] = { point = point(0.770528,0.011960), tag = 2 },
-		[2] = { point = point(0.835461,0.326368) },
-		[3] = { point = point(0.472204,0.486475) },
-		[4] = { point = point(0.154033,1.033496), tag = 3 },
-		[5] = { point = point(0.258017,0.619419) }},
-	curves = { n=1,
-		[0] = range(1,6)}
-	}
+  points = { n=6,
+    [0] = { point = point(0.100808,-0.000176), tag = 1 },
+    [1] = { point = point(0.770528,0.011960), tag = 2 },
+    [2] = { point = point(0.835461,0.326368) },
+    [3] = { point = point(0.472204,0.486475) },
+    [4] = { point = point(0.154033,1.033496), tag = 3 },
+    [5] = { point = point(0.258017,0.619419) }},
+  curves = { n=1,
+    [0] = range(1,6)}
+  }
 local obj0 = objectWithClass("PHLObject")
 obj0.levelDes = true
 obj0.physics.dynamic = false

@@ -1,3 +1,3 @@
 attributeBindings = {
-	position = 0
+  position = 0
 }

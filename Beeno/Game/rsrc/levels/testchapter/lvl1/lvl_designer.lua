@@ -28,17 +28,17 @@ objectAddCircle(obj,0.576953)
 addObject(wrecker)
 
 local bezierCurve0 = {
-	points = { n=7,
-		[0] = { point = point(0.000000,0.000000), tag = 1 },
-		[1] = { point = point(0.000000,-1.000000) },
-		[2] = { point = point(0.500000,1.000000) },
-		[3] = { point = point(1.000000,1.000000) },
-		[4] = { point = point(1.000000,0.000000), tag = 2 },
-		[5] = { point = point(1.000000,1.000000), tag = 3 },
-		[6] = { point = point(0.000000,1.000000), tag = 4 }},
-	curves = { n=1,
-		[0] = range(0,5)}
-	}
+  points = { n=7,
+    [0] = { point = point(0.000000,0.000000), tag = 1 },
+    [1] = { point = point(0.000000,-1.000000) },
+    [2] = { point = point(0.500000,1.000000) },
+    [3] = { point = point(1.000000,1.000000) },
+    [4] = { point = point(1.000000,0.000000), tag = 2 },
+    [5] = { point = point(1.000000,1.000000), tag = 3 },
+    [6] = { point = point(0.000000,1.000000), tag = 4 }},
+  curves = { n=1,
+    [0] = range(0,5)}
+  }
 local obj2 = objectWithClass("PHLPlatform")
 obj2.levelDes = true
 obj2.rotation = 0.000000

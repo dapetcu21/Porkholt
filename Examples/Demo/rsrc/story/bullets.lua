@@ -5,28 +5,28 @@ bounds = IGScreenBounds:new()
 bounds:attachToWorld()
 
 function bullets:onStandardBulletImpact(object, bullet)
-    if object then
-        if (bullet.owner == 1) then
-            if (object:isKindOfClass(IGMob)) then
-                object:loseHealth(1.0)
-            end
-        elseif (bullet.owner == 2) then
-            if (object == player) then
-                print("player hit")
-            end
-        end
+  if object then
+    if (bullet.owner == 1) then
+      if (object:isKindOfClass(IGMob)) then
+        object:loseHealth(1.0)
+      end
+    elseif (bullet.owner == 2) then
+      if (object == player) then
+        print("player hit")
+      end
     end
-    bullets:removeBullet(bullet.handle)
+  end
+  bullets:removeBullet(bullet.handle)
 end
 
 function bullets:onHomingBulletImpact(object, bullet)
-    bullets:removeBullet(bullet.handle)
-    if object then
-        if (bullet.owner == 2) then
-            if object == player then
-                player:die()
-            end
-        end
+  bullets:removeBullet(bullet.handle)
+  if object then
+    if (bullet.owner == 2) then
+      if object == player then
+        player:die()
+      end
     end
+  end
 end
 
