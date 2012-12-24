@@ -14,7 +14,7 @@ compile_lib() {
         mkdir -p "${DIR}/build-${ANDROID_ABI}"
         mkdir -p lib/android/libs/${ANDROID_NDK_ABI_NAME}
         cd "${DIR}/build-${ANDROID_ABI}"
-        ( cmake .. -DANDROID_NDK="${ANDROID_NDK}" -DCMAKE_TOOLCHAIN_FILE="${OLDPWD}/../Engine/scripts/android.toolchain.cmake" -DANDROID_ABI="${ANDROID_ABI}" && make -j2 && cp "libs/${ANDROID_NDK_ABI_NAME}/lib${NAME}.so" "${OLDPWD}/lib/android/libs/${ANDROID_NDK_ABI_NAME}/lib${NAME}.so" ) || (echo "Could not compile lib${NAME}" && exit 1)
+        ( cmake .. -DANDROID_NDK="${ANDROID_NDK}" -DCMAKE_TOOLCHAIN_FILE="${OLDPWD}/../Engine/scripts/android.toolchain.cmake" -DANDROID_ABI="${ANDROID_ABI}" -DANDROID_NATIVE_API_LEVEL=android-9 -DLIBRARY_OUTPUT_PATH_ROOT=.  && make -j2 && cp "libs/${ANDROID_NDK_ABI_NAME}/lib${NAME}.so" "${OLDPWD}/lib/android/libs/${ANDROID_NDK_ABI_NAME}/lib${NAME}.so" ) || (echo "Could not compile lib${NAME}" && exit 1)
         cd -
     fi
 }

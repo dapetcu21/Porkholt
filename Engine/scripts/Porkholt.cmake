@@ -25,12 +25,14 @@ function(porkholt PH_APP_TARGET)
   else()
     set(PH_ENGINE_PATH ${PH_ENGINE_PATH} CACHE STRING ${PH_ENGINE_PATH_DOC})
   endif()
+  get_filename_component(PH_ENGINE_PATH "${PH_ENGINE_PATH}" REALPATH)
 
   IF(NOT DEFINED PH_EXTERNALS)
     set(PH_EXTERNALS "${PH_ENGINE_PATH}/../Externals" CACHE STRING ${PH_EXTERNALS_DOC})
   else()
     set(PH_EXTERNALS ${PH_EXTERNALS} CACHE STRING ${PH_EXTERNALS_DOC})
   endif()
+  get_filename_component(PH_EXTERNALS "${PH_EXTERNALS}" REALPATH)
 
   include(${PH_ENGINE_PATH}/scripts/Porkholt_Common.cmake)
   
@@ -71,16 +73,21 @@ function(porkholt PH_APP_TARGET)
     include(${PH_ENGINE_PATH}/scripts/Android_Fork.cmake)
   endif()
 
+  if(PH_PLATFORM STREQUAL "iOS" AND NOT CMAKE_GENERATOR STREQUAL "Xcode" )
+    include(${PH_ENGINE_PATH}/scripts/iOS_Fork.cmake)
+  endif()
+
+
   if(PH_PLATFORM STREQUAL "X11")
     find_package(X11 REQUIRED)
     include_directories(${X11_INCLUDE_DIR})
     find_library(PH_XRANDR Xrandr)
   endif()
   if(NOT PH_PLATFORM STREQUAL "Android")
-    if(NOT CMAKE_GENERATOR STREQUAL "Xcode")
-      find_package(Threads REQUIRED)
-    endif()
     if(NOT PH_PLATFORM STREQUAL "iOS")
+      if(NOT CMAKE_GENERATOR STREQUAL "Xcode")
+        find_package(Threads REQUIRED)
+      endif()
       find_package(OpenGL REQUIRED)
       include_directories(${OPENGL_INCLUDE_DIRS})
       if(PH_PLATFORM STREQUAL "OSX")
@@ -95,8 +102,18 @@ function(porkholt PH_APP_TARGET)
     add_executable(${PH_APP_TARGET} MACOSX_BUNDLE ${PH_SOURCES})
     set_target_properties(${PH_APP_TARGET} PROPERTIES LINK_FLAGS "-ObjC -framework Foundation -framework CoreVideo -framework AppKit")
   elseif(PH_PLATFORM STREQUAL "iOS")
-    add_executable(${PH_APP_TARGET} MACOSX_BUNDLE ${PH_SOURCES})
-    set_target_properties(${PH_APP_TARGET} PROPERTIES LINK_FLAGS "-ObjC -framework AudioToolbox -framework AVFoundation -framework OpenAL -framework OpenGLES -framework Foundation -framework QuartzCore -framework UIKit")
+    set(PH_IOS_LINKER_FLAGS "-ObjC -framework AudioToolbox -framework AVFoundation -framework OpenAL -framework OpenGLES -framework Foundation -framework QuartzCore -framework UIKit")
+    if (CMAKE_GENERATOR STREQUAL "Xcode")
+      add_executable(${PH_APP_TARGET} MACOSX_BUNDLE ${PH_SOURCES})
+      set_target_properties(${PH_APP_TARGET} PROPERTIES LINK_FLAGS "${PH_IOS_LINKER_FLAGS}")
+    elseif(PH_FORK STREQUAL "1")
+      add_executable(${PH_APP_TARGET} ${PH_SOURCES})
+      set_target_properties(${PH_APP_TARGET} PROPERTIES LINK_FLAGS "${PH_IOS_LINKER_FLAGS}")
+      set_target_properties(${PH_APP_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../${PH_APP_TARGET}.app")
+    else()
+      invoke_make(${PH_APP_TARGET})
+      add_dependencies(${PH_APP_TARGET} Porkholt)
+    endif()
   elseif(PH_PLATFORM STREQUAL "Android")
     if(PH_FORK STREQUAL "1")
       add_custom_target(
@@ -141,8 +158,14 @@ function(porkholt PH_APP_TARGET)
     add_executable(${PH_APP_TARGET} ${PH_SOURCES})
   endif()
   
-  if(NOT PH_PLATFORM STREQUAL "Android")
-    target_link_libraries(${PH_APP_TARGET} Porkholt
+  if(NOT PH_PLATFORM STREQUAL "Android" AND ( NOT PH_PLATFORM STREQUAL "iOS" OR PH_FORK ) )
+    if (PH_FORK)
+      get_filename_component(PH__LIB_PATH "${CMAKE_CURRENT_BINARY_DIR}/../engine-build/fork/libPorkholt.a" REALPATH)
+      target_link_libraries(${PH_APP_TARGET} "${PH__LIB_PATH}")
+    else()
+      target_link_libraries(${PH_APP_TARGET} Porkholt)
+    endif()
+    target_link_libraries(${PH_APP_TARGET} 
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libluajit.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
@@ -166,10 +189,7 @@ function(porkholt PH_APP_TARGET)
     if(NOT DEFINED PH_IOS_DEPLOYMENT_TARGET)
       set(PH_IOS_DEPLOYMENT_TARGET "3.2")
     endif()
-    #if(NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET OR NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    #  set(CMAKE_OSX_DEPLOYMENT_TARGET ${PH_IOS_DEPLOYMENT_TARGET} PARENT_SCOPE)
-    #endif()
-        
+       
     if(NOT DEFINED PH_IOS_CODE_SIGN_IDENTITY)
       set(PH_IOS_CODE_SIGN_IDENTITY "iPhone Developer")
     endif()
@@ -200,18 +220,27 @@ function(porkholt PH_APP_TARGET)
       set(PH_IOS_INFO_PLIST "${PH_ENGINE_PATH}/scripts/Info-iOS.plist")
     endif()
 
+    set(PH_IOS_INFO_PLIST_OUT "${CMAKE_CURRENT_BINARY_DIR}/Info-iOS.plist")
     if (CMAKE_GENERATOR STREQUAL "Xcode")
+        configure_file(${PH_IOS_INFO_PLIST} ${PH_IOS_INFO_PLIST_OUT})
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ${PH_IOS_CODE_SIGN_IDENTITY})
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-        set(PH_IOS_INFO_PLIST_OUT "${CMAKE_CURRENT_BINARY_DIR}/Info-iOS.plist")
-        configure_file(${PH_IOS_INFO_PLIST} ${PH_IOS_INFO_PLIST_OUT})
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_INFOPLIST_FILE ${PH_IOS_INFO_PLIST_OUT} )
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "${PH_IOS_DEPLOYMENT_TARGET}")
         set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "${PH_IOS_DEV_FAMILY}")
-    else()
+    elseif(PH_FORK STREQUAL "1")
         set_target_properties(${PH_APP_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PH_IOS_INFO_PLIST})
+        set(PH__DEPLOY_FLAGS "-miphoneos-version-min=${PH_IOS_DEPLOYMENT_TARGET}")
+
+        append_target_property(${PH_APP_TARGET} COMPILE_FLAGS "${PH__DEPLOY_FLAGS}")
+        append_target_property(${PH_APP_TARGET} LINK_FLAGS "${PH__DEPLOY_FLAGS}")
+    else()
+        set(PH_IOS_INFO_PLIST_DEST "${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app/Info.plist")
+        configure_file(${PH_IOS_INFO_PLIST} ${PH_IOS_INFO_PLIST_OUT})
+        add_custom_target(InfoPlist COMMAND ${CMAKE_COMMAND} -E copy "${PH_IOS_INFO_PLIST_OUT}" "${PH_IOS_INFO_PLIST_DEST}")
+        add_dependencies(${PH_APP_TARGET} InfoPlist)
     endif()
 
   elseif (PH_PLATFORM STREQUAL "OSX")
@@ -228,14 +257,14 @@ function(porkholt PH_APP_TARGET)
     	set(PH_OSX_INFO_PLIST "${PH_ENGINE_PATH}/scripts/Info-OSX.plist")
     endif ()
 
+    set(PH_OSX_INFO_PLIST_OUT "${CMAKE_CURRENT_BINARY_DIR}/Info-OSX.plist")
+    configure_file(${PH_OSX_INFO_PLIST} ${PH_OSX_INFO_PLIST_OUT})
     if(CMAKE_GENERATOR STREQUAL "Xcode")
-      set(PH_OSX_INFO_PLIST_OUT "${CMAKE_CURRENT_BINARY_DIR}/Info-OSX.plist")
       set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES")
       set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES")
-      configure_file(${PH_OSX_INFO_PLIST} ${PH_OSX_INFO_PLIST_OUT})
       set_target_properties(${PH_APP_TARGET} PROPERTIES XCODE_ATTRIBUTE_INFOPLIST_FILE ${PH_OSX_INFO_PLIST_OUT} )
     else()
-      set_target_properties(${PH_APP_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PH_OSX_INFO_PLIST})
+      set_target_properties(${PH_APP_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PH_OSX_INFO_PLIST_OUT})
     endif()
   endif()
 
@@ -244,7 +273,7 @@ function(porkholt PH_APP_TARGET)
   endif()
   
   set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rsrc)
-  if (PH_PLATFORM STREQUAL "OSX" OR PH_PLATFORM STREQUAL "iOS")
+  if (PH_PLATFORM STREQUAL "OSX" OR ( PH_PLATFORM STREQUAL "iOS" AND NOT PH_FORK ) )
     if (PH_PLATFORM STREQUAL "OSX")
       set(PH_BUNDLE_PREFIX "Contents/Resources/")
     else()
@@ -341,6 +370,26 @@ function(porkholt PH_APP_TARGET)
         VERBATIM
         )
 
+    add_custom_target(
+        ${PH_APP_TARGET}-package-only
+        ALL /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; ant ${PH_ANT_TARGET}"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        VERBATIM
+        )
+ 
+    add_custom_target(
+        ${PH_APP_TARGET}-install-only
+        COMMAND /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; ant ${PH_ANT_TARGET} install"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        VERBATIM
+        )
+
+    add_custom_target(
+        ${PH_APP_TARGET}-run-only
+        COMMAND /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; adb shell am start -a android.intent.action.MAIN -n ${PH_BUNDLE_ID}/android.app.NativeActivity"
+        VERBATIM
+        )
+
     if (NOT TARGET install)
         add_custom_target(install)
     endif()
@@ -351,15 +400,54 @@ function(porkholt PH_APP_TARGET)
         add_custom_target(package)
     endif()
 
+    if (NOT TARGET install-only)
+        add_custom_target(install-only)
+    endif()
+    if (NOT TARGET run-only)
+        add_custom_target(run-only)
+    endif()
+    if (NOT TARGET package-only)
+        add_custom_target(package-only)
+    endif()
+
     add_dependencies(${PH_APP_TARGET} ${PH_APP_TARGET}-lib)
     add_dependencies(${PH_APP_TARGET} ${PH_APP_TARGET}-resources)
     add_dependencies(${PH_APP_TARGET}-install ${PH_APP_TARGET})
     add_dependencies(${PH_APP_TARGET}-package ${PH_APP_TARGET})
     add_dependencies(${PH_APP_TARGET}-run ${PH_APP_TARGET}-install)
     add_dependencies(package ${PH_APP_TARGET}-package)
+    add_dependencies(package-only ${PH_APP_TARGET}-package-only)
     add_dependencies(install ${PH_APP_TARGET}-install)
+    add_dependencies(install-only ${PH_APP_TARGET}-install-only)
     add_dependencies(run ${PH_APP_TARGET}-run)
+    add_dependencies(run-only ${PH_APP_TARGET}-run-only)
 
+  endif()
+
+  if (PH_PLATFORM STREQUAL "iOS" AND NOT CMAKE_GENERATOR STREQUAL "Xcode" AND NOT PH_FORK)
+    get_target_property(PH__OUTPUT_BINARY ${PH_APP_TARGET} LOCATION)
+    set(PH__OUTPUT_BINARY "${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app/${PH_APP_TARGET}")
+    add_custom_target(${PH_APP_TARGET}-sign ALL codesign -f -s "${PH_IOS_CODE_SIGN_IDENTITY}" "${PH__OUTPUT_BINARY}" VERBATIM)
+    add_dependencies(${PH_APP_TARGET}-sign ${PH_APP_TARGET})
+
+    add_custom_target(${PH_APP_TARGET}-install bash -c "rsync -a --delete --delete-excluded --exclude=*~ --exclude=.DS_Store --exclude=*.swp --exclude=*.swo ${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app root@$PH_DEVICE_IP:/Applications" VERBATIM)
+    add_dependencies(${PH_APP_TARGET}-install ${PH_APP_TARGET}-sign)
+
+    add_custom_target(${PH_APP_TARGET}-debug "${PH_ENGINE_PATH}/scripts/ios-debug/run-gdb.sh" "${PH__OUTPUT_BINARY}" "/Applications/${PH_APP_TARGET}.app/${PH_APP_TARGET}" "${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.dSYM" VERBATIM)
+    
+    if (NOT TARGET install)
+        add_custom_target(install)
+    endif()
+    if (NOT TARGET debug)
+        add_custom_target(debug)
+    endif()
+    if (NOT TARGET codesign)
+        add_custom_target(codesign)
+    endif()
+
+    add_dependencies(install ${PH_APP_TARGET}-install)
+    add_dependencies(codesign ${PH_APP_TARGET}-codesign)
+    add_dependencies(debug ${PH_APP_TARGET}-debug)
   endif()
 
 endfunction()

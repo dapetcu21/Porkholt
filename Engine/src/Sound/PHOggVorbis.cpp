@@ -13,8 +13,9 @@ long ph_tell(void * f)
     return ((PHOggVorbis*)f)->ftell();
 }
 
-int ph_seek(void * f, ogg_int64_t d, int t)
-{ return ((PHOggVorbis*)f)->fseek(d, t);
+int ph_seek(void * f, long long d, int t)
+{
+    return ((PHOggVorbis*)f)->fseek(d, t);
 }
 
 size_t ph_read(void * d, size_t s, size_t nm, void * f)

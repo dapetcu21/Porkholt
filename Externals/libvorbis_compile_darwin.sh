@@ -21,6 +21,7 @@ export CC="$IOSCC"
 for ARCH in $IOSARCHS; do
     export CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -O3" 
     make distclean 2>&1 > /dev/null
+    echo ./configure --with-ogg-includes="$LIBOGG/include/" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH/" --host=$ARCH-apple-darwin
     ./configure --with-ogg-includes="$LIBOGG/include/" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH/" --host=$ARCH-apple-darwin && make || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.ios.$ARCH
     cp $LIBPATH2_static lnsout/$LIBNAME2_static.ios.$ARCH

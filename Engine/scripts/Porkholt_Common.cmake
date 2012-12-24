@@ -29,3 +29,11 @@ if(NOT PH_COMMON_CMAKE)
     endif()
 
 endif()
+
+function(append_target_property TARGET PROPERTY ITEMS)
+    get_target_property(__TARGET_PROP ${TARGET} ${PROPERTY})
+    if (NOT __TARGET_PROP)
+        unset(__TARGET_PROP)
+    endif()
+    set_target_properties(${TARGET} PROPERTIES ${PROPERTY} "${__TARGET_PROP} ${ITEMS}")
+endfunction()
