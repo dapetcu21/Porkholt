@@ -23,8 +23,7 @@
 -(void)makeCurrentAndRender
 {
     [self makeCurrent];
-    double tim = [self elapsedTime];
-    [self render:tim];
+    [self render];
 }
 
 -(void)setVerticalSync:(BOOL)verticalSync
@@ -169,31 +168,10 @@
     [super dealloc];
 }
 
--(double)elapsedTime
-{
-    double frameInterval = 1.0f/gameManager->framesPerSecond();
-    if (flags & PHWFrameAnimation)
-        return frameInterval;
-    lastTime = time;
-    time = PHTime::getTime();
-    if (lastTime == 0)
-        lastTime = time - frameInterval;
-    double elapsedTime = (time-lastTime);
-    if (vsync)
-        return round(elapsedTime/frameInterval)*frameInterval;
-    return elapsedTime;
-}
-
 -(void)render
-{    
-    double tim = [self elapsedTime];
-    [self render:tim];
-}
-
--(void)render:(double)timeElapsed
 {
     gameManager->processInput();
-    gameManager->renderFrame(timeElapsed);
+    gameManager->renderFrame();
     glFlush();
     glSwapAPPLE();
 }

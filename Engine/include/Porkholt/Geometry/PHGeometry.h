@@ -48,6 +48,15 @@ inline ph_float PHWarp(ph_float v, ph_float f)
     return v;
 }
 
+inline ph_float PHClamp(ph_float v, ph_float l, ph_float h)
+{
+    if (v < l)
+        v = l;
+    if (v > h)
+        v = h;
+    return v;
+}
+
 inline ph_float PHNormalizeAngle(ph_float v)
 {
     if (v>M_PI)

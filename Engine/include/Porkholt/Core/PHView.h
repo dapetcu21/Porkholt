@@ -134,15 +134,18 @@ public:
     void autoresizeMyself(const PHRect & parentBounds, const PHSize & delta);
 //animation system
 protected:
-    void setCinematicPosition(const PHPoint & p) { setPosition(p); }
-    PHPoint cinematicPosition() { return position(); }
-    void setCinematicRotation(ph_float r) { setRotation(r); }
-    ph_float cinematicRotation() { return rotation(); }
-    void setCinematicScale(const PHSize & s) { setScaleX(s.x); setScaleY(s.y); }
-    PHSize cinematicScale() { return PHSize(scaleX(),scaleY()); }
-    void setCinematicBgColor(const PHColor & c) { setBackgroundColor(c); }
-    PHColor cinematicBgColor() { return backgroundColor(); }
+    virtual void setAnimationFieldF(int field, ph_float v);
+    virtual void setAnimationFieldV2(int field, const PHVector2 & v);
+    virtual void setAnimationFieldC(int field, const PHColor & v);
+    
+    virtual ph_float getAnimationFieldF(int field);
+    virtual PHVector2 getAnimationFieldV2(int field);
+    virtual PHColor getAnimationFieldC(int field);
+ 
+public:
+    void animateBgColor(const PHColor & clr) { animateField(PHAnimationField(PHCinematicActor::fieldBgColor, clr)); }
 
+protected:
     virtual void attachedToGameManager();
 
 //auxiliar view binding

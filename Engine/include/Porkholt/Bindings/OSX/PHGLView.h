@@ -23,11 +23,9 @@ class PHGameManager;
 -(void)setManualSize:(NSSize)sz;
 -(void)setAutomaticSize;
 
-
 -(void)render;
--(void)render:(double)timeElapsed;
 -(void)makeCurrent;
--(double)elapsedTime;
+-(void)makeCurrentAndRender;
 
 
 @property(nonatomic, assign) BOOL verticalSync;

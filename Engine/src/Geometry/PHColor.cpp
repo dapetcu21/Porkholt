@@ -10,6 +10,8 @@ const PHColor PHWhiteColor(1,1,1,1);
 const PHColor PHGrayColor(0.5,0.5,0.5,1);
 const PHColor PHInvalidColor(-1,-1,-1,-1);
 
+PHColor::PHColor(const PHQuaternion & q) : x(q.r), y(q.x), z(q.y), t(q.z) {}
+
 PHColor PHColor::fromLua(lua_State * L, int index)
 {
     if (!lua_istable(L, index)) return PHInvalidColor;

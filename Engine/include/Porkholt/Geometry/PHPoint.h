@@ -52,7 +52,7 @@ struct PHPoint
         PHPoint res(x-o.x,y-o.y);
         return res;
     }
-    const PHPoint & operator *= (ph_float d)
+    PHPoint & operator *= (ph_float d)
     {
         x*=d;
         y*=d;
@@ -69,14 +69,28 @@ struct PHPoint
         PHPoint res(x*p.x,y*p.y);
         return res;
     }
+
+    PHPoint & operator *= (const PHPoint & p)
+    {
+        x*=p.x;
+        y*=p.y;
+        return *this;
+    }
     
     PHPoint operator / (const PHPoint & p) const
     {
         PHPoint res(x/p.x,y/p.y);
         return res;
     }
+
+    PHPoint & operator /= (const PHPoint & p)
+    {
+        x/=p.x;
+        y/=p.y;
+        return *this;
+    }
     
-    const PHPoint & operator /= (ph_float d)
+    PHPoint & operator /= (ph_float d)
     {
         x/=d;
         y/=d;
@@ -155,7 +169,7 @@ struct PHPoint
 #ifdef BOX2D_H
     PHPoint(const b2Vec2 & o) : x(o.x), y(o.y) {};
     b2Vec2 b2d() const { return b2Vec2(x, y); }
-    const PHPoint & operator = (const b2Vec2 & o) { x = o.x; y = o.y; return (*this); }
+    PHPoint & operator = (const b2Vec2 & o) { x = o.x; y = o.y; return (*this); }
 #endif
 } PH_PACKED_STRUCT;
 
@@ -217,13 +231,14 @@ struct PH3DPoint
         PH3DPoint res(-x,-y,-z);
         return res;
     }
-    const PH3DPoint & operator *= (ph_float d)
+    PH3DPoint & operator *= (ph_float d)
     {
         x*=d;
         y*=d;
         z*=d;
         return * this;
     }
+
     PH3DPoint operator * (ph_float d) const
     {
         PH3DPoint res(x*d,y*d,z*d);
@@ -242,13 +257,23 @@ struct PH3DPoint
         return res;
     }
     
-    const PH3DPoint & operator /= (ph_float d)
+    PH3DPoint & operator /= (const PH3DPoint & p)
+    {
+        x/=p.x;
+        y/=p.y;
+        z/=p.z;
+        return * this;
+    }
+    
+    
+    PH3DPoint & operator /= (ph_float d)
     {
         x/=d;
         y/=d;
         z/=d;
         return * this;
     }
+
     PH3DPoint operator / (ph_float d) const
     {
         PH3DPoint res(x/d,y/d,z/d);
@@ -348,7 +373,7 @@ struct PH3DPoint
 #ifdef BOX2D_H
     PH3DPoint(const b2Vec3 & o) : x(o.x), y(o.y), z(o.z) {}
     b2Vec3 b2d() const { return b2Vec3(x, y, z); } 
-    const PH3DPoint & operator = (const b2Vec3 & o) { x = o.x; y = o.y; return (*this); }
+    PH3DPoint & operator = (const b2Vec3 & o) { x = o.x; y = o.y; return (*this); }
 #endif
 } PH_PACKED_STRUCT;
 

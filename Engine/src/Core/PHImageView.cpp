@@ -50,12 +50,32 @@ void PHImageView::setShader(PHGLShaderProgram *sh)
     _shader = sh;
 }
 
-void PHImageView::setCinematicCustomColor(const PHColor & clr)
+void PHImageView::setAnimationFieldC(int field, const PHColor & clr)
 {
-    if (clr == PHWhiteColor)
-        setTintColor(PHInvalidColor);
-    else
-        setTintColor(clr);
+    switch (field)
+    {
+        case PHCinematicActor::fieldColor:
+            if (clr == PHWhiteColor)
+                setTintColor(PHInvalidColor);
+            else
+                setTintColor(clr);
+            break;
+        default:
+            PHView::setAnimationFieldC(field, clr);
+    }
+}
+
+PHColor PHImageView::getAnimationFieldC(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldColor:
+            if (tint.a<0)
+                return PHWhiteColor;
+            return tint;
+        default:
+            return PHView::getAnimationFieldC(field);
+    }
 }
 
 bool PHImageView::ImageMaterial::materialSupportsRenderMode(int rm)
@@ -412,6 +432,7 @@ void PHImageView::loadFromLua(lua_State *L)
         }
         lua_pop(L,1);
         
+        /*
         lua_getfield(L, -1, "keyframeAnimations");
         if (lua_istable(L, -1))
         {
@@ -428,6 +449,7 @@ void PHImageView::loadFromLua(lua_State *L)
             PHLuaForEach_
         }
         lua_pop(L,1);
+        */
         
         setTintColor(tint);
         setTextureCoordinates(portion);

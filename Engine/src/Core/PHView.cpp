@@ -337,6 +337,76 @@ PHPositionalVector PHView::positionInParent(PHDrawableCoordinates * d, PHPositio
     return applyMatrices() * p;
 }
 
+void PHView::setAnimationFieldF(int field, ph_float v)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldRotate:
+            setRotation(v);
+            break;
+    }
+}
+#include <Porkholt/Core/PHTime.h>
+
+void PHView::setAnimationFieldV2(int field, const PHVector2 & v)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldMove:
+            setPosition(v);
+            break;
+        case PHCinematicActor::fieldScale:
+            setScaleX(v.x);
+            setScaleY(v.y);
+            break;
+    }
+}
+
+void PHView::setAnimationFieldC(int field, const PHColor & v)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldBgColor:
+            setBackgroundColor(v);
+            break;
+    }
+}   
+
+ph_float PHView::getAnimationFieldF(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldRotate:
+            return rotation();
+        default:
+            return 0;
+    }
+}
+
+PHVector2 PHView::getAnimationFieldV2(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldMove:
+            return position();
+        case PHCinematicActor::fieldScale:
+            return PHSize(scaleX(), scaleY());
+        default:
+            return PHOriginPoint;
+    }
+}
+
+PHColor PHView::getAnimationFieldC(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldBgColor:
+            return backgroundColor();
+        default:
+            return PHClearColor;
+    }
+}
+
 #pragma mark -
 #pragma Scripting
 

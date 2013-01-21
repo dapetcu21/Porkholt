@@ -6,3 +6,4 @@
 -I Externals/libvorbis/include
 -I Externals/uremote/include
 -I Externals/box2d/Box2D
+-fblocks

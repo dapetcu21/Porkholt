@@ -61,11 +61,6 @@ void PHCinematicActor::removeCinematicAnimationsWithTag(size_t tag)
     _cinematicMutex->unlock();
 }
 
-void PHCinematicActor::setCinematicCustomColor(const PHColor &) {}
-PHColor PHCinematicActor::cinematicCustomColor() { return PHInvalidColor; }
-void PHCinematicActor::setCinematicCustomValue(ph_float) {}
-ph_float PHCinematicActor::cinematicCustomValue() { return 0; }
-
 PHCinematicActor::PHCinematicActor() : _cinematicAnimator(NULL) , _rootAnimator(NULL), _cinematicMutex(new PHMutex), _gm(NULL) {};
 PHCinematicActor::~PHCinematicActor()
 {
@@ -122,30 +117,16 @@ void PHCinematicActor::dropCinematicAnimation()
     _rootAnimator = _cinematicAnimator = NULL;
 }
 
-void PHCinematicActor::animateMove(const PHPoint & mv)
+void PHCinematicActor::animateField(const PHAnimationField & field)
 {
-    _cinematicAnimator->setMovement(_cinematicAnimator->movement()+mv);
-}
-
-void PHCinematicActor::animateScale(const PHSize & mv)
-{
-    PHSize s = _cinematicAnimator->scaling();
-    _cinematicAnimator->setScaling(PHSize(mv.x*s.x,mv.y*s.y));
-}
-
-void PHCinematicActor::animateRotate(ph_float rot)
-{
-    _cinematicAnimator->setRotation(_cinematicAnimator->rotation()+rot);
-}
-
-void PHCinematicActor::animateBgColor(const PHColor & clr)
-{
-    _cinematicAnimator->setBgColor(clr);
-}
-
-void PHCinematicActor::animateCustomColor(const PHColor & clr)
-{
-    _cinematicAnimator->setCustomColor(clr);
+    if (_cinematicAnimator)
+        _cinematicAnimator->addAnimationField(field);
+    else
+    {
+        beginCinematicAnimation(0.5f);
+        _cinematicAnimator->addAnimationField(field);
+        commitCinematicAnimation();
+    }
 }
 
 void PHCinematicActor::animationCallback(const PHInvocation & inv)
@@ -163,11 +144,6 @@ void PHCinematicActor::animationSkipFirstFrames(int n)
     _cinematicAnimator->setSkipsFirstFrames(n);
 }
 
-void PHCinematicActor::animateCustomValue(ph_float val)
-{
-    _cinematicAnimator->setCustomValueDelta(_cinematicAnimator->customValueDelta()+val);
-}
-
 void PHCinematicActor::actorAttachedToGameManager(PHGameManager * gameman)
 {
     _gm = gameman;
@@ -175,3 +151,50 @@ void PHCinematicActor::actorAttachedToGameManager(PHGameManager * gameman)
         if (!((*i)->animatorPool()))
             (*i)->setAnimatorPool(_gm->animatorPool());
 }
+
+void PHCinematicActor::setAnimationFieldF(int field, ph_float v)
+{
+}
+
+void PHCinematicActor::setAnimationFieldV2(int field, const PHVector2 & v)
+{
+}
+
+void PHCinematicActor::setAnimationFieldV3(int field, const PHVector3 & v)
+{
+}
+
+void PHCinematicActor::setAnimationFieldC(int field, const PHColor & v)
+{
+}
+
+void PHCinematicActor::setAnimationFieldQ(int field, const PHQuaternion & v)
+{
+}
+
+ph_float PHCinematicActor::getAnimationFieldF(int field)
+{
+    return 0;
+}
+
+PHVector2 PHCinematicActor::getAnimationFieldV2(int field)
+{
+    return PHOriginPoint;
+}
+
+PHVector3 PHCinematicActor::getAnimationFieldV3(int field)
+{
+    return PH3DOriginPoint;
+}
+
+PHColor PHCinematicActor::getAnimationFieldC(int field)
+{
+    return PHClearColor;
+}
+
+PHQuaternion PHCinematicActor::getAnimationFieldQ(int field)
+{
+    return PHIdentityQuaternion;
+}
+
+

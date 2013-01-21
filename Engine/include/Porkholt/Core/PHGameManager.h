@@ -112,7 +112,7 @@ private:
     ph_float fpsLeft;
     PHTextView * fpsView;
     PH2DCamera * fpsCamera;
-    bool capped;
+    bool capped, frameAnim;
     void renderFPS(ph_float timeElapsed);
     
     void (*entryPoint)(PHGameManager*);
@@ -140,7 +140,7 @@ public:
     ph_float frameInterval() { return 1.0f/fps; }
     ph_float elapsedTime() { return lastElapsed; }
     ph_float dotsPerInch() { return dpi; }
-	void renderFrame(ph_float timeElapsed);
+	void renderFrame();
 	void appSuspended();
 	void appResumed();
 	void appQuits();
@@ -164,6 +164,8 @@ public:
     void setShowsFPS(bool fps) { showFPS = fps; }
     bool fpsCapped() { return capped; }
     void setFpsCapped(bool b) { capped = b; }
+    bool frameAnimation() { return frameAnim; }
+    void setFrameAnimation(bool f) { frameAnim = f; }
     
     void * userData() { return ud; }
     void setUserData(void * u) { ud = u; }

@@ -3,7 +3,7 @@
 #include <Porkholt/Core/PHCinematicAnimator.h>
 #include <Porkholt/Core/PHCinematicActor.h>
 
-#define ANIMATOR_INIT next(NULL), scale(1,1), move(0,0), rotate(0), _bgColor(PHInvalidColor), _customColor(PHInvalidColor), customValue(0), function(LinearFunction), time(0), totalTime(0), skipFirst(false)
+#define ANIMATOR_INIT next(NULL), function(LinearFunction), time(0), totalTime(0), skipFirst(false)
 
 PHCinematicAnimator::PHCinematicAnimator() : PHGenericCinematicAnimator(), ANIMATOR_INIT
 {
@@ -15,6 +15,11 @@ PHCinematicAnimator::PHCinematicAnimator(PHAnimatorPool * pool) : PHGenericCinem
 
 PHCinematicAnimator::~PHCinematicAnimator()
 {
+}
+
+void PHCinematicAnimator::addAnimationField(const PHAnimationField & field)
+{
+    newFields.push_back(field);
 }
 
 void PHCinematicAnimator::setNextAnimation(PHCinematicAnimator * nx)
@@ -112,70 +117,20 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
     {
         ph_float lastRatio = f(1.0f - (lastTime/totalTime),function);
         ph_float ratio = f(1.0f - (time/totalTime),function);
-        ph_float delta = ratio - lastRatio;
-        if (move.x || move.y)
-            _actor->setCinematicPosition(_actor->cinematicPosition()+(move * delta));
-        if (rotate)
-            _actor->setCinematicRotation(_actor->cinematicRotation()+(rotate * delta));
-        if (customValue)
-            _actor->setCinematicCustomValue(_actor->cinematicCustomValue()+(customValue * delta));
-        if (scale.x != 1 || scale.y != 1)
+
+        if (newFields.size())
         {
-            PHSize lastFactor = (scale-PHSize(1,1))*lastRatio+PHSize(1,1);
-            PHSize factor = (scale-PHSize(1,1))*ratio+PHSize(1,1);
-            PHSize orig = _actor->cinematicScale();
-            _actor->setCinematicScale(PHSize(orig.x/lastFactor.x*factor.x,orig.y/lastFactor.y*factor.y));
-        }
-        if (_bgColor.a>=0)
-        {
-            PHColor clr,trg,crr;
-            crr = _actor->cinematicBgColor();
-            trg = _bgColor;
-            if (trg.a>0)
+            fields.reserve(fields.size() + newFields.size());
+            for (vector<PHAnimationField>::iterator i = newFields.begin(); i != newFields.end(); i++)
             {
-                if (crr.a>0)
-                {
-                    clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
-                    clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
-                    clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
-                } else {
-                    clr.r = trg.r;
-                    clr.g = trg.g;
-                    clr.b = trg.b;
-                }
-            } else {
-                clr.r = crr.r;
-                clr.g = crr.g;
-                clr.b = crr.b;
+                i->initState(_actor);
+                fields.push_back(*i);
             }
-            clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
-            _actor->setCinematicBgColor(clr);
+            newFields.clear();
         }
-        if (_customColor.a>=0)
-        {
-            PHColor clr,trg,crr;
-            crr = _actor->cinematicCustomColor();
-            trg = _customColor;
-            if (trg.a>0)
-            {
-                if (crr.a>0)
-                {
-                    clr.r = ((lastRatio==1)?0:((crr.r-trg.r)/(1-lastRatio)))*(1-ratio)+trg.r;
-                    clr.g = ((lastRatio==1)?0:((crr.g-trg.g)/(1-lastRatio)))*(1-ratio)+trg.g;
-                    clr.b = ((lastRatio==1)?0:((crr.b-trg.b)/(1-lastRatio)))*(1-ratio)+trg.b;
-                } else {
-                    clr.r = trg.r;
-                    clr.g = trg.g;
-                    clr.b = trg.b;
-                }
-            } else {
-                clr.r = crr.r;
-                clr.g = crr.g;
-                clr.b = crr.b;
-            }
-            clr.a = ((lastRatio==1)?0:((crr.a-trg.a)/(1-lastRatio)))*(1-ratio)+trg.a;
-            _actor->setCinematicCustomColor(clr);
-        }
+
+        for (vector<PHAnimationField>::iterator i = fields.begin(); i != fields.end(); i++)
+            i->animate(_actor, lastRatio, ratio);
     }
     if (time<=FLT_EPSILON)
     {

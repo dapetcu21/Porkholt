@@ -13,27 +13,19 @@ struct PHQuaternion
 {
     union
     {
-        ph_float r;
-        ph_float a;
-		ph_float q0;
+        ph_float r,w,a,q0;
     };
     union
     {
-        ph_float x;
-        ph_float b;
-		ph_float q1;
+        ph_float x,b,q1;
     };
     union
     {
-        ph_float c;
-        ph_float y;
-		ph_float q2;
+        ph_float y,c,q2;
     };
     union
     {
-        ph_float d;
-        ph_float z;
-		ph_float q3;
+        ph_float z,d,q3;
     };
 
     bool operator == (const PHQuaternion & o) const {
@@ -78,6 +70,9 @@ struct PHQuaternion
 							q0*o.q2 + q2*o.q0 + q3*o.q1 - q1*o.q3,
 							q0*o.q3 + q3*o.q0 + q1*o.q2 - q2*o.q1);
     } 
+
+    PHVector3 operator * (const PHVector3 & o) const;
+
     PHQuaternion(ph_float _a, ph_float _b, ph_float _c, ph_float _d) : a(_a), b(_b), c(_c), d(_d) {};
 	PHQuaternion(ph_float alpha, PHVector3 axis) : r(cos(alpha/2)) 
 	{ 
@@ -87,6 +82,7 @@ struct PHQuaternion
 		y=axis.y*s; 
 		z=axis.z*s;
 	};
+    PHQuaternion(const PHVector4 & v) : r(v.x), x(v.y), y(v.z), z(v.t) {};
     PHQuaternion() {};
 	PHVector3 vector() const { return PHVector3(x,y,z); }
 	PHVector3 rotationAxis() const { ph_float scale = sqrt(x*x + y*y + z*z); return PHVector3(x/scale, y/scale, z/scale); }

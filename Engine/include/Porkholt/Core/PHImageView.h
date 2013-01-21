@@ -113,8 +113,12 @@ public:
     PHColor & tintColor() { return tint; };
     void setTintColor(const PHColor & clr) { tint = clr; };
     
-    virtual PHColor cinematicCustomColor() { if (tint.a<0) return PHWhiteColor; return tint; }
-    virtual void setCinematicCustomColor(const PHColor & c);
+
+    virtual void setAnimationFieldC(int field, const PHColor & v);
+    virtual PHColor getAnimationFieldC(int field);
+    void animateTint(const PHColor & clr) { animateField(PHAnimationField(PHCinematicActor::fieldColor, clr)); }
+
+
     
     bool constrainCurveToFrame() { return constrain; }
     void setConstrainCurveToFrame(bool c) { constrain = c; }

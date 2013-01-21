@@ -5,10 +5,13 @@
 #include <Porkholt/Sound/PHSoundManager.h>
 #include <Porkholt/Sound/PHSoundPool.h>
 
-PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false), seekv(0), initial(true), _tag(0), schplaying(false)
+PHSound::PHSound(PHSoundManager * mn) : buf(NULL), man(mn), st(false), stack_begin(0), schseek(false), playing(false), loop(false), seekv(0), initial(true), _tag(0), schplaying(false),
+
+_pitch(1.0f), _gain(1.0f), _minGain(0.0f), _maxGain(1.0f), _maxDistance(FLT_MAX), _rolloffFactor(1.0f), _coneOuterGain(0.0f), _coneInnerAngle(360.0f), _coneOuterAngle(360.0f), _position(0,0,0), _velocity(0,0,0), _direction(0,0,0), _relativePositions(false)
 {
     alGenSources(1, &id); 
     man->addSound(this);
+    actorAttachedToGameManager(man->gameManager());
 }
 
 void PHSound::setCallback(const PHInvocation & invo)
@@ -324,7 +327,7 @@ size_t PHSound::playPositionSample(ALenum state)
 
 ph_float PHSound::playPosition()
 {
-       return playPositionSample()/ph_float(buf->frequency());
+    return playPositionSample()/ph_float(buf->frequency());
 }
 
 void PHSound::seek(ph_float pos)
@@ -335,175 +338,88 @@ void PHSound::seek(ph_float pos)
 }
 
 
-ph_float PHSound::pitch()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_PITCH, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::gain()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_GAIN, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::minGain()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_MIN_GAIN, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::maxGain()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_MAX_GAIN, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::maxDistance()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_MAX_DISTANCE, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::rolloffFactor()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_ROLLOFF_FACTOR, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::coneOuterGain()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_CONE_OUTER_GAIN, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::coneInnerAngle()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_CONE_INNER_ANGLE, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::coneOuterAngle()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_CONE_OUTER_ANGLE, &v);
-    return ph_float(v);
-}
-
-ph_float PHSound::referenceDistance()
-{
-    ALfloat v;
-    alGetSourcef(id, AL_REFERENCE_DISTANCE, &v);
-    return ph_float(v);
-}
-
-
 void PHSound::setPitch(ph_float val)
 {
+    _pitch = val;
     alSourcef(id, AL_PITCH, ALfloat(val));
 }
 
 void PHSound::setGain(ph_float val)
 {
+    _gain = val;
     alSourcef(id, AL_GAIN, ALfloat(val));
 }
 
 void PHSound::setMinGain(ph_float val)
 {
+    _minGain = val;
     alSourcef(id, AL_MIN_GAIN, ALfloat(val));
 }
 
 void PHSound::setMaxGain(ph_float val)
 {
+    _maxGain = val;
     alSourcef(id, AL_MAX_GAIN, ALfloat(val));
 }
 
 void PHSound::setMaxDistance(ph_float val)
 {
+    _maxDistance = val;
     alSourcef(id, AL_MAX_DISTANCE, ALfloat(val));
 }
 
 void PHSound::setRolloffFactor(ph_float val)
 {
+    _rolloffFactor = val;
     alSourcef(id, AL_ROLLOFF_FACTOR, ALfloat(val));
 }
 
 void PHSound::setConeOuterGain(ph_float val)
 {
+    _coneOuterGain = val;
     alSourcef(id, AL_CONE_OUTER_GAIN, ALfloat(val));
 }
 
 void PHSound::setConeInnerAngle(ph_float val)
 {
+    _coneInnerAngle = val;
     alSourcef(id, AL_CONE_INNER_ANGLE, ALfloat(val));
 }
 
 void PHSound::setConeOuterAngle(ph_float val)
 {
+    _coneOuterAngle = val;
     alSourcef(id, AL_CONE_OUTER_ANGLE, ALfloat(val));
 }
 
 void PHSound::setReferenceDistance(ph_float val)
 {
+    _referenceDistance = val;
     alSourcef(id, AL_REFERENCE_DISTANCE, ALfloat(val));
-}
-
-
-PHVector3 PHSound::position()
-{
-    ALfloat v[3];
-    alGetSourcefv(id, AL_POSITION, v);
-    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
-}
-
-PHVector3 PHSound::velocity()
-{
-    ALfloat v[3];
-    alGetSourcefv(id, AL_VELOCITY, v);
-    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
-}
-
-PHVector3 PHSound::direction()
-{
-    ALfloat v[3];
-    alGetSourcefv(id, AL_DIRECTION, v);
-    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
 }
 
 
 void PHSound::setPosition(const PHVector3 & v)
 {
+    _position = v;
     alSource3f(id, AL_POSITION, ALfloat(v.x), ALfloat(v.y), ALfloat(v.x));
 }
 
 void PHSound::setVelocity(const PHVector3 & v)
 {
+    _velocity = v;
     alSource3f(id, AL_VELOCITY, ALfloat(v.x), ALfloat(v.y), ALfloat(v.x));
 }
 
 void PHSound::setDirection(const PHVector3 & v)
 {
+    _direction = v;
     alSource3f(id, AL_DIRECTION, ALfloat(v.x), ALfloat(v.y), ALfloat(v.x));
-}
-
-
-bool PHSound::relativePositions()
-{
-    ALint v;
-    alGetSourcei(id, AL_SOURCE_RELATIVE, &v);
-    return (v == AL_TRUE);
 }
 
 void PHSound::setRelativePositions(bool r)
 {
+    _relativePositions = r;
     alSourcei(id, AL_SOURCE_RELATIVE, r?AL_TRUE:AL_FALSE);
 }
 
@@ -517,6 +433,83 @@ void PHSound::setLooping(bool l)
     if (st)
         alSourcei(id, AL_LOOPING, l?AL_TRUE:AL_FALSE);
     loop = l;
+}
+
+void PHSound::setAnimationFieldF(int field, ph_float value)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldPitch:
+            setPitch(value);
+            break;
+        case PHCinematicActor::fieldGain:
+            setGain(value);
+            break;
+        default:
+            break;
+    }
+}
+
+void PHSound::setAnimationFieldV3(int field, const PHVector3 & value)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldMove:
+            setPosition(value);
+            break;
+        case PHCinematicActor::fieldVelocity:
+            setVelocity(value);
+            break;
+    }
+}
+
+void PHSound::setAnimationFieldQ(int field, const PHQuaternion & value)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldDirection:
+            setDirection(value * PHVector3(0, 0, 1));
+            break;
+        default:
+            break;
+    }
+}
+
+ph_float PHSound::getAnimationFieldF(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldPitch:
+            return pitch();
+        case PHCinematicActor::fieldGain:
+            return gain();
+        default:
+            return 0;
+    }
+}
+
+PHVector3 PHSound::getAnimationFieldV3(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldMove:
+            return position();
+        case PHCinematicActor::fieldVelocity:
+            return velocity();
+        default:
+            return PH3DOriginPoint;
+    }
+}
+
+PHQuaternion PHSound::getAnimationFieldQ(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldDirection:
+            return PHQuaternion::fromPointsOnSphere(PHVector3(0, 0, 1), direction());
+        default:
+            return PHIdentityQuaternion;
+    }
 }
 
 

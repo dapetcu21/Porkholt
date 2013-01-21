@@ -2,6 +2,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PH2DCamera.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAccelInterface.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimatedImage.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHAnimationField.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAnimatorPool.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAutoreleasePool.cpp
@@ -36,8 +37,8 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHImageAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHImageInitPool.cpp
   ${PH_ENGINE_PATH}/src/Core/PHImageView.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimator.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimatorGroup.cpp
+#  ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimator.cpp
+#  ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimatorGroup.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLua.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.lua.h

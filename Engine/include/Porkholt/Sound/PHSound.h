@@ -4,12 +4,13 @@
 #define PHSOUND_H
 
 #include <Porkholt/Sound/PHOpenAL.h>
+#include <Porkholt/Core/PHCinematicActor.h>
 
 class PHAudioBuffer;
 class PHSoundManager;
 class PHSoundPool;
 
-class PHSound : public PHObject
+class PHSound : public PHObject, public PHCinematicActor
 {
 private:
     ALuint id;
@@ -83,17 +84,23 @@ public:
         snd->playAndRelease();
         return snd;
     }
-    
-    ph_float pitch();
-    ph_float gain();
-    ph_float minGain();
-    ph_float maxGain();
-    ph_float maxDistance();
-    ph_float rolloffFactor();
-    ph_float coneOuterGain();
-    ph_float coneInnerAngle();
-    ph_float coneOuterAngle();
-    ph_float referenceDistance();
+
+protected:
+    ph_float _pitch, _gain, _minGain, _maxGain, _maxDistance, _rolloffFactor, _coneOuterGain, _coneInnerAngle, _coneOuterAngle, _referenceDistance;
+    PHVector3 _position, _velocity, _direction;
+    bool _relativePositions;
+
+public:
+    ph_float pitch() { return _pitch; }
+    ph_float gain() { return _gain; }
+    ph_float minGain() { return _minGain; }
+    ph_float maxGain() { return _maxGain; }
+    ph_float maxDistance() { return _maxDistance; }
+    ph_float rolloffFactor() { return _rolloffFactor; }
+    ph_float coneOuterGain() { return _coneOuterGain; }
+    ph_float coneInnerAngle() { return _coneInnerAngle; }
+    ph_float coneOuterAngle() { return _coneOuterAngle; }
+    ph_float referenceDistance() { return _referenceDistance; }
 
     void setPitch(ph_float val);
     void setGain(ph_float val);
@@ -106,16 +113,32 @@ public:
     void setConeOuterAngle(ph_float val);
     void setReferenceDistance(ph_float val);
 
-    PHVector3 position();
-    PHVector3 velocity();
-    PHVector3 direction();
+    PHVector3 position() { return _position; }
+    PHVector3 velocity() { return _velocity; }
+    PHVector3 direction() { return _direction; }
 
     void setPosition(const PHVector3 & v);
     void setVelocity(const PHVector3 & v);
     void setDirection(const PHVector3 & v);
 
-    bool relativePositions();
+    bool relativePositions() { return _relativePositions; }
     void setRelativePositions(bool r);
-    };
+
+protected:
+    void setAnimationFieldF(int field, ph_float value);
+    void setAnimationFieldV3(int field, const PHVector3 & value);
+    void setAnimationFieldQ(int field, const PHQuaternion & value);
+
+    ph_float getAnimationFieldF(int field);
+    PHVector3 getAnimationFieldV3(int field);
+    PHQuaternion getAnimationFieldQ(int field);
+
+public:
+    void animatePitch(ph_float val) { animateField(PHAnimationField(PHCinematicActor::fieldPitch, val)); }
+    void animateGain(ph_float val) { animateField(PHAnimationField(PHCinematicActor::fieldGain, val)); }
+    void animateVelocity(const PHVector3 & val) { animateField(PHAnimationField(PHCinematicActor::fieldVelocity, val)); }
+    void animateDirection(const PHVector3 & val) { animateField(PHAnimationField(PHCinematicActor::fieldDirection, PHQuaternion::fromPointsOnSphere(PHVector3(0, 0, 1), val))); }
+    void animateDirection(const PHQuaternion & val) { animateField(PHAnimationField(PHCinematicActor::fieldDirection, val)); }
+};
 
 #endif

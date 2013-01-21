@@ -64,3 +64,15 @@ PHQuaternion PHQuaternion::fromPointsOnSphere(const PHVector3 & from, const PHVe
     normal /= 2*cosa2;
     return PHQuaternion(cosa2, normal.x, normal.y, normal.z);
 }
+
+PHVector3 PHQuaternion::operator* (const PHVector3 & v) const
+{
+    PHVector3 uv, uuv;
+    PHVector3 qvec(x, y, z);
+    uv = qvec.cross(v);
+    uuv = qvec.cross(uv);
+    uv *= (2.0f * w);
+    uuv *= 2.0f;
+
+    return v + uv + uuv;
+}

@@ -4,8 +4,9 @@
 #define PHBODY_H
 
 #include <Porkholt/Core/PHDrawable.h>
+#include <Porkholt/Core/PHCinematicActor.h>
 
-class PHBody : public PHDrawable
+class PHBody : public PHDrawable, public PHCinematicActor
 {
 private:
     PH3DPoint pos;
@@ -61,6 +62,14 @@ public:
 
     PHPositionalVector positionInMyCoordinates(PHDrawableCoordinates *);
     PHPositionalVector positionInParent(PHDrawableCoordinates * d, PHPositionalVector & p);
+
+protected:
+    virtual void setAnimationFieldV3(int field, const PHVector3 & v);
+    virtual void setAnimationFieldQ(int field, const PHQuaternion & v);
+    virtual PHVector3 getAnimationFieldV3(int field);
+    virtual PHQuaternion getAnimationFieldQ(int field);
+
+    virtual void attachedToGameManager();
 };
 
 #endif

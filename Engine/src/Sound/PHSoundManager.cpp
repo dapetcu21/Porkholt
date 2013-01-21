@@ -22,13 +22,16 @@ void PHSoundManager::setBackgroundMusic(PHSound * m)
         music->pauseFading();
         music->release();
     }
-    music = m;
-    if (music)
+    if (m)
     {
-        music->retain();
-        music->stop();
-        music->playFading();
+        m->retain();
+        m->stop();
+        if (music)
+            m->playFading();
+        else
+            m->play();
     }
+    music = m;
 }
 
 void PHSoundManager::addSound(PHSound * snd)
@@ -90,8 +93,9 @@ void PHSoundManager::registerPlugin(const string & ext, PHAllocator a)
     extensions->insert(make_pair<string, PHAllocator>(ext, a));
 }
 
-PHSoundManager::PHSoundManager(PHDirectory * dir) : sndDir(dir), inside(false), music(NULL)
+PHSoundManager::PHSoundManager(PHDirectory * dir, PHGameManager * gm) : sndDir(dir), inside(false), music(NULL)
 {
+    actorAttachedToGameManager(gm); 
     sndDir->retain();
 #ifdef PH_DEBUG
     const char * s = alcGetString(NULL, ALC_DEVICE_SPECIFIER);

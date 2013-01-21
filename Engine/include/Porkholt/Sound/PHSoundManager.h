@@ -4,12 +4,13 @@
 #define PHSOUNDMANAGER_H
 
 #include <Porkholt/Core/PHAnimator.h>
+#include <Porkholt/Core/PHCinematicActor.h>
 
 class PHDirectory;
 class PHSound;
 class PHFile;
 
-class PHSoundManager : public PHAnimator
+class PHSoundManager : public PHAnimator, public PHCinematicActor
 {
 protected:
     PHDirectory * sndDir;
@@ -31,8 +32,10 @@ protected:
     friend class PHSound;
 
 public:
-    PHSoundManager(PHDirectory * dir);
+    PHSoundManager(PHDirectory * dir, PHGameManager * gm);
     ~PHSoundManager();
+
+    PHGameManager * gameManager() { return actorGameManager(); }
 
     PHSound * soundNamed(const string & name, PHDirectory * dir);
     PHSound * soundNamed(const string & name) { return soundNamed(name, sndDir); }

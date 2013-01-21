@@ -96,5 +96,62 @@ PHPositionalVector PHBody::positionInParent(PHDrawableCoordinates * d, PHPositio
     return applyMatrices() * p;
 }
 
+void PHBody::setAnimationFieldV3(int field, const PHVector3 & v)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldMove:
+            setPosition(v);
+            break;
+        case PHCinematicActor::fieldScale:
+            setScale(v);
+            break;
+        default:
+            break;
+    }
+}
 
+void PHBody::setAnimationFieldQ(int field, const PHQuaternion & v)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldRotate:
+        {
+            setRotation(v);
+            PHVector3 u = v.rotationAxis();
+            PHLog("%f  %f %f %f", v.rotationAngle(), u.x, u.y, u.z);
+            break;
+        }
+        default:
+            break;
+    }
+}
 
+PHVector3 PHBody::getAnimationFieldV3(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldMove:
+            return position();
+        case PHCinematicActor::fieldScale:
+            return scale();
+        default:
+            return PH3DOriginPoint;
+    }
+}
+
+PHQuaternion PHBody::getAnimationFieldQ(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldRotate:
+            return rotation();
+        default:
+            return PHIdentityQuaternion;
+    }
+}
+
+void PHBody::attachedToGameManager()
+{
+    actorAttachedToGameManager(gm);
+}

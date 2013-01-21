@@ -12,24 +12,29 @@
 #include <sys/time.h>
 #include <errno.h>
 
-float PHTime::getTime()
+double PHTime::getTime()
 {
 #ifdef PH_DARWIN
     uint64_t tm = mach_absolute_time();
     
-    static mach_timebase_info_data_t    sTimebaseInfo;
-    if ( sTimebaseInfo.denom == 0 ) {
-        (void) mach_timebase_info(&sTimebaseInfo);
+    static double ratio = 0;
+    static uint64_t start;
+    if (ratio == 0)
+    {
+        mach_timebase_info_data_t timebaseInfo;
+        mach_timebase_info(&timebaseInfo);
+        ratio = (timebaseInfo.numer / (timebaseInfo.denom * 1000000000.0));
+        start = tm;
     }
     
-    return tm * (float)(sTimebaseInfo.numer / sTimebaseInfo.denom / 1000000000.0f);
+    return (tm - start) * ratio;
 #else
     static time_t is = 0;
     struct timespec tv;
     clock_gettime(CLOCK_REALTIME, &tv);     
     if (is == 0)
         is = tv.tv_sec;
-    return (tv.tv_sec - is) + tv.tv_nsec/1000000000.0f;
+    return (tv.tv_sec - is) + tv.tv_nsec * (1.0 / 1000000000.0);
 #endif
 }
 

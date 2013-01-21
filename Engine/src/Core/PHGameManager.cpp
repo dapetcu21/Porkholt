@@ -26,7 +26,7 @@
 
 //#define PH_FORCE_FAKE_VAO
 
-PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _fullScreenVAO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), frameAnim(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _fullScreenVAO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), aTMU(0), clat(0), ccolor(PHBlackColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
 {
 memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
@@ -168,7 +168,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         fntDir = NULL;
     }
     try {
-        sndMan = new PHSoundManager(rsrcDir->directoryAtPath("snd"));
+        sndMan = new PHSoundManager(rsrcDir->directoryAtPath("snd"), this);
         animPool->addAnimator(sndMan);
     } catch (...) {}
     
@@ -262,10 +262,27 @@ void PHGameManager::processInput()
     }
 }
 
-void PHGameManager::renderFrame(ph_float timeElapsed)
+void PHGameManager::renderFrame()
 {	
     PHAutoreleasePool pool;
     
+    ph_float tm = PHTime::getTime();
+    if (lt == 0)
+        lt = tm - frameInterval();
+    ph_float realTimeElapsed = tm - lt;
+    lt = tm;
+
+    ph_float timeElapsed;
+    if (frameAnim)
+        timeElapsed = frameInterval();
+    else
+    {
+        if (capped)
+            timeElapsed = roundf(realTimeElapsed * framesPerSecond()) * frameInterval();
+        else
+            timeElapsed = realTimeElapsed;
+    }
+
     evtHandler->processQueue();
     
     lastElapsed = timeElapsed;
@@ -277,12 +294,10 @@ void PHGameManager::renderFrame(ph_float timeElapsed)
     animPool->advanceAnimation(timeElapsed);
     
     if (drawable)
-	    drawable->render();
+	      drawable->render();
     
-    ph_float tm = PHTime::getTime();
     if (showFPS)
-        renderFPS(tm - lt);
-    lt = tm;
+        renderFPS(realTimeElapsed);
     
     clearDeleteQueue();
 
@@ -299,8 +314,8 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
         fpsCamera->setGameManager(this);
         fpsView = new PHTextView();
         fpsView->setGameManager(this);
-        fpsView->setFont(fontNamed("Arial"));
-        fpsView->setFontSize(30.0f);
+        fpsView->setFont(fontNamed("Helvetica"));
+        fpsView->setFontSize(20.0f);
         fpsView->setFontColor(PHColor(0.1f,0.9f,1.0f));
         fpsView->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);
         fpsView->setFrame(screenBounds());
@@ -314,10 +329,12 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
     if (fpsLeft <=0)
     {
         stringstream s;
-        s<<frames<<" FPS";
+        s.precision(1);
+        s.setf(ios::fixed, ios::floatfield);
+        s<<float(frames)/(1.0f-fpsLeft)<<" FPS";
         fpsView->setText(s.str());
         frames = 0;
-        fpsLeft += (int(-fpsLeft)+1);
+        fpsLeft = 1.0f;
     }
     fpsCamera->render();
 }

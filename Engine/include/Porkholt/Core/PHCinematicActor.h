@@ -4,6 +4,7 @@
 #define PHCINEMATICACTOR_H
 
 #include <Porkholt/Core/PHMain.h>
+#include <Porkholt/Core/PHAnimationField.h>
 
 class PHCinematicAnimator;
 class PHGenericCinematicAnimator;
@@ -12,20 +13,39 @@ class PHGameManager;
 class PHCinematicActor
 {
 public:
-    virtual void setCinematicPosition(const PHPoint &) = 0;
-    virtual PHPoint cinematicPosition() = 0;
-    virtual void setCinematicRotation(ph_float) = 0;
-    virtual ph_float cinematicRotation() = 0;
-    virtual void setCinematicScale(const PHSize &) = 0;
-    virtual PHSize cinematicScale() = 0;
-    virtual void setCinematicBgColor(const PHColor &) = 0;
-    virtual PHColor cinematicBgColor() = 0;
-    virtual void setCinematicCustomColor(const PHColor &);
-    virtual PHColor cinematicCustomColor();
-    virtual void setCinematicCustomValue(ph_float);
-    virtual ph_float cinematicCustomValue();
+    enum fields
+    {
+        fieldMove,
+        fieldScale,
+        fieldRotate,
+        fieldBgColor,
+        fieldColor,
+        fieldDirection,
+        fieldVelocity,
+        fieldGain,
+        fieldPitch,
+    };
+    enum types
+    {
+        tNone,
+        tFloat,
+        tVec2,
+        tVec3,
+        tColor,
+        tQuat
+    };
 
-    
+    virtual void setAnimationFieldF(int field, ph_float v);
+    virtual void setAnimationFieldV2(int field, const PHVector2 & v);
+    virtual void setAnimationFieldV3(int field, const PHVector3 & v);
+    virtual void setAnimationFieldC(int field, const PHColor & v);
+    virtual void setAnimationFieldQ(int field, const PHQuaternion & v);
+    virtual ph_float getAnimationFieldF(int field);
+    virtual PHVector2 getAnimationFieldV2(int field);
+    virtual PHVector3 getAnimationFieldV3(int field);
+    virtual PHColor getAnimationFieldC(int field);
+    virtual PHQuaternion getAnimationFieldQ(int field);
+
 protected:
     
     PHCinematicAnimator * _cinematicAnimator, * _rootAnimator;
@@ -33,8 +53,10 @@ protected:
     friend class PHGenericCinematicAnimator;
     PHMutex * _cinematicMutex;
     PHGameManager * _gm;
-    
+
 public:
+    PHGameManager * actorGameManager() { return _gm; }
+
     void addCinematicAnimation(PHGenericCinematicAnimator * anim);
     void removeCinematicAnimation(PHGenericCinematicAnimator * anim);
     void removeAllCinematicAnimations();
@@ -48,17 +70,19 @@ public:
     void commitCinematicAnimation();
     void dropCinematicAnimation();
     
-    void animateMove(const PHPoint & mv);
-    void animateScale(const PHSize & mv);
-    void animateRotate(ph_float rot);
-    void animateBgColor(const PHColor & clr);
-    void animateCustomColor(const PHColor & clr);
-    void animateCustomValue(ph_float val);
+    void animateMove(const PHPoint & mv) { animateField(PHAnimationField(fieldMove, mv, true)); }
+    void animateMove(const PH3DPoint & mv) { animateField(PHAnimationField(fieldMove, mv, true)); }
+    void animateScale(const PHSize & mv) { animateField(PHAnimationField(fieldScale, mv, true, true)); }
+    void animateScale(const PH3DSize & mv) { animateField(PHAnimationField(fieldScale, mv, true, true)); }
+    void animateRotate(ph_float rot) { animateField(PHAnimationField(fieldRotate, true)); }
+    void animateRotate(const PHQuaternion & q) { animateField(PHAnimationField(fieldRotate, q, true)); }
+
+    void animateField(const PHAnimationField & field);
+
     void animationCallback(const PHInvocation & inv);
     void animationSkipFirstFrames(int f);
     void animationTag(size_t tag);
     
-   
     PHCinematicActor();
     ~PHCinematicActor();
     

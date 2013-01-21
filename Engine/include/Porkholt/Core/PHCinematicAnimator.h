@@ -6,6 +6,7 @@
 //#define PH_SLOW_CINEMATIC_ANIMATIONS
 
 #include <Porkholt/Core/PHGenericCinematicAnimator.h>
+#include <Porkholt/Core/PHAnimationField.h>
 
 class PHCinematicActor;
 class PHCinematicAnimator : public PHGenericCinematicAnimator
@@ -29,18 +30,6 @@ public:
     
     int skipsFirstFrames() { return skipFirst; }
     void setSkipsFirstFrames(int s) { skipFirst = s; }
-    void setScaling(const PHSize & sz) { scale = sz; }
-    const PHSize & scaling() { return scale; }
-    void setMovement(const PHSize & sz) { move = sz; }
-    const PHSize & movement() { return move; }
-    void setRotation(ph_float r) { rotate = r; }
-    ph_float rotation() { return rotate; }
-    void setCustomValueDelta(ph_float val) { customValue = val; }
-    ph_float customValueDelta() { return customValue; }
-    void setBgColor(const PHColor & clr) { _bgColor = clr; }
-    const PHColor & bgColor() { return _bgColor; }    
-    void setCustomColor(const PHColor & clr) { _customColor = clr; }
-    const PHColor & customColor() { return _customColor; }
     int timeFunction() { return function; }
     void setTimeFunction(int tf) { function = tf; }
     ph_float duration() { return time; }
@@ -58,16 +47,15 @@ public:
     void skip() { advanceAnimation(time); }
     void completed() { completed(0); }
     void completed(ph_float remaining);
-    
+
+    void addAnimationField(const PHAnimationField & anim);
     
 private:
     PHCinematicAnimator * next;
+
+    vector<PHAnimationField> newFields;
+    vector<PHAnimationField> fields;
     
-    PHSize scale;
-    PHSize move;
-    ph_float rotate;
-	PHColor _bgColor,_customColor;
-    ph_float customValue;
     int function;
     ph_float time,totalTime;
     int skipFirst;
