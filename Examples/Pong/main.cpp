@@ -87,7 +87,7 @@ protected:
         scoreAV = new PHTextView(PHRect(frame.x+frame.width/2-textHeight,frame.height,frame.height,textHeight));
         scoreAV->setRotationalCenter(PHOriginPoint);
         scoreAV->setRotation(-M_PI_2);
-        scoreAV->setFont(gm->fontNamed("Arial"));
+        scoreAV->setFont(gm->fontNamed("Helvetica"));
         scoreAV->setFontColor(PHWhiteColor);
         scoreAV->setFontSize(textHeight);
         scoreAV->setAlignment(PHTextView::justifyLeft | PHTextView::alignCenter);
@@ -95,7 +95,7 @@ protected:
         scoreBV = new PHTextView(PHRect(frame.x+frame.width/2+textHeight,0,frame.height,textHeight));
         scoreBV->setRotationalCenter(PHOriginPoint);
         scoreBV->setRotation(M_PI_2);
-        scoreBV->setFont(gm->fontNamed("Arial"));
+        scoreBV->setFont(gm->fontNamed("Helvetica"));
         scoreBV->setFontColor(PHWhiteColor);
         scoreBV->setFontSize(textHeight);
         scoreBV->setAlignment(PHTextView::justifyLeft | PHTextView::alignCenter);
