@@ -23,6 +23,8 @@
 #include <Porkholt/Core/PH2DCamera.h>
 #include <Porkholt/Core/PHViewControllerHolder.h>
 #include <Porkholt/Core/PHProfilerCollection.h>
+#include <Porkholt/IO/PHEmbeddedDirectory.h>
+#include <Porkholt/IO/PHUnionDirectory.h>
 
 //#define PH_FORCE_FAKE_VAO
 
@@ -139,10 +141,23 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     evtHandler = new PHEventHandler(this);
     animPool = new PHAnimatorPool();
     animPoolMutex = new PHMutex();
-    rsrcDir = params.resourceDirectory();
-    if (!rsrcDir)
-        rsrcDir = PHInode::directoryAtFSPath("./rsrc");
-    rsrcDir->retain();
+
+    PHUnionDirectory * rdir = new PHUnionDirectory();
+    PHDirectory * realRsrc = params.resourceDirectory();
+    if (!realRsrc)
+        try { realRsrc = PHInode::directoryAtFSPath("./rsrc"); }
+        catch(...) {}
+    rdir->addDirectory(realRsrc);
+    PHEmbeddedDirectory * embedRsrc = NULL;
+    try { embedRsrc = new PHEmbeddedDirectory("rsrc"); } 
+    catch (...) {}
+    if (embedRsrc)
+    {
+        rdir->addDirectory(embedRsrc);
+        embedRsrc->release();
+    }
+    rsrcDir = rdir;
+
     try {
         shdDir = rsrcDir->directoryAtPath("shaders");
         shdDir->retain();
@@ -314,7 +329,7 @@ void PHGameManager::renderFPS(ph_float timeElapsed)
         fpsCamera->setGameManager(this);
         fpsView = new PHTextView();
         fpsView->setGameManager(this);
-        fpsView->setFont(fontNamed("Helvetica"));
+        fpsView->setFont(defaultFont());
         fpsView->setFontSize(20.0f);
         fpsView->setFontColor(PHColor(0.1f,0.9f,1.0f));
         fpsView->setAlignment(PHTextView::alignTop | PHTextView::justifyLeft);

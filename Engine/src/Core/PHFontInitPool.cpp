@@ -10,6 +10,13 @@ PHFont* PHFontInitPool::fontFromFile(PHFile * file)
     return new PHFont(gameManager(), file);
 }
 
+PHFont * PHFontInitPool::defaultFont()
+{
+    if (_defaultFont == (PHFont*)(size_t)-1)
+        _defaultFont = fontNamed("Helvetica");
+    return _defaultFont;
+}
+
 PHFont* PHFontInitPool::fontNamed(const string & name)
 {
     PHFont * fnt;

@@ -94,7 +94,7 @@ protected:
 #define tHeight 20
 #define tWidth 200
             PHTextView * tv = new PHModeTextView(PHRect(0, r.height - tHeight*(i+1), tWidth, tHeight), modes[i]);
-            tv->setFont(gm->fontNamed("Helvetica"));
+            tv->setFont(gm->defaultFont());
             tv->setFontColor(PHWhiteColor);
             tv->setFontSize(tHeight);
             tv->setBackgroundColor(PHColor(0.3,0.3,0.3,1.0));
@@ -104,7 +104,7 @@ protected:
         }
 
         resView = new PHTextView(PHRect(r.width - tWidth, r.height - tHeight, tWidth, tHeight));
-        resView->setFont(gm->fontNamed("Helvetica"));
+        resView->setFont(gm->defaultFont());
         resView->setFontColor(PHWhiteColor);
         resView->setFontSize(tHeight);
         resView->setBackgroundColor(PHColor(0.3,0.3,0.3,1.0));
@@ -112,7 +112,7 @@ protected:
         v->addChild(resView);
  
         PHButtonTextView * tv = new PHButtonTextView(PHRect(r.width - tWidth, r.height - 2*tHeight, tWidth, tHeight));
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontColor(PHWhiteColor);
         tv->setFontSize(tHeight);
         tv->setBackgroundColor(PHColor(0.3,0.3,0.3,1.0));
@@ -123,7 +123,7 @@ protected:
         tv->release();
 
         tv = new PHButtonTextView(PHRect(r.width - tWidth, r.height - 3*tHeight, tWidth, tHeight));
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontColor(PHWhiteColor);
         tv->setFontSize(tHeight);
         tv->setBackgroundColor(PHColor(0.3,0.3,0.3,1.0));
@@ -135,7 +135,7 @@ protected:
 
 
         tv = new PHButtonTextView(PHRect(r.width - tWidth, r.height - 4*tHeight, tWidth, tHeight));
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontColor(PHWhiteColor);
         tv->setFontSize(tHeight);
         tv->setBackgroundColor(PHColor(0.3,0.3,0.3,1.0));

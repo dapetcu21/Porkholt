@@ -15,6 +15,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHDeferredView.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawable.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawableCoordinates.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHEmbeddedData.cpp
   ${PH_ENGINE_PATH}/src/Core/PHErrors.cpp
   ${PH_ENGINE_PATH}/src/Core/PHEvent.cpp
   ${PH_ENGINE_PATH}/src/Core/PHEventHandler.cpp
@@ -41,7 +42,6 @@ set(PH_ENGINE_SRCS
 #  ${PH_ENGINE_PATH}/src/Core/PHKeyframeAnimatorGroup.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLua.cpp
   ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.cpp
-  ${PH_ENGINE_PATH}/src/Core/PHLuaMaterial.lua.h
   ${PH_ENGINE_PATH}/src/Core/PHLuaObject.cpp
   ${PH_ENGINE_PATH}/src/Core/PHMaterialInitPool.cpp
   ${PH_ENGINE_PATH}/src/Core/PHMessage.cpp
@@ -101,10 +101,13 @@ set(PH_ENGINE_SRCS
   ${PH_EXTERNALS}/uremote/src/URField.cpp
   ${PH_EXTERNALS}/uremote/src/URServer.cpp
   ${PH_ENGINE_PATH}/src/IO/PHLinkDirectory.cpp
+  ${PH_ENGINE_PATH}/src/IO/PHEmbeddedFile.cpp
+  ${PH_ENGINE_PATH}/src/IO/PHEmbeddedDirectory.cpp
   ${PH_ENGINE_PATH}/src/Core/PHTransformDrawable.cpp
   ${PH_ENGINE_PATH}/src/Core/PHGenericParticleAnimator.cpp
   ${PH_ENGINE_PATH}/src/Core/PHProfilerCollection.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawableProxy.cpp
+  ${PH_ENGINE_PATH}/src/IO/PHUnionDirectory.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -124,6 +127,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawable.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawableCoordinates.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHErrors.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEmbeddedData.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEvent.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHEventHandler.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHFont.h
@@ -225,6 +229,9 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHProfiler.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHProfilerCollection.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHDrawableProxy.h
+  ${PH_ENGINE_PATH}/include/Porkholt/IO/PHEmbeddedFile.h
+  ${PH_ENGINE_PATH}/include/Porkholt/IO/PHEmbeddedDirectory.h
+  ${PH_ENGINE_PATH}/include/Porkholt/IO/PHUnionDirectory.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

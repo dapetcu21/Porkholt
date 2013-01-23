@@ -36,7 +36,7 @@ PHDrawable * IGWallManager::loadDrawable()
     curve->setWidth(1.2);
     curve->setLimit(flat);
     view->setShape(curve); 
-    view->setShader(world->gameManager()->shaderProgramNamed("sprites_persp"));
+    view->setShader(world->gameManager()->shaderProgramNamed("sprites[proj]"));
     view->setConstrainCurveToFrame(false);
     return view;
 }

@@ -7,12 +7,11 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLLight.h>
 #include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/Core/PHEmbeddedData.h>
 #include <limits.h>
 
 lua_State * PHLuaMaterial::sL = NULL;
 PHMutex * PHLuaMaterial::luaMutex = new PHMutex;
-
-#include "PHLuaMaterial.lua.h"
 
 void PHLuaMaterial::loadFromLua(lua_State * L)
 {
@@ -576,7 +575,7 @@ void PHLuaMaterial::initEnvironment(lua_State * L)
         lua_setfield(L, -2, op_names[i]);
     }
     lua_pop(L, 2);
-    PHLuaLoadString(L, luaEnvironmentInit);
+    PHLuaLoadString(L, scripts_lua_material_lua);
     
     lua_newtable(L);
     lua_pushvalue(L, -1);

@@ -78,7 +78,6 @@ void IGKnifeMob::configureDrawable(PHDrawable * d)
 {
     PHImageView * iv = new PHImageView(PHRect(-mx, -my, 2*mx, 2*my) + phdif);
     iv->setImage(world->gameManager()->imageNamed("knife"));
-    iv->setMaterial(world->gameManager()->materialNamed("density"));
     d->addChild(iv);
     PHView * v = new PHView(PHRect(-0.1,-0.1, 0.2, 0.2));
     v->setBackgroundColor(PHColor(1,0,0,1));

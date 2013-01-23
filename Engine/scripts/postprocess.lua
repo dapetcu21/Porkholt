@@ -98,6 +98,10 @@ function dir_list(dir)
   return files
 end
 
+function file_exists(file)
+  return (os.execute('/bin/ls "'..file..'" 1>/dev/null 2>/dev/null') == 0)
+end
+
 function dir_make(path)
   os.execute('mkdir -p "'..path..'"')
 end
@@ -457,13 +461,21 @@ function crawl_dir(src, dst, prefix)
   end
 end
 
-if fake_links then
-  dir_make(dst)
-  syml=io.open(dst..'/_symlinks', 'w')
-end
-  
-crawl_dir(src, dst)
+if file_exists(src) then
+  if fake_links then
+    dir_make(dst)
+    syml=io.open(dst..'/_symlinks', 'w')
+  end
+    
+  crawl_dir(src, dst)
 
-if fake_links then
-  syml:close()
+  if fake_links then
+    syml:close()
+  end
+else
+  if file_exists(dst) then
+    print('Removing resource directory')
+    file_rm(dst)
+  end
 end
+

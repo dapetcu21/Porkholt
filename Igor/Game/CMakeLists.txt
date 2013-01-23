@@ -29,7 +29,6 @@ set(PH_SOURCES
   Classes/IGBouncyView.cpp
   Classes/IGBouncyButton.cpp
   Classes/IGBackgroundParticles.cpp
-  Classes/IGRipples.cpp
   Classes/IGKnifeMob.cpp
   Classes/IGStandardBullet.cpp
   Classes/IGDeadpool.cpp
@@ -57,7 +56,6 @@ set(PH_HEADERS
   Classes/IGBouncyView.h
   Classes/IGBouncyButton.h
   Classes/IGBackgroundParticles.h
-  Classes/IGRipples.h
   Classes/IGKnifeMob.h
   Classes/IGBullet.h
   Classes/IGStandardBullet.h

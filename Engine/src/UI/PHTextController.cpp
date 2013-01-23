@@ -23,7 +23,7 @@ PHView * PHTextController::loadView(const PHRect & frame)
     textView = new PHTextView(PHRect(fr.width/12,1.0f/6,fr.width*5/6,4.0f/6));
     textView->setFontSize(0.1f);
     textView->setFontColor(fColor);
-    textView->setFont(gm->fontNamed("Helvetica"));
+    textView->setFont(gm->defaultFont());
     pos = 0;
     textView->setText((*strings)[pos]);
     textView->setAlignment(PHTextView::alignCenter | PHTextView::justifyCenter);

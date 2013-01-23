@@ -11,14 +11,17 @@ class PHFile;
 class PHGameManager;
 class PHFontInitPool
 {
+private:
+    PHFont * _defaultFont;
+    map<string,PHFont*> fonts;
 public:
+    PHFontInitPool() : _defaultFont((PHFont*)(size_t)-1) {}
     PHFont * fontFromFile(PHFile * file);
     PHFont * fontNamed(const string & name);
+    PHFont * defaultFont();
     void collectGarbageFonts();
     virtual PHDirectory * fontDirectory() = 0;
     virtual PHGameManager * gameManager() = 0;
-private:
-    map<string,PHFont*> fonts;
 };
 
 #endif

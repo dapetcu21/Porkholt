@@ -71,7 +71,7 @@ public:
     virtual PHColor cinematicCustomColor() { return color; }
     virtual void setCinematicCustomColor(const PHColor & c) { setFontColor(c); }
     
-    void setText(const string & s) { needsReload = true; _text = s; }
+    void setText(const string & s) { if (_text != s) { needsReload = true; _text = s; } }
     const string & text() { return _text; };
     
     void adjustFontSizeToFit(int precision);

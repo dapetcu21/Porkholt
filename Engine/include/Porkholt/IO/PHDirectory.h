@@ -6,19 +6,19 @@
 
 class PHDirectory: public PHInode
 {
-public:
-    PHDirectory(const string & s) : PHInode(s) {}
+    public:
+        PHDirectory(const string & s) : PHInode(s) {}
 
-    bool isDirectory() { return true; }
-    virtual PHInode * itemAtPath(const string & s) = 0;
-    virtual PHFile * fileAtPath(const string & s) = 0;
-    virtual PHDirectory * directoryAtPath(const string & s) = 0;
+        bool isDirectory() { return true; }
+        virtual PHInode * itemAtPath(const string & s) = 0;
+        virtual PHFile * fileAtPath(const string & s) = 0;
+        virtual PHDirectory * directoryAtPath(const string & s) = 0;
 
-    virtual bool itemExists(const string & path) = 0;
-    virtual bool fileExists(const string & path) = 0;
-    virtual bool directoryExists(const string & path) = 0;
+        virtual bool itemExists(const string & path) = 0;
+        virtual bool fileExists(const string & path) = 0;
+        virtual bool directoryExists(const string & path) = 0;
 
-    virtual void stat(const string & path, PHInode::stat_t & s) = 0;
+        virtual void stat(const string & path, PHInode::stat_t & s) = 0;
 };
 
 #endif

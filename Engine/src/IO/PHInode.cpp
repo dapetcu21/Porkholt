@@ -118,9 +118,7 @@ void PHInode::statFS(const string & p, PHInode::stat_t & s)
     {
         s.type = stat_t::None;
         s.size = 0;
-    }
-    else
-    {
+    } else {
         if (results.st_mode & S_IFDIR)
             s.type = stat_t::Directory;
         else if (results.st_mode & S_IFREG)

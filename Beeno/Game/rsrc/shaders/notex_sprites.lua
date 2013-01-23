@@ -1,3 +1,0 @@
-attributeBindings = {
-  position = 0
-}

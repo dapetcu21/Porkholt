@@ -110,7 +110,7 @@ protected:
         c->addChild(pv);
 
         text = new PHTextView(v->bounds());
-        text->setFont(gm->fontNamed("Helvetica"));
+        text->setFont(gm->defaultFont());
         text->setFontColor(PHWhiteColor);
         text->setAlignment(PHTextView::justifyLeft | PHTextView::alignTop);
         text->setFontSize(40);
@@ -180,7 +180,7 @@ protected:
             block->setTintColor(clr);
             //block->setShader(gm->shaderProgramNamed("rares_shader"));
             PHTextView * tv = new PHTextView(block->bounds());
-            tv->setFont(gm->fontNamed("Helvetica"));
+            tv->setFont(gm->defaultFont());
             tv->setFontColor(PHWhiteColor);
             tv->setAlignment(PHTextView::justifyCenter | PHTextView::alignCenter);
             tv->setFontSize(40);

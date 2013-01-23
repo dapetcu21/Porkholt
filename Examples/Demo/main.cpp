@@ -186,7 +186,7 @@ public:
         PHRect b = v->bounds();
         
         PHTextView * tv = new PHTextView(PHRect(b.width * titleborder, 0, b.width * (1.0f - 2*titleborder), b.height - border));
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontSize(80.0f);
         tv->setFontColor(PHClearColor);
         tv->setAlignment(PHTextView::justifyCenter | PHTextView::alignTop);
@@ -209,7 +209,7 @@ public:
         PHRect b = v->bounds();
         
         PHTextView * tv = new PHTextView(b);
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontSize(100.0f);
         tv->setFontColor(PHClearColor);
         tv->setAlignment(PHTextView::justifyCenter | PHTextView::alignCenter);
@@ -344,7 +344,7 @@ protected:
         PHRect b = view->bounds();
         
         PHTextView * tv = new PHTextView(b);
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontSize(40.0f);
         tv->setFontColor(PHClearColor);
         tv->setAlignment(PHTextView::justifyCenter | PHTextView::alignCenter);
@@ -369,7 +369,7 @@ protected:
         scoreAV = new PHTextView(PHRect(frame.x+frame.width/2-textHeight,frame.height,frame.height,textHeight));
         scoreAV->setRotationalCenter(PHOriginPoint);
         scoreAV->setRotation(-M_PI_2);
-        scoreAV->setFont(gm->fontNamed("Helvetica"));
+        scoreAV->setFont(gm->defaultFont());
         scoreAV->setFontColor(PHWhiteColor);
         scoreAV->setFontSize(textHeight);
         scoreAV->setAlignment(PHTextView::justifyLeft | PHTextView::alignCenter);
@@ -377,7 +377,7 @@ protected:
         scoreBV = new PHTextView(PHRect(frame.x+frame.width/2+textHeight,0,frame.height,textHeight));
         scoreBV->setRotationalCenter(PHOriginPoint);
         scoreBV->setRotation(M_PI_2);
-        scoreBV->setFont(gm->fontNamed("Helvetica"));
+        scoreBV->setFont(gm->defaultFont());
         scoreBV->setFontColor(PHWhiteColor);
         scoreBV->setFontSize(textHeight);
         scoreBV->setAlignment(PHTextView::justifyLeft | PHTextView::alignCenter);
@@ -860,7 +860,7 @@ body->setMesh(PHSphereMesh::sphere(gm));\n\
 body->setPosition(PH3DPoint(0, 0, -5));\n\
 body->setMaterial(gm->materialNamed(\"chestie_albastra\"));\n\
 container->addChild(body);"
-                , gm->fontNamed("Helvetica"), gm->fontNamed("Monaco"), 30, 15);
+                , gm->defaultFont(), gm->fontNamed("Monaco"), 30, 15);
                 curtain->addChild(cv);
                 cv->release();
                 return;
@@ -907,7 +907,7 @@ material = {\n\
             nMapR = vec4(0, 0, 1, 1),\n\
         }\n\
     }\n\
-}", gm->fontNamed("Helvetica"), gm->fontNamed("Monaco"), 25, 14);
+}", gm->defaultFont(), gm->fontNamed("Monaco"), 25, 14);
 
                 cv2->beginCinematicAnimation(0.5f, PHCinematicAnimator::FadeOutFunction);
                 cv2->animateMove(mov);
@@ -994,7 +994,7 @@ cell_map->setWrapS(PHGLTexture::clampToEdge);\n\
 cell_map->setMinFilter(PHGLTexture::nearest);\n\
 cell_map->setMagFilter(PHGLTexture::nearest);\n\
 canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
-                , gm->fontNamed("Helvetica"), gm->fontNamed("Monaco"), 40, 20);
+                , gm->defaultFont(), gm->fontNamed("Monaco"), 40, 20);
                 curtain->addChild(cv);
                 cv->release();
                 return;
@@ -1268,7 +1268,7 @@ protected:
         PHRect b = v->bounds();
 
         PHTextView * tv = new PHTextView(PHRect(b.width * titleborder, 0, b.width * (1.0f - 2*titleborder), b.height - titleheader));
-        tv->setFont(gm->fontNamed("Helvetica"));
+        tv->setFont(gm->defaultFont());
         tv->setFontSize(80.0f);
         tv->setFontColor(PHClearColor);
         tv->setAlignment(PHTextView::justifyCenter | PHTextView::alignTop);
