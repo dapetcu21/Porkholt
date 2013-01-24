@@ -5,8 +5,10 @@
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Core/PHSerialization.h>
 
-#define to32(x) PHLEToH32(*((const uint32_t*)(x)))
-#define to32A(x) (*((const uint32_t*)(x))) 
+#define to16(x) PHLEToH16(PHSafeCast<uint16_t>(x))
+#define to32(x) PHLEToH32(PHSafeCast<uint32_t>(x))
+#define to16A(x) PHSafeCast<uint16_t>(x) 
+#define to32A(x) PHSafeCast<uint32_t>(x) 
 
 void PHWAVDecoder::_loadHeader()
 {
@@ -43,12 +45,12 @@ void PHWAVDecoder::_loadHeader()
             if (chsiz != 16)
                 file->seek(chsiz - 16);
            
-            uint16_t audiofmt = PHLEToH16(*((uint16_t*)(b)));
+            uint16_t audiofmt = to16(b);
             if (audiofmt != 1)
                throw "This implementation only supports uncompressed PCM WAVE files";
-            chan = PHLEToH16(*((uint16_t*)(b+2)));
-            freq = PHLEToH32(*((uint32_t*)(b+4)));
-            uint16_t bps = PHLEToH16(*((uint16_t*)(b+14)));
+            chan = to16(b+2);
+            freq = to32(b+4);
+            uint16_t bps = to16(b+14);
             switch (bps)
             {
                 case 8:

@@ -9,9 +9,9 @@
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/Core/PHMutex.h>
 
-#define uint16From(d) (*((uint16_t*)(d)))
-#define uint32From(d) (*((uint32_t*)(d)))
-#define uint64From(d) (*((uint64_t*)(d)))
+#define uint16From(d) PHSafeCast<uint16_t>(d)
+#define uint32From(d) PHSafeCast<uint32_t>(d)
+#define uint64From(d) PHSafeCast<uint64_t>(d)
 #define uint16At(d,p) uint16From((d)+(p))
 #define uint32At(d,p) uint32From((d)+(p))
 #define uint64At(d,p) uint64From((d)+(p))

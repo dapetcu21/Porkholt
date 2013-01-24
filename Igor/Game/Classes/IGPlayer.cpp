@@ -80,11 +80,8 @@ void IGPlayer::die()
         lua_pop(L, 1);
     }
     IGWorld * w = world;
-    PHLog("meow");
     removeFromWorld();
-    PHLog("meow2");
     w->levelController()->callBack();
-    PHLog("meow3");
 }
 
 

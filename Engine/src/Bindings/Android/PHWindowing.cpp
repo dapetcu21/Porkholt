@@ -43,7 +43,6 @@ struct PHWState {
     int32_t height;
     ph_float fps; 
     ph_float dpi;
-    ph_float lastTime;
     int orient;
     bool vsync;
 
@@ -196,6 +195,8 @@ void PHWInitWindow(PHWState & state)
         gameManager->setShowsFPS(true);
     if (PHWFlags & PHWRemote)
         gameManager->setUsesRemote(true);
+    if (PHWFlags & PHWFrameAnimation)
+        gameManager->setFrameAnimation(true);
     if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
         gameManager->setPlatformSuffix(".hd");
     gameManager->setFpsCapped(state.vsync);
@@ -206,8 +207,6 @@ void PHWInitWindow(PHWState & state)
     PHLog("Loaded window %dx%d@%.1f, vsync: %s, orientation: %d degrees", w, h, state.fps, state.vsync?"on":"off", (int)state.orient * 90);
 #endif
     gameManager->init(params);
-
-    state.lastTime = PHTime::getTime();
 }
 
 void PHWDestroyWindow(PHWState & state)
@@ -241,12 +240,7 @@ void PHWRender(PHWState & state)
     
     eglMakeCurrent(state.display, state.surface, state.surface, state.context);
 
-    ph_float lt = state.lastTime;
-    ph_float t = state.lastTime = PHTime::getTime();
-    ph_float fi = state.gm->frameInterval();
-    ph_float tt = state.vsync?(round((t-lt)/fi)*fi):(t-lt);
-    //PHLog("frame %f actual: %f", tt, t-lt);
-    state.gm->renderFrame(tt); 
+    state.gm->renderFrame();
     eglSwapBuffers(state.display, state.surface);
 }
 

@@ -78,6 +78,8 @@
         gameManager->setUsesRemote(true);
     if (flags & PHWShowFPS)
         gameManager->setShowsFPS(true);    
+    if (flags & PHWFrameAnimation)
+        gameManager->setFrameAnimation(true);
     [[self openGLContext] makeCurrentContext];
     gameManager->init(initParams);
 }

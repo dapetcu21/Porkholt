@@ -77,6 +77,7 @@ protected:
         scoreA = 0;
         scoreB = 0;
         waitTime = 0;
+
         
         paddleA = new PHView(PHRect(frame.x+border-paddleWidth,frame.y+(frame.height-paddleHeight)/2,paddleWidth,paddleHeight));
         paddleB = new PHView(PHRect(frame.x+frame.width-border,frame.y+(frame.height-paddleHeight)/2,paddleWidth,paddleHeight));
@@ -157,6 +158,7 @@ protected:
         
         ostringstream s;
         s<<scoreA;
+        PHLog("meow");
         scoreAV->setText(s.str());
         
         ostringstream ss;
@@ -243,8 +245,9 @@ void PHGameEntryPoint(PHGameManager * gm)
     gm->setUpNavigationController()->pushViewController(vc);
 }
 
-int main(int argc, char *argv[]) {
+PHMAIN_DEFINE
+{
     srand(time(NULL));
-    return PHWMain(argc, argv, PHWVideoMode(1024, 700, 60, PHWVideoMode::Windowed), PHWGLES1 | PHWFrameAnimation | PHWVSync, &PHGameEntryPoint,NULL);
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVideoMode(1024, 700, 60, PHWVideoMode::Windowed), PHWGLES1 | PHWFrameAnimation | PHWVSync, &PHGameEntryPoint,NULL));
 }
  

@@ -73,9 +73,6 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
         buffer = NULL;
         return;
     }
-#ifdef PH_DEBUG
-    PHLog("Image loaded: \"%s\" (%.2fMB)", fd->basename().c_str(), _width * _height * 4.0 / 1024 / 1024);
-#endif
     fd->release();
     fd = NULL;
     pload = true;

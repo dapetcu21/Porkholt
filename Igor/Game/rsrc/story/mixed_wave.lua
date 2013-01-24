@@ -20,7 +20,6 @@ function IMixedWave:init(dif)
       else
         dd = d * (1+math.random()* 0.2) 
       end
-      print('ham')
       if dd >= min and dd <= max then
         dif = dif - dd
 

@@ -73,8 +73,7 @@ PHGameManager::~PHGameManager()
         sndMan->release();
     if (remote)
         delete remote;
-}
-
+} 
 void PHGameManager::setMainDrawable(PHDrawable * v)
 {
     if (v)
@@ -213,8 +212,9 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         textureSpriteUniform = &spriteStates->at("texture");
     }
     
+    PHLog("beforeEntryPoint");
     entryPoint(this);
-    
+    PHLog("afterEntryPoint");
 }
 
 void PHGameManager::setModelViewMatrix(const PHMatrix & m)

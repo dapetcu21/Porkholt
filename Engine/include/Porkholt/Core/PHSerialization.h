@@ -200,4 +200,12 @@ inline double PHDecodeF(uint64_t n)
     return PHFloatFromIEEE754<double,uint64_t,11,52,1023>(ntohll(n));
 }
 
+template <class T>
+inline T PHSafeCast(const void * d)
+{
+    T v;
+    memcpy(&v, d, sizeof(T));
+    return v;
+}
+
 #endif

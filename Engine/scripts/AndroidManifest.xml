@@ -4,6 +4,7 @@
         package="@PH_BUNDLE_ID@"
         android:versionCode="1"
         android:versionName="1.0"
+        android:installLocation="preferExternal"
         >
 
     <uses-sdk android:minSdkVersion="9" />

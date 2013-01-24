@@ -161,9 +161,6 @@ void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pix
     PHGLClearError();
     //TO DO: Reimplement this with glGenerateMipmap() when necessary
     //PHGL::glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
-#ifdef PH_DEBUG
-    PHLog("Allocating memory for texture: %.2f kB", width * height * 4.0 / 1024);
-#endif
     PHGL::glTexImage2D(target, 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
     PHGLCheckError();
     w = width;

@@ -93,7 +93,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/3D/PHSphereMesh.cpp
   ${PH_ENGINE_PATH}/src/UI/PHButtonView.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTestView.cpp
-  ${PH_ENGINE_PATH}/src/UI/PHTestViewController.cpp
+#  ${PH_ENGINE_PATH}/src/UI/PHTestViewController.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTextController.cpp
   ${PH_ENGINE_PATH}/src/UI/PHTextControllerView.cpp
   ${PH_EXTERNALS}/uremote/src/URClient.cpp

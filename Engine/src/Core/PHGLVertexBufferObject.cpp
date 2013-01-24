@@ -109,9 +109,6 @@ if (!b) { \
 void PHGLVertexBufferObject::setData(const void * data, size_t size, int usage)
 {
     bind_begin
-#ifdef PH_DEBUG
-    PHLog("Allocating memory for buffer: %.2f kB", size / 1024.0);
-#endif
     PHGL::glBufferData(targets[bound], size, data, usages[usage]);
     bind_end
 }
