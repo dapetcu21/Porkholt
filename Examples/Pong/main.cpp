@@ -248,6 +248,6 @@ void PHGameEntryPoint(PHGameManager * gm)
 PHMAIN_DEFINE
 {
     srand(time(NULL));
-    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVideoMode(1024, 700, 60, PHWVideoMode::Windowed), PHWGLES1 | PHWFrameAnimation | PHWVSync, &PHGameEntryPoint,NULL));
+    PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVideoMode(1024, 700, 60, PHWVideoMode::Windowed), PHWGLES1 | PHWFrameAnimation | PHWVSync | PHWShowFPS, &PHGameEntryPoint,NULL));
 }
  

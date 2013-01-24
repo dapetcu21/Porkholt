@@ -18,6 +18,9 @@ protected:
     
     friend class PHGameManager;
     friend class PHGLVertexArrayObject;
+
+    int _usage;
+    size_t _size;
     
 public:
     PHGLVertexBufferObject(PHGameManager * gameManager);
@@ -48,14 +51,16 @@ public:
         staticCopy,
         dynamicDraw,
         dynamicRead,
-        dynamicCopy
+        dynamicCopy,
+        usageNone
     };
+
+    size_t size() { return _size; }
+    int usage() { return _usage; }
     
-    void setData(const void * data, size_t size, int usage);
+    void setData(const void * data, size_t size, int usage = dynamicDraw);
+    void setDataOptimally(const void * data, size_t size, int usage);
     void setSubData(const void * data, size_t offset, size_t size);
-    void setData(void * data, size_t size) {
-        setData(data, size, dynamicDraw);
-    }
 };
 
 typedef PHGLVertexBufferObject PHGLVBO;

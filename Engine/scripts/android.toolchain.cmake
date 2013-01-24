@@ -1017,7 +1017,6 @@ if( BUILD_WITH_ANDROID_NDK )
  endif()
 endif()
 
-message("STL'${__libstl}' SUP'${__libsupcxx}")
 
 # ccache support
 __INIT_VARIABLE( _ndk_ccache NDK_CCACHE ENV_NDK_CCACHE )

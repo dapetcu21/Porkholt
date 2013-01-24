@@ -71,6 +71,7 @@ void PHGameManager::loadCapabilities()
     if (!parsedExtensions)
     {
         const char * ver = (char*) PHGL::glGetString(GL_VERSION);
+        const char * renderer = (char*) PHGL::glGetString(GL_RENDERER);
         const char * vers = ver;
         bool es = strstr(ver, "ES");
         openGLCaps[PHGLCapabilityOpenGLES] = es;
@@ -148,10 +149,12 @@ void PHGameManager::loadCapabilities()
         }
         
         PHLog("OpenGL Version: \"%s\" -> %s %d.%d",vers,es?"ES":"",openGLVersionMajor,openGLVersionMinor);
+        PHLog("OpenGL Renderer: \"%s\"", renderer);
         PHLog("GLSL Version: \"%s\" -> %d",glslvp,glslVersion);
         PHLog("OpenGL Extensions: %s",s.c_str());
 #endif
         
+        openGLCaps[PHGLCapabilityFuckedUpAdreno] = !strcmp(renderer, "Adreno (TM) 200");
         openGLCaps[PHGLCapabilityNPOT] = (openGLVersionMajor>=2 || extensions.count("OES_texture_npot") || extensions.count("GL_ARB_texture_non_power_of_two") || extensions.count("GL_IMG_texture_npot"));
         openGLCaps[PHGLCapabilityAppleLimitedNPOT] =
             (extensions.count("GL_APPLE_texture_2D_limited_npot") && !extensions.count("OES_texture_npot")) 
@@ -319,6 +322,9 @@ void PHGameManager::initPHGL()
     }
 
     #ifndef PH_FORCE_FAKE_VAO
+    if (hasCapability(PHGLCapabilityFuckedUpAdreno))
+    {} //Stupid VBO bug
+    else
     if ((glMaj >= 3 && !es) || hasExtension("GL_ARB_vertex_array_object"))
     {
         set(glBindVertexArray);

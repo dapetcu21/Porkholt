@@ -172,10 +172,8 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         vbo = new PHGLVertexBufferObject(gm);
     else
         vbo->retain();
-    
-    vbo->bindTo(PHGLVBO::arrayBuffer);
-    vbo->setData(NULL, sizeof(GLfloat)*nrVertices*6, gm->hasCapability(PHGLCapabilityGLES1)?PHGLVBO::dynamicDraw:PHGLVBO::streamDraw);
-    vbo->setSubData(buffer, 0, sizeof(GLfloat)*nrVertices*6);
+
+    vbo->setDataOptimally(buffer, sizeof(GLfloat)*nrVertices*6, PHGLVBO::streamDraw);
     
     cacheLeft -= gm->frameInterval();
     if (cacheLeft <=0)
@@ -231,10 +229,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
             }
         }
         
-        indexVBO->bindTo(PHGLVBO::elementArrayBuffer);
-        indexVBO->setData(NULL, indexSize, PHGLVBO::dynamicDraw);
-        indexVBO->setSubData(indexBuffer, 0, indexSize);
-        indexVBO->unbind();
+        indexVBO->setDataOptimally(indexBuffer, indexSize, PHGLVBO::dynamicDraw);
 
         if (useBytes)
             delete [] bIndices;

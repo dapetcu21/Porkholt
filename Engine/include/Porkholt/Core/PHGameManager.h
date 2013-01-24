@@ -42,6 +42,7 @@ enum PHGLCapabilities
     PHGLCapabilityGLES1,
     PHGLCapabilityGLES2,
     PHGLCapabilityShaders,
+    PHGLCapabilityFuckedUpAdreno,
     PHGLNumberCapabilities
 };
 
@@ -208,6 +209,9 @@ private:
     
     PHGLLight * lgth;
     PHColor ambient;
+
+    PHColor _windowClearColor;
+    ph_float _windowDepthClearValue;
     
     friend class PHGLVertexBufferObject;
     friend class PHGLVertexArrayObject;
@@ -264,6 +268,11 @@ public:
     {
         return _currentColor;
     }
+
+    void setWindowClearColor(const PHColor & c) { _windowClearColor = c; }
+    const PHColor & windowClearColor() { return _windowClearColor; }
+    void setWindowDepthClearValue(ph_float value) { _windowDepthClearValue = value; }
+    ph_float windowDepthClearValue() { return _windowDepthClearValue; }
         
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
     void pushSpriteShader(PHGLShaderProgram * p);

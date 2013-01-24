@@ -188,24 +188,12 @@ void PHTextureCanvas::render()
         mask |= PHGameManager::colorBuffers;
     mask &= cmask;
 
-    PHColor cc;
-    float dv;
-    int sv;
     if (mask & PHGameManager::colorBuffers)
-    {
-        cc = gm->clearColor();
         gm->setClearColor(ccolor);
-    }
     if (mask & PHGameManager::depthBuffer)
-    {
-        dv = gm->depthClearValue();
         gm->setDepthClearValue(cdepth);
-    }
     if (mask & PHGameManager::stencilBuffer)
-    {
-        sv = gm->stencilClearValue();
         gm->setStencilClearValue(cstencil);
-    }
 
     gm->bindFramebuffer(fbo);
     gm->clearBuffers(mask & cmask);
@@ -213,11 +201,4 @@ void PHTextureCanvas::render()
     renderChildren();
     gm->setRenderMode(rm);
     gm->bindFramebuffer(f);
-
-    if (mask & PHGameManager::colorBuffers)
-        gm->setClearColor(cc);
-    if (mask & PHGameManager::depthBuffer)
-        gm->setDepthClearValue(dv);
-    if (mask & PHGameManager::stencilBuffer)
-        gm->setStencilClearValue(sv);
 }

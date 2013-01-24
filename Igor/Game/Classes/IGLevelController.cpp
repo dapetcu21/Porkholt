@@ -27,7 +27,7 @@ PHView * IGLevelController::loadView(const PHRect & f)
     v->addChild(h);
     h->release();
     v->addChild(world->view());
-    gm->setClearColor(PHColor((float)0xd9/0xff, (float)0x68/0xff, (float)0x68/0xff));
+    gm->setWindowClearColor(PHColor((float)0xd9/0xff, (float)0x68/0xff, (float)0x68/0xff));
 
     gm->imageNamed("basic_mob");
     gm->imageNamed("knife");

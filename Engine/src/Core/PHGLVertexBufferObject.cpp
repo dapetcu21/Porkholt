@@ -76,7 +76,7 @@ GLenum PHGLVertexBufferObject::usages[] = {
 #endif
 };
 
-PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gameManager) : gm(gameManager), bound(0)
+PHGLVertexBufferObject::PHGLVertexBufferObject(PHGameManager * gameManager) : gm(gameManager), bound(0), _usage(usageNone), _size(0)
 {
     PHGL::glGenBuffers(1, &vbo);
 }
@@ -109,8 +109,37 @@ if (!b) { \
 void PHGLVertexBufferObject::setData(const void * data, size_t size, int usage)
 {
     bind_begin
+    _size = size;
+    _usage = usage;
     PHGL::glBufferData(targets[bound], size, data, usages[usage]);
     bind_end
+}
+
+void PHGLVertexBufferObject::setDataOptimally(const void * data, size_t size, int usage)
+{
+    if (usage == streamDraw && gm->hasCapability(PHGLCapabilityGLES1))
+        usage = dynamicDraw;
+    bool replace = (size <= _size) && (usage == _usage);
+    if (replace)
+    {
+        switch (_usage)
+        {
+            case streamDraw:
+            case streamCopy:
+            case streamRead:
+            case staticDraw:
+            case staticRead:
+            case staticCopy:
+                replace = false;
+                break;
+            default:
+                break;
+        }
+    }
+    if (replace)
+        setSubData(data, 0, size);
+    else
+        setData(data, size, usage);
 }
 
 void PHGLVertexBufferObject::setSubData(const void * data, size_t offset, size_t size)
