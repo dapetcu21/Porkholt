@@ -51,6 +51,16 @@ public:
 #define PHMAIN_RETURN(x) x
 #define PHMAIN_TYPE void
 #define PHMAIN_DEFINE extern "C" PHMAIN_TYPE PHMAIN(PHMAIN_PROTO)
+
+#elif defined(PH_LIVEPAPERS)
+
+#define PHMAIN LPInitViewController
+#define PHMAIN_PROTO void * infoDictionary
+#define PHMAIN_ARGS infoDictionary
+#define PHMAIN_RETURN(x) return (x)
+#define PHMAIN_TYPE void *
+#define PHMAIN_DEFINE extern "C" __attribute__((visibility("default"))) PHMAIN_TYPE PHMAIN(PHMAIN_PROTO)
+
 #else
 #define PHMAIN main
 #define PHMAIN_PROTO int argc, char * argv[]
@@ -62,8 +72,8 @@ public:
 
 #define PHMAIN_DECLARE(...) PHMAIN_DEFINE { PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, __VA_ARGS__)); }
 
-int PHWMain(PHMAIN_PROTO, const PHWVideoMode & vmode, int flags, void (*entryPoint)(PHGameManager *), void * ud);
-inline int PHWMain(PHMAIN_PROTO, int flags, void (*entryPoint)(PHGameManager *), void * ud)
+PHMAIN_TYPE PHWMain(PHMAIN_PROTO, const PHWVideoMode & vmode, int flags, void (*entryPoint)(PHGameManager *), void * ud);
+inline PHMAIN_TYPE PHWMain(PHMAIN_PROTO, int flags, void (*entryPoint)(PHGameManager *), void * ud)
 {
     PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), flags, entryPoint, ud));
 }

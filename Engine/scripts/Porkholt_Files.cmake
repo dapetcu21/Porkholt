@@ -237,46 +237,57 @@ set(PH_ENGINE_HEADERS
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
 
 if(PH_PLATFORM STREQUAL "Android")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      ${PH_ENGINE_PATH}/src/Bindings/Android/PHWindowing.cpp
-      ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.c
-      )
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.h
-      )
-    include_directories(
-      ${PH_EXTERNALS}/openal-soft/include
-      )
+  set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+    ${PH_ENGINE_PATH}/src/Bindings/Android/PHWindowing.cpp
+    ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.c
+    )
+  set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+    ${PH_ENGINE_PATH}/src/Bindings/Android/android_native_app_glue.h
+    )
+  include_directories(
+    ${PH_EXTERNALS}/openal-soft/include
+    )
 endif()
 
 if(PH_PLATFORM STREQUAL "X11")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      ${PH_ENGINE_PATH}/src/Bindings/X11/PHWindowing.cpp
-      ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.cpp
-      )
-      
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.h
-      )
+  set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+    ${PH_ENGINE_PATH}/src/Bindings/X11/PHWindowing.cpp
+    ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.cpp
+    )
+    
+  set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+    ${PH_ENGINE_PATH}/src/Bindings/X11/PHX11.h
+    )
 endif()
 
 if(PH_PLATFORM STREQUAL "OSX")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindowing.mm
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
-      ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
-      )
-      
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHAppDelegate.h
-      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHGLView.h
-      ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHWindow.h
-      )
+  set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+    ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindowing.mm
+    ${PH_ENGINE_PATH}/src/Bindings/OSX/PHAppDelegate.mm
+    ${PH_ENGINE_PATH}/src/Bindings/OSX/PHGLView.mm
+    ${PH_ENGINE_PATH}/src/Bindings/OSX/PHWindow.mm
+    ${PH_EXTERNALS}/unimotion/unimotion.c
+    )
+    
+  set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+    ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHAppDelegate.h
+    ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHGLView.h
+    ${PH_ENGINE_PATH}/include/Porkholt/Bindings/OSX/PHWindow.h
+    ${PH_EXTERNALS}/unimotion/unimotion.h
+    )
 
 endif()
 
 if(PH_PLATFORM STREQUAL "iOS")
+  if(PH_LIVEPAPERS)
+    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      ${PH_ENGINE_PATH}/src/Bindings/LivePapers/PHStartGame.mm
+      ${PH_ENGINE_PATH}/src/Bindings/LivePapers/LPPHViewController.mm
+      )
+    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      ${PH_ENGINE_PATH}/src/Bindings/LivePapers/LPPHViewController.h
+      )
+  else()
     set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
       ${PH_ENGINE_PATH}/src/Bindings/iOS/EAGLView.mm
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtAppDelegate.mm
@@ -290,51 +301,52 @@ if(PH_PLATFORM STREQUAL "iOS")
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PorkholtViewController.h
       ${PH_ENGINE_PATH}/src/Bindings/iOS/PHTouchInterface.h
       )
-    include_directories(
+  endif()
+  include_directories(
       ${CMAKE_CURRENT_SOURCE_DIR}/src/Geometry/math
       )
 endif()
 
 if (PH_PLATFORM STREQUAL "iOS" OR ANDROID_NDK_ABI_NAME MATCHES "arm.*")
-    set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
-        ${PH_EXTERNALS}/math/math-vfp/matrix_impl.cpp
-        ${PH_EXTERNALS}/math/math-neon/math_acosf.c
-        ${PH_EXTERNALS}/math/math-neon/math_asinf.c
-        ${PH_EXTERNALS}/math/math-neon/math_atan2f.c
-        ${PH_EXTERNALS}/math/math-neon/math_atanf.c
-        ${PH_EXTERNALS}/math/math-neon/math_ceilf.c
-        ${PH_EXTERNALS}/math/math-neon/math_cosf.c
-        ${PH_EXTERNALS}/math/math-neon/math_coshf.c
-        ${PH_EXTERNALS}/math/math-neon/math_debug.c
-        ${PH_EXTERNALS}/math/math-neon/math_expf.c
-        ${PH_EXTERNALS}/math/math-neon/math_fabsf.c
-        ${PH_EXTERNALS}/math/math-neon/math_floorf.c
-        ${PH_EXTERNALS}/math/math-neon/math_fmodf.c
-        ${PH_EXTERNALS}/math/math-neon/math_frexpf.c
-        ${PH_EXTERNALS}/math/math-neon/math_invsqrtf.c
-        ${PH_EXTERNALS}/math/math-neon/math_ldexpf.c
-        ${PH_EXTERNALS}/math/math-neon/math_log10f.c
-        ${PH_EXTERNALS}/math/math-neon/math_logf.c
-        ${PH_EXTERNALS}/math/math-neon/math_mat2.c
-        ${PH_EXTERNALS}/math/math-neon/math_mat3.c
-        ${PH_EXTERNALS}/math/math-neon/math_mat4.c
-        ${PH_EXTERNALS}/math/math-neon/math_modf.c
-        ${PH_EXTERNALS}/math/math-neon/math_powf.c
-        ${PH_EXTERNALS}/math/math-neon/math_runfast.c
-        ${PH_EXTERNALS}/math/math-neon/math_sincosf.c
-        ${PH_EXTERNALS}/math/math-neon/math_sinf.c
-        ${PH_EXTERNALS}/math/math-neon/math_sinfv.c
-        ${PH_EXTERNALS}/math/math-neon/math_sinhf.c
-        ${PH_EXTERNALS}/math/math-neon/math_sqrtf.c
-        ${PH_EXTERNALS}/math/math-neon/math_sqrtfv.c
-        ${PH_EXTERNALS}/math/math-neon/math_tanf.c
-        ${PH_EXTERNALS}/math/math-neon/math_tanhf.c
-        ${PH_EXTERNALS}/math/math-neon/math_vec2.c
-        ${PH_EXTERNALS}/math/math-neon/math_vec3.c
-        ${PH_EXTERNALS}/math/math-neon/math_vec4.c
-    )
-    set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
-        ${PH_EXTERNALS}/math/math-vfp/matrix_impl.h
-        ${PH_EXTERNALS}/math/math-neon/math_neon.h
-    )
+  set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+      ${PH_EXTERNALS}/math/math-vfp/matrix_impl.cpp
+      ${PH_EXTERNALS}/math/math-neon/math_acosf.c
+      ${PH_EXTERNALS}/math/math-neon/math_asinf.c
+      ${PH_EXTERNALS}/math/math-neon/math_atan2f.c
+      ${PH_EXTERNALS}/math/math-neon/math_atanf.c
+      ${PH_EXTERNALS}/math/math-neon/math_ceilf.c
+      ${PH_EXTERNALS}/math/math-neon/math_cosf.c
+      ${PH_EXTERNALS}/math/math-neon/math_coshf.c
+      ${PH_EXTERNALS}/math/math-neon/math_debug.c
+      ${PH_EXTERNALS}/math/math-neon/math_expf.c
+      ${PH_EXTERNALS}/math/math-neon/math_fabsf.c
+      ${PH_EXTERNALS}/math/math-neon/math_floorf.c
+      ${PH_EXTERNALS}/math/math-neon/math_fmodf.c
+      ${PH_EXTERNALS}/math/math-neon/math_frexpf.c
+      ${PH_EXTERNALS}/math/math-neon/math_invsqrtf.c
+      ${PH_EXTERNALS}/math/math-neon/math_ldexpf.c
+      ${PH_EXTERNALS}/math/math-neon/math_log10f.c
+      ${PH_EXTERNALS}/math/math-neon/math_logf.c
+      ${PH_EXTERNALS}/math/math-neon/math_mat2.c
+      ${PH_EXTERNALS}/math/math-neon/math_mat3.c
+      ${PH_EXTERNALS}/math/math-neon/math_mat4.c
+      ${PH_EXTERNALS}/math/math-neon/math_modf.c
+      ${PH_EXTERNALS}/math/math-neon/math_powf.c
+      ${PH_EXTERNALS}/math/math-neon/math_runfast.c
+      ${PH_EXTERNALS}/math/math-neon/math_sincosf.c
+      ${PH_EXTERNALS}/math/math-neon/math_sinf.c
+      ${PH_EXTERNALS}/math/math-neon/math_sinfv.c
+      ${PH_EXTERNALS}/math/math-neon/math_sinhf.c
+      ${PH_EXTERNALS}/math/math-neon/math_sqrtf.c
+      ${PH_EXTERNALS}/math/math-neon/math_sqrtfv.c
+      ${PH_EXTERNALS}/math/math-neon/math_tanf.c
+      ${PH_EXTERNALS}/math/math-neon/math_tanhf.c
+      ${PH_EXTERNALS}/math/math-neon/math_vec2.c
+      ${PH_EXTERNALS}/math/math-neon/math_vec3.c
+      ${PH_EXTERNALS}/math/math-neon/math_vec4.c
+  )
+  set(PH_ENGINE_HEADERS ${PH_ENGINE_HEADERS}
+      ${PH_EXTERNALS}/math/math-vfp/matrix_impl.h
+      ${PH_EXTERNALS}/math/math-neon/math_neon.h
+  )
 endif()

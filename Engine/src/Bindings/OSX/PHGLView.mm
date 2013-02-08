@@ -9,6 +9,8 @@
 #import <CoreVideo/CoreVideo.h>
 #import <Porkholt/IO/PHDirectory.h>
 #import <Porkholt/Core/PHTime.h>
+#import <Porkholt/Core/PHAccelInterface.h>
+#include <unimotion.h>
 
 @interface NSEvent (PLDeviceDelta)
 - (float)deviceDeltaX;
@@ -43,13 +45,14 @@
 -(void)load
 {
     if (gameManager) return;
+    sms_type = detect_sms();
     
     timer = [NSTimer scheduledTimerWithTimeInterval:0.0f
                                                      target:self
                                                    selector:@selector(makeCurrentAndRender)
                                                    userInfo:nil
                                                     repeats:YES];
-    
+
     NSRect frame = [self bounds];
     PHThread::mainThread();
     PHAutoreleasePool ap;
@@ -172,6 +175,11 @@
 
 -(void)render
 {
+    double x,y,z;
+    read_sms_real(sms_type, &x, &y, &z);
+    static const double g = 9.81;
+    PHAcceleration a = {.x = -x*g, .y = -z*g, .z = -y*g};
+    PHAccelInterface::setAcceleration(a);
     gameManager->processInput();
     gameManager->renderFrame();
     glFlush();

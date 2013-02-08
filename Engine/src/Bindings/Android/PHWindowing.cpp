@@ -383,17 +383,20 @@ void android_main(android_app * app)
                         ph_float x=accel.x, y=accel.y;
                         switch(state.orient)
                         {
+                            case 0:
+                                accel.x = -x;
+                                accel.y = -y;
                             case 1:
-                                accel.x = -y;
-                                accel.y = x;
+                                accel.x = y;
+                                accel.y = -x;
                                 break;
                             case 2:
-                                accel.x = -x;
+                                accel.x = x;
                                 accel.y = -y;
                                 break;
                             case 3:
-                                accel.x = y;
-                                accel.y = -x;
+                                accel.x = -y;
+                                accel.y = x;
                                 break;
                         }
                         PHAccelInterface::setAcceleration(accel);

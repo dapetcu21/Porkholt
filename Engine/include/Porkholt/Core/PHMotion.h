@@ -20,14 +20,9 @@ class PHMotion : public PHObject
 private:
 	PHMotion() {};
 public:
-	static PHMotion * sharedInstance()
-	{
-		static PHMotion * acc = new PHMotion();
-		return acc;
-	}
-	PHAcceleration getAcceleration();
-	PHTilt tiltFromAcceleration(const PHAcceleration & accel);
-	PHTilt getTilt();
+	static PHAcceleration getAcceleration();
+	static PHTilt tiltFromAcceleration(const PHAcceleration & accel);
+	static PHTilt getTilt();
 };
 
 #endif

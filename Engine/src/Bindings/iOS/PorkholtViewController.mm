@@ -146,6 +146,8 @@ extern void * PHWUD;
         gameManager->setUsesRemote(true);
     if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
         gameManager->setPlatformSuffix(".hd");
+    if (PHWFlags & PHWFrameAnimation)
+        gameManager->setFrameAnimation(true);
     gameManager->setFpsCapped(true);
     gameManager->setUserData(PHWUD);
     gameManager->init(params);
@@ -164,25 +166,7 @@ extern void * PHWUD;
     gameManager->processInput();
     [v setFramebuffer];
     
-    ph_float elapsedTime;
-    if (PHWFlags & PHWFrameAnimation)
-    {
-        elapsedTime = 1.0f/gameManager->framesPerSecond();
-    }
-    else
-    {
-        static ph_float time = 0;
-        static ph_float lastTime;
-        
-        ph_float frameInterval = 1.0f/gameManager->framesPerSecond();
-        lastTime = time;
-        time = PHTime::getTime();
-        if (lastTime == 0)
-            lastTime = time - frameInterval;
-        elapsedTime = time-lastTime;
-        elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
-    }
-    gameManager->renderFrame(elapsedTime);
+    gameManager->renderFrame();
     
     if (![v presentFramebuffer])
         PHLog("ERROR: Couldn't swap buffers");

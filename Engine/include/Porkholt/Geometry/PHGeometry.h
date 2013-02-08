@@ -13,6 +13,11 @@
     #define PH_MATRIX_C
 #endif
 
+ph_float PHInvSqrt(ph_float);
+ph_float PHSqrt(ph_float);
+double PHSqrt(double);
+double PHInvSqrt(double);
+
 #include <Porkholt/Geometry/PHPoint.h>
 #include <Porkholt/Geometry/PHRect.h>
 #include <Porkholt/Geometry/PHColor.h>

@@ -16,6 +16,7 @@ class PHGameManager;
     bool manual;
     NSSize msize;
     NSTimer * timer;
+    int sms_type;
 }
 
 -(id)initWithFrame:(NSRect)frameRect resourcePath:(NSString *)res entryPoint:(void (*)(PHGameManager *))entryPoint flags:(int)flags;

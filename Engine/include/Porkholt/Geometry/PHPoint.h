@@ -24,22 +24,30 @@ struct PHPoint
     PHPoint(ph_float xx,ph_float yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
     PHPoint(const PHRect & o);
+
+    void saveToLua(lua_State * L) const;
     static PHPoint fromLua(lua_State * L, int index);
+
+    PHPoint operator - () const
+    {
+        return PHPoint(-x,-y);
+    }
+
+
+    PHPoint operator + (const PHPoint & o) const
+    {
+        return PHPoint(x+o.x,y+o.y);
+    }
     PHPoint & operator += (const PHPoint & othr)
     {
         x+=othr.x;
         y+=othr.y;
         return *this;
     }
-    PHPoint operator + (const PHPoint & o) const
+
+    PHPoint operator - (const PHPoint & o) const
     {
-        PHPoint res(x+o.x,y+o.y);
-        return res;
-    }
-    PHPoint operator - () const
-    {
-        PHPoint res(-x,-y);
-        return res;
+        return PHPoint(x-o.x,y-o.y);
     }
     PHPoint & operator -= (const PHPoint & othr)
     {
@@ -47,10 +55,10 @@ struct PHPoint
         y-=othr.y;
         return *this;
     }
-    PHPoint operator - (const PHPoint & o) const
+
+    PHPoint operator * (ph_float d) const
     {
-        PHPoint res(x-o.x,y-o.y);
-        return res;
+        return PHPoint(x*d,y*d);
     }
     PHPoint & operator *= (ph_float d)
     {
@@ -58,16 +66,10 @@ struct PHPoint
         y*=d;
         return * this;
     }
-    PHPoint operator * (ph_float d) const
-    {
-        PHPoint res(x*d,y*d);
-        return res;
-    }
-    
+
     PHPoint operator * (const PHPoint & p) const
     {
-        PHPoint res(x*p.x,y*p.y);
-        return res;
+        return PHPoint(x*p.x,y*p.y);
     }
 
     PHPoint & operator *= (const PHPoint & p)
@@ -77,10 +79,20 @@ struct PHPoint
         return *this;
     }
     
+    PHPoint operator / (ph_float d) const
+    {
+        return PHPoint(x/d,y/d);
+    }
+    PHPoint & operator /= (ph_float d)
+    {
+        x/=d;
+        y/=d;
+        return * this;
+    }
+
     PHPoint operator / (const PHPoint & p) const
     {
-        PHPoint res(x/p.x,y/p.y);
-        return res;
+        return PHPoint(x/p.x,y/p.y);
     }
 
     PHPoint & operator /= (const PHPoint & p)
@@ -89,35 +101,13 @@ struct PHPoint
         y/=p.y;
         return *this;
     }
-    
-    PHPoint & operator /= (ph_float d)
-    {
-        x/=d;
-        y/=d;
-        return * this;
-    }
-    PHPoint operator / (ph_float d) const
-    {
-        PHPoint res(x/d,y/d);
-        return res;
-    }
-    void rotate(ph_float angle)
-    {
-        ph_float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
-        x = cosv*ox-sinv*oy;
-        y = sinv*ox+cosv*oy;
-    }
-    ph_float length() const { return sqrt(x*x+y*y); } 
+
+    ph_float length() const { return PHSqrt(x*x+y*y); } 
     ph_float squaredLength() const { return x*x+y*y; }
-    PHPoint rotated(ph_float angle) const
-    {
-        PHPoint p;
-        ph_float sinv = sin(angle), cosv = cos(angle);
-        p.x = cosv*x-sinv*y;
-        p.y = sinv*x+cosv*y;
-        return p;
-    }
-    
+    ph_float inverseLength() const { return PHInvSqrt(x*x+y*y); }
+    PHPoint rotated(ph_float angle) const;
+    void rotate(ph_float angle);
+   
     bool operator < (const PHPoint & o) const
     {
         if (x==o.x) 
@@ -136,14 +126,12 @@ struct PHPoint
     {
         return (x==o.x && y==o.y);
     }
-    
-    void saveToLua(lua_State * L) const;
-    
+
     void normalize() { 
 #ifdef PH_MATRIX_NEON
         (*this) = normalized();
 #else
-        (*this)/=length();
+        (*this) *= inverseLength();
 #endif
     }
     PHPoint normalized() const { 
@@ -152,7 +140,7 @@ struct PHPoint
         normalize2_neon((const float*)this, (float*)&p);
         return p;
 #else
-        return (*this) / length();
+        return (*this) * inverseLength();
 #endif
     }
     
@@ -201,7 +189,19 @@ struct PH3DPoint
     PH3DPoint(ph_float xx, ph_float yy, ph_float zz) : x(xx), y(yy), z(zz) {};
     PH3DPoint(const PHPoint & o) : x(o.x), y(o.y), z(0) {};
     PH3DPoint(const PH3DPoint & o) : x(o.x), y(o.y), z(o.z) {};
+
     static PH3DPoint fromLua(lua_State * L, int index);
+    void saveToLua(lua_State * L) const;
+
+    PH3DPoint operator - () const
+    {
+        return PH3DPoint(-x,-y,-z);
+    }
+
+    PH3DPoint operator + (const PH3DPoint & o) const
+    {
+        return PH3DPoint(x+o.x,y+o.y,z+o.z);
+    }
     PH3DPoint & operator += (const PH3DPoint & othr)
     {
         x+=othr.x;
@@ -209,10 +209,10 @@ struct PH3DPoint
         z+=othr.z;
         return *this;
     }
-    PH3DPoint operator + (const PH3DPoint & o) const
+
+    PH3DPoint operator - (const PH3DPoint & o) const
     {
-        PH3DPoint res(x+o.x,y+o.y,z+o.z);
-        return res;
+        return PH3DPoint(x-o.x,y-o.y);
     }
     PH3DPoint & operator -= (const PH3DPoint & othr)
     {
@@ -221,15 +221,10 @@ struct PH3DPoint
         z-=othr.z;
         return *this;
     }
-    PH3DPoint operator - (const PH3DPoint & o) const
+
+    PH3DPoint operator * (ph_float d) const
     {
-        PH3DPoint res(x-o.x,y-o.y);
-        return res;
-    }
-    PH3DPoint operator - () const
-    {
-        PH3DPoint res(-x,-y,-z);
-        return res;
+        return PH3DPoint(x*d,y*d,z*d);
     }
     PH3DPoint & operator *= (ph_float d)
     {
@@ -239,22 +234,33 @@ struct PH3DPoint
         return * this;
     }
 
-    PH3DPoint operator * (ph_float d) const
-    {
-        PH3DPoint res(x*d,y*d,z*d);
-        return res;
-    }
-    
     PH3DPoint operator * (const PH3DPoint & p) const
     {
-        PH3DPoint res(x*p.x,y*p.y,z*p.z);
-        return res;
+        return PH3DPoint(x*p.x,y*p.y,z*p.z);
     }
-    
+    PH3DPoint & operator *= (const PH3DPoint & p)
+    {
+        x*=p.x;
+        y*=p.y;
+        z*=p.z;
+        return * this;
+    }
+
+    PH3DPoint operator / (ph_float d) const
+    {
+        return PH3DPoint(x/d,y/d,z/d);
+    }
+    PH3DPoint & operator /= (ph_float d)
+    {
+        x/=d;
+        y/=d;
+        z/=d;
+        return * this;
+    }
+
     PH3DPoint operator / (const PH3DPoint & p) const
     {
-        PH3DPoint res(x/p.x,y/p.y,z/p.z);
-        return res;
+        return PH3DPoint(x/p.x,y/p.y,z/p.z);
     }
     
     PH3DPoint & operator /= (const PH3DPoint & p)
@@ -265,39 +271,11 @@ struct PH3DPoint
         return * this;
     }
     
-    
-    PH3DPoint & operator /= (ph_float d)
-    {
-        x/=d;
-        y/=d;
-        z/=d;
-        return * this;
-    }
-
-    PH3DPoint operator / (ph_float d) const
-    {
-        PH3DPoint res(x/d,y/d,z/d);
-        return res;
-    }
-    void rotate(ph_float angle)
-    {
-        ph_float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
-        x = cosv*ox-sinv*oy;
-        y = sinv*ox+cosv*oy;
-    }
-
-    PH3DPoint rotated(ph_float angle) const
-    {
-        PH3DPoint p;
-        ph_float sinv = sin(angle), cosv = cos(angle);
-        p.x = cosv*x-sinv*y;
-        p.y = sinv*x+cosv*y;
-        p.z = z;
-        return p;
-    }
- 
-    ph_float length() const { return sqrt(x*x+y*y+z*z); } 
+    ph_float length() const { return PHSqrt(x*x+y*y+z*z); } 
     ph_float squaredLength() const { return x*x+y*y+z*z; }
+    ph_float inverseLength() const { return PHInvSqrt(x*x+y*y+z*z); }
+    void rotate(ph_float angle);
+    PH3DPoint rotated(ph_float angle) const;
     
     bool operator < (const PH3DPoint & o) const
     {
@@ -326,13 +304,12 @@ struct PH3DPoint
         return (x==o.x && y==o.y && z==o.z);
     }
     
-    void saveToLua(lua_State * L) const;
     
     void normalize() { 
 #ifdef PH_MATRIX_NEON
         (*this) = normalized();
 #else
-        (*this)/=length();
+        (*this) *= inverseLength();
 #endif
     }
     PH3DPoint normalized() const { 
@@ -341,7 +318,7 @@ struct PH3DPoint
         normalize3_neon((const float*)this, (float*)&p);
         return p;
 #else
-        return (*this) / length();
+        return (*this) * inverseLength();
 #endif
     }
     

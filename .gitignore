@@ -12,6 +12,7 @@ xcuserdata
 *.dylib
 *.so
 *.so.*
+*.pyc
 _
 *~
 *.swp

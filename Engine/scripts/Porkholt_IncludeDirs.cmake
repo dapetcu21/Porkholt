@@ -17,6 +17,7 @@ if (NOT DEFINED PH_ENGINE_HINCLUDED)
 
     if (PH_PLATFORM STREQUAL OSX)
         set(PH_LIBS "darwin/osx")
+        include_directories(${PH_EXTERNALS}/unimotion)
     elseif (PH_PLATFORM STREQUAL iOS)
         set(PH_LIBS "darwin/ios")
     elseif (PH_PLATFORM STREQUAL X11)

@@ -158,7 +158,6 @@ protected:
         
         ostringstream s;
         s<<scoreA;
-        PHLog("meow");
         scoreAV->setText(s.str());
         
         ostringstream ss;

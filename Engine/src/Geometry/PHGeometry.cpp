@@ -77,3 +77,60 @@ ph_float PHAngleFromNormalizedVector(const PHPoint & vec)
         ang+=M_PI*2;
     return ang;
 }
+
+#define threehalfs 1.5f
+
+ph_float PHInvSqrt(ph_float number)
+{
+    union {
+        float f;
+        int32_t i;
+    } v = { .f = number };
+
+    float half = number * 0.5f;
+	v.i = 0x5f3759df - ( v.i >> 1 );
+	v.f  = v.f * ( threehalfs - ( half * v.f * v.f ) );
+	return v.f;
+}
+
+ph_float PHSqrt(ph_float number)
+{
+    union {
+        float f;
+        int32_t i;
+    } v = { .f = number };
+
+    float half = number * 0.5f;
+	v.i = 0x5f3759df - ( v.i >> 1 );
+	v.f  = v.f * ( threehalfs - ( half * v.f * v.f ) );
+	return v.f * number;
+}
+
+#define threehalfs_d 1.5f
+
+double PHInvSqrt(double number)
+{
+    union {
+        double f;
+        int64_t i;
+    } v = { .f = number };
+
+    double half = number * 0.5f;
+	v.i = 0x5fe6eb50c7b537a9 - ( v.i >> 1 );
+	v.f  = v.f * ( threehalfs_d - ( half * v.f * v.f ) );
+	return v.f;
+}
+
+double PHSqrt(double number)
+{
+    union {
+        double f;
+        int64_t i;
+    } v = { .f = number };
+
+    double half = number * 0.5f;
+	v.i = 0x5fe6eb50c7b537a9 - ( v.i >> 1 );
+	v.f  = v.f * ( threehalfs_d - ( half * v.f * v.f ) );
+	return v.f * number;
+}
+
