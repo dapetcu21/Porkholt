@@ -78,12 +78,10 @@ PHAnimatedImage::PHAnimatedImage(PHGameManager * gameManager, PHDirectory * dir)
     }
     if (!PHLuaLoadFile(L, initFile))
     {
-        initFile->release();
         cleanupLua();
         luaMutex->unlock();
         throw PHLuaError;
     }
-    initFile->release();
     try {
         atl = new PHTextureAtlas(gameManager, dir, L);
     } catch (string ex)

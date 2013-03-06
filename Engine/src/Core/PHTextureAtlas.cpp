@@ -14,7 +14,7 @@
 lua_State * PHTextureAtlas::staticL = NULL;
 PHMutex * PHTextureAtlas::luaMutex = new PHMutex;
 
-#define INIT gm(gameManager), loaded(false), ploaded(false), _textures(NULL), _texCoords(NULL), _bounds(NULL), mutex(new PHMutex)
+#define INIT gm(gameManager), loaded(false), ploaded(false), _textures(NULL), _texCoords(NULL), _bounds(NULL), mutex(new PHMutex), ls(NULL)
 
 PHTextureAtlas::PHTextureAtlas(PHGameManager * gameManager, PHDirectory * dir) : INIT
 {
@@ -198,11 +198,14 @@ void PHTextureAtlas::loadInVRAM()
         (*i)->release();
 
     delete ls;
+    ls = NULL;
     loaded = true;
 }
 
 PHTextureAtlas::~PHTextureAtlas()
 {
+    __builtin_trap();
+    load();
     if (_textures)
         delete [] _textures;
     if (_texCoords)

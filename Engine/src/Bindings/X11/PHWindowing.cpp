@@ -17,7 +17,6 @@ static string PHResourcePath;
 static string PHAppName;
 static int PHWFlags;
 static PHGameManager * PHWGameManager;
-static double PHWLastTime;
 static int PHWArgc;
 static char ** PHWArgv;
 
@@ -61,7 +60,6 @@ int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*
     PHWArgv = argv;
     PHWInitNames();
     PHWCreateWindow(PHAppName, vm, flags, entryPoint, ud);
-    PHWLastTime = PHTime::getTime();
     PHXMainLoop();
     PHXDestroyContext();
     return 0;
@@ -70,23 +68,8 @@ int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*
 void PHWRender()
 {
     PHGameManager * gm = PHWGameManager;
-    int flags = PHWFlags;
-
-    double frameInterval = 1.0f/gm->framesPerSecond();
-    double elapsedTime;
-    double time;
-    if (flags & PHWFrameAnimation)
-        elapsedTime = frameInterval;
-    else 
-    {
-        time = PHTime::getTime();
-        elapsedTime = (time - PHWLastTime);
-        if (flags & PHWVSync)
-            elapsedTime = round(elapsedTime/frameInterval)*frameInterval;
-    }
     gm->processInput();
-    gm->renderFrame(elapsedTime);
-    PHWLastTime = time;
+    gm->renderFrame();
 }
 
 #define PHWMaxButtons 10
@@ -118,12 +101,7 @@ void * PHWCreateWindow(const string & title, const PHWVideoMode & vm, int flags,
         PHLog("Can't load resource directory: %s", ex.c_str());
     }
     init.entryPoint = entryPoint;
-    if (flags & PHWRemote)
-        gm->setUsesRemote(true);
-    if (flags & PHWShowFPS)
-        gm->setShowsFPS(true);
-    if (flags & PHWVSync)
-        gm->setFpsCapped(true);
+    PHWApplyFlags(gm, flags);
     
     gm->init(init);
     

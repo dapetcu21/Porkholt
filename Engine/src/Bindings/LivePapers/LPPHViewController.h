@@ -4,7 +4,14 @@
 #import <GLKit/GLKit.h>
 
 class PHGameManager;
+#ifndef PH_TOKENPASTE
+#define _PH_TOKENPASTE(x, y) x ## y
+#define PH_TOKENPASTE(x, y) _PH_TOKENPASTE(x, y)
+#endif
 
+#define LPPHViewController PH_TOKENPASTE(LPPHViewController, PH_APP_TARGET)
+
+class PHNormalImage;
 @interface LPPHViewController : GLKViewController
 {
     EAGLContext * _context;
@@ -20,10 +27,14 @@ class PHGameManager;
     void (*_entryPoint)(PHGameManager*);
     void * _ud;
     int _flags;
+    
+    CGRect _wallpaperRect;
+    PHNormalImage * _wallpaperImage;
 }
 @property (nonatomic, readonly) EAGLContext * context;
 @property (nonatomic, retain) NSBundle * bundle;
 @property (nonatomic, readonly) NSTimeInterval adjustedTimeSinceLastUpdate;
+@property (nonatomic, assign) CGRect wallpaperRect;
 
 
 //to override
@@ -37,6 +48,9 @@ class PHGameManager;
 
 -(void)setCurrentContext;
 -(void)resetIdleTimer;
+
+-(void)setWallpaperImage:(UIImage*)img;
+-(PHNormalImage*)wallpaperImage;
 
 @end
 

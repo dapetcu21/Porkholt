@@ -37,6 +37,7 @@ protected:
     PHColor tint;
     bool constrain;
     ph_float _repeatX, _repeatY;
+    PHGLUniformStates * _additionalUniforms;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
     void renderCurved();
@@ -103,10 +104,11 @@ public:
 	virtual void draw();
     virtual void render() { PHView::render();};
     bool supportsRenderMode(int rm);
+    PHGLUniformStates * additionalUniforms();
     
     void setNormalMapping(bool nm) { _normalMapping = nm; }
     bool normalMapping() { return _normalMapping; }
-    
+        
     const PHRect & textureCoordinates() { return coords; };
 	void setTextureCoordinates(const PHRect & r) { coords = r; VAOneedsRebuilding = true; };
     

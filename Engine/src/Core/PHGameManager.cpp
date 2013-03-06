@@ -36,9 +36,7 @@ memset(boundVBOs, 0, sizeof(boundVBOs));
 PHGameManager::~PHGameManager()
 {
     if (exitmsg)
-    {
         exitmsg->broadcast(this, NULL);
-    }
     if (drawable)
         drawable->release();
     if (fpsView)
@@ -102,6 +100,8 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
     PHAutoreleasePool ap;
     initPHGL();
+    
+    exitmsg = messageWithName("appQuits");
 
 	fps = params.fps;
 	_screenWidth = params.screenWidth;
@@ -179,10 +179,15 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     } catch (...) {
         fntDir = NULL;
     }
+     
+#ifndef PH_LIVEPAPERS
     try {
         sndMan = new PHSoundManager(rsrcDir->directoryAtPath("snd"), this);
         animPool->addAnimator(sndMan);
     } catch (...) {}
+#else
+    sndMan = NULL;
+#endif
     
     PHGL::glDisable(GL_DEPTH_TEST);
     PHGL::glDepthMask(GL_TRUE);

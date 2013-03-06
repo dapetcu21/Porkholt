@@ -18,7 +18,8 @@ protected:
 public:
     GLuint name() { return tex; }
     
-    PHGLTexture(PHGameManager * gameManager);
+    PHGLTexture(PHGameManager * gameManager, GLenum target);
+    PHGLTexture(PHGameManager * gameManager, GLenum target, GLuint tex); //already initialized texture
     ~PHGLTexture();
     
     enum wrapType
@@ -92,10 +93,8 @@ class PHGLTexture1D : public PHGLTexture
 private:
     size_t w;
 public:
-    PHGLTexture1D(PHGameManager * gm) : PHGLTexture(gm)
-    {
-        target = GL_TEXTURE_1D;
-    }
+    PHGLTexture1D(PHGameManager * gm) : PHGLTexture(gm, GL_TEXTURE_1D) {}
+    PHGLTexture1D(PHGameManager * gm, GLuint tex, size_t _w) : PHGLTexture(gm, GL_TEXTURE_1D, tex), w(_w) {}
     size_t width() { return w; }
     void setData(uint8_t * data, size_t width, enum pixelFormat format);
 };
@@ -107,10 +106,9 @@ class PHGLTexture2D : public PHGLTexture
 private:
     size_t w,h;
 public:
-    PHGLTexture2D(PHGameManager * gm) : PHGLTexture(gm)
-    {
-        target = GL_TEXTURE_2D;
-    }
+    PHGLTexture2D(PHGameManager * gm) : PHGLTexture(gm, GL_TEXTURE_2D) {}
+    PHGLTexture2D(PHGameManager * gm, GLuint tex, size_t _w, size_t _h) : PHGLTexture(gm, GL_TEXTURE_2D, tex), w(_w), h(_h) {}
+                                        
     void setData(uint8_t * data, size_t width, size_t height, enum pixelFormat format);
     size_t width() { return w; }
     size_t height() { return h; }
@@ -127,10 +125,9 @@ class PHGLTexture3D : public PHGLTexture
 private:
     size_t w,h,d;
 public:
-    PHGLTexture3D(PHGameManager * gm) : PHGLTexture(gm)
-    {
-        target = GL_TEXTURE_3D;
-    }
+    PHGLTexture3D(PHGameManager * gm) : PHGLTexture(gm, GL_TEXTURE_3D) {}
+    PHGLTexture3D(PHGameManager * gm, GLuint tex, size_t _w, size_t _h, size_t _d) : PHGLTexture(gm, GL_TEXTURE_3D, tex), w(_w), h(_h), d(_d) {}
+    
     size_t width() { return w; }
     size_t height() { return h; }
     size_t depth() { return d; }
@@ -152,10 +149,9 @@ public:
         negativeZ
     };
     
-    PHGLTextureCubeMap(PHGameManager * gm) : PHGLTexture(gm)
-    {
-        target = GL_TEXTURE_CUBE_MAP;
-    }
+    PHGLTextureCubeMap(PHGameManager * gm) : PHGLTexture(gm, GL_TEXTURE_CUBE_MAP) {}
+    PHGLTextureCubeMap(PHGameManager * gm, GLuint tex) : PHGLTexture(gm, GL_TEXTURE_CUBE_MAP, tex) {}
+ 
     void setData(uint8_t * data, size_t width, size_t height, enum cubemapFace face, enum pixelFormat format);
 };
 #endif

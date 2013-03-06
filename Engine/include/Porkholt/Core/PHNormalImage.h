@@ -37,6 +37,7 @@ public:
     
     void bindToTexture(int tx);
     PHRect textureCoordinates() { load(); return txc; }
+    void setTextureCoordinates(const PHRect & r) { txc = r; }
     PHRect textureCoordinates(const PHRect & port);
 
     size_t bufferWidth() { return bw; }

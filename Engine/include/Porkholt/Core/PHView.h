@@ -14,6 +14,8 @@ class PHView : public PHDrawable, public PHCinematicActor
 {
 protected:
 	PHRect _frame,_bounds;
+    ph_float _ZPosition;
+    bool _blendingEnabled, _zTestingEnabled;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
     bool fhoriz,fvert;
 	ph_float _rotation,_scaleX,_scaleY;
@@ -86,7 +88,11 @@ public:
 	
 	virtual void setFrame(const PHRect &frame);
 	void setPosition(const PHPoint &pos);
+    void setPosition3D(const PH3DPoint &pos) { setPosition(pos.xy()); _ZPosition = pos.z; matrixCached = false; }
     PHPoint position() { return PHPoint(_frame.x,_frame.y); }
+    PH3DPoint position3D() { return PH3DPoint(_frame.x, _frame.y, _ZPosition); }
+    ph_float zPosition() { return _ZPosition; }
+    void setZPosition(ph_float p) { _ZPosition = p; effectCached = false; }
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
 	virtual void setBounds(const PHRect &bnd);
@@ -120,6 +126,11 @@ public:
 
 	void setOptimizations(bool ui) { _optimize = ui; };
 	bool optimizations() { return _optimize; };
+
+    void setZTestingEnabled(bool z) { _zTestingEnabled = z; }
+    bool zTestingEnabled() { return _zTestingEnabled; }
+    void setBlendingEnabled(bool b) { _blendingEnabled = b; }
+    bool blendingEnabled() { return _blendingEnabled; }
     
     void setAutoresizesSubviews(bool b) { autoresize = b; }
     bool autoresizesSubviews() { return autoresize; }

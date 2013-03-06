@@ -10,10 +10,12 @@
 #include <Porkholt/Core/PHGLVertexArrayObject.h>
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHDeferredView.h>
+#include <Porkholt/Core/PHTextureAtlas.h>
+#include <Porkholt/Core/PHAnimatedImage.h>
 
 PH_REGISTERIMAGEVIEW(PHParticleView)
 
-#define INIT particlePool(NULL), particleAnim(NULL), particleM(new PHMutex), vao(NULL), maxN(0), cacheTime(15), cacheLeft(15)
+#define INIT particlePool(NULL), particleAnim(NULL), particleM(new PHMutex), vao(NULL), maxN(0), cacheTime(15), cacheLeft(15), udindex(false)
 
 PHParticleView::PHParticleView() : PHImageView(), INIT 
 {
@@ -116,7 +118,7 @@ void PHParticleView::registerLuaInterface(lua_State * L)
 
 char color_sprites[] = "color_sprites";
 
-void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PHColor & tint)
+void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PHColor & tint, PHTextureAtlas * atlas)
 {
     PHParticleAnimator::particles * particles = (PHParticleAnimator::particles*)p;
     if (!p || !particles->n) return;
@@ -141,22 +143,38 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
         pp[2] = PH3DPoint(-sz.width/2,+sz.height/2, 0);
         pp[3] = PH3DPoint(+sz.width/2,+sz.height/2, 0);
         PH24BitColor c = PH24BitColor(p.color);
+        
+        #define fillparticle(txc) \
+        for (int j=0; j<4; j++) \
+        { \
+            pp[j].rotate(p.rotation); \
+            pp[j]+=p.position; \
+             \
+            b[0] = pp[j].x; \
+            b[1] = pp[j].y; \
+            b[2] = pp[j].z; \
+             \
+            b[3] = txc[(j<<1)]; \
+            b[4] = txc[(j<<1)+1]; \
+             \
+            *((uint32_t*)(b+5)) = *((uint32_t*)&c); \
+             \
+            b+=6; \
+        }
 
-        for (int j=0; j<4; j++)
+        if (atlas)
         {
-            pp[j].rotate(p.rotation);
-            pp[j]+=p.position;
-            
-            b[0] = pp[j].x;
-            b[1] = pp[j].y;
-            b[2] = pp[j].z;
-            
-            b[3] = stdTxC[(j<<1)];
-            b[4] = stdTxC[(j<<1)+1];
-            
-            *((uint32_t*)(b+5)) = *((uint32_t*)&c);
-            
-            b+=6;
+            PHRect tx = atlas->textureCoordinates((int)(size_t)p.ud);
+            GLfloat txc[8] = 
+            {
+                tx.x,            tx.y,
+                tx.x + tx.width, tx.y,
+                tx.x,            tx.y + tx.height,
+                tx.x + tx.width, tx.y + tx.height,
+            };
+            fillparticle(txc);
+        } else {
+            fillparticle(stdTxC);
         }
     }
     
@@ -292,6 +310,7 @@ void PHParticleView::render()
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * applyMatrices());
         gm->updateMatrixUniform();
+        gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLTexture0);
         
         PHColor t = tint;
         if (!t.isValid())
@@ -304,15 +323,21 @@ void PHParticleView::render()
         }
         if (img->isAnimated())
         {
-            bool fd = _animator->isFading();
-            ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
-            if (fd)
+            if (udindex)
             {
-                gm->setTextureUniform(_animator->lastFrameTexture());
-                renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(rem));
-            }   
-            gm->setTextureUniform(_animator->currentFrameTexture());
-            renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(1-rem));
+                gm->setTextureUniform(_animator->currentFrameTexture());
+                renderParticles(particles, PHWholeRect, t, ((PHAnimatedImage*)img)->atlas());
+            } else {
+                bool fd = _animator->isFading();
+                ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
+                if (fd)
+                {
+                    gm->setTextureUniform(_animator->lastFrameTexture());
+                    renderParticles(particles, _animator->lastFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(rem));
+                }   
+                gm->setTextureUniform(_animator->currentFrameTexture());
+                renderParticles(particles, _animator->currentFrameTextureCoordinates(textureCoordinates()), t.multipliedAlpha(1-rem));
+            }
         }
         
         gm->setTextureUniform(NULL);

@@ -31,8 +31,7 @@ class PHMessage : public PHObject
         void removeListener(PHObject * obj);
         void removeListener(PHObject * obj, PHCallback cb);
         void removeListener(const PHInvocation & inv);
-        void broadcast(PHObject * sender, void * ud);
-        void broadcast(PHObject * sender);
+        void broadcast(PHObject * sender, void * ud = NULL);
         
         static PHMessage * messageWithName(const string & name)
         {

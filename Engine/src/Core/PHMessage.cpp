@@ -61,10 +61,3 @@ void PHMessage::broadcast(PHObject * sender, void * ud)
         i->call(sender, ud);
 }
 
-void PHMessage::broadcast(PHObject * sender)
-{
-    list<PHInvocation> obj = objects;
-    for (list<PHInvocation>::iterator i = obj.begin(); i!=obj.end(); i++)
-        i->call(sender);
-}
-

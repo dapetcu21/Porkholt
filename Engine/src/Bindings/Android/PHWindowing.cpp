@@ -191,15 +191,9 @@ void PHWInitWindow(PHWState & state)
     }
     params.setResourceDirectory(dir);
     params.entryPoint = PHWEntryPoint;
-    if (PHWFlags & PHWShowFPS)
-        gameManager->setShowsFPS(true);
-    if (PHWFlags & PHWRemote)
-        gameManager->setUsesRemote(true);
-    if (PHWFlags & PHWFrameAnimation)
-        gameManager->setFrameAnimation(true);
+    PHWApplyFlags(gameManager, PHWFlags); 
     if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
         gameManager->setPlatformSuffix(".hd");
-    gameManager->setFpsCapped(state.vsync);
     gameManager->setUserData(PHWUD);
 
 

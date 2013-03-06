@@ -9,8 +9,10 @@ PHMutex * PHAutoreleasePool::mutex = new PHMutex();
 
 void PHAutoreleasePool::noPoolInPlace(PHObject * obj)
 {
-    PHLog("Object 0x%llx is autoreleased with no pool in place. It will leak. Set a breakpoint in PHAutoreleasePool::noPoolInPlace to debug", (unsigned long long)(size_t)obj);
+    PHLog("Object %p is autoreleased with no pool in place. It will leak. Set a breakpoint in PHAutoreleasePool::noPoolInPlace to debug", obj);
 }
+
+#include <Porkholt/Core/PHTextureAtlas.h>
 
 void PHAutoreleasePool::autorelease(PHObject * obj)
 {

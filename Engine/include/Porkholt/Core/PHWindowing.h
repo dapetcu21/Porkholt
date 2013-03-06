@@ -88,4 +88,17 @@ bool PHWGetVSync();
 void PHWSetResizable(bool r);
 bool PHWGetResizable();
 
+inline void PHWApplyFlags(PHGameManager * gm, int flags)
+{
+    gm->setUsesRemote((flags & PHWRemote) != 0);
+    gm->setShowsFPS((flags & PHWShowFPS) != 0);
+    gm->setFrameAnimation((flags & PHWFrameAnimation) != 0);
+    gm->setFpsCapped((flags & PHWVSync) != 0);
+}
+
+//LivePapers functions
+class PHImage;
+PHImage * LPPHGetWallpaperImage(PHGameManager * gm); //returns a newly initalized object
+PHRect LPPHGetWallpaperBounds(PHGameManager * gm);
+
 #endif

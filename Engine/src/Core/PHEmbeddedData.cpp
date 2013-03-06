@@ -9,39 +9,54 @@ PHEmbedDir("rsrc");
 
 PHEmbedDir("rsrc/shaders");
 
-PHEmbedFile(rsrc_shaders_color_notex_sprites_fsh, "rsrc/shaders/color_notex_sprites.fsh", 60,
-"varying lowp vec4 c;\n\
-\n\
-void main()\n\
-{\n\
-    gl_FragColor = c;\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_notex_sprites_lua, "rsrc/shaders/notex_sprites.lua", 39,
-"attributeBindings = {\n\
-  position = 0\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_vsh, "rsrc/shaders/deferred_diffuse_normal_point.vsh", 350,
+PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_fsh, "rsrc/shaders/deferred_diffuse_normal_point.fsh", 532,
 "varying highp vec2 txc;\n\
 varying highp vec3 p;\n\
 \n\
-attribute vec4 posi;\n\
-\n\
-uniform mat4 modelViewProjectionMatrix;\n\
-uniform vec2 scale;\n\
-uniform vec4 clip;\n\
+uniform sampler2D texture;\n\
+uniform sampler2D normalMap;\n\
+uniform lowp vec4 diffuseColor;\n\
+uniform highp vec3 lightPosition;\n\
+uniform highp float lightIntensity; //r^2\n\
 \n\
 void main(void)\n\
 {\n\
-\tvec4 ps = posi * vec4(clip.zw,1.0,1.0) + vec4(clip.xy,0.0,0.0);\n\
-\tvec4 pos = ps * vec4(scale,1.0,1.0);\n\
-\ttxc = ps.xy;\n\
-    p = pos.xyz;\n\
-\tgl_Position = modelViewProjectionMatrix * pos;\n\
-}");
+\thighp vec3 L = lightPosition-p;\n\
+    highp float len = length(L);\n\
+   \thighp vec3 N = normalize( texture2D(normalMap,txc).xyz * 2.0 - 1.0 );\n\
+    highp float intensity = lightIntensity/(len*len) * max(dot(N,normalize(L)),\
+0.0);\n\
+    \n\
+    gl_FragColor = texture2D(texture,txc) * diffuseColor * intensity;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_color_sprites_fsh, "rsrc/shaders/color_sprites.fsh", 263,
+"#ifdef proj\n\
+varying highp vec3 txc;\n\
+#else\n\
+varying highp vec2 txc;\n\
+#endif\n\
+\n\
+varying lowp vec4 c;\n\
+\n\
+uniform sampler2D texture;\n\
+\n\
+void main()\n\
+{\n\
+#ifdef proj\n\
+    gl_FragColor = texture2DProj(texture,txc) * c;\n\
+#else\n\
+    gl_FragColor = texture2D(texture,txc) * c;\n\
+#endif\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_deferred_ambient_lua, "rsrc/shaders/deferred_ambient.lua", 34,
+"attributeBindings = {\n\
+  pos = 0\n\
+}\n\
+");
 
 PHEmbedFile(rsrc_shaders_deferred_diffuse_point_fsh, "rsrc/shaders/deferred_diffuse_point.fsh", 389,
 "varying highp vec2 txc;\n\
@@ -108,34 +123,6 @@ void main()\n\
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_deferred_diffuse_point_lua, "rsrc/shaders/deferred_diffuse_point.lua", 35,
-"attributeBindings = {\n\
-  posi = 0\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_fsh, "rsrc/shaders/deferred_diffuse_normal_point.fsh", 532,
-"varying highp vec2 txc;\n\
-varying highp vec3 p;\n\
-\n\
-uniform sampler2D texture;\n\
-uniform sampler2D normalMap;\n\
-uniform lowp vec4 diffuseColor;\n\
-uniform highp vec3 lightPosition;\n\
-uniform highp float lightIntensity; //r^2\n\
-\n\
-void main(void)\n\
-{\n\
-\thighp vec3 L = lightPosition-p;\n\
-    highp float len = length(L);\n\
-   \thighp vec3 N = normalize( texture2D(normalMap,txc).xyz * 2.0 - 1.0 );\n\
-    highp float intensity = lightIntensity/(len*len) * max(dot(N,normalize(L)),\
-0.0);\n\
-    \n\
-    gl_FragColor = texture2D(texture,txc) * diffuseColor * intensity;\n\
-}\n\
-");
-
 PHEmbedFile(rsrc_shaders_color_notex_sprites_vsh, "rsrc/shaders/color_notex_sprites.vsh", 197,
 "varying lowp vec4 c;\n\
 \n\
@@ -150,51 +137,11 @@ void main(void)\n\
 \tgl_Position = modelViewProjectionMatrix * position;\n\
 }");
 
-PHEmbedFile(rsrc_shaders_color_sprites_fsh, "rsrc/shaders/color_sprites.fsh", 263,
-"#ifdef proj\n\
-varying highp vec3 txc;\n\
-#else\n\
-varying highp vec2 txc;\n\
-#endif\n\
-\n\
-varying lowp vec4 c;\n\
-\n\
-uniform sampler2D texture;\n\
-\n\
-void main()\n\
-{\n\
-#ifdef proj\n\
-    gl_FragColor = texture2DProj(texture,txc) * c;\n\
-#else\n\
-    gl_FragColor = texture2D(texture,txc) * c;\n\
-#endif\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_ambient_lua, "rsrc/shaders/deferred_ambient.lua", 34,
+PHEmbedFile(rsrc_shaders_deferred_diffuse_point_lua, "rsrc/shaders/deferred_diffuse_point.lua", 35,
 "attributeBindings = {\n\
-  pos = 0\n\
+  posi = 0\n\
 }\n\
 ");
-
-PHEmbedFile(rsrc_shaders_missingnormals_sprites_lua, "rsrc/shaders/missingnormals_sprites.lua", 85,
-"attributeBindings = {\n\
-  position = 0,\n\
-  texCoord = 1\n\
-}\n\
-\n\
-vertexShader = \"sprites.vsh\"\n\
-");
-
-PHEmbedFile(rsrc_shaders_notex_sprites_vsh, "rsrc/shaders/notex_sprites.vsh", 139,
-"attribute vec4 position;\n\
-\n\
-uniform mat4 modelViewProjectionMatrix;\n\
-\n\
-void main(void)\n\
-{\n\
-\tgl_Position = modelViewProjectionMatrix * position;\n\
-}");
 
 PHEmbedFile(rsrc_shaders_text_vsh, "rsrc/shaders/text.vsh", 206,
 "varying highp vec2 txc;\n\
@@ -217,15 +164,6 @@ PHEmbedFile(rsrc_shaders_text_lua, "rsrc/shaders/text.lua", 55,
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_notex_sprites_fsh, "rsrc/shaders/notex_sprites.fsh", 68,
-"uniform lowp vec4 color;\n\
-\n\
-void main()\n\
-{\n\
-    gl_FragColor = color;\n\
-}\n\
-");
-
 PHEmbedFile(rsrc_shaders_text_fsh, "rsrc/shaders/text.fsh", 178,
 "varying highp vec2 txc;\n\
 \n\
@@ -240,23 +178,28 @@ void main()\n\
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_missingnormals_sprites_fsh, "rsrc/shaders/missingnormals_sprites.fsh", 274,
-"#ifdef proj\n\
-varying highp vec3 txc;\n\
-#else\n\
-varying highp vec2 txc;\n\
-#endif\n\
+PHEmbedFile(rsrc_shaders_deferred_diffuse_point_vsh, "rsrc/shaders/deferred_diffuse_point.vsh", 350,
+"varying highp vec2 txc;\n\
+varying highp vec3 p;\n\
 \n\
-uniform sampler2D texture;\n\
+attribute vec4 posi;\n\
 \n\
-void main()\n\
+uniform mat4 modelViewProjectionMatrix;\n\
+uniform vec2 scale;\n\
+uniform vec4 clip;\n\
+\n\
+void main(void)\n\
 {\n\
-#ifdef proj\n\
-    gl_FragColor = vec4(0.5,0.5,1.0,texture2DProj(texture,txc).a);\n\
-#else\n\
-    gl_FragColor = vec4(0.5,0.5,1.0,texture2D(texture,txc).a);\n\
-#endif\n\
-\n\
+\tvec4 ps = posi * vec4(clip.zw,1.0,1.0) + vec4(clip.xy,0.0,0.0);\n\
+\tvec4 pos = ps * vec4(scale,1.0,1.0);\n\
+\ttxc = ps.xy;\n\
+    p = pos.xyz;\n\
+\tgl_Position = modelViewProjectionMatrix * pos;\n\
+}");
+
+PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_lua, "rsrc/shaders/deferred_diffuse_normal_point.lua", 35,
+"attributeBindings = {\n\
+  posi = 0\n\
 }\n\
 ");
 
@@ -283,19 +226,7 @@ void main(void)\n\
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_deferred_ambient_fsh, "rsrc/shaders/deferred_ambient.fsh", 149,
-"varying highp vec2 txc;\n\
-\n\
-uniform sampler2D texture;\n\
-uniform lowp vec4 color;\n\
-\n\
-void main(void)\n\
-{\n\
-    gl_FragColor = texture2D(texture,txc) * color;\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_point_vsh, "rsrc/shaders/deferred_diffuse_point.vsh", 350,
+PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_vsh, "rsrc/shaders/deferred_diffuse_normal_point.vsh", 350,
 "varying highp vec2 txc;\n\
 varying highp vec3 p;\n\
 \n\
@@ -314,6 +245,79 @@ void main(void)\n\
 \tgl_Position = modelViewProjectionMatrix * pos;\n\
 }");
 
+PHEmbedFile(rsrc_shaders_notex_sprites_vsh, "rsrc/shaders/notex_sprites.vsh", 139,
+"attribute vec4 position;\n\
+\n\
+uniform mat4 modelViewProjectionMatrix;\n\
+\n\
+void main(void)\n\
+{\n\
+\tgl_Position = modelViewProjectionMatrix * position;\n\
+}");
+
+PHEmbedFile(rsrc_shaders_color_notex_sprites_lua, "rsrc/shaders/color_notex_sprites.lua", 53,
+"attributeBindings = {\n\
+  position = 0,\n\
+  vColor = 2\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_notex_sprites_lua, "rsrc/shaders/notex_sprites.lua", 39,
+"attributeBindings = {\n\
+  position = 0\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_missingnormals_sprites_fsh, "rsrc/shaders/missingnormals_sprites.fsh", 274,
+"#ifdef proj\n\
+varying highp vec3 txc;\n\
+#else\n\
+varying highp vec2 txc;\n\
+#endif\n\
+\n\
+uniform sampler2D texture;\n\
+\n\
+void main()\n\
+{\n\
+#ifdef proj\n\
+    gl_FragColor = vec4(0.5,0.5,1.0,texture2DProj(texture,txc).a);\n\
+#else\n\
+    gl_FragColor = vec4(0.5,0.5,1.0,texture2D(texture,txc).a);\n\
+#endif\n\
+\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_notex_sprites_fsh, "rsrc/shaders/notex_sprites.fsh", 68,
+"uniform lowp vec4 color;\n\
+\n\
+void main()\n\
+{\n\
+    gl_FragColor = color;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_deferred_ambient_fsh, "rsrc/shaders/deferred_ambient.fsh", 149,
+"varying highp vec2 txc;\n\
+\n\
+uniform sampler2D texture;\n\
+uniform lowp vec4 color;\n\
+\n\
+void main(void)\n\
+{\n\
+    gl_FragColor = texture2D(texture,txc) * color;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_missingnormals_sprites_lua, "rsrc/shaders/missingnormals_sprites.lua", 85,
+"attributeBindings = {\n\
+  position = 0,\n\
+  texCoord = 1\n\
+}\n\
+\n\
+vertexShader = \"sprites.vsh\"\n\
+");
+
 PHEmbedFile(rsrc_shaders_deferred_ambient_vsh, "rsrc/shaders/deferred_ambient.vsh", 213,
 "varying highp vec2 txc;\n\
 \n\
@@ -328,9 +332,12 @@ void main(void)\n\
 \tgl_Position = modelViewProjectionMatrix * (pos * vec4(scale,1.0,1.0));\n\
 }");
 
-PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_lua, "rsrc/shaders/deferred_diffuse_normal_point.lua", 35,
-"attributeBindings = {\n\
-  posi = 0\n\
+PHEmbedFile(rsrc_shaders_color_notex_sprites_fsh, "rsrc/shaders/color_notex_sprites.fsh", 60,
+"varying lowp vec4 c;\n\
+\n\
+void main()\n\
+{\n\
+    gl_FragColor = c;\n\
 }\n\
 ");
 
@@ -338,13 +345,6 @@ PHEmbedFile(rsrc_shaders_color_sprites_lua, "rsrc/shaders/color_sprites.lua", 69
 "attributeBindings = {\n\
   position = 0,\n\
   texCoord = 1,\n\
-  vColor = 2\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_color_notex_sprites_lua, "rsrc/shaders/color_notex_sprites.lua", 53,
-"attributeBindings = {\n\
-  position = 0,\n\
   vColor = 2\n\
 }\n\
 ");

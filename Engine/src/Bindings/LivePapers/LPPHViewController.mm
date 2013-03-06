@@ -4,7 +4,36 @@
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/Core/PHWindowing.h>
 #include <Porkholt/Core/PHEventHandler.h>
+#include <Porkholt/Core/PHNormalImage.h>
+#include <Porkholt/Core/PHGLTexture.h>
 #include <Porkholt/IO/PHInode.h>
+#import <QuartzCore/CADisplayLink.h>
+#include <dlfcn.h>
+
+static map<PHGameManager*, LPPHViewController*> gmToLP;
+
+#define texoptions [NSDictionary dictionaryWithObjectsAndKeys: \
+    [NSNumber numberWithBool:YES], GLKTextureLoaderOriginBottomLeft,\
+    nil]
+
+PHImage * LPPHGetWallpaperImage(PHGameManager * gm)
+{
+    map<PHGameManager*, LPPHViewController*>::iterator i = gmToLP.find(gm);
+    if (i == gmToLP.end())
+        return NULL;
+    return i->second.wallpaperImage;
+}
+
+PHRect LPPHGetWallpaperBounds(PHGameManager * gm)
+{
+    map<PHGameManager*, LPPHViewController*>::iterator i = gmToLP.find(gm);
+    if (i == gmToLP.end())
+        return PHWholeRect;
+    CGRect r = i->second.wallpaperRect;
+    return PHRect(r.origin.x, r.origin.y, r.size.width, r.size.height);
+}
+
+#define LPGLKView PH_TOKENPASTE(LPGLKView, PH_APP_TARGET)
 
 @interface GLKViewController(_private)
 -(CADisplayLink*)displayLink;
@@ -24,11 +53,19 @@
 @implementation LPPHViewController
 @synthesize context = _context;
 @synthesize bundle = _bundle;
+@synthesize wallpaperRect = _wallpaperRect;
+
+-(void)_createDisplayLinkForScreen:(id)screen
+{
+    [super _createDisplayLinkForScreen:screen];
+    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+}
 
 -(id)initWithFlags:(int)flags entryPoint:(void(*)(PHGameManager*))ep userData:(void*)ud initDictionary:(NSDictionary*)init
 {
     if ((self = [super init]))
     {
+        _wallpaperRect = CGRectMake(0, 0, 1, 1);
         _entryPoint = ep;
         _ud = ud;
         _flags = flags;
@@ -44,17 +81,17 @@
     GLKView * view = [[LPGLKView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     view.multipleTouchEnabled = YES;
 
-    _context = [[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2] autorelease];
+    _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
-    if (!_context) {
+    if (!_context)
         NSLog(@"Failed to create ES context");
-    }
+        
+    [EAGLContext setCurrentContext:_context];
     
     self.view = view;
     view.context = _context;
     view.delegate = self;
     
-    [EAGLContext setCurrentContext:_context];
 
     [self setupGL];
 }
@@ -67,6 +104,8 @@
     [_context release];
     [_bundle release];
     [_init release];
+    if (_wallpaperImage)
+        _wallpaperImage->release();
 
     [super dealloc];
 }
@@ -85,32 +124,31 @@
     params.dpi = 160*scale;
     try {
         string path = [[[_init objectForKey:@"LCInitPluginPath"] stringByReplacingOccurrencesOfString:@".dylib" withString:@"-rsrc"] UTF8String];
-        PHLog("File path: %s", path.c_str());
         PHDirectory * dir = PHInode::directoryAtFSPath(path);
         params.setResourceDirectory(dir);
     } catch (const string & ex) {
         PHLog("Can't load resource directory: %s", ex.c_str());
     }
     params.entryPoint = _entryPoint;
-    if (_flags & PHWShowFPS)
-        gameManager->setShowsFPS(true);
-    if (_flags & PHWRemote)
-        gameManager->setUsesRemote(true);
+    PHWApplyFlags(gameManager, _flags | PHWVSync);
     if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
         gameManager->setPlatformSuffix(".hd");
-    if (_flags & PHWFrameAnimation)
-        gameManager->setFrameAnimation(true);
-    gameManager->setFpsCapped(true);
     gameManager->setUserData(_ud);
-    NSLog(@"hamham");
     gameManager->init(params);
     _gm = gameManager;
+    gmToLP.insert(make_pair(_gm, self));
 }
 
 -(void)tearDownGL
 {
     if (_gm)
+    {
+        if (_wallpaperImage)
+            _wallpaperImage->release();
+        _wallpaperImage = NULL;
+        gmToLP.erase(_gm);
         _gm->release();
+    }
     _gm = NULL;
 }
 
@@ -129,35 +167,51 @@
 
 -(void)reshape
 {
+    [EAGLContext setCurrentContext:_context];
     if (_gm)
         _gm->setScreenSize(self.view.bounds.size.width, self.view.bounds.size.height);
 }
 
 -(UIImage*)screenShot
 {
+    [EAGLContext setCurrentContext:_context];
     return ((GLKView*)self.view).snapshot;
 }
 
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    [EAGLContext setCurrentContext:_context];
     [self render];
 }
 
+-(void)reloadPreferences
+{
+    [EAGLContext setCurrentContext:_context];
+    [self resetIdleTimer];
+    if (_gm)
+        _gm->messageWithName("reloadPreferences")->broadcast(_gm);
+}
 
 -(void)setCurrentContext
 {
     [EAGLContext setCurrentContext:_context];
 }
 
+#ifndef PH_LIVEPAPERS_FPS_STAGES
+#define PH_LIVEPAPERS_FPS_STAGES {30, 30, 30, 15, 0}
+#endif
+static const NSInteger stages[] = PH_LIVEPAPERS_FPS_STAGES;
+
 -(void)_setFPS:(unsigned int)stage
 {
-    const NSInteger stages[] = {60, 30, 15, 15, 0};
+    [EAGLContext setCurrentContext:_context];
     if (stage >= (sizeof(stages)/sizeof(NSInteger)))
         stage  = (sizeof(stages)/sizeof(NSInteger)) - 1;
     if (stages[stage])
     {
         self.preferredFramesPerSecond = stages[stage];
-        _gm->setFramesPerSecond(self.framesPerSecond);
+        if (_gm)
+            _gm->setFramesPerSecond(self.framesPerSecond);
         self.paused = !_showing;
     } else {
         self.paused = YES;
@@ -172,6 +226,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [EAGLContext setCurrentContext:_context];
     _showing = YES;
     if (_gm)
         _gm->appResumed();
@@ -181,6 +236,7 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [EAGLContext setCurrentContext:_context];
     _showing = NO;
     [idleTimer invalidate];
     idleTimer = nil;
@@ -188,10 +244,20 @@
         _gm->appSuspended();
 }
 
+static float getIdleTimeout()
+{
+    static void * handle = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
+    static float (*f)() = (float (*)())dlsym(handle, "LPGetIdleTimeout");
+    if (f)
+        return f();
+    NSLog(@"Can't get idle timeout. Defaulting to 40 seconds"); 
+    return 40.0f;
+}
+
 -(void)resetIdleTimer
 {
     [idleTimer invalidate];
-    idleTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f
+    idleTimer = [NSTimer scheduledTimerWithTimeInterval:getIdleTimeout()/((sizeof(stages)/sizeof(NSInteger)) - 1)
         target:self
         selector:@selector(timerFired)
         userInfo:nil
@@ -211,6 +277,7 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!_gm) return;
+    [EAGLContext setCurrentContext:_context];
 	for (UITouch * touch in touches)
         _gm->eventHandler()->touchDown([self adjustPoint:[touch locationInView:self.view]], touch);
 }
@@ -218,6 +285,7 @@
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!_gm) return;
+    [EAGLContext setCurrentContext:_context];
 	for (UITouch * touch in touches)
         _gm->eventHandler()->touchMoved([self adjustPoint:[touch locationInView:self.view]], touch);
 }
@@ -225,6 +293,7 @@
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!_gm) return;
+    [EAGLContext setCurrentContext:_context];
 	for (UITouch * touch in touches)
         _gm->eventHandler()->touchUp([self adjustPoint:[touch locationInView:self.view]], touch);
 }
@@ -232,8 +301,57 @@
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!_gm) return;
+    [EAGLContext setCurrentContext:_context];
 	for (UITouch * touch in touches)
         _gm->eventHandler()->touchCancelled([self adjustPoint:[touch locationInView:self.view]], touch);
+}
+
+-(void)setWallpaperImage:(UIImage*)image
+{
+    [EAGLContext setCurrentContext:_context];
+    if (_wallpaperImage)
+        _wallpaperImage->release();
+        
+    if (_gm)
+    {
+        NSError * err;
+        GLKTextureInfo * info = [GLKTextureLoader textureWithCGImage:image.CGImage options:texoptions error:&err];
+        if (!info)
+        {
+            NSLog(@"Error occured while loading texture: %@", err);
+            _wallpaperImage = NULL;
+        } else {
+            PHGLTexture2D * tex = new PHGLTexture2D(_gm, info.name, info.width, info.height);
+            tex->setWrapS(PHGLTexture::clampToEdge);
+            tex->setWrapT(PHGLTexture::clampToEdge);
+            tex->setMinFilter(PHGLTexture::linear);
+            tex->setMagFilter(PHGLTexture::linear);
+            CGRect r = self.wallpaperRect;
+            PHNormalImage * img = new PHNormalImage(tex, PHRect(r.origin.x, r.origin.y, r.size.width, r.size.height));
+            tex->release();
+            _wallpaperImage = img;
+        }
+        _gm->messageWithName("wallpaperImageChanged")->broadcast(_gm);
+    } else {
+        _wallpaperImage = NULL;
+    }
+}
+
+-(PHNormalImage*)wallpaperImage
+{
+    return _wallpaperImage;
+}
+
+-(void)setWallpaperRect:(CGRect)r
+{
+    _wallpaperRect = r;
+    if (_gm)
+    {
+        [EAGLContext setCurrentContext:_context];
+        if (_wallpaperImage)
+            _wallpaperImage->setTextureCoordinates(PHRect(r.origin.x, r.origin.y, r.size.width, r.size.height));
+        _gm->messageWithName("wallpaperBoundsChanged")->broadcast(_gm);
+    }
 }
 
 @end

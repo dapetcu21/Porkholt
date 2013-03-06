@@ -21,7 +21,7 @@
 
 const string PHImageView::_luaClass("PHImageView");
 
-#define PHIMAGEVIEW_INIT imageMaterial(this), _material(&imageMaterial), _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VAOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), _shader(NULL)
+#define PHIMAGEVIEW_INIT imageMaterial(this), _material(&imageMaterial), _image(NULL), _animator(NULL), coords(PHWholeRect), tint(PHInvalidColor), pool(NULL), curve(NULL), VAOneedsRebuilding(true), constrain(true), _repeatX(1), _repeatY(1), _additionalUniforms(NULL), lastAnimFrame(-1), animFrame(-1), _normalMapping(true), curveVAO(NULL), straightVAO1(NULL), straightVAO2(NULL), _shader(NULL)
 
 PHMaterial * PHImageView::material()
 {
@@ -169,6 +169,8 @@ PHImageView::~PHImageView()
         _animator->release();
 	if (_image)
 		_image->release();
+    if (_additionalUniforms)
+        _additionalUniforms->release();
 }
 
 char missingnormals_sprites[] = "missingnormals_sprites";
@@ -280,8 +282,14 @@ void PHImageView::ImageMaterial::renderVAO(PHGLVAO * vao, PHGLUniformStates * un
     if (!shader)
         shader = _imageView->gm->spriteShader();
     uniforms->apply(shader);
-    _imageView->gm->setGLStates(PHGLBlending | PHGLTexture0);
     vao->draw();
+}
+
+PHGLUniformStates * PHImageView::additionalUniforms()
+{
+    if (!_additionalUniforms)
+        _additionalUniforms = new PHGLUniformStates();
+    return _additionalUniforms;
 }
 
 void PHImageView::renderStraight()
@@ -293,6 +301,10 @@ void PHImageView::renderStraight()
     loadVAO();
     if (straightVAO1)
     {
+        PHGLUniformStates * states = gm->spriteUniformStates();
+        states->setNextStates(_additionalUniforms);
+
+        gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLTexture0);
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         gm->updateMatrixUniform();
@@ -301,7 +313,7 @@ void PHImageView::renderStraight()
             gm->setColor(tint);
             gm->updateColorUniform();
             gm->setTextureUniform(((PHNormalImage*)image())->texture());
-            _material->renderVAO(straightVAO1, gm->spriteUniformStates());
+            _material->renderVAO(straightVAO1, states);
         }
         
         if (_image->isAnimated())
@@ -315,15 +327,16 @@ void PHImageView::renderStraight()
                 gm->setColor(t.multipliedAlpha(rem));
                 gm->updateColorUniform();
                 gm->setTextureUniform(_animator->lastFrameTexture());
-                _material->renderVAO(straightVAO2, gm->spriteUniformStates());
+                _material->renderVAO(straightVAO2, states);
             }
             
             gm->setColor(t.multipliedAlpha(1-rem));
             gm->updateColorUniform();
             gm->setTextureUniform(_animator->currentFrameTexture());
-            _material->renderVAO(straightVAO1, gm->spriteUniformStates());
+            _material->renderVAO(straightVAO1, states);
         }
         
+        states->setNextStates(NULL);
         gm->setTextureUniform(NULL);
         gm->setModelViewMatrix(om);
     }
@@ -339,6 +352,8 @@ void PHImageView::renderCurved()
     gm->setColor(tint);
     gm->updateColorUniform();
     gm->setTextureUniform(((PHNormalImage*)image())->texture());
+    
+    gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLTexture0);
     
     if (constrain)
     {

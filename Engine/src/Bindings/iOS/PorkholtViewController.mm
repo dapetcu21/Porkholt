@@ -140,15 +140,9 @@ extern void * PHWUD;
         PHLog("Can't load resource directory: %s", ex.c_str());
     }
     params.entryPoint = PHWEntryPoint;
-    if (PHWFlags & PHWShowFPS)
-        gameManager->setShowsFPS(true);
-    if (PHWFlags & PHWRemote)
-        gameManager->setUsesRemote(true);
+    PHWApplyFlags(gameManager, PHWFlags | PHWVSync);
     if (params.screenWidth*params.screenWidth + params.screenHeight*params.screenHeight > 500000)
         gameManager->setPlatformSuffix(".hd");
-    if (PHWFlags & PHWFrameAnimation)
-        gameManager->setFrameAnimation(true);
-    gameManager->setFpsCapped(true);
     gameManager->setUserData(PHWUD);
     gameManager->init(params);
     PHGameManagerSingleton = gameManager;

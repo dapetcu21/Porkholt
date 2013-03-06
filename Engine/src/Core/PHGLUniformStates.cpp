@@ -149,6 +149,8 @@ void PHGLUniformStates::apply(PHGLShaderProgram * shader, int * tmuCount)
         tmuCount = &t;
     for (map<string,uniform*>::iterator i = stringMap.begin(); i!=stringMap.end(); i++)
         i->second->apply(shader, tmuCount);
+    if (_linked)
+        _linked->apply(shader, tmuCount);
 }
 
 PHGLUniformStates::uniform & PHGLUniformStates::operator[] (const string & name)
@@ -171,9 +173,11 @@ void PHGLUniformStates::erase(const PHGLUniformStates::uniform & u)
     delete &u;
 }
 
-PHGLUniformStates::PHGLUniformStates() {};
+PHGLUniformStates::PHGLUniformStates() : _linked(NULL) {};
 PHGLUniformStates::~PHGLUniformStates()
 {
+    if (_linked)
+        _linked->release();
     for (map<string,uniform*>::iterator i = stringMap.begin(); i!=stringMap.end(); i++)
         delete i->second;
 }
@@ -201,6 +205,15 @@ void PHGLUniformStates::uniform::clear()
     if (tex && ((type == textureType) || (type == imageType)))
         tex->release();
     type = nullType;
+}
+
+void PHGLUniformStates::setNextStates(PHGLUniformStates * states)
+{
+    if (states)
+        states->retain();
+    if (_linked)
+        _linked->release();
+    _linked = states;
 }
 
 PHGLUniformStates::uniform::~uniform()

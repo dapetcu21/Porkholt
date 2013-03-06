@@ -4,14 +4,14 @@
 
 #include <Porkholt/Core/PHMain.h>
 
-extern const char   rsrc_shaders_color_notex_sprites_fsh[];
-extern const size_t rsrc_shaders_color_notex_sprites_fsh_size;
+extern const char   rsrc_shaders_deferred_diffuse_normal_point_fsh[];
+extern const size_t rsrc_shaders_deferred_diffuse_normal_point_fsh_size;
 
-extern const char   rsrc_shaders_notex_sprites_lua[];
-extern const size_t rsrc_shaders_notex_sprites_lua_size;
+extern const char   rsrc_shaders_color_sprites_fsh[];
+extern const size_t rsrc_shaders_color_sprites_fsh_size;
 
-extern const char   rsrc_shaders_deferred_diffuse_normal_point_vsh[];
-extern const size_t rsrc_shaders_deferred_diffuse_normal_point_vsh_size;
+extern const char   rsrc_shaders_deferred_ambient_lua[];
+extern const size_t rsrc_shaders_deferred_ambient_lua_size;
 
 extern const char   rsrc_shaders_deferred_diffuse_point_fsh[];
 extern const size_t rsrc_shaders_deferred_diffuse_point_fsh_size;
@@ -22,26 +22,11 @@ extern const size_t rsrc_shaders_color_sprites_vsh_size;
 extern const char   rsrc_shaders_sprites_fsh[];
 extern const size_t rsrc_shaders_sprites_fsh_size;
 
-extern const char   rsrc_shaders_deferred_diffuse_point_lua[];
-extern const size_t rsrc_shaders_deferred_diffuse_point_lua_size;
-
-extern const char   rsrc_shaders_deferred_diffuse_normal_point_fsh[];
-extern const size_t rsrc_shaders_deferred_diffuse_normal_point_fsh_size;
-
 extern const char   rsrc_shaders_color_notex_sprites_vsh[];
 extern const size_t rsrc_shaders_color_notex_sprites_vsh_size;
 
-extern const char   rsrc_shaders_color_sprites_fsh[];
-extern const size_t rsrc_shaders_color_sprites_fsh_size;
-
-extern const char   rsrc_shaders_deferred_ambient_lua[];
-extern const size_t rsrc_shaders_deferred_ambient_lua_size;
-
-extern const char   rsrc_shaders_missingnormals_sprites_lua[];
-extern const size_t rsrc_shaders_missingnormals_sprites_lua_size;
-
-extern const char   rsrc_shaders_notex_sprites_vsh[];
-extern const size_t rsrc_shaders_notex_sprites_vsh_size;
+extern const char   rsrc_shaders_deferred_diffuse_point_lua[];
+extern const size_t rsrc_shaders_deferred_diffuse_point_lua_size;
 
 extern const char   rsrc_shaders_text_vsh[];
 extern const size_t rsrc_shaders_text_vsh_size;
@@ -49,35 +34,50 @@ extern const size_t rsrc_shaders_text_vsh_size;
 extern const char   rsrc_shaders_text_lua[];
 extern const size_t rsrc_shaders_text_lua_size;
 
-extern const char   rsrc_shaders_notex_sprites_fsh[];
-extern const size_t rsrc_shaders_notex_sprites_fsh_size;
-
 extern const char   rsrc_shaders_text_fsh[];
 extern const size_t rsrc_shaders_text_fsh_size;
-
-extern const char   rsrc_shaders_missingnormals_sprites_fsh[];
-extern const size_t rsrc_shaders_missingnormals_sprites_fsh_size;
-
-extern const char   rsrc_shaders_sprites_vsh[];
-extern const size_t rsrc_shaders_sprites_vsh_size;
-
-extern const char   rsrc_shaders_deferred_ambient_fsh[];
-extern const size_t rsrc_shaders_deferred_ambient_fsh_size;
 
 extern const char   rsrc_shaders_deferred_diffuse_point_vsh[];
 extern const size_t rsrc_shaders_deferred_diffuse_point_vsh_size;
 
-extern const char   rsrc_shaders_deferred_ambient_vsh[];
-extern const size_t rsrc_shaders_deferred_ambient_vsh_size;
-
 extern const char   rsrc_shaders_deferred_diffuse_normal_point_lua[];
 extern const size_t rsrc_shaders_deferred_diffuse_normal_point_lua_size;
 
-extern const char   rsrc_shaders_color_sprites_lua[];
-extern const size_t rsrc_shaders_color_sprites_lua_size;
+extern const char   rsrc_shaders_sprites_vsh[];
+extern const size_t rsrc_shaders_sprites_vsh_size;
+
+extern const char   rsrc_shaders_deferred_diffuse_normal_point_vsh[];
+extern const size_t rsrc_shaders_deferred_diffuse_normal_point_vsh_size;
+
+extern const char   rsrc_shaders_notex_sprites_vsh[];
+extern const size_t rsrc_shaders_notex_sprites_vsh_size;
 
 extern const char   rsrc_shaders_color_notex_sprites_lua[];
 extern const size_t rsrc_shaders_color_notex_sprites_lua_size;
+
+extern const char   rsrc_shaders_notex_sprites_lua[];
+extern const size_t rsrc_shaders_notex_sprites_lua_size;
+
+extern const char   rsrc_shaders_missingnormals_sprites_fsh[];
+extern const size_t rsrc_shaders_missingnormals_sprites_fsh_size;
+
+extern const char   rsrc_shaders_notex_sprites_fsh[];
+extern const size_t rsrc_shaders_notex_sprites_fsh_size;
+
+extern const char   rsrc_shaders_deferred_ambient_fsh[];
+extern const size_t rsrc_shaders_deferred_ambient_fsh_size;
+
+extern const char   rsrc_shaders_missingnormals_sprites_lua[];
+extern const size_t rsrc_shaders_missingnormals_sprites_lua_size;
+
+extern const char   rsrc_shaders_deferred_ambient_vsh[];
+extern const size_t rsrc_shaders_deferred_ambient_vsh_size;
+
+extern const char   rsrc_shaders_color_notex_sprites_fsh[];
+extern const size_t rsrc_shaders_color_notex_sprites_fsh_size;
+
+extern const char   rsrc_shaders_color_sprites_lua[];
+extern const size_t rsrc_shaders_color_sprites_lua_size;
 
 extern const char   rsrc_shaders_sprites_lua[];
 extern const size_t rsrc_shaders_sprites_lua_size;

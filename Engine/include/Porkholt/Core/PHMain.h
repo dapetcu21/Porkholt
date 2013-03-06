@@ -119,6 +119,9 @@ struct lua_State;
 #endif
 #endif
 
+#define PHTrap() __builtin_trap()
+#define PHTrapCount(c) static int trap_count = 0; if (++trap_count==c) PHTrap()
+
 #include <Porkholt/Core/PHGL.h>
 #include <Porkholt/Core/PHUtilities.h>
 #include <Porkholt/Core/PHInvocation.h>

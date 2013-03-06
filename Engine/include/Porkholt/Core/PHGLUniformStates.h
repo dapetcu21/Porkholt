@@ -99,6 +99,7 @@ public:
     
 protected:
     map<string,uniform*> stringMap;
+    PHGLUniformStates * _linked;
 public:
     
     PHGLUniformStates();
@@ -112,6 +113,9 @@ public:
     void erase(const uniform & u);
     
     void apply(PHGLShaderProgram * shader, int * tmuCount = NULL);
+    
+    PHGLUniformStates * nextStates() { return _linked; }
+    void setNextStates(PHGLUniformStates * states);
 };
 
 #endif

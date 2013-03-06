@@ -9,9 +9,15 @@
 #include <errno.h>
 #include <arpa/inet.h>
 
-PHGLTexture::PHGLTexture(PHGameManager * gameManager) : tex(0), gm(gameManager), wS(repeat), wT(repeat), wR(repeat), min(linear), mag(linear), mipMap(false), bound(false)
+#define INIT gm(gameManager), wS(repeat), wT(repeat), wR(repeat), min(linear), mag(linear), mipMap(false), bound(false), target(_target)
+
+PHGLTexture::PHGLTexture(PHGameManager * gameManager, GLenum _target) : tex(0), INIT
 {
     PHGL::glGenTextures(1, &tex);
+}
+
+PHGLTexture::PHGLTexture(PHGameManager * gameManager, GLenum _target, GLuint _tex) : tex(_tex), INIT
+{
 }
 
 PHGLTexture::~PHGLTexture()

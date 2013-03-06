@@ -34,8 +34,22 @@ PHSize PH2DCamera::realScreenSize()
 void PH2DCamera::reshape()
 {
     cache = false;
-    PHRect b = gm->screenBounds();
-    PHSize d = b.size() - gm->oldScreenBounds().size(); 
+    
+    //realOldScreenSize
+    PHSize s = sz;
+    if (!s.x || !s.y)
+    {
+        PHSize ss = gm->oldScreenBounds().size();
+        if (s.x)
+            s.y = s.x/ss.x*ss.y;
+        else if (s.y)
+            s.x = s.y/ss.y*ss.x;
+        else
+            s = ss;
+    }
+
+    PHSize d = realScreenSize() - s; 
+    PHRect b(0, 0, s.x ,s.y);
     for (list<PHDrawable*>::iterator i = _children.begin(); i!= _children.end(); i++)
         if ((*i)->isView())
             ((PHView*)(*i))->autoresizeMyself(b, d);

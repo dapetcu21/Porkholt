@@ -77,12 +77,7 @@
         PHLog("Can't load resource directory: %s", ex.c_str());
     }
     initParams.entryPoint = entryPoint;
-    if (flags & PHWRemote)
-        gameManager->setUsesRemote(true);
-    if (flags & PHWShowFPS)
-        gameManager->setShowsFPS(true);    
-    if (flags & PHWFrameAnimation)
-        gameManager->setFrameAnimation(true);
+    PHWApplyFlags(gameManager, flags);
     [[self openGLContext] makeCurrentContext];
     gameManager->init(initParams);
 }
@@ -167,6 +162,7 @@
 
 -(void)dealloc
 {
+    [self makeCurrent];
     [timer invalidate];
     gameManager->release();
     [res release];

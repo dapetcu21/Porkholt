@@ -1,0 +1,10 @@
+Package: @PH_BUNDLE_ID@
+Name: @PH_NAME@
+Depends: 
+Version: @PH_MARKETING_VERSION@
+Architecture: iphoneos-arm
+Description: @PH_DESCRIPTION@
+Maintainer: Marius Petcu
+Author: Marius Petcu
+Section: System
+Tag: role::developer

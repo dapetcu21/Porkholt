@@ -12,7 +12,7 @@
 
 const string PHView::_luaClass("PHView");
 
-#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
+#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), _ZPosition(0.0f), _zTestingEnabled(false), _blendingEnabled(true), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
@@ -176,7 +176,7 @@ PHMatrix PHView::applyMatrices()
     }
     matrixCached = true;
     matrixCache = 
-        PHMatrix::translation(_frame.x,_frame.y) * 
+        PHMatrix::translation(_frame.x,_frame.y, _ZPosition) * 
         PHMatrix::scaling(_bounds.width?_frame.width/_bounds.width:1, _bounds.height?_frame.height/_bounds.height:1) *
         PHMatrix::translation(-_bounds.x, -_bounds.y) *
         effectCache;
@@ -242,7 +242,7 @@ void PHView::drawBackground()
     if (gm->renderMode() != PHGameManager::defaultRenderMode)
         return;
 	
-    gm->setGLStates(PHGLBlending | PHGLVertexArray);
+    gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLVertexArray);
     gm->setColor(_backColor);
     PHMatrix old = gm->modelViewMatrix();
     gm->setModelViewMatrix(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));

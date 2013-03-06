@@ -9,6 +9,7 @@ class PHParticleAnimator;
 class PHAnimatorPool;
 class PHGLVertexArrayObject;
 class PHGLVertexBufferObject;
+class PHTextureAtlas;
 
 class PHParticleView : public PHImageView
 {
@@ -17,7 +18,7 @@ private:
     PHParticleAnimator * particleAnim;
     PHMutex * particleM;
     
-    void renderParticles(void * particles, const PHRect & texCoord, const PHColor & tint);
+    void renderParticles(void * particles, const PHRect & texCoord, const PHColor & tint, PHTextureAtlas * atlas = NULL);
     
     PHGLVertexArrayObject * vao;
     
@@ -26,6 +27,8 @@ private:
     
     ph_float cacheTime;
     ph_float cacheLeft;
+    
+    bool udindex;
 
     void attachedToGameManager();
     
@@ -45,6 +48,9 @@ public:
     PHParticleAnimator * particleAnimator() { return particleAnim; }
     void setParticleAnimator(PHParticleAnimator * anim );
     void setParticleAnimatorPool(PHAnimatorPool * animPool );
+
+    void setUseUDAsAtlasIndex(bool u) { udindex = u; }
+    bool useUDAsAtlasIndex() { return udindex; }
     
     virtual void loadFromLua(lua_State * L);
     static void registerLuaInterface(lua_State * L);

@@ -11,7 +11,7 @@
 #define PHOBJECT_PREFIX
 #endif
 
-#define DEBUG_ZOMBIES
+//#define DEBUG_ZOMBIES
 
 class PHInvocation;
 
@@ -24,7 +24,7 @@ private:
     void zombie();
 public:
 	PHObject(): _refcount(1), inv(NULL) {};
-	PHOBJECT_PREFIX PHObject * retain() { _refcount++; return this;};
+	PHOBJECT_PREFIX void retain() { _refcount++; };
 	PHOBJECT_PREFIX PHObject * release() 
     { 
         _refcount--; 

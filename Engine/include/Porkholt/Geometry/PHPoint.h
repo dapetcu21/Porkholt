@@ -344,8 +344,8 @@ struct PH3DPoint
 #endif
     }
     
-    PHPoint xy() { return PHPoint(x, y); }
-    PHPoint yz() { return PHPoint(y, z); }
+    PHPoint xy() const { return PHPoint(x, y); }
+    PHPoint yz() const { return PHPoint(y, z); }
 
 #ifdef BOX2D_H
     PH3DPoint(const b2Vec3 & o) : x(o.x), y(o.y), z(o.z) {}

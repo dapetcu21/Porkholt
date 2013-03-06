@@ -33,7 +33,7 @@ PHMAIN_DEFINE
     srand(time(NULL));
     PHMAIN_RETURN(PHWMain(PHMAIN_ARGS, 
         PHWVideoMode(480*2, 320*2, PHWVideoMode::Windowed), 
-        PHWVSync
+        PHWVSync | PHWFrameAnimation
 #if defined(PH_SIMULATOR) || (defined (PH_DEBUG)) 
         | PHWRemote
         | PHWShowFPS

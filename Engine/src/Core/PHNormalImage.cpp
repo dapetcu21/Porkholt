@@ -15,6 +15,7 @@
 
 PHNormalImage::PHNormalImage(PHGLTexture2D * texture, const PHRect textureCoord) : PHImage(texture->gameManager()), txc(textureCoord), tex(texture), pload(true), _keepCount(0)
 {
+    fd = NULL;
     tex->retain();
     loaded = true;
     bw = tex->width();
