@@ -49,3 +49,10 @@ void PHFontInitPool::collectGarbageFonts()
 	}
 	fonts = tmp;
 }
+
+PHFontInitPool::~PHFontInitPool()
+{
+    PHLog("Deallocating fonts");
+    for (map<string,PHFont*>::iterator i = fonts.begin(); i != fonts.end(); i++)
+        i->second->release();
+}

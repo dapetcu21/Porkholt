@@ -40,9 +40,25 @@ PHGLShaderProgram* PHGLProgramInitPool::shaderProgramNamed(const string & name)
 	return shd;
 }
 
+void PHGLProgramInitPool::collectGarbageShaderPrograms()
+{
+	map<string, PHGLShaderProgram*>::iterator i;
+	map<string, PHGLShaderProgram*> tmp;
+	for (i = shaders.begin(); i!=shaders.end(); i++)
+	{
+		if ((i->second)->referenceCount()>=2)
+			tmp[i->first] = i->second;
+		else
+			i->second->release();
+	}
+	shaders = tmp;
+    someShaders.clear();
+}
 
 PHGLProgramInitPool::~PHGLProgramInitPool()
 {
+    PHLog("Deallocating shader programs");
+    someShaders.clear();
     for (map<string,PHGLShaderProgram*>::iterator i = shaders.begin(); i!=shaders.end(); i++)
         i->second->release();
 }

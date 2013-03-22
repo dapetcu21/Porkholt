@@ -12,14 +12,16 @@ class PHFile;
 class PHMaterialInitPool 
 {
     protected:
-        map<PHHashedString, PHMaterial*> materials; 
+        map<pair<PHHashedString, PHHashedString>, PHMaterial*> materials; 
     public:
         virtual PHDirectory * materialDirectory() = 0;
         virtual PHGameManager * gameManager() = 0;
-        PHMaterial * materialFromFile(PHFile * file);
+        PHMaterial * materialFromFile(PHFile * file, const string & opts = "");
         PHMaterial * materialNamed(const string & name, PHDirectory * dir);
         PHMaterial * materialNamed(const string & name) { return materialNamed(name, materialDirectory()); }
         void collectGarbageMaterials();
+
+        ~PHMaterialInitPool();
 };
 
 #endif

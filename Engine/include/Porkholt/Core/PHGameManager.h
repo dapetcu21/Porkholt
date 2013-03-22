@@ -65,6 +65,8 @@ private:
 public:
     PHDirectory * resourceDirectory() const { return resourceDir; }
     void setResourceDirectory(PHDirectory * r);
+
+    ~PHGameManagerInitParameters();
 };
 
 enum PHGLStates
@@ -74,14 +76,19 @@ enum PHGLStates
     PHGLTextureCoordArray = 1<<2,
     PHGLTexture0 = 1<<3,
     PHGLZTesting = 1<<4,
-    PHGLResetAllStates = 1<<5,
-    PHGLNormalArray = 1<<6,
-    PHGLBlending = 1<<7,
-    PHGLBackFaceCulling = 1<<8,
-    PHGLStencilTesting = 1<<9
+    PHGLZWriting = 1<<5,
+    PHGLResetAllStates = 1<<6,
+    PHGLNormalArray = 1<<7,
+    PHGLBlending = 1<<8,
+    PHGLBackFaceCulling = 1<<9,
+    PHGLStencilTesting = 1<<10
 };
 
-class PHGameManager : public PHObject, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool, public PHMessagePool
+class PHGameManager : public PHObject
+#ifdef DEBUG_ALLOCATIONS
+, public PHAllocationDumper
+#endif
+, public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool, public PHMessagePool
 {
 private:
 	PHDrawable * drawable;
@@ -117,8 +124,6 @@ private:
     void renderFPS(ph_float timeElapsed);
     
     void (*entryPoint)(PHGameManager*);
-    
-    void setProjection();
     void * ud;
     
     PHMessage * exitmsg;
@@ -136,6 +141,10 @@ public:
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
     PHRect oldScreenBounds() { return _oldBounds; }
     void setScreenSize(ph_float w, ph_float h);
+    void setViewport(int x, int y, int w, int h);
+    void setViewport(const PHRect & r) { setViewport(r.x, r.y, r.width, r.height); }
+    void viewport(int & x, int & y, int & width, int & height);
+    PHRect viewport() { int x,y,w,h; viewport(x,y,w,h); return PHRect(x,y,w,h); }
 	int framesPerSecond() { return fps; }
     void setFramesPerSecond(int f) { fps = f; }
     ph_float frameInterval() { return 1.0f/fps; }
@@ -146,6 +155,7 @@ public:
 	void appResumed();
 	void appQuits();
 	void memoryWarning();
+    void collectGarbageResources();
 	PHDrawable * mainDrawable() { return drawable; };
     void setMainDrawable(PHDrawable * v);
 
@@ -246,6 +256,7 @@ public:
     void setGLStates(uint32_t states) { setGLStates(states,0); }
     void setGLStates(uint32_t states, uint32_t vertexAttribStates);
     void setGLAttributeStates(uint32_t vertexAttribStates);
+    uint32_t getGLStates() { return openGLStates; }
     void setModelViewMatrix(const PHMatrix & m);
     PHMatrix modelViewMatrix() { return _modelView; }
     void setProjectionMatrix(const PHMatrix & m);

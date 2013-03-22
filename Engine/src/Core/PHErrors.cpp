@@ -36,6 +36,26 @@ void PHLog(const string & str, ...)
 	va_end(al);
 }
 
+#elif defined(PH_DARWIN)
+
+extern "C" void PHNSLog(const char * str, va_list args);
+
+void PHLog(const char * str, ...)
+{
+    va_list al;
+    va_start(al, str);
+    PHNSLog(str, al);
+    va_end(al);
+}
+
+void PHLog(const string & str, ...)
+{
+    va_list al;
+    va_start(al, str);
+    PHNSLog(str.c_str(), al);
+    va_end(al);
+}
+
 #else
 
 void PHLog(const char * str, ...)

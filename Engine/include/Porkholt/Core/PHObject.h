@@ -4,6 +4,8 @@
 #define PHOBJECT_H
 
 //#define VIRTUAL_PHOBJECT
+//#define DEBUG_ZOMBIES
+//#define DEBUG_ALLOCATIONS
 
 #ifdef VIRTUAL_PHOBJECT
 #define PHOBJECT_PREFIX virtual
@@ -11,7 +13,9 @@
 #define PHOBJECT_PREFIX
 #endif
 
-//#define DEBUG_ZOMBIES
+#ifdef DEBUG_ALLOCATIONS
+#include <Porkholt/Core/PHAllocationProfiler.h>
+#endif
 
 class PHInvocation;
 
@@ -23,10 +27,24 @@ private:
 
     void zombie();
 public:
-	PHObject(): _refcount(1), inv(NULL) {};
-	PHOBJECT_PREFIX void retain() { _refcount++; };
+	PHObject(): _refcount(1), inv(NULL)
+    {
+#ifdef DEBUG_ALLOCATIONS
+        PHAllocationProfiler::singleton().objectRetain(this);
+#endif
+    }
+	PHOBJECT_PREFIX void retain() 
+    { 
+        _refcount++;
+#ifdef DEBUG_ALLOCATIONS
+        PHAllocationProfiler::singleton().objectRetain(this);
+#endif
+    };
 	PHOBJECT_PREFIX PHObject * release() 
     { 
+#ifdef DEBUG_ALLOCATIONS
+        PHAllocationProfiler::singleton().objectRelease(this);
+#endif
         _refcount--; 
         if (!_refcount) 
         { 

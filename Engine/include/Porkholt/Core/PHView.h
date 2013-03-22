@@ -15,7 +15,6 @@ class PHView : public PHDrawable, public PHCinematicActor
 protected:
 	PHRect _frame,_bounds;
     ph_float _ZPosition;
-    bool _blendingEnabled, _zTestingEnabled;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
     bool fhoriz,fvert;
 	ph_float _rotation,_scaleX,_scaleY;
@@ -126,12 +125,7 @@ public:
 
 	void setOptimizations(bool ui) { _optimize = ui; };
 	bool optimizations() { return _optimize; };
-
-    void setZTestingEnabled(bool z) { _zTestingEnabled = z; }
-    bool zTestingEnabled() { return _zTestingEnabled; }
-    void setBlendingEnabled(bool b) { _blendingEnabled = b; }
-    bool blendingEnabled() { return _blendingEnabled; }
-    
+   
     void setAutoresizesSubviews(bool b) { autoresize = b; }
     bool autoresizesSubviews() { return autoresize; }
     int autoresizeMask() { return resizeMask; }

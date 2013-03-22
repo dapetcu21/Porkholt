@@ -33,7 +33,7 @@ PHNormalImage::PHNormalImage(PHGameManager * gameManager, PHFile * file, bool aa
         throw string("The fuck?");
     fd->retain();
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
-    PHThread::detachThread(PHInv(this,PHNormalImage::loadFromFile, NULL));
+    PHThread::detachThread(PHInvBind(this,PHNormalImage::loadFromFile, NULL));
 #else
     loadFromFile(this, NULL);
 #endif  
@@ -83,7 +83,7 @@ void PHNormalImage::loadFromFile(PHObject *sender, void *ud)
 #endif
     loadMutex->unlock();
     
-    gm->mainAnimatorPool()->scheduleAction(PHInv(this, PHNormalImage::loadToTexture, NULL));
+    gm->mainAnimatorPool()->scheduleAction(PHInvBind(this, PHNormalImage::loadToTexture, NULL));
 }
 
 void PHNormalImage::loadToTexture(PHObject * sender, void * ud)

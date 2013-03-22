@@ -100,6 +100,8 @@ struct PHQuaternion
 	}
 	PHMatrix rotationMatrix(); //use normalize() first
 
+    void toEuler(ph_float & heading, ph_float & attitude, ph_float & bank);
+    static PHQuaternion fromEuler(ph_float heading, ph_float attitude, ph_float bank);
     static PHQuaternion fromPointsOnSphere(const PHVector3 & from, const PHVector3 & to);
 } PH_PACKED_STRUCT;
 

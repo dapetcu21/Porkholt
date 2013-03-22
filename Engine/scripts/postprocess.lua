@@ -98,11 +98,21 @@ function dir_list(dir)
   return files
 end
 
+function max(a, b)
+  if a > b then
+    return a
+  else
+    return b
+  end
+end
+
 function file_exists(file)
-  return (os.execute('/bin/ls "'..file..'" 1>/dev/null 2>/dev/null') == 0)
+  local v1,v2,v3 = os.execute('/bin/ls "'..file..'" 1>/dev/null 2>/dev/null')
+  return ((v1 == true) and (v2 == "exit") and (v3 == 0)) or ((v1 == 0) and (v2 == nil) and (v3 == nil))
 end
 
 function dir_make(path)
+  --print('Making directory "'..path..'"')
   os.execute('mkdir -p "'..path..'"')
 end
 
@@ -132,11 +142,12 @@ end
 
 
 function copy_file(src, dst, name)
-  if (file_modif(src) > file_modif(dst)) then
+  if (max(file_modif(src), bake_modif) > file_modif(dst)) then
     if name then
       print('Copying file "'..name..'"')
     end
     os.execute('cp -a "'..src..'" "'..dst..'"')
+    os.execute('touch "'..dst..'"')
   end
 end
 
@@ -144,7 +155,7 @@ function compress_script(src, dst, name)
   if (not luacompress) then
     copy_file(src, dst, name)
   else
-    if (file_modif(src) > file_modif(dst)) then
+    if (max(file_modif(src), bake_modif) > file_modif(dst)) then
       name = name or f
       print('Compressing script "'..name..'"')
       local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && lua '..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null'
@@ -220,7 +231,7 @@ function downscale_png(srcd, dstd, f, stp, named)
       link(dstd, named, lhd, fhd)
     end
   else
-    local fm = file_modif(srcd.."/"..f)
+    local fm = max(file_modif(srcd.."/"..f), bake_modif)
     local downscale = false
     for ext,screen in pairs(platform.screens) do
       local fhd = string.gsub(f, ".png$", ext..".png")
@@ -333,7 +344,7 @@ function animation_dir(src, dst, prefix, screen)
     end
   end
 
-  local smod = 0
+  local smod = bake_modif
   for f,tp in pairs(fl) do
     local m = file_modif(src.."/"..f)
     if (smod < m) then
@@ -387,6 +398,8 @@ function anim_dir(src, dst, prefix)
   end
 end
 
+bake_modif = 0
+
 function crawl_dir(src, dst, prefix)
   prefix = prefix or ""
   dir_make(dst)
@@ -394,9 +407,16 @@ function crawl_dir(src, dst, prefix)
   local sl = dir_list(src)
   local dl = dir_list(dst)
 
+  local bmod = bake_modif
   if sl["bakeconfig.lua"] then
     sl["bakeconfig.lua"] = nil
     local f, err = loadfile(src..'/bakeconfig.lua')
+
+    local bbm = file_modif(src..'/bakeconfig.lua')
+    if bbm > bmod then
+      bmod = bbm
+    end
+
     if not f then
       print(err)
     else
@@ -415,6 +435,9 @@ function crawl_dir(src, dst, prefix)
   sl[".svn"] = nil
   sl["CVS"] = nil
   dl["_symlinks"] = nil
+
+  local bmod_old = bake_modif
+  bake_modif = bmod
 
   for f,tp in pairs(sl) do
     local ext = f:sub(-3)
@@ -459,6 +482,8 @@ function crawl_dir(src, dst, prefix)
       end
     end
   end
+
+  bake_modif = bmod_old
 end
 
 if file_exists(src) then

@@ -18,6 +18,7 @@ class PHMeshBody : public PHBody
 private:
     PHMesh * _mesh;
     PHMaterial * mat;
+    PHGLUniformStates * _additionalUniforms;
     
 public:
     PHMeshBody();
@@ -28,8 +29,12 @@ public:
    
     void setMaterial(PHMaterial * m);
     PHMaterial * material() { return mat; }
+
+    PHGLUniformStates * additionalUniforms();
+
 protected:
     void draw();
+
 };
 
 #endif

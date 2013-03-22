@@ -98,7 +98,9 @@ inline void PHWApplyFlags(PHGameManager * gm, int flags)
 
 //LivePapers functions
 class PHImage;
-PHImage * LPPHGetWallpaperImage(PHGameManager * gm); //returns a newly initalized object
+PHImage * LPPHGetWallpaperImage(PHGameManager * gm);
 PHRect LPPHGetWallpaperBounds(PHGameManager * gm);
+void LPPHSetFPS(PHGameManager * gm, int fps, int stage = 0);
+void LPPHClearWallpaperImage(PHGameManager * gm);
 
 #endif

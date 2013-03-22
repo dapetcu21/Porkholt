@@ -17,8 +17,8 @@ void PHMeshBody::setMesh(PHMesh * m)
 void PHMeshBody::draw()
 {
     if (!_mesh || !mat) return;
-    gm->setGLStates(PHGLBackFaceCulling | PHGLZTesting);
-    mat->renderVAO(_mesh->vao());
+    gm->setGLStates(_openGLStates);
+    mat->renderVAO(_mesh->vao(), _additionalUniforms);
 }
 
 void PHMeshBody::setMaterial(PHMaterial *m)
@@ -28,8 +28,15 @@ void PHMeshBody::setMaterial(PHMaterial *m)
     mat = m;
 }
 
-PHMeshBody::PHMeshBody() : _mesh(NULL), mat(NULL)
+PHMeshBody::PHMeshBody() : _mesh(NULL), mat(NULL), _additionalUniforms(NULL)
 {
+}
+
+PHGLUniformStates * PHMeshBody::additionalUniforms()
+{
+    if (!_additionalUniforms)
+        _additionalUniforms = new PHGLUniformStates();
+    return _additionalUniforms;
 }
         
 PHMeshBody::~PHMeshBody()
@@ -38,5 +45,7 @@ PHMeshBody::~PHMeshBody()
         mat->release();
     if (_mesh)
         _mesh->release();
+    if (_additionalUniforms)
+        _additionalUniforms->release();
 }
 

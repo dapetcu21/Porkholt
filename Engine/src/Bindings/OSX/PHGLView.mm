@@ -160,6 +160,11 @@
     return gameManager;
 }
 
+-(void)setGameManager:(PHGameManager*)gm
+{
+    gameManager = gm;
+}
+
 -(void)dealloc
 {
     [self makeCurrent];

@@ -7,7 +7,7 @@
 #include <Porkholt/Core/PHGLRenderbuffer.h>
 #include <Porkholt/Core/PHAutoreleasePool.h>
 
-PHTextureCanvas::PHTextureCanvas(PHGameManager * _gm) : fbo(NULL), changed(true), dit(false),  dfmt(PHGLFBOAttachment::None), dtex(NULL), ow(-1), oh(-1), w(0), h(0), fs(true), cmask(PHGameManager::colorBuffers | PHGameManager::stencilBuffer | PHGameManager::depthBuffer), ccolor(PHClearColor), cdepth(1.0f), cstencil(0), _renderMode(PHGameManager::defaultRenderMode)
+PHTextureCanvas::PHTextureCanvas(PHGameManager * _gm) : fbo(NULL), changed(true), dit(false),  dfmt(PHGLFBOAttachment::None), dtex(NULL), ow(-1), oh(-1), w(0), h(0), cmask(PHGameManager::colorBuffers | PHGameManager::stencilBuffer | PHGameManager::depthBuffer), ccolor(PHClearColor), cdepth(1.0f), cstencil(0), _renderMode(PHGameManager::defaultRenderMode)
 {
     setGameManager(_gm);
 }
@@ -154,11 +154,10 @@ void PHTextureCanvas::render()
     PHGLFramebuffer * f = gm->boundFramebuffer();
     
     int sw = w; int sh = h;
-    if (fs)
-    {
+    if (!sw)
         sw = gm->screenWidth();
+    if (!sh)
         sh = gm->screenHeight();
-    }
     if ((sw!=ow) || (sh!=oh))
     {
         changed = true;
@@ -195,10 +194,14 @@ void PHTextureCanvas::render()
     if (mask & PHGameManager::stencilBuffer)
         gm->setStencilClearValue(cstencil);
 
+    int ovx, ovy, ovh, ovw;
+    gm->viewport(ovx, ovy, ovh, ovw);
+    gm->setViewport(0, 0, sw, sh);
     gm->bindFramebuffer(fbo);
     gm->clearBuffers(mask & cmask);
     gm->setRenderMode(_renderMode);
     renderChildren();
     gm->setRenderMode(rm);
     gm->bindFramebuffer(f);
+    gm->setViewport(ovx, ovy, ovh, ovw);
 }

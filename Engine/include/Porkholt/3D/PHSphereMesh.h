@@ -5,8 +5,10 @@
 
 #include <Porkholt/3D/PHMesh.h>
 
-#define PHSPHEREMESH_DEFAULT_LAT 20
-#define PHSPHEREMESH_DEFAULT_LONG 20
+//#define PHSPHEREMESH_DEFAULT_LAT 30
+//#define PHSPHEREMESH_DEFAULT_LONG 30
+#define PHSPHEREMESH_DEFAULT_LAT 30
+#define PHSPHEREMESH_DEFAULT_LONG 30
 
 class PHGLVertexArrayObject;
 class PHGLVertexBufferObject;
@@ -35,6 +37,9 @@ public:
     
     static PHSphereMesh * sphere(PHGameManager * gm);
 private:
+    static map<PHGameManager*,PHSphereMesh*> spheres;
+    void gameManagerQuits(PHGameManager * sender);
+
     void releaseLOD(int lod);
 };
 

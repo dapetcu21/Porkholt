@@ -35,18 +35,26 @@ memset(boundVBOs, 0, sizeof(boundVBOs));
 
 PHGameManager::~PHGameManager()
 {
+    PHAutoreleasePool pool;
+    PHLog("Dealocating game manager");
     if (exitmsg)
         exitmsg->broadcast(this, NULL);
     if (drawable)
         drawable->release();
     if (fpsView)
         fpsView->release();
+    if (fpsCamera)
+        fpsCamera->release();
     if (viewController)
         viewController->release();
     if (_fullScreenVAO)
         _fullScreenVAO->release();
     if (_solidSquareVAO)
         _solidSquareVAO->release();
+    if (_spriteShader)
+        _spriteShader->release();
+    for (list<PHGLShaderProgram*>::iterator i = spriteShaderStack.begin(); i != spriteShaderStack.end(); i++)
+        (*i)->release();
     if (evtHandler)
         evtHandler->release();
     if (animPool)
@@ -69,6 +77,9 @@ PHGameManager::~PHGameManager()
         sndMan->release();
     if (remote)
         delete remote;
+    clearDeleteQueue();
+    if (animPoolMutex)
+        animPoolMutex->release();
 } 
 void PHGameManager::setMainDrawable(PHDrawable * v)
 {
@@ -83,7 +94,6 @@ void PHGameManager::setMainDrawable(PHDrawable * v)
         drawable->release();
     }
     drawable = v;
-    setProjection(); 
 }
 
 void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
@@ -95,6 +105,12 @@ void PHGameManagerInitParameters::setResourceDirectory(PHDirectory * r)
     resourceDir = r;
 }
 
+
+PHGameManagerInitParameters::~PHGameManagerInitParameters()
+{
+    if (resourceDir)
+        resourceDir->release();
+}
 
 void PHGameManager::init(const PHGameManagerInitParameters & params)
 {
@@ -180,35 +196,31 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
         fntDir = NULL;
     }
      
+    sndMan = NULL;
 #ifndef PH_LIVEPAPERS
     try {
         sndMan = new PHSoundManager(rsrcDir->directoryAtPath("snd"), this);
         animPool->addAnimator(sndMan);
     } catch (...) {}
-#else
-    sndMan = NULL;
 #endif
     
-    PHGL::glDisable(GL_DEPTH_TEST);
-    PHGL::glDepthMask(GL_TRUE);
     PHGL::glDepthFunc(GL_LEQUAL);
-	PHGL::glDisable(GL_BLEND);
 	PHGL::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     PHGL::glCullFace(GL_BACK);
-    PHGL::glDisable(GL_CULL_FACE);
     //PHGL::glPolygonMode(GL_FRONT,GL_LINE); //wireframe
     PHGL::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (!useShaders())
-    {
         PHGL::glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    }
-    setProjection();
+
+    setGLStates(PHGLResetAllStates);
     setModelViewMatrix(PHIdentityMatrix);
     setProjectionMatrix(PHIdentityMatrix);
+    setViewport(0, 0, _screenWidth, _screenHeight);
     
     if (useShaders())
     {
         pushSpriteShader(_spriteShader = shaderProgramNamed("sprites"));
+        _spriteShader->retain();
         spriteStates = new PHGLUniformStates;
         modelViewSpriteUniform = &spriteStates->at("modelViewProjectionMatrix");
         colorSpriteUniform = &spriteStates->at("color");
@@ -238,9 +250,17 @@ void PHGameManager::setProjectionMatrix(const PHMatrix & m)
     _projection = m;
 }
 
-void PHGameManager::setProjection()
+void PHGameManager::setViewport(int x, int y, int w, int h)
 {
-    PHGL::glViewport(0, 0, _screenWidth, _screenHeight);
+    PHGL::glViewport(x, y, w, h);
+}
+
+void PHGameManager::viewport(int & x, int & y, int & width, int & height)
+{
+    GLint v[4];
+    PHGL::glGetIntegerv(GL_VIEWPORT, v);
+    x = v[0]; y = v[1];
+    width = v[2]; height = v[3];
 }
 
 void PHGameManager::setScreenSize(ph_float w, ph_float h)
@@ -248,7 +268,7 @@ void PHGameManager::setScreenSize(ph_float w, ph_float h)
     _oldBounds = screenBounds();
     _screenWidth = w;
     _screenHeight = h;
-    setProjection(); 
+    setViewport(0, 0, _screenWidth, _screenHeight);
     messageWithName("reshapeWindow")->broadcast(this);
 }
 
@@ -468,6 +488,13 @@ void PHGameManager::setGLStates(uint32_t states, uint32_t vertexAttrib)
             PHGL::glEnable(GL_DEPTH_TEST);
         else
             PHGL::glDisable(GL_DEPTH_TEST);
+    }
+    if (xr & PHGLZWriting)
+    {
+        if (states & PHGLZWriting)
+            PHGL::glDepthMask(GL_TRUE);
+        else
+            PHGL::glDepthMask(GL_FALSE);
     }
     if (xr & PHGLBackFaceCulling)
     {
@@ -783,4 +810,14 @@ PHNavigationController * PHGameManager::setUpNavigationController()
     holder->release();
     nav->release();
     return nav;
+}
+
+void PHGameManager::collectGarbageResources()
+{
+    collectGarbageImages();
+    collectGarbageMaterials();
+    collectGarbageShaderPrograms();
+    collectGarbageFonts();
+    if (sndMan)
+        sndMan->collectGarbageSounds();
 }

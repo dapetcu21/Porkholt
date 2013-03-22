@@ -438,7 +438,10 @@ void PHGameManager::clearBuffers(int m)
     if (m&colorBuffers) 
         mask |= GL_COLOR_BUFFER_BIT;
     if (m&depthBuffer)
+    {
         mask |= GL_DEPTH_BUFFER_BIT;
+        setGLStates(getGLStates() | PHGLZWriting);
+    }
     if (m&stencilBuffer)
         mask |= GL_STENCIL_BUFFER_BIT;
     PHGL::glClear(mask);

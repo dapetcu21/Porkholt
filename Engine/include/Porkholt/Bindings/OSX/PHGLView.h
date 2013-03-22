@@ -20,7 +20,7 @@ class PHGameManager;
 }
 
 -(id)initWithFrame:(NSRect)frameRect resourcePath:(NSString *)res entryPoint:(void (*)(PHGameManager *))entryPoint flags:(int)flags;
--(PHGameManager*)gameManager;
+
 -(void)setManualSize:(NSSize)sz;
 -(void)setAutomaticSize;
 
@@ -31,4 +31,5 @@ class PHGameManager;
 
 @property(nonatomic, assign) BOOL verticalSync;
 @property(nonatomic, assign) double refreshRate;
+@property(nonatomic, assign) PHGameManager * gameManager;
 @end

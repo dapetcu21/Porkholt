@@ -6,16 +6,18 @@
 #include <Porkholt/IO/PHDirectory.h>
 #include <Porkholt/IO/PHFile.h>
 
-PHMaterial * PHMaterialInitPool::materialFromFile(PHFile * file)
+PHMaterial * PHMaterialInitPool::materialFromFile(PHFile * file, const string & options)
 {
     PHMaterial * mat;
     PHHashedString path(file->path());
-    map<PHHashedString, PHMaterial*>::iterator i = materials.find(path);
+    PHHashedString opts(options);
+    pair<PHHashedString, PHHashedString> key = make_pair(path, opts);
+    map< pair < PHHashedString, PHHashedString >, PHMaterial*>::iterator i = materials.find(key);
     if (i==materials.end())
     {
         PHGameManager * gm = gameManager();
-        mat = new PHLuaMaterial(gm, file);
-        materials[path] = mat;
+        mat = new PHLuaMaterial(gm, file, options);
+        materials[key] = mat;
     } else {
         mat = i->second;
     }
@@ -25,7 +27,19 @@ PHMaterial * PHMaterialInitPool::materialFromFile(PHFile * file)
 PHMaterial * PHMaterialInitPool::materialNamed(const string & name, PHDirectory * dir)
 {
     PHAutoreleasePool ap;
-    try { return materialFromFile(dir->fileAtPath(name + ".lua")); }
+    string opts;
+    string nm = name;
+    size_t n = name.size();
+    if (n && name[n - 1] == ']')
+    {
+        size_t f = name.find("[");
+        if (f != string::npos)
+        {
+            opts = name.substr(f + 1, n - f - 2);
+            nm = name.substr(0, f);
+        }
+    }
+    try { return materialFromFile(dir->fileAtPath(nm + ".lua"), opts); }
     catch(const string & ex) {
         PHLog("Could not load material \"%s\": %s", name.c_str(), ex.c_str());
     }
@@ -34,8 +48,8 @@ PHMaterial * PHMaterialInitPool::materialNamed(const string & name, PHDirectory 
 
 void PHMaterialInitPool::collectGarbageMaterials()
 {
-    map<PHHashedString,PHMaterial*>::iterator i;
-	map<PHHashedString,PHMaterial*> tmp;
+    map<pair<PHHashedString, PHHashedString>,PHMaterial*>::iterator i;
+	map<pair<PHHashedString, PHHashedString>,PHMaterial*> tmp;
 	for (i = materials.begin(); i!=materials.end(); i++)
 	{
 		if ((i->second)->referenceCount()>=2)
@@ -44,4 +58,11 @@ void PHMaterialInitPool::collectGarbageMaterials()
 			i->second->release();
 	}
 	materials = tmp;
+}
+
+PHMaterialInitPool::~PHMaterialInitPool()
+{
+    PHLog("Deallocating materials");
+    for (map<pair<PHHashedString, PHHashedString>,PHMaterial*>::iterator i = materials.begin(); i != materials.end(); i++)
+        i->second->release();
 }

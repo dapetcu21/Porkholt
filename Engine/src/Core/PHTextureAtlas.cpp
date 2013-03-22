@@ -73,7 +73,7 @@ void PHTextureAtlas::asyncLoad()
     PHImage::loadingMutex->unlock();
 #endif
     mutex->unlock();
-    gm->mainAnimatorPool()->scheduleAction(PHInv(this, PHTextureAtlas::loadInVRAM, NULL));
+    gm->mainAnimatorPool()->scheduleAction(PHInvBind(this, PHTextureAtlas::loadInVRAM, NULL));
 }
 
 struct PHTextureAtlas::loadStruct
@@ -140,7 +140,7 @@ void PHTextureAtlas::loadFromDir(PHDirectory * dir, lua_State * L)
         throw string("Nothing. There's nothing in this atlas. No texture. Nothing");
 
 #ifdef PHIMAGE_ASYNCHRONEOUS_LOADING
-    PHThread::detachThread(PHInv(this, PHTextureAtlas::asyncLoad, NULL));
+    PHThread::detachThread(PHInvBind(this, PHTextureAtlas::asyncLoad, NULL));
 #else
     load();
 #endif

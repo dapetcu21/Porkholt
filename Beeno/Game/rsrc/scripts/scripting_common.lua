@@ -19,7 +19,7 @@ function PHLog(fmt, ...)
       t[i] = tostring(v)
     end
   end
-  PHOutput(string.format(fmt, unpack(t)))
+  PHOutput(string.format(fmt, ...))
 end
 
 function PHPrint(t,level,prefix,pre)

@@ -12,6 +12,7 @@ class PHPerspectiveCamera : public PHCamera
         ph_float ar;
         ph_float near,far;
         ph_float fov;
+        PHQuaternion rot;
 
     public:
         PHPerspectiveCamera();
@@ -24,6 +25,8 @@ class PHPerspectiveCamera : public PHCamera
         void setFarClippingPlane(ph_float f) { far = f; cache = false; }
         ph_float fieldOfView() { return fov; }
         void setFieldOfView(ph_float f) { fov = f; cache = false; }
+        PHQuaternion rotation() { return rot; }
+        void setRotation(const PHQuaternion & q) { rot = q; cache = false; }
 
         void reshape();    
         PHMatrix projection();

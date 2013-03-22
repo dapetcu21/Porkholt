@@ -5,7 +5,7 @@
 
 PHBody::PHBody() : pos(PH3DOriginPoint), rot(PHIdentityQuaternion), scl(PH3DUnitSize), _rotationalCenter(PH3DOriginPoint), _scalingCenter(PH3DOriginPoint), effOrder(PHBody::EffectOrderRotateScale), matrixCached(false), effectCached(false)
 {
-    
+    _openGLStates = PHGLBackFaceCulling | PHGLZTesting | PHGLZWriting;
 }
 
 PHBody::~PHBody()
@@ -79,6 +79,7 @@ PHMatrix PHBody::applyMatrices()
 
 void PHBody::render()
 {
+    if (_hidden) return;
     PHMatrix o = gm->modelViewMatrix();
     gm->setModelViewMatrix(o * applyMatrices());
     draw();

@@ -265,3 +265,15 @@ void PHNavigationController::popViewController(int anim)
 	startAnimating();
 }
 
+PHNavigationController::~PHNavigationController()
+{
+    cancelAnimation();
+    if (currentVC)
+    {
+        currentVC->getView()->removeFromParent();
+        currentVC->release();
+    }
+    for (list<PHViewController*>::iterator i = stack.begin(); i != stack.end(); i++)
+        (*i)->release();
+}
+

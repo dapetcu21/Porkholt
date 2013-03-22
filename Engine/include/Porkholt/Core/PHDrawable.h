@@ -31,6 +31,8 @@ protected:
     size_t _tag;
     PHMutex * mtx;
     PHDrawableInputDelegate * _inputDelegate;
+    bool _hidden;
+    uint32_t _openGLStates;
     
 	virtual void draw() {}
 public:
@@ -87,6 +89,22 @@ private:
 public:
 	void setUserInput(bool ui) { _userInput = ui; };
 	bool userInput() { return _userInput; };
+    void setHidden(bool h) { _hidden = h; }
+    bool isHidden() { return _hidden; }
+
+#define getsetFlag(fg) \
+    void set ## fg ## Enabled(bool en) \
+    { _openGLStates = _openGLStates & ~PHGL ## fg | (en ? PHGL ## fg : 0); } \
+    bool is ## fg ## Enabled() \
+    { return (_openGLStates & PHGL ## fg) != 0; }
+
+    getsetFlag(ZTesting);
+    getsetFlag(ZWriting);
+    getsetFlag(Blending);
+    getsetFlag(BackFaceCulling);
+    getsetFlag(StencilTesting);
+    uint32_t openGLStates() { return _openGLStates; }
+    void setOpenGLStates(uint32_t states) { _openGLStates = states; }
 
 protected:
     virtual void attachedToGameManager() {};

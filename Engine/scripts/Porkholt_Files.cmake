@@ -108,6 +108,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHProfilerCollection.cpp
   ${PH_ENGINE_PATH}/src/Core/PHDrawableProxy.cpp
   ${PH_ENGINE_PATH}/src/IO/PHUnionDirectory.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHAllocationProfiler.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -232,6 +233,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHEmbeddedFile.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHEmbeddedDirectory.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHUnionDirectory.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAllocationProfiler.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
@@ -305,6 +307,12 @@ if(PH_PLATFORM STREQUAL "iOS")
   include_directories(
       ${CMAKE_CURRENT_SOURCE_DIR}/src/Geometry/math
       )
+endif()
+
+if (PH_PLATFORM STREQUAL "iOS" OR PH_PLATFORM STREQUAL "OSX")
+  set(PH_ENGINE_SRCS ${PH_ENGINE_SRCS}
+    ${PH_ENGINE_PATH}/src/Bindings/Darwin/PHDarwinCommon.mm
+    )
 endif()
 
 if (PH_PLATFORM STREQUAL "iOS" OR ANDROID_NDK_ABI_NAME MATCHES "arm.*")

@@ -60,6 +60,8 @@
     if (view.gameManager)
         view.gameManager->appQuits();
     [view release];
+    view.gameManager->release();
+    view.gameManager = NULL;
     [title release];
 #ifndef PH_OSX_FAKERESOLUTION
     if (vm.type == PHWVideoMode::Fullscreen)

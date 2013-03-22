@@ -279,6 +279,7 @@ void PHParticleView::renderParticles(void * p, const PHRect & texCoord, const PH
 
 void PHParticleView::render()
 {
+    if (_hidden) return;
     particleM->lock();
     if (!particleAnim || !_image) 
     {
@@ -310,7 +311,7 @@ void PHParticleView::render()
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * applyMatrices());
         gm->updateMatrixUniform();
-        gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLTexture0);
+        gm->setGLStates(_openGLStates | PHGLTexture0);
         
         PHColor t = tint;
         if (!t.isValid())

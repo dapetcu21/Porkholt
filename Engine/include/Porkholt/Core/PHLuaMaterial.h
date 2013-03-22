@@ -73,7 +73,7 @@ class PHLuaMaterial : public PHMaterial
         PHGameManager * gm;
 
     public:
-        PHLuaMaterial(PHGameManager * gm, PHFile * file);
+        PHLuaMaterial(PHGameManager * gm, PHFile * file, const string & options = "");
         ~PHLuaMaterial();
 
         void initEnvironment(lua_State * L);

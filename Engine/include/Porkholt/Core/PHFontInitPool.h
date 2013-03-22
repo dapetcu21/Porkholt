@@ -16,6 +16,7 @@ private:
     map<string,PHFont*> fonts;
 public:
     PHFontInitPool() : _defaultFont((PHFont*)(size_t)-1) {}
+    ~PHFontInitPool();
     PHFont * fontFromFile(PHFile * file);
     PHFont * fontNamed(const string & name);
     PHFont * defaultFont();

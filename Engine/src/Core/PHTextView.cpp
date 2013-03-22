@@ -72,7 +72,7 @@ void PHTextView::draw()
     gm->setTextureUniform(_font->texture());
     gm->setColor(color);
     gm->updateSpriteUniforms();
-    gm->setGLStates(PHGLBlending | PHGLTexture0);
+    gm->setGLStates(_openGLStates);
     gm->spriteUniformStates()->apply(gm->shaderProgramNamed<text_shader>());
     vao->draw();
     gm->setTextureUniform(NULL);

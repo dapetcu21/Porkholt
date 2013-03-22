@@ -54,6 +54,7 @@ PHRect LPPHGetWallpaperBounds(PHGameManager * gm)
 @synthesize context = _context;
 @synthesize bundle = _bundle;
 @synthesize wallpaperRect = _wallpaperRect;
+@synthesize variant = _variant;
 
 -(void)_createDisplayLinkForScreen:(id)screen
 {
@@ -92,6 +93,8 @@ PHRect LPPHGetWallpaperBounds(PHGameManager * gm)
     view.context = _context;
     view.delegate = self;
     
+    view.drawableDepthFormat = (_flags & PHWDepthBuffer) ? GLKViewDrawableDepthFormat16 : GLKViewDrawableDepthFormatNone;
+    view.drawableStencilFormat = (_flags & PHWStencilBuffer) ? GLKViewDrawableStencilFormat8 : GLKViewDrawableStencilFormatNone;
 
     [self setupGL];
 }
@@ -200,7 +203,7 @@ PHRect LPPHGetWallpaperBounds(PHGameManager * gm)
 #ifndef PH_LIVEPAPERS_FPS_STAGES
 #define PH_LIVEPAPERS_FPS_STAGES {30, 30, 30, 15, 0}
 #endif
-static const NSInteger stages[] = PH_LIVEPAPERS_FPS_STAGES;
+static NSInteger stages[] = PH_LIVEPAPERS_FPS_STAGES;
 
 -(void)_setFPS:(unsigned int)stage
 {
@@ -216,6 +219,14 @@ static const NSInteger stages[] = PH_LIVEPAPERS_FPS_STAGES;
     } else {
         self.paused = YES;
     }
+}
+
+void LPPHSetFPS(PHGameManager * gm, int fps, int stage)
+{
+    stages[stage] = fps;
+    map<PHGameManager*, LPPHViewController*>::iterator i = gmToLP.find(gm);
+    if (i != gmToLP.end())
+        [i->second _setFPS:stage]; 
 }
 
 -(void)timerFired
@@ -306,16 +317,47 @@ static float getIdleTimeout()
         _gm->eventHandler()->touchCancelled([self adjustPoint:[touch locationInView:self.view]], touch);
 }
 
--(void)setWallpaperImage:(UIImage*)image
+-(void)clearWallpaperCache
 {
     [EAGLContext setCurrentContext:_context];
     if (_wallpaperImage)
-        _wallpaperImage->release();
-        
-    if (_gm)
     {
+        _wallpaperImage->release();
+        _wallpaperImage = NULL;
+    }
+}
+
+void LPPHClearWallpaperImage(PHGameManager * gm)
+{
+    map<PHGameManager*, LPPHViewController*>::iterator i = gmToLP.find(gm);
+    if (i != gmToLP.end())
+        [i->second clearWallpaperCache];
+}
+
+-(void)setWallpaperImage:(UIImage*)image
+{
+    [EAGLContext setCurrentContext:_context];
+    [self clearWallpaperCache];
+    if (_gm)
+        _gm->messageWithName("wallpaperImageChanged")->broadcast(_gm);
+}
+
+UIImage * LPWallpaperImageForVariant(int var)
+{
+    static void * h = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
+    static UIImage * (*f)(int) = (UIImage * (*)(int))dlsym(h, "SBWallpaperImageForVariant");
+    if (f)
+        return f(var);
+    return NULL;
+}
+
+-(PHNormalImage*)wallpaperImage
+{
+    if (!_wallpaperImage && _gm)
+    {
+        [EAGLContext setCurrentContext:_context];
         NSError * err;
-        GLKTextureInfo * info = [GLKTextureLoader textureWithCGImage:image.CGImage options:texoptions error:&err];
+        GLKTextureInfo * info = [GLKTextureLoader textureWithCGImage:LPWallpaperImageForVariant(_variant).CGImage options:texoptions error:&err];
         if (!info)
         {
             NSLog(@"Error occured while loading texture: %@", err);
@@ -331,14 +373,7 @@ static float getIdleTimeout()
             tex->release();
             _wallpaperImage = img;
         }
-        _gm->messageWithName("wallpaperImageChanged")->broadcast(_gm);
-    } else {
-        _wallpaperImage = NULL;
     }
-}
-
--(PHNormalImage*)wallpaperImage
-{
     return _wallpaperImage;
 }
 

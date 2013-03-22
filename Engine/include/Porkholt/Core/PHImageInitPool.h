@@ -29,6 +29,8 @@ public:
 
     const string & platformSuffix() { return hdsuf; }
     void setPlatformSuffix(const string & s) { hdsuf = s; }
+
+    ~PHImageInitPool();
 };
 
 #endif

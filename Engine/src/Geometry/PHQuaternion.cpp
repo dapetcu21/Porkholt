@@ -65,6 +65,47 @@ PHQuaternion PHQuaternion::fromPointsOnSphere(const PHVector3 & from, const PHVe
     return PHQuaternion(cosa2, normal.x, normal.y, normal.z);
 }
 
+void PHQuaternion::toEuler(ph_float & heading, ph_float & attitude, ph_float & bank)
+{
+    ph_float sqw = w*w;
+    ph_float sqx = x*x;
+    ph_float sqy = y*y;
+    ph_float sqz = z*z;
+    ph_float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+    ph_float test = x*y + z*w;
+    if (test > 0.499*unit) { // singularity at north pole
+        heading = 2 * atan2(x,w);
+        attitude = M_PI_2;
+        bank = 0;
+        return;
+    }
+    if (test < -0.499*unit) { // singularity at south pole
+        heading = -2 * atan2(x,w);
+        attitude = -M_PI_2;
+        bank = 0;
+        return;
+    }
+    heading = atan2(2*y*w - 2*x*z, sqx - sqy - sqz + sqw);
+    attitude = asin(2*test/unit);
+    bank = atan2(2*x*w - 2*y*z, -sqx + sqy - sqz + sqw);
+}
+
+PHQuaternion PHQuaternion::fromEuler(ph_float heading, ph_float attitude, ph_float bank)
+{
+    ph_float c1 = cosf(heading/2);
+    ph_float s1 = sinf(heading/2);
+    ph_float c2 = cosf(attitude/2);
+    ph_float s2 = sinf(attitude/2);
+    ph_float c3 = cosf(bank/2);
+    ph_float s3 = sinf(bank/2);
+    ph_float c1c2 = c1*c2;
+    ph_float s1s2 = s1*s2;
+    return PHQuaternion(c1c2*c3 - s1s2*s3,
+                        c1c2*s3 + s1s2*c3,
+                        s1*c2*c3 + c1*s2*s3,
+                        c1*s2*c3 - s1*c2*s3);
+}
+
 PHVector3 PHQuaternion::operator* (const PHVector3 & v) const
 {
     PHVector3 uv, uuv;

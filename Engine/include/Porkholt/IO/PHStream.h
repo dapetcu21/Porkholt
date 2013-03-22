@@ -13,7 +13,8 @@ public:
         Read =   1<<0,
         Write =  1<<1,
         Create = 1<<2,
-        Append = 1<<3
+        Append = 1<<3,
+        Trunc = 1<<4,
     };
     PHStream(const string & p) : PHInode(p), coflags(0) {};
 
@@ -24,6 +25,7 @@ public:
     bool opened() { return coflags!=0; }
     virtual size_t read(uint8_t * buf, size_t size) = 0;
     virtual size_t write(const uint8_t * buf, size_t size) = 0;
+    size_t write(const string & s) { return write((uint8_t*)s.c_str(), s.size()); }
     virtual void close() { coflags = 0; }
     
     bool isStream() { return true; }

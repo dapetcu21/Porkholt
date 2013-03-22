@@ -5,23 +5,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-PHRegularFile::PHRegularFile(const string & dpath, int dummy) : PHFile(dpath), fd(-1)
+PHRegularFile::PHRegularFile(const string & dpath, bool check_exists) : PHFile(dpath), fd(-1)
 {
-    init();
-}
-
-PHRegularFile::PHRegularFile(const string & dpath) : PHFile(dpath), fd(-1)
-{
-    struct stat result;
-    if (stat(_path.c_str(), &result) != 0)
-        throw string(strerror(errno));
-    if (!(result.st_mode & S_IFREG))
-        throw string("not a file");
-    init();
-}
-
-void PHRegularFile::init()
-{
+    if (check_exists)
+    {
+        struct stat result;
+        if (stat(_path.c_str(), &result) != 0)
+            throw string(strerror(errno));
+        if (!(result.st_mode & S_IFREG))
+            throw string("not a file");
+    }
 }
 
 void PHRegularFile::open(int flags)
@@ -36,7 +29,9 @@ void PHRegularFile::open(int flags)
         oflags |= O_CREAT;
     if (flags & PHStream::Append)
         oflags |= O_APPEND;
-    if ((fd = ::open(_path.c_str(), oflags)) < 0)
+    if (flags & PHStream::Trunc)
+        oflags |= O_TRUNC;
+    if ((fd = ::open(_path.c_str(), oflags, 0644)) < 0)
         throw string(strerror(errno));
     PHFile::open(flags);
 }

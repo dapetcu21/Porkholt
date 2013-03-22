@@ -8,10 +8,7 @@ class PHRegularFile : public PHFile
 {
 protected:
     int fd;
-    PHRegularFile(const string & dpath, int dummy);
     friend class PHInode;
-
-    void init();
 public:
     void open(int flags);
     void close();
@@ -24,7 +21,7 @@ public:
     size_t size();
     void seek(ssize_t p);
     
-    PHRegularFile(const string & dpath);
+    PHRegularFile(const string & dpath, bool check_exists = true);
     ~PHRegularFile();
 };
 

@@ -14,8 +14,8 @@ void PHObject::bindInvocation(PHInvocation * invo)
 void PHObject::unbindInvocation(PHInvocation * invo)
 {
     set<PHInvocation*> * s = (set<PHInvocation*> *)inv;
-    if (!s) return;
-    s->erase(invo);
+    if (s)
+        s->erase(invo);
 }
 
 void PHObject::autorelease()

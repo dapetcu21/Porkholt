@@ -168,6 +168,8 @@ void PHGLTexture2D::setData(uint8_t *data, size_t width, size_t height, enum pix
     //TO DO: Reimplement this with glGenerateMipmap() when necessary
     //PHGL::glTexParameteri(target, GL_GENERATE_MIPMAP, hasMipMap()?GL_TRUE:GL_FALSE);
     PHGL::glTexImage2D(target, 0, PHGLInternalFormats[f], width, height, 0, PHGLFormats[f], PHGLTypes[f], data);
+    if (PHGL::glGenerateMipmap && hasMipMap())
+        PHGL::glGenerateMipmap(target);
     PHGLCheckError();
     w = width;
     h = height;

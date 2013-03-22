@@ -3,14 +3,14 @@ import ycm_core
 from clang_helpers import PrepareClangFlags
 
 flags = [
-"-I", "./Engine/include",
-"-I", "./Externals/lua/src",
-"-I", "./Externals/libpng",
-"-I", "./Externals/zlib",
-"-I", "./Externals/libogg/include",
-"-I", "./Externals/libvorbis/include",
-"-I", "./Externals/uremote/include",
-"-I", "./Externals/box2d/Box2D",
+"-I", "Engine/include",
+"-I", "Externals/lua/src",
+"-I", "Externals/libpng",
+"-I", "Externals/zlib",
+"-I", "Externals/libogg/include",
+"-I", "Externals/libvorbis/include",
+"-I", "Externals/uremote/include",
+"-I", "Externals/box2d/Box2D",
 "-fblocks",
 "-fexceptions"
 ]
@@ -48,24 +48,20 @@ def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
       new_flags.append( new_flag )
   return new_flags
 
-def IsiOSForFile( filename ):
-  return True
 
 def FlagsForFile( filename ):
   relative_to = DirectoryOfThisScript()
-  final_flags = flags
+  final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
   if filename.endswith('.cpp'):
     final_flags += [ "-x", "c++" ]
   elif filename.endswith('.c'):
     final_flags += [ "-x", "c" ]
   elif filename.endswith('.m'):
-    final_flags += [ "-x", "obj-c" ]
+    final_flags += [ "-x", "objective-c" ]
     objc = True
-  elif filename.endswith('.mm'):
-    final_flags += [ "-x", "obj-c++" ]
+  elif filename.endswith('.mm') or filename.endswith('.h'):
+    final_flags += [ "-x", "objective-c++" ]
     objc = True
-    
-  final_flags = MakeRelativePathsInFlagsAbsolute( final_flags, relative_to )
 
   return {
     'flags': final_flags,

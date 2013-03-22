@@ -16,10 +16,9 @@ void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse
 
 class PHMatrix
 {
-private:
-    GLfloat m[16];
-    
 public:
+    GLfloat m[16];
+
     PHMatrix() 
     {}
     
@@ -282,6 +281,13 @@ public:
                 return false;
         return true;
     }
+
+    GLfloat operator[] (int index) const
+    {
+        return m[index];
+    }
+
+    void dump();
 };
 
 extern const PHMatrix PHIdentityMatrix;

@@ -46,6 +46,8 @@ void PHLuaMaterial::loadFromLua(lua_State * L)
                 string sh;
                 PHLuaGetStringField(sh, "shader");
                 r.shader = gm->shaderProgramNamed(sh);
+                if (!r.shader)
+                    throw string("Shader \"") + sh + "\" referenced by material doesn't exist";
                 r.shader->retain();
                 r.uniforms = new PHGLUniformStates;
                 r.nvars = 0;
@@ -160,7 +162,7 @@ PHLuaMaterial::~PHLuaMaterial()
     }
 }
 
-PHLuaMaterial::PHLuaMaterial(PHGameManager * _gm, PHFile * file) : gm(_gm)
+PHLuaMaterial::PHLuaMaterial(PHGameManager * _gm, PHFile * file, const string & options) : gm(_gm)
 {
     luaMutex->lock();
     if (!sL)
@@ -170,6 +172,7 @@ PHLuaMaterial::PHLuaMaterial(PHGameManager * _gm, PHFile * file) : gm(_gm)
         PHLuaSeedRandom(sL);
         initEnvironment(sL);
     }
+    PHLuaLoadString(sL, string("options = {") + options + "}");
     PHLuaLoadFile(sL, file);
     loadFromLua(sL);
     luaMutex->unlock();

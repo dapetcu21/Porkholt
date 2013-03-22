@@ -48,6 +48,8 @@ public:
 	
 	PHColor fadeColor() { return _fadeColor; };
 	void setFadeColor(const PHColor & c) { _fadeColor = c; };
+
+    ~PHNavigationController();
 };
 
 #endif

@@ -63,8 +63,8 @@ public:
     void setColorTexture(PHGLTexture2D * tex, int color_attachment = 0);
     void setDepthTexture(PHGLTexture2D * tex);
 
-    bool fullScreenTexture() { return fs; }
-    void setFullScreenTexture(bool fus) { fs = fus; }
+    bool isFullScreenTexture() { return !w && !h; }
+    void setFullScreenTexture() { w = h = 0; }
     void setTextureSize(int _w, int _h) { w = _w; h = _h; }
     void setTextureSize(const PHSize & sz) { w = int(sz.width); h = int(sz.height); }
     PHSize textureSize() { return PHSize(w, h); }

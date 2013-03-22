@@ -158,8 +158,24 @@ PHSound * PHSoundManager::soundNamed(const string & name, PHDirectory * dir)
     return it->second;
 }
 
+void PHSoundManager::collectGarbageSounds()
+{
+    map<PHHashedString, PHSound*>::iterator i;
+	map<PHHashedString, PHSound*> tmp;
+	for (i = sounds.begin(); i!=sounds.end(); i++)
+	{
+		if ((i->second)->referenceCount()>=2)
+			tmp[i->first] = i->second;
+		else
+			i->second->release();
+	}
+	sounds = tmp;
+}
+
 PHSoundManager::~PHSoundManager()
 {
+    for (map<PHHashedString, PHSound*>::iterator i = sounds.begin(); i != sounds.end(); i++)
+        i->second->release();
     sndDir->release();
     if (context)
     {

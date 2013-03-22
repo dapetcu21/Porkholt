@@ -83,3 +83,10 @@ void PHImageInitPool::loadAllImages()
     for (i = images.begin(); i!=images.end(); i++)
         i->second->load();
 }
+
+PHImageInitPool::~PHImageInitPool()
+{
+    PHLog("Deallocating images");
+    for (map<PHHashedString, PHImage*>::iterator i = images.begin(); i != images.end(); i++)
+        i->second->release();
+}

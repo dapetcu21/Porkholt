@@ -11,7 +11,7 @@
 
 const string PHDrawable::_luaClass("PHDrawable");
 
-#define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false), _userInput(false), _inputDelegate(NULL)
+#define PH_DRAWABLE_INIT_LIST gm(NULL), _parent(NULL), _tag(0), mtx(NULL), luaClass(&_luaClass), _isView(false), _userInput(false), _inputDelegate(NULL), _hidden(false)
 
 PHMutex * PHDrawable::mutex() 
 { 
@@ -46,6 +46,7 @@ void PHDrawable::renderChildren()
 
 void PHDrawable::render()
 {
+    if (_hidden) return;
     draw();
     renderChildren();
 }

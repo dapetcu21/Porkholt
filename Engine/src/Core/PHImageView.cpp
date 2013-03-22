@@ -304,7 +304,7 @@ void PHImageView::renderStraight()
         PHGLUniformStates * states = gm->spriteUniformStates();
         states->setNextStates(_additionalUniforms);
 
-        gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLTexture0);
+        gm->setGLStates(_openGLStates | PHGLTexture0);
         PHMatrix om = gm->modelViewMatrix();
         gm->setModelViewMatrix(om * PHMatrix::translation(_bounds.x, _bounds.y) * PHMatrix::scaling(_bounds.width,_bounds.height));
         gm->updateMatrixUniform();
@@ -353,7 +353,7 @@ void PHImageView::renderCurved()
     gm->updateColorUniform();
     gm->setTextureUniform(((PHNormalImage*)image())->texture());
     
-    gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLTexture0);
+    gm->setGLStates(_openGLStates | PHGLTexture0);
     
     if (constrain)
     {

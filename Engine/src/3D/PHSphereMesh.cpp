@@ -7,6 +7,8 @@
 
 #define INIT closeDist(-INFINITY), farDist(INFINITY), gm(_gm)
 
+map<PHGameManager*,PHSphereMesh*> PHSphereMesh::spheres;
+
 PHSphereMesh::PHSphereMesh(PHGameManager * _gm) : INIT
 {
     vaos[0] = vaos[1] = vaos[2] = NULL;
@@ -48,26 +50,32 @@ void PHSphereMesh::setResolutionForLOD(int lod, int latitude, int longitude)
 {
     releaseLOD(lod);
     int i, j;
-    GLfloat * buf = new GLfloat[(longitude+1)*(latitude)*8*2];
-    int k = 0;
+    int vertices = ((longitude+2)*(latitude)-1)*2;
+    GLfloat * buf = new GLfloat[vertices*8];
+    int k = -8*2;
     for(i = 0; i < latitude; i++) 
     {
-        double lat0f = (double) i / latitude;
-        double lat0 = M_PI * (-0.5 + lat0f);
-        double z0  = sin(lat0);
-        double zr0 =  cos(lat0);
+        GLfloat lat0f = (GLfloat) i / latitude;
+        GLfloat lat0 = M_PI * (-0.5 + lat0f);
+        GLfloat z0  = sin(lat0);
+        GLfloat zr0 =  cos(lat0);
         
-        double lat1f = (double) (i+1) / latitude;
-        double lat1 = M_PI * (-0.5 + lat1f);
-        double z1 = sin(lat1);
-        double zr1 = cos(lat1);
+        GLfloat lat1f = (GLfloat) (i+1) / latitude;
+        GLfloat lat1 = M_PI * (-0.5 + lat1f);
+        GLfloat z1 = sin(lat1);
+        GLfloat zr1 = cos(lat1);
+
+        if (i)
+            memcpy(buf+k, buf+k-8, sizeof(GLfloat)*8);
+        k+=2*8;
+        int last_k = k;
         
         for(j = 0; j <= longitude; j++) 
         {
-            double lngf = (double) (j) / longitude;
-            double lng = 2 * M_PI * lngf;
-            double x = -cos(lng);
-            double y = sin(lng);
+            GLfloat lngf = (GLfloat) (j) / longitude;
+            GLfloat lng = 2 * M_PI * lngf;
+            GLfloat x = -cos(lng);
+            GLfloat y = sin(lng);
             
             buf[k++] = x * zr1; 
             buf[k++] = z1;
@@ -91,16 +99,19 @@ void PHSphereMesh::setResolutionForLOD(int lod, int latitude, int longitude)
             buf[k++] = lngf;
             buf[k++] = lat0f;
         }        
+
+        if (i)
+            memcpy(buf+last_k-8, buf+last_k, sizeof(GLfloat)*8);
     }
     vaos[lod] = new PHGLVertexArrayObject(gm);
     vaos[lod]->bindToEdit();
     PHGLVBO * vbo = new PHGLVertexBufferObject(gm);
     vbo->bindToArrayBuffer();
-    vbo->setData(buf, (longitude+1)*(latitude)*8*2*sizeof(GLfloat), PHGLVBO::staticDraw);
+    vbo->setData(buf, vertices*8*sizeof(GLfloat), PHGLVBO::staticDraw);
     vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_POS, 3, GL_FLOAT, false, sizeof(GLfloat)*8, 0, vbo);
     vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_NRM, 3, GL_FLOAT, false, sizeof(GLfloat)*8, sizeof(GLfloat)*3, vbo);
     vaos[lod]->vertexPointer(PHIMAGEATTRIBUTE_TXC, 2, GL_FLOAT, false, sizeof(GLfloat)*8, sizeof(GLfloat)*6, vbo);
-    vaos[lod]->setDrawArrays(GL_TRIANGLE_STRIP, 0, (longitude+1)*(latitude)*2);
+    vaos[lod]->setDrawArrays(GL_TRIANGLE_STRIP, 0, vertices);
     vbo->unbind();
     vbo->release();
     vaos[lod]->unbind();
@@ -118,9 +129,22 @@ void PHSphereMesh::releaseLOD(int lod)
 
 PHSphereMesh * PHSphereMesh::sphere(PHGameManager * gm)
 {
-    static map<PHGameManager*,PHSphereMesh*> map;
-    PHSphereMesh * sm = map[gm];
+    PHSphereMesh * sm = spheres[gm];
     if (!sm)
-        map[gm] = sm = new PHSphereMesh(gm);
+    {
+        spheres[gm] = sm = new PHSphereMesh(gm);
+        gm->deallocMessage()->addListener(PHInvN(sm, PHSphereMesh::gameManagerQuits));
+    }
     return sm;
 }
+
+void PHSphereMesh::gameManagerQuits(PHGameManager * gm)
+{
+    map<PHGameManager*,PHSphereMesh*>::iterator i = spheres.find(gm);
+    if (i != spheres.end())
+    {
+        i->second->release();
+        spheres.erase(i);
+    }
+}
+

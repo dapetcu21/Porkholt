@@ -62,7 +62,7 @@ compilelibosx() {
 	fi
 }
 
-if [ -d /Developer ]; then
+if [ -e /Developer/usr/bin/make ]; then
     DEVEL=/Developer
 else
     DEVEL=/Applications/Xcode.app/Contents/Developer
@@ -80,7 +80,7 @@ export OSXCC=cc
 export OSXCPP=c++
 export OSXLIPO=lipo
 
-if [ $XCAPP == "1" ]; then
+if [ "$XCAPP" == "1" ]; then
     export IOSCC=$(xcrun -sdk iphoneos -find cc)
     export IOSCPP=$(xcrun -sdk iphoneos -find c++)
     export SIMCC=$(xcrun -sdk iphonesimulator -find cc)

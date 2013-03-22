@@ -36,6 +36,8 @@ public:
             someShaders[pos] = shaderProgramNamed(string(S));
         return someShaders[pos];
     }
+
+    void collectGarbageShaderPrograms();
     
 private:
     map<string,PHGLShaderProgram*> shaders;

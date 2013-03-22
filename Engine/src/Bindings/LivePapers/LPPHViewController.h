@@ -30,11 +30,14 @@ class PHNormalImage;
     
     CGRect _wallpaperRect;
     PHNormalImage * _wallpaperImage;
+
+    int _variant;
 }
 @property (nonatomic, readonly) EAGLContext * context;
 @property (nonatomic, retain) NSBundle * bundle;
 @property (nonatomic, readonly) NSTimeInterval adjustedTimeSinceLastUpdate;
 @property (nonatomic, assign) CGRect wallpaperRect;
+@property (nonatomic, assign) int variant;
 
 
 //to override

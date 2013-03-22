@@ -12,10 +12,11 @@
 
 const string PHView::_luaClass("PHView");
 
-#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), _ZPosition(0.0f), _zTestingEnabled(false), _blendingEnabled(true), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
+#define PHVIEW_INITLIST _bounds(PHRect(0, 0, -1, -1)), _ZPosition(0.0f), fhoriz(false), fvert(false), _rotation(0), _scaleX(1), _scaleY(1), _alpha(1.0f), _optimize(false), _backColor(PHClearColor), effOrder(EffectOrderScaleRotateFlip), effectCached(false), matrixCached(false), autoresize(false), resizeMask(ResizeStatic), auxLayer(NULL), auxSuperview(NULL), drawingOnAuxLayer(false), dontDrawOnMain(true)
 
 PHView::PHView() :  PHVIEW_INITLIST
 {
+    _openGLStates = PHGLBlending;
     luaClass = &_luaClass;
     _isView = true;
 	setFrame(PHRect(0, 0, 0, 0));
@@ -23,6 +24,7 @@ PHView::PHView() :  PHVIEW_INITLIST
 
 PHView::PHView(const PHRect &frame) : PHVIEW_INITLIST
 {
+    _openGLStates = PHGLBlending;
 	luaClass = &_luaClass;
     _isView = true;
     setFrame(frame);
@@ -185,6 +187,7 @@ PHMatrix PHView::applyMatrices()
 
 void PHView::render()
 {
+    if (_hidden) return;
     if (mtx) mtx->lock();
     PHMatrix om = gm->modelViewMatrix();
     PHMatrix m = om * applyMatrices();
@@ -242,7 +245,7 @@ void PHView::drawBackground()
     if (gm->renderMode() != PHGameManager::defaultRenderMode)
         return;
 	
-    gm->setGLStates((_blendingEnabled ? PHGLBlending : 0) | (_zTestingEnabled ? PHGLZTesting : 0 ) | PHGLVertexArray);
+    gm->setGLStates(_openGLStates | PHGLVertexArray);
     gm->setColor(_backColor);
     PHMatrix old = gm->modelViewMatrix();
     gm->setModelViewMatrix(old * PHMatrix::scaling(PHSize(_bounds.width,_bounds.height)));

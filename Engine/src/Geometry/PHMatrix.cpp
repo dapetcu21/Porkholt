@@ -85,3 +85,14 @@ const PHMatrix PHIdentityMatrix(1,0,0,0,
                                 0,1,0,0,
                                 0,0,1,0,
                                 0,0,0,1);
+
+void PHMatrix::dump()
+{
+    for (int i = 0; i < 4; i++)
+        PHLog("%f\t%f\t%f\t%f",
+                m[i<<2],
+                m[(i<<2) + 1],
+                m[(i<<2) + 2],
+                m[(i<<2) + 3]);
+}
+
