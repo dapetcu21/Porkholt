@@ -312,6 +312,8 @@ class BubblesViewController : public PHViewController
                     break;
             }
             bg->setImage(s.bgType == 2 ? LPPHGetWallpaperImage(gm) : gm->imageNamed("background"));
+            LPPHClearWallpaperImage(gm);
+            gm->collectGarbageResources();
         }
         
         void wallpaperChanged()

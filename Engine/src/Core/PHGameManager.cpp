@@ -26,9 +26,9 @@
 #include <Porkholt/IO/PHEmbeddedDirectory.h>
 #include <Porkholt/IO/PHUnionDirectory.h>
 
-PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), capped(false), frameAnim(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _fullScreenVAO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), _windowClearColor(PHBlackColor), _windowDepthClearValue(1.0f), aTMU(0), clat(0), ccolor(PHInvalidColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
+PHGameManager::PHGameManager() : drawable(NULL), viewController(NULL), loaded(false), useRemote(false), remote(NULL), showFPS(false), fpsView(NULL), fpsCamera(NULL), capped(false), frameAnim(false), openGLStates(0), openGLVertexAttribStates(0), parsedExtensions(false), openGLVersionMajor(0), openGLVersionMinor(0), spriteStates(NULL), _shader(NULL), _spriteShader(NULL), rndMode(defaultRenderMode), _boundVAO(NULL), _solidSquareVAO(NULL), _fullScreenVAO(NULL), _boundFBO(NULL), lgth(NULL), ambient(PHClearColor), _windowClearColor(PHBlackColor), _windowDepthClearValue(1.0f), aTMU(0), clat(0), ccolor(PHInvalidColor), cdepth(1.0f), cstencil(0), _currentColor(0, 0, 0, 0), stencilF(stencilAlways), stencilRef(0), stencilMask((unsigned int)-1), stencilOpSF(stencilKeep), stencilOpDF(stencilKeep), stencilOpDP(stencilKeep)
 {
-memset(boundVBOs, 0, sizeof(boundVBOs));
+    memset(boundVBOs, 0, sizeof(boundVBOs));
     memset(textures, 0, sizeof(textures));
 }
 

@@ -3,6 +3,8 @@
 #ifndef PHGEOMETRY_H
 #define PHGEOMETRY_H
 
+#include <Porkholt/Core/PHUtilities.h>
+
 #if defined(__ARM_NEON__)
     #include "math_neon.h"
     #define PH_MATRIX_NEON

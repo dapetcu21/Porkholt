@@ -203,6 +203,8 @@ function scale_for_image(fname, screen, size)
       dw = d.w_cm * screen.ppi * 0.393701
     elseif d.h_cm ~=nil then
       dh = d.h_cm * screen.ppi * 0.393701
+    elseif d.scale ~=nil then
+      scale = d.scale
     end
 
     if dw ~= nil then
@@ -242,13 +244,20 @@ function downscale_png(srcd, dstd, f, stp, named)
       end
     end
     if downscale then
+      local scales = {}
       local img_name = named..f
       print('Downscaling image "'..img_name..'"')
       local size = image_size(srcd..'/'..f)
       for ext,screen in pairs(platform.screens) do
         local fhd = string.gsub(f, ".png$", ext..".png")
         local scale = scale_for_image(img_name, screen, size)
-        os.execute(string.format('%s convert "%s/%s" -resize %.4f%% "png32:%s/%s"', gm_exe, srcd, f, scale*100, dstd, fhd))
+        local ofhd = scales[scale]
+        if ofhd then
+          link(dstd, named, ofhd, fhd)
+        else
+          os.execute(string.format('%s convert "%s/%s" -resize %.4f%% "png32:%s/%s"', gm_exe, srcd, f, scale*100, dstd, fhd))
+          scales[scale] = fhd
+        end
       end
     end
   end
@@ -451,6 +460,17 @@ function crawl_dir(src, dst, prefix)
     local ext = file_extension(f)
     for ext,screen in pairs(platform.screens) do
       ff = string.gsub(ff, ext..".png$", ".png")
+    end
+    if (tp == "l") then
+      local fl = io.popen('readlink "'..dst..'/'..f..'"')
+      local lk = fl:lines()()
+      fl:close()
+      for ext,screen in pairs(platform.screens) do
+        lk = string.gsub(lk, ext..".png$", ".png")
+      end
+      if lk == ff then
+        tp = sl[ff]
+      end
     end
     if (tp ~= sl[ff]) then
       print('Removing file "'..prefix..f..'"')

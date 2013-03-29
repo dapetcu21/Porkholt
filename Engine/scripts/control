@@ -1,6 +1,6 @@
 Package: @PH_BUNDLE_ID@
 Name: @PH_NAME@
-Depends: 
+Depends: org.porkholt.livepapers (>=1.1.1)
 Version: @PH_MARKETING_VERSION@
 Architecture: iphoneos-arm
 Description: @PH_DESCRIPTION@

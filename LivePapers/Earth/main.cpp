@@ -11,12 +11,78 @@
 #include <Porkholt/Core/PHPerspectiveCamera.h>
 #include <Porkholt/Core/PH2DCamera.h>
 #include <Porkholt/Core/PHTextureCanvas.h>
+#include <Porkholt/Core/PHParticleView.h>
+#include <Porkholt/Core/PHParticleAnimator.h>
+#include <Porkholt/Core/PHDrawableCoordinates.h>
 
 #include <ctime>
 
 #include "ESettings.h"
 
-class PHEarthViewController : public PHViewController
+#define PART_ROWS 5
+#define PART_COLS 5
+#define PART_SIZE 0.08
+#define PART_SPEED 0.5
+#define NUM_PART (PART_ROWS * PART_COLS)
+#define floatrand() ((float)rand() / (float)RAND_MAX)
+
+class PHStarsAnimator : public PHParticleAnimator
+{
+    protected:
+        struct part 
+        {
+            PHVector2 pos;
+            float offset;
+            float opacity;
+        } v[NUM_PART];
+        particles parts;
+        particle2D pv[NUM_PART];
+        float time;
+    public:
+        PHStarsAnimator() : time(0)
+        {
+            const float dx = 2.0f / PART_ROWS;
+            const float dy = 2.0f / PART_COLS;
+            for (int i = 0; i < PART_ROWS; i++)
+                for (int j = 0; j < PART_COLS; j++)
+                {
+                    part & p = v[i * PART_COLS + j];
+                    p.pos = PHVector2(
+                            -1.0f + dx * i + floatrand() * (1.5f * dx),
+                            -1.0f + dy * j + floatrand() * (1.5f * dy));
+                    p.offset = floatrand() * (M_PI * 2.0f);
+                    p.opacity = floatrand() * 0.5f + 0.5f;
+                }
+            parts.n = NUM_PART;
+            parts.type = particleType2D;
+            parts.v2d = pv;
+            for (int i = 0; i < NUM_PART; i++)
+            {
+                pv[i].position = v[i].pos;
+                pv[i].rotation = 0;
+                float size = PART_SIZE * (floatrand() * 0.5f + 0.5f);
+                pv[i].size = PHSize(size, size);
+                pv[i].ud = NULL;
+            }
+        }
+
+
+        virtual void advanceAnimation(ph_float elapsedTime)
+        {
+            time = PHWarp(elapsedTime * PART_SPEED + time, M_PI * 2);
+            for (int i = 0; i < NUM_PART; i++)
+            {
+                pv[i].color = PHColor(1, 1, 1, v[i].opacity * max(0.0f, sinf(time + v[i].offset)));
+            }
+        }
+
+        virtual particles * calculatedParticles()
+        {
+            return &parts;
+        }
+};
+
+class PHEarthViewController : public PHViewController, public PHDrawableInputDelegate
 {
 protected:
     PHMeshBody * earth, *athmos;
@@ -26,23 +92,44 @@ protected:
     ESettings s;
     PHPerspectiveCamera * container;
     PHColor oldColor1, oldColor2;
+    PHParticleView * stars;
+    PHStarsAnimator * starsAnimator;
+
+    bool fingerDown;
+    ph_float lastFingerPos;
+    ph_float fingerPos;
+    ph_float currentSpeed;
+
     
     PHView * loadView(const PHRect & r)
     {
+        fingerDown = false;
+        currentSpeed = 0;
+
         container = new PHPerspectiveCamera();
         container->setNearClippingPlane(0.5f);
         container->setFarClippingPlane(50.0f);
 
         background = new PHImageView(r);
         background->setAutoresizeMask(PHView::ResizeAll);
+        background->setAutoresizesSubviews(true);
         background->setUserInput(true);
+        background->setInputDelegate(this);
+
+        stars = new PHParticleView(PHRect(r.width * 0.5, r.height * 0.5, r.width * 0.5, r.height * 0.5)); 
+        stars->setAutoresizeMask(PHView::ResizeFixedUp | PHView::ResizeFixedRight | PHView::ResizeFlexibleWidth | PHView::ResizeFlexibleHeight);
+
+        starsAnimator = new PHStarsAnimator();
+        stars->setParticleAnimator(starsAnimator);
+        stars->setImage(gm->imageNamed("star"));
+
+        background->addChild(stars);
         background->addChild(container);
 
         box = new PHBody();
 
         earth = new PHMeshBody();
         earth->setMesh(PHSphereMesh::sphere(gm));
-        PHNormalImage * img = (PHNormalImage*)gm->imageNamed("earth", true);
 
         athmos = new PHMeshBody();
         athmos->setMesh(PHSphereMesh::sphere(gm));
@@ -65,12 +152,42 @@ protected:
 
         gm->messageWithName("reloadPreferences")->addListener(PHInvBind(this, PHEarthViewController::loadSettings, NULL));
         gm->messageWithName("wallpaperImageChanged")->addListener(PHInvBind(this, PHEarthViewController::setBackground, NULL));
-        loadSettings();
+        gm->messageWithName("reshapeWindow")->addListener(PHInvBind(this, PHEarthViewController::reshape, NULL));
 
         oldColor1 = PHInvalidColor; 
         oldColor2 = PHWhiteColor;
+
+        loadSettings();
+        reshape();
         
         return background;
+    }
+
+    void reshape()
+    {
+        PHRect f = stars->frame();
+        float s = max(f.width, f.height);
+        stars->setScalingCenter(PHOriginPoint);
+        stars->setScale(PHSize(s, s));
+
+        if (this->s.bgType == 2)
+        {
+            PHSize siz;
+            float ar = gm->screenWidth() / gm->screenHeight();
+            PHNormalImage * img = (PHNormalImage*)gm->imageNamed("starfield");
+            float iar = (float)img->width() / (float)img->height();
+
+            if (iar > ar)
+            {
+                siz.width = ar/iar;
+                siz.height = 1.0f;
+            } else {
+                siz.width = 1.0f;
+                siz.height = iar/ar;
+            }
+            background->setTextureCoordinates(PHRect((PHVector2(1.0f, 1.0f) - siz) * 0.5, siz));
+        } else
+            background->setTextureCoordinates(PHWholeRect);
     }
 
     PHGLTexture2D * alternateTexture()
@@ -129,6 +246,8 @@ protected:
         athmos->setHidden(s.athmosColor.a < 0.01);
         earth->setMaterial(gm->materialNamed(opts));
         gm->setWindowClearColor(s.bgColor);
+        stars->setHidden(!s.stars);
+
         if (s.staticSun)
         {
             float sunAngle = s.sunAngle - M_PI_2;
@@ -176,15 +295,54 @@ protected:
 
     void setBackground()
     {
+        PHImage * img = NULL;
+        switch (s.bgType)
+        {
+            case 1:
 #ifdef PH_LIVEPAPERS
-        background->setImage(s.bgType ? LPPHGetWallpaperImage(gm) : NULL);
+                img = LPPHGetWallpaperImage(gm);
 #endif
+                break;
+            case 2:
+                img = gm->imageNamed("starfield");
+                break;
+        }
+        background->setImage(img);
+        reshape();
+    }
+
+    virtual void drawableRecievedEvent(PHDrawable * d, PHEvent * evt)
+    {
+        switch (evt->type())
+        {
+            case PHEvent::touchDown:
+                if (!fingerDown)
+                {
+                    fingerDown = true;
+                    evt->setHandled(true);
+                    fingerPos = lastFingerPos = evt->location().x;
+                }
+                break;
+            case PHEvent::touchCancelled:
+            case PHEvent::touchUp:
+                fingerDown = false;
+            case PHEvent::touchMoved:
+                fingerPos = evt->location().x;
+                break;
+        }
     }
     
     void updateScene(ph_float timeElapsed)
     {
-        earth->setRotation(PHQuaternion(time, PHVector3(0.0,-1.0,0.0)));
-        time = PHWarp(time + timeElapsed * s.rotationSpeed, M_PI * 2);
+        earth->setRotation(PHQuaternion(time, PHVector3(0.0f, 1.0f, 0.0f)));
+        if (fingerDown)
+        {
+            currentSpeed = (fingerPos - lastFingerPos) / timeElapsed;
+            lastFingerPos = fingerPos;
+        }
+        else
+            PHLowPassFilter(currentSpeed, s.rotationSpeed, timeElapsed, 5.0f);
+        time = PHWarp(time + timeElapsed * currentSpeed, M_PI * 2);
 
         if (!s.staticSun)
         {
@@ -208,6 +366,10 @@ public:
             earth->release();
         if (box)
             box->release();
+        if (stars)
+            stars->release();
+        if (starsAnimator)
+            starsAnimator->release();
     }
 };
 
@@ -222,6 +384,7 @@ void PHGameEntryPoint(PHGameManager * gm)
 }
 
 PHMAIN_DEFINE {
+    srand(time(NULL));
     return PHWMain(PHMAIN_ARGS, PHWVideoMode(800, 600, 60, PHWVideoMode::Windowed), PHWResizable | PHWVSync | PHWDepthBuffer | PHWFrameAnimation, &PHGameEntryPoint,NULL);
 }
  

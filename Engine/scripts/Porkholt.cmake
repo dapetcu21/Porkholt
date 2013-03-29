@@ -463,7 +463,7 @@ function(porkholt PH_APP_TARGET)
     add_dependencies(${PH_APP_TARGET}-sign ${PH_APP_TARGET})
 
     if(PH_LIVEPAPERS)
-      add_custom_target(${PH_APP_TARGET}-install bash -c "rsync -a --exclude=*~ --exclude=.DS_Store --exclude=*.swp --exclude=*.swo \"${PH_STAGING}/\" root@$PH_DEVICE_IP:/ && ssh root@$PH_DEVICE_IP killall LivePapers" VERBATIM)
+      add_custom_target(${PH_APP_TARGET}-install bash -c "rsync -a --exclude=*~ --exclude=.DS_Store --exclude=*.swp --exclude=*.swo \"${PH_STAGING}/\" root@$PH_DEVICE_IP:/ && ( ssh root@$PH_DEVICE_IP killall LivePapers || exit 0 )" VERBATIM)
     else()
       add_custom_target(${PH_APP_TARGET}-install bash -c "rsync -a --delete --delete-excluded --exclude=*~ --exclude=.DS_Store --exclude=*.swp --exclude=*.swo ${CMAKE_CURRENT_BINARY_DIR}/${PH_APP_TARGET}.app root@$PH_DEVICE_IP:/Applications" VERBATIM)
     endif()

@@ -3,6 +3,8 @@
 #ifndef PHOBJECT_H
 #define PHOBJECT_H
 
+#include <Porkholt/Core/PHUtilities.h>
+
 //#define VIRTUAL_PHOBJECT
 //#define DEBUG_ZOMBIES
 //#define DEBUG_ALLOCATIONS

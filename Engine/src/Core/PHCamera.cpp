@@ -6,6 +6,7 @@
 
 void PHCamera::render()
 {
+    if (_hidden) return;
     PHMatrix om = gm->modelViewMatrix();
     PHMatrix op = gm->projectionMatrix();
     if (im)

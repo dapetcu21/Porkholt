@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(Earth)
 
-set(PH_COMPANY_ID "org.porkholt")
+set(PH_COMPANY_ID "org.porkholt.livepapers")
 set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
 set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/scripts")
 set(PH_NAME "Earth")
 set(PH_IOS_TARGET_IPAD "YES")
 set(PH_LIVEPAPERS_FPS_STAGES "{60, 0}")
+set(PH_DESCRIPTION "Configurable OpenGL Earth live wallpaper")
 
 set(PH_FILES main.cpp ESettings.h ESettings.cpp)
 if(PH_LIVEPAPERS)
@@ -27,6 +28,8 @@ if(PH_LIVEPAPERS)
     ${PH_LPPREFS}/LPDatePref.mm
     ${PH_LPPREFS}/LPColorPref.h
     ${PH_LPPREFS}/LPColorPref.mm
+    ${PH_LPPREFS}/LPButtonPref.h
+    ${PH_LPPREFS}/LPButtonPref.mm
     EPrefsViewController.h
     EPrefsViewController.mm
     ESettingsLP.mm

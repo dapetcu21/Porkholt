@@ -2,7 +2,8 @@
 
 #ifndef PHERRORS_H
 #define PHERRORS_H
-#include <Porkholt/Core/PHMain.h>
+
+#include <Porkholt/Core/PHUtilities.h>
 
 void PHLog(const char * str, ...);
 void PHLog(const string & str, ...);

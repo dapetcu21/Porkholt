@@ -32,6 +32,7 @@ enum prefs
     ESunAngle,
     EVertexShading,
     EFPSType,
+    EReset,
 };
 
 #define getparam(key, type, var) [self prefWithTag:key]. type ## Value = s.var
@@ -108,7 +109,7 @@ enum prefs
     prefSlider(EPosX, @"Position X", @"%.2f", -5, 5);
     prefSlider(EPosY, @"Position Y", @"%.2f", -5, 5);
     prefSlider(EPosZ, @"Position Z", @"%.2f", -10, 0);
-    prefSlider(ESize, @"Earth size", @"%.2f", 0, 2);
+    //prefSlider(ESize, @"Earth size", @"%.2f", 0, 2);
     prefSlider(ERoll, @"Earth roll", @"%.2f", -M_PI, M_PI);
     prefSlider(EPitch, @"Earth pitch", @"%.2f", -M_PI, M_PI);
     prefSlider(ECamRoll, @"Camera roll", @"%.2f", -M_PI, M_PI);
@@ -122,7 +123,10 @@ enum prefs
     prefSwitch(EMapType, @"Alternative map");
     prefColor(EColor1, @"Map foreground");
     prefColor(EColor2, @"Map background");
-    prefSegment(EBgType, @"Background", @"Color", @"Wallpaper");
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        prefSegment(EBgType, @"Background", @"Color", @"Wallpaper", @"Starfield");
+    else
+        prefSegment(EBgType, @"Background", @"Color", @"Wpaper", @"Stars");
     prefColor(EBgColor, @"Background color");
 
     prefSpacer_();
@@ -131,7 +135,10 @@ enum prefs
     prefSwitch(ESpecular, @"Specular highlights");
     prefSlider(ENormalMap, @"Normal map strength", @"%.2f", 0, 1);
     prefSegment(EFPSType, @"Frames per second", @"20", @"30", @"60");
-    prefSegment(EVertexShading, @"Optimize", @"Quality", @"Speed");
+    //prefSegment(EVertexShading, @"Optimize", @"Quality", @"Speed");
+
+    prefSpacer_();
+    prefButton(EReset, @"Reset to defaults");
 
     [super loadView];
     [self loadPreferences];
@@ -176,8 +183,22 @@ enum prefs
         case EAthmosAlpha:
             s.athmosColor.a = pref.floatValue;
             break;
+
+        case EReset:
+        {
+            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Reset settings" message:@"Are you sure you want to reset Earth's settings to their defaults?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [alertView show];
+            break;
+        }
     }
     [self setHiddens];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+        [self resetToDefaults];
+    [alertView release];
 }
 
 @end

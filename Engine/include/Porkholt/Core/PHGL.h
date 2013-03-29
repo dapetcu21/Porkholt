@@ -2,6 +2,8 @@
 #ifndef PHGL_H
 #define PHGL_H
 
+#include <Porkholt/Core/PHUtilities.h>
+
 #if defined(PH_IPHONE_OS)
 	#include <OpenGLES/ES1/gl.h>
 	#include <OpenGLES/ES1/glext.h>

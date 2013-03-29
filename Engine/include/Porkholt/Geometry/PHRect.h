@@ -8,6 +8,9 @@
 struct PHRect
 {
 	PHRect(ph_float _x, ph_float _y, ph_float w, ph_float h) : x(_x),y(_y),width(w),height(h) {};
+    PHRect(const PHVector2 & o, ph_float w, ph_float h) : x(o.x), y(o.y), width(w), height(h) {};
+    PHRect(const PHVector2 & o, const PHVector2 & s) : x(o.x), y(o.y), width(s.width), height(s.height) {};
+    PHRect(ph_float _x, ph_float _y, const PHVector2 & s) : x(_x), y(_y), width(s.width), height(s.height) {};
 	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
 	PHRect() {};
 	ph_float x,y;
