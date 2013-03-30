@@ -69,17 +69,17 @@ PHCinematicActor::~PHCinematicActor()
     _cinematicMutex->release();
 }
 
-void PHCinematicActor::beginCinematicAnimation(ph_float duration)
+void PHCinematicActor::beginCinematicAnimation(float duration)
 {
     beginCinematicAnimation(duration, PHCinematicAnimator::LinearFunction);
 }
 
-void PHCinematicActor::chainCinematicAnimation(ph_float duration)
+void PHCinematicActor::chainCinematicAnimation(float duration)
 {
     chainCinematicAnimation(duration, PHCinematicAnimator::LinearFunction);
 }
 
-void PHCinematicActor::beginCinematicAnimation(ph_float duration, int type)
+void PHCinematicActor::beginCinematicAnimation(float duration, int type)
 {
     if (_cinematicAnimator)
         dropCinematicAnimation();
@@ -88,7 +88,7 @@ void PHCinematicActor::beginCinematicAnimation(ph_float duration, int type)
     _cinematicAnimator->setTimeFunction(type);
 }
 
-void PHCinematicActor::chainCinematicAnimation(ph_float duration, int type)
+void PHCinematicActor::chainCinematicAnimation(float duration, int type)
 {
     if (!_cinematicAnimator)
     {
@@ -152,7 +152,7 @@ void PHCinematicActor::actorAttachedToGameManager(PHGameManager * gameman)
             (*i)->setAnimatorPool(_gm->animatorPool());
 }
 
-void PHCinematicActor::setAnimationFieldF(int field, ph_float v)
+void PHCinematicActor::setAnimationFieldF(int field, float v)
 {
 }
 
@@ -172,7 +172,7 @@ void PHCinematicActor::setAnimationFieldQ(int field, const PHQuaternion & v)
 {
 }
 
-ph_float PHCinematicActor::getAnimationFieldF(int field)
+float PHCinematicActor::getAnimationFieldF(int field)
 {
     return 0;
 }

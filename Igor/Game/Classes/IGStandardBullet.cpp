@@ -50,7 +50,7 @@ IGStandardBullet::~IGStandardBullet()
     _bulletManager->getWorld()->physicsWorld()->DestroyBody(body);
 }
 
-void IGStandardBullet::animate(ph_float elapsed)
+void IGStandardBullet::animate(float elapsed)
 {
     position = body->GetPosition();
     angle = body->GetAngle();

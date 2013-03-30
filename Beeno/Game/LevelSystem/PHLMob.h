@@ -10,12 +10,12 @@ class b2Fixture;
 class PHLMob: public PHLNPC
 {
 private:
-    ph_float damage;
+    float damage;
     
     virtual void contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldManifold);
     
     virtual bool vulnerableFixture(b2Fixture * f);
-    virtual ph_float speedNeededForDamagingFixture(b2Fixture * f);
+    virtual float speedNeededForDamagingFixture(b2Fixture * f);
 public:
     PHLMob();
     virtual ~PHLMob();
@@ -24,8 +24,8 @@ public:
     
     static void registerLuaInterface(lua_State * L);
     
-    void setAttackDamage(ph_float power) { damage = power; }
-    ph_float attackDamage() { return damage; }
+    void setAttackDamage(float power) { damage = power; }
+    float attackDamage() { return damage; }
 };
 
 #endif

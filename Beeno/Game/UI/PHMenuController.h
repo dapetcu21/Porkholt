@@ -21,7 +21,7 @@ private:
     void resetClouds(PHView * v);
 protected:
     virtual PHView * loadView(const PHRect & frame);
-    virtual void updateScene(ph_float timeElapsed);
+    virtual void updateScene(float timeElapsed);
     
 public:
     PHTitleScreen * titleScreen() { getView(); return vc; }

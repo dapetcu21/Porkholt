@@ -59,20 +59,20 @@ PHQuaternion PHQuaternion::fromPointsOnSphere(const PHVector3 & from, const PHVe
 {
     if (from == to) return PHIdentityQuaternion;
     PHVector3 normal = PHVector3::cross(from, to);
-    ph_float cosa = PHVector3::dot(from, to);
-    ph_float cosa2 = sqrt((cosa + 1) / 2);
+    float cosa = PHVector3::dot(from, to);
+    float cosa2 = sqrt((cosa + 1) / 2);
     normal /= 2*cosa2;
     return PHQuaternion(cosa2, normal.x, normal.y, normal.z);
 }
 
-void PHQuaternion::toEuler(ph_float & heading, ph_float & attitude, ph_float & bank)
+void PHQuaternion::toEuler(float & heading, float & attitude, float & bank)
 {
-    ph_float sqw = w*w;
-    ph_float sqx = x*x;
-    ph_float sqy = y*y;
-    ph_float sqz = z*z;
-    ph_float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
-    ph_float test = x*y + z*w;
+    float sqw = w*w;
+    float sqx = x*x;
+    float sqy = y*y;
+    float sqz = z*z;
+    float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+    float test = x*y + z*w;
     if (test > 0.499*unit) { // singularity at north pole
         heading = 2 * atan2(x,w);
         attitude = M_PI_2;
@@ -90,16 +90,16 @@ void PHQuaternion::toEuler(ph_float & heading, ph_float & attitude, ph_float & b
     bank = atan2(2*x*w - 2*y*z, -sqx + sqy - sqz + sqw);
 }
 
-PHQuaternion PHQuaternion::fromEuler(ph_float heading, ph_float attitude, ph_float bank)
+PHQuaternion PHQuaternion::fromEuler(float heading, float attitude, float bank)
 {
-    ph_float c1 = cosf(heading/2);
-    ph_float s1 = sinf(heading/2);
-    ph_float c2 = cosf(attitude/2);
-    ph_float s2 = sinf(attitude/2);
-    ph_float c3 = cosf(bank/2);
-    ph_float s3 = sinf(bank/2);
-    ph_float c1c2 = c1*c2;
-    ph_float s1s2 = s1*s2;
+    float c1 = cosf(heading/2);
+    float s1 = sinf(heading/2);
+    float c2 = cosf(attitude/2);
+    float s2 = sinf(attitude/2);
+    float c3 = cosf(bank/2);
+    float s3 = sinf(bank/2);
+    float c1c2 = c1*c2;
+    float s1s2 = s1*s2;
     return PHQuaternion(c1c2*c3 - s1s2*s3,
                         c1c2*s3 + s1s2*c3,
                         s1*c2*c3 + c1*s2*s3,

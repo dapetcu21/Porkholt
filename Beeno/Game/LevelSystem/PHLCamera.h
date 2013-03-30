@@ -14,19 +14,19 @@ protected:
 	PHRect sz;
     bool follow, strict;
     int strictcount;
-    ph_float sstrict;
+    float sstrict;
 public:
 	PHLCamera();
 	virtual ~PHLCamera();
 	
 	PHRect bounds() { return sz; };
-    ph_float width() { return sz.width; }
-    ph_float height() { return sz.height; }
+    float width() { return sz.width; }
+    float height() { return sz.height; }
 	
 	virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
 	virtual void loadView();
 	
-	void updateCamera(PHPoint pnt, ph_float elapsed);
+	void updateCamera(PHPoint pnt, float elapsed);
     
     void setFollowsPlayer(bool f) { follow = f; }
     bool followsPlayer() { return follow; }

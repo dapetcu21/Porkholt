@@ -14,11 +14,11 @@ class PHView : public PHDrawable, public PHCinematicActor
 {
 protected:
 	PHRect _frame,_bounds;
-    ph_float _ZPosition;
+    float _ZPosition;
 	PHPoint _rotationalCenter,_scalingCenter, _flipCenter;
     bool fhoriz,fvert;
-	ph_float _rotation,_scaleX,_scaleY;
-	ph_float _alpha;
+	float _rotation,_scaleX,_scaleY;
+	float _alpha;
 	bool _optimize;
 	PHColor _backColor;
 	int effOrder;
@@ -90,8 +90,8 @@ public:
     void setPosition3D(const PH3DPoint &pos) { setPosition(pos.xy()); _ZPosition = pos.z; matrixCached = false; }
     PHPoint position() { return PHPoint(_frame.x,_frame.y); }
     PH3DPoint position3D() { return PH3DPoint(_frame.x, _frame.y, _ZPosition); }
-    ph_float zPosition() { return _ZPosition; }
-    void setZPosition(ph_float p) { _ZPosition = p; effectCached = false; }
+    float zPosition() { return _ZPosition; }
+    void setZPosition(float p) { _ZPosition = p; effectCached = false; }
 	PHRect frame() const { return _frame; }
 	PHRect bounds() const { return _bounds; }
 	virtual void setBounds(const PHRect &bnd);
@@ -108,18 +108,18 @@ public:
     void setVerticallyFlipped(bool b) { fvert = b; effectCached = false; }  
 	void setRotationalCenter(const PHPoint &center) { _rotationalCenter = center; effectCached = false; }
 	void setScalingCenter(const PHPoint &center) { _scalingCenter = center; effectCached = false; }
-	ph_float rotation() { return _rotation; };
-	virtual void setRotation(ph_float rot) { _rotation = rot; effectCached = false; };
-	ph_float scaleX() { return _scaleX; };
-	void setScaleX(ph_float scale) { _scaleX = scale; effectCached = false; };
-	ph_float scaleY() { return _scaleY; };
-	void setScaleY(ph_float scale) { _scaleY = scale; effectCached = false; };
+	float rotation() { return _rotation; };
+	virtual void setRotation(float rot) { _rotation = rot; effectCached = false; };
+	float scaleX() { return _scaleX; };
+	void setScaleX(float scale) { _scaleX = scale; effectCached = false; };
+	float scaleY() { return _scaleY; };
+	void setScaleY(float scale) { _scaleY = scale; effectCached = false; };
     void setScale(const PHSize & s) { _scaleX = s.x, _scaleY = s.y; effectCached = false; }
 	int effectOrder() { return effOrder; };
 	void setEffectOrder(int eff) { effOrder = eff; effectCached = false; };
-	void rotate(ph_float rot) { _rotation+= rot; effectCached = false; };
-	void setAlpha(ph_float alpha) { _alpha = alpha; if (alpha<0) alpha = 0; if (alpha>1) alpha = 1; };
-	ph_float alpha() { return _alpha; }
+	void rotate(float rot) { _rotation+= rot; effectCached = false; };
+	void setAlpha(float alpha) { _alpha = alpha; if (alpha<0) alpha = 0; if (alpha>1) alpha = 1; };
+	float alpha() { return _alpha; }
 	void setBackgroundColor(const PHColor &color) { _backColor = color; };
 	PHColor backgroundColor() { return _backColor; };
 
@@ -139,11 +139,11 @@ public:
     void autoresizeMyself(const PHRect & parentBounds, const PHSize & delta);
 //animation system
 protected:
-    virtual void setAnimationFieldF(int field, ph_float v);
+    virtual void setAnimationFieldF(int field, float v);
     virtual void setAnimationFieldV2(int field, const PHVector2 & v);
     virtual void setAnimationFieldC(int field, const PHColor & v);
     
-    virtual ph_float getAnimationFieldF(int field);
+    virtual float getAnimationFieldF(int field);
     virtual PHVector2 getAnimationFieldV2(int field);
     virtual PHColor getAnimationFieldC(int field);
  

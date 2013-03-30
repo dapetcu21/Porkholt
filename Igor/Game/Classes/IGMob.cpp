@@ -14,7 +14,7 @@ IGMob::~IGMob()
 {
 }
 
-void IGMob::loseHealth(ph_float h)
+void IGMob::loseHealth(float h)
 {
     hp -= h;
     if (hp <= 0)

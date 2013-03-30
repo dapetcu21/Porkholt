@@ -42,7 +42,7 @@ void PHTime::sleep(float time)
 {
 	if (time==0)
 		return;
-	//ph_float tm = getTime();
+	//float tm = getTime();
 	//PHLog("getTime:%lf",tm);
 	
 	struct timespec s1,s2;

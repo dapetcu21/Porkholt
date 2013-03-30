@@ -208,7 +208,7 @@ void PHWorld::updatePhysics()
 
 void PHWorld::updatePositions()
 {
-    ph_float frameInterval = gm->frameInterval();
+    float frameInterval = gm->frameInterval();
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
         PHLObject * obj = *i;
@@ -220,7 +220,7 @@ void PHWorld::updatePositions()
 }
 
 
-void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
+void PHWorld::updateScene(float elapsed, float interpolate)
 {
     viewQueue->advanceAnimation(elapsed);
     updateDialogs();
@@ -236,11 +236,11 @@ void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
 		PHRect pos = camera->bounds();
 		PHPoint ps = camera->position();
         PHPoint posit = ps;
-        ph_float rot = camera->rotation();
+        float rot = camera->rotation();
 		ps.x -= pos.width/2;			
 		ps.y -= pos.height/2;
-		ph_float scaleX = view->bounds().width / pos.width;
-		ph_float scaleY = view->bounds().height / pos.height;
+		float scaleX = view->bounds().width / pos.width;
+		float scaleY = view->bounds().height / pos.height;
 		pos.x = -ps.x * scaleX;
 		pos.y = -ps.y * scaleY;
 		pos.width = worldSize.width * scaleX;
@@ -258,8 +258,8 @@ void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
 			PHPoint ps = camera->position();
 			ps.x -= pos.width/2;			
 			ps.y -= pos.height/2;
-			ph_float scaleX = view->bounds().width / pos.width * ly.scale;
-			ph_float scaleY = view->bounds().height / pos.height * ly.scale;
+			float scaleX = view->bounds().width / pos.width * ly.scale;
+			float scaleY = view->bounds().height / pos.height * ly.scale;
 			pos.x = -ps.x * scaleX;
 			pos.y = -ps.y * scaleY;
 			pos.width = worldSize.width * scaleX;
@@ -282,7 +282,7 @@ void PHWorld::updateScene(ph_float elapsed, ph_float interpolate)
     heartView->setActiveHearts(round(player->healthPoints()/player->maximumHP()*hn));
 }
 
-void PHWorld::updateTimers(ph_float frameInterval)
+void PHWorld::updateTimers(float frameInterval)
 {
     modelQueue->advanceAnimation(frameInterval);
 }
@@ -399,7 +399,7 @@ void PHWorld::removeAllJoints()
     objects.clear();
 }
 
-PHWorld::layer * PHWorld::addLayer(ph_float scale)
+PHWorld::layer * PHWorld::addLayer(float scale)
 {
 	layer tmp;
 	tmp.container = new PHView(worldSize);
@@ -553,7 +553,7 @@ void PHWorld::dismissOverlayText()
 #define OVERLAYFONTSIZE 0.15
 #define OVERLAYPOS (5.1f/6)
 
-void PHWorld::overlayText(const string & s, ph_float duration)
+void PHWorld::overlayText(const string & s, float duration)
 {
     if (!overlayView)
     {
@@ -582,7 +582,7 @@ void PHWorld::overlayText(const string & s, ph_float duration)
     overlayView->mutex()->unlock();
 }
 
-void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage, ph_float radius)
+void PHWorld::boom(const PHPoint &location, float magnitude, float damage, float radius)
 {
     for (vector<PHLObject*>::iterator i = objects.begin(); i!=objects.end(); i++)
     {
@@ -593,14 +593,14 @@ void PHWorld::boom(const PHPoint &location, ph_float magnitude, ph_float damage,
         if (b && (b->GetType() == b2_dynamicBody))
         {
             PHPoint p = o->position()-location;
-            ph_float d = p.length();
+            float d = p.length();
             if (d==0)
             {
                 d = 0.1;
                 p = PHPoint(0,0.1);
             }
             p.normalize();
-            ph_float amm = (magnitude/(d*d));
+            float amm = (magnitude/(d*d));
             if (amm > magnitude*2)
                 amm = magnitude*2;
             b2Vec2 im(p.x*amm,p.y*amm);

@@ -10,9 +10,9 @@ class IGWallCurve : public PHCurve
     protected:
         list<PHPoint> points;
         size_t count;
-        ph_float _offset;
-        ph_float _width;
-        ph_float _limit;
+        float _offset;
+        float _width;
+        float _limit;
 
         friend class IGWallManager;
 
@@ -21,12 +21,12 @@ class IGWallCurve : public PHCurve
         IGWallCurve();
         ~IGWallCurve();
 
-        void setOffset(ph_float f) { _offset = f; modelChanged(); }
-        ph_float offset() { return _offset; }
-        void setWidth(ph_float w) { _width  = w; modelChanged(); }
-        ph_float width() { return _width; }
-        void setLimit(ph_float l) { _limit = l; modelChanged(); }
-        ph_float limit() { return _limit; }
+        void setOffset(float f) { _offset = f; modelChanged(); }
+        float offset() { return _offset; }
+        void setWidth(float w) { _width  = w; modelChanged(); }
+        float width() { return _width; }
+        void setLimit(float l) { _limit = l; modelChanged(); }
+        float limit() { return _limit; }
 
         bool perspectiveCorrectTextureMapping() { return true; }
 

@@ -25,14 +25,14 @@ public:
         multitouchEnd
 	};
 private:
-	ph_float _lastTime;
-	ph_float _time;
+	float _lastTime;
+	float _time;
 	PHDrawable * _owner;
 	PHPoint _location;
 	PHPoint _lastLocation;
-    ph_float _zoom;
+    float _zoom;
     PHPoint _delta;
-    ph_float _rotation;
+    float _rotation;
 	int state;
 	void * ud;
     PHObject * _sender;
@@ -46,22 +46,22 @@ public:
     PHEvent(PHEvent * o);
 	~PHEvent();
 	
-	ph_float time() { return _time; };
-    void setTime(ph_float t) { _time = t; }
-	ph_float lastTime() { return _lastTime; };
-    void setLastTime(ph_float t) { _lastTime = t; }
+	float time() { return _time; };
+    void setTime(float t) { _time = t; }
+	float lastTime() { return _lastTime; };
+    void setLastTime(float t) { _lastTime = t; }
 	PHPoint location() { return _location; };
     void setLocation(const PHPoint & p) { _location = p; }
 	PHPoint lastLocation() { return _lastLocation; };
 	void setLastLocation(const PHPoint & p) { _lastLocation = p; };
     PHPoint delta() { return _delta; }
     void setDelta(PHPoint & d) { _delta = d; }
-    ph_float deltaX() { return _delta.x; }
-    ph_float deltaY() { return _delta.y; }
-    ph_float rotation() { return _rotation; }
-    void setRotation(ph_float r) { _rotation = r; }
-    ph_float zoom() { return _zoom; }
-    void setZoom(ph_float z) { _zoom = z; }
+    float deltaX() { return _delta.x; }
+    float deltaY() { return _delta.y; }
+    float rotation() { return _rotation; }
+    void setRotation(float r) { _rotation = r; }
+    float zoom() { return _zoom; }
+    void setZoom(float z) { _zoom = z; }
 	int type() { return state; };
     void setType(int t) { state = t; }
     void setUserData(void * u) { ud = u; }

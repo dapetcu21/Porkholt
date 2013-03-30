@@ -48,7 +48,7 @@ void PHPrismaticJoint::recreateJoint()
     joint = world->getPhysicsWorld()->CreateJoint(&jointDef);
 }
 
-void PHPrismaticJoint::setLimits(ph_float lower, ph_float upper)
+void PHPrismaticJoint::setLimits(float lower, float upper)
 {
     _lowerTranslation = lower;
     _upperTranslation = upper;
@@ -56,13 +56,13 @@ void PHPrismaticJoint::setLimits(ph_float lower, ph_float upper)
         ((b2PrismaticJoint*)joint)->SetLimits(_lowerTranslation,_upperTranslation);
 }
 
-void PHPrismaticJoint::setLowerTranslation(ph_float val)
+void PHPrismaticJoint::setLowerTranslation(float val)
 {
     _lowerTranslation = val;
     if (joint)
         ((b2PrismaticJoint*)joint)->SetLimits(_lowerTranslation,_upperTranslation);
 }
-void PHPrismaticJoint::setUpperTranslation(ph_float val)
+void PHPrismaticJoint::setUpperTranslation(float val)
 {
     _upperTranslation = val;
     if (joint)

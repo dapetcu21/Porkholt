@@ -34,7 +34,7 @@ protected:
     PHTextView * text;
     int lane;
 
-    ph_float speed;
+    float speed;
 
     void setLane(int l) { if ((l>=0) && (l<cols)) shift(l - lane); }
 
@@ -164,7 +164,7 @@ protected:
         updateScore();
     }
 
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     {
         if (!block)
         {
@@ -207,7 +207,7 @@ protected:
         }
         PHRect r = block->frame();
         r.y -= elapsed * (dn?(speed*3):speed);
-        ph_float l = vec[lane].size() * height;
+        float l = vec[lane].size() * height;
         bool b = false;
         if (r.y<=l)
         {

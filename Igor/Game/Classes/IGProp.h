@@ -13,7 +13,7 @@ class IGProp : public IGObject, public IGContactHandler
 {
     protected:
         PHPoint pos;
-        ph_float rot;
+        float rot;
         b2Body * body;
         b2MouseJoint * posJoint;
         bool collisions;
@@ -36,8 +36,8 @@ class IGProp : public IGObject, public IGContactHandler
 
         virtual void setPosition(const PHPoint & p);
         const PHPoint & position() { return pos; }
-        virtual void setRotation(ph_float rot);
-        ph_float rotation() { return rot; }
+        virtual void setRotation(float rot);
+        float rotation() { return rot; }
 
         PHPoint worldPoint(const PHPoint & p);
         PHPoint localPoint(const PHPoint & p);
@@ -49,7 +49,7 @@ class IGProp : public IGObject, public IGContactHandler
         b2Body * physicsBody() { return body; }
         void setPhysicsBody(b2Body * b);
 
-        virtual void animate(ph_float elapsed);
+        virtual void animate(float elapsed);
 };
 
 #endif

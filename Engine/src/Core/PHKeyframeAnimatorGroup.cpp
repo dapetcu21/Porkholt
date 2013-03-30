@@ -22,7 +22,7 @@ void PHKeyframeAnimatorGroup::removeKeyframeAnimator(PHKeyframeAnimator * anim)
 }
 
 
-void PHKeyframeAnimatorGroup::playSection(const string & name, const PHInvocation & callback, ph_float seek)
+void PHKeyframeAnimatorGroup::playSection(const string & name, const PHInvocation & callback, float seek)
 {
     PHInvocation inv = callback;
     for (set<PHKeyframeAnimator*>::iterator i = keyframeAnimators.begin(); i != keyframeAnimators.end(); i++)
@@ -35,7 +35,7 @@ void PHKeyframeAnimatorGroup::playSection(const string & name, const PHInvocatio
     }
 }
 
-void PHKeyframeAnimatorGroup::playSection(int section, const PHInvocation & callback, ph_float seek)
+void PHKeyframeAnimatorGroup::playSection(int section, const PHInvocation & callback, float seek)
 {
     PHInvocation inv = callback;
     for (set<PHKeyframeAnimator*>::iterator i = keyframeAnimators.begin(); i != keyframeAnimators.end(); i++)
@@ -143,7 +143,7 @@ static int PHKeyframeAnimatorGroup_playSection(lua_State * L)
         cb->setConsequentCallback(PHInv(a,PHKeyframeAnimatorGroup::removeLuaCallback,cb));
         inv = PHInv(cb,PHLuaCallback::call,NULL);
     }
-    ph_float seek = 0;
+    float seek = 0;
     if (lua_isnumber(L, 4))
         seek = lua_tonumber(L, 4);
     if (lua_isnumber(L, 2))

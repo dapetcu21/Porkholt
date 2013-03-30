@@ -15,8 +15,8 @@
     #define PH_MATRIX_C
 #endif
 
-ph_float PHInvSqrt(ph_float);
-ph_float PHSqrt(ph_float);
+float PHInvSqrt(float);
+float PHSqrt(float);
 double PHSqrt(double);
 double PHInvSqrt(double);
 
@@ -29,24 +29,24 @@ double PHInvSqrt(double);
 
 bool PHPointInRect(const PHPoint & pnt, const PHRect & rect);
 bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2);
-bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, ph_float radius);
+bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, float radius);
 
 #define toRad(x) ((x)/180.0f*M_PI)
 #define toDeg(x) ((x)/M_PI*180.0f)
 
-void PHLowPassFilter(ph_float & var, ph_float newval, ph_float period, ph_float cutoff);
+void PHLowPassFilter(float & var, float newval, float period, float cutoff);
 void PHLowPassFilter(double & var, double newval, double period, double cutoff);
-void PHLowPassFilter(ph_float * var, ph_float newval, ph_float period, ph_float cutoff);
+void PHLowPassFilter(float * var, float newval, float period, float cutoff);
 void PHLowPassFilter(double * var, double newval, double period, double cutoff);
 
-ph_float PHAngleFromNormalizedVector(const PHPoint & vec);
-inline ph_float PHAngleFromVector(PHPoint vec)
+float PHAngleFromNormalizedVector(const PHPoint & vec);
+inline float PHAngleFromVector(PHPoint vec)
 {
     vec.normalize();
     return PHAngleFromNormalizedVector(vec);
 }
 
-inline ph_float PHWarp(ph_float v, ph_float f)
+inline float PHWarp(float v, float f)
 {
     if (v<0)
         v-=((int)(v/f)-1)*f;
@@ -55,7 +55,7 @@ inline ph_float PHWarp(ph_float v, ph_float f)
     return v;
 }
 
-inline ph_float PHClamp(ph_float v, ph_float l, ph_float h)
+inline float PHClamp(float v, float l, float h)
 {
     if (v < l)
         v = l;
@@ -64,7 +64,7 @@ inline ph_float PHClamp(ph_float v, ph_float l, ph_float h)
     return v;
 }
 
-inline ph_float PHNormalizeAngle(ph_float v)
+inline float PHNormalizeAngle(float v)
 {
     if (v>M_PI)
         v-=((int)(v+M_PI)/(M_PI*2))*(M_PI*2);

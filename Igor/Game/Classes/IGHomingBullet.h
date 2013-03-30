@@ -13,7 +13,7 @@ class IGHomingBullet : public IGBullet
 {
     protected:
         PHVector2 position;
-        ph_float angle;
+        float angle;
         int owner;
         IGObject * contact;
         IGObject * target;
@@ -24,7 +24,7 @@ class IGHomingBullet : public IGBullet
 
         size_t numberOfParticles() { return 1; }
         void addParticles(PHParticleAnimator::particle2D * v);
-        void animate(ph_float elapsed);
+        void animate(float elapsed);
 
         void beginContact(bool aBody, b2Contact * contact);
 

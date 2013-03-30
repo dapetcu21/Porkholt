@@ -16,11 +16,11 @@ public:
     PHVector3 position; //if directionalLight, then this must be normalized and it represents direction
     PHColor diffuse;
     PHColor specular;
-    ph_float intensity;
+    float intensity;
     
-    PHGLLight(enum lightType tp, const PHVector3 & pos, const PHColor & dif, const PHColor & spec, ph_float inten) : type(tp), position(pos), diffuse(dif), specular(spec), intensity(inten) {}
-    PHGLLight(enum lightType tp, const PHVector3 & pos, const PHColor & dif, ph_float inten) : type(tp), position(pos), diffuse(dif), specular(PHWhiteColor), intensity(inten) {}
-    PHGLLight(enum lightType tp, const PHVector3 & pos, ph_float inten) : type(tp), position(pos), diffuse(PHWhiteColor), specular(PHWhiteColor), intensity(inten) {}
+    PHGLLight(enum lightType tp, const PHVector3 & pos, const PHColor & dif, const PHColor & spec, float inten) : type(tp), position(pos), diffuse(dif), specular(spec), intensity(inten) {}
+    PHGLLight(enum lightType tp, const PHVector3 & pos, const PHColor & dif, float inten) : type(tp), position(pos), diffuse(dif), specular(PHWhiteColor), intensity(inten) {}
+    PHGLLight(enum lightType tp, const PHVector3 & pos, float inten) : type(tp), position(pos), diffuse(PHWhiteColor), specular(PHWhiteColor), intensity(inten) {}
 };
 
 #endif

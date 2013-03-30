@@ -52,7 +52,7 @@ void PHCurve::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, 
     
     for (int k=0; k<4; k++)
     {
-        ph_float len = 0;
+        float len = 0;
         int tag;
         for (i = nx = corners[k];((tag = anchors[i].tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
         {
@@ -61,14 +61,14 @@ void PHCurve::textureCoordinatesFromAnchorList(GLfloat * buffer, size_t stride, 
                 nx-=n;
             len+=(anchors[nx].point-anchors[i].point).length();
         }
-        ph_float l = 0;
+        float l = 0;
         for (i = nx = corners[k];((tag = anchors[i].tag),(tag<=0 || tag>4 || tag==k+1)); i=nx)
         {
             nx++;
             if ((size_t)nx>=n)
                 nx-=n;
-            ph_float d = l/len;
-            ph_float x,y;
+            float d = l/len;
+            float x,y;
             switch (k+1) {
                 case 1:
                     y = 0;
@@ -196,7 +196,7 @@ static bool cmp_raw(pnt_raw * a, pnt_raw * b)
 
 static inline int angleof(const PHPoint & a, const PHPoint & b, const PHPoint & c)
 {
-    ph_float determinant = a.x*b.y-a.y*b.x + b.x*c.y-b.y*c.x + c.x*a.y-c.y*a.x;
+    float determinant = a.x*b.y-a.y*b.x + b.x*c.y-b.y*c.x + c.x*a.y-c.y*a.x;
     if (determinant==0)
         return 0;
     if (determinant>0)
@@ -353,9 +353,9 @@ GLushort * PHCurve::triangulatePolygon(const GLfloat vertices[],size_t stride, s
         pnt_raw * crr = aa[i];
         pnt_raw * pv = crr->prev;
         pnt_raw * nx = crr->next;
-        ph_float cx = crr->i->x;
-        ph_float pvx = pv->i->x;
-        ph_float nxx = nx->i->x;
+        float cx = crr->i->x;
+        float pvx = pv->i->x;
+        float nxx = nx->i->x;
         
         #define edgenamed(x,y) ((x->p==y->p-1)?&b[x->p]:((x->p-1==y->p)?&b[y->p]:(((x->p==0 && y->p==m-1)||(x->p==m-1 && y->p==0))?&b[m-1]:NULL)))
         edge_raw * nxe = edgenamed(crr, nx);
@@ -612,9 +612,9 @@ const vector<PHCurve::anchorPoint> * PHCurve::tesselate(const vector<anchorPoint
         pnt * crr = aa[i];
         pnt * pv = crr->prev;
         pnt * nx = crr->next;
-        ph_float cx = crr->it()->point.x;
-        ph_float pvx = pv->it()->point.x;
-        ph_float nxx = nx->it()->point.x;
+        float cx = crr->it()->point.x;
+        float pvx = pv->it()->point.x;
+        float nxx = nx->it()->point.x;
         
         int j = crr->p;
         edge * nxe = &b[j];
@@ -835,9 +835,9 @@ GLushort * PHCurve::triangulatePolygon(const vector<anchorPoint> & points, size_
         pnt * crr = aa[i];
         pnt * pv = crr->prev;
         pnt * nx = crr->next;
-        ph_float cx = crr->i->point.x;
-        ph_float pvx = pv->i->point.x;
-        ph_float nxx = nx->i->point.x;
+        float cx = crr->i->point.x;
+        float pvx = pv->i->point.x;
+        float nxx = nx->i->point.x;
         
 #define edgenamed(x,y) ((x->p==y->p-1)?&b[x->p]:((x->p-1==y->p)?&b[y->p]:(((x->p==0 && y->p==m-1)||(x->p==m-1 && y->p==0))?&b[m-1]:NULL)))
         edge * nxe = edgenamed(crr, nx);

@@ -49,7 +49,7 @@ void PHView::layoutSubviews(const PHRect & oldBounds)
             ((PHView*)(*i))->autoresizeMyself(b, d);
 }
 
-inline static PHPoint doTheMaths(ph_float lw, ph_float mw, ph_float rw, bool l, bool m, bool r, ph_float delta)
+inline static PHPoint doTheMaths(float lw, float mw, float rw, bool l, bool m, bool r, float delta)
 {
     if ((!l && !m) || !delta)
         return PHOriginPoint;
@@ -74,19 +74,19 @@ inline static PHPoint doTheMaths(ph_float lw, ph_float mw, ph_float rw, bool l, 
         {
             if (!(lw+mw))
                 return PHOriginPoint;
-            ph_float w = lw / (lw+mw);
+            float w = lw / (lw+mw);
             return PHPoint(delta * w, delta * (1 - w));
         }
         if (r && !m)
         {
             if (!(lw+rw))
                 return PHOriginPoint;
-            ph_float w = lw / (lw+rw);
+            float w = lw / (lw+rw);
             return PHPoint(delta * w, 0);
         }
         //if (r && m)
         {
-            ph_float sum = lw + mw + rw;
+            float sum = lw + mw + rw;
             if (!sum)
                 return PHOriginPoint;
             return PHPoint(delta * (lw / sum), delta * (mw / sum));
@@ -197,7 +197,7 @@ void PHView::render()
 	if (_optimize)
 	{
 		PHPoint pnt;
-		ph_float minX,minY,maxX,maxY;
+		float minX,minY,maxX,maxY;
 		minX=minY=0x3f3f3f3f;
 		maxX=maxY=-0x3f3f3f3f;
 #define test\
@@ -340,7 +340,7 @@ PHPositionalVector PHView::positionInParent(PHDrawableCoordinates * d, PHPositio
     return applyMatrices() * p;
 }
 
-void PHView::setAnimationFieldF(int field, ph_float v)
+void PHView::setAnimationFieldF(int field, float v)
 {
     switch (field)
     {
@@ -375,7 +375,7 @@ void PHView::setAnimationFieldC(int field, const PHColor & v)
     }
 }   
 
-ph_float PHView::getAnimationFieldF(int field)
+float PHView::getAnimationFieldF(int field)
 {
     switch (field)
     {

@@ -42,13 +42,13 @@ class ElectricParticleAnimator : public PHParticleAnimator
             int stage;
             int endpoint;
             PHVector2 pos;
-            ph_float elapsed;
+            float elapsed;
         } * pv; 
         particles particles;
         particle2D * p2v;
-        ph_float _particleSize;
+        float _particleSize;
         int _particleCount; 
-        ph_float _particleVelocity;
+        float _particleVelocity;
         PHParticleView * _particleView;
         PHColor _particleColor;
         
@@ -62,10 +62,10 @@ class ElectricParticleAnimator : public PHParticleAnimator
         
         PHParticleView * particleView() { return _particleView; }
         void setParticleView(PHParticleView * pv) { _particleView = pv; }
-        ph_float particleSize() { return _particleSize; }
-        void setParticleSize(ph_float f) { _particleSize = f; }
-        ph_float particleVelocity() { return _particleVelocity; }
-        void setParticleVelocity(ph_float v) { _particleVelocity = v; }
+        float particleSize() { return _particleSize; }
+        void setParticleSize(float f) { _particleSize = f; }
+        float particleVelocity() { return _particleVelocity; }
+        void setParticleVelocity(float v) { _particleVelocity = v; }
         PHColor particleColor() { return _particleColor; }
         void setParticleColor(const PHColor & c) { _particleColor = c; }
         int particleCount() { return _particleCount; }
@@ -84,18 +84,18 @@ class ElectricParticleAnimator : public PHParticleAnimator
             }
         }
 
-        void advanceAnimation(ph_float elapsed)
+        void advanceAnimation(float elapsed)
         {
             if (!elapsed) return;   
             PHSize bounds = _particleView->bounds().size();
             for (int i = 0; i < _particleCount; i++)
             {
                 part * p = pv + i;
-                ph_float elps = elapsed;
+                float elps = elapsed;
                 while (elps > FLT_EPSILON)
                 {
                     bool consumedAll = p->elapsed <= elps;
-                    ph_float el;
+                    float el;
                     if (consumedAll)
                     {
                         el = p->elapsed;

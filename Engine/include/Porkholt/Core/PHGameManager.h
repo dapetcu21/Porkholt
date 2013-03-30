@@ -53,10 +53,10 @@ class PHGameManagerInitParameters
 public:
     PHGameManagerInitParameters() : screenWidth(480), screenHeight(340), fps(60), dpi(150), defaultFBO(0), entryPoint(NULL), resourceDir(NULL) {}
 
-    ph_float screenWidth;
-    ph_float screenHeight;
+    float screenWidth;
+    float screenHeight;
     int fps;
-    ph_float dpi;
+    float dpi;
     GLuint defaultFBO;
     void (*entryPoint)(PHGameManager *);
 private:
@@ -102,26 +102,26 @@ private:
     PHDirectory * imgDir;
     PHDirectory * fntDir;
 
-	ph_float _screenWidth;
-	ph_float _screenHeight;
+	float _screenWidth;
+	float _screenHeight;
     PHRect _oldBounds;
-    ph_float dpi;
+    float dpi;
 	int fps;
-    ph_float lt;
+    float lt;
 	bool suspended;
     bool loaded;
-    ph_float lastElapsed, frameBeg;
+    float lastElapsed, frameBeg;
     
     bool useRemote;
     PHRemote * remote;
     
     bool showFPS;
     int frames;
-    ph_float fpsLeft;
+    float fpsLeft;
     PHTextView * fpsView;
     PH2DCamera * fpsCamera;
     bool capped, frameAnim;
-    void renderFPS(ph_float timeElapsed);
+    void renderFPS(float timeElapsed);
     
     void (*entryPoint)(PHGameManager*);
     void * ud;
@@ -136,20 +136,20 @@ public:
     ~PHGameManager();
     void init(const PHGameManagerInitParameters & params);
 
-	ph_float screenWidth() { return _screenWidth; };
-	ph_float screenHeight() { return _screenHeight; };
+	float screenWidth() { return _screenWidth; };
+	float screenHeight() { return _screenHeight; };
 	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
     PHRect oldScreenBounds() { return _oldBounds; }
-    void setScreenSize(ph_float w, ph_float h);
+    void setScreenSize(float w, float h);
     void setViewport(int x, int y, int w, int h);
     void setViewport(const PHRect & r) { setViewport(r.x, r.y, r.width, r.height); }
     void viewport(int & x, int & y, int & width, int & height);
     PHRect viewport() { int x,y,w,h; viewport(x,y,w,h); return PHRect(x,y,w,h); }
 	int framesPerSecond() { return fps; }
     void setFramesPerSecond(int f) { fps = f; }
-    ph_float frameInterval() { return 1.0f/fps; }
-    ph_float elapsedTime() { return lastElapsed; }
-    ph_float dotsPerInch() { return dpi; }
+    float frameInterval() { return 1.0f/fps; }
+    float elapsedTime() { return lastElapsed; }
+    float dotsPerInch() { return dpi; }
 	void renderFrame();
 	void appSuspended();
 	void appResumed();
@@ -221,7 +221,7 @@ private:
     PHColor ambient;
 
     PHColor _windowClearColor;
-    ph_float _windowDepthClearValue;
+    float _windowDepthClearValue;
     
     friend class PHGLVertexBufferObject;
     friend class PHGLVertexArrayObject;
@@ -282,8 +282,8 @@ public:
 
     void setWindowClearColor(const PHColor & c) { _windowClearColor = c; }
     const PHColor & windowClearColor() { return _windowClearColor; }
-    void setWindowDepthClearValue(ph_float value) { _windowDepthClearValue = value; }
-    ph_float windowDepthClearValue() { return _windowDepthClearValue; }
+    void setWindowDepthClearValue(float value) { _windowDepthClearValue = value; }
+    float windowDepthClearValue() { return _windowDepthClearValue; }
         
     PHGLShaderProgram * spriteShader() { if (spriteShaderStack.empty()) return NULL; return spriteShaderStack.back(); }
     void pushSpriteShader(PHGLShaderProgram * p);

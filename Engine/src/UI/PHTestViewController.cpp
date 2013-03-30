@@ -118,7 +118,7 @@ PHView * PHTestViewController::loadView(const PHRect & frame)
 	return view;
 }
 
-void PHTestViewController::updateScene(ph_float timeElapsed)
+void PHTestViewController::updateScene(float timeElapsed)
 {
 	PHTilt tilt = PHMotion::sharedInstance()->getTilt();
 	view2->setRotation(-tilt.roll); // "geostationary" view

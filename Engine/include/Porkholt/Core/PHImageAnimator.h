@@ -27,12 +27,12 @@ private:
     int section;
     int frame;
     int realframe,lastframe;
-    ph_float remaining,time;
+    float remaining,time;
     bool fade;
     
     PHInvocation invocation;
     
-    ph_float timeForFrameInSection(int fr, int sec);
+    float timeForFrameInSection(int fr, int sec);
     int realFrame(int fr, int sec);
     
     bool running;
@@ -53,10 +53,10 @@ public:
     
     bool isFading() { return fade; }
     
-    void advanceAnimation(ph_float elapsedTime);
+    void advanceAnimation(float elapsedTime);
     
-    ph_float currentFrameTime() { return time; }
-    ph_float remainingFrameTime() { return remaining; }
+    float currentFrameTime() { return time; }
+    float remainingFrameTime() { return remaining; }
     int currentSection() { return section; }
     int currentFrame() { return frame; }
     int currentRealFrame() { return realframe; }

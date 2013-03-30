@@ -11,7 +11,7 @@ void PHKeyframeAnimator::Keyframe::addPosition(const PHPoint & pos)
     position = pos;
 }
 
-void PHKeyframeAnimator::Keyframe::addRotation(ph_float rot)
+void PHKeyframeAnimator::Keyframe::addRotation(float rot)
 {
     flags|= hasRotation;
     rotation = rot;
@@ -35,67 +35,67 @@ void PHKeyframeAnimator::Keyframe::addCustomColor(const PHColor & clr)
     customColor = clr;
 }
 
-void PHKeyframeAnimator::Keyframe::addCustomValue(ph_float val)
+void PHKeyframeAnimator::Keyframe::addCustomValue(float val)
 {
     flags|= hasCustomValue;
     customValue = val;
 }
 
-void PHKeyframeAnimator::Keyframe::addJump(int sectionIndex, ph_float time)
+void PHKeyframeAnimator::Keyframe::addJump(int sectionIndex, float time)
 {
     flags|= hasJump;
     jmpSec = sectionIndex;
     jmpTime = time;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::positionFrame(ph_float tm, const PHPoint & pos)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::positionFrame(float tm, const PHPoint & pos)
 {
     Keyframe k(tm);
     k.addPosition(pos);
     return k;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::rotationFrame(ph_float tm, ph_float rot)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::rotationFrame(float tm, float rot)
 {
     Keyframe k(tm);
     k.addRotation(rot);
     return k;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::scaleFrame(ph_float tm, const PHSize & scale)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::scaleFrame(float tm, const PHSize & scale)
 {
     Keyframe k(tm);
     k.addScale(scale);
     return k;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::bgColorFrame(ph_float tm, const PHColor & clr)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::bgColorFrame(float tm, const PHColor & clr)
 {
     Keyframe k(tm);
     k.addBgColor(clr);
     return k;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::customColorFrame(ph_float tm, const PHColor & clr)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::customColorFrame(float tm, const PHColor & clr)
 {
     Keyframe k(tm);
     k.addCustomColor(clr);
     return k;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::customValueFrame(ph_float tm, ph_float val)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::customValueFrame(float tm, float val)
 {
     Keyframe k(tm);
     k.addCustomValue(val);
     return k;
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::nullFrame(ph_float tm) 
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::nullFrame(float tm) 
 { 
     return Keyframe(tm);
 }
 
-PHKeyframeAnimator::Keyframe PHKeyframeAnimator::jumpFrame(ph_float tm, int sectionIndex, ph_float time)
+PHKeyframeAnimator::Keyframe PHKeyframeAnimator::jumpFrame(float tm, int sectionIndex, float time)
 {
     Keyframe k(tm);
     k.addJump(sectionIndex, time);
@@ -135,7 +135,7 @@ void PHKeyframeAnimator::advanceNexts(int frame)
     advnext(nextCValue,hasCustomValue);
 }
 
-void PHKeyframeAnimator::playSection(int sec, const PHInvocation & callback, ph_float seek)
+void PHKeyframeAnimator::playSection(int sec, const PHInvocation & callback, float seek)
 {
     section = sec;
     if (section>=sections.size() || section<0)
@@ -168,7 +168,7 @@ void PHKeyframeAnimator::playSection(int sec, const PHInvocation & callback, ph_
     playing = true;
 }
 
-void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
+void PHKeyframeAnimator::advanceAnimation(float elapsedTime)
 {
     if (!_actor)
     {
@@ -183,13 +183,13 @@ void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
     
     while (elapsedTime>FLT_EPSILON)
     {
-        ph_float nextTime;
+        float nextTime;
         bool touch = (elapsedTime>=v[frame].time-time);
         if (touch)
             nextTime = v[frame].time;
         else
             nextTime = time+elapsedTime;
-        ph_float delta = nextTime-time;
+        float delta = nextTime-time;
         elapsedTime-=delta;
         
 #define advanceProperty(next,type,actorgetter,actorsetter,framegetter) \
@@ -213,7 +213,7 @@ void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
             else { \
                 PHColor old = _actor->actorgetter(); \
                 if (!old.isValid()) old = PHColor(1,1,1,0); \
-                ph_float f = (delta/(v[next].time-time)); \
+                float f = (delta/(v[next].time-time)); \
                 old.r += f*(keyval.r-old.r); \
                 old.g += f*(keyval.g-old.g); \
                 old.b += f*(keyval.b-old.b); \
@@ -223,11 +223,11 @@ void PHKeyframeAnimator::advanceAnimation(ph_float elapsedTime)
         }
         
         advanceProperty(nextPos,PHPoint,cinematicPosition,setCinematicPosition,position);
-        advanceProperty(nextRot, ph_float, cinematicRotation, setCinematicRotation, rotation);
+        advanceProperty(nextRot, float, cinematicRotation, setCinematicRotation, rotation);
         advanceProperty(nextScale, PHSize, cinematicScale, setCinematicScale, scale);
         advancePropertyColor(nextBgColor, cinematicBgColor, setCinematicBgColor, bgColor);
         advancePropertyColor(nextCColor, cinematicCustomColor, setCinematicCustomColor, customColor);
-        advanceProperty(nextCValue, ph_float, cinematicCustomValue, setCinematicCustomValue, customValue);
+        advanceProperty(nextCValue, float, cinematicCustomValue, setCinematicCustomValue, customValue);
         
         time = nextTime;
         if (touch)

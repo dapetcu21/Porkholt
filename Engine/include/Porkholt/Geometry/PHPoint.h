@@ -13,15 +13,15 @@ struct PHRect;
 struct PHPoint
 {
     union {
-        ph_float x;
-        ph_float width;
+        float x;
+        float width;
     };
     union {
-        ph_float y;
-        ph_float height;
+        float y;
+        float height;
     };
     PHPoint() {};
-    PHPoint(ph_float xx,ph_float yy) : x(xx), y(yy) {};
+    PHPoint(float xx,float yy) : x(xx), y(yy) {};
     PHPoint(const PHPoint & o) : x(o.x), y(o.y) {};
     PHPoint(const PHRect & o);
 
@@ -56,11 +56,11 @@ struct PHPoint
         return *this;
     }
 
-    PHPoint operator * (ph_float d) const
+    PHPoint operator * (float d) const
     {
         return PHPoint(x*d,y*d);
     }
-    PHPoint & operator *= (ph_float d)
+    PHPoint & operator *= (float d)
     {
         x*=d;
         y*=d;
@@ -79,11 +79,11 @@ struct PHPoint
         return *this;
     }
     
-    PHPoint operator / (ph_float d) const
+    PHPoint operator / (float d) const
     {
         return PHPoint(x/d,y/d);
     }
-    PHPoint & operator /= (ph_float d)
+    PHPoint & operator /= (float d)
     {
         x/=d;
         y/=d;
@@ -102,11 +102,11 @@ struct PHPoint
         return *this;
     }
 
-    ph_float length() const { return PHSqrt(x*x+y*y); } 
-    ph_float squaredLength() const { return x*x+y*y; }
-    ph_float inverseLength() const { return PHInvSqrt(x*x+y*y); }
-    PHPoint rotated(ph_float angle) const;
-    void rotate(ph_float angle);
+    float length() const { return PHSqrt(x*x+y*y); } 
+    float squaredLength() const { return x*x+y*y; }
+    float inverseLength() const { return PHInvSqrt(x*x+y*y); }
+    PHPoint rotated(float angle) const;
+    void rotate(float angle);
    
     bool operator < (const PHPoint & o) const
     {
@@ -144,8 +144,8 @@ struct PHPoint
 #endif
     }
     
-    ph_float dot(const PHPoint & v) { return dot(*this,v); }
-    static ph_float dot(const PHPoint & v1, const PHPoint & v2)
+    float dot(const PHPoint & v) { return dot(*this,v); }
+    static float dot(const PHPoint & v1, const PHPoint & v2)
     {
 #ifdef PH_MATRIX_NEON
         return dot2_neon((const float *)&v1,(const float *)&v2);
@@ -171,22 +171,22 @@ extern const PHPoint PHOriginPoint;
 struct PH3DPoint
 {
     union {
-        ph_float x;
-        ph_float width;
+        float x;
+        float width;
     };
     union {
-        ph_float y;
-        ph_float height;
+        float y;
+        float height;
     };
     union {
-        ph_float z;
-        ph_float depth;
+        float z;
+        float depth;
     };
     PH3DPoint() {};
-    PH3DPoint(const PHPoint & o, ph_float zz) : x(o.x), y(o.y), z(zz) {};
-    PH3DPoint(ph_float xx, const PHPoint & o) : x(xx), y(o.x), z(o.y) {};
-    PH3DPoint(ph_float xx, ph_float yy) : x(xx), y(yy), z(0) {};
-    PH3DPoint(ph_float xx, ph_float yy, ph_float zz) : x(xx), y(yy), z(zz) {};
+    PH3DPoint(const PHPoint & o, float zz) : x(o.x), y(o.y), z(zz) {};
+    PH3DPoint(float xx, const PHPoint & o) : x(xx), y(o.x), z(o.y) {};
+    PH3DPoint(float xx, float yy) : x(xx), y(yy), z(0) {};
+    PH3DPoint(float xx, float yy, float zz) : x(xx), y(yy), z(zz) {};
     PH3DPoint(const PHPoint & o) : x(o.x), y(o.y), z(0) {};
     PH3DPoint(const PH3DPoint & o) : x(o.x), y(o.y), z(o.z) {};
 
@@ -222,11 +222,11 @@ struct PH3DPoint
         return *this;
     }
 
-    PH3DPoint operator * (ph_float d) const
+    PH3DPoint operator * (float d) const
     {
         return PH3DPoint(x*d,y*d,z*d);
     }
-    PH3DPoint & operator *= (ph_float d)
+    PH3DPoint & operator *= (float d)
     {
         x*=d;
         y*=d;
@@ -246,11 +246,11 @@ struct PH3DPoint
         return * this;
     }
 
-    PH3DPoint operator / (ph_float d) const
+    PH3DPoint operator / (float d) const
     {
         return PH3DPoint(x/d,y/d,z/d);
     }
-    PH3DPoint & operator /= (ph_float d)
+    PH3DPoint & operator /= (float d)
     {
         x/=d;
         y/=d;
@@ -271,11 +271,11 @@ struct PH3DPoint
         return * this;
     }
     
-    ph_float length() const { return PHSqrt(x*x+y*y+z*z); } 
-    ph_float squaredLength() const { return x*x+y*y+z*z; }
-    ph_float inverseLength() const { return PHInvSqrt(x*x+y*y+z*z); }
-    void rotate(ph_float angle);
-    PH3DPoint rotated(ph_float angle) const;
+    float length() const { return PHSqrt(x*x+y*y+z*z); } 
+    float squaredLength() const { return x*x+y*y+z*z; }
+    float inverseLength() const { return PHInvSqrt(x*x+y*y+z*z); }
+    void rotate(float angle);
+    PH3DPoint rotated(float angle) const;
     
     bool operator < (const PH3DPoint & o) const
     {
@@ -322,8 +322,8 @@ struct PH3DPoint
 #endif
     }
     
-    ph_float dot(const PH3DPoint & v) { return dot(*this,v); }
-    static ph_float dot(const PH3DPoint & v1, const PH3DPoint & v2)
+    float dot(const PH3DPoint & v) { return dot(*this,v); }
+    static float dot(const PH3DPoint & v1, const PH3DPoint & v2)
     {
 #ifdef PH_MATRIX_NEON
         return dot3_neon((const float *)&v1,(const float *)&v2);
@@ -382,7 +382,7 @@ typedef PHAABox PHPositionalVector;
 extern const PH3DSize PH3DUnitSize;
 extern const PH3DPoint PH3DOriginPoint;
 
-PH_STATIC_ASSERT(sizeof(PHVector3) == sizeof(ph_float)*3);
-PH_STATIC_ASSERT(sizeof(PHVector2) == sizeof(ph_float)*2);
+PH_STATIC_ASSERT(sizeof(PHVector3) == sizeof(float)*3);
+PH_STATIC_ASSERT(sizeof(PHVector2) == sizeof(float)*2);
 
 #endif

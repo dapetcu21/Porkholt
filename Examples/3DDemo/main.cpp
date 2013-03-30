@@ -16,7 +16,7 @@ protected:
     PHBody * _body;
     PHVector3 lastPoint;
     PHVector3 axis;
-    ph_float rotSpeed;
+    float rotSpeed;
     bool manual;
 public:
 
@@ -100,7 +100,7 @@ public:
         }
     }
 
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     {
         if (_body && !manual && rotSpeed>0 && rotSpeed < 1000000000000.0f)
         {
@@ -114,7 +114,7 @@ class PH3DDemoViewController : public PHViewController
 {
 protected:
     PHMeshBody * lbody, *body;
-    ph_float time;
+    float time;
     PHRotateBall * rotator;
     
     PHView * loadView(const PHRect & r)
@@ -166,7 +166,7 @@ protected:
         return v;
     }
     
-    void updateScene(ph_float timeElapsed)
+    void updateScene(float timeElapsed)
     {
         PH3DPoint p(0 + sin(time)*2.5, 0, -5 + cos(time)*2.5);
         lbody->setPosition(p);

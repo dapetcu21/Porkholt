@@ -23,12 +23,12 @@ void PHDialogView::draw()
         PHImageView::draw();
         return;
     }
-    ph_float aspectRatio = _image->width()/_image->height();
-    ph_float aspectRatioC = _bounds.width/_bounds.height;
+    float aspectRatio = _image->width()/_image->height();
+    float aspectRatioC = _bounds.width/_bounds.height;
     if (aspectRatioC/aspectRatio >1.0f)
     {
-        ph_float marginLen = aspectRatio*_bounds.height/2;
-        ph_float toRecover = _bounds.width-marginLen*2;
+        float marginLen = aspectRatio*_bounds.height/2;
+        float toRecover = _bounds.width-marginLen*2;
         
         renderInFramePortionTint(PHRect(0, 0, marginLen, _bounds.height), PHRect(0, 0, 0.5, 1.0), tint);
         renderInFramePortionTint(PHRect(marginLen+toRecover, 0, marginLen, _bounds.height), PHRect(0.5, 0, 0.5, 1.0), tint);

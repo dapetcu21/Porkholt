@@ -13,7 +13,7 @@ private:
     int heartNo;
     int active;
     bool flipped;
-    ph_float gap;
+    float gap;
 public:
     PHHeartView() : PHImageView(), PHHEARTVIEW_INIT {}
     PHHeartView(const PHRect & frame) : PHImageView(frame), PHHEARTVIEW_INIT {}
@@ -24,8 +24,8 @@ public:
     bool flippedOrder() { return flipped; }
     void setFlippedOrder(bool f) { flipped = f; }
     virtual void draw();
-    void setHeartGap(ph_float g) { gap = g; }
-    ph_float heartGap() { return gap; }
+    void setHeartGap(float g) { gap = g; }
+    float heartGap() { return gap; }
 };
 
 #endif

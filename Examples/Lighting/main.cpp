@@ -16,9 +16,9 @@ protected:
     struct {
         PHGLLight * light;
         PH3DPoint pnt;
-        ph_float rot;
-        ph_float rad;
-        ph_float speed;
+        float rot;
+        float rad;
+        float speed;
     } a[numLights];
     
     PHView * loadView(const PHRect & frm)
@@ -44,17 +44,17 @@ protected:
                     break;
             }
             a[i].light = dv->addPointLight(a[i].pnt = PH3DPoint(rand()%int(frm.width),rand()%int(frm.height),100+rand()%100),c,150.0f);
-            a[i].rot = (rand()/(ph_float)RAND_MAX)*M_PI*2;
+            a[i].rot = (rand()/(float)RAND_MAX)*M_PI*2;
             a[i].rad = 50+rand()%100;
-            a[i].speed = ((rand()/(ph_float)RAND_MAX)-0.5)*8.0;
+            a[i].speed = ((rand()/(float)RAND_MAX)-0.5)*8.0;
         }
 
         dv->setAmbientColor(PHColor(0.1,0.1,0.1,1.0));
         dv->setNormalMapping(true);
         
         PHImage * img = gm->imageNamed("igor", true);
-        ph_float height = img->height()/2;
-        ph_float width = img->width()/2;
+        float height = img->height()/2;
+        float width = img->width()/2;
         
 #define columns 2
 #define rows 3
@@ -71,7 +71,7 @@ protected:
         return v;
     }
     
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     { 
         for (int i=0; i<numLights; i++)
         {

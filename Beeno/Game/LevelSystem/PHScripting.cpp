@@ -173,9 +173,9 @@ static int PHWorld_boom(lua_State * L)
     PHWorld * world = (PHWorld*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
     PHPoint loc = PHPoint::fromLua(L, 2);
-    ph_float magnitude = 1;
-    ph_float damage = 1;
-    ph_float radius = 1;
+    float magnitude = 1;
+    float damage = 1;
+    float radius = 1;
     if (lua_isnumber(L, 3))
         magnitude = lua_tonumber(L, 3);
     if (lua_isnumber(L, 4))
@@ -226,7 +226,7 @@ void PHScripting::loadWorld()
     PHLEggBomb::registerLuaInterface(L);
 }
 
-void PHScripting::scriptingStep(ph_float timeElapsed)
+void PHScripting::scriptingStep(float timeElapsed)
 {
     
 }

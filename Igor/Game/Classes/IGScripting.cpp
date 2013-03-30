@@ -122,7 +122,7 @@ void IGScripting::loadCInterface()
         (*i)(this);
 }
 
-void IGScripting::advanceAnimation(ph_float elapsed)
+void IGScripting::advanceAnimation(float elapsed)
 {
     lua_getglobal(L, "frame");
     lua_pushnumber(L, elapsed);

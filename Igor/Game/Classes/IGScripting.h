@@ -31,7 +31,7 @@ class IGScripting : public PHAnimator
         lua_State * luaState() { return L; }
         PHPoint screenSize();
 
-        void advanceAnimation(ph_float elapsed);
+        void advanceAnimation(float elapsed);
 
         static map<string, IGScriptingAllocator> * luaClasses;
         static list<IGScriptingIface> * luaInterfaces;

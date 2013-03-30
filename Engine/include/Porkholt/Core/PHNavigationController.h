@@ -17,7 +17,7 @@ private:
 	
 	void startAnimating();
 	void stopAnimating();
-	void startSlideAnimation(ph_float x, ph_float y);
+	void startSlideAnimation(float x, float y);
 	void endSlideAnimation(void * dmy);
 	void cancelAnimation();
 	void startFadeAnimation();

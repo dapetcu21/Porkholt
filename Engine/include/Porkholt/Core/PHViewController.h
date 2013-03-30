@@ -22,7 +22,7 @@ protected:
     bool rmNav;
     PHRect ir;
     
-    virtual void updateScene(ph_float timeElapsed);
+    virtual void updateScene(float timeElapsed);
     
     PHGameManager * gm;
     
@@ -37,7 +37,7 @@ public:
     PHNavigationController * navigationController() { return navController; }
     void setNavigationController(PHNavigationController * nc);
     
-	virtual void advanceAnimation(ph_float timeElapsed);
+	virtual void advanceAnimation(float timeElapsed);
 	
 	enum ViewStates
 	{

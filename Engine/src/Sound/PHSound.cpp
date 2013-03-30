@@ -285,10 +285,10 @@ bool PHSound::isPlaying()
     return (state == AL_PLAYING);
 }
 
-ph_float PHSound::duration()
+float PHSound::duration()
 {
     if (!buf) return 0;
-    return buf->sampleCount()/ph_float(buf->frequency());
+    return buf->sampleCount()/float(buf->frequency());
 }
 
 size_t PHSound::playPositionSample(ALenum state)
@@ -325,12 +325,12 @@ size_t PHSound::playPositionSample(ALenum state)
     return off;
 }
 
-ph_float PHSound::playPosition()
+float PHSound::playPosition()
 {
-    return playPositionSample()/ph_float(buf->frequency());
+    return playPositionSample()/float(buf->frequency());
 }
 
-void PHSound::seek(ph_float pos)
+void PHSound::seek(float pos)
 {
     schseek = true;
     seekv = pos*buf->frequency();
@@ -338,61 +338,61 @@ void PHSound::seek(ph_float pos)
 }
 
 
-void PHSound::setPitch(ph_float val)
+void PHSound::setPitch(float val)
 {
     _pitch = val;
     alSourcef(id, AL_PITCH, ALfloat(val));
 }
 
-void PHSound::setGain(ph_float val)
+void PHSound::setGain(float val)
 {
     _gain = val;
     alSourcef(id, AL_GAIN, ALfloat(val));
 }
 
-void PHSound::setMinGain(ph_float val)
+void PHSound::setMinGain(float val)
 {
     _minGain = val;
     alSourcef(id, AL_MIN_GAIN, ALfloat(val));
 }
 
-void PHSound::setMaxGain(ph_float val)
+void PHSound::setMaxGain(float val)
 {
     _maxGain = val;
     alSourcef(id, AL_MAX_GAIN, ALfloat(val));
 }
 
-void PHSound::setMaxDistance(ph_float val)
+void PHSound::setMaxDistance(float val)
 {
     _maxDistance = val;
     alSourcef(id, AL_MAX_DISTANCE, ALfloat(val));
 }
 
-void PHSound::setRolloffFactor(ph_float val)
+void PHSound::setRolloffFactor(float val)
 {
     _rolloffFactor = val;
     alSourcef(id, AL_ROLLOFF_FACTOR, ALfloat(val));
 }
 
-void PHSound::setConeOuterGain(ph_float val)
+void PHSound::setConeOuterGain(float val)
 {
     _coneOuterGain = val;
     alSourcef(id, AL_CONE_OUTER_GAIN, ALfloat(val));
 }
 
-void PHSound::setConeInnerAngle(ph_float val)
+void PHSound::setConeInnerAngle(float val)
 {
     _coneInnerAngle = val;
     alSourcef(id, AL_CONE_INNER_ANGLE, ALfloat(val));
 }
 
-void PHSound::setConeOuterAngle(ph_float val)
+void PHSound::setConeOuterAngle(float val)
 {
     _coneOuterAngle = val;
     alSourcef(id, AL_CONE_OUTER_ANGLE, ALfloat(val));
 }
 
-void PHSound::setReferenceDistance(ph_float val)
+void PHSound::setReferenceDistance(float val)
 {
     _referenceDistance = val;
     alSourcef(id, AL_REFERENCE_DISTANCE, ALfloat(val));
@@ -435,7 +435,7 @@ void PHSound::setLooping(bool l)
     loop = l;
 }
 
-void PHSound::setAnimationFieldF(int field, ph_float value)
+void PHSound::setAnimationFieldF(int field, float value)
 {
     switch (field)
     {
@@ -475,7 +475,7 @@ void PHSound::setAnimationFieldQ(int field, const PHQuaternion & value)
     }
 }
 
-ph_float PHSound::getAnimationFieldF(int field)
+float PHSound::getAnimationFieldF(int field)
 {
     switch (field)
     {

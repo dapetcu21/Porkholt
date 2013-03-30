@@ -27,12 +27,12 @@ void PHLCamera::loadView()
 {
 }
 
-void PHLCamera::updateCamera(PHPoint pnt, ph_float elapsed)
+void PHLCamera::updateCamera(PHPoint pnt, float elapsed)
 {
 	if (follow)
     {
         
-        ph_float el = elapsed;
+        float el = elapsed;
         
         if (sstrict>0)
         {

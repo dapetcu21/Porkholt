@@ -14,7 +14,7 @@ class IGBouncyButton : public IGDampingProp, PHDrawableInputDelegate
         void configureDrawable(PHDrawable * d);
         string img;
         PHImageView * iv;
-        ph_float time;
+        float time;
         PHSize _rotSize;
         PHSize _size;
         PHPoint _target;
@@ -36,7 +36,7 @@ class IGBouncyButton : public IGDampingProp, PHDrawableInputDelegate
 
         void dismiss();
 
-        void animate(ph_float);
+        void animate(float);
         void drawableRecievedEvent(PHDrawable * d, PHEvent * evt);
 
         const char * luaClass() { return "IGBouncyButton"; } 

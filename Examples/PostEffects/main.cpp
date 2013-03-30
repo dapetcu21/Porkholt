@@ -15,7 +15,7 @@ class PH3DDemoViewController : public PHViewController
 {
 protected:
     PHMeshBody * lbody, *body;
-    ph_float time;
+    float time;
     
     PHView * loadView(const PHRect & r)
     {
@@ -80,7 +80,7 @@ protected:
         return v;
     }
     
-    void updateScene(ph_float timeElapsed)
+    void updateScene(float timeElapsed)
     {
         PH3DPoint p(0 + sin(time)*2.5, 0, -5 + cos(time)*2.5);
         lbody->setPosition(p);

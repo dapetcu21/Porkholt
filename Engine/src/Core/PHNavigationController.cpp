@@ -116,9 +116,9 @@ void PHNavigationController::cancelAnimation()
 	}
 }
 
-void PHNavigationController::startSlideAnimation(ph_float x, ph_float y)
+void PHNavigationController::startSlideAnimation(float x, float y)
 {
-    ph_float time = 0.5f;
+    float time = 0.5f;
 	if (lastVC)
 	{
 		PHView * lastV = lastVC->getView();

@@ -12,8 +12,8 @@ class PHTextView : public PHView
 {
 protected:
     PHFont * _font;
-    ph_float size;
-    ph_float lineSpace;
+    float size;
+    float lineSpace;
     int _alignment;
     string _text;
     PHColor color;
@@ -33,7 +33,7 @@ protected:
     
     void recalculatePositions();
     void loadVBOs();
-    ph_float lengthForInterval(int st, int en);
+    float lengthForInterval(int st, int en);
     
     PHSize sz;
     
@@ -55,10 +55,10 @@ public:
     void setBounds(const PHRect & b);
 	PHFont * font() { return _font; }
     void setFont(PHFont * font) { if (font) font->retain(); if (_font) _font->release(); _font = font; needsReload = true;}
-    ph_float fontSize() { return size; }
-    void setFontSize(ph_float s) { needsReload = true; size = s; }
-    ph_float lineSpacing() { return lineSpace; }
-    void setLineSpacing(ph_float s) {  needsReload = true; lineSpace = s; }
+    float fontSize() { return size; }
+    void setFontSize(float s) { needsReload = true; size = s; }
+    float lineSpacing() { return lineSpace; }
+    void setLineSpacing(float s) {  needsReload = true; lineSpace = s; }
     int alignment() { return _alignment; }
     void setAlignment(int a) { needsReload = true; _alignment = a; }
     void setFontColor(const PHColor & c) { color = c; }

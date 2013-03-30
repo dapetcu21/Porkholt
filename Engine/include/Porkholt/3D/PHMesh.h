@@ -19,7 +19,7 @@ public:
     
     virtual PHGLVertexArrayObject * vaoForLevelOfDetail(int lod) = 0;
     PHGLVertexArrayObject * vao() { return vaoForLevelOfDetail(defaultLOD); }
-    virtual int lodForDistance(ph_float dist) { return defaultLOD; }
+    virtual int lodForDistance(float dist) { return defaultLOD; }
     virtual bool usesLevelsOfDetail() { return false; }
 };
 

@@ -27,7 +27,7 @@ class IGLevelController : public PHViewController
         void setBackCallback(const PHInvocation & i) { inv = i; }
         void callBack() { inv.call(this); }
 
-        void updateScene(ph_float elapsed);
+        void updateScene(float elapsed);
         PHView * loadView(const PHRect & f);
 };
 

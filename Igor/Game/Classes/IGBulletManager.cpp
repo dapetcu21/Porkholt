@@ -30,7 +30,7 @@ class IGBulletParticles : public PHParticleAnimator
         }
 
         particles * calculatedParticles();
-        void advanceAnimation(ph_float elapsed) {}
+        void advanceAnimation(float elapsed) {}
 };
 
 IGBulletManager::IGBulletManager(IGWorld * w) : IGObject(w), bullets(NULL)
@@ -95,7 +95,7 @@ PHDrawable * IGBulletManager::loadDrawable()
     return (PHDrawable*)v->retain();
 }
 
-void IGBulletManager::animate(ph_float elapsed)
+void IGBulletManager::animate(float elapsed)
 {
     IGBullet * nx;
     for (IGBullet * p = bullets; p; p = nx)

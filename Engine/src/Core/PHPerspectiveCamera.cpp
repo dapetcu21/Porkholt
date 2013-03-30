@@ -8,7 +8,7 @@ PHMatrix PHPerspectiveCamera::projection()
     if (cache)
         return mat;
     cache = true;
-    ph_float a = ar;
+    float a = ar;
     if (!a)
         a = gm->screenWidth() / gm->screenHeight();
     return mat = PHMatrix::perspective(fov, a, near, far) * rot.rotationMatrix();

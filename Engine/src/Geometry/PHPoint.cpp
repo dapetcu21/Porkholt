@@ -12,33 +12,33 @@ const PH3DSize PH3DUnitSize(1,1,1);
 
 PHPoint::PHPoint(const PHRect & o) : x(o.x), y(o.y){};
 
-PHPoint PHPoint::rotated(ph_float angle) const
+PHPoint PHPoint::rotated(float angle) const
 {
     PHPoint p;
-    ph_float sinv = sin(angle), cosv = cos(angle);
+    float sinv = sin(angle), cosv = cos(angle);
     p.x = cosv*x-sinv*y;
     p.y = sinv*x+cosv*y;
     return p;
 }
 
-void PHPoint::rotate(ph_float angle)
+void PHPoint::rotate(float angle)
 {
-    ph_float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
+    float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
     x = cosv*ox-sinv*oy;
     y = sinv*ox+cosv*oy;
 }
 
-void PH3DPoint::rotate(ph_float angle)
+void PH3DPoint::rotate(float angle)
 {
-    ph_float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
+    float ox=x, oy=y, sinv = sin(angle), cosv = cos(angle);
     x = cosv*ox-sinv*oy;
     y = sinv*ox+cosv*oy;
 }
 
-PH3DPoint PH3DPoint::rotated(ph_float angle) const
+PH3DPoint PH3DPoint::rotated(float angle) const
 {
     PH3DPoint p;
-    ph_float sinv = sin(angle), cosv = cos(angle);
+    float sinv = sin(angle), cosv = cos(angle);
     p.x = cosv*x-sinv*y;
     p.y = sinv*x+cosv*y;
     p.z = z;

@@ -50,7 +50,7 @@ IGHomingBullet::~IGHomingBullet()
     _bulletManager->getWorld()->physicsWorld()->DestroyBody(body);
 }
 
-void IGHomingBullet::animate(ph_float elapsed)
+void IGHomingBullet::animate(float elapsed)
 {
     position = body->GetPosition();
     angle = body->GetAngle();
@@ -59,7 +59,7 @@ void IGHomingBullet::animate(ph_float elapsed)
     {
         b2Body * b = target->physicsBody();
         PHVector2 p = b->GetPosition();
-        ph_float delta = p.y - position.y;
+        float delta = p.y - position.y;
         if (fabs(delta) > 0.1)
         {
             if (delta > 0)

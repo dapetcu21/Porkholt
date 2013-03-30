@@ -26,7 +26,7 @@ class PHTestAnim : public PHParticleAnimator
             p->v2d[0].ud = (void*)(size_t)1;
         }
         
-        void advanceAnimation(ph_float elapsedTime)
+        void advanceAnimation(float elapsedTime)
         {
             p->v2d[0].rotation += M_PI * elapsedTime;
         }

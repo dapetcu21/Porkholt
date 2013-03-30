@@ -15,21 +15,21 @@ class PHGenericParticleAnimator : public PHParticleAnimator
         PHMutex * mutex;
         
         bool playing,generating;
-        ph_float genFor;
-        ph_float pps;
+        float genFor;
+        float pps;
         PHRect genArea;
         bool elArea;
         PHPoint vel;
-        ph_float deltavel;
-        ph_float spreadAngl;
+        float deltavel;
+        float spreadAngl;
         PHPoint grav;
-        ph_float deltaSize;
+        float deltaSize;
         PHSize initSize,endSize;
-        ph_float lifetime;
-        ph_float deltalifetime;
+        float lifetime;
+        float deltalifetime;
         PHColor initColor,endColor;
         bool rotates;
-        ph_float rotoff;
+        float rotoff;
         
         lua_State * L;
         
@@ -41,44 +41,44 @@ class PHGenericParticleAnimator : public PHParticleAnimator
         setter(bool, setPlaying, playing);
         getter(bool, isGenerating, generating);
         setter(bool, setGenerating, generating);
-        getter(ph_float, generatingFor, genFor);
-        setter(ph_float, setGeneratingFor, genFor);
-        getter(ph_float, particlesPerSecond, pps);
-        setter(ph_float, setParticlesPerSecond, pps);
+        getter(float, generatingFor, genFor);
+        setter(float, setGeneratingFor, genFor);
+        getter(float, particlesPerSecond, pps);
+        setter(float, setParticlesPerSecond, pps);
         getter(PHRect, generationArea, genArea);
         setter_(PHRect, setGenerationArea, genArea);
         getter(bool, elipticalArea, elArea);
         setter(bool, setElipticalArea, elArea);
         getter(PHPoint, velocity, vel);
         void setVelocity(const PHPoint & p);
-        getter(ph_float, velocityVariation, deltavel);
-        setter(ph_float, setVelocityVariation, deltavel);
-        getter(ph_float, spreadAngle, spreadAngl);
-        setter(ph_float, setSpreadAngle, spreadAngl);
+        getter(float, velocityVariation, deltavel);
+        setter(float, setVelocityVariation, deltavel);
+        getter(float, spreadAngle, spreadAngl);
+        setter(float, setSpreadAngle, spreadAngl);
         getter(PHPoint, gravity, grav);
         setter_(PHPoint, setGravity, grav);
-        getter(ph_float, sizeVariation, deltaSize);
-        setter(ph_float, setSizeVariation, deltaSize);
+        getter(float, sizeVariation, deltaSize);
+        setter(float, setSizeVariation, deltaSize);
         getter(PHSize, initialSize, initSize);
         setter_(PHSize, setInitSize, initSize);
         getter(PHSize, finalSize, endSize);
         setter_(PHSize, setFinalSize, endSize);
-        getter(ph_float, particleLifetime, lifetime);
-        setter(ph_float, setParticleLifetime, lifetime);
-        getter(ph_float, lifetimeVariation, deltalifetime);
-        setter(ph_float, setLifetimeVariation, deltalifetime);
+        getter(float, particleLifetime, lifetime);
+        setter(float, setParticleLifetime, lifetime);
+        getter(float, lifetimeVariation, deltalifetime);
+        setter(float, setLifetimeVariation, deltalifetime);
         getter(PHColor, initialColor, initColor);
         setter_(PHColor, setInitColor, initColor);
         getter(PHColor, finalColor, endColor);
         setter_(PHColor, setFinalColor, endColor);
         getter(bool, rotatesWithVelocity, rotates);
         setter(bool, setRotatesWithVelocity, rotates);
-        getter(ph_float, rotationOffset, rotoff);
-        setter(ph_float, setRotationOffset, rotoff);
+        getter(float, rotationOffset, rotoff);
+        setter(float, setRotationOffset, rotoff);
         
         PHGenericParticleAnimator();
         ~PHGenericParticleAnimator();
-        void advanceAnimation(ph_float elapsedTime);
+        void advanceAnimation(float elapsedTime);
         
         void luaDestroy(PHObject * sender, void * ud);
         virtual void loadFromLua(lua_State * L);
@@ -96,10 +96,10 @@ class PHGenericParticleAnimator : public PHParticleAnimator
         {
             particle2D part;
             PHPoint velocity;
-            ph_float lifespan;
-            ph_float totalLife;
+            float lifespan;
+            float totalLife;
         };
-        ph_float genQueue;
+        float genQueue;
         
         vector<particle_state*> heap;
         
@@ -111,7 +111,7 @@ class PHGenericParticleAnimator : public PHParticleAnimator
         particle_state * hp_pop();
         void hp_push(particle_state * p);
         
-        void animateParticle(particle_state * p,ph_float elapsed);
+        void animateParticle(particle_state * p,float elapsed);
 };
 
 #undef setter

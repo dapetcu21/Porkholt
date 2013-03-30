@@ -46,7 +46,7 @@ PHLObject::PHLObject() : _class("PHLObject"), view(NULL), wrld(NULL), world(NULL
 struct PHBezierFixtureProps
 {
     PHRect frame;
-    ph_float rotation;
+    float rotation;
 };
 
 PHLObject::~PHLObject()
@@ -91,7 +91,7 @@ PHLObject::~PHLObject()
 		view->release();
 }
 
-static void b2RotatePoint(b2Vec2 & p, ph_float angle, b2Vec2 around)
+static void b2RotatePoint(b2Vec2 & p, float angle, b2Vec2 around)
 {
     p = p-around;
     b2Vec2 pp = p;
@@ -134,9 +134,9 @@ void PHLObject::loadBody(void *l)
                         
                         //shape attributes
                         const char * typ = "";
-                        ph_float circleR=1;
+                        float circleR=1;
                         PHRect box = PHRect(-0.5f, -0.5f, 1, 1);
-                        ph_float rot = 0;
+                        float rot = 0;
                         PHPoint pos = PHOriginPoint;
                         PHLuaGetStringField(typ,"shape");
                         PHLuaGetRectField(box,"box");
@@ -145,9 +145,9 @@ void PHLObject::loadBody(void *l)
                         PHLuaGetPointField(pos,"pos");
                         
                         //physics attributes
-                        ph_float friction = 0.3f;
-                        ph_float restitution = 0.0f;
-                        ph_float density = 1.0f;
+                        float friction = 0.3f;
+                        float restitution = 0.0f;
+                        float density = 1.0f;
                         
                         PHLuaGetNumberField(friction,"friction");
                         PHLuaGetNumberField(restitution,"restitution");
@@ -486,14 +486,14 @@ void PHLObject::setPosition(PHPoint p)
         body->SetTransform(b2Vec2(pos.x, pos.y),rot);
 };
 
-void PHLObject::setRotation(ph_float r)
+void PHLObject::setRotation(float r)
 {
 	rot = r;
     if (body)
         body->SetTransform(b2Vec2(pos.x, pos.y),rot);
 }
 
-void PHLObject::setTransform(PHPoint p,ph_float r)
+void PHLObject::setTransform(PHPoint p,float r)
 {
     pos = p;
     rot = r;
@@ -513,7 +513,7 @@ void PHLObject::setDynamic(bool d)
         body->SetType(d?b2_dynamicBody:b2_staticBody);
 }
 
-void PHLObject::rotateAround(ph_float r, PHPoint around)
+void PHLObject::rotateAround(float r, PHPoint around)
 {
     PHPoint p = pos;
     p-=around;
@@ -567,7 +567,7 @@ PHPoint PHLObject::velocity()
     return PHPoint(v.x,v.y);
 }
 
-ph_float PHLObject::scalarVelocity()
+float PHLObject::scalarVelocity()
 {
     if (!body) return 0;
     b2Vec2 v = body->GetLinearVelocity();
@@ -580,25 +580,25 @@ void PHLObject::setVelocity(PHPoint vel)
         body->SetLinearVelocity(b2Vec2(vel.x,vel.y));
 }
 
-ph_float PHLObject::angularVelocity()
+float PHLObject::angularVelocity()
 {
     if (!body) return 0;
     return body->GetAngularVelocity();
 }
 
-void PHLObject::setAngularVelocity(ph_float v)
+void PHLObject::setAngularVelocity(float v)
 {
     if (body)
         body->SetAngularVelocity(v);
 }
 
-void PHLObject::applyAngularImpulse(ph_float impulse)
+void PHLObject::applyAngularImpulse(float impulse)
 {
     if (body)
         body->ApplyAngularImpulse(impulse);
 }
 
-ph_float PHLObject::mass()
+float PHLObject::mass()
 {
     if (!body) return 0;
     return body->GetMass();
@@ -623,7 +623,7 @@ void PHLObject::setPatrolPath(PHBezierPath *p)
     patrol = p;
 }
 
-void PHLObject::updatePatrol(ph_float elapsed)
+void PHLObject::updatePatrol(float elapsed)
 {
     if (!patrol)
         return;
@@ -639,7 +639,7 @@ void PHLObject::updatePatrol(ph_float elapsed)
         for (int i=1; i<n; i++)
         {
             PHPoint delta = v[i].point - v[i-1].point;
-            ph_float l = delta.length();
+            float l = delta.length();
             if (patP == i-1 && l<=patLength-lastPos)
             {
                 lastPos += l;
@@ -677,12 +677,12 @@ void PHLObject::updatePatrol(ph_float elapsed)
                 break;
         }
     }
-    ph_float delta = patPos - lastPos;
+    float delta = patPos - lastPos;
     do {
         int nx = patP+1;
         if (nx>=n)
             nx-=n;
-        ph_float d  = (v[nx].point-v[patP].point).length();
+        float d  = (v[nx].point-v[patP].point).length();
         if (d<=delta)
         {
             delta-=d;
@@ -696,7 +696,7 @@ void PHLObject::updatePatrol(ph_float elapsed)
         int pv = patP-1;
         if (pv<0)
             pv+=n;
-        ph_float d = (v[patP].point-v[pv].point).length();
+        float d = (v[patP].point-v[pv].point).length();
         delta+=d;
         patP = pv;
         lastPos-=d;
@@ -704,7 +704,7 @@ void PHLObject::updatePatrol(ph_float elapsed)
     int nx = patP+1;
     if (nx>=n)
         nx-=n;
-    ph_float d  = delta/(v[nx].point-v[patP].point).length();
+    float d  = delta/(v[nx].point-v[patP].point).length();
     PHPoint newPoint = v[patP].point*(1-d)+v[nx].point*d;
     if (body && ! rebuild)
     {
@@ -735,7 +735,7 @@ PHPoint PHLObject::cinematicPosition()
     return position();
 }
 
-void PHLObject::setCinematicRotation(ph_float rot)
+void PHLObject::setCinematicRotation(float rot)
 {
     if (body)
     {
@@ -745,14 +745,14 @@ void PHLObject::setCinematicRotation(ph_float rot)
         setRotation(rot);
 }
 
-ph_float PHLObject::cinematicRotation()
+float PHLObject::cinematicRotation()
 {
     if (needsCineRot)
         return cineRot;
     return rotation();
 }
 
-void PHLObject::updateCinematics(ph_float elapsed)
+void PHLObject::updateCinematics(float elapsed)
 {
     correctPos=needsCinePos;
     correctRot=needsCineRot;
@@ -783,7 +783,7 @@ void PHLObject::updateCinematics(ph_float elapsed)
     }
     if (needsCineRot)
     {
-        ph_float rot = body->GetAngle();
+        float rot = body->GetAngle();
         if (body->GetType() == b2_staticBody)
             body->SetType(b2_kinematicBody);
         if (!needsLOmega)
@@ -791,10 +791,10 @@ void PHLObject::updateCinematics(ph_float elapsed)
             lastOmega = body->GetAngularVelocity();
             needsLOmega = true;
         }
-        ph_float delta = cineRot-rot;
+        float delta = cineRot-rot;
         if (abs(delta)>4) //because box2D doesn't behave nicely when abs(delta)>1.5*M_PI
         {
-            static const ph_float pi2 = 2*M_PI;
+            static const float pi2 = 2*M_PI;
             delta-=(int)(delta/pi2)*pi2;
             if (abs(pi2-delta)<abs(delta))
                 delta = pi2-delta;
@@ -813,7 +813,7 @@ void PHLObject::updateCinematics(ph_float elapsed)
 
 void PHLObject::updatePhysics()
 {
-    ph_float elapsed = gm->frameInterval();
+    float elapsed = gm->frameInterval();
     PHPoint pp = pos;
     updatePatrol(elapsed);
     updateCinematics(elapsed);
@@ -849,7 +849,7 @@ void PHLObject::updatePosition()
 	if (!body)
 		return;
 	b2Vec2 p = body->GetPosition();
-    ph_float r = body->GetAngle();
+    float r = body->GetAngle();
     
     if (correctPos)
     {
@@ -883,11 +883,11 @@ void PHLObject::updatePosition()
     }
 }
 
-void PHLObject::updateView(ph_float elapsed, ph_float interpolate)
+void PHLObject::updateView(float elapsed, float interpolate)
 {
     if (view)
     {
-        ph_float rot_adj = 0;
+        float rot_adj = 0;
         PHPoint pos_adj(0,0);
         if (body)
         {
@@ -912,14 +912,14 @@ void PHLObject::limitVelocity()
 		return;
 	}
 	
-	ph_float period = gm->frameInterval();
+	float period = gm->frameInterval();
 	
 	b2Vec2 v = body->GetLinearVelocity();
-	ph_float X,Y;
+	float X,Y;
 	X=v.x; Y=v.y;
 	if (maxSpeed!=FLT_MAX)
 	{
-		ph_float length = sqrt(X*X+Y*Y);
+		float length = sqrt(X*X+Y*Y);
 		if (length>maxSpeed)
 			length=maxSpeed/length;
 		PHLowPassFilter(X, X*length, period, LIMIT_CUTOFF);
@@ -1031,7 +1031,7 @@ void PHLObject::invalidateAllAnimations()
             (*i)->invalidateChain();
 }
 
-void PHLObject::commitAnimations(ph_float el)
+void PHLObject::commitAnimations(float el)
 {
     list<PHLAnimation*>::iterator i,nx;
     for (i = animations.begin(); i!=animations.end(); i=nx)
@@ -1043,20 +1043,20 @@ void PHLObject::commitAnimations(ph_float el)
         while (!doneJob && a)
         {
             bool jobFinished = true;
-            ph_float tm = a->time;            
-            ph_float elapsedTime = el;
+            float tm = a->time;            
+            float elapsedTime = el;
             if (a->isValid() && tm && !(tm==INFINITY && a->isSkipped()))
             {
-                ph_float remaining = tm-a->elapsed;
+                float remaining = tm-a->elapsed;
                 if ((jobFinished=((remaining<=elapsedTime)||a->isSkipped())))
                     elapsedTime = remaining;
                 if (!a->isSkipped())
                     doneJob = true;
                 a->elapsed +=elapsedTime;
-                ph_float opos = a->position;
-                ph_float pos = a->f((a->elapsed)/tm);
+                float opos = a->position;
+                float pos = a->f((a->elapsed)/tm);
                 a->position = pos;
-                ph_float dif = pos-opos;
+                float dif = pos-opos;
                 PHPoint mv = a->move;
                 if (mv.x || mv.y)
                     setPosition(position()+mv*dif);
@@ -1095,11 +1095,11 @@ void PHLObject::commitAnimations(ph_float el)
                     frc = a->velocity;
                     if (frc.x || frc.y)
                     {
-                        ph_float desired = frc.length();
+                        float desired = frc.length();
                         frc/=desired;
                         b2Vec2 vel = body->GetLinearVelocity();
-                        ph_float actual = frc.x*vel.x+frc.y*vel.y;
-                        ph_float impulse = (desired - actual)*body->GetMass();
+                        float actual = frc.x*vel.x+frc.y*vel.y;
+                        float impulse = (desired - actual)*body->GetMass();
                         if (impulse>(a->corrForce*elapsedTime))
                             impulse=a->corrForce*elapsedTime;
                         if (impulse<-(a->corrForce*elapsedTime))
@@ -1113,9 +1113,9 @@ void PHLObject::commitAnimations(ph_float el)
                     if (a->braking)
                     {
                         b2Vec2 vel = body->GetLinearVelocity();
-                        ph_float vlen = vel.Length();
+                        float vlen = vel.Length();
                         vel*=1/vlen;
-                        ph_float impulse = vlen*body->GetMass();
+                        float impulse = vlen*body->GetMass();
                         if (impulse>(a->braking*elapsedTime))
                             impulse=a->braking*elapsedTime;
                         if (impulse)
@@ -1176,10 +1176,10 @@ void PHLObject::_poof()
         poofRect = viewSize;
     }
     PHImage * iv = PHPoofView::poofImage(gm);
-    ph_float w = iv->width();
-    ph_float h = iv->height();
-    ph_float dar = w/h;
-    ph_float ar = poofRect.width/poofRect.height;
+    float w = iv->width();
+    float h = iv->height();
+    float dar = w/h;
+    float ar = poofRect.width/poofRect.height;
     if (ar>dar)
     {   poofRect.y -= (poofRect.width/dar-poofRect.height)/2;
         poofRect.height = poofRect.width/dar;
@@ -1273,7 +1273,7 @@ static int PHLObject_setTransform(lua_State * L)
 {
     PHLObject * obj = (PHLObject*)PHLuaThisPointer(L);
     PHPoint pnt;
-    ph_float rot;
+    float rot;
     bool p = false, r = false;
     if (lua_istable(L, 2))
     {

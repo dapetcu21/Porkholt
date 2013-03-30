@@ -23,7 +23,7 @@ bool PHLMob::vulnerableFixture(b2Fixture * f)
     return true;
 }
 
-ph_float PHLMob::speedNeededForDamagingFixture(b2Fixture * f)
+float PHLMob::speedNeededForDamagingFixture(b2Fixture * f)
 {
     return 4.0f;
 }
@@ -64,7 +64,7 @@ void PHLMob::contactPreSolve(bool b,b2Contact* contact, const b2Manifold* oldMan
         b2Vec2 point = worldManifold.points[0];
         b2Vec2 vA = bodyA->GetLinearVelocityFromWorldPoint(point);
         b2Vec2 vB = bodyB->GetLinearVelocityFromWorldPoint(point);
-        ph_float approachVelocity = fabs(b2Dot(vB - vA, worldManifold.normal));
+        float approachVelocity = fabs(b2Dot(vB - vA, worldManifold.normal));
         
         if (!isInvulnerable() && (approachVelocity > speedNeededForDamagingFixture(f1) || p->isUsingForce()) && vulnerableFixture(f1))
         {

@@ -59,11 +59,11 @@ public:
     void playFading();
     void pauseFading();
 
-    ph_float duration();
-    ph_float playPosition();
+    float duration();
+    float playPosition();
     size_t playPositionSample(ALenum state);
     size_t playPositionSample() { return playPositionSample(-1); }
-    void seek(ph_float pos);
+    void seek(float pos);
     
     bool looping();
     void setLooping(bool l);
@@ -86,32 +86,32 @@ public:
     }
 
 protected:
-    ph_float _pitch, _gain, _minGain, _maxGain, _maxDistance, _rolloffFactor, _coneOuterGain, _coneInnerAngle, _coneOuterAngle, _referenceDistance;
+    float _pitch, _gain, _minGain, _maxGain, _maxDistance, _rolloffFactor, _coneOuterGain, _coneInnerAngle, _coneOuterAngle, _referenceDistance;
     PHVector3 _position, _velocity, _direction;
     bool _relativePositions;
 
 public:
-    ph_float pitch() { return _pitch; }
-    ph_float gain() { return _gain; }
-    ph_float minGain() { return _minGain; }
-    ph_float maxGain() { return _maxGain; }
-    ph_float maxDistance() { return _maxDistance; }
-    ph_float rolloffFactor() { return _rolloffFactor; }
-    ph_float coneOuterGain() { return _coneOuterGain; }
-    ph_float coneInnerAngle() { return _coneInnerAngle; }
-    ph_float coneOuterAngle() { return _coneOuterAngle; }
-    ph_float referenceDistance() { return _referenceDistance; }
+    float pitch() { return _pitch; }
+    float gain() { return _gain; }
+    float minGain() { return _minGain; }
+    float maxGain() { return _maxGain; }
+    float maxDistance() { return _maxDistance; }
+    float rolloffFactor() { return _rolloffFactor; }
+    float coneOuterGain() { return _coneOuterGain; }
+    float coneInnerAngle() { return _coneInnerAngle; }
+    float coneOuterAngle() { return _coneOuterAngle; }
+    float referenceDistance() { return _referenceDistance; }
 
-    void setPitch(ph_float val);
-    void setGain(ph_float val);
-    void setMinGain(ph_float val);
-    void setMaxGain(ph_float val);
-    void setMaxDistance(ph_float val);
-    void setRolloffFactor(ph_float val);
-    void setConeOuterGain(ph_float val);
-    void setConeInnerAngle(ph_float val);
-    void setConeOuterAngle(ph_float val);
-    void setReferenceDistance(ph_float val);
+    void setPitch(float val);
+    void setGain(float val);
+    void setMinGain(float val);
+    void setMaxGain(float val);
+    void setMaxDistance(float val);
+    void setRolloffFactor(float val);
+    void setConeOuterGain(float val);
+    void setConeInnerAngle(float val);
+    void setConeOuterAngle(float val);
+    void setReferenceDistance(float val);
 
     PHVector3 position() { return _position; }
     PHVector3 velocity() { return _velocity; }
@@ -125,17 +125,17 @@ public:
     void setRelativePositions(bool r);
 
 protected:
-    void setAnimationFieldF(int field, ph_float value);
+    void setAnimationFieldF(int field, float value);
     void setAnimationFieldV3(int field, const PHVector3 & value);
     void setAnimationFieldQ(int field, const PHQuaternion & value);
 
-    ph_float getAnimationFieldF(int field);
+    float getAnimationFieldF(int field);
     PHVector3 getAnimationFieldV3(int field);
     PHQuaternion getAnimationFieldQ(int field);
 
 public:
-    void animatePitch(ph_float val) { animateField(PHAnimationField(PHCinematicActor::fieldPitch, val)); }
-    void animateGain(ph_float val) { animateField(PHAnimationField(PHCinematicActor::fieldGain, val)); }
+    void animatePitch(float val) { animateField(PHAnimationField(PHCinematicActor::fieldPitch, val)); }
+    void animateGain(float val) { animateField(PHAnimationField(PHCinematicActor::fieldGain, val)); }
     void animateVelocity(const PHVector3 & val) { animateField(PHAnimationField(PHCinematicActor::fieldVelocity, val)); }
     void animateDirection(const PHVector3 & val) { animateField(PHAnimationField(PHCinematicActor::fieldDirection, PHQuaternion::fromPointsOnSphere(PHVector3(0, 0, 1), val))); }
     void animateDirection(const PHQuaternion & val) { animateField(PHAnimationField(PHCinematicActor::fieldDirection, val)); }

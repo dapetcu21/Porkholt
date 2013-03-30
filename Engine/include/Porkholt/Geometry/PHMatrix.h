@@ -52,17 +52,17 @@ public:
         m[12] = 0; m[13] = 0; m[14] = 0; m[15] = 1;
     }
     
-    static PHMatrix rotation(ph_float angle) { PHMatrix m; m.loadZRotation(angle); return m; }
-    void rotate(ph_float angle) { zRotate(angle); }
-    void preRotate(ph_float angle) { preZRotate(angle); }
-    void loadRotation(ph_float angle) { loadZRotation(angle); }
+    static PHMatrix rotation(float angle) { PHMatrix m; m.loadZRotation(angle); return m; }
+    void rotate(float angle) { zRotate(angle); }
+    void preRotate(float angle) { preZRotate(angle); }
+    void loadRotation(float angle) { loadZRotation(angle); }
     
-    static PHMatrix zRotation(ph_float angle) { PHMatrix m; m.loadZRotation(angle); return m;}
-    void zRotate(ph_float angle) { PHMatrix m; m.loadZRotation(angle); (*this)=(*this)*m; }
-    void preZRotate(ph_float angle) { PHMatrix m; m.loadZRotation(angle); (*this)=m*(*this); }
-    void loadZRotation(ph_float angle)
+    static PHMatrix zRotation(float angle) { PHMatrix m; m.loadZRotation(angle); return m;}
+    void zRotate(float angle) { PHMatrix m; m.loadZRotation(angle); (*this)=(*this)*m; }
+    void preZRotate(float angle) { PHMatrix m; m.loadZRotation(angle); (*this)=m*(*this); }
+    void loadZRotation(float angle)
     {
-        ph_float s = sin(angle), c = cos(angle);
+        float s = sin(angle), c = cos(angle);
         m[ 0] = c; m[ 1] = s; m[ 2] = 0; m[ 3] = 0;
         m[ 4] =-s; m[ 5] = c; m[ 6] = 0; m[ 7] = 0;
         m[ 8] = 0; m[ 9] = 0; m[10] = 1; m[11] = 0;

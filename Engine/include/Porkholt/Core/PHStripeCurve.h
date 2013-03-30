@@ -14,7 +14,7 @@ public:
         point() {}
         point(const point & o) : pos(o.pos), texCoords(o.texCoords) {}
         point(const PHPoint & p, const PHPoint & txc) : pos(p), texCoords(txc) {}
-        point(ph_float px, ph_float py, ph_float txc1, ph_float txc2) : pos(px,py), texCoords(txc1,txc2) {}
+        point(float px, float py, float txc1, float txc2) : pos(px,py), texCoords(txc1,txc2) {}
     };
     
 protected:

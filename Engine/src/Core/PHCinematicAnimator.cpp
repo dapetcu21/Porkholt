@@ -41,7 +41,7 @@ void PHCinematicAnimator::invalidate()
     _actor = NULL;
 }
 
-void PHCinematicAnimator::completed(ph_float remaining)
+void PHCinematicAnimator::completed(float remaining)
 {
     callback.call((PHObject*)_actor);
     if (next && _actor)
@@ -54,12 +54,12 @@ void PHCinematicAnimator::completed(ph_float remaining)
     invalidate();
 }
 
-inline ph_float circleEq(ph_float x,ph_float mx,ph_float my,ph_float r)
+inline float circleEq(float x,float mx,float my,float r)
 {
 	return sqrt(r*r-(x-mx)*(x-mx))+my;
 }
 #define bounceL 0.5f
-ph_float PHCinematicAnimator::f(ph_float time,int ftype)
+float PHCinematicAnimator::f(float time,int ftype)
 {
 	if (ftype==LinearFunction)
 		return time;
@@ -69,10 +69,10 @@ ph_float PHCinematicAnimator::f(ph_float time,int ftype)
 		{
 			return time/(1-bounceL);
 		} else {
-			ph_float m = (bounceL-1);
-			ph_float n = 1-m*(1-bounceL);
-			ph_float yy = m*(1-bounceL/2)+n;
-			ph_float r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
+			float m = (bounceL-1);
+			float n = 1-m*(1-bounceL);
+			float yy = m*(1-bounceL/2)+n;
+			float r = sqrt(bounceL*bounceL/4+(1-yy)*(1-yy));
 			return circleEq(time, 1-bounceL/2, yy, r);
 		}
 	}
@@ -86,12 +86,12 @@ ph_float PHCinematicAnimator::f(ph_float time,int ftype)
 	}
 	if (ftype==FadeInOutFunction)
 	{
-		return (ph_float)(sin(M_PI*(time-0.5f))/2+0.5);
+		return (float)(sin(M_PI*(time-0.5f))/2+0.5);
 	}
 	return time; //revert to linear
 }
 
-void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
+void PHCinematicAnimator::advanceAnimation(float elapsedTime)
 {
     if (!_actor)
     {
@@ -103,8 +103,8 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
         skipFirst--;
         return;
     }
-    ph_float tm = elapsedTime;
-    ph_float lastTime = time;
+    float tm = elapsedTime;
+    float lastTime = time;
     if (elapsedTime >= time)
     {  
         tm = time;
@@ -115,8 +115,8 @@ void PHCinematicAnimator::advanceAnimation(ph_float elapsedTime)
     }
     if (tm>0 && totalTime>0)
     {
-        ph_float lastRatio = f(1.0f - (lastTime/totalTime),function);
-        ph_float ratio = f(1.0f - (time/totalTime),function);
+        float lastRatio = f(1.0f - (lastTime/totalTime),function);
+        float ratio = f(1.0f - (time/totalTime),function);
 
         if (newFields.size())
         {

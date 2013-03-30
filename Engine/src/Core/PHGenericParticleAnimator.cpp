@@ -278,13 +278,13 @@ void PHGenericParticleAnimator::clear()
 PHGenericParticleAnimator::PHGenericParticleAnimator() : mutex(new PHMutex), playing(true), generating(true), genFor(INFINITY), pps(5), genArea(PHRect(0,0,0,0)), elArea(false), vel(PHOriginPoint), deltavel(0), spreadAngl(0), grav(0,-9.81), deltaSize(1), initSize(0.1,0.1), endSize(0.05,0.05), lifetime(1), deltalifetime(0), initColor(PHWhiteColor), endColor(PHWhiteColor), rotates(false), rotoff(0), L(NULL), genQueue(0), cache(NULL), cached(false)
 {}
 
-void PHGenericParticleAnimator::animateParticle(PHGenericParticleAnimator::particle_state * p, ph_float elapsed)
+void PHGenericParticleAnimator::animateParticle(PHGenericParticleAnimator::particle_state * p, float elapsed)
 {
     p->lifespan -= elapsed;
     if (p->lifespan<=0) return;
     p->part.position += p->velocity*elapsed;
     p->velocity += grav*elapsed;
-    ph_float q = (p->lifespan)/(p->totalLife);
+    float q = (p->lifespan)/(p->totalLife);
     p->part.size += (endSize-initSize)*(elapsed / p->totalLife); 
     p->part.color = PHColor(initColor.r*q+endColor.r*(1-q),
                                 initColor.g*q+endColor.g*(1-q),
@@ -302,7 +302,7 @@ void PHGenericParticleAnimator::setVelocity(const PHPoint &v)
     mutex->lock(); vel = v; mutex->unlock();
 }
 
-void PHGenericParticleAnimator::advanceAnimation(ph_float elapsedTime)
+void PHGenericParticleAnimator::advanceAnimation(float elapsedTime)
 {
     mutex->lock();
     if (playing)
@@ -323,14 +323,14 @@ void PHGenericParticleAnimator::advanceAnimation(ph_float elapsedTime)
         while (hp_top() && hp_top()->lifespan<=0)
             delete hp_pop();
         
-        ph_float interval = 1.0f/pps;
+        float interval = 1.0f/pps;
         while (genQueue>=interval)
         {
             genQueue-=interval;
             particle_state * st = new particle_state;
-            ph_float r1 = (ph_float)rand()/RAND_MAX;
-            ph_float r2 = (ph_float)rand()/RAND_MAX;
-            ph_float r3 = (ph_float)rand()/RAND_MAX;
+            float r1 = (float)rand()/RAND_MAX;
+            float r2 = (float)rand()/RAND_MAX;
+            float r3 = (float)rand()/RAND_MAX;
             PHPoint p;
             if (elArea)
                 p = PHPoint((cos(r2*M_PI*2)*r2+1)/2,(sin(r1*M_PI*2)*r2+1)/2);
@@ -341,12 +341,12 @@ void PHGenericParticleAnimator::advanceAnimation(ph_float elapsedTime)
             st->part.position = p;
             st->part.size = initSize * (1 + (deltaSize - 1) * r3);
             st->part.color = initColor;
-            ph_float ang = PHAngleFromVector(vel);
-            ph_float module = vel.length()+((ph_float)rand()/RAND_MAX)*deltavel;
-            ang += (((ph_float)rand()/RAND_MAX)-0.5)*spreadAngl;
+            float ang = PHAngleFromVector(vel);
+            float module = vel.length()+((float)rand()/RAND_MAX)*deltavel;
+            ang += (((float)rand()/RAND_MAX)-0.5)*spreadAngl;
             st->part.rotation = rotates?(ang-M_PI_2):0;
             st->velocity = PHPoint(cos(ang)*module,sin(ang)*module);
-            st->lifespan = st->totalLife = lifetime+((ph_float)rand()/RAND_MAX)*deltalifetime;
+            st->lifespan = st->totalLife = lifetime+((float)rand()/RAND_MAX)*deltalifetime;
             animateParticle(st,genQueue);
             if (st->lifespan>0)
                 hp_push(st);

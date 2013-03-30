@@ -29,7 +29,7 @@ enum PHAnimationFieldType
 
 #define cast(type) (*((type ## _struct *)(void*)storage))
 
-PHAnimationField::PHAnimationField(int f, ph_float value, bool additive, bool exponential) : field(f)
+PHAnimationField::PHAnimationField(int f, float value, bool additive, bool exponential) : field(f)
 {
     cast(f).diff = value;
     type = tFloat_A_L | (additive == false) | (exponential != false)<<1;
@@ -114,7 +114,7 @@ void PHAnimationField::initState(PHCinematicActor * actor)
     }
 }
 
-void PHAnimationField::animate(PHCinematicActor * a, ph_float lt, ph_float t)
+void PHAnimationField::animate(PHCinematicActor * a, float lt, float t)
 {
     switch (type)
     {

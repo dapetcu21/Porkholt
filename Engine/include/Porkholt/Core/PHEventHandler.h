@@ -32,8 +32,8 @@ public:
 	void touchMoved(PHPoint pnt, void * ud);
 	void touchCancelled(PHPoint pnt, void *ud);
     void scrollWheel(PHPoint pnt, PHPoint delta, void *ud);
-    void pinchZoom(PHPoint pnt, ph_float zoom, void *ud);
-    void pinchRotate(PHPoint pnt, ph_float rotation, void *ud);
+    void pinchZoom(PHPoint pnt, float zoom, void *ud);
+    void pinchRotate(PHPoint pnt, float rotation, void *ud);
     void multitouchBegin(void *ud);
     void multitouchEnd(void *ud);
 	

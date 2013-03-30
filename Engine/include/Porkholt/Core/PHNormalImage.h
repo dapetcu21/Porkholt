@@ -66,8 +66,8 @@ public:
     virtual bool isNormal() { return true; }
     
     //algos
-    static PHPoint * detectOutline(uint8_t * data, size_t xs, size_t ys, size_t w, size_t h, size_t bw, enum PHGLTexture::pixelFormat fmt, ph_float treshold, size_t keypoints);
-    PHPoint * detectOutline(ph_float treshold, size_t keypoints) { load(); return detectOutline(buffer, round(txc.x*bw), round(txc.y*bh), _width, _height, bw, fmt, treshold, keypoints); }
+    static PHPoint * detectOutline(uint8_t * data, size_t xs, size_t ys, size_t w, size_t h, size_t bw, enum PHGLTexture::pixelFormat fmt, float treshold, size_t keypoints);
+    PHPoint * detectOutline(float treshold, size_t keypoints) { load(); return detectOutline(buffer, round(txc.x*bw), round(txc.y*bh), _width, _height, bw, fmt, treshold, keypoints); }
 };
 
 #endif

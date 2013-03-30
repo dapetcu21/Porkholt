@@ -1,0 +1,1 @@
+alias findallsources="find . \( -name \"*.cpp\" -or -name \"*.mm\" -or -name \"*.h\" \) -and -not -path \"*/Externals/*\" -and -not -path \"*build*\""

@@ -31,13 +31,13 @@ PHView * PHViewController::loadView(const PHRect & frame)
 	return view;
 }
 
-void PHViewController::advanceAnimation(ph_float timeElapsed)
+void PHViewController::advanceAnimation(float timeElapsed)
 {
     if (view)
         updateScene(timeElapsed);
 }
 
-void PHViewController::updateScene(ph_float timeElapsed)
+void PHViewController::updateScene(float timeElapsed)
 {	
 }
 

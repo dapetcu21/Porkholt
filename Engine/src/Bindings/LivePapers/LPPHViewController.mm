@@ -120,7 +120,7 @@ PHRect LPPHGetWallpaperBounds(PHGameManager * gm)
     
     PHGameManagerInitParameters params;
     UIScreen * s = [UIScreen mainScreen];
-    ph_float scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
+    float scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
     params.screenWidth = self.view.bounds.size.width*scale;
     params.screenHeight = self.view.bounds.size.height*scale;
     params.fps = self.framesPerSecond;

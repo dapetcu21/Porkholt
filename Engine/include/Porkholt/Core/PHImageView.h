@@ -36,7 +36,7 @@ protected:
 	PHRect coords;
     PHColor tint;
     bool constrain;
-    ph_float _repeatX, _repeatY;
+    float _repeatX, _repeatY;
     PHGLUniformStates * _additionalUniforms;
     
     void renderInFramePortionTint(const PHRect & fr, const PHRect & coords, const PHColor & clr);
@@ -125,11 +125,11 @@ public:
     bool constrainCurveToFrame() { return constrain; }
     void setConstrainCurveToFrame(bool c) { constrain = c; }
     
-    ph_float repeatX() { return _repeatX; }
-    void setRepeatX(ph_float rx) { _repeatX = rx; VAOneedsRebuilding = true; }
+    float repeatX() { return _repeatX; }
+    void setRepeatX(float rx) { _repeatX = rx; VAOneedsRebuilding = true; }
     
-    ph_float repeatY() { return _repeatY; }
-    void setRepeatY(ph_float ry) { _repeatY = ry; VAOneedsRebuilding = true; }
+    float repeatY() { return _repeatY; }
+    void setRepeatY(float ry) { _repeatY = ry; VAOneedsRebuilding = true; }
     
     PHCurve * shape() { return curve; }
     void setShape(PHCurve * bp);

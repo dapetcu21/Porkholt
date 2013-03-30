@@ -147,13 +147,13 @@ void PHDeferredView::composite()
         {
             PHGLLight * p =*i;
             PH3DPoint pnt = p->position;
-            ph_float z = pnt.z;
-            ph_float z_2 = z*z;
+            float z = pnt.z;
+            float z_2 = z*z;
             if (z<=0) continue;
-            ph_float it = p->intensity;
+            float it = p->intensity;
             if (cutoff)
             {
-                ph_float rad2D = sqrt(pow(z*it*it/cutoff,2.0f/3.0f)-z_2);
+                float rad2D = sqrt(pow(z*it*it/cutoff,2.0f/3.0f)-z_2);
                 
                 PHRect portion((pnt.x-rad2D)/v.width,(pnt.y-rad2D)/v.height,(rad2D*2)/v.width,(rad2D*2)/v.height);
                 

@@ -47,7 +47,7 @@ IGLevelController::~IGLevelController()
         animpool->release();
 }
 
-void IGLevelController::updateScene(ph_float elapsed)
+void IGLevelController::updateScene(float elapsed)
 {
     animpool->advanceAnimation(elapsed);
 }

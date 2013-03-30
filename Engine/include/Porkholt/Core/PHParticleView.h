@@ -25,8 +25,8 @@ private:
     bool useBytes;
     size_t maxN;
     
-    ph_float cacheTime;
-    ph_float cacheLeft;
+    float cacheTime;
+    float cacheLeft;
     
     bool udindex;
 
@@ -38,8 +38,8 @@ public:
     PHParticleView(PHImage * image);
     void init();
     
-    void setIndexCacheTime(ph_float time) { cacheLeft = cacheTime = time; }
-    ph_float indexCacheTime() { return cacheTime; }
+    void setIndexCacheTime(float time) { cacheLeft = cacheTime = time; }
+    float indexCacheTime() { return cacheTime; }
     
     virtual ~PHParticleView();
     virtual void render();

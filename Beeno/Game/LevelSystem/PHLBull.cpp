@@ -74,7 +74,7 @@ void PHLBull::attack()
 void PHLBull::updatePosition()
 {
     PHLMob::updatePosition();
-    ph_float ang = PHWarp(rotation(),M_PI*2);
+    float ang = PHWarp(rotation(),M_PI*2);
     if (ang>M_PI) ang-=M_PI*2;
     if (abs(ang)>=M_PI_4)
     {
@@ -93,7 +93,7 @@ bool PHLBull::vulnerableFixture(b2Fixture * f)
     return true;
 }
 
-ph_float PHLBull::speedNeededForDamagingFixture(b2Fixture * f)
+float PHLBull::speedNeededForDamagingFixture(b2Fixture * f)
 {
     return 2.0f;
 }

@@ -13,14 +13,14 @@ class IGWallCurve;
 class IGWallManager : public IGObject
 {
     protected:
-        ph_float upper, lower, velocity, width, epsilon, flat;
-        ph_float ftime;
-        ph_float fvel;
+        float upper, lower, velocity, width, epsilon, flat;
+        float ftime;
+        float fvel;
 
         list<IGWallCell*> cells;
 
-        ph_float f(ph_float x);
-        void fadvance(ph_float elapsed);
+        float f(float x);
+        void fadvance(float elapsed);
         void freset();
 
         IGWallView * view;
@@ -30,7 +30,7 @@ class IGWallManager : public IGObject
         IGWallManager(IGWorld * world);
         virtual ~IGWallManager();
 
-#define sgetter(g, s, v) ph_float g() { return v; } void s(ph_float x) { v = x; }
+#define sgetter(g, s, v) float g() { return v; } void s(float x) { v = x; }
         sgetter(upperMargin, setUpperMargin, upper);
         sgetter(lowerMargin, setLowerMargin, lower);
         sgetter(wallVelocity, setWallVelocity, velocity);
@@ -39,7 +39,7 @@ class IGWallManager : public IGObject
         sgetter(flatMargin, setFlatMargin, flat);
 
         PHDrawable * loadDrawable();
-        void animate(ph_float elapsed);
+        void animate(float elapsed);
         const char * luaClass() { return "IGWallManager"; }
         static void loadLuaInterface(IGScripting * s);
 };

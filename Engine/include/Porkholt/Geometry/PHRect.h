@@ -7,14 +7,14 @@
 
 struct PHRect
 {
-	PHRect(ph_float _x, ph_float _y, ph_float w, ph_float h) : x(_x),y(_y),width(w),height(h) {};
-    PHRect(const PHVector2 & o, ph_float w, ph_float h) : x(o.x), y(o.y), width(w), height(h) {};
+	PHRect(float _x, float _y, float w, float h) : x(_x),y(_y),width(w),height(h) {};
+    PHRect(const PHVector2 & o, float w, float h) : x(o.x), y(o.y), width(w), height(h) {};
     PHRect(const PHVector2 & o, const PHVector2 & s) : x(o.x), y(o.y), width(s.width), height(s.height) {};
-    PHRect(ph_float _x, ph_float _y, const PHVector2 & s) : x(_x), y(_y), width(s.width), height(s.height) {};
+    PHRect(float _x, float _y, const PHVector2 & s) : x(_x), y(_y), width(s.width), height(s.height) {};
 	PHRect(const PHRect & o) : x(o.x),y(o.y),width(o.width),height(o.height) {};
 	PHRect() {};
-	ph_float x,y;
-	ph_float width,height;
+	float x,y;
+	float width,height;
     static PHRect fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
     
@@ -79,13 +79,13 @@ struct PHRect
     {
         return PHRect(x-o.x,y-o.y,width-o.width,height-o.height);
     }
-    const PHRect & operator *= (ph_float d)
+    const PHRect & operator *= (float d)
     {
         width*=d;
         height*=d;
         return * this;
     }
-    PHRect operator * (ph_float d) const
+    PHRect operator * (float d) const
     {
         return PHRect(x,y,width*d,height*d);
     }
@@ -99,13 +99,13 @@ struct PHRect
     {
         return PHRect(x,y,width*d.x,height*d.y);
     }
-    const PHRect & operator /= (ph_float d)
+    const PHRect & operator /= (float d)
     {
         width/=d;
         height/=d;
         return * this;
     }
-    PHRect operator / (ph_float d) const
+    PHRect operator / (float d) const
     {
         return PHRect(x,y,width/d,height/d);
     }

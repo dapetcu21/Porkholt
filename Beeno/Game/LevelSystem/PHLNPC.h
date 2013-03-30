@@ -31,7 +31,7 @@ private:
     bool hover;
     bool _idle;
     
-    ph_float hoverAmmount;
+    float hoverAmmount;
 public:
     PHLNPC();
     virtual ~PHLNPC();
@@ -51,7 +51,7 @@ public:
     int trailLength() { return traillen; }
     
     virtual void updatePosition();
-    virtual void updateView(ph_float elapsed, ph_float interpolate);
+    virtual void updateView(float elapsed, float interpolate);
     virtual void loadView();
     virtual void loadFromLua(lua_State * L, b2World * world, PHLevelController * lvlc);
     static void registerLuaInterface(lua_State * L);
@@ -92,7 +92,7 @@ private:
     friend class PHWorld;
     
     bool qquest,queuedquest,showDialogDelayed;
-    ph_float questHeight;
+    float questHeight;
     PHPoint questPoint;
     
     PHLAnimation * brakeAnimation;
@@ -110,21 +110,21 @@ public:
     
     void setDialog(PHDialog * dialog);
     
-    void walk(const PHPoint & offset, ph_float speed) { walkTo(pos+offset,speed,NULL); }
-    void walkTo(const PHPoint &  destination, ph_float speed) { walkTo(destination,speed,NULL); }
-    void walk(const PHPoint &  offset, ph_float speed, lua_State * l) { walkTo(pos+offset,speed,l); }
-    void walkTo(const PHPoint &  destination, ph_float speed, lua_State * l);
+    void walk(const PHPoint & offset, float speed) { walkTo(pos+offset,speed,NULL); }
+    void walkTo(const PHPoint &  destination, float speed) { walkTo(destination,speed,NULL); }
+    void walk(const PHPoint &  offset, float speed, lua_State * l) { walkTo(pos+offset,speed,l); }
+    void walkTo(const PHPoint &  destination, float speed, lua_State * l);
     
     bool braked() { return brakeAnimation!=NULL; }
     void setBraked(bool br); 
     virtual void flip();
     
 protected:
-    ph_float hp;
-    ph_float maxHP;
+    float hp;
+    float maxHP;
     bool invuln,hinvuln;
-    ph_float hInvulnTime;
-    ph_float hInvulnRemTime;
+    float hInvulnTime;
+    float hInvulnRemTime;
     PHColor hInvulnFadeColor;
     
     virtual void lowHP();
@@ -139,16 +139,16 @@ protected:
     void _animateHurtInvuln(PHObject * sender, void * ud);
     
 public:
-    void setHP(ph_float HP) { hp = HP; if (hp<=0) { hp=0; lowHP(); } if (hp>maxHP) hp=maxHP; }
+    void setHP(float HP) { hp = HP; if (hp<=0) { hp=0; lowHP(); } if (hp>maxHP) hp=maxHP; }
 #ifdef PH_GOD_MODE 
 #define lowHP lowHPGod
 #endif
-    void decreaseHP(ph_float HP) { if (isInvulnerable()) return; hp-=HP; if (hp<=0) { hp = 0; lowHP(); } else decreasedHP(); }
+    void decreaseHP(float HP) { if (isInvulnerable()) return; hp-=HP; if (hp<=0) { hp = 0; lowHP(); } else decreasedHP(); }
 #undef lowHP
-    void increaseHP(ph_float HP) { hp+=HP; if (hp>maxHP) hp=maxHP; increasedHP(); }
-    ph_float healthPoints() { return hp; }
-    ph_float maximumHP() { return maxHP; }
-    void setMaximumHP(ph_float mhp) { maxHP = mhp; if (hp>maxHP) hp=maxHP; }
+    void increaseHP(float HP) { hp+=HP; if (hp>maxHP) hp=maxHP; increasedHP(); }
+    float healthPoints() { return hp; }
+    float maximumHP() { return maxHP; }
+    void setMaximumHP(float mhp) { maxHP = mhp; if (hp>maxHP) hp=maxHP; }
     
     virtual void die();
     

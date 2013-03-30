@@ -68,13 +68,13 @@ IGWorld::~IGWorld()
     delete cl;
 }
 
-void IGWorld::advanceAnimation(ph_float elapsed)
+void IGWorld::advanceAnimation(float elapsed)
 {
-    ph_float ts = gm->frameInterval();
+    float ts = gm->frameInterval();
     if (elapsed < ts/2) return;
     for (list<IGObject*>::iterator i = _objects.begin(); i != _objects.end(); i++)
         (*i)->adjustPhysics(elapsed);
-    for (ph_float el = elapsed; el >= ts/2; el -= ts)
+    for (float el = elapsed; el >= ts/2; el -= ts)
         phyWorld->Step(ts, 6, 2);
     phyWorld->ClearForces();
     for (list<IGObject*>::iterator i = _objects.begin(); i != _objects.end(); i++)

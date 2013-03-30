@@ -18,7 +18,7 @@ class PHAccelTest: public PHViewController
         PHView * loadView(const PHRect & r)
         {
             PHView * v = new PHView(r);
-            ph_float m = min(r.width, r.height);
+            float m = min(r.width, r.height);
             PHView * container = new PHView(PHRect(r.width / 2, r.height /2 , 15, 15));
             container->setScalingCenter(PHPoint(0, 0));
             container->setScale(PHSize(m/30, m/30));
@@ -33,12 +33,12 @@ class PHAccelTest: public PHViewController
             return v;
         }
 
-        void updateScene(ph_float elapsed)
+        void updateScene(float elapsed)
         {
             PHAcceleration a = PHMotion::getAcceleration();
             PHLog("%f %f %f", a.x, a.y, a.z);
             PHVector2 v(a.x, a.y);
-            ph_float len = v.length();
+            float len = v.length();
             v.normalize();
             iv->setFrame(PHRect(0, -1.5, len, 3));
             iv->setRotationalCenter(PHVector2(0, 1.5));

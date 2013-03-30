@@ -26,7 +26,7 @@ private:
         int type;
         union
         {
-            ph_float duration;
+            float duration;
             int fnumber;
             string * sectionName;
             int section;

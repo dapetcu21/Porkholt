@@ -117,7 +117,7 @@ void PHLNPC::loadView()
 }
 
 
-void PHLNPC::updateView(ph_float elapsed, ph_float interpolate)
+void PHLNPC::updateView(float elapsed, float interpolate)
 {
     if (hover)
     {
@@ -129,7 +129,7 @@ void PHLNPC::updateView(ph_float elapsed, ph_float interpolate)
     updateDialogPosition();
     if (questView)
     {
-        ph_float width = questView->frame().width;
+        float width = questView->frame().width;
         PHPoint p = view?(pos - viewSize - offset):pos;
         questView->setFrame(PHRect(p.x+(flipped?(-questPoint.x-width):(questPoint.x)), p.y+questPoint.y, width, questHeight));
         questView->setHorizontallyFlipped(flipped);
@@ -154,7 +154,7 @@ void PHLNPC::updatePosition()
         ((PHTrailImageView*)bodyView)->bindToAuxLayer(PHAuxLayerView::auxLayerViewWithName(20), worldView);
     }
     b2Vec2 speed = body->GetLinearVelocity();
-    ph_float elapsed = gm->frameInterval();
+    float elapsed = gm->frameInterval();
     if (aflip && abs(speed.x)>=0.1)
         setFlipped(speed.x<0);
     setIdle(abs(speed.x)<0.1);
@@ -229,12 +229,12 @@ void PHLNPC::updateDialogPosition()
     PHPoint bubblePoint = pos;
     bubblePoint.y+=overHeadPoint.y;
     PHLCamera * camera = getWorld()->getCamera();
-    ph_float camwidth = camera->width();
+    float camwidth = camera->width();
     bool flipped = position().x>=camera->position().x;
-    ph_float width = abs(position().x-camera->position().x)+camwidth*0.45;
+    float width = abs(position().x-camera->position().x)+camwidth*0.45;
     if (width>camwidth*0.6)
         width=camwidth*0.6;
-    ph_float height = dialogFontSize/(1.0f-dialogBorderTop-dialogBorderBottom);
+    float height = dialogFontSize/(1.0f-dialogBorderTop-dialogBorderBottom);
     dialogView->setFrame(PHRect(bubblePoint.x, bubblePoint.y, width, height));
     dialogView->setFlipCenter(PHOriginPoint);
     dialogView->setHorizontallyFlipped(flipped);
@@ -291,7 +291,7 @@ void PHLNPC::showDialog(PHDialog *dialog)
 
     updateDialogPosition();
     
-    static const ph_float scale = 1024;
+    static const float scale = 1024;
     dialogView->setScaleX(1/scale);
     dialogView->setScaleY(1/scale);
     dialogView->beginCinematicAnimation(0.5f,PHCinematicAnimator::BounceFunction);
@@ -346,7 +346,7 @@ void PHLNPC::dismissDialog()
     dv->removeCinematicAnimationsWithTag(dialogTag);
     dtv->removeCinematicAnimationsWithTag(dialogTag);
     dv->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
-    static const ph_float scale = 1024;
+    static const float scale = 1024;
     dv->animateScale(PHSize(1/scale,1/scale));
     dv->animationCallback(PHInvBindN(this, PHLNPC::_dialogDismissed));
     dv->animationTag(dialogTag);
@@ -401,11 +401,11 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     dv->mutex()->lock();
     dtv->setText(currentDialog->text);
     
-    ph_float owidth = dv->frame().width;
-    ph_float oheight = dv->frame().height;
+    float owidth = dv->frame().width;
+    float oheight = dv->frame().height;
     updateDialogPosition();
-    ph_float width = dv->frame().width;
-    ph_float height = dv->frame().height;
+    float width = dv->frame().width;
+    float height = dv->frame().height;
     
     dv->setScaleX(owidth/width);
     dv->setScaleY(oheight/height);
@@ -454,13 +454,13 @@ void PHLNPC::showQuest()
     questView->removeCinematicAnimationsWithTag(4867);
     questView->setUserInput(true);
     
-    ph_float aspectRatio = qi?((ph_float)(qi->width())/qi->height()):1.0f;
+    float aspectRatio = qi?((float)(qi->width())/qi->height()):1.0f;
     
     questView->setFrame(PHRect(pos.x+(flipped?(-questPoint.x-questHeight*aspectRatio):(questPoint.x)), pos.y+questPoint.y, questHeight*aspectRatio, questHeight));
     questView->setHorizontallyFlipped(flipped);
     questView->setScalingCenter(PHOriginPoint);
 
-    ph_float scale = 1024;
+    float scale = 1024;
     questView->setScaleX(1/scale);
     questView->setScaleY(1/scale);
     animatingquest = true;
@@ -498,7 +498,7 @@ void PHLNPC::hideQuest()
     questView->removeCinematicAnimationsWithTag(4867);
     questView->setUserInput(false);
     
-    ph_float scale = 1024;
+    float scale = 1024;
     animatingquest = true;
     questView->beginCinematicAnimation(0.3f,PHCinematicAnimator::FadeOutFunction);
     questView->animateScale(PHSize(1/scale,1/scale));
@@ -532,7 +532,7 @@ private:
     PHPoint destination;
     bool leftSide;
     lua_State * L;
-    virtual void animationStepped(ph_float elapsed)
+    virtual void animationStepped(float elapsed)
     {
         if (brakeForce())
         {
@@ -580,7 +580,7 @@ public:
     ~PHLWalkAnimation() { if (L) PHLuaDeleteHardRef(L,this); }
 };
 
-void PHLNPC::walkTo(const PHPoint &  destination, ph_float speed, lua_State * l)
+void PHLNPC::walkTo(const PHPoint &  destination, float speed, lua_State * l)
 {
     if (!body) return;
     PHPoint velocity = destination-pos;
@@ -727,7 +727,7 @@ static int PHLNPC_walk(lua_State * L)
 {
     PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    ph_float speed = 2;
+    float speed = 2;
     if (lua_isnumber(L,3))
         speed = lua_tonumber(L,3);
     if (lua_istable(L,4))
@@ -743,7 +743,7 @@ static int PHLNPC_walkTo(lua_State * L)
 {
     PHLNPC * npc = (PHLNPC*)PHLuaThisPointer(L);
     luaL_checktype(L, 2, LUA_TTABLE);
-    ph_float speed = 2;
+    float speed = 2;
     if (lua_isnumber(L,3))
         speed = lua_tonumber(L,3);
     if (lua_istable(L,4))

@@ -7,10 +7,10 @@
 
 PHColor PHGLCurrentColor(-1,-1,-1,-1);
 
-void PHLowPassFilter(ph_float & var, ph_float newval, ph_float period, ph_float cutoff)
+void PHLowPassFilter(float & var, float newval, float period, float cutoff)
 {
-	ph_float RC=1.0/cutoff;
-	ph_float alpha=period/(period+RC);
+	float RC=1.0/cutoff;
+	float alpha=period/(period+RC);
 	var = newval * alpha + var * (1.0 - alpha);
 }
 
@@ -21,10 +21,10 @@ void PHLowPassFilter(double & var, double newval, double period, double cutoff)
 	var = newval * alpha + var * (1.0 - alpha);
 }
 
-void PHLowPassFilter(ph_float * var, ph_float newval, ph_float period, ph_float cutoff)
+void PHLowPassFilter(float * var, float newval, float period, float cutoff)
 {
-	ph_float RC=1.0/cutoff;
-	ph_float alpha=period/(period+RC);
+	float RC=1.0/cutoff;
+	float alpha=period/(period+RC);
 	(*var) = newval * alpha + (*var) * (1.0 - alpha);
 }
 
@@ -42,7 +42,7 @@ bool PHPointInRect(const PHPoint & pnt, const PHRect & rect)
     return true;
 }
 
-bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, ph_float radius)
+bool PHPointInCircle(const PHPoint & pnt, const PHPoint & origin, float radius)
 {
     return (pnt-origin).length()<=radius;
 }
@@ -58,9 +58,9 @@ bool PHRectIntersectsRect(const PHRect & r1, const PHRect & r2)
     return lil(r1.x, xb1, r2.x, xb2) && lil(r1.y, yb1, r2.y, yb2);
 }
 
-ph_float PHAngleFromNormalizedVector(const PHPoint & vec)
+float PHAngleFromNormalizedVector(const PHPoint & vec)
 {
-    ph_float ang;
+    float ang;
     if (abs(vec.x)<0.5)
     {
         ang = acos(vec.x);
@@ -80,7 +80,7 @@ ph_float PHAngleFromNormalizedVector(const PHPoint & vec)
 
 #define threehalfs 1.5f
 
-ph_float PHInvSqrt(ph_float number)
+float PHInvSqrt(float number)
 {
     union {
         float f;
@@ -93,7 +93,7 @@ ph_float PHInvSqrt(ph_float number)
 	return v.f;
 }
 
-ph_float PHSqrt(ph_float number)
+float PHSqrt(float number)
 {
     union {
         float f;

@@ -68,7 +68,7 @@ void IGBouncyButton::setTarget(const PHPoint & p)
     setPosition(_target + PHVector2(cos(time) * _rotSize.x, sin(time) * _rotSize.y));
 }
 
-void IGBouncyButton::animate(ph_float e)
+void IGBouncyButton::animate(float e)
 {
     time += e*1.5;
     if (time > M_PI*2)

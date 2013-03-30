@@ -11,7 +11,7 @@
 class PHCapturePView : public PHView
 {
 protected:
-    ph_float y;
+    float y;
     void * e;
     bool has;
     
@@ -30,7 +30,7 @@ protected:
     }
 public:
     PHCapturePView() : e(NULL), has(false) {}
-    ph_float getY() { return y; }
+    float getY() { return y; }
     bool hasY() { return has; }
     void reset() 
     {
@@ -49,7 +49,7 @@ protected:
     PHView * rootView;
     
     int scoreA,scoreB;
-    ph_float waitTime;
+    float waitTime;
     
     bool useAIA, useAIB;
     
@@ -134,7 +134,7 @@ protected:
         waitTime = 3.0f;
     }
     
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     {
         PHRect bounds = rootView->bounds();
         
@@ -221,15 +221,15 @@ protected:
     }
     
 #define maxAISpeed 800.0f
-    ph_float calculateAI(ph_float old, ph_float elapsed, bool player)
+    float calculateAI(float old, float elapsed, bool player)
     {
         PHPoint p = ball->center();
         if ((p.x<rootView->bounds().width/2) != player) return old;
-        ph_float ms = maxAISpeed * elapsed;
-//        ph_float bp = p.y+(rand()/((ph_float)RAND_MAX)-0.5)*4*ballDiameter;
-        ph_float bp = p.y;
+        float ms = maxAISpeed * elapsed;
+//        float bp = p.y+(rand()/((float)RAND_MAX)-0.5)*4*ballDiameter;
+        float bp = p.y;
 //        if ((bp<old+paddleHeight/2.5f) && (bp>old-paddleHeight/2.5f)) return old;
-        ms = min<ph_float>(max<ph_float>(-ms,bp-old),ms);
+        ms = min<float>(max<float>(-ms,bp-old),ms);
         return old+ms;
     }
 

@@ -17,7 +17,7 @@ IGDampingProp::~IGDampingProp()
 {
 }
 
-void IGDampingProp::setRotation(ph_float r)
+void IGDampingProp::setRotation(float r)
 {
     if (!body || !rr)
         IGProp::setRotation(r);
@@ -53,17 +53,17 @@ void IGDampingProp::createDampingJoint()
     cui = (b2MouseJoint*)world->physicsWorld()->CreateJoint(&def);
 }
 
-void IGDampingProp::adjustPhysics(ph_float elapsed)
+void IGDampingProp::adjustPhysics(float elapsed)
 {
     if (body)
     {
         if (rr)
         {
-            ph_float totalRotation = PHNormalizeAngle(desiredRot - body->GetAngle()) - body->GetAngularVelocity() * foresight;
-            ph_float desiredAngularVelocity = totalRotation / elapsed;
-            ph_float change = dampTorque * elapsed;
+            float totalRotation = PHNormalizeAngle(desiredRot - body->GetAngle()) - body->GetAngularVelocity() * foresight;
+            float desiredAngularVelocity = totalRotation / elapsed;
+            float change = dampTorque * elapsed;
             desiredAngularVelocity = min( change, max(-change, desiredAngularVelocity));
-            ph_float impulse = body->GetInertia() * desiredAngularVelocity;
+            float impulse = body->GetInertia() * desiredAngularVelocity;
             body->ApplyAngularImpulse(impulse);
         }
 
@@ -75,7 +75,7 @@ void IGDampingProp::adjustPhysics(ph_float elapsed)
     }
 }
 
-void IGDampingProp::animate(ph_float elapsed)
+void IGDampingProp::animate(float elapsed)
 {
     IGProp::animate(elapsed);
     if (body && cui)
@@ -85,14 +85,14 @@ void IGDampingProp::animate(ph_float elapsed)
     }
 }
 
-void IGDampingProp::setDampingForce(ph_float f)
+void IGDampingProp::setDampingForce(float f)
 {
     if (cui)
         cui->SetMaxForce(f);
     maxF = f;
 }
 
-void IGDampingProp::setDampingFrequency(ph_float f)
+void IGDampingProp::setDampingFrequency(float f)
 {
     if (cui)
         cui->SetFrequency(f);

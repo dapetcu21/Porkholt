@@ -119,7 +119,6 @@ void * PHAlloc(void)
 
 //Miscelaneous
 
-typedef float ph_float;
 struct lua_State; 
 
 #define PH_TOKENPASTE_(x, y) x ## y

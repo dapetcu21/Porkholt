@@ -147,7 +147,7 @@ protected:
         
         return v;
     }
-    void updateScene(ph_float elapsedTime)
+    void updateScene(float elapsedTime)
     {
         stringstream ss;
         ss<<int(gm->screenWidth())<<"x"<<int(gm->screenHeight())<<"@"<<gm->framesPerSecond();

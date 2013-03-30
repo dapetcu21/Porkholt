@@ -55,7 +55,7 @@ class IGWorld : public PHAnimator
 
         PHGameManager * gameManager() { return gm; }
         
-        void advanceAnimation(ph_float elapsed);
+        void advanceAnimation(float elapsed);
 };
 
 #endif

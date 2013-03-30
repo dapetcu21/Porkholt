@@ -6,7 +6,7 @@
 class PHMutex;
 
 @interface PHTouchInterface : UIView <UIAccelerometerDelegate> {
-    ph_float scale;
+    float scale;
 }
 
 extern PHTouchInterface * PHTouchInterfaceSingleton;

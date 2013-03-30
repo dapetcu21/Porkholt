@@ -26,7 +26,7 @@ PHImageAnimator::PHImageAnimator(PHAnimatedImage * img, PHAnimatorPool * p) : PH
     reset();
 }
 
-ph_float PHImageAnimator::timeForFrameInSection(int fr, int sec)
+float PHImageAnimator::timeForFrameInSection(int fr, int sec)
 {
     try {
         PHAnimatedImage::section * section = _image->sections.at(sec);
@@ -39,7 +39,7 @@ ph_float PHImageAnimator::timeForFrameInSection(int fr, int sec)
         }
         if (frame.type == 1)
         {
-            ph_float res = 0;
+            float res = 0;
             PHAnimatedImage::luaMutex->lock();
             
             lua_State * L = PHAnimatedImage::L;
@@ -113,7 +113,7 @@ void PHImageAnimator::animateSection(int sect, const PHInvocation & inv)
     fade = frm->fade;
 }
 
-void PHImageAnimator::advanceAnimation(ph_float elapsedTime)
+void PHImageAnimator::advanceAnimation(float elapsedTime)
 {
     if (section==-1 || frame==-1) return;
     if (!running) return;

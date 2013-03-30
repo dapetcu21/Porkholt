@@ -39,7 +39,7 @@ class PHSliderView : public PHView
     };
     knob * k;
 public:
-    ph_float _pos;
+    float _pos;
 
     PHSliderView(const PHRect & frame) : PHView(frame)
     {
@@ -50,7 +50,7 @@ public:
         setPosition(0);
     }
 
-    void setPosition(ph_float pos)
+    void setPosition(float pos)
     {
         _pos = pos;
         PHRect b(bounds());
@@ -63,7 +63,7 @@ public:
         setPosition(_pos);
     }
 
-    virtual void submitPosition(ph_float pos)
+    virtual void submitPosition(float pos)
     {
     }
 
@@ -72,7 +72,7 @@ public:
         if (evt->type() == PHEvent::touchDown)
         {
             PHPoint p = evt->drawableLocation()->pointInView(this);
-            ph_float pos = (p.x - bounds().x) / bounds().width;
+            float pos = (p.x - bounds().x) / bounds().width;
             setPosition(pos);
             submitPosition(pos);
             evt->setHandled(true);
@@ -95,7 +95,7 @@ public:
         snd->retain();
     }
 
-    void submitPosition(ph_float pos)
+    void submitPosition(float pos)
     {
         snd->seek(pos * snd->duration());
     }
@@ -180,7 +180,7 @@ public:
 #define textright 0.1
 
     
-    ph_float addTitle(const string & s, ph_float border)
+    float addTitle(const string & s, float border)
     {
         PHView * v = getView();
         PHRect b = v->bounds();
@@ -225,19 +225,19 @@ public:
         tv->release();
     }
     
-    ph_float addBullet(const string & s, ph_float border, ph_float fontsize, bool code) {
+    float addBullet(const string & s, float border, float fontsize, bool code) {
         return addBullet(getView(), s, border, fontsize, code);
     }
     
-    ph_float addBullet(const string & s, ph_float border) {
+    float addBullet(const string & s, float border) {
         return addBullet(getView(), s, border, 40.0f, false);
     }
     
-    ph_float addBullet(PHView * v, const string & s, ph_float border) {
+    float addBullet(PHView * v, const string & s, float border) {
         return addBullet(v, s, border, 40.0f, false);
     }
     
-    ph_float addBullet(PHView * v, const string & s, ph_float border, ph_float fontsize, bool code)
+    float addBullet(PHView * v, const string & s, float border, float fontsize, bool code)
     {
         PHRect b = v->bounds();
         
@@ -263,7 +263,7 @@ public:
 class PHCapturePView : public PHView
 {
 protected:
-    ph_float y;
+    float y;
     void * e;
     bool has;
     
@@ -283,7 +283,7 @@ protected:
     }
 public:
     PHCapturePView() : e(NULL), has(false) {}
-    ph_float getY() { return y; }
+    float getY() { return y; }
     bool hasY() { return has; }
     void reset() 
     {
@@ -304,7 +304,7 @@ protected:
     PHView * rootView;
     
     int scoreA,scoreB;
-    ph_float waitTime;
+    float waitTime;
     
     bool useAIA, useAIB;
     
@@ -317,7 +317,7 @@ protected:
         reset(true);
     }
     
-    ph_float ap;
+    float ap;
 #define border 50
 #define paddleWidth 20
 #define paddleHeight 150
@@ -415,7 +415,7 @@ protected:
         waitTime = 3.0f;
     }
     
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     {
         PHRect bounds = rootView->bounds();
         
@@ -502,15 +502,15 @@ protected:
     }
     
 #define maxAISpeed 800.0f
-    ph_float calculateAI(ph_float old, ph_float elapsed, bool player)
+    float calculateAI(float old, float elapsed, bool player)
     {
         PHPoint p = ball->center();
         if ((p.x<rootView->bounds().width/2) != player) return old;
-        ph_float ms = maxAISpeed * elapsed;
-        //        ph_float bp = p.y+(rand()/((ph_float)RAND_MAX)-0.5)*4*ballDiameter;
-        ph_float bp = p.y;
+        float ms = maxAISpeed * elapsed;
+        //        float bp = p.y+(rand()/((float)RAND_MAX)-0.5)*4*ballDiameter;
+        float bp = p.y;
         //        if ((bp<old+paddleHeight/2.5f) && (bp>old-paddleHeight/2.5f)) return old;
-        ms = min<ph_float>(max<ph_float>(-ms,bp-old),ms);
+        ms = min<float>(max<float>(-ms,bp-old),ms);
         return old+ms;
     }
 };
@@ -745,7 +745,7 @@ class PHPorkholt3D : public PHSlide
 {
 protected:
     PHMeshBody * lbody, *body;
-    ph_float time;
+    float time;
     PHPostProcess * canvas;
     PHView * curtain;
     PHImageView * v1, * v2;
@@ -1014,7 +1014,7 @@ canvas->additionalUniforms()->at(\"cellmap\").setValue(cell_map);"
         }
     }
     
-    void updateScene(ph_float timeElapsed)
+    void updateScene(float timeElapsed)
     {
         PH3DPoint p(0 + sin(time)*2.5, 0, -5 + cos(time)*2.5);
         lbody->setPosition(p);
@@ -1166,16 +1166,16 @@ protected:
         return v;
     }
 
-    ph_float pos;
+    float pos;
 
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     {
         slider->update();
         pos+=elapsed;
         //snd->setPosition(PHVector3(sin(pos)*10, cos(pos)*10, 0));
     }
 
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch(count)
@@ -1213,9 +1213,9 @@ protected:
     struct {
         PHGLLight * light;
         PH3DPoint pnt;
-        ph_float rot;
-        ph_float rad;
-        ph_float speed;
+        float rot;
+        float rad;
+        float speed;
     } a[numLights];
     
     PHView * loadView(const PHRect & frm)
@@ -1241,17 +1241,17 @@ protected:
                     break;
             }
             a[i].light = dv->addPointLight(a[i].pnt = PH3DPoint(rand()%int(frm.width),rand()%int(frm.height),100+rand()%100),c,150.0f);
-            a[i].rot = (rand()/(ph_float)RAND_MAX)*M_PI*2;
+            a[i].rot = (rand()/(float)RAND_MAX)*M_PI*2;
             a[i].rad = 50+rand()%100;
-            a[i].speed = ((rand()/(ph_float)RAND_MAX)-0.5)*8.0;
+            a[i].speed = ((rand()/(float)RAND_MAX)-0.5)*8.0;
         }
 
         dv->setAmbientColor(PHColor(0.2,0.2,0.2,1.0));
         //dv->setNormalMapping(true);
         
         PHImage * img = gm->imageNamed("igor", true);
-        ph_float height = img->height()/2;
-        ph_float width = img->width()/2;
+        float height = img->height()/2;
+        float width = img->width()/2;
         
 #define columns 2
 #define rows 3
@@ -1292,7 +1292,7 @@ protected:
         vc->release();
     }
 
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     { 
         for (int i=0; i<numLights; i++)
         {
@@ -1306,7 +1306,7 @@ protected:
 class PHPorkholtBezier : public PHSlide
 {
 protected:
-    ph_float tb;
+    float tb;
     PHBezierPath * bez;
     bool animates;
     ~PHPorkholtBezier() { bez->release(); }
@@ -1362,8 +1362,8 @@ protected:
             }
         }
     }
-    ph_float time;
-    void updateScene(ph_float f)
+    float time;
+    void updateScene(float f)
     {
         if (!animates || !bez) return;
         time += f;
@@ -1400,7 +1400,7 @@ class PHPorkholtParticles : public PHSlide
 public:
     PHPorkholtParticles(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         PHView * v = getView();
@@ -1450,7 +1450,7 @@ class PHPorkholtAnimImg : public PHSlide
 public:
     PHPorkholtAnimImg(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     PHImageView * vv;
     PHRect rr;
     void screenTapped(int count)
@@ -1470,7 +1470,7 @@ protected:
                 vv->setCenter(PHPoint(b.width/2, b.height * 0.45));
                 vv->setImage(img);
                 vv->setAutoresizeMask(PHView::ResizeFlexibleBorders);
-                static const ph_float scl = 1024.0f;
+                static const float scl = 1024.0f;
                 vv->setScaleX(1/scl);
                 vv->setScaleY(1/scl);
                 vv->beginCinematicAnimation(0.5f, PHCinematicAnimator::BounceFunction);
@@ -1510,7 +1510,7 @@ class PHPorkholtAnim : public PHSlide
 public:
     PHPorkholtAnim(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     PHView * v;
     
     void animCall()
@@ -1562,7 +1562,7 @@ class PHPorkholtViews : public PHSlide
 public:
     PHPorkholtViews(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch(count)
@@ -1601,7 +1601,7 @@ class PHPorkholtHighLevel : public PHSlide
 public:
     PHPorkholtHighLevel(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch (count) {
@@ -1630,7 +1630,7 @@ class PHPorkholtLowLevel : public PHSlide
 public:
     PHPorkholtLowLevel(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch(count) { 
@@ -1674,7 +1674,7 @@ class PHPorkholt2 : public PHSlide
 public:
     PHPorkholt2(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch (count) {
@@ -1844,7 +1844,7 @@ class PHBeeno3 : public PHSlide
 public:
     PHBeeno3(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch (count)
@@ -1878,7 +1878,7 @@ class PHBeeno2 : public PHSlide
 public:
     PHBeeno2(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         PHView * v = getView();
@@ -1905,7 +1905,7 @@ protected:
                 vv->setCenter(PHPoint(b.width * (1.0f - 3*textright) - rr.width/2, b.height * 0.55));
                 vv->setImage(img);
                 vv->setAutoresizeMask(PHView::ResizeFlexibleBorders);
-                static const ph_float scl = 1024.0f;
+                static const float scl = 1024.0f;
                 vv->setScaleX(1/scl);
                 vv->setScaleY(1/scl);
                 vv->beginCinematicAnimation(0.5f, PHCinematicAnimator::BounceFunction);
@@ -1950,7 +1950,7 @@ class PHBeeno : public PHSlide
 public:
 PHBeeno(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch (count)
@@ -1973,7 +1973,7 @@ class PHGames2 : public PHSlide
 public:
     PHGames2(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch (count)
@@ -2021,7 +2021,7 @@ class PHPorkholt : public PHSlide
 public:
     PHPorkholt(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         switch (count)
@@ -2048,7 +2048,7 @@ class PHSparta : public PHSlide
 public:
     PHSparta(PHGameManager * gm) : PHSlide(gm) {}
 protected:
-    ph_float tb;
+    float tb;
     void screenTapped(int count)
     {
         PHView * v = getView();
@@ -2076,7 +2076,7 @@ protected:
             vv->setCenter(PHPoint(b.width/2, (b.height-tb)/2));
             vv->setImage(img);
             vv->setAutoresizeMask(PHView::ResizeFlexibleBorders);
-            static const ph_float scl = 1024.0f;
+            static const float scl = 1024.0f;
             vv->setScaleX(1/scl);
             vv->setScaleY(1/scl);
             vv->beginCinematicAnimation(0.5f, PHCinematicAnimator::BounceFunction);

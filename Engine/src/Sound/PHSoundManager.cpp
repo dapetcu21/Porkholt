@@ -56,7 +56,7 @@ void PHSoundManager::removeSound(PHSound * snd)
     }
 }
 
-void PHSoundManager::advanceAnimation(ph_float elapsed)
+void PHSoundManager::advanceAnimation(float elapsed)
 {
     inside = true;
     set<PHSound*>::iterator i;
@@ -186,16 +186,16 @@ PHSoundManager::~PHSoundManager()
         alcCloseDevice((ALCdevice*)device);
 }
 
-void PHSoundManager::setGain(ph_float gain)
+void PHSoundManager::setGain(float gain)
 {
     alListenerf(AL_GAIN, ALfloat(gain));  
 }
 
-ph_float PHSoundManager::gain()
+float PHSoundManager::gain()
 {
     ALfloat v;
     alGetListenerf(AL_GAIN, &v);
-    return ph_float(v);
+    return float(v);
 }
 
 void PHSoundManager::setPositiion(const PHVector3 & p)
@@ -207,7 +207,7 @@ PHVector3 PHSoundManager::position()
 {
     ALfloat v[3];
     alGetListenerfv(AL_POSITION, v);
-    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
+    return PHVector3(float(v[0]), float(v[1]), float(v[2]));
 }
 
 void PHSoundManager::setVelocity(const PHVector3 & p)
@@ -219,7 +219,7 @@ PHVector3 PHSoundManager::velocity()
 {
     ALfloat v[3];
     alGetListenerfv(AL_VELOCITY, v);
-    return PHVector3(ph_float(v[0]), ph_float(v[1]), ph_float(v[2]));
+    return PHVector3(float(v[0]), float(v[1]), float(v[2]));
 }
 
 void PHSoundManager::setOrientation(const PHQuaternion & p)
@@ -242,22 +242,22 @@ pair<PHVector3, PHVector3> PHSoundManager::orientation()
     return make_pair(PHVector3(v[0], v[1], v[2]), PHVector3(v[3], v[4], v[5]));
 }
 
-ph_float PHSoundManager::dopplerFactor()
+float PHSoundManager::dopplerFactor()
 {
     return alGetFloat(AL_DOPPLER_FACTOR);
 }
 
-void PHSoundManager::setDopplerFactor(ph_float v)
+void PHSoundManager::setDopplerFactor(float v)
 {
     alDopplerFactor(ALfloat(v));
 }
 
-ph_float PHSoundManager::speedOfSound()
+float PHSoundManager::speedOfSound()
 {
     return alGetFloat(AL_SPEED_OF_SOUND);
 }
 
-void PHSoundManager::setSpeedOfSound(ph_float v)
+void PHSoundManager::setSpeedOfSound(float v)
 {
     alSpeedOfSound(v);
 }

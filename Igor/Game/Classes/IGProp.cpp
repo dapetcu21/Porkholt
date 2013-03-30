@@ -31,7 +31,7 @@ void IGProp::setPosition(const PHPoint & p)
     pos = p;
 }
 
-void IGProp::setRotation(ph_float r)
+void IGProp::setRotation(float r)
 {
     if (body)
     {
@@ -69,7 +69,7 @@ PHDrawable * IGProp::loadDrawable()
     return td;
 }
 
-void IGProp::animate(ph_float elapsed)
+void IGProp::animate(float elapsed)
 {
     if (body && drawable)
     {

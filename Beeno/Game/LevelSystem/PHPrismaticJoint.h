@@ -9,8 +9,8 @@ class PHPrismaticJoint : public PHMotorJoint
 {
 private:
     PHPoint anchor;
-    ph_float _lowerTranslation;
-    ph_float _upperTranslation;
+    float _lowerTranslation;
+    float _upperTranslation;
     bool _enableLimit;
     PHPoint axis;
 public:
@@ -19,13 +19,13 @@ public:
     virtual void loadFromLua(lua_State * L);
     virtual void recreateJoint();
     
-    ph_float lowerTranslation() { return _lowerTranslation; }
-    ph_float upperTranslation() { return _upperTranslation; }
+    float lowerTranslation() { return _lowerTranslation; }
+    float upperTranslation() { return _upperTranslation; }
     bool limitEnabled() { return _enableLimit; }
     
-    void setLimits(ph_float lower, ph_float upper);
-    void setLowerTranslation(ph_float val);
-    void setUpperTranslation(ph_float val);
+    void setLimits(float lower, float upper);
+    void setLowerTranslation(float val);
+    void setUpperTranslation(float val);
     void setLimitEnabled(bool val);
 };
 

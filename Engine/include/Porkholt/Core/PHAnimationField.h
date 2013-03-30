@@ -13,7 +13,7 @@ class PHAnimationField
         int type;
         int field;
         struct f_struct {
-            ph_float diff, start;
+            float diff, start;
         };
         struct v2_struct {
             PHVector2 diff, start;
@@ -25,12 +25,12 @@ class PHAnimationField
             PHColor start, end;
         };
         struct quat_struct {
-            ph_float dot;
-            ph_float theta;
+            float dot;
+            float theta;
             PHVector4 v0, v2;   
         };
         struct quat_add_struct {
-            ph_float theta;
+            float theta;
             PHVector3 axis;
         };
 
@@ -47,14 +47,14 @@ class PHAnimationField
 #undef PHAFSMax
 
     public:
-        PHAnimationField(int field, ph_float value, bool additive = false, bool exponential = false);
+        PHAnimationField(int field, float value, bool additive = false, bool exponential = false);
         PHAnimationField(int field, const PHVector2 & value, bool additive = false, bool exponential = false);
         PHAnimationField(int field, const PHVector3 & value, bool additive = false, bool exponential = false);
         PHAnimationField(int field, const PHColor & value);
         PHAnimationField(int field, const PHQuaternion & value, bool additive = false);
 
         void initState(PHCinematicActor * actor);
-        void animate(PHCinematicActor * actor, ph_float lt, ph_float t);
+        void animate(PHCinematicActor * actor, float lt, float t);
 };
 
 #endif

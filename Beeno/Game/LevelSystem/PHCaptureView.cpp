@@ -29,7 +29,7 @@ void PHCaptureView::touchEvent(PHEvent * event)
 		p2 = event->lastDrawableLocation()->pointInView(this);
 		p.x = p1.x-p2.x;
 		p.y = p1.y-p2.y;
-        ph_float dpi = gm->dotsPerInch();
+        float dpi = gm->dotsPerInch();
 		p.x/= dpi;
 		p.y/= dpi;
 		mutex->lock();

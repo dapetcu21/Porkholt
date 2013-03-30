@@ -182,7 +182,7 @@ class BubblesAnimator : public PHParticleAnimator, public PHDrawableInputDelegat
             return &parts;
         }
 
-        void advanceAnimation(ph_float elapsed)
+        void advanceAnimation(float elapsed)
         {
             if (!v || !partv) return;
             PHSize sz = cam->realScreenSize();

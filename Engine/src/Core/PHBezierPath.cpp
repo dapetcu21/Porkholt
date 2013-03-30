@@ -283,7 +283,7 @@ vector<PHBezierPath::anchorPoint> * PHBezierPath::bezierPath(vector<anchorPoint>
             int n = (int)v.size();
             for (int j = 0; j<n; j++)
                 vv.push_back(v[j].point);
-            ph_float ammount = (1.0f/count)*i;
+            float ammount = (1.0f/count)*i;
             while (n>1)
             {
                 for (int i=0; i<n-1; i++)

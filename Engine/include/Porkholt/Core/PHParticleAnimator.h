@@ -11,7 +11,7 @@ class PHParticleAnimator : public PHAnimator
         struct particle2D
         {
             PH3DPoint position;
-            ph_float rotation;
+            float rotation;
             PHSize size;
             PHColor color;
             void * ud;
@@ -44,7 +44,7 @@ class PHParticleAnimator : public PHAnimator
             };
         };
 
-        virtual void advanceAnimation(ph_float elapsedTime) = 0;
+        virtual void advanceAnimation(float elapsedTime) = 0;
         virtual particles * calculatedParticles() = 0;
 };
 

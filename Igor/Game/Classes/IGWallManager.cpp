@@ -46,7 +46,7 @@ void IGWallManager::freset()
     ftime = 0;
 }
 
-void IGWallManager::fadvance(ph_float elapsed)
+void IGWallManager::fadvance(float elapsed)
 {
     ftime += elapsed * fvel;
     fvel+= elapsed * (rand()/(float)RAND_MAX*2-1);
@@ -54,16 +54,16 @@ void IGWallManager::fadvance(ph_float elapsed)
     if (fvel > 1.5) fvel = 1.5;
 }
 
-ph_float IGWallManager::f(ph_float x)
+float IGWallManager::f(float x)
 {
     return (sin(ftime + x) * (upper-lower) + (upper+lower))/2;
 }
 
-void IGWallManager::animate(ph_float elapsed)
+void IGWallManager::animate(float elapsed)
 {
     curve->beginCommitGrouping();
-    ph_float off = curve->offset() + velocity * elapsed;
-    ph_float w = curve->width();
+    float off = curve->offset() + velocity * elapsed;
+    float w = curve->width();
     if (off >= w)
         off -= w * floor(off/w);
     curve->setOffset(off);
@@ -95,7 +95,7 @@ void IGWallManager::animate(ph_float elapsed)
     {
         IGWallCell * l = cells.empty() ? NULL : cells.back();
         PHVector2 pos;
-        ph_float ag;
+        float ag;
         if (l)
             pos = l->worldPoint(PHVector2(width/2, 0));
         else {
@@ -106,10 +106,10 @@ void IGWallManager::animate(ph_float elapsed)
         if (pos.x > world->view()->bounds().width)
             break;
 
-        ph_float tx = width;
-        ph_float ty = f(tx);
-        ph_float dy = ty-pos.y;
-        ph_float ln = sqrt(dy*dy + tx * tx);
+        float tx = width;
+        float ty = f(tx);
+        float dy = ty-pos.y;
+        float ln = sqrt(dy*dy + tx * tx);
         tx *= tx/ln;
         dy = f(tx)-pos.y;
         ln = sqrt(dy*dy + tx*tx);

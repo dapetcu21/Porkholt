@@ -8,14 +8,14 @@
 class IGMob : public IGDampingProp
 {
     protected:
-        ph_float hp;
+        float hp;
     public:
         IGMob(IGWorld * w);
         ~IGMob();
 
-        void setHealth(ph_float h) { hp = h; }
-        ph_float health() { return hp; }
-        void loseHealth(ph_float h);
+        void setHealth(float h) { hp = h; }
+        float health() { return hp; }
+        void loseHealth(float h);
         virtual void die();
 
         const char * luaClass() { return "IGMob"; }

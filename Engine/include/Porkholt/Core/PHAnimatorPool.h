@@ -23,7 +23,7 @@ public:
     void removeAnimator(PHAnimator * a);
     void removeAllAnimators();
     void removeAnimatorsWithTag(int d);
-    void advanceAnimation(ph_float elapsed);
+    void advanceAnimation(float elapsed);
     
     
     //waitForIt means that scheduleAction should block until the

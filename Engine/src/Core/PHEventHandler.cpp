@@ -10,7 +10,7 @@
 struct PHEventProps
 {
     PHPoint loc;
-    ph_float time;
+    float time;
     PHDrawable * owner;
 };
 
@@ -65,7 +65,7 @@ void PHEventHandler::scrollWheel(PHPoint pnt, PHPoint delta, void *ud)
     addEvent(evt);
 }
 
-void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
+void PHEventHandler::pinchZoom(PHPoint pnt, float zoom, void *ud)
 {
     PHEvent * evt = new PHEvent();
     evt->setUserData(ud);
@@ -76,7 +76,7 @@ void PHEventHandler::pinchZoom(PHPoint pnt, ph_float zoom, void *ud)
     addEvent(evt);
 }
 
-void PHEventHandler::pinchRotate(PHPoint pnt, ph_float rotation, void *ud)
+void PHEventHandler::pinchRotate(PHPoint pnt, float rotation, void *ud)
 {
     PHEvent * evt = new PHEvent();
     evt->setUserData(ud);

@@ -22,17 +22,17 @@ void PHImage::buildImageVAO(PHGLVertexArrayObject * vao, const PHPoint & repeat,
     //TO REDO
     vector<GLfloat> v;
     PHRect r = portion*repeat;
-    ph_float lx = r.x;
-    for (ph_float x = ((int)r.x)+1; lx<r.x+r.width; (lx=x),(x+=1))
+    float lx = r.x;
+    for (float x = ((int)r.x)+1; lx<r.x+r.width; (lx=x),(x+=1))
     {
         if (x>r.x+r.width)
             x=r.x+r.width;
-        ph_float ly = r.y;
+        float ly = r.y;
         if (!v.empty())
             for (int i=0; i<4; i++)
                 v.push_back(v[v.size()-4]);
         bool first = !v.empty();
-        for (ph_float y = ((int)r.y)+1; ly<r.y+r.height; (ly=y),(y+=1))
+        for (float y = ((int)r.y)+1; ly<r.y+r.height; (ly=y),(y+=1))
         {
             if (y>r.y+r.height)
                 y=r.y+r.height;

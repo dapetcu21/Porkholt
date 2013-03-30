@@ -263,7 +263,7 @@ void PHGameManager::viewport(int & x, int & y, int & width, int & height)
     width = v[2]; height = v[3];
 }
 
-void PHGameManager::setScreenSize(ph_float w, ph_float h)
+void PHGameManager::setScreenSize(float w, float h)
 {
     _oldBounds = screenBounds();
     _screenWidth = w;
@@ -302,13 +302,13 @@ void PHGameManager::renderFrame()
 {	
     PHAutoreleasePool pool;
     
-    ph_float tm = PHTime::getTime();
+    float tm = PHTime::getTime();
     if (lt == 0)
         lt = tm - frameInterval();
-    ph_float realTimeElapsed = tm - lt;
+    float realTimeElapsed = tm - lt;
     lt = tm;
 
-    ph_float timeElapsed;
+    float timeElapsed;
     if (frameAnim)
         timeElapsed = frameInterval();
     else
@@ -343,7 +343,7 @@ void PHGameManager::renderFrame()
 #endif
 }
 
-void PHGameManager::renderFPS(ph_float timeElapsed)
+void PHGameManager::renderFPS(float timeElapsed)
 {
     if (!fpsView)
     {

@@ -63,7 +63,7 @@ bool PHFont::loadGlyphs(uint8_t *d, size_t len)
     size_t l = PHDecode(uint16At(d, 0));
     if (len<l+14) return false;
     name = string((char*)(d+2),l);
-    pntSize = (ph_float)PHDecodeF(uint64At(d, l+2));
+    pntSize = (float)PHDecodeF(uint64At(d, l+2));
     size_t n = PHDecode(uint32At(d, l+10));
     if (len<l+14+n*(8*5+1)) return false;
     uint8_t * p = d+l+14;
@@ -72,11 +72,11 @@ bool PHFont::loadGlyphs(uint8_t *d, size_t len)
     {
         glyph tmp;
         char c = (char)*p; p++; 
-        tmp.minX = (ph_float)PHDecodeF(uint64From(p)); p+=8;
-        tmp.maxX = (ph_float)PHDecodeF(uint64From(p)); p+=8;
-        tmp.minY = (ph_float)PHDecodeF(uint64From(p)); p+=8;
-        tmp.maxY = (ph_float)PHDecodeF(uint64From(p)); p+=8;
-        tmp.aspectRatio = (ph_float)PHDecodeF(uint64From(p)); p+=8;
+        tmp.minX = (float)PHDecodeF(uint64From(p)); p+=8;
+        tmp.maxX = (float)PHDecodeF(uint64From(p)); p+=8;
+        tmp.minY = (float)PHDecodeF(uint64From(p)); p+=8;
+        tmp.maxY = (float)PHDecodeF(uint64From(p)); p+=8;
+        tmp.aspectRatio = (float)PHDecodeF(uint64From(p)); p+=8;
         glyphs[c] = tmp;
     }
     return true;

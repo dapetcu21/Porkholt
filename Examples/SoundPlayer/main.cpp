@@ -22,7 +22,7 @@ class PHSliderView : public PHView
     };
     knob * k;
 public:
-    ph_float _pos;
+    float _pos;
 
     PHSliderView(const PHRect & frame) : PHView(frame)
     {
@@ -33,7 +33,7 @@ public:
         setPosition(0);
     }
 
-    void setPosition(ph_float pos)
+    void setPosition(float pos)
     {
         _pos = pos;
         PHRect b(bounds());
@@ -46,7 +46,7 @@ public:
         setPosition(_pos);
     }
 
-    virtual void submitPosition(ph_float pos)
+    virtual void submitPosition(float pos)
     {
     }
 
@@ -55,7 +55,7 @@ public:
         if (evt->type() == PHEvent::touchDown)
         {
             PHPoint p = evt->drawableLocation()->pointInView(this);
-            ph_float pos = (p.x - bounds().x) / bounds().width;
+            float pos = (p.x - bounds().x) / bounds().width;
             setPosition(pos);
             submitPosition(pos);
             evt->setHandled(true);
@@ -78,7 +78,7 @@ public:
         snd->retain();
     }
 
-    void submitPosition(ph_float pos)
+    void submitPosition(float pos)
     {
         snd->seek(pos * snd->duration());
     }
@@ -241,9 +241,9 @@ protected:
         return v;
     }
 
-    ph_float pos;
+    float pos;
 
-    void updateScene(ph_float elapsed)
+    void updateScene(float elapsed)
     {
         slider->update();
         pos+=elapsed;

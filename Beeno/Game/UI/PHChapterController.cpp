@@ -27,15 +27,15 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     PHImageView * view = new PHImageView(frame);
     view->setImage(bg);
     view->setUserInput(true);
-    ph_float upperBorder = 0.425*frame.height;
-    ph_float lowerBorder = 0.175*frame.height;
-    ph_float leftBorder = 0.1*frame.width;
-    ph_float rightBorder = 0.1*frame.width;
-    ph_float levelSize = 0.1*frame.width;
+    float upperBorder = 0.425*frame.height;
+    float lowerBorder = 0.175*frame.height;
+    float leftBorder = 0.1*frame.width;
+    float rightBorder = 0.1*frame.width;
+    float levelSize = 0.1*frame.width;
     int columns = 5;
     int rows = 2;
-    ph_float vertSpacing = (rows==1)?0:((frame.height-upperBorder-lowerBorder-levelSize)/(rows-1));
-    ph_float horisSpacing = (columns==1)?0:((frame.width-leftBorder-rightBorder-levelSize)/(columns-1));
+    float vertSpacing = (rows==1)?0:((frame.height-upperBorder-lowerBorder-levelSize)/(rows-1));
+    float horisSpacing = (columns==1)?0:((frame.width-leftBorder-rightBorder-levelSize)/(columns-1));
     for (int i=0; i<columns; i++)
         for (int j=0; j<rows; j++)
         {
@@ -62,7 +62,7 @@ PHView * PHChapterController::loadView(const PHRect & frame)
     dadoamne->release();
     
     PHImage * img = gm->imageNamed("back");
-    ph_float hi = ((ph_float)img->height())/((ph_float)img->width())*(SIZ_BK_WID*frame.width);
+    float hi = ((float)img->height())/((float)img->width())*(SIZ_BK_WID*frame.width);
     PHButtonView * back = new PHButtonView(PHRect((1.0f-BORDER_BK_RIGHT-SIZ_BK_WID)*frame.width,BORDER_BK_DOWN*frame.height,SIZ_BK_WID*frame.width,hi));
     back->setImage(img);
     back->setPressedImage(gm->imageNamed("back_pressed"));

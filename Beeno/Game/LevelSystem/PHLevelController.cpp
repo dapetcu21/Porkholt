@@ -107,9 +107,9 @@ void PHLevelController::pauseWithMenu()
     rv->animateRotate(-3*M_PI/2);
     rv->commitCinematicAnimation();
     
-    ph_float rs = fr.width*BT_SIZE;
-    ph_float rg = rs/2+fr.width*BT_GAP/2;
-    ph_float off = fr.height/2+rs/2-rg;
+    float rs = fr.width*BT_SIZE;
+    float rg = rs/2+fr.width*BT_GAP/2;
+    float off = fr.height/2+rs/2-rg;
     rb->setFrame(PHRect(fr.width/2+rg+off-rs/2,fr.height/2-rs/2,rs,rs));
     qb->setFrame(PHRect(fr.width/2-rg-off-rs/2,fr.height/2-rs/2,rs,rs));
     
@@ -154,9 +154,9 @@ void PHLevelController::dismissMenu()
         rv->commitCinematicAnimation();
     }
     
-    ph_float rs = fr.width*BT_SIZE;
-    ph_float rg = rs/2+fr.width*BT_GAP/2;
-    ph_float off = fr.height/2+rs/2-rg;    
+    float rs = fr.width*BT_SIZE;
+    float rg = rs/2+fr.width*BT_GAP/2;
+    float off = fr.height/2+rs/2-rg;    
     
     if (rb)
     {
@@ -484,7 +484,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 			lua_gettable(L, -2);
 			if (lua_istable(L, -1))
 			{
-				ph_float scale = 1.0f;
+				float scale = 1.0f;
                 PHLuaGetNumberField(scale, "scale");
 				
 				int n = 0;
@@ -587,12 +587,12 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
     ready1 = true;
     resume();
 	mutex->unlock();
-	ph_float frameInterval = 1.0f/gm->framesPerSecond();
-    ph_float nextFrame = PHTime::getTime();
-    ph_float time = nextFrame;
+	float frameInterval = 1.0f/gm->framesPerSecond();
+    float nextFrame = PHTime::getTime();
+    float time = nextFrame;
 	while (running)
 	{
-        ph_float lastTime = time;
+        float lastTime = time;
         bool p = paused;
         if (!p)
         {
@@ -623,7 +623,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
         scripingEngine->executeConsole();
 #endif
         
-        ph_float interpolate = (time + frameInterval - nextFrame);
+        float interpolate = (time + frameInterval - nextFrame);
         world->realTimeEventQueue()->advanceAnimation(time - lastTime);
         pSem2->wait();
         mutex->lock();

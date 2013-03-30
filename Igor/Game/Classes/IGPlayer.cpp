@@ -53,7 +53,7 @@ void IGPlayer::configureDrawable(PHDrawable * d)
     iv->release();
 }
 
-void IGPlayer::loseHealth(ph_float h)
+void IGPlayer::loseHealth(float h)
 {
     hp -= h;
     if (hp <= 0)

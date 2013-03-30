@@ -13,8 +13,8 @@ private:
     bool attacking;
     bool inCamera;
     bool droppedCargo;
-    ph_float accuracy;
-    ph_float dropVelocity;
+    float accuracy;
+    float dropVelocity;
     PHRect bounds;
     
     virtual void updatePosition();

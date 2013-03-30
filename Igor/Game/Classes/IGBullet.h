@@ -20,7 +20,7 @@ class IGBullet
 
         virtual size_t numberOfParticles() { return 0; }
         virtual void addParticles(PHParticleAnimator::particle2D * v) = 0;
-        virtual void animate(ph_float elapsed) = 0;
+        virtual void animate(float elapsed) = 0;
         virtual void beginContact(bool aBody, b2Contact * contact) {}
 };
 

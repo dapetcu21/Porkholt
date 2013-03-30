@@ -7,12 +7,12 @@
 
 struct PHAcceleration
 {
-	ph_float x,y,z;
+	float x,y,z;
 };
 
 struct PHTilt
 {
-	ph_float pitch,roll;
+	float pitch,roll;
 };
 
 class PHMotion : public PHObject

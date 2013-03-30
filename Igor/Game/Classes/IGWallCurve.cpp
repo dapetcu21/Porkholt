@@ -53,24 +53,24 @@ GLfloat * IGWallCurve::vertexData(size_t & nvertices, const PHRect & txc)
         return NULL;
     }
     nvertices = count * 2;
-    ph_float xf = points.front().x + _offset;
-    ph_float xl = points.back().x + _offset;
+    float xf = points.front().x + _offset;
+    float xl = points.back().x + _offset;
     nvertices += 4*(size_t)(floor(xl/_width) - ceil(xf/_width) + 1);
     GLfloat * v = new GLfloat[nvertices * 5];
     GLfloat * p = v;
-    ph_float tx = xf/_width - floor(xf/_width);
+    float tx = xf/_width - floor(xf/_width);
     PHPoint lp = points.front();
 
     for (list<PHPoint>::iterator i = points.begin(); i != points.end(); i++)
     {
         PHPoint pt = *i;
-        ph_float ltx = tx;
+        float ltx = tx;
         tx += (pt.x - lp.x) / _width;
         if (tx >= 1.0f)
         {
-            ph_float f = (1.0f - ltx) / (tx - ltx);
+            float f = (1.0f - ltx) / (tx - ltx);
             PHPoint pp = lp+(pt-lp)*f;
-            ph_float q = (pp.y - _limit);
+            float q = (pp.y - _limit);
             p[0] = pp.x;
             p[1] = _limit;
             p[2] = (txc.x + txc.width) * q;
@@ -101,7 +101,7 @@ GLfloat * IGWallCurve::vertexData(size_t & nvertices, const PHRect & txc)
             tx-=1.0f;
         }
 
-        ph_float q = (pt.y - _limit);
+        float q = (pt.y - _limit);
 
         p[0] = pt.x;
         p[1] = _limit;

@@ -9,22 +9,22 @@ class PHPerspectiveCamera : public PHCamera
     private:
         PHMatrix mat;
         bool cache;
-        ph_float ar;
-        ph_float near,far;
-        ph_float fov;
+        float ar;
+        float near,far;
+        float fov;
         PHQuaternion rot;
 
     public:
         PHPerspectiveCamera();
 
-        ph_float aspectRatio() { return ar; }
-        void setAspectRatio(ph_float aspect) { ar = aspect; cache = false; } 
-        ph_float nearClippingPlane() { return near; }
-        ph_float farClippingPlane() { return far; }
-        void setNearClippingPlane(ph_float n) { near = n; cache = false; }
-        void setFarClippingPlane(ph_float f) { far = f; cache = false; }
-        ph_float fieldOfView() { return fov; }
-        void setFieldOfView(ph_float f) { fov = f; cache = false; }
+        float aspectRatio() { return ar; }
+        void setAspectRatio(float aspect) { ar = aspect; cache = false; } 
+        float nearClippingPlane() { return near; }
+        float farClippingPlane() { return far; }
+        void setNearClippingPlane(float n) { near = n; cache = false; }
+        void setFarClippingPlane(float f) { far = f; cache = false; }
+        float fieldOfView() { return fov; }
+        void setFieldOfView(float f) { fov = f; cache = false; }
         PHQuaternion rotation() { return rot; }
         void setRotation(const PHQuaternion & q) { rot = q; cache = false; }
 

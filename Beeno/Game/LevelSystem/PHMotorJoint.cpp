@@ -37,7 +37,7 @@ void PHMotorJoint::setMotorEnabled(bool val)
         }
     }
 }
-void PHMotorJoint::setMotorPower(ph_float val)
+void PHMotorJoint::setMotorPower(float val)
 {
     _motorPower = val;
     if (joint)
@@ -56,7 +56,7 @@ void PHMotorJoint::setMotorPower(ph_float val)
     }
 }
 
-void PHMotorJoint::setMotorSpeed(ph_float val)
+void PHMotorJoint::setMotorSpeed(float val)
 {
     _motorPower = val;
     if (joint)

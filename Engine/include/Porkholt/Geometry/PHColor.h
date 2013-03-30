@@ -12,23 +12,23 @@ struct PHColor
 {
     union
     {
-        ph_float r;
-        ph_float x;
+        float r;
+        float x;
     };
     union
     {
-        ph_float g;
-        ph_float y;
+        float g;
+        float y;
     };
     union
     {
-        ph_float b;
-        ph_float z;
+        float b;
+        float z;
     };
     union
     {
-        ph_float a;
-        ph_float t;
+        float a;
+        float t;
     };
     bool operator == (const PHColor & o) const {
         return (r==o.r)&&(g==o.g)&&(b==o.b)&&(a==o.a);
@@ -36,23 +36,23 @@ struct PHColor
     bool operator != (const PHColor & o) const {
         return (r!=o.r)||(g!=o.g)||(b!=o.b)||(a!=o.a);
     }
-    const PHColor & multiplyAlpha(ph_float d)
+    const PHColor & multiplyAlpha(float d)
     {
         if (a>0) a*=d;
         return * this;
     }
-    PHColor multipliedAlpha(ph_float d) const
+    PHColor multipliedAlpha(float d) const
     {
         if (a<0) return *this;
         PHColor res(r,g,b,a*d);
         return res;
     }
-    const PHColor & operator *= (ph_float d)
+    const PHColor & operator *= (float d)
     {
         a*=d; r*=d; g*=d; b*=d;
         return * this;
     }
-    PHColor operator * (ph_float d) const
+    PHColor operator * (float d) const
     {
         PHColor res(r*d,g*d,b*d,a*d);
         return res;
@@ -67,13 +67,13 @@ struct PHColor
         PHColor res(r*d.r,g*d.g,b*d.b,a*d.a);
         return res;
     } 
-    const PHColor & operator /= (ph_float d)
+    const PHColor & operator /= (float d)
     {
         d = 1.0f/d;
         a*=d; r*=d; g*=d; b*=d;
         return * this;
     }
-    PHColor operator / (ph_float d) const
+    PHColor operator / (float d) const
     {
         d = 1.0f/d;
         PHColor res(r*d,g*d,b*d,a*d);
@@ -111,8 +111,8 @@ struct PHColor
         return res;
     } 
 
-    PHColor(ph_float red, ph_float green, ph_float blue, ph_float alpha) : r(red), g(green), b(blue), a(alpha) {};
-    PHColor(ph_float red, ph_float green, ph_float blue) : r(red), g(green), b(blue), a(1.0f) {};
+    PHColor(float red, float green, float blue, float alpha) : r(red), g(green), b(blue), a(alpha) {};
+    PHColor(float red, float green, float blue) : r(red), g(green), b(blue), a(1.0f) {};
     PHColor(const PHQuaternion & q);
     PHColor() {};
     bool isValid() { return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1 && a>=0 && a<=1); }
@@ -121,8 +121,8 @@ struct PHColor
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
 
-    ph_float length() const { return sqrt(x*x+y*y+z*z+t*t); } 
-    ph_float squaredLength() const { return x*x+y*y+z*z+t*t; }
+    float length() const { return sqrt(x*x+y*y+z*z+t*t); } 
+    float squaredLength() const { return x*x+y*y+z*z+t*t; }
 
     void normalize() { 
 #ifdef PH_MATRIX_NEON
@@ -141,8 +141,8 @@ struct PHColor
 #endif
     }
 
-    ph_float dot(const PHColor & v) { return dot(*this,v); }
-    static ph_float dot(const PHColor & v1, const PHColor & v2)
+    float dot(const PHColor & v) { return dot(*this,v); }
+    static float dot(const PHColor & v1, const PHColor & v2)
     {
 #ifdef PH_MATRIX_NEON
         return dot4_neon((const float *)&v1,(const float *)&v2);
@@ -180,7 +180,7 @@ extern const PHColor PHWhiteColor;
 extern const PHColor PHInvalidColor;
 
 namespace PHColor_conditions {
-    PH_STATIC_ASSERT(sizeof(PHVector4) == sizeof(ph_float)*4);
+    PH_STATIC_ASSERT(sizeof(PHVector4) == sizeof(float)*4);
     PH_STATIC_ASSERT(sizeof(PH24BitColor) == 4);
 }
 

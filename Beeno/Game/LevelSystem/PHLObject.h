@@ -29,8 +29,8 @@ class PHLObject : public PHObject, public PHCinematicActor
 protected:
 	string _class;
 	PHPoint pos;
-	ph_float rot;
-	ph_float maxSpeed,maxSpeedX,maxSpeedY;
+	float rot;
+	float maxSpeed,maxSpeedX,maxSpeedY;
 	bool disableLimit;
 	PHView * view;
 	
@@ -81,31 +81,31 @@ public:
 	const string & getClass() {return _class;};
 	PHView * getView() { return view;};
 	PHPoint position() { return pos; };
-	ph_float rotation() { return rot; };
-	ph_float maxVelocity() { return maxSpeed; }
-	void setMaxVelocity(ph_float v) { maxSpeed = v; }
-	ph_float maxVelocityX() { return maxSpeedX; }
-	void setMaxVelocityX(ph_float v) { maxSpeedX = v; }
-	ph_float maxVelocityY() { return maxSpeedY; }
-	void setMaxVelocityY(ph_float v) { maxSpeedY = v; }
+	float rotation() { return rot; };
+	float maxVelocity() { return maxSpeed; }
+	void setMaxVelocity(float v) { maxSpeed = v; }
+	float maxVelocityX() { return maxSpeedX; }
+	void setMaxVelocityX(float v) { maxSpeedX = v; }
+	float maxVelocityY() { return maxSpeedY; }
+	void setMaxVelocityY(float v) { maxSpeedY = v; }
 	void temporarilyDisableVelocityLimit() { disableLimit = true; }
     
     virtual void setCinematicPosition(const PHPoint &);
     virtual PHPoint cinematicPosition();
-    virtual void setCinematicRotation(ph_float);
-    virtual ph_float cinematicRotation();
+    virtual void setCinematicRotation(float);
+    virtual float cinematicRotation();
     virtual void setCinematicScale(const PHSize &) {};
     virtual PHSize cinematicScale() { return PHSize(1,1); }
     virtual void setCinematicBgColor(const PHColor &) {}
     virtual PHColor cinematicBgColor() { return PHInvalidColor; }
     
-	void setRotation(ph_float r);
+	void setRotation(float r);
 	void setPosition(PHPoint p);
-    void setTransform(PHPoint p,ph_float r);
+    void setTransform(PHPoint p,float r);
 	void limitVelocity();
     bool isDynamic();
     void setDynamic(bool d);
-    void rotateAround(ph_float r, PHPoint around);
+    void rotateAround(float r, PHPoint around);
     
     virtual void flip();
     bool isFlipped() {  return flipped; }
@@ -114,12 +114,12 @@ public:
     void applyForce(PHPoint force, PHPoint appPoint);
     void applyImpulse(PHPoint impulse, PHPoint appPoint);
     PHPoint velocity();
-    ph_float scalarVelocity();
+    float scalarVelocity();
     void setVelocity(PHPoint vel);
-    ph_float angularVelocity();
-    void setAngularVelocity(ph_float v);
-    void applyAngularImpulse(ph_float impulse);
-    ph_float mass();
+    float angularVelocity();
+    void setAngularVelocity(float v);
+    void applyAngularImpulse(float impulse);
+    float mass();
     PHPoint centerOfMass();
     
 	
@@ -136,7 +136,7 @@ public:
 	
     virtual void updatePhysics();
     virtual void updatePosition();
-    virtual void updateView(ph_float elapsed, ph_float interpolate);
+    virtual void updateView(float elapsed, float interpolate);
     
     b2Body * getBody() { return body; }
     
@@ -148,40 +148,40 @@ public:
     
 protected:
     PHBezierPath * patrol;
-    ph_float patSpeed;
+    float patSpeed;
     bool patCircle;
-    ph_float patLength;
-    ph_float jointLength;
-    ph_float patPos;
+    float patLength;
+    float jointLength;
+    float patPos;
     PHPoint patLastVel;
     PHPoint patVel;
     bool patRev;
     PHPoint cinePos;
     bool needsCinePos;
-    ph_float cineRot;
+    float cineRot;
     bool needsCineRot;
     PHPoint lastVel;
-    ph_float lastOmega;
+    float lastOmega;
     bool needsLVel;
     bool needsLOmega;
     bool correctPos,correctRot;
     
-    void updatePatrol(ph_float elapsed);
-    void updateCinematics(ph_float elapsed);
+    void updatePatrol(float elapsed);
+    void updateCinematics(float elapsed);
     
     const void * patSignature;
     int patP;
-    ph_float lastPos;
+    float lastPos;
 public:
     PHBezierPath * patrolPath() { return patrol; }
     void setPatrolPath(PHBezierPath * p);
-    ph_float patrolSpeed() { return patSpeed; }
-    void setPatrolSpeed(ph_float p) { patSpeed = p; }
+    float patrolSpeed() { return patSpeed; }
+    void setPatrolSpeed(float p) { patSpeed = p; }
     bool patrolInCircle() { return patCircle; }
     void setPatrolInCircle(bool c) { patCircle = c; }
-    ph_float patrolLength() { return patLength+(patCircle?jointLength:0); }
-    ph_float patrolPosition() { return patPos; }
-    void setPatrolPosition(ph_float d) { patPos = d; }
+    float patrolLength() { return patLength+(patCircle?jointLength:0); }
+    float patrolPosition() { return patPos; }
+    void setPatrolPosition(float d) { patPos = d; }
     bool patrolReversed() { return patRev; }
     void setPatrolReversed(bool pr) { patRev = pr; }
     
@@ -226,7 +226,7 @@ public:
     void addAnimation(PHLAnimation * anim);
     void skipAllAnimations();
     void invalidateAllAnimations();
-    void commitAnimations(ph_float elapsedTime);
+    void commitAnimations(float elapsedTime);
 private:
     list<PHLAnimation*>animations;
 public:

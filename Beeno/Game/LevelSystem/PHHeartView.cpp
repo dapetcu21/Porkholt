@@ -7,8 +7,8 @@
 void PHHeartView::draw()
 {
     if (!_image) return;
-    ph_float height = _bounds.height;
-    ph_float width = height/_image->height()*_image->width();
+    float height = _bounds.height;
+    float width = height/_image->height()*_image->width();
     for (int i=0; i<heartNo; i++)
     {
         bool isactive = (flipped?(heartNo-i<=active):(i<active));

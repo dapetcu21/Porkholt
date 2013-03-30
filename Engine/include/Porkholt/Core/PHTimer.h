@@ -8,7 +8,7 @@ class PHTimer : public PHAnimator
 private:
     bool valid;
     bool repeat;
-    ph_float time, dur;
+    float time, dur;
     bool cboninvalidate;
     PHInvocation invocation;
     PHSemaphore * sem;
@@ -23,12 +23,12 @@ public:
     
     ~PHTimer();
     
-    void advanceAnimation(ph_float timeElapsed);
+    void advanceAnimation(float timeElapsed);
 
-    void setDuration(ph_float tm) { dur = time = tm; }
-    ph_float duration() { return dur; }
-    void setTimeLeft(ph_float tm) { time = tm; }
-    ph_float timeLeft() { return time; }
+    void setDuration(float tm) { dur = time = tm; }
+    float duration() { return dur; }
+    void setTimeLeft(float tm) { time = tm; }
+    float timeLeft() { return time; }
     bool repeats() { return repeat; }
     void setRepeats(bool rpt) { repeat = rpt; }
     bool callsBackOnInvalidate() { return cboninvalidate; }

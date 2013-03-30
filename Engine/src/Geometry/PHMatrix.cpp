@@ -5,21 +5,21 @@
 
 void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse)
 {
-	ph_float a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
-    ph_float a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
-    ph_float a2 = m[ 0]*m[ 7] - m[ 3]*m[ 4];
-    ph_float a3 = m[ 1]*m[ 6] - m[ 2]*m[ 5];
-    ph_float a4 = m[ 1]*m[ 7] - m[ 3]*m[ 5];
-    ph_float a5 = m[ 2]*m[ 7] - m[ 3]*m[ 6];
-    ph_float b0 = m[ 8]*m[13] - m[ 9]*m[12];
-    ph_float b1 = m[ 8]*m[14] - m[10]*m[12];
-    ph_float b2 = m[ 8]*m[15] - m[11]*m[12];
-    ph_float b3 = m[ 9]*m[14] - m[10]*m[13];
-    ph_float b4 = m[ 9]*m[15] - m[11]*m[13];
-    ph_float b5 = m[10]*m[15] - m[11]*m[14];
+	float a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
+    float a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
+    float a2 = m[ 0]*m[ 7] - m[ 3]*m[ 4];
+    float a3 = m[ 1]*m[ 6] - m[ 2]*m[ 5];
+    float a4 = m[ 1]*m[ 7] - m[ 3]*m[ 5];
+    float a5 = m[ 2]*m[ 7] - m[ 3]*m[ 6];
+    float b0 = m[ 8]*m[13] - m[ 9]*m[12];
+    float b1 = m[ 8]*m[14] - m[10]*m[12];
+    float b2 = m[ 8]*m[15] - m[11]*m[12];
+    float b3 = m[ 9]*m[14] - m[10]*m[13];
+    float b4 = m[ 9]*m[15] - m[11]*m[13];
+    float b5 = m[10]*m[15] - m[11]*m[14];
 	
-    ph_float det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
-    ph_float invDet = (1.0f)/det;
+    float det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
+    float invDet = (1.0f)/det;
     
 	inverse[ 0] = ( + m[ 5]*b5 - m[ 6]*b4 + m[ 7]*b3 ) * invDet;
 	inverse[ 1] = ( - m[ 1]*b5 + m[ 2]*b4 - m[ 3]*b3 ) * invDet;
@@ -62,7 +62,7 @@ void PHMultiplyMatrix(const GLfloat m0[16], const GLfloat m1[16], GLfloat d[16])
 
 PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoint & pnt)
 {
-	ph_float x,y,w;
+	float x,y,w;
 	x = pnt.x * m[0] + pnt.y * m[4] + /*0 * m[8] + 1 * */m[12];
 	y = pnt.x * m[1] + pnt.y * m[5] + /*0 * m[9] + 1 * */m[13];
 	w = pnt.x * m[3] + pnt.y * m[7] + /*0 * m[11]+ 1 * */m[15];        
@@ -72,7 +72,7 @@ PHPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PHPoint & pnt
 
 PH3DPoint PHTransformPointMatrix(const GLfloat * PH_RESTRICT m,const PH3DPoint & pnt)
 {
-	ph_float x,y,z,w;
+	float x,y,z,w;
 	x = pnt.x * m[0] + pnt.y * m[4] + pnt.z * m[8]  + m[12];
 	y = pnt.x * m[1] + pnt.y * m[5] + pnt.z * m[9]  + m[13];
     z = pnt.x * m[2] + pnt.y * m[6] + pnt.z * m[10] + m[14];

@@ -67,7 +67,7 @@ class PHStarsAnimator : public PHParticleAnimator
         }
 
 
-        virtual void advanceAnimation(ph_float elapsedTime)
+        virtual void advanceAnimation(float elapsedTime)
         {
             time = PHWarp(elapsedTime * PART_SPEED + time, M_PI * 2);
             for (int i = 0; i < NUM_PART; i++)
@@ -88,7 +88,7 @@ protected:
     PHMeshBody * earth, *athmos;
     PHImageView * background;
     PHBody * box;
-    ph_float time;
+    float time;
     ESettings s;
     PHPerspectiveCamera * container;
     PHColor oldColor1, oldColor2;
@@ -96,9 +96,9 @@ protected:
     PHStarsAnimator * starsAnimator;
 
     bool fingerDown;
-    ph_float lastFingerPos;
-    ph_float fingerPos;
-    ph_float currentSpeed;
+    float lastFingerPos;
+    float fingerPos;
+    float currentSpeed;
 
     
     PHView * loadView(const PHRect & r)
@@ -332,7 +332,7 @@ protected:
         }
     }
     
-    void updateScene(ph_float timeElapsed)
+    void updateScene(float timeElapsed)
     {
         earth->setRotation(PHQuaternion(time, PHVector3(0.0f, 1.0f, 0.0f)));
         if (fingerDown)

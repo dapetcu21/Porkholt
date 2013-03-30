@@ -21,7 +21,7 @@ void PHTimer::setSemaphore(PHSemaphore * semaphore)
     sem = semaphore; 
 }
  
-void PHTimer::advanceAnimation(ph_float timeElapsed)
+void PHTimer::advanceAnimation(float timeElapsed)
 {
     time -= timeElapsed;
     if (time<=0)

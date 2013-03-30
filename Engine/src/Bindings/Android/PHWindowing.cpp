@@ -41,8 +41,8 @@ struct PHWState {
 
     int32_t width;
     int32_t height;
-    ph_float fps; 
-    ph_float dpi;
+    float fps; 
+    float dpi;
     int orient;
     bool vsync;
 
@@ -271,7 +271,7 @@ void PHWOnCmd(struct android_app* app, int32_t cmd)
     }
 }
 
-void PHWOnTouchEvent(PHWState & state, int type, int pointer, ph_float x, ph_float y)
+void PHWOnTouchEvent(PHWState & state, int type, int pointer, float x, float y)
 {
     if (!state.gm) return;
     void * ud = (void*)pointer;
@@ -374,7 +374,7 @@ void android_main(android_app * app)
                         accel.x = event.acceleration.x;
                         accel.y = event.acceleration.y;
                         accel.z = event.acceleration.z;
-                        ph_float x=accel.x, y=accel.y;
+                        float x=accel.x, y=accel.y;
                         switch(state.orient)
                         {
                             case 0:

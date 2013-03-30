@@ -61,11 +61,11 @@ void PHLPlayer::loadFromLua(lua_State * L, b2World * world, PHLevelController * 
 void PHLPlayer::updateControls(list<PHPoint> * queue)
 {
 	if (!body) return;
-    ph_float el = gm->frameInterval();
+    float el = gm->frameInterval();
 	
 	b2Vec2 frc;
 	PHTilt t = PHMotion::sharedInstance()->getTilt();
-	ph_float f = t.roll;
+	float f = t.roll;
 	if (f>MAX_TILT)
 		f = MAX_TILT;
 	if (f<-MAX_TILT)
@@ -75,7 +75,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	b2Vec2 center = body->GetWorldCenter();
     if (userInp)
         body->ApplyForce(frc, center);
-	ph_float jumpGauge = _forceGauge;
+	float jumpGauge = _forceGauge;
     b2Vec2 totalJump(0,0);
     if (mutex)
         mutex->lock();
@@ -88,7 +88,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         queue->pop_front();
         if (mutex)
             mutex->unlock();
-		ph_float length = sqrt(frc.x*frc.x+frc.y*frc.y);
+		float length = sqrt(frc.x*frc.x+frc.y*frc.y);
 		if (frc.y<0)
 			length = fabs(frc.x);
 		if (length)
@@ -114,7 +114,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
         totalJump.Normalize();
         if (totalJump.y>0.1 && normal.y>0)
         {
-            b2Vec2 imp(0,min<ph_float>(normal.y*2,10.0f*el));
+            b2Vec2 imp(0,min<float>(normal.y*2,10.0f*el));
             body->ApplyLinearImpulse(imp,center);
         }
     }
@@ -137,7 +137,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 void PHLPlayer::updatePosition()
 {
     PHLNPC::updatePosition();
-    ph_float interval = gm->frameInterval();
+    float interval = gm->frameInterval();
     if (powerTime>0)
     {
         powerTime-=interval;
@@ -155,7 +155,7 @@ void PHLPlayer::contactPostSolve(bool b,b2Contact* contact, const b2ContactImpul
     touchesSomething = 1.0f;
     if (contacts.insert(contact).second)
     {
-        ph_float a = PHTime::getTime();
+        float a = PHTime::getTime();
         if (a-lastInsert > 1.0f)
         {
             _forceGauge = maxForce;
@@ -217,7 +217,7 @@ void PHLPlayer::activateShield()
     getWorld()->viewEventQueue()->scheduleAction(PHInvBind(this, PHLPlayer::_activateShield,NULL));
 }
 
-void PHLPlayer::updateView(ph_float elapsed, ph_float interpolate)
+void PHLPlayer::updateView(float elapsed, float interpolate)
 {
     PHLNPC::updateView(elapsed, interpolate);
     if (powerTime<0)
@@ -252,7 +252,7 @@ void PHLPlayer::_deactivatePower(PHObject * sender, void * ud)
 
 void PHLPlayer::activatePower()
 {
-    ph_float pt = powerTime;
+    float pt = powerTime;
     powerTime = 10.0f;
     if (pt<=0)
     {

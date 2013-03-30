@@ -22,10 +22,10 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     PHImage * img;
     PHView * v = new PHView(frame);
     v->setUserInput(true);
-    ph_float w = frame.width;
-    ph_float h = frame.height;
+    float w = frame.width;
+    float h = frame.height;
     img = gm->imageNamed("title");
-    ph_float hi = ((ph_float)img->height())/((ph_float)img->width())*(SIZ_BG_WID*w);
+    float hi = ((float)img->height())/((float)img->width())*(SIZ_BG_WID*w);
     PHImageView * bg = new PHImageView(PHRect(
         BORDER_BG_LEFT*w,
         POS_BG_Y*h-hi/2,
@@ -36,7 +36,7 @@ PHView * PHTitleScreen::loadView(const PHRect & frame)
     bg->setTag(3562);
     
     img = gm->imageNamed("start_game");
-    hi = ((ph_float)img->height())/((ph_float)img->width())*(SIZ_BT*w);
+    hi = ((float)img->height())/((float)img->width())*(SIZ_BT*w);
     PHButtonView * bt = new PHButtonView(PHRect(
         POS_BT_X*w-SIZ_BT*w/2,
         POS_BT_Y*h-hi/2,

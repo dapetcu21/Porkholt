@@ -17,20 +17,20 @@ class PHSphereMesh : public PHMesh
 {
 private:
     PHGLVertexArrayObject * vaos[3];
-    ph_float closeDist, farDist;
+    float closeDist, farDist;
     PHGameManager * gm;
 public:
     PHSphereMesh(PHGameManager * gm);
     PHSphereMesh(PHGameManager * gm, int latitude, int longitude);
     ~PHSphereMesh();
-    void setMediumLODInterval(ph_float close, ph_float far)
+    void setMediumLODInterval(float close, float far)
     {
         closeDist = close; 
         farDist = far;
     }
     
     PHGLVertexArrayObject * vaoForLevelOfDetail(int lod);
-    int lodForDistance(ph_float dist) { return (dist<closeDist)?PHMesh::highLOD:((dist>farDist)?PHMesh::lowLOD:PHMesh::defaultLOD); }
+    int lodForDistance(float dist) { return (dist<closeDist)?PHMesh::highLOD:((dist>farDist)?PHMesh::lowLOD:PHMesh::defaultLOD); }
     bool usesLevelsOfDetail();
     
     void setResolutionForLOD(int lod, int latitude, int longitude);

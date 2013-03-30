@@ -196,7 +196,7 @@ PHRect PHGLTexture2D::loadFromData(uint8_t * buf, size_t w, size_t h, size_t bw,
     setData(buf, bw, bh, fmt);
     bind_end;
     
-    return PHRect(0, 0, w/ph_float(bw), h/ph_float(bh));
+    return PHRect(0, 0, w/float(bw), h/float(bh));
 }
 
 PHRect PHGLTexture2D::loadFromFile(PHStream * fd, bool antialiasing)

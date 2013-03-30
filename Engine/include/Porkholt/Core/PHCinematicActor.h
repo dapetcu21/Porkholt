@@ -35,12 +35,12 @@ public:
         tQuat
     };
 
-    virtual void setAnimationFieldF(int field, ph_float v);
+    virtual void setAnimationFieldF(int field, float v);
     virtual void setAnimationFieldV2(int field, const PHVector2 & v);
     virtual void setAnimationFieldV3(int field, const PHVector3 & v);
     virtual void setAnimationFieldC(int field, const PHColor & v);
     virtual void setAnimationFieldQ(int field, const PHQuaternion & v);
-    virtual ph_float getAnimationFieldF(int field);
+    virtual float getAnimationFieldF(int field);
     virtual PHVector2 getAnimationFieldV2(int field);
     virtual PHVector3 getAnimationFieldV3(int field);
     virtual PHColor getAnimationFieldC(int field);
@@ -63,10 +63,10 @@ public:
     void removeCinematicAnimationsWithTag(size_t tag);
     
     PHCinematicAnimator * cinematicAnimator() { return _cinematicAnimator; }
-    void beginCinematicAnimation(ph_float duration);
-    void beginCinematicAnimation(ph_float duration, int type);
-    void chainCinematicAnimation(ph_float duration);
-    void chainCinematicAnimation(ph_float duration, int type);
+    void beginCinematicAnimation(float duration);
+    void beginCinematicAnimation(float duration, int type);
+    void chainCinematicAnimation(float duration);
+    void chainCinematicAnimation(float duration, int type);
     void commitCinematicAnimation();
     void dropCinematicAnimation();
     
@@ -74,7 +74,7 @@ public:
     void animateMove(const PH3DPoint & mv) { animateField(PHAnimationField(fieldMove, mv, true)); }
     void animateScale(const PHSize & mv) { animateField(PHAnimationField(fieldScale, mv, true, true)); }
     void animateScale(const PH3DSize & mv) { animateField(PHAnimationField(fieldScale, mv, true, true)); }
-    void animateRotate(ph_float rot) { animateField(PHAnimationField(fieldRotate, true)); }
+    void animateRotate(float rot) { animateField(PHAnimationField(fieldRotate, true)); }
     void animateRotate(const PHQuaternion & q) { animateField(PHAnimationField(fieldRotate, q, true)); }
 
     void animateField(const PHAnimationField & field);

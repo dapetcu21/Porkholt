@@ -48,11 +48,11 @@ PHDrawable * IGObject::getDrawable()
         drawable = loadDrawable();
     return drawable; }
 
-void IGObject::animate(ph_float elapsed)
+void IGObject::animate(float elapsed)
 {
 }
 
-void IGObject::adjustPhysics(ph_float elapsed)
+void IGObject::adjustPhysics(float elapsed)
 {
 }
 

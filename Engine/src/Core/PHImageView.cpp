@@ -319,7 +319,7 @@ void PHImageView::renderStraight()
         if (_image->isAnimated())
         {
             PHColor t = tint.isValid()?tint:PHWhiteColor;
-            ph_float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
+            float rem = straightVAO2?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
             
             
             if (straightVAO2)
@@ -415,11 +415,11 @@ void PHImageView::loadFromLua(lua_State *L)
         PHRect portion = PHWholeRect;
         PHRect frame = PHWholeRect;
         int tag = 0;
-        ph_float rot = 0;
+        float rot = 0;
         bool flipHoriz = false;
         bool flipVert = false;
         bool constrain = true;
-        ph_float repX=1,repY=1;
+        float repX=1,repY=1;
         PHColor tint = PHInvalidColor;
 
         PHLuaGetRectField(frame, "pos");

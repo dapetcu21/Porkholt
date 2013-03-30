@@ -330,7 +330,7 @@ void PHParticleView::render()
                 renderParticles(particles, PHWholeRect, t, ((PHAnimatedImage*)img)->atlas());
             } else {
                 bool fd = _animator->isFading();
-                ph_float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
+                float rem = fd?(_animator->remainingFrameTime()/_animator->currentFrameTime()):0;
                 if (fd)
                 {
                     gm->setTextureUniform(_animator->lastFrameTexture());

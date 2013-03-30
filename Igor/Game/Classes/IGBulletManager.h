@@ -34,7 +34,7 @@ class IGBulletManager : public IGObject, public IGContactHandler
         IGBulletParticles * pa;
         PHParticleView * pv;
 
-        void animate(ph_float elapsed);
+        void animate(float elapsed);
 };
 
 #endif

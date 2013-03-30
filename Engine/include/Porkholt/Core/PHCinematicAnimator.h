@@ -16,7 +16,7 @@ public:
     PHCinematicAnimator(PHAnimatorPool * pool);
     virtual ~PHCinematicAnimator();
     
-    virtual void advanceAnimation(ph_float elapsedTime);
+    virtual void advanceAnimation(float elapsedTime);
     
     enum Functions
 	{
@@ -32,9 +32,9 @@ public:
     void setSkipsFirstFrames(int s) { skipFirst = s; }
     int timeFunction() { return function; }
     void setTimeFunction(int tf) { function = tf; }
-    ph_float duration() { return time; }
-    ph_float totalDuration() { return totalTime; }
-    void setDuration(ph_float d) { time = totalTime = d
+    float duration() { return time; }
+    float totalDuration() { return totalTime; }
+    void setDuration(float d) { time = totalTime = d
 #ifdef PH_SLOW_CINEMATIC_ANIMATIONS
         * 5;
 #endif
@@ -46,7 +46,7 @@ public:
     void invalidate();
     void skip() { advanceAnimation(time); }
     void completed() { completed(0); }
-    void completed(ph_float remaining);
+    void completed(float remaining);
 
     void addAnimationField(const PHAnimationField & anim);
     
@@ -57,11 +57,11 @@ private:
     vector<PHAnimationField> fields;
     
     int function;
-    ph_float time,totalTime;
+    float time,totalTime;
     int skipFirst;
     PHInvocation callback;
     
-    ph_float f(ph_float time,int ftype);
+    float f(float time,int ftype);
 };
 
 #endif

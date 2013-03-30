@@ -13,16 +13,16 @@ public:
     {
     protected:
         uint8_t flags;
-        ph_float time;
+        float time;
         PHPoint position;
-        ph_float rotation;
+        float rotation;
         PHSize scale;
         PHColor bgColor;
         PHColor customColor;
-        ph_float customValue;
+        float customValue;
         
         int jmpSec;
-        ph_float jmpTime;
+        float jmpTime;
         
         enum {
             hasPosition = 1<<0,
@@ -37,7 +37,7 @@ public:
         friend class PHKeyframeAnimator;
         
     public:
-        Keyframe(ph_float tm) : flags(0), time(tm) {};
+        Keyframe(float tm) : flags(0), time(tm) {};
         Keyframe(const Keyframe & o) : 
             flags(o.flags),
             time(o.time),
@@ -52,22 +52,22 @@ public:
         {};
         
         void addPosition(const PHPoint & pos);
-        void addRotation(ph_float rot);
+        void addRotation(float rot);
         void addScale(const PHSize & scale);
         void addBgColor(const PHColor & clr);
         void addCustomColor(const PHColor & clr);
-        void addCustomValue(ph_float val);
-        void addJump(int sectionIndex, ph_float time);
+        void addCustomValue(float val);
+        void addJump(int sectionIndex, float time);
         
     };
-    static Keyframe positionFrame(ph_float tm, const PHPoint & pos);
-    static Keyframe rotationFrame(ph_float tm, ph_float rot);
-    static Keyframe scaleFrame(ph_float tm, const PHSize & scale);
-    static Keyframe bgColorFrame(ph_float tm, const PHColor & clr);
-    static Keyframe customColorFrame(ph_float tm, const PHColor & clr);
-    static Keyframe customValueFrame(ph_float tm, ph_float val);
-    static Keyframe nullFrame(ph_float tm);
-    static Keyframe jumpFrame(ph_float tm, int sectionIndex, ph_float time);
+    static Keyframe positionFrame(float tm, const PHPoint & pos);
+    static Keyframe rotationFrame(float tm, float rot);
+    static Keyframe scaleFrame(float tm, const PHSize & scale);
+    static Keyframe bgColorFrame(float tm, const PHColor & clr);
+    static Keyframe customColorFrame(float tm, const PHColor & clr);
+    static Keyframe customValueFrame(float tm, float val);
+    static Keyframe nullFrame(float tm);
+    static Keyframe jumpFrame(float tm, int sectionIndex, float time);
     
     struct Section
     {
@@ -82,7 +82,7 @@ private:
     int frame;
     bool playing;
     int section;
-    ph_float time;
+    float time;
     
     int nextPos;
     int nextRot;
@@ -113,11 +113,11 @@ public:
         playSection(sectionWithName(name), callback, 0.0f); }
     void playSection(int section, const PHInvocation & callback) {
         playSection(section, callback, 0.0f); }
-    void playSection(const string & name, const PHInvocation & callback, ph_float seek) { 
+    void playSection(const string & name, const PHInvocation & callback, float seek) { 
         playSection(sectionWithName(name), callback, seek); }
-    void playSection(int section, const PHInvocation & callback, ph_float seek);
+    void playSection(int section, const PHInvocation & callback, float seek);
     
-    virtual void advanceAnimation(ph_float elapsedTime);
+    virtual void advanceAnimation(float elapsedTime);
     
     static PHKeyframeAnimator * fromLua(lua_State * L);
     

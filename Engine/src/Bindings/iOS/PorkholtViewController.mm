@@ -104,7 +104,7 @@ extern void * PHWUD;
     [v setFramebuffer];
     NSRunLoop *theRL = [NSRunLoop currentRunLoop];
     
-    ph_float FPS = fps;
+    float FPS = fps;
 #ifdef PH_SIMULATOR
     BOOL useDisplayLink = NO;
 #else
@@ -128,7 +128,7 @@ extern void * PHWUD;
     
     PHGameManagerInitParameters params;
     UIScreen * s = [UIScreen mainScreen];
-    ph_float scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
+    float scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
     params.screenHeight = s.bounds.size.width*scale;
     params.screenWidth = s.bounds.size.height*scale;
     params.fps = FPS;
