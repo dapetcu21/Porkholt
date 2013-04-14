@@ -91,8 +91,8 @@ class PHGameManager : public PHObject
 , public PHImageInitPool, public PHFontInitPool, public PHGLProgramInitPool, public PHMaterialInitPool, public PHMessagePool
 {
 private:
-	PHDrawable * drawable;
-	PHNavigationController * viewController;
+    PHDrawable * drawable;
+    PHNavigationController * viewController;
     PHEventHandler * evtHandler;
     PHAnimatorPool * animPool;
     PHSoundManager * sndMan;
@@ -102,13 +102,13 @@ private:
     PHDirectory * imgDir;
     PHDirectory * fntDir;
 
-	float _screenWidth;
-	float _screenHeight;
+    float _screenWidth;
+    float _screenHeight;
     PHRect _oldBounds;
     float dpi;
-	int fps;
+    int fps;
     float lt;
-	bool suspended;
+    bool suspended;
     bool loaded;
     float lastElapsed, frameBeg;
     
@@ -136,27 +136,27 @@ public:
     ~PHGameManager();
     void init(const PHGameManagerInitParameters & params);
 
-	float screenWidth() { return _screenWidth; };
-	float screenHeight() { return _screenHeight; };
-	PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
+    float screenWidth() { return _screenWidth; };
+    float screenHeight() { return _screenHeight; };
+    PHRect screenBounds() { return PHRect(0, 0, _screenWidth, _screenHeight); };
     PHRect oldScreenBounds() { return _oldBounds; }
     void setScreenSize(float w, float h);
     void setViewport(int x, int y, int w, int h);
     void setViewport(const PHRect & r) { setViewport(r.x, r.y, r.width, r.height); }
     void viewport(int & x, int & y, int & width, int & height);
     PHRect viewport() { int x,y,w,h; viewport(x,y,w,h); return PHRect(x,y,w,h); }
-	int framesPerSecond() { return fps; }
+    int framesPerSecond() { return fps; }
     void setFramesPerSecond(int f) { fps = f; }
     float frameInterval() { return 1.0f/fps; }
     float elapsedTime() { return lastElapsed; }
     float dotsPerInch() { return dpi; }
-	void renderFrame();
-	void appSuspended();
-	void appResumed();
-	void appQuits();
-	void memoryWarning();
+    void renderFrame();
+    void appSuspended();
+    void appResumed();
+    void appQuits();
+    void memoryWarning();
     void collectGarbageResources();
-	PHDrawable * mainDrawable() { return drawable; };
+    PHDrawable * mainDrawable() { return drawable; };
     void setMainDrawable(PHDrawable * v);
 
     PHNavigationController * setUpNavigationController();
@@ -168,7 +168,6 @@ public:
     PHDirectory * shaderDirectory() { if (shdDir) return shdDir; throw string("no shader directory"); }
     PHDirectory * materialDirectory() { if (matDir) return matDir; throw string("no material directory"); }
 
-    const string musicNamed(const string & name);
     bool usesRemote() { return useRemote; }
     void setUsesRemote(bool ur) { useRemote = ur; }
     bool showsFPS() { return showFPS; }
@@ -253,8 +252,7 @@ public:
     int renderMode() { return rndMode; }
     
     int maxVertexAttribs() { return _maxVertexAttribs; }
-    void setGLStates(uint32_t states) { setGLStates(states,0); }
-    void setGLStates(uint32_t states, uint32_t vertexAttribStates);
+    void setGLStates(uint32_t states, uint32_t vertexAttribStates = 0);
     void setGLAttributeStates(uint32_t vertexAttribStates);
     uint32_t getGLStates() { return openGLStates; }
     void setModelViewMatrix(const PHMatrix & m);

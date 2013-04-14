@@ -8,6 +8,7 @@
 //#define VIRTUAL_PHOBJECT
 //#define DEBUG_ZOMBIES
 //#define DEBUG_ALLOCATIONS
+#define LUA_INTERFACE
 
 #ifdef VIRTUAL_PHOBJECT
 #define PHOBJECT_PREFIX virtual
@@ -72,6 +73,13 @@ public:
 
 	virtual ~PHObject() { if (inv) clearInvocations(); }
 	int referenceCount() { return _refcount; };
+
+#ifdef LUA_INTERFACE
+    void pushLuaInstance(lua_State * L, bool strongReference = true);
+    void releaseLuaInterface(lua_State * L);
+    std::string luaClass();
+#endif
+
 };
 
 #endif

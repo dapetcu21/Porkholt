@@ -93,6 +93,8 @@ struct PHQuaternion
 	PHQuaternion normalized() const { return (*this) / length(); }
     static PHQuaternion fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
+    void toLua(lua_State * L) const { saveToLua(L); }
+
 	static PHQuaternion rotation(float alpha, float x, float y, float z)
 	{
 		float s = sin(alpha/2);

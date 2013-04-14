@@ -120,6 +120,7 @@ struct PHColor
     bool isBlack() { return !(r || g || b); }
     static PHColor fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
+    void toLua(lua_State * L) const { saveToLua(L); }
 
     float length() const { return sqrt(x*x+y*y+z*z+t*t); } 
     float squaredLength() const { return x*x+y*y+z*z+t*t; }

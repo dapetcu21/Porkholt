@@ -26,6 +26,7 @@ struct PHPoint
     PHPoint(const PHRect & o);
 
     void saveToLua(lua_State * L) const;
+    void toLua(lua_State * L) const { saveToLua(L); }
     static PHPoint fromLua(lua_State * L, int index);
 
     PHPoint operator - () const
@@ -192,6 +193,7 @@ struct PH3DPoint
 
     static PH3DPoint fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
+    void toLua(lua_State * L) const { saveToLua(L); }
 
     PH3DPoint operator - () const
     {
@@ -381,8 +383,5 @@ typedef PHAABox PHPositionalVector;
 #define PHNullVector3 PH3DOriginPoint 
 extern const PH3DSize PH3DUnitSize;
 extern const PH3DPoint PH3DOriginPoint;
-
-PH_STATIC_ASSERT(sizeof(PHVector3) == sizeof(float)*3);
-PH_STATIC_ASSERT(sizeof(PHVector2) == sizeof(float)*2);
 
 #endif

@@ -84,6 +84,7 @@ struct PHRange
     
     static PHRange fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
+    void toLua(lua_State * L) const { saveToLua(L); }
 };
 
 extern const PHRange PHInvalidRange;

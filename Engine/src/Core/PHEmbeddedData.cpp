@@ -5,277 +5,9 @@ map<PHHashedString, pair<const char*, size_t> > * PHEmbedFiles = NULL;
 
 PHEmbedDir("");
 
-PHEmbedDir("scripts");
-
-PHEmbedFile(scripts_alloc_log_lua, "scripts/alloc_log.lua", 381,
-"classes = {}\n\
-for i,v in ipairs(objects) do\n\
-  if v.class == \"\" then\n\
-    local bt = v.traces[1].backtrace\n\
-    for i = 2,#bt do\n\
-      local d1,d2,s = string.find(bt[i], \"_ZN(%d*%a*)C\")\n\
-      if s then\n\
-        v.class = s\n\
-      else\n\
-        break\n\
-      end\n\
-    end\n\
-  end\n\
-\n\
-  local t = classes[v.class]\n\
-  if not t then\n\
-    t = {}\n\
-    classes[v.class] = t\n\
-  end\n\
-  table.insert(t, v)\n\
-end\n\
-\n\
-");
-
-PHEmbedFile(scripts_lua_material_lua, "scripts/lua_material.lua", 4928,
-"\n\
-metastack = {}\n\
-\n\
-function vec2(a, b) local r = {a, b} setmetatable(r, metastack) return r end\n\
-function vec3(a, b, c) local r = {a, b, c} setmetatable(r, metastack) return r \
-end\n\
-function vec4(a, b, c , d) local r = {a, b, c, d} setmetatable(r, metastack) re\
-turn r end\n\
-\n\
-function metastack.gettype(a)\n\
-    local lt = type(a)\n\
-    if (lt == \"number\") then\n\
-        return \"f\"\n\
-    elseif (lt == \"table\") then\n\
-        if rawget(a, \"tp\") then\n\
-            return a.tp\n\
-        end\n\
-        local t = nil\n\
-        for i=1,4 do\n\
-            if type(rawget(a, i)) == \"number\" then\n\
-                t = \'v\'..i\n\
-            else\n\
-                break\n\
-            end\n\
-        end\n\
-        if t == \'v1\' then\n\
-            t = nil\n\
-        end\n\
-        return t\n\
-    end\n\
-    return nil\n\
-end\n\
-\n\
-function metastack.isstack(a)\n\
-    return (type(a) == \"table\") and (type(a.stack) == \"table\")\n\
-end\n\
-\n\
-fv14 = {f=1, v2=1, v3=1, v4=1}\n\
-function metastack.addsub(a, b, op)\n\
-    local at = metastack.gettype(a) \n\
-    local bt = metastack.gettype(b) \n\
-    if (at == bt) and (fv14[at]) then\n\
-        return metastack.operate(op..\"_\"..at..\"_\"..bt, a, b)\n\
-    end\n\
-    return nil\n\
-end\n\
-\n\
-function metastack.__add(a, b) \n\
-    return metastack.addsub(a, b, \"plus\")\n\
-end\n\
-\n\
-function metastack.__sub(a, b)\n\
-    return metastack.addsub(a, b, \"minus\")\n\
-end\n\
-\n\
-fv14m = {f=1, v2=1, v3=1, v4=1, mat=1}\n\
-function metastack.multdiv(a, b, op)\n\
-    local at = metastack.gettype(a) \n\
-    local bt = metastack.gettype(b) \n\
-    if (at == bt) and fv14m[at] then\n\
-        return metastack.operate(op..\"_\"..at..\"_\"..bt, a, b)\n\
-    elseif (bt == \"f\") and fv14[at] then\n\
-        return metastack.operate(op..\"_\"..at..\"_\"..bt, a, b)\n\
-    end\n\
-    return (op == \"multiply\") or nil and metastack.multdiv(b, a, op)\n\
-end\n\
-\n\
-function metastack.__mul(a, b)\n\
-    return metastack.multdiv(a, b, \"multiply\")\n\
-end\n\
-\n\
-function metastack.__div(a, b)\n\
-    return metastack.multdiv(a, b, \"divide\")\n\
-end\n\
-\n\
-metastack.props = { f = {}, v2 = {}, v3 = {}, v4 = {}, mat = {} }\n\
-\n\
-function metastack.props.mat.transposed(t)\n\
-    return metastack.operate(\"transposed_mat\", t)\n\
-end\n\
-\n\
-function metastack.props.mat.inverse(t)\n\
-    return metastack.operate(\"inverse_mat\", t)\n\
-end\n\
-\n\
-function metastack.__index(t, key)\n\
-   local at = metastack.gettype(t)\n\
-   local f = metastack.props[at][key]\n\
-   if f then\n\
-       return f(t)\n\
-   else\n\
-       return nil\n\
-   end\n\
-end\n\
-\n\
-function metastack.operate(op, ...)\n\
-    local is = {}\n\
-    local any = false\n\
-    for i = 1, select(\"#\",...) do\n\
-        local v = select(i,...)\n\
-        is[i] = metastack.isstack(v)\n\
-        any = any or is[i]\n\
-    end\n\
-    if not any then\n\
-        return ops[op](...)\n\
-    else\n\
-        local o = { stack = { n = 0 } }\n\
-        setmetatable(o, metastack)\n\
-        local f = function (x) \n\
-                local s = o.stack\n\
-                s.n = s.n + 1\n\
-                s[s.n] = x\n\
-            end\n\
-        local add = function(a, as)\n\
-            if as then\n\
-                for i,v in ipairs(a.stack) do\n\
-                    f(v)\n\
-                end\n\
-            else\n\
-                f(a)\n\
-            end\n\
-       end\n\
-       for i = 1, select(\"#\",...) do\n\
-           add(select(i,...), is[i])\n\
-       end\n\
-       f({ op = ops_c[op] })\n\
-       o.tp = ops_r[op]\n\
-       return o\n\
-    end\n\
-end\n\
-\n\
-function metastack.variable(index, t)\n\
-    local o = { tp = t, stack = { { var = index }, n=1 } }\n\
-    setmetatable(o, metastack)\n\
-    return o\n\
-end\n\
-\n\
--- OPS:\n\
-ops = {}\n\
-function ops.plus_f_f(a, b) return a+b end\n\
-function ops.plus_v2_v2(a, b) return vec2(a[1]+b[1], a[2]+b[2]) end\n\
-function ops.plus_v3_v3(a, b) return vec3(a[1]+b[1], a[2]+b[2], a[3]+b[3]) end\n\
-function ops.plus_v4_v4(a, b) return vec4(a[1]+b[1], a[2]+b[2], a[3]+b[3], a[4]\
-+b[4]) end\n\
-\n\
-function ops.minus_f_f(a, b) return a-b end\n\
-function ops.minus_v2_v2(a, b) return vec2(a[1]-b[1], a[2]-b[2]) end\n\
-function ops.minus_v3_v3(a, b) return vec3(a[1]-b[1], a[2]-b[2], a[3]-b[3]) end\n\
-function ops.minus_v4_v4(a, b) return vec4(a[1]-b[1], a[2]-b[2], a[3]-b[3], a[4\
-]-b[4]) end\n\
-\n\
-function ops.multiply_f_f(a, b) return a*b end\n\
-function ops.multiply_v2_f(a, b) return vec2(a[1]*b, a[2]*b) end\n\
-function ops.multiply_v2_v2(a, b) return vec2(a[1]*b[1], a[2]*b[2]) end\n\
-function ops.multiply_v3_f(a, b) return vec3(a[1]*b, a[2]*b, a[3]*b) end\n\
-function ops.multiply_v3_v3(a, b) return vec3(a[1]*b[1], a[2]*b[2], a[3]*b[3]) \
-end\n\
-function ops.multiply_v4_f(a, b) return vec4(a[1]*b, a[2]*b, a[3]*b, a[4]*b) en\
-d\n\
-function ops.multiply_v4_v4(a, b) return vec4(a[1]*b[1], a[2]*b[2], a[3]*b[3], \
-a[4]*b[4]) end\n\
-\n\
-function ops.divide_f_f(a, b) return a/b end\n\
-function ops.divide_v2_f(a, b) return vec2(a[1]/b, a[2]/b) end\n\
-function ops.divide_v2_v2(a, b) return vec2(a[1]/b[1], a[2]/b[2]) end\n\
-function ops.divide_v3_f(a, b) return vec3(a[1]/b, a[2]/b, a[3]/b) end\n\
-function ops.divide_v3_v3(a, b) return vec3(a[1]/b[1], a[2]/b[2], a[3]/b[3]) en\
-d\n\
-function ops.divide_v4_f(a, b) return vec4(a[1]/b, a[2]/b, a[3]/b, a[4]/b) end\n\
-function ops.divide_v4_v4(a, b) return vec4(a[1]/b[1], a[2]/b[2], a[3]/b[3], a[\
-4]/b[4]) end\n\
-");
-
 PHEmbedDir("rsrc");
 
 PHEmbedDir("rsrc/shaders");
-
-PHEmbedFile(rsrc_shaders_color_notex_sprites_vsh, "rsrc/shaders/color_notex_sprites.vsh", 197,
-"varying lowp vec4 c;\n\
-\n\
-attribute vec4 position;\n\
-attribute vec4 vColor;\n\
-\n\
-uniform mat4 modelViewProjectionMatrix;\n\
-\n\
-void main(void)\n\
-{\n\
-\tc = vColor;\n\
-\tgl_Position = modelViewProjectionMatrix * position;\n\
-}");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_point_fsh, "rsrc/shaders/deferred_diffuse_point.fsh", 389,
-"varying highp vec2 txc;\n\
-varying highp vec3 p;\n\
-\n\
-uniform sampler2D texture;\n\
-uniform lowp vec4 diffuseColor;\n\
-uniform highp vec3 lightPosition;\n\
-uniform highp float lightIntensity; //z*r^2\n\
-\n\
-\n\
-void main(void)\n\
-{\n\
-    highp float len = length(lightPosition-p);   \n\
-    highp float intensity = lightIntensity/(len*len*len);\n\
-    \n\
-    gl_FragColor = texture2D(texture,txc) * diffuseColor * intensity;\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_missingnormals_sprites_fsh, "rsrc/shaders/missingnormals_sprites.fsh", 274,
-"#ifdef proj\n\
-varying highp vec3 txc;\n\
-#else\n\
-varying highp vec2 txc;\n\
-#endif\n\
-\n\
-uniform sampler2D texture;\n\
-\n\
-void main()\n\
-{\n\
-#ifdef proj\n\
-    gl_FragColor = vec4(0.5,0.5,1.0,texture2DProj(texture,txc).a);\n\
-#else\n\
-    gl_FragColor = vec4(0.5,0.5,1.0,texture2D(texture,txc).a);\n\
-#endif\n\
-\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_ambient_vsh, "rsrc/shaders/deferred_ambient.vsh", 213,
-"varying highp vec2 txc;\n\
-\n\
-attribute vec4 pos;\n\
-\n\
-uniform mat4 modelViewProjectionMatrix;\n\
-uniform vec2 scale;\n\
-\n\
-void main(void)\n\
-{\n\
-\ttxc = pos.xy;\n\
-\tgl_Position = modelViewProjectionMatrix * (pos * vec4(scale,1.0,1.0));\n\
-}");
 
 PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_fsh, "rsrc/shaders/deferred_diffuse_normal_point.fsh", 532,
 "varying highp vec2 txc;\n\
@@ -299,42 +31,49 @@ void main(void)\n\
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_deferred_ambient_fsh, "rsrc/shaders/deferred_ambient.fsh", 149,
-"varying highp vec2 txc;\n\
-\n\
-uniform sampler2D texture;\n\
-uniform lowp vec4 color;\n\
-\n\
-void main(void)\n\
-{\n\
-    gl_FragColor = texture2D(texture,txc) * color;\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_sprites_fsh, "rsrc/shaders/sprites.fsh", 274,
+PHEmbedFile(rsrc_shaders_color_sprites_fsh, "rsrc/shaders/color_sprites.fsh", 263,
 "#ifdef proj\n\
 varying highp vec3 txc;\n\
 #else\n\
 varying highp vec2 txc;\n\
 #endif\n\
 \n\
-uniform lowp vec4 color;\n\
+varying lowp vec4 c;\n\
+\n\
 uniform sampler2D texture;\n\
 \n\
 void main()\n\
 {\n\
 #ifdef proj\n\
-    gl_FragColor = texture2DProj(texture,txc) * color;\n\
+    gl_FragColor = texture2DProj(texture,txc) * c;\n\
 #else\n\
-    gl_FragColor = texture2D(texture,txc) * color;\n\
+    gl_FragColor = texture2D(texture,txc) * c;\n\
 #endif\n\
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_sprites_lua, "rsrc/shaders/sprites.lua", 55,
+PHEmbedFile(rsrc_shaders_deferred_ambient_lua, "rsrc/shaders/deferred_ambient.lua", 34,
 "attributeBindings = {\n\
-  position = 0,\n\
-  texCoord = 1\n\
+  pos = 0\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_deferred_diffuse_point_fsh, "rsrc/shaders/deferred_diffuse_point.fsh", 389,
+"varying highp vec2 txc;\n\
+varying highp vec3 p;\n\
+\n\
+uniform sampler2D texture;\n\
+uniform lowp vec4 diffuseColor;\n\
+uniform highp vec3 lightPosition;\n\
+uniform highp float lightIntensity; //z*r^2\n\
+\n\
+\n\
+void main(void)\n\
+{\n\
+    highp float len = length(lightPosition-p);   \n\
+    highp float intensity = lightIntensity/(len*len*len);\n\
+    \n\
+    gl_FragColor = texture2D(texture,txc) * diffuseColor * intensity;\n\
 }\n\
 ");
 
@@ -361,6 +100,106 @@ void main(void)\n\
 \ttxc = texCoord;\n\
 \tc = vColor;\n\
 \tgl_Position = modelViewProjectionMatrix * position;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_sprites_fsh, "rsrc/shaders/sprites.fsh", 274,
+"#ifdef proj\n\
+varying highp vec3 txc;\n\
+#else\n\
+varying highp vec2 txc;\n\
+#endif\n\
+\n\
+uniform lowp vec4 color;\n\
+uniform sampler2D texture;\n\
+\n\
+void main()\n\
+{\n\
+#ifdef proj\n\
+    gl_FragColor = texture2DProj(texture,txc) * color;\n\
+#else\n\
+    gl_FragColor = texture2D(texture,txc) * color;\n\
+#endif\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_color_notex_sprites_vsh, "rsrc/shaders/color_notex_sprites.vsh", 197,
+"varying lowp vec4 c;\n\
+\n\
+attribute vec4 position;\n\
+attribute vec4 vColor;\n\
+\n\
+uniform mat4 modelViewProjectionMatrix;\n\
+\n\
+void main(void)\n\
+{\n\
+\tc = vColor;\n\
+\tgl_Position = modelViewProjectionMatrix * position;\n\
+}");
+
+PHEmbedFile(rsrc_shaders_deferred_diffuse_point_lua, "rsrc/shaders/deferred_diffuse_point.lua", 35,
+"attributeBindings = {\n\
+  posi = 0\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_text_vsh, "rsrc/shaders/text.vsh", 206,
+"varying highp vec2 txc;\n\
+\n\
+attribute vec4 position;\n\
+attribute vec2 texCoord;\n\
+\n\
+uniform mat4 modelViewProjectionMatrix;\n\
+\n\
+void main(void)\n\
+{\n\
+\ttxc = texCoord;\n\
+\tgl_Position = modelViewProjectionMatrix * position;\n\
+}");
+
+PHEmbedFile(rsrc_shaders_text_lua, "rsrc/shaders/text.lua", 55,
+"attributeBindings = {\n\
+  position = 0,\n\
+  texCoord = 1\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_text_fsh, "rsrc/shaders/text.fsh", 178,
+"varying highp vec2 txc;\n\
+\n\
+uniform lowp vec4 color;\n\
+uniform sampler2D texture;\n\
+\n\
+void main()\n\
+{\n\
+\tlowp vec4 clr = color;\n\
+\tclr.a *= texture2D(texture,txc).a;\n\
+    gl_FragColor = clr;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_deferred_diffuse_point_vsh, "rsrc/shaders/deferred_diffuse_point.vsh", 350,
+"varying highp vec2 txc;\n\
+varying highp vec3 p;\n\
+\n\
+attribute vec4 posi;\n\
+\n\
+uniform mat4 modelViewProjectionMatrix;\n\
+uniform vec2 scale;\n\
+uniform vec4 clip;\n\
+\n\
+void main(void)\n\
+{\n\
+\tvec4 ps = posi * vec4(clip.zw,1.0,1.0) + vec4(clip.xy,0.0,0.0);\n\
+\tvec4 pos = ps * vec4(scale,1.0,1.0);\n\
+\ttxc = ps.xy;\n\
+    p = pos.xyz;\n\
+\tgl_Position = modelViewProjectionMatrix * pos;\n\
+}");
+
+PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_lua, "rsrc/shaders/deferred_diffuse_normal_point.lua", 35,
+"attributeBindings = {\n\
+  posi = 0\n\
 }\n\
 ");
 
@@ -406,32 +245,20 @@ void main(void)\n\
 \tgl_Position = modelViewProjectionMatrix * pos;\n\
 }");
 
-PHEmbedFile(rsrc_shaders_missingnormals_sprites_lua, "rsrc/shaders/missingnormals_sprites.lua", 85,
-"attributeBindings = {\n\
-  position = 0,\n\
-  texCoord = 1\n\
-}\n\
+PHEmbedFile(rsrc_shaders_notex_sprites_vsh, "rsrc/shaders/notex_sprites.vsh", 139,
+"attribute vec4 position;\n\
 \n\
-vertexShader = \"sprites.vsh\"\n\
-");
+uniform mat4 modelViewProjectionMatrix;\n\
+\n\
+void main(void)\n\
+{\n\
+\tgl_Position = modelViewProjectionMatrix * position;\n\
+}");
 
-PHEmbedFile(rsrc_shaders_color_sprites_lua, "rsrc/shaders/color_sprites.lua", 69,
+PHEmbedFile(rsrc_shaders_color_notex_sprites_lua, "rsrc/shaders/color_notex_sprites.lua", 53,
 "attributeBindings = {\n\
   position = 0,\n\
-  texCoord = 1,\n\
   vColor = 2\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_ambient_lua, "rsrc/shaders/deferred_ambient.lua", 34,
-"attributeBindings = {\n\
-  pos = 0\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_point_lua, "rsrc/shaders/deferred_diffuse_point.lua", 35,
-"attributeBindings = {\n\
-  posi = 0\n\
 }\n\
 ");
 
@@ -441,24 +268,23 @@ PHEmbedFile(rsrc_shaders_notex_sprites_lua, "rsrc/shaders/notex_sprites.lua", 39
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_text_vsh, "rsrc/shaders/text.vsh", 206,
-"varying highp vec2 txc;\n\
+PHEmbedFile(rsrc_shaders_missingnormals_sprites_fsh, "rsrc/shaders/missingnormals_sprites.fsh", 274,
+"#ifdef proj\n\
+varying highp vec3 txc;\n\
+#else\n\
+varying highp vec2 txc;\n\
+#endif\n\
 \n\
-attribute vec4 position;\n\
-attribute vec2 texCoord;\n\
+uniform sampler2D texture;\n\
 \n\
-uniform mat4 modelViewProjectionMatrix;\n\
-\n\
-void main(void)\n\
+void main()\n\
 {\n\
-\ttxc = texCoord;\n\
-\tgl_Position = modelViewProjectionMatrix * position;\n\
-}");
-
-PHEmbedFile(rsrc_shaders_color_notex_sprites_lua, "rsrc/shaders/color_notex_sprites.lua", 53,
-"attributeBindings = {\n\
-  position = 0,\n\
-  vColor = 2\n\
+#ifdef proj\n\
+    gl_FragColor = vec4(0.5,0.5,1.0,texture2DProj(texture,txc).a);\n\
+#else\n\
+    gl_FragColor = vec4(0.5,0.5,1.0,texture2D(texture,txc).a);\n\
+#endif\n\
+\n\
 }\n\
 ");
 
@@ -471,81 +297,39 @@ void main()\n\
 }\n\
 ");
 
-PHEmbedFile(rsrc_shaders_text_lua, "rsrc/shaders/text.lua", 55,
+PHEmbedFile(rsrc_shaders_deferred_ambient_fsh, "rsrc/shaders/deferred_ambient.fsh", 149,
+"varying highp vec2 txc;\n\
+\n\
+uniform sampler2D texture;\n\
+uniform lowp vec4 color;\n\
+\n\
+void main(void)\n\
+{\n\
+    gl_FragColor = texture2D(texture,txc) * color;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_missingnormals_sprites_lua, "rsrc/shaders/missingnormals_sprites.lua", 85,
 "attributeBindings = {\n\
   position = 0,\n\
   texCoord = 1\n\
 }\n\
+\n\
+vertexShader = \"sprites.vsh\"\n\
 ");
 
-PHEmbedFile(rsrc_shaders_text_fsh, "rsrc/shaders/text.fsh", 178,
+PHEmbedFile(rsrc_shaders_deferred_ambient_vsh, "rsrc/shaders/deferred_ambient.vsh", 213,
 "varying highp vec2 txc;\n\
 \n\
-uniform lowp vec4 color;\n\
-uniform sampler2D texture;\n\
-\n\
-void main()\n\
-{\n\
-\tlowp vec4 clr = color;\n\
-\tclr.a *= texture2D(texture,txc).a;\n\
-    gl_FragColor = clr;\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_notex_sprites_vsh, "rsrc/shaders/notex_sprites.vsh", 139,
-"attribute vec4 position;\n\
-\n\
-uniform mat4 modelViewProjectionMatrix;\n\
-\n\
-void main(void)\n\
-{\n\
-\tgl_Position = modelViewProjectionMatrix * position;\n\
-}");
-
-PHEmbedFile(rsrc_shaders_color_sprites_fsh, "rsrc/shaders/color_sprites.fsh", 263,
-"#ifdef proj\n\
-varying highp vec3 txc;\n\
-#else\n\
-varying highp vec2 txc;\n\
-#endif\n\
-\n\
-varying lowp vec4 c;\n\
-\n\
-uniform sampler2D texture;\n\
-\n\
-void main()\n\
-{\n\
-#ifdef proj\n\
-    gl_FragColor = texture2DProj(texture,txc) * c;\n\
-#else\n\
-    gl_FragColor = texture2D(texture,txc) * c;\n\
-#endif\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_normal_point_lua, "rsrc/shaders/deferred_diffuse_normal_point.lua", 35,
-"attributeBindings = {\n\
-  posi = 0\n\
-}\n\
-");
-
-PHEmbedFile(rsrc_shaders_deferred_diffuse_point_vsh, "rsrc/shaders/deferred_diffuse_point.vsh", 350,
-"varying highp vec2 txc;\n\
-varying highp vec3 p;\n\
-\n\
-attribute vec4 posi;\n\
+attribute vec4 pos;\n\
 \n\
 uniform mat4 modelViewProjectionMatrix;\n\
 uniform vec2 scale;\n\
-uniform vec4 clip;\n\
 \n\
 void main(void)\n\
 {\n\
-\tvec4 ps = posi * vec4(clip.zw,1.0,1.0) + vec4(clip.xy,0.0,0.0);\n\
-\tvec4 pos = ps * vec4(scale,1.0,1.0);\n\
-\ttxc = ps.xy;\n\
-    p = pos.xyz;\n\
-\tgl_Position = modelViewProjectionMatrix * pos;\n\
+\ttxc = pos.xy;\n\
+\tgl_Position = modelViewProjectionMatrix * (pos * vec4(scale,1.0,1.0));\n\
 }");
 
 PHEmbedFile(rsrc_shaders_color_notex_sprites_fsh, "rsrc/shaders/color_notex_sprites.fsh", 60,
@@ -554,6 +338,21 @@ PHEmbedFile(rsrc_shaders_color_notex_sprites_fsh, "rsrc/shaders/color_notex_spri
 void main()\n\
 {\n\
     gl_FragColor = c;\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_color_sprites_lua, "rsrc/shaders/color_sprites.lua", 69,
+"attributeBindings = {\n\
+  position = 0,\n\
+  texCoord = 1,\n\
+  vColor = 2\n\
+}\n\
+");
+
+PHEmbedFile(rsrc_shaders_sprites_lua, "rsrc/shaders/sprites.lua", 55,
+"attributeBindings = {\n\
+  position = 0,\n\
+  texCoord = 1\n\
 }\n\
 ");
 
@@ -9956,4 +9755,213 @@ N\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\
 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+
+PHEmbedDir("scripts");
+
+PHEmbedFile(scripts_interface_lua, "scripts/interface.lua", 74,
+"PHUDMeta = {}\n\
+\n\
+PHLuaSetUpContext()\n\
+\n\
+PHUDMeta.__gc = PHUDMetaReleaseObject\n\
+");
+
+PHEmbedFile(scripts_alloc_log_lua, "scripts/alloc_log.lua", 381,
+"classes = {}\n\
+for i,v in ipairs(objects) do\n\
+  if v.class == \"\" then\n\
+    local bt = v.traces[1].backtrace\n\
+    for i = 2,#bt do\n\
+      local d1,d2,s = string.find(bt[i], \"_ZN(%d*%a*)C\")\n\
+      if s then\n\
+        v.class = s\n\
+      else\n\
+        break\n\
+      end\n\
+    end\n\
+  end\n\
+\n\
+  local t = classes[v.class]\n\
+  if not t then\n\
+    t = {}\n\
+    classes[v.class] = t\n\
+  end\n\
+  table.insert(t, v)\n\
+end\n\
+\n\
+");
+
+PHEmbedFile(scripts_lua_material_lua, "scripts/lua_material.lua", 4928,
+"\n\
+metastack = {}\n\
+\n\
+function vec2(a, b) local r = {a, b} setmetatable(r, metastack) return r end\n\
+function vec3(a, b, c) local r = {a, b, c} setmetatable(r, metastack) return r \
+end\n\
+function vec4(a, b, c , d) local r = {a, b, c, d} setmetatable(r, metastack) re\
+turn r end\n\
+\n\
+function metastack.gettype(a)\n\
+    local lt = type(a)\n\
+    if (lt == \"number\") then\n\
+        return \"f\"\n\
+    elseif (lt == \"table\") then\n\
+        if rawget(a, \"tp\") then\n\
+            return a.tp\n\
+        end\n\
+        local t = nil\n\
+        for i=1,4 do\n\
+            if type(rawget(a, i)) == \"number\" then\n\
+                t = \'v\'..i\n\
+            else\n\
+                break\n\
+            end\n\
+        end\n\
+        if t == \'v1\' then\n\
+            t = nil\n\
+        end\n\
+        return t\n\
+    end\n\
+    return nil\n\
+end\n\
+\n\
+function metastack.isstack(a)\n\
+    return (type(a) == \"table\") and (type(a.stack) == \"table\")\n\
+end\n\
+\n\
+fv14 = {f=1, v2=1, v3=1, v4=1}\n\
+function metastack.addsub(a, b, op)\n\
+    local at = metastack.gettype(a) \n\
+    local bt = metastack.gettype(b) \n\
+    if (at == bt) and (fv14[at]) then\n\
+        return metastack.operate(op..\"_\"..at..\"_\"..bt, a, b)\n\
+    end\n\
+    return nil\n\
+end\n\
+\n\
+function metastack.__add(a, b) \n\
+    return metastack.addsub(a, b, \"plus\")\n\
+end\n\
+\n\
+function metastack.__sub(a, b)\n\
+    return metastack.addsub(a, b, \"minus\")\n\
+end\n\
+\n\
+fv14m = {f=1, v2=1, v3=1, v4=1, mat=1}\n\
+function metastack.multdiv(a, b, op)\n\
+    local at = metastack.gettype(a) \n\
+    local bt = metastack.gettype(b) \n\
+    if (at == bt) and fv14m[at] then\n\
+        return metastack.operate(op..\"_\"..at..\"_\"..bt, a, b)\n\
+    elseif (bt == \"f\") and fv14[at] then\n\
+        return metastack.operate(op..\"_\"..at..\"_\"..bt, a, b)\n\
+    end\n\
+    return (op == \"multiply\") or nil and metastack.multdiv(b, a, op)\n\
+end\n\
+\n\
+function metastack.__mul(a, b)\n\
+    return metastack.multdiv(a, b, \"multiply\")\n\
+end\n\
+\n\
+function metastack.__div(a, b)\n\
+    return metastack.multdiv(a, b, \"divide\")\n\
+end\n\
+\n\
+metastack.props = { f = {}, v2 = {}, v3 = {}, v4 = {}, mat = {} }\n\
+\n\
+function metastack.props.mat.transposed(t)\n\
+    return metastack.operate(\"transposed_mat\", t)\n\
+end\n\
+\n\
+function metastack.props.mat.inverse(t)\n\
+    return metastack.operate(\"inverse_mat\", t)\n\
+end\n\
+\n\
+function metastack.__index(t, key)\n\
+   local at = metastack.gettype(t)\n\
+   local f = metastack.props[at][key]\n\
+   if f then\n\
+       return f(t)\n\
+   else\n\
+       return nil\n\
+   end\n\
+end\n\
+\n\
+function metastack.operate(op, ...)\n\
+    local is = {}\n\
+    local any = false\n\
+    for i = 1, select(\"#\",...) do\n\
+        local v = select(i,...)\n\
+        is[i] = metastack.isstack(v)\n\
+        any = any or is[i]\n\
+    end\n\
+    if not any then\n\
+        return ops[op](...)\n\
+    else\n\
+        local o = { stack = { n = 0 } }\n\
+        setmetatable(o, metastack)\n\
+        local f = function (x) \n\
+                local s = o.stack\n\
+                s.n = s.n + 1\n\
+                s[s.n] = x\n\
+            end\n\
+        local add = function(a, as)\n\
+            if as then\n\
+                for i,v in ipairs(a.stack) do\n\
+                    f(v)\n\
+                end\n\
+            else\n\
+                f(a)\n\
+            end\n\
+       end\n\
+       for i = 1, select(\"#\",...) do\n\
+           add(select(i,...), is[i])\n\
+       end\n\
+       f({ op = ops_c[op] })\n\
+       o.tp = ops_r[op]\n\
+       return o\n\
+    end\n\
+end\n\
+\n\
+function metastack.variable(index, t)\n\
+    local o = { tp = t, stack = { { var = index }, n=1 } }\n\
+    setmetatable(o, metastack)\n\
+    return o\n\
+end\n\
+\n\
+-- OPS:\n\
+ops = {}\n\
+function ops.plus_f_f(a, b) return a+b end\n\
+function ops.plus_v2_v2(a, b) return vec2(a[1]+b[1], a[2]+b[2]) end\n\
+function ops.plus_v3_v3(a, b) return vec3(a[1]+b[1], a[2]+b[2], a[3]+b[3]) end\n\
+function ops.plus_v4_v4(a, b) return vec4(a[1]+b[1], a[2]+b[2], a[3]+b[3], a[4]\
++b[4]) end\n\
+\n\
+function ops.minus_f_f(a, b) return a-b end\n\
+function ops.minus_v2_v2(a, b) return vec2(a[1]-b[1], a[2]-b[2]) end\n\
+function ops.minus_v3_v3(a, b) return vec3(a[1]-b[1], a[2]-b[2], a[3]-b[3]) end\n\
+function ops.minus_v4_v4(a, b) return vec4(a[1]-b[1], a[2]-b[2], a[3]-b[3], a[4\
+]-b[4]) end\n\
+\n\
+function ops.multiply_f_f(a, b) return a*b end\n\
+function ops.multiply_v2_f(a, b) return vec2(a[1]*b, a[2]*b) end\n\
+function ops.multiply_v2_v2(a, b) return vec2(a[1]*b[1], a[2]*b[2]) end\n\
+function ops.multiply_v3_f(a, b) return vec3(a[1]*b, a[2]*b, a[3]*b) end\n\
+function ops.multiply_v3_v3(a, b) return vec3(a[1]*b[1], a[2]*b[2], a[3]*b[3]) \
+end\n\
+function ops.multiply_v4_f(a, b) return vec4(a[1]*b, a[2]*b, a[3]*b, a[4]*b) en\
+d\n\
+function ops.multiply_v4_v4(a, b) return vec4(a[1]*b[1], a[2]*b[2], a[3]*b[3], \
+a[4]*b[4]) end\n\
+\n\
+function ops.divide_f_f(a, b) return a/b end\n\
+function ops.divide_v2_f(a, b) return vec2(a[1]/b, a[2]/b) end\n\
+function ops.divide_v2_v2(a, b) return vec2(a[1]/b[1], a[2]/b[2]) end\n\
+function ops.divide_v3_f(a, b) return vec3(a[1]/b, a[2]/b, a[3]/b) end\n\
+function ops.divide_v3_v3(a, b) return vec3(a[1]/b[1], a[2]/b[2], a[3]/b[3]) en\
+d\n\
+function ops.divide_v4_f(a, b) return vec4(a[1]/b, a[2]/b, a[3]/b, a[4]/b) end\n\
+function ops.divide_v4_v4(a, b) return vec4(a[1]/b[1], a[2]/b[2], a[3]/b[3], a[\
+4]/b[4]) end\n\
+");
 

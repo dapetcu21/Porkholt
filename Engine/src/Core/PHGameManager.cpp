@@ -119,21 +119,21 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
     
     exitmsg = messageWithName("appQuits");
 
-	fps = params.fps;
-	_screenWidth = params.screenWidth;
-	_screenHeight = params.screenHeight;
+    fps = params.fps;
+    _screenWidth = params.screenWidth;
+    _screenHeight = params.screenHeight;
     _oldBounds = screenBounds();
     dpi = params.dpi;
-	suspended = 0;
+    suspended = 0;
     loaded = true;
     entryPoint = params.entryPoint;
     _defaultFBO = params.defaultFBO;
     if (_defaultFBO == 0)
         PHGL::glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&_defaultFBO);
     lt = PHTime::getTime();
-	setUserData(ud);
+    setUserData(ud);
     
-	PHThread::mainThread();
+    PHThread::mainThread();
 
     if (useRemote)
     {
@@ -150,7 +150,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
             useRemote = false;
         }
     }
-	
+    
     evtHandler = new PHEventHandler(this);
     animPool = new PHAnimatorPool();
     animPoolMutex = new PHMutex();
@@ -205,7 +205,7 @@ void PHGameManager::init(const PHGameManagerInitParameters & params)
 #endif
     
     PHGL::glDepthFunc(GL_LEQUAL);
-	PHGL::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    PHGL::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     PHGL::glCullFace(GL_BACK);
     //PHGL::glPolygonMode(GL_FRONT,GL_LINE); //wireframe
     PHGL::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -299,7 +299,7 @@ void PHGameManager::processInput()
 }
 
 void PHGameManager::renderFrame()
-{	
+{    
     PHAutoreleasePool pool;
     
     float tm = PHTime::getTime();
@@ -331,7 +331,7 @@ void PHGameManager::renderFrame()
     animPool->advanceAnimation(timeElapsed);
     
     if (drawable)
-	      drawable->render();
+          drawable->render();
     
     if (showFPS)
         renderFPS(realTimeElapsed);
@@ -527,9 +527,9 @@ void PHGameManager::appSuspended()
 {
     if (!loaded) return;
     if (!loaded) return;
-	if (suspended) return;
-	suspended = true;
-	messageWithName("appSuspended")->broadcast(this, NULL);
+    if (suspended) return;
+    suspended = true;
+    messageWithName("appSuspended")->broadcast(this, NULL);
     PHLog("appSuspended");
 #ifdef PH_SIMULATOR
     remote->stop();
@@ -541,9 +541,9 @@ void PHGameManager::appResumed()
 {
     if (!loaded) return;
     if (!suspended) return;
-	suspended = false;
-	PHLog("appResumed");
-	messageWithName("appResumed")->broadcast(this, NULL);
+    suspended = false;
+    PHLog("appResumed");
+    messageWithName("appResumed")->broadcast(this, NULL);
 #ifdef PH_SIMULATOR
     try {
         remote->start();
@@ -556,14 +556,14 @@ void PHGameManager::appResumed()
 void PHGameManager::appQuits()
 {
     if (!loaded) return;
-	//This isn't guaranteed to be called
-	//Save all stuff in PHGameManager::appSuspended()
-	PHLog("appQuits");
+    //This isn't guaranteed to be called
+    //Save all stuff in PHGameManager::appSuspended()
+    PHLog("appQuits");
 }
 
 void PHGameManager::memoryWarning()
 {
-	PHLog("memoryWarning");
+    PHLog("memoryWarning");
 }
 
 void PHGameManager::pushSpriteShader(PHGLShaderProgram * p) 
@@ -821,3 +821,104 @@ void PHGameManager::collectGarbageResources()
     if (sndMan)
         sndMan->collectGarbageSounds();
 }
+
+#ifdef LUA_INTERFACE
+#include <Porkholt/Core/PHLua.h>
+PHLuaDefineClass(PHGameManager, PHObject);
+
+PHLuaMethod (PHGameManager, screenWidth, float);
+PHLuaMethod (PHGameManager, screenHeight, float);
+PHLuaMethod (PHGameManager, screenBounds, PHRect);
+PHLuaMethod (PHGameManager, oldScreenBounds, PHRect);
+PHLuaMethodV(PHGameManager, setViewport, (PHRect));
+PHLuaMethod (PHGameManager, viewport, PHRect);
+PHLuaMethod (PHGameManager, framesPerSecond, int);
+PHLuaMethod (PHGameManager, frameInterval, float);
+PHLuaMethod (PHGameManager, elapsedTime, float);
+PHLuaMethod (PHGameManager, dotsPerInch, float);
+
+PHLuaMethodV(PHGameManager, renderFrame);
+PHLuaMethod (PHGameManager, deallocMessage, PHMessage *);
+PHLuaMethodV(PHGameManager, collectGarbageResources);
+
+PHLuaMethod (PHGameManager, resourceDirectory, PHDirectory *);
+PHLuaMethod (PHGameManager, fontDirectory, PHDirectory *);
+PHLuaMethod (PHGameManager, imageDirectory, PHDirectory *);
+PHLuaMethod (PHGameManager, shaderDirectory, PHDirectory *);
+PHLuaMethod (PHGameManager, materialDirectory, PHDirectory *);
+
+PHLuaMethod (PHGameManager, usesRemote, bool);
+PHLuaMethod (PHGameManager, showsFPS, bool);
+PHLuaMethodV(PHGameManager, setShowsFPS, (bool));
+PHLuaMethod (PHGameManager, fpsCapped, bool);
+PHLuaMethod (PHGameManager, frameAnimation, bool);
+    
+PHLuaMethodV(PHGameManager, processInput);
+PHLuaMethod (PHGameManager, eventHandler, PHEventHandler *);
+PHLuaMethod (PHGameManager, mainAnimatorPool, PHAnimatorPool *);
+PHLuaMethod (PHGameManager, soundManager, PHSoundManager *);
+
+PHLuaMethod (PHGameManager, mainDrawable, PHDrawable *);
+PHLuaMethodV(PHGameManager, setMainDrawable, (PHDrawable *));
+PHLuaMethod (PHGameManager, setUpNavigationController, PHNavigationController *);
+
+PHLuaMethod (PHGameManager, animatorPool, PHAnimatorPool *);
+PHLuaMethodV(PHGameManager, pushAnimatorPool, (PHAnimatorPool *));
+PHLuaMethodV(PHGameManager, popAnimatorPool);
+
+PHLuaMethodV(PHGameManager, setRenderMode, (int))
+PHLuaMethod (PHGameManager, renderMode, int);
+    
+PHLuaMethod (PHGameManager, maxVertexAttribs, int);
+PHLuaMethodV(PHGameManager, setGLStates, (uint32_t), (uint32_t, 0))
+PHLuaMethodV(PHGameManager, setGLAttributeStates, (uint32_t))
+PHLuaMethod (PHGameManager, getGLStates, uint32_t);
+PHLuaMethodV(PHGameManager, setModelViewMatrix, (PHMatrix))
+PHLuaMethod (PHGameManager, modelViewMatrix, PHMatrix);
+PHLuaMethodV(PHGameManager, setProjectionMatrix, (PHMatrix))
+PHLuaMethod (PHGameManager, projectionMatrix, PHMatrix);
+PHLuaMethodV(PHGameManager, setColor, (PHColor))
+PHLuaMethod (PHGameManager, color, PHColor);
+
+PHLuaMethodV(PHGameManager, setWindowClearColor, (PHColor))
+PHLuaMethod (PHGameManager, windowClearColor, PHColor);
+PHLuaMethodV(PHGameManager, setWindowDepthClearValue, (float))
+PHLuaMethod (PHGameManager, windowDepthClearValue, float);
+        
+PHLuaMethod (PHGameManager, spriteShader, PHGLShaderProgram *);
+PHLuaMethodV(PHGameManager, pushSpriteShader, (PHGLShaderProgram *))
+PHLuaMethodV(PHGameManager, popSpriteShader);
+PHLuaMethod (PHGameManager, fullScreenVAO, PHGLVertexArrayObject *);
+PHLuaMethod (PHGameManager, solidSquareVAO, PHGLVertexArrayObject *);
+    
+PHLuaMethod (PHGameManager, normalSpriteShader, PHGLShaderProgram *);
+
+PHLuaMethod (PHGameManager, spriteUniformStates, PHGLUniformStates *);
+PHLuaMethodV(PHGameManager, updateMatrixUniform);
+PHLuaMethodV(PHGameManager, updateColorUniform);
+PHLuaMethodV(PHGameManager, setTextureUniform, (PHGLTexture *))
+PHLuaMethodV(PHGameManager, updateSpriteUniforms);
+
+PHLuaMethod (PHGameManager, shader, PHGLShaderProgram *);
+PHLuaMethodV(PHGameManager, useShader, (PHGLShaderProgram *))
+    
+PHLuaMethodV(PHGameManager, bindVBO, (PHGLVertexBufferObject *), (int, 1))
+PHLuaMethodV(PHGameManager, bindVAO, (PHGLVertexArrayObject *))
+PHLuaMethod (PHGameManager, boundVBO, PHGLVertexBufferObject *, (int, 1))
+PHLuaMethod (PHGameManager, boundVAO, PHGLVertexArrayObject *);
+PHLuaMethodV(PHGameManager, bindFramebuffer, (PHGLFramebuffer *))
+PHLuaMethod (PHGameManager, boundFramebuffer, PHGLFramebuffer *);
+    
+PHLuaMethod (PHGameManager, currentLight, PHGLLight *);
+PHLuaMethodV(PHGameManager, setCurrentLight, (PHGLLight *))
+PHLuaMethod (PHGameManager, ambientColor, PHColor);
+PHLuaMethodV(PHGameManager, setAmbientColor, (PHColor))
+    
+PHLuaMethodV(PHGameManager, setActiveTexture, (int))
+PHLuaMethod (PHGameManager, activeTexture, int);
+PHLuaMethodV(PHGameManager, bindTexture, (PHGLTexture *))
+PHLuaMethodV(PHGameManager, destroyTexture, (PHGLTexture *))
+PHLuaMethod (PHGameManager, boundTexture, PHGLTexture *);
+
+PHLuaMethod (PHGameManager, colorAttachmentCount, int);
+#endif

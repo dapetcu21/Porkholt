@@ -4,7 +4,9 @@
 #include <Porkholt/Core/PHAutoreleasePool.h>
 #include <Porkholt/IO/PHFile.h>
 #include <Porkholt/IO/PHDirectory.h>
+#include <Porkholt/IO/PHEmbeddedFile.h>
 #include <Porkholt/Core/PHProfilerCollection.h>
+#include <Porkholt/Core/PHGameManager.h>
 
 void PHLuaSetIncludePath(lua_State * L, string path)
 {
@@ -105,23 +107,15 @@ void PHLuaDeleteWeakRef(lua_State * L, void * ref)
 
 void * PHLuaThisPointer(lua_State * L, int index)
 {
-    if (lua_gettop(L)<index || !lua_istable(L, index)) 
-    {
-        lua_pushstring(L, "this function requires the self argument");
-        lua_error(L);
-        return NULL;
-    }
-    lua_getfield(L, index, "ud");
-    if (!lua_isuserdata(L, -1))
-    {
-        lua_pop(L, 1);
-        lua_pushstring(L, "this table doesn't have an \"ud\" field");
-        lua_error(L);
-        return NULL;
-    }
-    void * p = lua_touserdata(L, -1);
-    lua_pop(L,1);
-    return p;
+    return (void*)PHLuaConvert<PHObject*>::from(L, index);
+}
+
+void * PHLuaThisPointerNoNil(lua_State * L, int index)
+{
+    void * r = (void*)PHLuaConvert<PHObject*>::from(L, index);
+    if (!r)
+        throw string("Trying to call C++ member of nil value");
+    return r;
 }
 
 bool PHLuaLoadFile(lua_State * L, string fname)
@@ -253,3 +247,63 @@ void PHLuaCallback::call()
     PHLuaCall(L, 0, 0);
     inv.call(this);
 }
+
+//Setting up the context
+
+lua_State * PHLuaCreateContext()
+{
+    lua_State * L = luaL_newstate();
+    luaL_openlibs(L);    
+    PHLuaSetUpContext(L);
+    return L;
+}
+
+list<PHLuaInitFunction> * PHLuaContextInitList = NULL;
+static int PHLuaSetUpContext_(lua_State * L)
+{
+    if (PHLuaContextInitList)
+        for (list<PHLuaInitFunction>::iterator i = PHLuaContextInitList->begin(); i != PHLuaContextInitList->end(); i++)
+            (*i)(L);
+    return 0;
+}
+
+void PHLuaSetUpContext(lua_State * L)
+{
+    lua_pushcfunction(L, PHLuaSetUpContext_);
+    lua_setglobal(L, "PHLuaSetUpContext");
+    PHFile * f = new PHEmbeddedFile("scripts/interface.lua");
+    PHLuaLoadFile(L, f);
+    f->release();
+    lua_pushnil(L);
+    lua_setglobal(L, "PHLuaSetUpContext");
+}
+
+class PHPureLuaCallback : public PHObject
+{
+    public:
+        void dealloc()
+        {
+            lua_State * L = (lua_State*)(void*)this;
+            lua_close(L);
+        }
+};
+
+void PHPureLuaEntryPoint(PHGameManager * gm)
+{
+    PHAutoreleasePool pool;
+
+    lua_State * L = PHLuaCreateContext();
+    PHLuaSeedRandom(L);
+    gm->pushLuaInstance(L, false);
+    lua_setglobal(L, "gameManager");
+    gm->deallocMessage()->addListener(PHInv(L, PHPureLuaCallback::dealloc, NULL));
+    try {
+        PHDirectory * dir = gm->resourceDirectory()->directoryAtPath("scripts");
+        PHLuaAddIncludeDir(L, dir);
+        PHLuaLoadFile(L, dir, "main.lua");
+    } catch(string ex) {
+        PHLog("Lua: Can't open \"main.lua\": %s", ex.c_str()); 
+        throw;
+    }
+}
+

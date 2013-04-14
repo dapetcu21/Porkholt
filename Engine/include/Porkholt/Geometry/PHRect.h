@@ -17,6 +17,7 @@ struct PHRect
 	float width,height;
     static PHRect fromLua(lua_State * L, int index);
     void saveToLua(lua_State * L) const;
+    void toLua(lua_State * L) const { saveToLua(L); }
     
     PHPoint origin() const { return PHPoint(x,y); }
     PHSize size() const { return PHSize(width,height); }
