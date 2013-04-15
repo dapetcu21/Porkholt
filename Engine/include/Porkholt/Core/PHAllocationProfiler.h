@@ -31,6 +31,7 @@ class PHAllocationProfiler
                         Trace(void * address, enum trace_type type, int refcount, int strip, int count);
                         enum trace_type type;
                         int refcount;
+                        bool global_init;
                         void * address;
                         std::vector<std::string> backtrace;
 
@@ -49,6 +50,7 @@ class PHAllocationProfiler
     public:
         void objectRetain(PHObject * o);
         void objectRelease(PHObject * o);
+        void objectDealloc(PHObject * o);
         void addTrace(Object::Trace * t);
 
         void dump();

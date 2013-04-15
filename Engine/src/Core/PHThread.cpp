@@ -111,7 +111,11 @@ PHThread::~PHThread()
 PHThread * PHThread::mainThread()
 {
 	if (main==NULL)
+    {
 		main = new PHThread(pthread_self());
+        main->fakeRelease();
+        main->threads_mutex->fakeRelease();
+    }
 	return main;
 }
 

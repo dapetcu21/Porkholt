@@ -11,12 +11,6 @@
 #define LUA_INTERFACE
 //#define PH_PROFILING
 
-#ifdef VIRTUAL_PHOBJECT
-#define PHOBJECT_PREFIX virtual
-#else
-#define PHOBJECT_PREFIX
-#endif
-
 #ifdef DEBUG_ALLOCATIONS
 #include <Porkholt/Core/PHAllocationProfiler.h>
 #endif
@@ -37,18 +31,15 @@ public:
         PHAllocationProfiler::singleton().objectRetain(this);
 #endif
     }
-	PHOBJECT_PREFIX void retain() 
+	void retain() 
     { 
         _refcount++;
 #ifdef DEBUG_ALLOCATIONS
         PHAllocationProfiler::singleton().objectRetain(this);
 #endif
     };
-	PHOBJECT_PREFIX PHObject * release() 
+	PHObject * release() 
     { 
-#ifdef DEBUG_ALLOCATIONS
-        PHAllocationProfiler::singleton().objectRelease(this);
-#endif
         _refcount--; 
         if (!_refcount) 
         { 
@@ -59,6 +50,10 @@ public:
 #endif
             return NULL; 
         }
+#ifdef DEBUG_ALLOCATIONS
+        else
+            PHAllocationProfiler::singleton().objectRelease(this);
+#endif
         if (_refcount<0) 
         {
             zombie();
@@ -66,13 +61,31 @@ public:
         }
         return this; 
     };
+    void fakeRelease()
+    {
+#ifdef DEBUG_ALLOCATIONS 
+        PHAllocationProfiler::singleton().objectRelease(this);
+#endif
+    }
+    void fakeRetain()
+    {
+#ifdef DEBUG_ALLOCATIONS 
+        PHAllocationProfiler::singleton().objectRetain(this);
+#endif
+    }
     void autorelease();
 
     void clearInvocations();
     void bindInvocation(PHInvocation * inv);
     void unbindInvocation(PHInvocation * inv);
 
-	virtual ~PHObject() { if (inv) clearInvocations(); }
+	virtual ~PHObject() 
+    { 
+        if (inv) clearInvocations(); 
+#ifdef DEBUG_ALLOCATIONS
+        PHAllocationProfiler::singleton().objectDealloc(this);
+#endif
+    }
 	int referenceCount() { return _refcount; };
 
 #ifdef LUA_INTERFACE

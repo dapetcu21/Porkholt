@@ -5,12 +5,10 @@
 #include <Porkholt/Core/PHThreading.h>
 
 PHAcceleration PHAccelInterface::acc = { 0, 0, 0 };
-PHMutex * PHAccelInterface::mutex = NULL;
+PHMutex * PHAccelInterface::mutex = new PHMutex();
 
 PHAcceleration PHAccelInterface::getAcceleration()
 {
-	if (!mutex)
-		mutex = new PHMutex();
 	mutex->lock();
 	PHAcceleration ac = acc;
 	mutex->unlock();
@@ -19,8 +17,6 @@ PHAcceleration PHAccelInterface::getAcceleration()
 
 void PHAccelInterface::setAcceleration(const PHAcceleration & _acc)
 {
-	if (!mutex)
-		mutex = new PHMutex();
 	mutex->lock();
 	acc = _acc;
 	mutex->unlock();
