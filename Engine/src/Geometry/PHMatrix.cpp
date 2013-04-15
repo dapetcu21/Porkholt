@@ -2,6 +2,7 @@
 
 #include <Porkholt/Core/PHMain.h>
 #include <Porkholt/Geometry/PHMatrix.h>
+#include <Porkholt/Core/PHLua.h>
 
 void PHInvertMatrix(const GLfloat * PH_RESTRICT m, GLfloat * PH_RESTRICT inverse)
 {
@@ -94,5 +95,28 @@ void PHMatrix::dump()
                 m[(i<<2) + 1],
                 m[(i<<2) + 2],
                 m[(i<<2) + 3]);
+}
+
+void PHMatrix::saveToLua(lua_State * L) const
+{
+    memcpy(lua_newuserdata(L, sizeof(PHMatrix)), this, sizeof(PHMatrix));
+    lua_getglobal(L, "PHMatrix_meta");
+    lua_setmetatable(L, -2);
+}
+
+const PHMatrix & PHMatrix::fromLua(lua_State * L, int index)
+{
+    if (lua_isuserdata(L, index))
+        return *(const PHMatrix *)lua_touserdata(L, index);
+    else
+        throw PHStringFormat("Argument " << index << " is not a matrix");
+}
+
+const PHMatrix & PHMatrix::fromLuaDefault(lua_State * L, int index, const PHMatrix & def)
+{
+    if (lua_isuserdata(L, index))
+        return *(const PHMatrix *)lua_touserdata(L, index);
+    else
+        return def;
 }
 

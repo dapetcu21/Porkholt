@@ -287,6 +287,10 @@ public:
         return m[index];
     }
 
+    void saveToLua(lua_State * L) const;
+    static const PHMatrix & fromLua(lua_State * L, int index);
+    static const PHMatrix & fromLuaDefault(lua_State * L, int index, const PHMatrix & def);
+
     void dump();
 };
 

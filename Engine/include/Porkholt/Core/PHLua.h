@@ -208,27 +208,37 @@ template<typename T> class PHLuaConvert<T *> {
         }
 };
 
-template<> class PHLuaConvert<int> {
-    public:
-        static void to(lua_State * L, int a)
-        {
-            lua_pushnumber(L, a);
-        }
-        static int from(lua_State * L, int index)
-        {
-            if (lua_isnumber(L, index))
-                return lua_tonumber(L, index);
-            else
-                throw PHStringFormat("Argument" << index << "must be an integer");
-        }
-        static int fromDefault(lua_State * L, int index, int def)
-        {
-            if (lua_isnumber(L, index))
-                return lua_tonumber(L, index);
-            else
-                return def;
-        }
-};
+#define spec(T) \
+template<> class PHLuaConvert<T> { \
+    public: \
+        static void to(lua_State * L, T a) \
+        { \
+            lua_pushnumber(L, a); \
+        } \
+        static T from(lua_State * L, int index) \
+        { \
+            if (lua_isnumber(L, index)) \
+                return lua_tonumber(L, index); \
+            else \
+                throw PHStringFormat("Argument" << index << "must be an integer"); \
+        } \
+        static T fromDefault(lua_State * L, int index, T def) \
+        { \
+            if (lua_isnumber(L, index)) \
+                return lua_tonumber(L, index); \
+            else \
+                return def; \
+        } \
+}
+spec(int);
+spec(unsigned int);
+spec(long long);
+spec(unsigned long long);
+spec(short);
+spec(unsigned short);
+spec(char);
+spec(unsigned char);
+#undef spec
 
 template<> class PHLuaConvert<float> {
     public:
@@ -338,6 +348,13 @@ template<> class PHLuaConvert<string>{
             else
                 return def;
         }
+};
+
+template<> class PHLuaConvert<PHMatrix> {
+    public:
+        static void to(lua_State * L, const PHMatrix & a) { a.saveToLua(L); }
+        static const PHMatrix & from(lua_State * L, int index) { return PHMatrix::fromLua(L, index); }
+        static const PHMatrix & fromDefault(lua_State * L, int index, const PHMatrix & def) { return PHMatrix::fromLuaDefault(L, index, def); }
 };
 
 //deprecated begin
