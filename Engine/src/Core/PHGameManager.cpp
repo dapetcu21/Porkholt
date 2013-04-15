@@ -339,7 +339,7 @@ void PHGameManager::renderFrame()
     clearDeleteQueue();
 
 #ifdef PH_PROFILING
-    PHMainProfilers->collect(frameInterval());
+    PHMainProfilers->collect();
 #endif
 }
 

@@ -7,6 +7,7 @@ class PHTime
 {
 public:
 	static double getTime();
+    static double getCPUTime();
 	static void sleep(float time);
 };
 

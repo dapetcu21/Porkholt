@@ -10,27 +10,57 @@ class PHProfiler : public PHObject
     protected:
         double time, tstart;
         int recursing;
+        bool cpu;
+        double oratio; 
         string nam;
     public:
-        PHProfiler() : time(0), recursing(0) {}
-        PHProfiler(const string & nm) : time(0), recursing(0), nam(nm) {}
+#define PHPROFILER_INIT time(0), recursing(0), cpu(true), oratio(0.0)
+        PHProfiler() : PHPROFILER_INIT {}
+        PHProfiler(const string & nm) : PHPROFILER_INIT, nam(nm) {}
+#undef PHPROFILER_INIT
+
         void setName(const string & nm) { nam = nm; }
         const string & name() { return nam; }
+        double overtimeRatio() { return oratio; }
+        void setOvertimeRatio(double d) { oratio = d; }
+        bool useCpuTime() { return cpu; }
+        void setUseCpuTime(bool c) { cpu = c; }
+
+        double getTime()
+        {
+            if (cpu)
+                return PHTime::getCPUTime();
+            return PHTime::getTime();
+        }
 
         void profileStart()
         {
             if (!recursing++)
-                tstart = PHTime::getTime();
+                tstart = getTime();
         }
 
         void profileStop()
         {
             if (!--recursing)
-                time += PHTime::getTime() - tstart;
+                time += getTime() - tstart;
         }
 
-        double totalTime() { return time; }
-        void clear() { time = 0; }
+        double totalTime() 
+        { 
+            if (recursing)
+            {
+                double t = getTime();
+                time += t - tstart;
+                tstart = t;
+            }
+            return time; 
+        }
+        void clear() 
+        { 
+            time = 0; 
+            if (recursing) 
+                tstart = getTime();
+        }
 };
 
 #endif

@@ -38,6 +38,71 @@ double PHTime::getTime()
 #endif
 }
 
+double PHTime::getCPUTime()
+{
+    static int method = -1;
+#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0)
+    static clockid_t id;
+#endif
+#if (defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0)) || defined(RUSAGE_SELF)
+    static time_t is = 0;
+#endif
+
+    switch (method)
+    {
+        case -1:
+        {
+#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0)
+            struct timespec ts;
+#if _POSIX_CPUTIME > 0
+            if (clock_getcpuclockid(0, &id) == -1)
+#endif
+#ifdef CLOCK_PROCESS_CPUTIME_ID
+                id = CLOCK_PROCESS_CPUTIME_ID;
+#elif defined(CLOCK_VIRTUAL)
+                id = CLOCK_VIRTUAL;
+#else
+                id = (clockid_t)-1;
+#endif
+            if (id != (clockid_t)-1 && clock_gettime(id, &ts) != -1)
+            {
+                method = 0;
+                is = ts.tv_sec;
+                return 0.0;
+            }
+#endif
+#ifdef RUSAGE_SELF 
+            struct rusage ru;
+            if (getrusage(RUSAGE_SELF, &ru) != -1)
+            {
+                method = 1;
+                is = ru.ru_utime.tv_sec;
+                return 0.0;
+            }
+#endif
+            method = -2;
+            break;
+        }
+#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0)
+        case 0:
+        {
+            struct timespec ts;
+            if (clock_gettime(id, &ts) != -1)
+                return (ts.tv_sec - is) + ts.tv_nsec * (1.0 / 1000000000.0);
+        }
+#endif
+#ifdef RUSAGE_SELF
+        case 1:
+        {
+            struct rusage ru;
+            if (getrusage(RUSAGE_SELF, &ru) != -1)
+                return (ru.ru_utime.tv_sec - is) + ru.ru_utime.tv_usec * (1.0 / 1000000.0);
+        }
+#endif
+    }
+    return -1.0f;
+}
+
 void PHTime::sleep(float time)
 {
 	if (time==0)

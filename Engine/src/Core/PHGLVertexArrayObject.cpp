@@ -4,6 +4,7 @@
 #include <Porkholt/Core/PHGLVertexBufferObject.h>
 #include <Porkholt/Core/PHGameManager.h>
 #include <Porkholt/Core/PHThread.h>
+#include <Porkholt/Core/PHProfilerCollection.h>
 
 #define MAX_VAO_ATTR 16
 
@@ -244,6 +245,7 @@ void PHGLVertexArrayObject::setDrawArrays(GLenum _mode, GLint _first, GLsizei _c
 void PHGLVertexArrayObject::draw()
 {
     bind_begin_draw
+    PHProfilingStart(PHRenderProfiler);
     switch (drawType)
     {
         case drawArrays:
@@ -253,6 +255,7 @@ void PHGLVertexArrayObject::draw()
             PHGL::glDrawElements(mode, count, type, (const GLvoid*)offset);
             break;
     }
+    PHProfilingStop(PHRenderProfiler);
     bind_end
 }
 

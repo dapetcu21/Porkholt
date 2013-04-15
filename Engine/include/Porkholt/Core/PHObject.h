@@ -9,6 +9,7 @@
 //#define DEBUG_ZOMBIES
 //#define DEBUG_ALLOCATIONS
 #define LUA_INTERFACE
+//#define PH_PROFILING
 
 #ifdef VIRTUAL_PHOBJECT
 #define PHOBJECT_PREFIX virtual

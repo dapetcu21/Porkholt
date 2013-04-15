@@ -13,7 +13,8 @@ class PHProfilerCollection : public PHObject
         int autoDump;
         int dcount;
         bool overt;
-        double oratio;
+        double lastTime;
+        double lastCPUTime;
     public:
         PHProfilerCollection();
         ~PHProfilerCollection();
@@ -30,20 +31,16 @@ class PHProfilerCollection : public PHObject
         void setAutoClearAndDump(int s) { autoDump = dcount = s; }
         bool onlyDumpOvertime() { return overt; }
         void setOnlyDumpOvertime(bool s) { overt = s; }
-        double overtimeRatio() { return oratio; }
-        void setOvertimeRatio(double d) { oratio = d; }
         
-        void collect(double frameTime);
+        void collect();
+        void start();
 };
-
-#ifdef PH_DEBUG
-//#define PH_PROFILING
-#endif
 
 #ifdef PH_PROFILING
 #define PHProfilingStart(p) p->profileStart()
 #define PHProfilingStop(p) p->profileStop()
 extern PHProfiler * PHLuaProfiler;
+extern PHProfiler * PHRenderProfiler;
 extern PHProfilerCollection * PHMainProfilers;
 #else
 #define PHProfilingStart(p)
