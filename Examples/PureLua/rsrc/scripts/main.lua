@@ -1,5 +1,4 @@
 print(gameManager:className())
-gameManager:setShowsFPS(true)
 print(gameManager:setUpNavigationController():className())
 print(gameManager:mainDrawable():className())
-print(gameManager:framesPerSecond())
+gameManager:setShowsFPS(true)

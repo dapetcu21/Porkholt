@@ -52,16 +52,28 @@ void PHObject::releaseLuaInterface(lua_State * L)
 
 PHLuaDefineFunction(PHUDMetaReleaseObject)
 {
-    PHObject * o = (PHObject*)PHLuaThisPointer(L, 1);
-    o->release();
+    PHObject * o = NULL;
+    if (lua_isuserdata(L, 1))
+    {
+        if (lua_islightuserdata(L, 1))
+            o = (PHObject*)lua_touserdata(L, 1);
+        else
+            o = *((PHObject**)lua_touserdata(L, 1));
+    } else
+        throw string("This finalizer must take only one userdata which is a pointer to a pointer to the object being released");
+    if (!o)
+        throw string("Trying to release NULL. What the fuck?");
+    o->releaseLuaInterface(L);
     return 0;
 }
 
+#include <Porkholt/Core/PHGameManager.h>
 void PHObject::pushLuaInstance(lua_State * L, bool strong)
 {
     PHLuaGetWeakRef(L, this);
     if (lua_istable(L, -1))
         return;
+    lua_pop(L, 1);
 
     lua_newtable(L);
 
@@ -77,12 +89,15 @@ void PHObject::pushLuaInstance(lua_State * L, bool strong)
     lua_setfield(L, -2, "__index");
 
     lua_pushlightuserdata(L, this);
+    lua_setfield(L, -2, "ud");
+
     if (strong) 
     {
+        *((void**)lua_newuserdata(L, sizeof(void*))) = this;
         lua_getglobal(L, "PHUDMeta");
         lua_setmetatable(L, -2);
+        lua_setfield(L, -2, "gc_ud");
     }
-    lua_setfield(L, -2, "ud");
 
     lua_pushvalue(L, -1);
     PHLuaSetWeakRef(L, this);

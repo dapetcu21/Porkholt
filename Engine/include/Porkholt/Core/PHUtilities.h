@@ -151,7 +151,7 @@ struct lua_State;
 #endif
 #endif
 
-#define PHStringFormat(x) (static_cast<ostringstream*>( &(ostringstream() << x) )->str())
+#define PHStringFormat(x) ({ ostringstream oss; oss << x; oss.str(); })
 
 
 //Static assertions

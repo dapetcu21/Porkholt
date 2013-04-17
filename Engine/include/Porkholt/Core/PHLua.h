@@ -195,7 +195,7 @@ template<typename T> class PHLuaConvert<T *> {
             if (found)
                 return r;
             else
-                throw PHStringFormat("Argument" << index << "must be an object");
+                throw PHStringFormat("Argument " << index << " must be an object");
         }
         static T * fromDefault(lua_State * L, int index, T * def)
         {
@@ -220,7 +220,7 @@ template<> class PHLuaConvert<T> { \
             if (lua_isnumber(L, index)) \
                 return lua_tonumber(L, index); \
             else \
-                throw PHStringFormat("Argument" << index << "must be an integer"); \
+                throw PHStringFormat("Argument " << index << " must be an integer"); \
         } \
         static T fromDefault(lua_State * L, int index, T def) \
         { \
@@ -251,7 +251,7 @@ template<> class PHLuaConvert<float> {
             if (lua_isnumber(L, index))
                 return lua_tonumber(L, index);
             else
-                throw PHStringFormat("Argument" << index << "must be a float");
+                throw PHStringFormat("Argument " << index << " must be a float");
         }
         static float fromDefault(lua_State * L, int index, float def)
         {
@@ -273,7 +273,7 @@ template<> class PHLuaConvert<double> {
             if (lua_isnumber(L, index))
                 return lua_tonumber(L, index);
             else
-                throw PHStringFormat("Argument" << index << "must be a double");
+                throw PHStringFormat("Argument " << index << " must be a double");
         }
         static double fromDefault(lua_State * L, int index, double def)
         {
@@ -295,7 +295,7 @@ template<> class PHLuaConvert<bool> {
             if (lua_isboolean(L, index))
                 return lua_toboolean(L, index);
             else
-                throw PHStringFormat("Argument" << index << "must be a bool");
+                throw PHStringFormat("Argument " << index << " must be a bool");
         }
         static bool fromDefault(lua_State * L, int index, bool def)
         {
@@ -317,7 +317,7 @@ template<> class PHLuaConvert<const char *> {
             if (lua_isstring(L, index))
                 return lua_tostring(L, index);
             else
-                throw PHStringFormat("Argument" << index << "must be a string");
+                throw PHStringFormat("Argument " << index << " must be a string");
         }
         static const char * fromDefault(lua_State * L, int index, const char * def)
         {
@@ -339,7 +339,7 @@ template<> class PHLuaConvert<string>{
             if (lua_isstring(L, index))
                 return string(lua_tostring(L, index));
             else
-                throw PHStringFormat("Argument" << index << "must be a string");
+                throw PHStringFormat("Argument " << index << " must be a string");
         }
         static string fromDefault(lua_State * L, int index, const string & def)
         {
