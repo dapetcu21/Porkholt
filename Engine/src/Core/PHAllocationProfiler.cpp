@@ -21,7 +21,7 @@ void PHAllocationProfiler::objectRetain(PHObject * o)
 void PHAllocationProfiler::objectRelease(PHObject * o)
 {
     int r = o->referenceCount();
-    addTrace(new Object::Trace(o, Object::Trace::TraceRelease, r, 2, 10));
+    addTrace(new Object::Trace(o, r == 1 ? Object::Trace::TraceDealloc : Object::Trace::TraceRelease, r, 2, 10));
 }
 
 void PHAllocationProfiler::objectDealloc(PHObject * o)
@@ -71,7 +71,7 @@ void PHAllocationProfiler::dump()
     }
 }
 
-PHAllocationProfiler::Object::Object(void * addr) : address(addr), refcount(0)
+PHAllocationProfiler::Object::Object(void * addr) : address(addr), refcount(0), deallocated(false)
 {
 }
 
@@ -79,7 +79,6 @@ PHAllocationProfiler::Object::Object(void * addr) : address(addr), refcount(0)
 
 void PHAllocationProfiler::Object::addTrace(PHAllocationProfiler::Object::Trace * t)
 {
-    traces.push_back(t);
     if (t->type != Trace::TraceAlloc)
         if (name == "")
         {
@@ -96,12 +95,20 @@ void PHAllocationProfiler::Object::addTrace(PHAllocationProfiler::Object::Trace 
                 break;
         case Trace::TraceRetain:
             refcount++;
+            deallocated = false;
             break;
         case Trace::TraceDealloc:
+            if (deallocated)
+            {
+                delete t;
+                return;
+            }
+            deallocated = true;
         case Trace::TraceRelease:
             refcount--;
             break;
     }
+    traces.push_back(t);
 }
 
 void PHAllocationProfiler::Object::dump(PHFile * f)

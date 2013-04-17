@@ -39,6 +39,7 @@ class PHAllocationProfiler
                 };
                 void * address;
                 int refcount;
+                bool deallocated;
                 std::string name;
                 std::list<Trace*> traces;
 

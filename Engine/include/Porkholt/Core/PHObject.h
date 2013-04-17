@@ -40,6 +40,9 @@ public:
     };
 	PHObject * release() 
     { 
+#ifdef DEBUG_ALLOCATIONS
+        PHAllocationProfiler::singleton().objectRelease(this);
+#endif
         _refcount--; 
         if (!_refcount) 
         { 
@@ -50,10 +53,6 @@ public:
 #endif
             return NULL; 
         }
-#ifdef DEBUG_ALLOCATIONS
-        else
-            PHAllocationProfiler::singleton().objectRelease(this);
-#endif
         if (_refcount<0) 
         {
             zombie();
