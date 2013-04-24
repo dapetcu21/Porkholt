@@ -1,0 +1,12 @@
+function! ConjugatePathsPorkholt()
+    let samedir = expand('%:p:h')
+    if match(samedir, "src") != -1
+        let otherdir = substitute(samedir, "src", "include/Porkholt", "")
+    elseif match(samedir, "include/Porkholt") != -1
+        let otherdir = substitute(samedir, "include/Porkholt", "src", "")
+    endif
+    return [samedir, otherdir]
+endfunction
+
+let g:conjugate_paths="ConjugatePathsPorkholt()"
+"set wildignore+=Externals,Beeno/Site,Beeno/Concepts
