@@ -157,9 +157,17 @@ function compress_script(src, dst, name)
   else
     if (max(file_modif(src), bake_modif) > file_modif(dst)) then
       name = name or f
-      print('Compressing script "'..name..'"')
-      local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && lua '..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null'
-      os.execute(scriptline)
+      if jit then
+        print('Compiling script "'..name..'" to LuaJIT bytecode')
+        local out = assert(io.open(dst, "wb"))
+        local f = assert(loadfile(src))
+        out:write(string.dump(f, true))
+        out:close()
+      else
+        print('Compressing script "'..name..'"')
+        local scriptline = 'cd "'..externals_dir..'/LuaSrcDiet" && lua '..externals_dir..'/LuaSrcDiet/LuaSrcDiet.lua "'..src..'" -o "'..dst..'" --maximum >> /dev/null'
+        os.execute(scriptline)
+      end
     end
   end
 end

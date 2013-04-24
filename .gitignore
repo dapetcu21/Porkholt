@@ -2,6 +2,7 @@
 build*
 /Externals/log
 /Externals/lib
+/Externals/bin
 *.pbxuser
 *.mode1v3
 xcuserdata
