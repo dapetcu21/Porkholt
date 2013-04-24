@@ -7,6 +7,6 @@
 	<key>Plugin</key>
 	<string>@PH_APP_TARGET@</string>
 	<key>Has Settings</key>
-    <string>Check</string>
+    <true/>
 </dict>
 </plist>
