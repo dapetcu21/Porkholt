@@ -311,15 +311,21 @@ class BubblesViewController : public PHViewController
                     bg->additionalUniforms()->at("color2").setValue(PHColor(s.rs, s.gs, s.bs));
                     break;
             }
+#ifdef PH_LIVEPAPERS
             bg->setImage(s.bgType == 2 ? LPPHGetWallpaperImage(gm) : gm->imageNamed("background"));
             LPPHClearWallpaperImage(gm);
+#else
+            bg->setImage(gm->imageNamed("background"));
+#endif
             gm->collectGarbageResources();
         }
         
         void wallpaperChanged()
         {
+#ifdef PH_LIVEPAPERS
             if (anim && bg && anim->settings().bgType == 2)
                 bg->setImage(LPPHGetWallpaperImage(gm));
+#endif
         }
         
         PHView * loadView(const PHRect & r)
