@@ -13,7 +13,7 @@ function PHOutput(s)
 end
 
 function PHLog(fmt, ...)
-  local t = table.pack(...)
+  local t = {...}
   for i,v in ipairs(t) do
     if (type(v) == "table") then
       t[i] = tostring(v)
@@ -76,14 +76,14 @@ PHWorld:insertAtTheEnd()
 function PHWorld:fadeToColor(color,cb,...)
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_fadeToColor(color,call)
 end
 function PHWorld:dismissFading(cb,...)
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_dismissFading(call)
 end
@@ -92,7 +92,7 @@ end
 function PHWorld:curtainText(text,cb,...)
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_curtainText(text,call)
 end
@@ -169,14 +169,14 @@ function PHTimer:init(tm,rep,cb, ...)
     self.time = tm or 0
     self.willrepeat = rep or false
     self.callback = cb or nil
-    self.args = table.pack(...)
+    self.args = {...}
     return self
   end
   return nil
 end
 function PHTimer:setCallback(cb, ...)
   self.callback = cb or nil
-  self.args = table.pack(...)
+  self.args = {...}
 end
 function PHTimer:timerFired()
   local cb = self.callback
@@ -224,7 +224,7 @@ PHLAnimation = PHObject:new{
 --PHLAnimation.callbackOnInvalidate --normally, calling invalidate() on an animation cancels the callback, set this to true to override that behaviour
 function PHLAnimation:setCallback(cb,...)
   self.cb = cb
-  self.args = table.pack(...)
+  self.args = {...}
 end
 function PHLAnimation:animationFinished() --don't call this manually
   if self.cb then
@@ -304,14 +304,14 @@ PHLNPC = PHLObject:new()
 function PHLNPC:addDialog(text,cb,...)
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_addDialog(text,call)
 end
 function PHLNPC:setDialog(text,cb,...) --this immediately shows the dialog bypassing the stack system
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_setDialog(text,call)
 end
@@ -322,14 +322,14 @@ function PHLNPC:questTapped(obj) end --override this to do something when the us
 function PHLNPC:walk(offset,speed,cb,...) --same as walkTo(position()+offset,speed), speed optional, defaults to 2
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_walk(offset,speed,call)
 end
 function PHLNPC:walkTo(destination,speed,cb,...) -- speed optional, defaults to 2
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_walkTo(destination,speed,call)
 end
@@ -401,7 +401,7 @@ PHLSign = PHLNPC:new()
 function PHLSign:display(cb,...)
   local call = nil
   if (cb) then
-    call = { callback = cb, args = table.pack(...) }
+    call = { callback = cb, args = {...} }
   end
   self:_display(call)
 end

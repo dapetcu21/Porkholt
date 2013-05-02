@@ -39,7 +39,8 @@ PHScripting::PHScripting(PHWorld * _world, PHDirectory * level_dir) : world(_wor
     
     PHDirectory * resDir = _world->gameManager()->resourceDirectory();
 
-	PHLuaSetIncludePath(L, level_dir->path()+"/?.lua;"+resDir->path()+"/scripts/?.lua");
+    PHLuaAddIncludeDir(L, level_dir);
+    PHLuaAddIncludeDir(L, resDir->directoryAtPath("scripts"));
     
     if (PHLuaLoadFile(L, resDir, "scripts/scripting_common.lua"))
     {
@@ -207,7 +208,7 @@ void PHScripting::loadWorld()
 
     lua_pop(L, 1);
     
-    PHKeyframeAnimatorGroup::registerLuaInterface(L);
+    //PHKeyframeAnimatorGroup::registerLuaInterface(L);
     PHScriptableTimer::registerLuaInterface(L);
     PHLObject::registerLuaInterface(L);
     PHLNPC::registerLuaInterface(L);

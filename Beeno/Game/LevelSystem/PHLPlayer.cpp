@@ -64,7 +64,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
     float el = gm->frameInterval();
 	
 	b2Vec2 frc;
-	PHTilt t = PHMotion::sharedInstance()->getTilt();
+	PHTilt t = PHMotion::getTilt();
 	float f = t.roll;
 	if (f>MAX_TILT)
 		f = MAX_TILT;

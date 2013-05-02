@@ -67,9 +67,10 @@ public:
 
     void setWordWrap(bool w) { ww = w; needsReload = true; }
     bool wordWrap() { return ww; }
-    
-    virtual PHColor cinematicCustomColor() { return color; }
-    virtual void setCinematicCustomColor(const PHColor & c) { setFontColor(c); }
+
+    virtual void setAnimationFieldC(int field, const PHColor & v);
+    virtual PHColor getAnimationFieldC(int field);
+    void animateFontColor(const PHColor & clr) { animateField(PHAnimationField(PHCinematicActor::fieldColor, clr)); }
     
     void setText(const string & s) { if (_text != s) { needsReload = true; _text = s; } }
     const string & text() { return _text; };

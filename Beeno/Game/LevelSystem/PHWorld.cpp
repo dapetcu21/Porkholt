@@ -544,7 +544,7 @@ void PHWorld::dismissOverlayText()
     if (!overlayView) return;
     overlayView->mutex()->lock();
     overlayView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
-    overlayView->animateCustomColor(PHClearColor);
+    overlayView->animateFontColor(PHClearColor);
     overlayView->animationCallback(PHInvN(this,PHWorld::_overlayDismissed));
     overlayView->commitCinematicAnimation();
     overlayView->mutex()->unlock();
@@ -570,7 +570,7 @@ void PHWorld::overlayText(const string & s, float duration)
     overlayView->setFontColor(PHClearColor);
     overlayView->setText(s);
     overlayView->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeInFunction);
-    overlayView->animateCustomColor(PHColor(0, 0, 0, 0.5));
+    overlayView->animateFontColor(PHColor(0, 0, 0, 0.5));
     overlayView->commitCinematicAnimation();
     
     PHTimer * timer = new PHTimer;

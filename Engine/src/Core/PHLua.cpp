@@ -34,7 +34,7 @@ static int PHLua_require(lua_State * L)
     {   
         lua_pushvalue(L, lua_upvalueindex(2));
         lua_pushvalue(L, 1);
-        PHLuaCall(L, 2, 0);
+        PHLuaCall(L, 1, 0);
     }
     return 0;
 }

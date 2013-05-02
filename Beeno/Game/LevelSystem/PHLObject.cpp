@@ -6,7 +6,7 @@
 
 #include "PHLAnimation.h"
 #include "PHLevelController.h"
-#include <Porkholt/Core/PHKeyframeAnimator.h>
+//#include <Porkholt/Core/PHKeyframeAnimator.h>
 
 #include "PHJoint.h"
 #include "PHWorld.h"
@@ -384,7 +384,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
     PHLuaGetBoolField(patRev,"patrolReversed");
     
     
-    lua_getfield(L, -1, "keyframeAnimations");
+/*    lua_getfield(L, -1, "keyframeAnimations");
     if (lua_istable(L, -1))
     {
         PHLuaForEach(-1)
@@ -398,6 +398,7 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
         PHLuaForEach_
     }
     lua_pop(L,1);
+    */
     
     
 	PHRect min;
@@ -452,7 +453,6 @@ void PHLObject::loadFromLua(lua_State * L, b2World * _world, PHLevelController *
 		b.y -= viewSize.y;
 		i->img->setFrame(b);
 	}
-	
 }
 
 void PHLObject::loadImages()

@@ -279,3 +279,26 @@ void PHTextView::adjustFontSizeToFit(int precision)
     }
     setFontSize(en);
 }
+
+void PHTextView::setAnimationFieldC(int field, const PHColor & clr)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldColor:
+            setFontColor(clr);
+            break;
+        default:
+            PHView::setAnimationFieldC(field, clr);
+    }
+}
+
+PHColor PHTextView::getAnimationFieldC(int field)
+{
+    switch (field)
+    {
+        case PHCinematicActor::fieldColor:
+            return color;
+        default:
+            return PHView::getAnimationFieldC(field);
+    }
+}

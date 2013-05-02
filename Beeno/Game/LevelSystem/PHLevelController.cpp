@@ -466,8 +466,8 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	lua_State *L = lua_open();   /* opens Lua */
 	luaL_openlibs(L);
     
-    //TO DO: Get rid of paths. Paths are evil
-	PHLuaSetIncludePath(L, directory->path()+"/?.lua;"+gm->resourceDirectory()->path()+"/scripts/?.lua");
+    PHLuaAddIncludeDir(L, directory);
+    PHLuaAddIncludeDir(L, gm->resourceDirectory()->directoryAtPath("scripts"));
 	
     PHLuaLoadFile(L, directory, "init.lua");
 	
@@ -573,7 +573,7 @@ void PHLevelController::auxThread(PHThread * sender, void * ud)
 	
     PHMessage::messageWithName("luaDestroy")->broadcast(this, L);
 	lua_close(L);
-    
+
     scripingEngine = new PHScripting(world, directory);
 	
 	mutex->lock();

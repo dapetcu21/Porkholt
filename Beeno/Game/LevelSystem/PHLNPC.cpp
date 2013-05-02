@@ -386,7 +386,7 @@ void PHLNPC::swapDialog(PHDialog *dialog)
     dialogView->removeCinematicAnimationsWithTag(dialogTag);
     dialogTextView->removeCinematicAnimationsWithTag(dialogTag);
     dialogTextView->beginCinematicAnimation(0.2f,PHCinematicAnimator::FadeOutFunction);
-    dialogTextView->animateCustomColor(PHClearColor);
+    dialogTextView->animateFontColor(PHClearColor);
     dialogTextView->animationCallback(PHInvBindN(this, PHLNPC::_dialogSwapBegin));
     dialogTextView->animationTag(dialogTag);
     dialogTextView->commitCinematicAnimation();
@@ -427,7 +427,7 @@ void PHLNPC::_dialogSwapBegin(PHLObject * sender, void * ud)
     dv->commitCinematicAnimation();
     
     dtv->beginCinematicAnimation(0.2f, PHCinematicAnimator::FadeInFunction);
-    dtv->animateCustomColor(PHBlackColor);
+    dtv->animateFontColor(PHBlackColor);
     dtv->animationTag(dialogTag);
     dtv->commitCinematicAnimation();
     dv->mutex()->unlock();
@@ -654,9 +654,9 @@ void PHLNPC::_animateHurtInvuln(PHObject * sender, void * ud)
     if (!bodyView) return;
     bodyView->setTintColor(PHWhiteColor);
     bodyView->beginCinematicAnimation(hInvulnTime/2,PHCinematicAnimator::FadeOutFunction);
-    bodyView->animateCustomColor(hInvulnFadeColor);
+    bodyView->animateTint(hInvulnFadeColor);
     bodyView->chainCinematicAnimation(hInvulnTime/2,PHCinematicAnimator::FadeInFunction);
-    bodyView->animateCustomColor(PHWhiteColor);
+    bodyView->animateTint(PHWhiteColor);
     bodyView->commitCinematicAnimation();
 }
 
