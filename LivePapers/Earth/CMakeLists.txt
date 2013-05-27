@@ -7,6 +7,7 @@ set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/scripts")
 set(PH_NAME "Earth")
 set(PH_IOS_TARGET_IPAD "YES")
 set(PH_LIVEPAPERS_FPS_STAGES "{60, 0}")
+set(PH_LIVEPAPERS_HAS_SETTINGS "YES")
 set(PH_DESCRIPTION "Configurable OpenGL Earth live wallpaper")
 
 set(PH_FILES main.cpp ESettings.h ESettings.cpp)

@@ -124,13 +124,17 @@ void * PHAlloc(void)
 
 struct lua_State; 
 
+#ifndef PH_TOKENPASTE
 #define PH_TOKENPASTE_(x, y) x ## y
 #define PH_TOKENPASTE(x, y) PH_TOKENPASTE_(x,y)
 #define PH_TOKENPASTE3(x, y) PH_TOKENPASTE(x, y)
+#endif
 
+#ifndef PH_STRINGIFY
 #define PH_STRINGIFY_(x) #x
 #define PH_STRINGIFY(x) PH_STRINGIFY_(x)
 #define PH_STRINGIFY3(x) PH_STRINGIFY(x)
+#endif
 
 #define PH_EXPAND(...) __VA_ARGS__
 

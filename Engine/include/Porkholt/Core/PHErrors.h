@@ -4,6 +4,7 @@
 #define PHERRORS_H
 
 #include <Porkholt/Core/PHUtilities.h>
+#include <assert.h>
 
 void PHLog(const char * str, ...);
 void PHLog(const string & str, ...);
@@ -14,9 +15,11 @@ inline void PHNop() {};
 #ifdef PH_DEBUG
 #define PHGLCheckError() PHGLCheckError_(__FILE__, __LINE__)
 #define PHGLClearError PHGL::glGetError
+#define PHAssert(expr) assert(expr)
 #else
 #define PHGLCheckError PHNop
 #define PHGLClearError PHNop
+#define PHAssert(expr) PHNop()
 #endif
 
 extern string PHIOError;

@@ -109,6 +109,7 @@ set(PH_ENGINE_SRCS
   ${PH_ENGINE_PATH}/src/Core/PHDrawableProxy.cpp
   ${PH_ENGINE_PATH}/src/IO/PHUnionDirectory.cpp
   ${PH_ENGINE_PATH}/src/Core/PHAllocationProfiler.cpp
+  ${PH_ENGINE_PATH}/src/Core/PHGLPolyElementVBO.cpp
   )
 
 set(PH_ENGINE_HEADERS
@@ -234,6 +235,7 @@ set(PH_ENGINE_HEADERS
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHEmbeddedDirectory.h
   ${PH_ENGINE_PATH}/include/Porkholt/IO/PHUnionDirectory.h
   ${PH_ENGINE_PATH}/include/Porkholt/Core/PHAllocationProfiler.h
+  ${PH_ENGINE_PATH}/include/Porkholt/Core/PHGLPolyElementVBO.h
   )
 
 include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)

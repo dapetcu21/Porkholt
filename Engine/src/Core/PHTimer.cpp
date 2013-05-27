@@ -23,6 +23,11 @@ void PHTimer::setSemaphore(PHSemaphore * semaphore)
  
 void PHTimer::advanceAnimation(float timeElapsed)
 {
+    if (!invocation.valid())
+    {
+        _invalidate();
+        return;
+    }
     time -= timeElapsed;
     if (time<=0)
     {

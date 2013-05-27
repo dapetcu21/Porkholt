@@ -8,5 +8,6 @@ set(PH_NAME "Bubbles")
 set(PH_BUNDLE_ID "org.porkholt.livepapers.bubbles")
 set(PH_IOS_TARGET_IPAD "YES")
 set(PH_LIVEPAPERS_FPS_STAGES "{30, 30, 30, 0}")
+set(PH_LIVEPAPERS_HAS_SETTINGS "Check")
 
 porkholt(Bubbles main.cpp)

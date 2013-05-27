@@ -31,6 +31,10 @@ end
 
 class = arg[1]
 base = string.sub(class, string.find(class, "%w*$"))
+if (base == class) then
+  print("WARNING: Class has no prefix path. Aborting")
+  return 1
+end
 file = io.open(engine_path..'/src/'..class..'.cpp', 'w')
 file:write(head.."#include <Porkholt/"..class..".h>\n")
 file:close()
@@ -46,8 +50,8 @@ files = file:read("*a")
 file:close()
 
 if (not string.find(files, class)) then
-  files = string.gsub(files, "(set%(PH_ENGINE_SRCS[ \t\n{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/src/"..class..".cpp\n%2", 1)
-  files = string.gsub(files, "(set%(PH_ENGINE_HEADERS[ \t\n{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/include/Porkholt/"..class..".h\n%2", 1)
+  files = string.gsub(files, "(set%(PH_ENGINE_SRCS[ \t\n#{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/src/"..class..".cpp\n%2", 1)
+  files = string.gsub(files, "(set%(PH_ENGINE_HEADERS[ \t\n#{}%$/%.%w_]*\n)(([ \t]*)%))", "%1%3${PH_ENGINE_PATH}/include/Porkholt/"..class..".h\n%2", 1)
   file = io.open(fname, "w")
   file:write(files)
   file:close()

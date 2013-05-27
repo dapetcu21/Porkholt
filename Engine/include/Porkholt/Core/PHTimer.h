@@ -48,16 +48,7 @@ public:
     //invocation is performed and should only be used from 
     //another thread than the one on which the animator pool 
     //is running to avoid a deadlock
-    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time, bool repeat, bool waitForIt);
-    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time, bool repeat) {
-        scheduleAction(pool, inv, time, repeat, false);
-    }
-    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time) {
-        scheduleAction(pool, inv, time, false, false);
-    }
-    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv) {
-        scheduleAction(pool, inv, 0, false, false);
-    }
+    static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, double time = 0.0, bool repeat = false, bool waitForIt = false);
     static void scheduleAction(PHAnimatorPool * pool, const PHInvocation & inv, bool waitForIt) {
         scheduleAction(pool, inv, 0, false, waitForIt);
     }

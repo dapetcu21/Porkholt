@@ -30,16 +30,7 @@ public:
     //invocation is performed and should only be used from 
     //another thread than the one on which the animator pool 
     //is running to avoid a deadlock
-    void scheduleAction(const PHInvocation & inv, double time, bool repeat, bool waitForIt);
-    void scheduleAction(const PHInvocation & inv, double time, bool repeat) {
-        scheduleAction(inv, time, repeat, false);
-    }
-    void scheduleAction(const PHInvocation & inv, double time) {
-        scheduleAction(inv, time, false, false);
-    }
-    void scheduleAction(const PHInvocation & inv) {
-        scheduleAction(inv, 0, false, false);
-    }
+    void scheduleAction(const PHInvocation & inv, double time = 0.0, bool repeat = false, bool waitForIt = false);
     void scheduleAction(const PHInvocation & inv, bool waitForIt) {
         scheduleAction(inv, 0, false, waitForIt);
     }
