@@ -9,4 +9,4 @@ function! ConjugatePathsPorkholt()
 endfunction
 
 let g:conjugate_paths="ConjugatePathsPorkholt()"
-"set wildignore+=Externals,Beeno/Site,Beeno/Concepts
+set wildignore+=Externals,Beeno/Site,Beeno/Concepts
