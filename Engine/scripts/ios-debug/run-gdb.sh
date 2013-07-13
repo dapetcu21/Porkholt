@@ -60,7 +60,7 @@ sharedlibrary apply-load-rules all
 set inferior-auto-start-dyld 1"
 
 echo "${GDB_CMDS}" > "${TEMP}/gdbinit"
-ssh -f root@${PH_DEVICE_IP} debugserver 6789
+ssh -f root@${PH_DEVICE_IP} debugserver localhost:6789
 xcrun -sdk iphoneos gdb -arch arm -q -x "${TEMP}/gdbinit"
 rm -rf "${TEMP}"
 

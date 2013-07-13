@@ -8,25 +8,27 @@
 #import <OpenGLES/ES2/glext.h>
 #include <pthread.h>
 
-// This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
-// The view content is basically an EAGL surface you render your OpenGL scene into.
-// Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
+@class EAGLView;
+@protocol EAGLViewDelegate<NSObject>
+-(void)eaGLViewReshaped:(EAGLView*)v;
+-(void)eaGLViewCreatedFramebuffer:(EAGLView*)v;
+@end
+
 @interface EAGLView : UIView
 {
 @private
-    EAGLContext *context,*workingContext;
-    // The pixel dimensions of the CAEAGLLayer.
-    GLint framebufferWidth;
-    GLint framebufferHeight;
-	pthread_mutex_t mutex;
-    // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view.
+    id<EAGLViewDelegate> delegate;
+    EAGLContext *context;
     GLuint defaultFramebuffer, colorRenderbuffer;
 }
 
-@property (nonatomic, retain) EAGLContext *context;
+@property (nonatomic, assign) id<EAGLViewDelegate> delegate;
+@property (nonatomic, readonly) EAGLContext *context;
+@property (nonatomic, readonly) CGSize framebufferSize;
+@property (nonatomic, readonly) GLuint defaultFramebuffer;
+@property (nonatomic, readonly) GLuint colorRenderbuffer;
 
 - (void)initMain;
-- (void)initSecondary;
 - (void)setFramebuffer;
 - (BOOL)presentFramebuffer;
 

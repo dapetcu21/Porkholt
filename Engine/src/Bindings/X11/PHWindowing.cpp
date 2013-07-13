@@ -67,9 +67,7 @@ int PHWMain(int argc, char * argv[], const PHWVideoMode & vm, int flags, void (*
 
 void PHWRender()
 {
-    PHGameManager * gm = PHWGameManager;
-    gm->processInput();
-    gm->renderFrame();
+    PHWGameManager->renderFrame();
 }
 
 #define PHWMaxButtons 10

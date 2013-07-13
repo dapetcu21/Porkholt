@@ -24,13 +24,9 @@ extern int PHWFlags;
 extern void (*PHWEntryPoint)(PHGameManager *);
 extern void * PHWUD;
 
-@interface PorkholtViewController ()
-@property (nonatomic, retain) EAGLContext *context;
-@end 
-
 @implementation PorkholtViewController
 
-@synthesize animating, context;
+@synthesize animating;
 
 - (NSString *) platform
 {
@@ -60,7 +56,16 @@ extern void * PHWUD;
 
 - (void)loadView
 {
-	EAGLView * view = [[EAGLView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight)
+    {
+        CGFloat w = bounds.size.width;
+        bounds.size.width = bounds.size.height;
+        bounds.size.height = w;
+    }
+	EAGLView * view = [[EAGLView alloc] initWithFrame:bounds];
+    view.delegate = (id<EAGLViewDelegate>)self;
 	
     PHTouchInterface * touchView = [[PHTouchInterface alloc] initWithFrame:view.bounds];
 	touchView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -71,66 +76,42 @@ extern void * PHWUD;
 	
 	animating = FALSE;
     
-    thread = [[NSThread alloc] initWithTarget:self
-                                     selector:@selector(openGLThread) 
-                                       object:nil];
-    exitCondition = [[NSConditionLock alloc] init];
     v = view;
     fps = 60;
 	if ([self dumbDevice])
 		fps = 30;
-    [thread start];
+
+    [self initPorkholt];
 }
 
 - (void)dealloc
 {
-	[thread cancel];
-    [exitCondition lockWhenCondition: 1];
-    [exitCondition unlock];
-    [thread release];
-    [exitCondition release];
 	[super dealloc];
 }
 
-- (void)dummy
+- (void)initPorkholt
 {
-    
-}
-
-- (void)openGLThread
-{
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    [v initMain];
     [v setFramebuffer];
     NSRunLoop *theRL = [NSRunLoop currentRunLoop];
     
     float FPS = fps;
-#ifdef PH_SIMULATOR
-    BOOL useDisplayLink = NO;
-#else
-    BOOL useDisplayLink = [[[UIDevice currentDevice] systemVersion] compare:@"3.1" options:NSNumericSearch] != NSOrderedAscending;
-#endif
 
-    if (useDisplayLink)
-    {
-        CADisplayLink * displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(openGLFrame:)];
-        displayLink.frameInterval = round(60.0f/fps);
-        FPS = 1.0f/(1.0f/60*displayLink.frameInterval);
-        displayLink.paused = YES;
-        dl = displayLink;
-        [displayLink addToRunLoop:theRL forMode:NSDefaultRunLoopMode];
-    } else {
-        [NSTimer scheduledTimerWithTimeInterval:1024 target:self selector:@selector(dummy) userInfo:nil repeats:YES]; //to keep the run loop blocking
-    }
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(openGLFrame:)];
+    displayLink.frameInterval = round(60.0f/fps);
+    FPS = 1.0f/(1.0f/60*displayLink.frameInterval);
+    displayLink.paused = !animating;
+    [displayLink addToRunLoop:theRL forMode:NSDefaultRunLoopMode];
     
     PHAutoreleasePool ap;
     gameManager = new PHGameManager;
     
-    PHGameManagerInitParameters params;
     UIScreen * s = [UIScreen mainScreen];
     float scale = ([[[UIDevice currentDevice] systemVersion] compare:@"4.0" options:NSNumericSearch] != NSOrderedAscending)?s.scale:1.0f;
-    params.screenHeight = s.bounds.size.width*scale;
-    params.screenWidth = s.bounds.size.height*scale;
+    CGSize sz = ((EAGLView*)self.view).framebufferSize;
+
+    PHGameManagerInitParameters params;
+    params.screenWidth = sz.width;
+    params.screenHeight = sz.height;
     params.fps = FPS;
     params.dpi = 160*scale;
     try {
@@ -146,24 +127,23 @@ extern void * PHWUD;
     gameManager->setUserData(PHWUD);
     gameManager->init(params);
     PHGameManagerSingleton = gameManager;
-    
-    while (![thread isCancelled] && [theRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
-    
-    [exitCondition lock];
-    [exitCondition unlockWithCondition: 1];
-    [pool drain];
-    [dl release];
 }
 
 - (void)openGLFrame:(CADisplayLink*)displayLink
 {
-    gameManager->processInput();
     [v setFramebuffer];
-    
     gameManager->renderFrame();
     
     if (![v presentFramebuffer])
         PHLog("ERROR: Couldn't swap buffers");
+}
+
+-(void)eaGLViewCreatedFramebuffer:(EAGLView*)view
+{
+    NSLog(@"createdFramebuffer");
+    if (!gameManager) return;
+    CGSize sz = view.framebufferSize; 
+    gameManager->setScreenSize(sz.width, sz.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -172,41 +152,22 @@ extern void * PHWUD;
     [super viewWillAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewDidDisappear:(BOOL)animated
 {
     [self stopAnimation];
-    [super viewWillDisappear:animated];
+    [super viewDidDisappear:animated];
 }
 
 - (void)startAnimation
 {
-    if (!animating)
-    {
-        animating = TRUE;
-        [self performSelector:@selector(defferedSetPaused:) onThread:thread withObject:[NSNumber numberWithBool:NO] waitUntilDone:NO];
-    }
+    animating = TRUE;
+    displayLink.paused = !animating;
 }
 
 - (void)stopAnimation
 {
-    if (animating)
-    {
-        animating = FALSE;
-        [self performSelector:@selector(defferedSetPaused:) onThread:thread withObject:[NSNumber numberWithBool:YES] waitUntilDone:NO];
-    }
-}
-
-- (void)defferedSetPaused:(NSNumber*)val
-{
-    if (dl)
-        dl.paused = [val boolValue];
-    else
-    {
-        if ([val boolValue])
-            [timer invalidate];
-        else
-            timer = [NSTimer scheduledTimerWithTimeInterval:(1.0f/fps) target:self selector:@selector(openGLFrame:) userInfo:nil repeats:YES];
-    }
+    animating = FALSE;
+    displayLink.paused = !animating;
 }
 
 - (void)didReceiveMemoryWarning
@@ -214,11 +175,6 @@ extern void * PHWUD;
     gameManager->memoryWarning();
     [super didReceiveMemoryWarning];
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-}
-
 
 -(PHGameManager*)gameManager
 {

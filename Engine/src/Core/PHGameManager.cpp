@@ -272,7 +272,7 @@ void PHGameManager::setScreenSize(float w, float h)
     messageWithName("reshapeWindow")->broadcast(this);
 }
 
-void PHGameManager::processInput()
+void PHGameManager::processRemote()
 {
     if (useRemote)
     {
@@ -319,6 +319,7 @@ void PHGameManager::renderFrame()
             timeElapsed = realTimeElapsed;
     }
 
+    processRemote();
     evtHandler->processQueue();
     
     lastElapsed = timeElapsed;
@@ -853,7 +854,6 @@ PHLuaMethodV(PHGameManager, setShowsFPS, (bool));
 PHLuaMethod (PHGameManager, fpsCapped, bool);
 PHLuaMethod (PHGameManager, frameAnimation, bool);
     
-PHLuaMethodV(PHGameManager, processInput);
 PHLuaMethod (PHGameManager, eventHandler, PHEventHandler *);
 PHLuaMethod (PHGameManager, mainAnimatorPool, PHAnimatorPool *);
 PHLuaMethod (PHGameManager, soundManager, PHSoundManager *);

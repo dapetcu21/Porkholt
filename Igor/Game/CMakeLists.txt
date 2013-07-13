@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/scripts")
 include(Porkholt)
 
 set(PH_NAME "Igor")
+set(PH_COMPANY_ID "org.porkholt")
 set(PH_SOURCES
   main.cpp
   Classes/IGLevelController.cpp

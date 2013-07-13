@@ -17,8 +17,7 @@
 	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
     viewController = [[PorkholtViewController alloc] init];
-    
-	[window addSubview:viewController.view];
+    [window setRootViewController:viewController];
 	[window layoutSubviews];
 	[window makeKeyAndVisible];
 }

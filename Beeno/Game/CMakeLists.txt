@@ -5,6 +5,7 @@ set(PH_ENGINE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine")
 set(CMAKE_MODULE_PATH "${PH_ENGINE_PATH}/scripts")
 include(Porkholt)
 set(PH_NAME "Beeno Reloaded")
+set(PH_COMPANY_ID "org.porkholt")
 set(PH_SOURCES
   main.cpp
   LevelSystem/PHCaptureView.cpp

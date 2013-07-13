@@ -16,19 +16,19 @@ extern int PHWFlags;
 
 @implementation EAGLView
 
-@dynamic context;
+@synthesize context;
+@synthesize delegate;
+@synthesize defaultFramebuffer;
+@synthesize colorRenderbuffer;
 
-// You must implement this method
 + (Class)layerClass
 {
     return [CAEAGLLayer class];
 }
 
-//The EAGL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:.
 - (id)initWithCoder:(NSCoder*)coder
 {
-    self = [super initWithCoder:coder];
-	if (self)
+	if ((self = [super initWithCoder:coder]))
     {
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
         
@@ -37,87 +37,61 @@ extern int PHWFlags;
                                         [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
                                         kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
                                         nil];
-		pthread_mutex_init(&mutex, NULL);
     }
-    
     return self;
 }
 
 - (void)dealloc
 {
     [self deleteFramebuffer];    
-	[context release];
-	if (context!=workingContext)
-		[workingContext release];
-	pthread_mutex_destroy(&mutex);
+    [context release];
     [super dealloc];
 }
 
 - (void)initMain
 {
-	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    
-    if (!aContext && (PHWFlags & PHWGLES1))
-        aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-    
-    if (!aContext)
-        NSLog(@"Failed to create ES context");
-    else if (![EAGLContext setCurrentContext:aContext])
-        NSLog(@"Failed to set ES context current");
-	context = aContext;
-	workingContext = context;
- 	[self setFramebuffer];
-	pthread_mutex_unlock(&mutex);
-}
+    if (context) return;
 
-- (void) initSecondary
-{
-	pthread_mutex_lock(&mutex);
-	EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    if ([self respondsToSelector: NSSelectorFromString(@"contentScaleFactor")])
+        [self setContentScaleFactor:[[UIScreen mainScreen] scale]];
+
+    context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
-    if (!aContext && (PHWFlags & PHWGLES1))
-        aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+    if (!context && (PHWFlags & PHWGLES1))
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     
-    if (!aContext)
+    if (!context)
         NSLog(@"Failed to create ES context");
-    else if (![EAGLContext setCurrentContext:aContext])
+    else if (![EAGLContext setCurrentContext:context])
         NSLog(@"Failed to set ES context current");
-	workingContext = aContext;
-	pthread_mutex_unlock(&mutex);
 }
 
 - (void)createFramebuffer
 {
-	pthread_mutex_lock(&mutex);
 	if (context && !defaultFramebuffer)
 	{
 		[EAGLContext setCurrentContext:context];
 		
-		// Create default framebuffer object.
 		glGenFramebuffers(1, &defaultFramebuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
 		
-		// Create color render buffer and allocate backing store.
 		glGenRenderbuffers(1, &colorRenderbuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
 		BOOL res = [context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer *)self.layer];
-		glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &framebufferWidth);
-		glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &framebufferHeight);
-		
-		NSLog(@"res:%d W:%d H:%d",res,framebufferWidth,framebufferHeight);
-		
+
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
-		
+
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        else {
+            if ([delegate respondsToSelector:@selector(eaGLViewCreatedFramebuffer:)])
+                [delegate eaGLViewCreatedFramebuffer:self];
+        }
 	}
-	pthread_mutex_unlock(&mutex);
 }
 
 - (void)deleteFramebuffer
 {
-	pthread_mutex_lock(&mutex);
 	if (context)
 	{
 		[EAGLContext setCurrentContext:context];
@@ -134,55 +108,50 @@ extern int PHWFlags;
 			colorRenderbuffer = 0;
 		}
 	}
-	pthread_mutex_unlock(&mutex);
 }
 
 - (void)setFramebuffer
 {
-	pthread_mutex_lock(&mutex);
-	if (workingContext)
-	{
-		[EAGLContext setCurrentContext:workingContext];
-		
+    if (!context)
+        [self initMain];
+    if (context)
+    {
+		[EAGLContext setCurrentContext:context];
 		if (!defaultFramebuffer)
-		{
-			pthread_mutex_unlock(&mutex);
-			//[self createFramebuffer];
-			[self performSelectorOnMainThread:@selector(createFramebuffer) withObject:nil waitUntilDone:YES];
-			pthread_mutex_lock(&mutex);
-		}
-		
+			[self createFramebuffer];
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		
-		glViewport(0, 0, framebufferWidth, framebufferHeight);
 	}
-	pthread_mutex_unlock(&mutex);
 }
 
 - (BOOL)presentFramebuffer
 {
 	BOOL success = FALSE;
-	pthread_mutex_lock(&mutex);
-	if (workingContext)
+	if (context)
 	{
-		[EAGLContext setCurrentContext:workingContext];
-		
+		[EAGLContext setCurrentContext:context];
 		glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-		
-		success = [workingContext presentRenderbuffer:GL_RENDERBUFFER];
+		success = [context presentRenderbuffer:GL_RENDERBUFFER];
 	}
-	pthread_mutex_unlock(&mutex);
     return success;
+}
+
+- (CGSize)framebufferSize
+{
+    if (!context || !defaultFramebuffer) return CGSizeMake(0, 0);
+    [EAGLContext setCurrentContext:context];
+    glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+
+    GLint w,h;
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w) ;
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h) ;
+    return CGSizeMake(w, h);
 }
 
 - (void)layoutSubviews
 {
-    // The framebuffer will be re-created at the beginning of the next setFramebuffer method call.
-    if ([self respondsToSelector: NSSelectorFromString(@"contentScaleFactor")]) {
-        [self setContentScaleFactor:[[UIScreen mainScreen] scale]];
-    }
     [self deleteFramebuffer];
-	//[self createFramebuffer];
+    if ([delegate respondsToSelector:@selector(eaGLViewReshaped:)])
+        [delegate eaGLViewReshaped:self];
 }
 
 @end

@@ -20,11 +20,9 @@ extern PHGameManager * PHGameManagerSingleton;
 {
     BOOL animating;
 	
-    CADisplayLink * dl;
+    CADisplayLink * displayLink;
     NSTimer * timer;
     EAGLView * v;
-    NSConditionLock * exitCondition;
-	NSThread * thread;
     int fps;
     
     PHGameManager * gameManager;

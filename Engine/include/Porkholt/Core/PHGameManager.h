@@ -122,6 +122,7 @@ private:
     PH2DCamera * fpsCamera;
     bool capped, frameAnim;
     void renderFPS(float timeElapsed);
+    void processRemote();
     
     void (*entryPoint)(PHGameManager*);
     void * ud;
@@ -180,7 +181,6 @@ public:
     void * userData() { return ud; }
     void setUserData(void * u) { ud = u; }
     
-    void processInput();
     PHEventHandler * eventHandler() { return evtHandler; }
     PHAnimatorPool * mainAnimatorPool() { return animPool; }
     PHSoundManager * soundManager() { return sndMan; } 

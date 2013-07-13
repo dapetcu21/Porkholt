@@ -92,7 +92,8 @@ PHParticleAnimator::particles * IGBulletParticles::calculatedParticles()
 
 PHDrawable * IGBulletManager::loadDrawable()
 {
-    return (PHDrawable*)v->retain();
+    v->retain();
+    return (PHDrawable*)v;
 }
 
 void IGBulletManager::animate(float elapsed)

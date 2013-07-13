@@ -181,7 +181,6 @@
     static const double g = 9.81;
     PHAcceleration a = {.x = -x*g, .y = -z*g, .z = -y*g};
     PHAccelInterface::setAcceleration(a);
-    gameManager->processInput();
     gameManager->renderFrame();
     glFlush();
     glSwapAPPLE();
