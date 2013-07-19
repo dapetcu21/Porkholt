@@ -26,7 +26,7 @@ float frand(float s, float f)
 
 void WarpSettings::loadDefaults()
 {
-    speed = 10.0f;
+    speed = 8.0f;
     starsPerSecond = 100;
     starWidth = 0.1f;
     starLength = 2.5f;
@@ -122,14 +122,17 @@ class WarpMesh : public PHMesh, public PHDrawableInputDelegate
         void advanceAnimation()
         {
             float timeElapsed = gm->elapsedTime();
-            float distance = timeElapsed * s.speed;
             float radius = max(1.0f, gm->screenWidth() / gm->screenHeight());
 
             if (touched)
-                touchedDist += distance;
-            else
+            {
+                if (touchedDist <= s.starLength * 2)
+                    touchedDist += timeElapsed * s.speed;
+            } else
                 PHLowPassFilter(touchedDist, 0.0f, timeElapsed, 5);
             float ss = s.starLength + touchedDist;
+
+            float distance = timeElapsed * s.speed * (ss / s.starLength);
 
             while (!points.empty())
             {
@@ -148,7 +151,7 @@ class WarpMesh : public PHMesh, public PHDrawableInputDelegate
                 {
                     point p;
                     p.z = -FAR_PLANE - distanceLeft - offset;
-                    float r = frand(0.5f, 1.0f) * radius;
+                    float r = frand(0.5f, 2.0f) * radius;
                     float angle = frand(0.0f, M_PI * 2.0f);
                     p.up = PHPoint(r, s.starWidth).rotated(angle);
                     p.down = PHPoint(r, -s.starWidth).rotated(angle);
