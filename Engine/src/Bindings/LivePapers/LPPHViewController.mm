@@ -162,10 +162,7 @@ PHRect LPPHGetWallpaperBounds(PHGameManager * gm)
 -(void)render
 {
     if (_gm)
-    {
-        _gm->processInput();
         _gm->renderFrame();
-    }
 }
 
 -(void)reshape
