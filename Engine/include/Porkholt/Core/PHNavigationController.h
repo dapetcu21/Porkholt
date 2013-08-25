@@ -37,11 +37,8 @@ public:
 		FadeToColor,
 		NUMANIMATIONS
 	};
-	void pushViewController(PHViewController * vc, int anim, bool replace);
-	void popViewController(int anim);
-	void pushViewController(PHViewController * vc, int anim) { pushViewController(vc, anim, false); };
-	void pushViewController(PHViewController * vc)  { pushViewController(vc, NoAnim, false); };
-	void popViewController() { popViewController(NoAnim); }
+	void pushViewController(PHViewController * vc, int anim = NoAnim, bool replace = false);
+	void popViewController(int anim = NoAnim);
 	
 	virtual void viewDidDisappear();
 	virtual void viewWillAppear();

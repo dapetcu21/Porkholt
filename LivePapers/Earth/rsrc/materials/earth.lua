@@ -9,8 +9,6 @@ material = {
       normalMatrix = vars.modelViewMatrix.inverse.transposed,
       diffuseColor = diffuse * vars.lightDiffuse * vars.lightIntensity,
       lightPosition = vars.lightPosition,
-      tex = "earth",
-      night = "night",
     }
   }
 }
@@ -30,4 +28,5 @@ end
 
 if options.night then
   mat.shader = mat.shader .. "[night_map]"
+  uniforms.night = "night"
 end

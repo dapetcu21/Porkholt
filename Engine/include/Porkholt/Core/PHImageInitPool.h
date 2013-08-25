@@ -25,6 +25,7 @@ public:
     bool imageExists(const string & name) { return imageExists(name, imageDirectory()); }
     void loadAllImages();
 	void collectGarbageImages();
+    bool allImagesLoaded();
     virtual PHGameManager * gameManager() = 0;
 
     const string & platformSuffix() { return hdsuf; }

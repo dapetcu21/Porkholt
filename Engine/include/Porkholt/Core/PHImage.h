@@ -42,6 +42,7 @@ protected:
     
 public:
     void load(); 
+    bool isLoaded() { return loaded; }
 	size_t height() { load(); return _height; };
 	size_t width() { load(); return _width; };
 

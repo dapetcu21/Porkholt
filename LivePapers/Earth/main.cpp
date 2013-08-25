@@ -14,6 +14,7 @@
 #include <Porkholt/Core/PHParticleView.h>
 #include <Porkholt/Core/PHParticleAnimator.h>
 #include <Porkholt/Core/PHDrawableCoordinates.h>
+#include <Porkholt/Core/PHTextView.h>
 
 #include <ctime>
 
@@ -373,9 +374,63 @@ public:
     }
 };
 
+class PHLoadingViewController : public PHViewController
+{
+    public:
+        PHLoadingViewController(PHGameManager * gm) : PHViewController(gm) {}
+
+    protected:
+        void preload()
+        {
+            ESettings s;
+            s.load();
+
+            if (s.bgType == 2)
+                gm->imageNamed("starfield");
+            if (s.night)
+                gm->imageNamed("night");
+            if (s.mapType)
+                gm->imageNamed("alt_earth");
+            else
+                gm->imageNamed("earth");
+            gm->imageNamed("star");
+        }
+
+        PHView * loadView(const PHRect & r)
+        {
+            PHTextView * v = new PHTextView(r);
+            v->setAutoresizeMask(PHView::ResizeAll);
+            v->setFontSize(gm->screenHeight() * 0.03f);
+            v->setText("Loading...");
+            v->setAlignment(PHTextView::justifyCenter | PHTextView::alignCenter);
+            v->setFontColor(PHWhiteColor);
+            v->setFont(gm->defaultFont());
+
+            preload();
+
+            return v;
+        }
+
+        void updateScene(float timeElapsed)
+        {
+            //static bool update = false;
+            //((PHTextView*)getView())->setFontColor(update ? PHColor(1,0,0) : PHColor(0,1,0));
+            //update = !update;
+            if (gm->allImagesLoaded())
+            {
+                ((PHTextView*)getView())->setFont(NULL);
+                gm->collectGarbageFonts();
+                PHViewController * vc = new PHEarthViewController(gm);
+                navigationController()->pushViewController(vc, PHNavigationController::NoAnim, true);
+                vc->release();
+            }
+        }
+};
+
+
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHViewController * vc = new PHEarthViewController(gm);
+    PHViewController * vc = new PHLoadingViewController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
     #ifdef PH_DEBUG
     gm->setShowsFPS(true);

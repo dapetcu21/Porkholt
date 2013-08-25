@@ -84,6 +84,15 @@ void PHImageInitPool::loadAllImages()
         i->second->load();
 }
 
+bool PHImageInitPool::allImagesLoaded()
+{
+    map<PHHashedString, PHImage*>::iterator i;
+    for (i = images.begin(); i!=images.end(); i++)
+        if (!i->second->isLoaded())
+            return false;
+    return true;
+}
+
 PHImageInitPool::~PHImageInitPool()
 {
     PHLog("Deallocating images");
