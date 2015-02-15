@@ -71,7 +71,7 @@ void PHLPlayer::updateControls(list<PHPoint> * queue)
 	if (f<-MAX_TILT)
 		f = -MAX_TILT;
 	frc.y = 0;
-	frc.x = -f*TILT_FORCE_FACTOR;
+	frc.x = f*TILT_FORCE_FACTOR;
 	b2Vec2 center = body->GetWorldCenter();
     if (userInp)
         body->ApplyForce(frc, center);

@@ -101,10 +101,10 @@ void PHLevelController::pauseWithMenu()
     menuView->animateBgColor(PHColor(0.0f,0.0f,0.0f,0.8f));
     menuView->animationTag(3752);
     menuView->commitCinematicAnimation();
-    rv->setRotation(3*M_PI/2);
+    rv->setRotation(3*M_PI_2);
     rv->beginCinematicAnimation(0.5f,PHCinematicAnimator::FadeOutFunction);
     rv->animationTag(3752);
-    rv->animateRotate(-3*M_PI/2);
+    rv->animateRotate(-3*M_PI_2);
     rv->commitCinematicAnimation();
     
     float rs = fr.width*BT_SIZE;
@@ -145,7 +145,7 @@ void PHLevelController::dismissMenu()
     {
         rv->beginCinematicAnimation(0.25f,PHCinematicAnimator::FadeInFunction);
         rv->animationTag(3752);
-        rv->animateRotate(-M_PI/2);
+        rv->animateRotate(-M_PI_2);
         if (!cb)
         {
             rv->animationCallback(PHInvN(this,PHLevelController::menuDismissed));
