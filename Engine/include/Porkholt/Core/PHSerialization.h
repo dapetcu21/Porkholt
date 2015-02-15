@@ -52,6 +52,9 @@ inline uint16_t PHByteSwap16(uint16_t x)
 }
 #endif
 
+#define ntohll htonll
+#endif
+
 #ifdef __BIG_ENDIAN__
     #define PHBEToH16(x) (x)
     #define PHBEToH32(x) (x)
@@ -66,9 +69,6 @@ inline uint16_t PHByteSwap16(uint16_t x)
     #define PHBEToH16(x) PHByteSwap16(x)
     #define PHBEToH32(x) PHByteSwap32(x)
     #define PHBEToH64(x) PHByteSwap64(x)
-#endif
-
-#define ntohll htonll
 #endif
 
 inline uint16_t PHEncode(uint16_t n) 

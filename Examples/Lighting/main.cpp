@@ -7,7 +7,7 @@
 #include <Porkholt/Core/PHImage.h>
 
 
-class PHIgorController : public PHViewController
+class PHLightsController : public PHViewController
 {
     
 protected:
@@ -79,12 +79,14 @@ protected:
             a[i].light->position = a[i].pnt + PH3DPoint(a[i].rad*sin(a[i].rot),a[i].rad*cos(a[i].rot),0);
         }
     }
+
+public:
+    PHLightsController(PHGameManager * gm) : PHViewController(gm) {};
 };
 
 void PHGameEntryPoint(PHGameManager * gm)
 {    
-    PHIgorController * vc = new PHIgorController();
-	vc->init(gm);
+    PHLightsController * vc = new PHLightsController(gm);
     gm->setUpNavigationController()->pushViewController(vc);
 }
 
