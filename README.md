@@ -8,7 +8,19 @@ This repo also contains a few attempts to games that never were in `Beeno/Game` 
 
 ## Features
 
-`TODO`
+* Math library
+* Windowing functions
+* Frame animations
+* Keyframed transitions
+* Sprite atlases
+* Texture-based fonts
+* Render to texture filters
+* Deferred lighting
+* Sound (WAV and Ogg)
+* Lua bindings and scripting
+* Lua-based material format with conditional shader compilation
+* Asset pipeline
+* Other bells and whistles I totally forgot about in 4 years.
 
 ## Screenshots
 
