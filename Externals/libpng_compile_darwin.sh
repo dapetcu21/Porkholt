@@ -10,24 +10,27 @@ mkdir -p lnsout
 
 export LDFLAGS="-L../lib/darwin/ios"
 for ARCH in $IOSARCHS; do
-    CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp" 
+    CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=4.2 -pipe -no-cpp-precomp"
+    CFLAGS="-I../zlib $CFLAGS"
     make distclean 2>&1 > /dev/null
-    ./configure CC="$IOSCC" CFLAGS="-I../zlib $CFLAGS" --host=$ARCH-apple-darwin && make || exit 1 
+    ./configure CC="$IOSCC" CFLAGS="$CFLAGS" CPPFLAGS="$CFLAGS" --host=arm-apple-darwin && make || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.ios.$ARCH
 done
 
 for ARCH in $SIMARCHS; do
-    CFLAGS="-arch $ARCH -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp"
+    CFLAGS="-arch $ARCH -isysroot $SIMSDK -miphoneos-version-min=4.2 -pipe -no-cpp-precomp"
+    CFLAGS="-I../zlib $CFLAGS"
     make distclean 2>&1 > /dev/null
-    ./configure CC="$SIMCC" CFLAGS="-I../zlib $CFLAGS" && make || exit 1
+    ./configure CC="$SIMCC" CFLAGS="$CFLAGS" CPPFLAGS="$CFLAGS" && make || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.sim.$ARCH
 done
- 
+
 export LDFLAGS="-L../lib/darwin/osx"
 for ARCH in $OSXARCHS; do
     CFLAGS="-arch $ARCH -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe -no-cpp-precomp"
+    CFLAGS="-I../zlib $CFLAGS"
     make distclean 2>&1 > /dev/null
-    ./configure CC="$OSXCC" CFLAGS="-I../zlib $CFLAGS" && make || exit 1
+    ./configure CC="$OSXCC" CFLAGS="$CFLAGS" CPPFLAGS="$CFLAGS" && make || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.osx.$ARCH
 done
 

@@ -19,7 +19,7 @@ LIBOGG="$(pwd)/../libogg"
 
 export CC="$IOSCC"
 for ARCH in $IOSARCHS; do
-    export CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe -no-cpp-precomp -O3" 
+    export CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=4.2 -pipe -no-cpp-precomp -O3"
     make distclean 2>&1 > /dev/null
     echo ./configure --with-ogg-includes="$LIBOGG/include/" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH/" --host=$ARCH-apple-darwin
     ./configure --with-ogg-includes="$LIBOGG/include/" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH/" --host=$ARCH-apple-darwin && make || exit 1
@@ -29,7 +29,7 @@ done
 
 export CC="$SIMCC"
 for ARCH in $SIMARCHS; do
-    export CFLAGS="-arch $ARCH -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe -no-cpp-precomp -O3"
+    export CFLAGS="-arch $ARCH -isysroot $SIMSDK -miphoneos-version-min=4.2 -pipe -no-cpp-precomp -O3"
     make distclean 2>&1 > /dev/null
     ./configure --with-ogg-includes="$LIBOGG/include" --with-ogg-libraries="$LIBOGG/prebuilt/ios-$ARCH" --disable-oggtest && make || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.sim.$ARCH
@@ -58,4 +58,3 @@ cp lnsout/$LIBNAME2_static.osx ../lib/darwin/osx/$LIBINSTALL2_static
 
 rm -rf lnsout
 cd ..
-

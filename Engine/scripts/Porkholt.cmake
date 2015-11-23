@@ -4,7 +4,7 @@ function(porkholt PH_APP_TARGET)
   if(NOT DEFINED PH_NAME OR NOT PH_NAME)
     set(PH_NAME ${PH_APP_TARGET})
   endif()
-  
+
   set(PH_PLATFORM_DOC "Target platform. Can be one of X11 OSX iOS Android")
   set(PH_ENGINE_PATH_DOC "Path to the Engine folder")
   set(PH_EXTERNALS_DOC "Path to the Externals folder")
@@ -35,7 +35,7 @@ function(porkholt PH_APP_TARGET)
   get_filename_component(PH_EXTERNALS "${PH_EXTERNALS}" REALPATH)
 
   include(${PH_ENGINE_PATH}/scripts/Porkholt_Common.cmake)
-  
+
   set(LIBRARY_OUTPUT_PATH_ROOT ${CMAKE_CURRENT_BINARY_DIR} CACHE STRING "Don't change")
   if(NOT PH_FORK STREQUAL "1")
     set(PH_LIVEPAPERS_FPS_STAGES "${PH_LIVEPAPERS_FPS_STAGES}" CACHE STRING "Fps Stages")
@@ -44,7 +44,7 @@ function(porkholt PH_APP_TARGET)
   endif()
 
   include(${PH_ENGINE_PATH}/scripts/Porkholt_IncludeDirs.cmake)
-  
+
   if(NOT DEFINED PH_MARKETING_VERSION)
     set(PH_MARKETING_VERSION 1.0)
   endif()
@@ -99,7 +99,7 @@ function(porkholt PH_APP_TARGET)
       endif()
     endif()
   endif()
-  
+
   if(PH_PLATFORM STREQUAL "OSX")
     add_executable(${PH_APP_TARGET} MACOSX_BUNDLE ${PH_SOURCES})
     set_target_properties(${PH_APP_TARGET} PROPERTIES LINK_FLAGS "-ObjC -framework Foundation -framework CoreVideo -framework AppKit -framework IOKit")
@@ -149,11 +149,11 @@ function(porkholt PH_APP_TARGET)
 
       if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         include(${PH_ENGINE_PATH}/scripts/Porkholt_Files.cmake)
-        execute_process(COMMAND ${PH_EXTERNALS}/bin/${PH_BINS}/luajit ${PH_ENGINE_PATH}/scripts/android_gdb_trim.lua 
-            ${PH_SOURCES} 
-            ${PH_ENGINE_SRCS} 
+        execute_process(COMMAND ${PH_EXTERNALS}/bin/${PH_BINS}/luajit ${PH_ENGINE_PATH}/scripts/android_gdb_trim.lua
+            ${PH_SOURCES}
+            ${PH_ENGINE_SRCS}
             ${PH_ENGINE_HEADERS}
-            ${ANDROID_SYSROOT}/usr/include 
+            ${ANDROID_SYSROOT}/usr/include
             ${ANDROID_NDK}/sources/cxx-stl/system
            OUTPUT_VARIABLE PH_GDB_DIRECTORY)
         set(PH_GDB_SOLIB_PATH ${LIBRARY_OUTPUT_PATH_ROOT}/libs/${ANDROID_NDK_ABI_NAME})
@@ -163,12 +163,12 @@ function(porkholt PH_APP_TARGET)
 
     else()
       invoke_make(${PH_APP_TARGET}-lib)
-      add_dependencies(${PH_APP_TARGET}-lib Porkholt) 
+      add_dependencies(${PH_APP_TARGET}-lib Porkholt)
     endif()
   else()
     add_executable(${PH_APP_TARGET} ${PH_SOURCES})
   endif()
-  
+
   if(NOT PH_PLATFORM STREQUAL "Android" AND ( NOT PH_PLATFORM STREQUAL "iOS" OR PH_FORK ) )
     if(PH_FORK)
       get_filename_component(PH__LIB_PATH "${CMAKE_CURRENT_BINARY_DIR}/../engine-build/fork/libPorkholt.a" REALPATH)
@@ -176,7 +176,7 @@ function(porkholt PH_APP_TARGET)
     else()
       target_link_libraries(${PH_APP_TARGET} Porkholt)
     endif()
-    target_link_libraries(${PH_APP_TARGET} 
+    target_link_libraries(${PH_APP_TARGET}
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libluajit.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libpng15.a
       ${PH_EXTERNALS}/lib/${PH_LIBS}/libz.a
@@ -200,7 +200,7 @@ function(porkholt PH_APP_TARGET)
     if(NOT DEFINED PH_IOS_DEPLOYMENT_TARGET)
       set(PH_IOS_DEPLOYMENT_TARGET "3.2")
     endif()
-       
+
     if(NOT DEFINED PH_IOS_CODE_SIGN_IDENTITY)
       set(PH_IOS_CODE_SIGN_IDENTITY "iPhone Developer")
     endif()
@@ -277,7 +277,7 @@ function(porkholt PH_APP_TARGET)
 
   elseif(PH_PLATFORM STREQUAL "OSX")
     if(NOT DEFINED PH_OSX_DEPLOYMENT_TARGET)
-      set(PH_OSX_DEPLOYMENT_TARGET "10.6")
+      set(PH_OSX_DEPLOYMENT_TARGET "10.11")
     endif()
     if(NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET OR NOT CMAKE_OSX_DEPLOYMENT_TARGET)
       set(CMAKE_OSX_DEPLOYMENT_TARGET ${PH_OSX_DEPLOYMENT_TARGET} PARENT_SCOPE)
@@ -303,7 +303,7 @@ function(porkholt PH_APP_TARGET)
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(PH_BUILD_TYPE "noluacompress")
   endif()
-  
+
   set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rsrc)
   if(PH_PLATFORM STREQUAL "OSX" OR ( PH_PLATFORM STREQUAL "iOS" AND NOT PH_FORK ) )
     if(PH_PLATFORM STREQUAL "OSX")
@@ -337,14 +337,14 @@ function(porkholt PH_APP_TARGET)
         COMMAND ${PH_EXTERNALS}/bin/${PH_BINS}/luajit ${PH_ENGINE_PATH}/scripts/postprocess.lua ${RES_SRC_DIR} ${APP_NAME}/${PH_BUNDLE_PREFIX}rsrc ${PH_EXTERNALS} ${PH_PLATFORM} ${PH_BUILD_TYPE}
         )
       add_dependencies(${PH_APP_TARGET} PostProcess_Resources)
-      add_dependencies(PostProcess_Resources External_Libs)  
+      add_dependencies(PostProcess_Resources External_Libs)
       if(PH_PLATFORM STREQUAL "OSX")
         add_custom_target(
           Copy_Libraries
           COMMAND ${PH_ENGINE_PATH}/scripts/copy_libraries.sh ${PH_EXTERNALS}/lib/darwin/osx ${APP_NAME}/Contents/lib
           )
         add_dependencies(${PH_APP_TARGET} Copy_Libraries)
-        add_dependencies(Copy_Libraries External_Libs)  
+        add_dependencies(Copy_Libraries External_Libs)
       endif()
     endif()
   elseif(PH_PLATFORM STREQUAL "X11")
@@ -393,9 +393,9 @@ function(porkholt PH_APP_TARGET)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
         )
- 
+
     add_custom_target(
-        ${PH_APP_TARGET}-install 
+        ${PH_APP_TARGET}-install
         COMMAND /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; ant ${PH_ANT_TARGET} install"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
@@ -413,7 +413,7 @@ function(porkholt PH_APP_TARGET)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
         )
- 
+
     add_custom_target(
         ${PH_APP_TARGET}-install-only
         COMMAND /bin/bash -c "export PATH=\${PATH}${ANDROID_SDK}; ant ${PH_ANT_TARGET} install"
@@ -490,7 +490,7 @@ function(porkholt PH_APP_TARGET)
       add_custom_target(${PH_APP_TARGET}-package bash -c "echo Not implemented yet" VERBATIM)
     endif()
     add_dependencies(${PH_APP_TARGET}-package ${PH_APP_TARGET}-sign)
-    
+
     if(NOT TARGET install)
       add_custom_target(install)
     endif()

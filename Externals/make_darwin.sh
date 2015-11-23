@@ -17,13 +17,13 @@ compilelib() {
 		if [ ! -f lib/darwin/ios/$LIBFILE ]
 		then
 			echo "Could not compile $LIBNAME for iOS" 1>&2
-			exit 1 
+			exit 1
 	    else
 		if [ ! -f lib/darwin/osx/$LIBFILE ]
 		then
 			echo "Could not compile $LIBNAME for Mac OS X" 1>&2
 			exit 1
-		else	
+		else
 			if [ ! "$4" == "-d" ] && [ ! "$4" == "-v" ]
 			then
 				rm log/$LIBFILE.stdout.log log/$LIBFILE.stderr.log
@@ -52,7 +52,7 @@ compilelibosx() {
 		then
 			echo "Could not compile $LIBNAME for Mac OS X" 1>&2
 			exit 1
-		else	
+		else
 			if [ ! "$4" == "-d" ] && [ ! "$4" == "-v" ]
 			then
 				rm log/$LIBFILE.stdout.log log/$LIBFILE.stderr.log
@@ -145,14 +145,18 @@ latestsdk() {
 }
 
 archsof() {
-    $2 -info $1/usr/lib/libSystem.dylib | sed s/Architectures\ in\ the\ fat\ file.*\ are:\ // | sed s/Non-fat\ file:.*\ is\ architecture:\ //
+		if [[ -f $1/usr/lib/libSystem.tbd ]]; then
+				cat $1/usr/lib/libSystem.tbd | grep archs | tail -n 1 | sed 's/^.*\[[ \t]*//' | sed 's/[ \t\]]*$//' | sed 's/,//g'
+		else
+		    $2 -info $1/usr/lib/libSystem.dylib | sed s/Architectures\ in\ the\ fat\ file.*\ are:\ // | sed s/Non-fat\ file:.*\ is\ architecture:\ //
+		fi
 }
 
 export OSXSDK=$(latestsdk "$OSXSDKS")
 export IOSSDK=$(latestsdk "$IOSSDKS")
 export SIMSDK=$(latestsdk "$SIMSDKS")
 
-export IOSARCHS=$(archsof "$IOSSDK" "$IOSLIPO" )
+export IOSARCHS=$(archsof "$IOSSDK" "$IOSLIPO" | sed 's/arm64//')
 export SIMARCHS=$(archsof "$SIMSDK" "$SIMLIPO" )
 export OSXARCHS=$(archsof "$OSXSDK" "$OSXLIPO" )
 
@@ -162,4 +166,3 @@ compilelib libluajit.a LuaJIT ./libluajit_compile_darwin.sh $1
 compilelib libogg.a Ogg ./libogg_compile_darwin.sh $1
 compilelib libvorbis.a Vorbis ./libvorbis_compile_darwin.sh $1
 compilelibosx libopenal.dylib OpenAL ./libopenal_compile_darwin.sh $1
-

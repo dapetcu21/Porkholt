@@ -13,19 +13,19 @@ rm -rf lnsout
 mkdir -p lnsout
 
 for ARCH in $IOSARCHS; do
-    CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=2.2 -pipe" 
+    CFLAGS="-arch $ARCH -isysroot $IOSSDK -miphoneos-version-min=4.2 -pipe"
     make clean 2>&1 > /dev/null
     make HOST_CC="cc -arch i386" CROSS="xcrun -sdk iphoneos " TARGET_FLAGS="$CFLAGS" TARGET_SYS=iOS || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.ios.$ARCH
 done
 
 for ARCH in $SIMARCHS; do
-    CFLAGS="-arch $ARCH -isysroot $SIMSDK -mmacosx-version-min=10.6 -pipe" 
+    CFLAGS="-arch $ARCH -isysroot $SIMSDK -miphoneos-version-min=4.2 -pipe"
     make clean 2>&1 > /dev/null
     make HOST_CC="cc -arch $ARCH" CROSS="xcrun -sdk iphonesimulator " TARGET_FLAGS="$CFLAGS" TARGET_SYS=iOS || exit 1
     cp $LIBPATH_static lnsout/$LIBNAME_static.sim.$ARCH
 done
- 
+
 for ARCH in $OSXARCHS; do
     CFLAGS="-arch $ARCH -isysroot $OSXSDK -mmacosx-version-min=10.5 -pipe"
     make clean 2>&1 > /dev/null
@@ -46,4 +46,3 @@ cp lnsout/$BINNAME ../bin/darwin/osx/$BINNAME
 
 rm -rf lnsout
 cd ..
-
