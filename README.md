@@ -12,7 +12,9 @@ This repo also contains an attempt to a platformer that never was in `Beeno/Game
 
 ## Screenshots
 
-`TODO`
+![screen shot 2015-11-23 at 23 23 49](https://cloud.githubusercontent.com/assets/428060/11351142/99b67ce0-923d-11e5-816b-34c233c14f4b.png)
+![screen shot 2015-11-23 at 23 33 55](https://cloud.githubusercontent.com/assets/428060/11351143/99e541ec-923d-11e5-98b7-d5a718ac14c1.png)
+![screen shot 2015-11-23 at 23 52 19](https://cloud.githubusercontent.com/assets/428060/11351144/99e5961a-923d-11e5-9516-4aa4dbd32d17.png)
 
 ## Installation
 There's no need for any instalation, however Porkholt Engine requires some dependencies to compile itself and its external libraries. These can be installed using your distro's package manager.
@@ -24,9 +26,9 @@ For example:
 sudo apt-get install libreadline-dev cmake graphicsmagick mesa-common-dev libncurses-dev libopenal-dev lua
 ```
 
-### OS X with Macports (yes, this project is old):
+### OS X with Homebrew:
 ```
-sudo port install lua cmake ImageMagick
+brew install lua cmake graphicsmagick
 ```
 
 ## Creating a project
