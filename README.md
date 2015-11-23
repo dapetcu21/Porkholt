@@ -4,7 +4,7 @@ Porkholt is a 2D and 3D graphics and game engine targeted towards mobile and des
 
 I built it as a learning project quite some of time ago. It's certainly not ready for production and will never be. I decided to post it on GitHub after all this time.
 
-This repo also contains an attempt to a platformer that never was in `Beeno/Game`.
+This repo also contains a few attempts to games that never were in `Beeno/Game` and `Igor/Game`, a full set of examples, demos and toys in `Examples` and some [LivePapers](https://github.com/dapetcu21/LivePapers) wallpapers in `LivePapers`.
 
 ## Features
 
